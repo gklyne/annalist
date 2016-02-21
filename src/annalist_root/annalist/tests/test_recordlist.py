@@ -261,7 +261,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # 1
         self.assertEqual(r.context['fields'][0]['field_id'], 'List_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'], 'List Id')
         self.assertEqual(r.context['fields'][0]['field_value'], list_id)
         # 2
         self.assertEqual(r.context['fields'][1]['field_id'], 'List_type')
@@ -280,12 +280,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         # 5
         self.assertEqual(r.context['fields'][4]['field_id'], 'List_default_type')
         self.assertEqual(r.context['fields'][4]['field_name'], 'List_default_type')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][4]['field_label'], 'Default type')
         self.assertEqual(r.context['fields'][4]['field_value'], list_default_type)
         # 6
         self.assertEqual(r.context['fields'][5]['field_id'], 'List_default_view')
         self.assertEqual(r.context['fields'][5]['field_name'], 'List_default_view')
-        self.assertEqual(r.context['fields'][5]['field_label'], 'View')
+        self.assertEqual(r.context['fields'][5]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][5]['field_value'], list_default_view)
         # 7
         self.assertEqual(r.context['fields'][6]['field_id'], 'List_entity_selector')
@@ -295,7 +295,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # 8
         self.assertEqual(r.context['fields'][7]['field_id'], 'List_target_type')
         self.assertEqual(r.context['fields'][7]['field_name'], 'List_target_type')
-        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type URI')
+        self.assertEqual(r.context['fields'][7]['field_label'], 'List entity type')
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         # 9th field - list of fields from target entity for each list entry
         if num_fields == 2:
@@ -360,7 +360,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>List Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -421,12 +421,12 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Record type</span>
+                  <span>Default type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_type", "Record type",
+                    "List_default_type", "Default type",
                     no_selection("(default record type)") + self.type_options,
                     "_type/Default_type",
                     placeholder="(default record type)"
@@ -440,12 +440,12 @@ class RecordListEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip5)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>View</span>
+                  <span>Default view</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_view", "View",
+                    "List_default_view", "Default view",
                     no_selection("(view id)") + self.view_options,
                     "_view/Default_view",
                     placeholder="(view id)"

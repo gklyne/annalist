@@ -161,7 +161,6 @@ class RecordFieldTest(AnnalistTestCase):
         v.update(
             { '@id':                        "annal:fields/Field_type"
             , 'rdfs:label':                 "Field value type"
-            , 'rdfs:comment':               "Type (URI or CURIE) of underlying data that is stored in a field."
             , 'annal:type':                 "annal:Field"
             , 'annal:url':                  field_url
             , 'annal:field_value_type':     "annal:Identifier"
@@ -170,6 +169,7 @@ class RecordFieldTest(AnnalistTestCase):
             , 'annal:property_uri':         "annal:field_value_type"
             , 'annal:default_value':        "annal:Text"
             })
+        v.pop('rdfs:comment', None)
         self.assertDictionaryMatch(td, v)
         return
 
@@ -274,7 +274,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_render="(?field_type)",
             field_value_mode="Value_direct",
             field_label="(?field_label)",
-            field_comment="(?field_comment)",
             field_placeholder="(?field_placeholder)",
             field_property="(?field_property)",
             field_placement="(?field_placement)",
@@ -345,10 +344,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i]['field_id'],           'Field_comment')
         self.assertEqual(r.context['fields'][i]['field_name'],         'Field_comment')
         self.assertEqual(r.context['fields'][i]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Markdown")
+        self.assertEqual(r.context['fields'][i]['field_render_type'],  "Textarea")
         self.assertEqual(r.context['fields'][i]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Richtext")
-        self.assertEqual(r.context['fields'][i]['field_value'],        field_comment)
+        self.assertEqual(r.context['fields'][i]['field_target_type'],  "annal:Longtext")
         self.assertEqual(r.context['fields'][i]['options'],            self.no_options)
         # Field 6: Field_property URI
         i += 1
@@ -510,7 +508,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Field Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -596,6 +594,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
+
         formrow5col1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
               <div class="row view-value-row">
@@ -711,7 +710,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip10a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Add fields label</span>
+                  <span>Add value label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_add"
@@ -725,7 +724,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip10b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Delete fields label</span>
+                  <span>Delete value label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_delete"
@@ -757,7 +756,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_restrict" 
-                         placeholder="(enumeration value restriction; e.g. &#39;entity[annal:record_type] subtype [annal:field_entity_type]&#39;)"
+                         placeholder="(enumeration value restriction)"
                          value=""/>
                 </div>
               </div>
@@ -803,7 +802,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_type="annal:Text",
             field_render="Text",
             field_label=default_label("testcoll", "_field", "00000001"),
-            field_comment=default_comment("testcoll", "_field", "00000001"),
             field_placeholder="",
             field_property="",
             field_placement="",
@@ -848,7 +846,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_type="annal:Text",
             field_render="Text",
             field_label="Label",
-            field_comment="Short string used to describe record type when displayed",
             field_placeholder="(label)",
             field_property="rdfs:label",
             field_placement="small:0,12",

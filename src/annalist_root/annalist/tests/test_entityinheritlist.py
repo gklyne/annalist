@@ -168,7 +168,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         if len(entities) != 217:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 217)    # Will change with site data
+        self.assertEqual(len(entities), 218)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):
@@ -276,7 +276,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
             , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
-            , ('Field_comment',     "Markdown",      "annal:Richtext",      "Help")
+            , ('Field_comment',     "Textarea",      "annal:Longtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
             , ('Field_type',        "Identifier",    "annal:Identifier",    "Field value type")
             , ('Field_render',      "Enum_choice",   "annal:Slug",          "Field render type")
@@ -284,8 +284,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
-            , ('List_default_type', "Enum_optional", "annal:Type",          "Record type")
-            , ('List_default_view', "Enum_optional", "annal:View",          "View")
+            , ('List_default_type', "Enum_optional", "annal:Type",          "Default type")
+            , ('List_default_view', "Enum_optional", "annal:View",          "Default view")
+            , ('List_target_type',  "Identifier",    "annal:Identifier",    "List entity type")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")

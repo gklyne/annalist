@@ -205,7 +205,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Type Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(entity_url)s">entity1</a>
@@ -385,7 +385,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'],           'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'],        'Type Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
@@ -431,13 +431,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_value'],        "")
         self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
         # 5th field - Supertype URIs
-        type_supertype_uris_help = (
-            "References to URIs/CURIEs of supertypes."
-            )
         self.assertEqual(r.context['fields'][4]['field_id'],          'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
-        self.assertEqual(r.context['fields'][4]['field_help'],        type_supertype_uris_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")

@@ -4,7 +4,7 @@
 , "annal:id":                   "Group_label"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Label"
-, "rdfs:comment":               "Short string used to describe field group when displayed"
+, "rdfs:comment":               "Short string used to describe this field group when displayed."
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

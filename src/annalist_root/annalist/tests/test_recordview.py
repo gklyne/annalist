@@ -299,13 +299,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         #
         self.assertEqual(len(r.context['fields']), 6)
         # 1st field - Id
-        view_id_help = (
-            "A short identifier that distinguishes this view from all other views in the same collection."
-            )
         self.assertEqual(r.context['fields'][0]['field_id'],           'View_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
-        self.assertEqual(r.context['fields'][0]['field_help'],         view_id_help)
+        self.assertEqual(r.context['fields'][0]['field_label'],        'View Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(view id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
@@ -314,13 +310,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_value'],        view_id)
         self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
         # 2nd field - Label
-        view_label_help = (
-            "Short string used to describe view when displayed"
-            )
         self.assertEqual(r.context['fields'][1]['field_id'],           'View_label')
         self.assertEqual(r.context['fields'][1]['field_name'],         'View_label')
         self.assertEqual(r.context['fields'][1]['field_label'],        'Label')
-        self.assertEqual(r.context['fields'][1]['field_help'],         view_label_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(view label)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
@@ -342,7 +334,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # log.info("******\n"+repr(r.context['fields'][3]))
         self.assertEqual(r.context['fields'][3]['field_id'],           'View_target_type')
         self.assertEqual(r.context['fields'][3]['field_name'],         'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_label'],        'Record type')
+        self.assertEqual(r.context['fields'][3]['field_label'],        'View entity type')
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:record_type")
         self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][3]['field_target_type'],  "annal:Identifier")
@@ -409,7 +401,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'],    'View_id')
         self.assertEqual(r.context['fields'][0]['field_name'],  'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'], 'View Id')
         # 2nd field - Label
         self.assertEqual(r.context['fields'][1]['field_id'],    'View_label')
         self.assertEqual(r.context['fields'][1]['field_name'],  'View_label')
@@ -422,7 +414,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # log.info("******\n"+repr(r.context['fields'][3]))
         self.assertEqual(r.context['fields'][3]['field_id'],    'View_target_type')
         self.assertEqual(r.context['fields'][3]['field_name'],  'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][3]['field_label'], 'View entity type')
         # 5th field - add field
         # log.info("******\n"+repr(r.context['fields'][3]))
         self.assertEqual(r.context['fields'][4]['field_id'],    'View_edit_view')
@@ -491,7 +483,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>View Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -534,11 +526,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Record type</span>
+                  <span>View entity type</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="View_target_type" 
-                         placeholder="(Record type URI/CURIE displayed by view)" 
+                         placeholder="(Entity type URI/CURIE displayed by view)" 
                          value=""/>
                 </div>
               </div>

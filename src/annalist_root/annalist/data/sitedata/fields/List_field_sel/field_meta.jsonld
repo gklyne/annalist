@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "List_field_sel"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Field id"
-, "rdfs:comment":               "Used in a group that defines a field in a list, and specifies a Field Id to be displayed.  The containing group generally combines this with a property URI (`List_field_property`) and display placement (`List_field_placement`) values to describe a field to be displayed."
+, "rdfs:label":                 "Field Id"
+, "rdfs:comment":               "Specifies the 'Field Id' of a field definition to be used in a list display.  The containing list definition may combine this with a property URI (field 'Property') and display placement (field 'Position/size') values to describe a field to be displayed."
 , "annal:placeholder":          "(field sel)"
 , "annal:field_name":           "Field_id"
 , "annal:field_render_type":    "Enum_optional"

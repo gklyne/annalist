@@ -4,7 +4,7 @@
 , "annal:id":                   "Type_comment"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Comment"
-, "rdfs:comment":               "Descriptive text about a record type"
+, "rdfs:comment":               "Descriptive of entity type."
 , "annal:field_render_type":    "Markdown"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Richtext"

@@ -28,7 +28,8 @@ from render_text_markdown       import (
     get_text_markdown_renderer, get_show_markdown_renderer, TextMarkdownValueMapper
     )
 from render_select              import (
-    get_select_renderer, get_choice_renderer, get_entitytype_renderer, get_view_choice_renderer,
+    get_select_renderer, get_choice_renderer,
+    get_entitytype_renderer, get_view_choice_renderer,
     SelectValueMapper
     )
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
@@ -66,55 +67,57 @@ _field_edit_files = (
     })
 
 _field_get_renderer_functions = (
-    { "Placement":      get_field_placement_renderer
-    , "TokenSet":       get_field_tokenset_renderer
-    , "CheckBox":       get_bool_checkbox_renderer
-    , "Markdown":       get_text_markdown_renderer
-    , "ShowMarkdown":   get_show_markdown_renderer
-    , "RefAudio":       get_ref_audio_renderer
-    , "RefImage":       get_ref_image_renderer
-    , "URILink":        get_uri_link_renderer
-    , "URIImport":      get_uri_import_renderer
-    , "FileUpload":     get_file_upload_renderer
-    , "EntityTypeId":   get_entitytype_renderer
-    , "Enum":           get_select_renderer
-    , "Enum_optional":  get_select_renderer
-    , "Enum_choice":    get_choice_renderer
-    , "View_choice":    get_view_choice_renderer
-    , "RefMultifield":  get_ref_multifield_renderer
+    { "Placement":          get_field_placement_renderer
+    , "TokenSet":           get_field_tokenset_renderer
+    , "CheckBox":           get_bool_checkbox_renderer
+    , "Markdown":           get_text_markdown_renderer
+    , "ShowMarkdown":       get_show_markdown_renderer
+    , "RefAudio":           get_ref_audio_renderer
+    , "RefImage":           get_ref_image_renderer
+    , "URILink":            get_uri_link_renderer
+    , "URIImport":          get_uri_import_renderer
+    , "FileUpload":         get_file_upload_renderer
+    , "EntityTypeId":       get_entitytype_renderer
+    , "Enum":               get_select_renderer
+    , "Enum_optional":      get_select_renderer
+    , "Enum_choice":        get_choice_renderer
+    , "Enum_choice_opt":    get_choice_renderer
+    , "View_choice":        get_view_choice_renderer
+    , "RefMultifield":      get_ref_multifield_renderer
     # Render types recognized for backward compatibility
-    , "URIImage":       get_ref_image_renderer
-    , "Type":           get_select_renderer
-    , "View":           get_select_renderer
-    , "List":           get_select_renderer
-    , "Field":          get_select_renderer
-    , "List_sel":       get_choice_renderer
+    , "URIImage":           get_ref_image_renderer
+    , "Type":               get_select_renderer
+    , "View":               get_select_renderer
+    , "List":               get_select_renderer
+    , "Field":              get_select_renderer
+    , "List_sel":           get_choice_renderer
     })
 
 _field_value_mappers = (
-    { "TokenSet":       TokenSetValueMapper
-    , "CheckBox":       BoolCheckboxValueMapper
-    , "Markdown":       TextMarkdownValueMapper
-    , "ShowMarkdown":   TextMarkdownValueMapper
-    , "RefAudio":       RefAudioValueMapper
-    , "RefImage":       RefImageValueMapper
-    , "URILink":        URILinkValueMapper
-    , "URIImport":      URIImportValueMapper
-    , "FileUpload":     FileUploadValueMapper
-    , "EntityId":       EntityIdValueMapper
-    , "EntityTypeId":   SelectValueMapper
-    , "Enum":           SelectValueMapper
-    , "Enum_optional":  SelectValueMapper
-    , "Enum_choice":    SelectValueMapper
-    , "View_choice":    SelectValueMapper
-    , "RefMultifield":  RefMultifieldValueMapper
+    { "TokenSet":           TokenSetValueMapper
+    , "CheckBox":           BoolCheckboxValueMapper
+    , "Markdown":           TextMarkdownValueMapper
+    , "ShowMarkdown":       TextMarkdownValueMapper
+    , "RefAudio":           RefAudioValueMapper
+    , "RefImage":           RefImageValueMapper
+    , "URILink":            URILinkValueMapper
+    , "URIImport":          URIImportValueMapper
+    , "FileUpload":         FileUploadValueMapper
+    , "EntityId":           EntityIdValueMapper
+    , "EntityTypeId":       SelectValueMapper
+    , "Enum":               SelectValueMapper
+    , "Enum_optional":      SelectValueMapper
+    , "Enum_choice":        SelectValueMapper
+    , "Enum_choice_opt":    SelectValueMapper
+    , "View_choice":        SelectValueMapper
+    , "RefMultifield":      RefMultifieldValueMapper
     # Render types recognized for backward compatibility
-    , "URIImage":       RefImageValueMapper
-    , "Type":           SelectValueMapper
-    , "View":           SelectValueMapper
-    , "List":           SelectValueMapper
-    , "Field":          SelectValueMapper
-    , "List_sel":       SelectValueMapper
+    , "URIImage":           RefImageValueMapper
+    , "Type":               SelectValueMapper
+    , "View":               SelectValueMapper
+    , "List":               SelectValueMapper
+    , "Field":              SelectValueMapper
+    , "List_sel":           SelectValueMapper
     })
 
 def get_field_base_renderer(field_render_type):
@@ -136,9 +139,10 @@ def get_field_base_renderer(field_render_type):
 
 def get_entityref_edit_renderer(renderer, field_render_type):
     """
-    Returns an updated edit renderer for fields with an entity type reference
+    Returns an updated edit renderer, called for fields with an entity type reference:
+    used to force a selection renderer for fields with other view render types.
     """
-    if field_render_type not in ["Enum", "Enum_choice", "Enum_optional", "View_choice", "List_sel"]:
+    if field_render_type not in ["Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt", "View_choice", "List_sel"]:
         renderer = get_field_base_renderer("Enum")
     return renderer
 

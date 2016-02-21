@@ -4,7 +4,7 @@
 , "annal:id":                   "View_field_sel"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Field id"
-, "rdfs:comment":               "Used in a group that defines a field in a view, and specifies a Field Id to be displayed.  The containing group generally combines this with a property URI (`View_field_property`) and display placement (`View_field_placement`) values to describe a field to be displayed."
+, "rdfs:comment":               "Specifies the 'Field Id' of a field definition to be used in a viewed display.  The containing view definition may combine this with property URI (field 'Property') and display placement (field 'Position/size') values to define a field to be displayed."
 , "annal:placeholder":          "(field sel)"
 , "annal:field_name":           "Field_id"
 , "annal:field_render_type":    "Enum_optional"

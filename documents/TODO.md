@@ -55,7 +55,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
     - [x] Update renderer logic to include tool tips based on field help text
     - [x] Update test cases to avoid help-text sensitivity
-    - [ ] Update field help text to match
+    - [x] Field `Coll_parent` needs option fopr optional reference without button
+    - [x] Update field help text to match
+    - [x] Update test cases
+    - [ ] Check field names in help text for type/view/list/etc views (see above for list to check)
 - [ ] Add title attributes to all buttons - used as tooltip
 
 (release?)
@@ -67,7 +70,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
-- [ ] New logins: automatically create new user record with default permissions
+- [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 - [ ] Implement at least one other identify provider (ORCID?)
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?

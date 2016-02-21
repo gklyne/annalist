@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "List_id"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Id"
-, "rdfs:comment":               "A short identifier that distinguishes this field from all other lists in the same collection."
+, "rdfs:label":                 "List Id"
+, "rdfs:comment":               "A short identifier that distinguishes this list from all other lists in the same collection."
 , "annal:field_name":           "entity_id"
 , "annal:field_render_type":    "Slug"
 , "annal:field_value_mode":     "Value_direct"

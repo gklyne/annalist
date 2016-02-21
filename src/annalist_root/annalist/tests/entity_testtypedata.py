@@ -203,7 +203,7 @@ def recordtype_entity_view_context_data(
           [ { 'field_id':           'Type_id'
             , 'field_name':         'entity_id'
             , 'field_target_type':  'annal:Slug'
-            , 'field_label':        'Id'
+            , 'field_label':        'Type Id'
             , 'field_render_type':  'EntityId'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')

@@ -269,7 +269,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 157)    # Will change with site data
+        self.assertEqual(len(entities), 158)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -415,28 +415,28 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
         #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
-            { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
-            , ( "Coll_comment",     "Markdown",      "annal:Richtext",      "Collection metadata")
-            , ( "Coll_parent",      "Enum_choice",   "annal:Slug",          "Parent")
-            , ( "Coll_software_version", "Showtext", "annal:Text",          "S/W version")
-            , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
-            , ('Entity_label',      "Text",          "annal:Text",          "Label")
-            , ('Field_comment',     "Markdown",      "annal:Richtext",      "Help")
-            , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
-            , ('Field_type',        "Identifier",    "annal:Identifier",    "Field value type")
-            , ('Field_render',      "Enum_choice",   "annal:Slug",          "Field render type")
-            , ('Field_default',     "Text",          "annal:Text",          "Default")
-            , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
-            , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
-            , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
-            , ('List_default_type', "Enum_optional", "annal:Type",          "Record type")
-            , ('List_default_view', "Enum_optional", "annal:View",          "View")
-            , ('Type_label',        "Text",          "annal:Text",          "Label")
-            , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
-            , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
-            , ('List_choice',       "Enum_choice",   "annal:Slug",          "List view")
-            , ('View_choice',       "View_choice",   "annal:Slug",          "Choose view")
-            , ('Group_field_sel',   "Enum_optional", "annal:Slug",          "Field id")
+            { ('Entity_id',         "EntityId",         "annal:Slug",          "Id")
+            , ( "Coll_comment",     "Markdown",         "annal:Richtext",      "Collection metadata")
+            , ( "Coll_parent",      "Enum_choice_opt",  "annal:Slug",          "Parent")
+            , ( "Coll_software_version", "Showtext",    "annal:Text",          "S/W version")
+            , ('Entity_type',       "EntityTypeId",     "annal:Slug",          "Type")
+            , ('Entity_label',      "Text",             "annal:Text",          "Label")
+            , ('Field_comment',     "Textarea",         "annal:Longtext",      "Help")
+            , ('Field_placement',   "Placement",        "annal:Placement",     "Position/size")
+            , ('Field_type',        "Identifier",       "annal:Identifier",    "Field value type")
+            , ('Field_render',      "Enum_choice",      "annal:Slug",          "Field render type")
+            , ('Field_default',     "Text",             "annal:Text",          "Default")
+            , ('Field_typeref',     "Enum_optional",    "annal:Slug",          "Refer to type")
+            , ('Field_restrict',    "Text",             "annal:Text",          "Value restriction")
+            , ('List_comment',      "Markdown",         "annal:Richtext",      "Help")
+            , ('List_default_type', "Enum_optional",    "annal:Type",          "Default type")
+            , ('List_default_view', "Enum_optional",    "annal:View",          "Default view")
+            , ('Type_label',        "Text",             "annal:Text",          "Label")
+            , ('Type_comment',      "Markdown",         "annal:Richtext",      "Comment")
+            , ('Type_uri',          "Identifier",       "annal:Identifier",    "URI")
+            , ('List_choice',       "Enum_choice",      "annal:Slug",          "List view")
+            , ('View_choice',       "View_choice",      "annal:Slug",          "Choose view")
+            , ('Group_field_sel',   "Enum_optional",    "annal:Slug",          "Field id")
             })
         for f in field_entities:
             for eid in range(len(entities)):
@@ -515,7 +515,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_field/Coll_parent/%(cont)s">Coll_parent</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice/%(cont)s">Entity choice</a>
+                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
                     <span>annal:Slug</span>
@@ -599,13 +599,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 7)
         field_entities = (
-            { ( "Coll_comment",             "Markdown",     "annal:Richtext", "Collection metadata" )
-            , ( "Coll_default_list_id",     "Showtext",     "annal:Text",     "Default list"        )
-            , ( "Coll_default_view_entity", "Showtext",     "annal:Text",     "Default view entity" )
-            , ( "Coll_default_view_id",     "Showtext",     "annal:Text",     "Default view"        )
-            , ( "Coll_default_view_type",   "Showtext",     "annal:Text",     "Default view type"   )
-            , ( "Coll_parent",              "Enum_choice",  "annal:Slug",     "Parent"              )
-            , ( "Coll_software_version",    "Showtext",     "annal:Text",     "S/W version"         )
+            { ( "Coll_comment",             "Markdown",         "annal:Richtext", "Collection metadata" )
+            , ( "Coll_default_list_id",     "Showtext",         "annal:Text",     "Default list"        )
+            , ( "Coll_default_view_entity", "Showtext",         "annal:Text",     "Default view entity" )
+            , ( "Coll_default_view_id",     "Showtext",         "annal:Text",     "Default view"        )
+            , ( "Coll_default_view_type",   "Showtext",         "annal:Text",     "Default view type"   )
+            , ( "Coll_parent",              "Enum_choice_opt",  "annal:Slug",     "Parent"              )
+            , ( "Coll_software_version",    "Showtext",         "annal:Text",     "S/W version"         )
             })
         for f in field_entities:
             for eid in range(len(entities)):

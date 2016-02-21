@@ -4,7 +4,7 @@
 , "annal:id":                   "Type_supertype_uris"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Supertype URIs"
-, "rdfs:comment":               "References to URIs/CURIEs of supertypes."
+, "rdfs:comment":               "References to URIs/CURIEs of supertypes.  There may be zero, one or more such supertypes."
 , "annal:field_render_type":    "RepeatGroupRow"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Type_supertype_uri"

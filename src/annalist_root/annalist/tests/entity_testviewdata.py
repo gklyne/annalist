@@ -265,7 +265,7 @@ def recordview_entity_view_context_data(
           [ { 'field_id':           'View_id'               # fields[0]
             , 'field_name':         'entity_id'
             , 'field_target_type':  'annal:Slug'
-            , 'field_label':        'Id'
+            , 'field_label':        'View Id'
             , 'field_render_type':  'EntityId'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -295,7 +295,7 @@ def recordview_entity_view_context_data(
           , { 'field_id':           'View_target_type'      # fields[3]
             , 'field_name':         'View_target_type'
             , 'field_target_type':  'annal:Identifier'
-            , 'field_label':        'Record type'
+            , 'field_label':        'View entity type'
             , 'field_render_type':  'Identifier'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')

@@ -227,7 +227,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Type Id</span>
                 </div>
                 <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
@@ -372,13 +372,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Fields
         self.assertEqual(len(r.context['fields']), 8)
         # 1st field - Id
-        id_help = (
-            "A short identifier that distinguishes this type from all other types in the same collection."
-            )
         self.assertEqual(r.context['fields'][0]['field_id'], 'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
-        self.assertEqual(r.context['fields'][0]['field_help'], id_help)
+        self.assertEqual(r.context['fields'][0]['field_label'], 'Type Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'], "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
@@ -387,14 +383,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_value'], "00000001")
         self.assertEqual(r.context['fields'][0]['options'], self.no_options)
         # 2nd field - Label
-        label_help = (
-            "Short string used to describe record type when displayed"
-            )
         label_value = default_label("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][1]['field_id'], 'Type_label')
         self.assertEqual(r.context['fields'][1]['field_name'], 'Type_label')
         self.assertEqual(r.context['fields'][1]['field_label'], 'Label')
-        self.assertEqual(r.context['fields'][1]['field_help'], label_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'], "(label)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 columns")
@@ -403,14 +395,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_value'], label_value)
         self.assertEqual(r.context['fields'][1]['options'], self.no_options)
         # 3rd field - comment
-        comment_help = (
-            "Descriptive text about a record type"
-            )
         comment_value = default_comment("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][2]['field_id'], 'Type_comment')
         self.assertEqual(r.context['fields'][2]['field_name'], 'Type_comment')
         self.assertEqual(r.context['fields'][2]['field_label'], 'Comment')
-        self.assertEqual(r.context['fields'][2]['field_help'], comment_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'], "(type description)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
@@ -419,13 +407,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value'], comment_value)
         self.assertEqual(r.context['fields'][2]['options'], self.no_options)
         # 4th field - URI
-        uri_help = (
-            "Entity type URI"
-            )
         self.assertEqual(r.context['fields'][3]['field_id'], 'Type_uri')
         self.assertEqual(r.context['fields'][3]['field_name'], 'Type_uri')
         self.assertEqual(r.context['fields'][3]['field_label'], 'URI')
-        self.assertEqual(r.context['fields'][3]['field_help'], uri_help)
         self.assertEqual(r.context['fields'][3]['field_placeholder'], "(URI)")
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:uri")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
@@ -434,13 +418,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_value'], "")
         self.assertEqual(r.context['fields'][3]['options'], self.no_options)
         # 5th field - Supertype URIs
-        type_supertype_uris_help = (
-            "References to URIs/CURIEs of supertypes."
-            )
         self.assertEqual(r.context['fields'][4]['field_id'],          'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
-        self.assertEqual(r.context['fields'][4]['field_help'],        type_supertype_uris_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
@@ -449,13 +429,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_value'],        "") #@@
         self.assertEqual(r.context['fields'][4]['options'],            self.no_options)
         # 6th field - view id
-        view_id_help = (
-            "Default view id for this type"
-            )
         self.assertEqual(r.context['fields'][5]['field_id'], 'Type_view')
         self.assertEqual(r.context['fields'][5]['field_name'], 'Type_view')
         self.assertEqual(r.context['fields'][5]['field_label'], 'Default view')
-        self.assertEqual(r.context['fields'][5]['field_help'], view_id_help)
         self.assertEqual(r.context['fields'][5]['field_placeholder'], "(view id)")
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_view")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
@@ -464,13 +440,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value'], "Default_view")
         self.assertEqual(r.context['fields'][5]['options'], self.no_view_id + self.view_options)
         # 7th field - list id
-        list_id_help = (
-            "Default list id for this type"
-            )
         self.assertEqual(r.context['fields'][6]['field_id'], 'Type_list')
         self.assertEqual(r.context['fields'][6]['field_name'], 'Type_list')
         self.assertEqual(r.context['fields'][6]['field_label'], 'Default list')
-        self.assertEqual(r.context['fields'][6]['field_help'], list_id_help)
         self.assertEqual(r.context['fields'][6]['field_placeholder'], "(list id)")
         self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:type_list")
         self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 medium-6 columns")
@@ -515,7 +487,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'],           'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'],        'Type Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
@@ -561,13 +533,9 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_value'],        "")
         self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
         # 5th field - Supertype URIs
-        type_supertype_uris_help = (
-            "References to URIs/CURIEs of supertypes."
-            )
         self.assertEqual(r.context['fields'][4]['field_id'],          'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
-        self.assertEqual(r.context['fields'][4]['field_help'],        type_supertype_uris_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")

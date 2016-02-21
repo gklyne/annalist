@@ -203,7 +203,7 @@ def recordlist_view_context_data(
           [ { "field_id":           "List_id"                   # fields[0]
             , "field_name":         "entity_id"
             , "field_target_type":  "annal:Slug"
-            , "field_label":        "Id"
+            , "field_label":        "List Id"
             , "field_render_type":  "Slug"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
@@ -243,7 +243,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_default_type"         # fields[4]
             , "field_name":         "List_default_type"
             , "field_target_type":  "annal:Type"
-            , "field_label":        "Record type"
+            , "field_label":        "Default type"
             , "field_render_type":  "Enum_optional"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
@@ -253,7 +253,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_default_view"         # fields[5]
             , "field_name":         "List_default_view"
             , "field_target_type":  "annal:View"
-            , "field_label":        "View"
+            , "field_label":        "Default view"
             , "field_render_type":  "Enum_optional"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
@@ -273,7 +273,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_target_type"          # fields[7]
             , "field_name":         "List_target_type"
             , "field_target_type":  "annal:Identifier"
-            , "field_label":        "Record type URI"
+            , "field_label":        "List entity type"
             , "field_render_type":  "Identifier"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12")

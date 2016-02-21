@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_placement"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Position/size"
-, "rdfs:comment":               "Size of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in view.  A placement value specified in a view description overrides a value specified in the field description."
+, "rdfs:comment":               "Size of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in view.  A placement value specified in a view description overrides a value specified in the field description.  (See 'Field definition' help text for more details.)"
 , "annal:placeholder":          "(field position and size)"
 , "annal:field_name":           "Field_placement"
 , "annal:field_render_type":    "Placement"

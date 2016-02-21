@@ -27,7 +27,8 @@ _render_type_literal = set(
     , "Slug"
     , "Placement", "CheckBox", "Markdown", "ShowMarkdown"
     , "EntityId", "EntityTypeId"
-    , "Enum", "Enum_optional", "Enum_choice", "View_choice"
+    , "Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt"
+    , "View_choice"
     , "RefMultifield"
     , "Type", "View", "List", "Field"
     ])

@@ -150,7 +150,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>View Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 

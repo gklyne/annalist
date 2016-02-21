@@ -370,7 +370,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value=""/>
                     </div>
                 </div>
@@ -424,7 +424,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>
                     </div>
                 </div>
@@ -460,7 +460,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value="VIEW CREATE UPDATE DELETE"/>
                     </div>
                 </div>

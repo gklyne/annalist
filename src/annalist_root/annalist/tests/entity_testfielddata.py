@@ -209,7 +209,7 @@ def recordfield_entity_view_context_data(
         , 'fields':
           [ { 'field_id':               "Field_id"                  # 0
             , 'field_name':             "entity_id"
-            , 'field_label':            "Id"
+            , 'field_label':            "Field Id"
             , 'field_target_type':      "annal:Slug"
             , 'field_render_type':      "EntityId"
             , 'field_value_mode':       "Value_direct"
@@ -286,8 +286,8 @@ def recordfield_entity_view_context_data(
           , { 'field_id':               "Field_comment"             # 5
             , 'field_name':             "Field_comment"
             , 'field_label':            "Help"
-            , 'field_target_type':      "annal:Richtext"
-            , 'field_render_type':      "Markdown"
+            , 'field_target_type':      "annal:Longtext"
+            , 'field_render_type':      "Textarea"
             , 'field_value_mode':       "Value_direct"
             , 'field_property_uri':     "rdfs:comment"
             , 'field_placement':        get_placement_classes('small:0,12')
@@ -418,7 +418,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_repeat_label_add"    # 14
             , 'field_name':             "Field_repeat_label_add"
-            , 'field_label':            "Add fields label"
+            , 'field_label':            "Add value label"
             , 'field_target_type':      "annal:Text"
             , 'field_render_type':      "Text"
             , 'field_value_mode':       "Value_direct"
@@ -433,7 +433,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_repeat_label_delete" # 15
             , 'field_name':             "Field_repeat_label_delete"
-            , 'field_label':            "Delete fields label"
+            , 'field_label':            "Delete value label"
             , 'field_target_type':      "annal:Text"
             , 'field_render_type':      "Text"
             , 'field_value_mode':       "Value_direct"

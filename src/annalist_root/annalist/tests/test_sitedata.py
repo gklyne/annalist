@@ -964,7 +964,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                           "Display text",   "annal:Text"            ] ]
             , [ "_field/Coll_default_view_type",    ["Coll_default_view_type", 
                                                                           "Display text",   "annal:Text"            ] ]
-            , [ "_field/Coll_parent",               ["Coll_parent",       "Entity choice",  "annal:Slug"            ] ]
+            , [ "_field/Coll_parent",               ["Coll_parent",       "Optional entity choice",  
+                                                                                            "annal:Slug"            ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 
                                                                           "Display text",   "annal:Text"            ] ]
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
@@ -975,7 +976,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                           "Repeating fields as table", 
                                                                                             "annal:Field_group"     ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
-            , [ "_field/Field_comment",             ["Field_comment",     "Markdown rich text", "annal:Richtext"    ] ]
+            , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"        ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",    "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",    "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",    "annal:Identifier"       ] ]

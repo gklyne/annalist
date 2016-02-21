@@ -159,9 +159,9 @@ class FieldDescription(object):
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
-            # 'Enum_optional' adds a blank entry at the start of the list
             self._field_desc['field_choices'] = collections.OrderedDict()
-            if field_render_type == "Enum_optional":
+            if field_render_type in ["Enum_optional", "Enum_choice_opt"]:
+                # Add blank choice for optional selections
                 self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
             for e in entities:
                 eid = e.get_id()
