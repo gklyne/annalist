@@ -349,8 +349,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content)
-        self.assertContains(r, "<h3>'_type' data in collection 'testcoll'</h3>")
+        # log.info(r.content)   #@@
         field_vals = default_fields(
             coll_id="testcoll", type_id="_type", entity_id="00000001",
             default_label="(New type initial values - label)",
@@ -361,6 +360,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             tooltip2=r.context['fields'][1]['field_help'],
             tooltip3=r.context['fields'][2]['field_help'],
             tooltip4=r.context['fields'][3]['field_help'],
+            button_save_tip="Save values and return to previous view.",
+            button_view_tip="Save values and switch to entity view.",
+            button_cancel_tip="Discard unsaved changes and return to previous view.",
+            button_view_list_tip=
+                "Define initial view and list definitions for the current type.  "+
+                "(View and list type information and URI are taken from the current type; "+
+                "other fields are taken from the corresponding &#39;_initial_values&#39; record, "+
+                "and may be extended or modified later.)"
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -433,9 +440,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
-                  <input type="submit" name="save"      value="Save" />
-                  <input type="submit" name="view"      value="View" />
-                  <input type="submit" name="cancel"    value="Cancel" />
+                  <input type="submit" name="save"      value="Save"   title="%(button_save_tip)s"/>
+                  <input type="submit" name="view"      value="View"   title="%(button_view_tip)s"/>
+                  <input type="submit" name="cancel"    value="Cancel" title="%(button_cancel_tip)s"/>
                 </div>
               </div>
             </div>
@@ -444,7 +451,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_right_classes)s">
-                  <input name="Define_view_list" value="Define view+list" type="submit">
+                  <input name="Define_view_list" value="Define view+list" type="submit" 
+                         title="%(button_view_list_tip)s" />
                 </div>
               </div>
             </div>

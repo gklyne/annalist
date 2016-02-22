@@ -118,7 +118,6 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>'_coll' data in collection '_annalist_site'</h3>")
         field_vals = default_fields(
             coll_id="_annalist_site", 
             type_id="_coll", 
@@ -275,26 +274,6 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow8a = """
-            <div class="%(space_classes)s">
-              <div class="row">
-                <div class="small-12 columns">
-                  &nbsp;
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=2)
-        formrow8b = """
-            <div class="%(button_wide_classes)s">
-              <div class="row">
-                <div class="%(button_left_classes)s">
-                  <input type="submit" name="save"    value="Save" />
-                  <input type="submit" name="view"    value="View" />
-                  <input type="submit" name="cancel"  value="Cancel" />
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=4)
         # log.info(r.content)
         self.assertContains(r, formrow1a, html=True)
         self.assertContains(r, formrow1b, html=True)
@@ -306,8 +285,6 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow6a, html=True)
         self.assertContains(r, formrow6b, html=True)
         self.assertContains(r, formrow7,  html=True)
-        self.assertContains(r, formrow8a, html=True)
-        self.assertContains(r, formrow8b, html=True)
         return
 
     # collection default view

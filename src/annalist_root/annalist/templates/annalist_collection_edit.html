@@ -28,10 +28,10 @@
                             <option value="{{t.get_id}}">{{t.get_label}}</option>
                             {% endfor %}
                          </select>
-                        <input type="submit" name="type_new"    value="New" />
-                        <input type="submit" name="type_copy"   value="Copy" />
-                        <input type="submit" name="type_edit"   value="Edit" />
-                        <input type="submit" name="type_delete" value="Delete" />
+                        <input type="submit" name="type_new"    value="New"    title="Define new type"/>
+                        <input type="submit" name="type_copy"   value="Copy"   title="Copy selected type"/>
+                        <input type="submit" name="type_edit"   value="Edit"   title="Edit selected type"/>
+                        <input type="submit" name="type_delete" value="Delete" title="Delete selected type"/>
                     </div>
                     <div class="medium-4 columns">
                         <h4>List views</h4>
@@ -41,10 +41,10 @@
                             <option value="{{l.get_id}}">{{l.get_label}}</option>
                             {% endfor %}
                          </select>
-                        <input type="submit" name="list_new"    value="New" />
-                        <input type="submit" name="list_copy"   value="Copy" />
-                        <input type="submit" name="list_edit"   value="Edit" />
-                        <input type="submit" name="list_delete" value="Delete" />
+                        <input type="submit" name="list_new"    value="New"    title="Define new list"/>
+                        <input type="submit" name="list_copy"   value="Copy"   title="Copy selected list"/>
+                        <input type="submit" name="list_edit"   value="Edit"   title="Edit selected list"/>
+                        <input type="submit" name="list_delete" value="Delete" title="Delete selected list"/>
                     </div>
                     <div class="medium-4 columns">
                         <h4>Record views</h4>
@@ -54,16 +54,16 @@
                             <option value="{{v.get_id}}">{{v.get_label}}</option>
                             {% endfor %}
                          </select>
-                        <input type="submit" name="view_new"    value="New" />
-                        <input type="submit" name="view_copy"   value="Copy" />
-                        <input type="submit" name="view_edit"   value="Edit" />
-                        <input type="submit" name="view_delete" value="Delete" />
+                        <input type="submit" name="view_new"    value="new"    title="Define new view"/>
+                        <input type="submit" name="view_copy"   value="Copy"   title="Copy selected view"/>
+                        <input type="submit" name="view_edit"   value="Edit"   title="Edit selected view"/>
+                        <input type="submit" name="view_delete" value="Delete" title="Delete selected view"/>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="medium-4 columns">
-                        <input type="submit" name="close" value="Close" />
+                        <input type="submit" name="close" value="Close" title="Return to previous view"/>
                     </div>
                 </div>
 

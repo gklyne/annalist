@@ -18,7 +18,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 # Version 0.1.27, towards 0.1.28
 
 - [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
-    - Changed calling enumeration logic to log a warning rather when referenced type is absent.
+    - Changed calling enumeration logic to log a warning rather than error when referenced type is absent.
     - May want to revisit to enumerate values without implied values if type is missing.
     - rename "inferred_values" to "implied values".
 - [x] Provide option to remove type constraint when listing entities.
@@ -47,19 +47,23 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] lists
     - [x] field groups
     - [x] enumerations (add label as header)
-    - [x] default user permissions
+    - [x] user permissions
     - [x] vocabulary namespaces
 - [x] Top menu bar vertical alignment: menu text should use common baseline
     - A bit hacky - had to pixel-tweak the height - is there a better way?
     - Converted pixels to REMs - maybe this will be slightly more consistent
-- [ ] Use field comment text as tooltip on forms, to tell user how a field value is used
+- [x] Use field comment text as tooltip on forms, to tell user how a field value is used
     - [x] Update renderer logic to include tool tips based on field help text
     - [x] Update test cases to avoid help-text sensitivity
     - [x] Field `Coll_parent` needs option fopr optional reference without button
     - [x] Update field help text to match
     - [x] Update test cases
-    - [ ] Check field names in help text for type/view/list/etc views (see above for list to check)
-- [ ] Add title attributes to all buttons - used as tooltip
+    - [x] Check field names in help text for type/view/list/etc views (see above for list to check)
+- [x] Add title attributes to all buttons - used as tooltip
+    + update or trim test cases
+    + remove commented-out up edit/view/list templates
+    + remove spurious tests from test cases
+- [ ] Create new field type for namespace/vocab id - label 'Prefix'
 
 (release?)
 
