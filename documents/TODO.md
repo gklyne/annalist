@@ -60,7 +60,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Update test cases
     - [x] Check field names in help text for type/view/list/etc views (see above for list to check)
 - [x] Add title attributes to all buttons - used as tooltip
-- [ ] Create new field type for namespace/vocab id - label 'Prefix'
+- [x] Create new field type for namespace/vocab id - label 'Prefix'
 
 (release?)
 

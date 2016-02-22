@@ -1041,6 +1041,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/View_id",                   ["View_id"                   ] ]
             , [ "_field/View_label",                ["View_label"                ] ]
             , [ "_field/View_target_type",          ["View_target_type"          ] ]
+            , [ "_field/Vocab_id",                  ["Vocab_id"                  ] ]
             , [ "_field/Vocab_uri",                 ["Vocab_uri"                 ] ]
             ])
         self.check_list_row_data(s, trows_expected)
@@ -1201,7 +1202,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
         expect_field_choices = no_selection("(field sel)") + get_site_vocab_fields_sorted()
         expect_fields = (
-            [ "_field/Entity_id"
+            [ "_field/Vocab_id"
             , "_field/Entity_label"
             , "_field/Entity_comment"
             , "_field/Vocab_uri"

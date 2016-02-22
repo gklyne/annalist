@@ -394,6 +394,7 @@ site_view_field_group_fields = (
 
 site_vocab_fields = (
     [ FieldChoice("_field/_initial_values")
+    , FieldChoice("_field/Vocab_id",                   label="Prefix"              )
     , FieldChoice("_field/Vocab_uri",                  label="Vocabulary URI"      )
     ])
 
