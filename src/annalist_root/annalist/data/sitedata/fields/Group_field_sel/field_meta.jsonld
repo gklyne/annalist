@@ -4,7 +4,7 @@
 , "annal:id":                   "Group_field_sel"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Field id"
-, "rdfs:comment":               "Specifies a Field Id to be included in a view or list display that references the current field group.  May be specified along with a property URI ('Group_field_property') and display placement ('Group_field_placement') values to describe a field to be displayed."
+, "rdfs:comment":               "A Field Id to be included in a view or list display that references the current field group.  May be specified along with a property URI ('Group_field_property') and display placement ('Group_field_placement') values to describe a field to be displayed."
 , "annal:placeholder":          "(field sel)"
 , "annal:field_name":           "Field_id"
 , "annal:field_render_type":    "Enum_optional"

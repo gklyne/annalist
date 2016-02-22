@@ -295,7 +295,6 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>'_user' data in collection 'testcoll'</h3>")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_user", entity_id="00000001",
             tooltip1=r.context['fields'][0]['field_help'],
@@ -376,34 +375,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6a = """
-            <div class="%(space_classes)s">
-              <div class="row">
-                <div class="small-12 columns">
-                  &nbsp;
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=2)
-        formrow6b = """
-            <div class="%(button_wide_classes)s">
-              <div class="row">
-                <div class="%(button_left_classes)s">
-                  <input type="submit" name="save"      value="Save" />
-                  <input type="submit" name="view"      value="View" />
-                  <input type="submit" name="cancel"    value="Cancel" />
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=4)
         # log.info(r.content)
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)
         self.assertContains(r, formrow3,  html=True)
         self.assertContains(r, formrow4,  html=True)
         self.assertContains(r, formrow5,  html=True)
-        self.assertContains(r, formrow6a, html=True)
-        self.assertContains(r, formrow6b, html=True)
         return
 
     def test_user_permissions_form_rendering(self):

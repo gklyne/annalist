@@ -663,6 +663,7 @@ class DisplayInfo(object):
                     [ { 'button_id':    b[ANNAL.CURIE.button_id]
                       , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
                       , 'button_label': b[ANNAL.CURIE.button_label]
+                      , 'button_help':  b[ANNAL.CURIE.button_help]
                       } for b in task_buttons
                     ]
                 })

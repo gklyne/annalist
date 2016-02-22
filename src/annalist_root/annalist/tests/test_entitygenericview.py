@@ -372,7 +372,6 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
         view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")

@@ -304,7 +304,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)
         self.assertContains(r, "<title>Entity testcoll/testtype/entity1 - Default record view - Collection testcoll</title>")
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
         view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
