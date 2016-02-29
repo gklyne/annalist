@@ -5,7 +5,7 @@
 , "annal:type_id":  "_vocab"
 , "annal:type":     "annal:Vocabulary"
 , "rdfs:label":     "OWL ontology namespace"
-, "rdfs:comment":   "Vocabulary namespace for terms used to define OWL ontologies.\r\n\r\n(e.g. owl:sameAs to indicate subject === object)\r\n"
+, "rdfs:comment":   "# Namespace: `owl`\r\n\r\nVocabulary namespace for terms used to define OWL ontologies.\r\n\r\n(e.g. owl:sameAs to indicate subject === object)\r\n"
 , "annal:uri":      "http://www.w3.org/2002/07/owl#"
 , "rdfs:seeAlso":
     [ { "owl:sameAs":   "http://www.w3.org/TR/owl2-overview/" }

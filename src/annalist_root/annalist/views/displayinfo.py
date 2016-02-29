@@ -236,10 +236,10 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             assert list_id
-            log.debug(
-                "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
-                [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
-                )
+            # log.debug(
+            #     "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
+            #     [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
+            #     )
             if not RecordList.exists(self.collection, list_id, altscope="all"):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
@@ -251,11 +251,21 @@ class DisplayInfo(object):
             else:
                 self.list_id    = list_id
                 self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
-                if self.type_id is None and self.entitytypeinfo is None:
+                if "@error" in self.recordlist:
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.RECORD_LIST_LOAD_ERROR%(
+                                { 'id':       list_id
+                                , 'file':     self.recordlist["@error"]
+                                , 'message':  self.recordlist["@message"]
+                                })
+                            )
+                        )
+                elif self.type_id is None and self.entitytypeinfo is None:
                     self.get_type_info(
                         extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
                         )
-                log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
+                # log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
     def get_view_info(self, view_id):
@@ -278,7 +288,17 @@ class DisplayInfo(object):
             else:
                 self.view_id    = view_id
                 self.recordview = RecordView.load(self.collection, view_id, altscope="all")
-                log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
+                if "@error" in self.recordview:
+                    self.http_response = self.view.error(
+                        dict(self.view.error500values(),
+                            message=message.RECORD_VIEW_LOAD_ERROR%(
+                                { 'id':       list_id
+                                , 'file':     self.recordview["@error"]
+                                , 'message':  self.recordview["@message"]
+                                })
+                            )
+                        )
+                # log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
     def get_entity_info(self, action, entity_id):
@@ -561,47 +581,72 @@ class DisplayInfo(object):
         list_ref = make_resource_ref_query(request_url, layout.ENTITY_LIST_FILE)
         return list_ref
 
-    def context_data(self):
+    def context_data(self, entity_label=None):
         """
-        Return dictionary of rendering context data available from the elements assembled.
+        Return dictionary of rendering context data available from the 
+        elements assembled.
 
-        Values that are added here to the view context are used for view rendering, and
-        are not passed to the entity value mapping process.
+        Values that are added here to the view context are used for view rendering, 
+        and are not passed to the entity value mapping process.
+
+        NOTE: values that are needed to be accessible as part of bound_field values 
+        must be provided earlier in the form generation process, as elements of the 
+        "context_extra_values" dictionary.
+
+        Context values set here do not need to be named in the valuye maop used to
+        create the view context.
         """
         context = (
-            { 'site_title':     self.sitedata["title"]
-            , 'title':          self.sitedata["title"]
-            , 'action':         self.action
-            , 'coll_id':        self.coll_id
-            , 'type_id':        self.type_id
-            , 'view_id':        self.view_id
-            , 'list_id':        self.list_id
+            { 'site_label':         self.sitedata["title"]
+            , 'title':              self.sitedata["title"]
+            , 'heading':            self.sitedata["title"]
+            , 'action':             self.action
+            , 'coll_id':            self.coll_id
+            , 'type_id':            self.type_id
+            , 'view_id':            self.view_id
+            , 'list_id':            self.list_id
             })
         context.update(self.authorizations)
-        if hasattr(self.view, 'help'):
+        if hasattr(self.view, 'help') and self.view.help:
             context.update(
                 { 'help_filename':  self.view.help
                 })
+        if hasattr(self.view, 'help_markdown') and self.view.help_markdown:
+            context.update(
+                { 'help_markdown':  self.view.help_markdown
+                })
         if self.collection:
             context.update(
-                { 'title':      self.collection[RDFS.CURIE.label]
+                { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]
                 })
+            context['title'] = "%(coll_label)s"%context
         if self.recordview:
             context.update(
-                { 'view_label': self.recordview[RDFS.CURIE.label]
+                { 'heading':            self.recordview[RDFS.CURIE.label]
+                , 'view_label':         self.recordview[RDFS.CURIE.label]
+                , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
+            context['title'] = "%(view_label)s - %(coll_label)s"%context
             task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
             self.add_task_button_context(task_buttons, context)
         if self.recordlist:
             context.update(
-                { 'list_label': self.recordlist[RDFS.CURIE.label]
-                , 'entity_list_ref': self.get_entity_list_ref()
+                { 'heading':            self.recordlist[RDFS.CURIE.label]
+                , 'list_label':         self.recordlist[RDFS.CURIE.label]
+                , 'entity_list_ref':    self.get_entity_list_ref()
                 })
+            context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.entitytypeinfo:
             context.update(
-                { 'entity_data_ref': self.get_entity_data_ref()
+                { 'entity_data_ref':    self.get_entity_data_ref()
                 })
+        if entity_label:
+            context.update(
+                { 'entity_label':       entity_label
+                })
+            # context['heading'] = "%(entity_label)s - %(view_label)s"%context
+            context['title']   = "%(entity_label)s - %(view_label)s - %(coll_label)s"%context
         return context
 
     def add_task_button_context(self, task_buttons, context):
@@ -618,6 +663,7 @@ class DisplayInfo(object):
                     [ { 'button_id':    b[ANNAL.CURIE.button_id]
                       , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
                       , 'button_label': b[ANNAL.CURIE.button_label]
+                      , 'button_help':  b[ANNAL.CURIE.button_help]
                       } for b in task_buttons
                     ]
                 })

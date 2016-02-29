@@ -4,7 +4,7 @@
 , "annal:id":                   "Entity_label"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Label"
-, "rdfs:comment":               "Short string used to describe entity when displayed"
+, "rdfs:comment":               "Short string used to label a displayed entity."
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

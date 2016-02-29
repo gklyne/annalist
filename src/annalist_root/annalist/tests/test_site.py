@@ -155,7 +155,6 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.id],                 "_default_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Default permissions")
-        self.assertEqual(ugp[RDFS.CURIE.comment],             "Default permissions for authenticated user.")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_user_perms")
         self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
         return

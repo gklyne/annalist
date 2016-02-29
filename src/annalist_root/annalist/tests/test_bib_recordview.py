@@ -138,13 +138,19 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_view", entity_id="BibEntry_view")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_view", entity_id="BibEntry_view",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][4]['field_help'],
+            tooltip5=r.context['fields'][5]._field_description['group_field_descs'][0]['field_help']
+          )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>View Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -154,7 +160,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -168,7 +174,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Help</span>
@@ -184,7 +190,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Editable view?</span>
@@ -197,7 +203,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow5 = ("""
-            <div class="small-12 medium-4 columns">
+            <div class="small-12 medium-4 columns" title="%(tooltip5)s">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
                   <span>Field id</span>
@@ -225,6 +231,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             </div>        
             """
         # log.info("*** BibEntry_view content: "+r.content)
+        # log.info("*** %r"%(r.context['fields'][5]._field_description['field_help']))
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

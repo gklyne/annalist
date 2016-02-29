@@ -178,6 +178,12 @@ def recordlist_view_context_data(
         coll_id="testcoll", list_id=None, orig_id=None, view_ids=[],
         action=None, update="RecordList"
     ):
+    if list_id:
+        list_label = "%s %s/%s"%(update, coll_id, list_id)
+        list_descr = "%s help for %s/%s"%(update, coll_id, list_id)
+    else:
+        list_label = "%s list (%s/@@list_id@@)"%(update, coll_id)
+        list_descr = "%s description ... (%s/%s)"%(update, coll_id, list_id)
     list_fields = (
         [ { "annal:field_id":         "_field/Entity_id"
           , "annal:field_placement":  "small:0,3"
@@ -187,7 +193,8 @@ def recordlist_view_context_data(
           }
         ])
     context_dict = (
-        { "title":              "Collection %s"%(coll_id)
+        { "title":              "%s - List definition - Collection %s"%(list_label, coll_id)
+        , 'heading':            "List definition"
         , "coll_id":            coll_id
         , "type_id":            "_list"
         , "orig_id":            "orig_list_id"
@@ -196,7 +203,7 @@ def recordlist_view_context_data(
           [ { "field_id":           "List_id"                   # fields[0]
             , "field_name":         "entity_id"
             , "field_target_type":  "annal:Slug"
-            , "field_label":        "Id"
+            , "field_label":        "List Id"
             , "field_render_type":  "Slug"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
@@ -236,7 +243,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_default_type"         # fields[4]
             , "field_name":         "List_default_type"
             , "field_target_type":  "annal:Type"
-            , "field_label":        "Record type"
+            , "field_label":        "Default type"
             , "field_render_type":  "Enum_optional"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
@@ -246,7 +253,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_default_view"         # fields[5]
             , "field_name":         "List_default_view"
             , "field_target_type":  "annal:View"
-            , "field_label":        "View"
+            , "field_label":        "Default view"
             , "field_render_type":  "Enum_optional"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
@@ -266,7 +273,7 @@ def recordlist_view_context_data(
           , { "field_id":           "List_target_type"          # fields[7]
             , "field_name":         "List_target_type"
             , "field_target_type":  "annal:Identifier"
-            , "field_label":        "Record type URI"
+            , "field_label":        "List entity type"
             , "field_render_type":  "Identifier"
             , "field_value_mode":   "Value_direct"
             , "field_placement":    get_placement_classes("small:0,12")
@@ -287,8 +294,8 @@ def recordlist_view_context_data(
         })
     if list_id:
         context_dict['fields'][0]['field_value'] = list_id
-        context_dict['fields'][2]['field_value'] = '%s %s/%s'%(update, coll_id, list_id)
-        context_dict['fields'][3]['field_value'] = '%s help for %s/%s'%(update, coll_id, list_id)
+        context_dict['fields'][2]['field_value'] = list_label
+        context_dict['fields'][3]['field_value'] = list_descr
         context_dict['orig_id']     = list_id
     if orig_id:
         context_dict['orig_id']     = orig_id

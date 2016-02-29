@@ -4,7 +4,7 @@
 , "annal:id":                   "Group_comment"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Help"
-, "rdfs:comment":               "Descriptive text about the field group.  This may be used as help or tooltip text in appropriate contexts."
+, "rdfs:comment":               "Description of the field group. This is used as help or tooltip text."
 , "annal:field_render_type":    "Markdown"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Richtext"

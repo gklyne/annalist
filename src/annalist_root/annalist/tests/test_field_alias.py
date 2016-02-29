@@ -118,7 +118,6 @@ class FieldAliasTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
         # Test context
         url = entity_url(coll_id="testcoll", type_id="BibEntry_type", entity_id="bibentity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -203,7 +202,8 @@ class FieldAliasTest(AnnalistTestCase):
         del v['bib:author']
         self.assertDictionaryMatch(e.get_values(), v)
         self.assertEqual(e.get_values().get(RDFS.CURIE.label, None),   None)
-        self.assertEqual(e.get_values().get(RDFS.CURIE.comment, None), None)
+        # Comment defaults from aliased label value
+        self.assertEqual(e.get_values().get(RDFS.CURIE.comment, None), f['Bib_title'])
         return
 
     def test_save_field_alias_target(self):

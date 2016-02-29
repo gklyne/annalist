@@ -52,13 +52,9 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 # Table used as basis, or initial values, for a dynamically generated 
 # entity-value map for list displays
 listentityvaluemap  = (
-        [ SimpleValueMap(c='title',                 e=None,                  f=None                  )
-        , SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
-        , SimpleValueMap(c='coll_id',               e=None,                  f=None                  )
-        , SimpleValueMap(c='coll_label',            e=None,                  f=None                  )
-        , SimpleValueMap(c='type_id',               e=None,                  f=None                  )
-        , SimpleValueMap(c='list_id',               e=None,                  f=None                  )
-        , SimpleValueMap(c='list_label',            e=None,                  f=None                  )
+        [ SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
+        , SimpleValueMap(c='url_type_id',           e=None,                  f=None                  )
+        , SimpleValueMap(c='url_list_id',           e=None,                  f=None                  )
         , SimpleValueMap(c='list_choices',          e=None,                  f=None                  )
         , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
@@ -110,7 +106,10 @@ class EntityGenericListView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap  = EntityValueMap(listentityvaluemap)
-        log.debug("entitylist %r"%listinfo.recordlist.get_values())
+        # log.debug(
+        #     "EntityGenericListView.get_list_entityvaluemap entitylist %r"%
+        #     listinfo.recordlist.get_values()
+        #     )
 
         # Need to generate
         # 1. 'fields':  (context receives list of field descriptions used to generate row headers)
@@ -164,6 +163,7 @@ class EntityGenericListView(AnnalistGenericView):
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
             return listinfo.http_response
+        self.help_markdown = listinfo.recordlist.get(RDFS.CURIE.comment, None)
         log.debug("listinfo.list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         try:
@@ -172,7 +172,7 @@ class EntityGenericListView(AnnalistGenericView):
             entity_list = (
                 EntityFinder(listinfo.collection, selector=selector)
                     .get_entities_sorted(
-                        user_perms, type_id=type_id, scope=scope,
+                        user_perms, type_id=type_id, altscope=scope,
                         context=listinfo.recordlist, search=search_for
                         )
                 )
@@ -185,7 +185,9 @@ class EntityGenericListView(AnnalistGenericView):
                 , 'scope':                  scope
                 , 'coll_id':                coll_id
                 , 'type_id':                type_id
+                , 'url_type_id':            type_id
                 , 'list_id':                listinfo.list_id
+                , 'url_list_id':            list_id
                 , 'search_for':             search_for
                 , 'list_choices':           self.get_list_choices_field(listinfo)
                 , 'collection_view':        self.collection_view_url
@@ -222,8 +224,8 @@ class EntityGenericListView(AnnalistGenericView):
         Handle response from dynamically generated list display form.
         """
         log.info("views.entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
-        # log.info("  %s"%(self.get_request_path()))
-        # log.info("  form data %r"%(request.POST))
+        log.log(settings.TRACE_FIELD_VALUE, "  %s"%(self.get_request_path()))
+        log.log(settings.TRACE_FIELD_VALUE, "  form data %r"%(request.POST))
         listinfo = self.list_setup(coll_id, type_id, list_id, request.POST.dict())
         if listinfo.http_response:
             return listinfo.http_response
@@ -348,11 +350,12 @@ class EntityGenericListView(AnnalistGenericView):
                         listinfo.get_continuation_url_dict()
                         )
                     )
-            if ("view" in request.POST) or ("view_all" in request.POST):
-                action = "list"  
+            if ( ("view" in request.POST) or ("view_all"  in request.POST) ):
+                action       = "list"
+                list_type_id = None if "view_all_types" in request.POST else type_id
                 redirect_uri = self.get_list_url(
                     coll_id, extract_entity_id(request.POST['list_choice']),
-                    type_id=type_id,
+                    type_id=list_type_id,
                     scope="all" if "view_all" in request.POST else None,
                     search=request.POST['search_for'],
                     query_params=listinfo.get_continuation_url_dict()
@@ -393,7 +396,7 @@ class EntityGenericListView(AnnalistGenericView):
         field_description = field_description_from_view_field(
             listinfo.collection, 
             { ANNAL.CURIE.field_id: "List_choice"
-            , ANNAL.CURIE.field_placement: "small:0,12;medium:5,5" },
+            , ANNAL.CURIE.field_placement: "small:0,12;medium:0,9" },
             {}
             )
         entityvals = { field_description['field_property_uri']: listinfo.list_id }

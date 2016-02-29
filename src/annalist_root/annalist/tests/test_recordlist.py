@@ -160,9 +160,9 @@ class RecordListTest(AnnalistTestCase):
         v.update(
             { '@id':            "annal:display/Default_list"
             , 'rdfs:label':     "List entities"
-            , 'rdfs:comment':   "Default list of entities of given type"
             , 'annal:uri':      "annal:display/Default_list"
             })
+        v.pop('rdfs:comment', None)
         self.assertDictionaryMatch(td, v)
         return
 
@@ -237,7 +237,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=0,
             list_id="(?list_id)", 
             list_label="(?list_label)",
-            list_help="(?list_help)",
             list_url="(?list_url)",
             list_uri="(?list_uri)",
             list_type="Enum_list_type/List",
@@ -262,7 +261,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # 1
         self.assertEqual(r.context['fields'][0]['field_id'], 'List_id')
         self.assertEqual(r.context['fields'][0]['field_name'], 'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'], 'List Id')
         self.assertEqual(r.context['fields'][0]['field_value'], list_id)
         # 2
         self.assertEqual(r.context['fields'][1]['field_id'], 'List_type')
@@ -278,16 +277,15 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_id'], 'List_comment')
         self.assertEqual(r.context['fields'][3]['field_name'], 'List_comment')
         self.assertEqual(r.context['fields'][3]['field_label'], 'Help')
-        self.assertEqual(r.context['fields'][3]['field_value'], list_help)
         # 5
         self.assertEqual(r.context['fields'][4]['field_id'], 'List_default_type')
         self.assertEqual(r.context['fields'][4]['field_name'], 'List_default_type')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Record type')
+        self.assertEqual(r.context['fields'][4]['field_label'], 'Default type')
         self.assertEqual(r.context['fields'][4]['field_value'], list_default_type)
         # 6
         self.assertEqual(r.context['fields'][5]['field_id'], 'List_default_view')
         self.assertEqual(r.context['fields'][5]['field_name'], 'List_default_view')
-        self.assertEqual(r.context['fields'][5]['field_label'], 'View')
+        self.assertEqual(r.context['fields'][5]['field_label'], 'Default view')
         self.assertEqual(r.context['fields'][5]['field_value'], list_default_view)
         # 7
         self.assertEqual(r.context['fields'][6]['field_id'], 'List_entity_selector')
@@ -297,7 +295,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # 8
         self.assertEqual(r.context['fields'][7]['field_id'], 'List_target_type')
         self.assertEqual(r.context['fields'][7]['field_name'], 'List_target_type')
-        self.assertEqual(r.context['fields'][7]['field_label'], 'Record type URI')
+        self.assertEqual(r.context['fields'][7]['field_label'], 'List entity type')
         self.assertEqual(r.context['fields'][7]['field_value'], list_target_type)
         # 9th field - list of fields from target entity for each list entry
         if num_fields == 2:
@@ -346,13 +344,22 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>'_list' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_list", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_list", entity_id="00000001",
+            default_comment=r.context['fields'][3]['field_value'],
+            tooltip1a=r.context['fields'][0]['field_help'],
+            tooltip1b=r.context['fields'][1]['field_help'],
+            tooltip2=r.context['fields'][2]['field_help'],
+            tooltip3=r.context['fields'][3]['field_help'],
+            tooltip4=r.context['fields'][4]['field_help'],
+            tooltip5=r.context['fields'][5]['field_help'],
+            tooltip6=r.context['fields'][6]['field_help'],
+            )
         formrow1a = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>List Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="entity_id" 
@@ -363,7 +370,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow1b = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>List display type</span>
@@ -380,7 +387,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -394,7 +401,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Help</span>
@@ -410,15 +417,15 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Record type</span>
+                  <span>Default type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_type", "Record type",
+                    "List_default_type", "Default type",
                     no_selection("(default record type)") + self.type_options,
                     "_type/Default_type",
                     placeholder="(default record type)"
@@ -429,15 +436,15 @@ class RecordListEditViewTest(AnnalistTestCase):
             </div>
             """)%field_vals(width=6)
         formrow5 = ("""
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip5)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>View</span>
+                  <span>Default view</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_select_options(
-                    "List_default_view", "View",
+                    "List_default_view", "Default view",
                     no_selection("(view id)") + self.view_options,
                     "_view/Default_view",
                     placeholder="(view id)"
@@ -455,7 +462,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             "etc.)"
             )
         formrow6 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip6)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Selector</span>
@@ -498,7 +505,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=3,
             list_id="00000001",
             list_label=default_label("testcoll", "_list", "00000001"),
-            list_help=default_comment("testcoll", "_list", "00000001"),
             list_url=list_url,
             list_uri=None,
             list_type="Enum_list_type/List",
@@ -526,7 +532,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="00000001",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri=None
             )
@@ -567,7 +572,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="Default_list",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri="annal:display/Default_list"
             )
@@ -613,7 +617,6 @@ class RecordListEditViewTest(AnnalistTestCase):
             num_fields=2,
             list_id="Default_list",
             list_label="List entities",
-            list_help="Default list of entities of given type",
             list_url=list_url,
             list_uri="annal:display/Default_list"
             )

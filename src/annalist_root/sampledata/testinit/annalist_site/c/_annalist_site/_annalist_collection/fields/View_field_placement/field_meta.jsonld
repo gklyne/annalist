@@ -4,7 +4,7 @@
 , "annal:id":                   "View_field_placement"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Position/size"
-, "rdfs:comment":               "Used in a group that defines a field in a view, and specifies the size and positioning hint for the displayed field.  The containing group generally combines this with a field selector (`View_field_sel`) and property URI (`View_field_property`) values to describe a field to be displayed."
+, "rdfs:comment":               "Defines placement of a field used in a view display.  The containing view definition may combine this with field selector (field 'Field Id') and property URI (field 'Property') values to define a field to be displayed.  If specified, overrides the placement value from the corresponding field definition."
 , "annal:placeholder":          "(field position and size)"
 , "annal:field_name":           "Field_placement"
 , "annal:field_render_type":    "Placement"

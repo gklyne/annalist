@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.26; this release includes a number of small presentation, usability and bug fixes.
+Current status: public prototype release 0.1.28; this release includes support for customizable online help, and a number of presentation, usability and bug fixes.
 
 
 # V1.0 release
@@ -66,6 +66,7 @@ Alternative form of list view, e.g. for image galeries.
 - Authentication mechanisms
   - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
 - OAuth2 dynamic registration - https://tools.ietf.org/html/rfc7591 - if IDPs support it.
+- EUdat?
 
 
 ## Support multiple entity providers

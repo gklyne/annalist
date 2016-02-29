@@ -54,8 +54,8 @@ class AnnalistUser(EntityData):
                     allowing site-wide AnnalistUser values to be found.
         """
         super(AnnalistUser, self).__init__(parent, type_id)
-        log.debug("AnnalistUser %s: dir %s"%(type_id, self._entitydir))
-        log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
+        # log.debug("AnnalistUser %s: dir %s"%(type_id, self._entitydir))
+        # log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
         return
 
 # End.

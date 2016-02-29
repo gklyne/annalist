@@ -4,7 +4,7 @@
 , "annal:id":                   "Group_fields"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Fields"
-, "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a field group description (yes, it is self-referential)."
+, "rdfs:comment":               "References the field group definition used when displaying and/or editing a field group definition.  (Yes, it is self-referential.)"
 , "annal:field_render_type":    "RepeatGroupRow"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Field_group"

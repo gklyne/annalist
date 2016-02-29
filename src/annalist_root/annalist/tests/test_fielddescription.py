@@ -96,7 +96,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_name':                 '_initial_values'
             , 'field_target_type':          ANNAL.CURIE.Text
             , 'field_label':                ''
-            , 'field_help':                 ''
+            , 'field_help':                 '(tooltip text here)'
             , 'field_render_type':          'Text'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ''
@@ -130,7 +130,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             { 'field_id':                   'Field_id'
             , 'field_name':                 'entity_id'
             , 'field_target_type':          ANNAL.CURIE.Slug
-            , 'field_label':                'Id'
+            , 'field_label':                'Field Id'
             , 'field_render_type':          'EntityId'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.id

@@ -4,7 +4,7 @@
 , "annal:id":                   "User_name"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "User name"
-, "rdfs:comment":               "User name consisting of first_name and last_name"
+, "rdfs:comment":               "User name consisting of a first_name and a last_name, separated by whitespace.  (@@TODO: review this; the format is used to integrate with the underlying Django mechanisms, but some more flexible mapping shoul;d be used (e.g. per BibTex?)@@)"
 , "annal:placeholder":          "(user name)"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"

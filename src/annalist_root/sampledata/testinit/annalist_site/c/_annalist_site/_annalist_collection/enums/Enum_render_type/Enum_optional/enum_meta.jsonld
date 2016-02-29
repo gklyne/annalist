@@ -4,6 +4,6 @@
 , "annal:id":           "Enum_optional"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Optional entity ref"
-, "rdfs:comment":       "An entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection, or no value at all."
-, "annal:uri":          "annal:field_render_type/Enum_optional"
+, "rdfs:comment":       "# Render type: Optional entity reference\r\n\r\nAn entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection, or no value at all.  Rendering also includes a '+' button that can be used to define a new instance of thereferenced entity type."
+, "annal:uri":          "annal:Enum_render_type/Enum_optional"
 }

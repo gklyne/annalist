@@ -150,10 +150,10 @@ class AnnalistUserTest(AnnalistTestCase):
         uev = annalistuser_read_values(user_id="_unknown_user_perms")
         uev.update(
             { 'rdfs:label':             'Unknown user'
-            , 'rdfs:comment':           'Permissions for unauthenticated user.'
             , 'annal:user_uri':         'annal:User/_unknown_user_perms'
             , 'annal:user_permissions': ['VIEW']
             })
+        uev.pop('rdfs:comment', None)
         self.assertDictionaryMatch(uld, uev)
         return
 
@@ -295,11 +295,16 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
-        self.assertContains(r, "<h3>'_user' data in collection 'testcoll'</h3>")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            tooltip5=r.context['fields'][4]['field_help']
+            )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>User Id</span>
@@ -313,7 +318,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>User name</span>
@@ -327,7 +332,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Description</span>
@@ -343,7 +348,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>URI</span>
@@ -357,47 +362,25 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip5)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value=""/>
                     </div>
                 </div>
             </div>
             """%field_vals(width=12)
-        formrow6a = """
-            <div class="%(space_classes)s">
-              <div class="row">
-                <div class="small-12 columns">
-                  &nbsp;
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=2)
-        formrow6b = """
-            <div class="%(button_wide_classes)s">
-              <div class="row">
-                <div class="%(button_left_classes)s">
-                  <input type="submit" name="save"      value="Save" />
-                  <input type="submit" name="view"      value="View" />
-                  <input type="submit" name="cancel"    value="Cancel" />
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=4)
         # log.info(r.content)
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)
         self.assertContains(r, formrow3,  html=True)
         self.assertContains(r, formrow4,  html=True)
         self.assertContains(r, formrow5,  html=True)
-        self.assertContains(r, formrow6a, html=True)
-        self.assertContains(r, formrow6b, html=True)
         return
 
     def test_user_permissions_form_rendering(self):
@@ -406,22 +389,28 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="testuser")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="testuser",
+            tooltip=r.context['fields'][4]['field_help']
+            )
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value="VIEW CREATE UPDATE DELETE CONFIG ADMIN"/>
                     </div>
                 </div>
             </div>
             """%field_vals(width=12)
         # log.info(r.content)
+        # log.info
+        # for i in range(len(r.context['fields'])):
+        #     log.info("Field %d: %r"%(i, r.context['fields'][i]))
         self.assertContains(r, formrow5, html=True)
         return
 
@@ -436,16 +425,19 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        field_vals = default_fields(coll_id="testcoll", type_id="_user", entity_id="baduserperms")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_user", entity_id="baduserperms",
+            tooltip=r.context['fields'][4]['field_help']
+            )
         formrow5 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Permissions</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_permissions" 
-                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE&#39;)"
+                               placeholder="(user permissions; e.g. &#39;VIEW CREATE UPDATE DELETE CONFIG&#39;)"
                                value="VIEW CREATE UPDATE DELETE"/>
                     </div>
                 </div>

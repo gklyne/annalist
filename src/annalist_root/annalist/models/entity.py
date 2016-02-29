@@ -27,6 +27,7 @@ from django.conf                import settings
 
 from annalist                   import layout
 from annalist                   import util
+from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
 
@@ -106,7 +107,7 @@ class Entity(EntityRoot):
         self._entityid  = entityid
         self._parent    = parent
         self._altparent = altparent     # Alternative to current entity to search
-        log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
+        # log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
     def get_view_url(self, baseurl=""):
@@ -157,6 +158,8 @@ class Entity(EntityRoot):
                     "none" or None - search current entity only
                     "all" - search current entity and all alternative parent entities,
                         including their parents and alternatives.
+                    "select" - same as "all" - used for generating a list of options
+                        for a select/choice field.
                     "user" - search current entity and site entity if it is on the 
                         alternatives list; skips intervening entities.  Used to avoid 
                         inheriting user permissions with other configuration data.
@@ -169,10 +172,10 @@ class Entity(EntityRoot):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
-        log.debug("Entity.get_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
+        # log.debug("Entity.get_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
         alt_ancestry = []
         if self._altparent:
-            if ( (altscope == "all") or
+            if ( (altscope == "all") or (altscope == "select") or
                  (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
                 alt_ancestry.append(self._altparent)
             alt_ancestry.extend(self._altparent.get_alt_entities(altscope=altscope))
@@ -231,10 +234,10 @@ class Entity(EntityRoot):
         attempting to evaluate alternatives: this function will enumerate the 
         alternatives and make additional calls as needed.
         """
-        log.debug(
-            "Entity.try_alt_parentage: %s/%s with parent %r, altscope %s"%
-            (cls._entitytypeid, entityid, parent.get_id(), altscope)
-            )
+        # log.debug(
+        #     "Entity.try_alt_parentage: %s/%s with parent %r, altscope %s"%
+        #     (cls._entitytypeid, entityid, parent.get_id(), altscope)
+        #     )
         e  = cls._child_init(parent, entityid)
         uv = e._entityviewurl
         v  = func(e)
@@ -250,9 +253,10 @@ class Entity(EntityRoot):
         # Failed: log details
         log.debug(
             "Entity.try_alt_parentage: no entity found for %s/%s with parent %s"%
-            (cls._entitytypeid, entityid, parent)
+            (cls._entitytypeid, entityid, parent.get_id())
             )
-        log.debug("    alt parents tried: %r"%(alt_parents,))
+        for ap in alt_parents:
+            log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
         return (None, v)
 
     # Class helper methods
@@ -404,6 +408,14 @@ class Entity(EntityRoot):
         log.debug("Entity.remove: id %s"%(entityid))
         e = cls.load(parent, entityid)
         if e:
+            if "@error" in e:
+                return Annalist_Error(
+                    message.ENTITY_LOAD_ERROR%(
+                        { 'id':       entityid
+                        , 'file':     e["@error"]
+                        , 'message':  e["@message"]
+                        })
+                    )
             e._remove(cls._entitytype)
         else:
             return Annalist_Error("Entity %s not found"%(entityid))
@@ -424,9 +436,9 @@ class Entity(EntityRoot):
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
         """
-        log.debug("Entity.load: entity %s/%s, altscope %s"%
-            (cls._entitytype, entityid, altscope)
-            )
+        # log.debug("Entity.load: entity %s/%s, altscope %s"%
+        #     (cls._entitytype, entityid, altscope)
+        #     )
         # if altscope is not None:
         #     if not isinstance(altscope, (unicode, str)):
         #         log.error("altscope must be string (%r supplied)"%(altscope))
@@ -444,6 +456,8 @@ class Entity(EntityRoot):
                 v = e._migrate_values(v)
                 e.set_values(v)
                 entity = e
+        else:
+            log.debug("Entity.load: invalid id %s"%entityid)
         # log.warning("@@Entity.load ub %r"%(entity._entityurl))
         # log.warning("@@Entity.load uv %r"%(entity._entityviewurl))
         # log.warning("@@Entity.load e  %r"%(entity))
@@ -464,9 +478,9 @@ class Entity(EntityRoot):
         Returns True if the entity exists, as determined by existence of the 
         entity description metadata file.
         """
-        log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
-            (cls._entitytype, parent._entitydir, entityid)
-            )
+        # log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
+        #     (cls._entitytype, parent._entitydir, entityid)
+        #     )
         # if altscope is not None:
         #     if not isinstance(altscope, (unicode, str)):
         #         log.error("altscope must be string (%r supplied)"%(altscope))

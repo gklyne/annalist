@@ -50,7 +50,7 @@ class RecordList(EntityData):
         """
         super(RecordList, self).__init__(parent, list_id)
         self._parent = parent
-        log.debug("RecordList %s: dir %s"%(list_id, self._entitydir))
+        # log.debug("RecordList %s: dir %s"%(list_id, self._entitydir))
         return
 
     def _migrate_filenames(self):

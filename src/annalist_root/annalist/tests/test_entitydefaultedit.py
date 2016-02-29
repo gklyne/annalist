@@ -152,9 +152,15 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "Collection testcoll")
-        field_vals = default_fields(coll_id="testcoll", type_id="testtype", entity_id="00000001")
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            )
         formrow1 = """
-              <div class="small-12 medium-6 columns">
+              <div class="small-12 medium-6 columns" title="%(tooltip1)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Id</span>
@@ -168,7 +174,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=6)
         formrow2 = ("""
-              <div class="small-12 medium-6 columns">
+              <div class="small-12 medium-6 columns" title="%(tooltip2)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Type</span>
@@ -186,7 +192,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow3 = """
               <!-- editable text field -->
-              <div class="small-12 columns">
+              <div class="small-12 columns" title="%(tooltip3)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Label</span>
@@ -200,7 +206,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
               </div>
             """%field_vals(width=12)
         formrow4 = """
-              <div class="small-12 columns">
+              <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                   <div class="%(label_classes)s">
                       <span>Comment</span>
@@ -238,14 +244,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Fields
         self.assertEqual(len(r.context['fields']), 4)
         # 1st field
-        field_id_help = (
-            "A short identifier that distinguishes this record from "+
-            "all other records of the same type in the same collection."
-            )
         self.assertEqual(r.context['fields'][0]['field_id'],            'Entity_id')
         self.assertEqual(r.context['fields'][0]['field_name'],          'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'],         'Id')
-        self.assertEqual(r.context['fields'][0]['field_help'],          field_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'],   "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'],  "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],   "EntityId")
@@ -256,13 +257,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['entity_type_id'],      "testtype")
         self.assertEqual(r.context['fields'][0]['options'],             self.no_options)
         # 2nd field
-        field_type_help = (
-            "A short identifier that identifies the type of the corresponding entity."
-            )
         self.assertEqual(r.context['fields'][1]['field_id'],            'Entity_type')
         self.assertEqual(r.context['fields'][1]['field_name'],          'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'],         'Type')
-        self.assertEqual(r.context['fields'][1]['field_help'],          field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],   "EntityTypeId")
@@ -273,14 +270,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['entity_type_id'],      "testtype")
         self.assertEqual(set(r.context['fields'][1]['options']),        set(self.type_ids))
         # 3rd field
-        field_label_help = (
-            "Short string used to describe entity when displayed"
-            )
         field_label_value = default_label("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][2]['field_id'],            'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'],          'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_label'],         'Label')
-        self.assertEqual(r.context['fields'][2]['field_help'],          field_label_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'],   "(label)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'],  "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'],   "Text")
@@ -290,14 +283,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['entity_type_id'],      "testtype")
         self.assertEqual(r.context['fields'][2]['options'],             self.no_options)
         # 4th field
-        field_comment_help = (
-            "Descriptive text about an entity."
-            )
         field_comment_value = default_comment("testcoll", "testtype", "00000001")
         self.assertEqual(r.context['fields'][3]['field_id'],            'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_name'],          'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_label'],         'Comment')
-        self.assertEqual(r.context['fields'][3]['field_help'],          field_comment_help)
         self.assertEqual(r.context['fields'][3]['field_placeholder'],   "(description)")
         self.assertEqual(r.context['fields'][3]['field_property_uri'],  "rdfs:comment")
         self.assertEqual(r.context['fields'][3]['field_render_type'],   "Markdown")
@@ -313,7 +302,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
+        # log.info(r.content)
+        self.assertContains(r, "<title>Entity testcoll/testtype/entity1 - Default record view - Collection testcoll</title>")
         # Test context
         view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -325,14 +315,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Fields
         self.assertEqual(len(r.context['fields']), 4)        
         # 1st field
-        field_id_help = (
-            "A short identifier that distinguishes this record from "+
-            "all other records of the same type in the same collection."
-            )
         self.assertEqual(r.context['fields'][0]['field_id'],           'Entity_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
         self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
-        self.assertEqual(r.context['fields'][0]['field_help'],         field_id_help)
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(entity id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
@@ -341,13 +326,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_value'],        "entity1")
         self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
         # 2nd field
-        field_type_help = (
-            "A short identifier that identifies the type of the corresponding entity."
-            )
         self.assertEqual(r.context['fields'][1]['field_id'],           'Entity_type')
         self.assertEqual(r.context['fields'][1]['field_name'],         'entity_type')
         self.assertEqual(r.context['fields'][1]['field_label'],        'Type')
-        self.assertEqual(r.context['fields'][1]['field_help'],         field_type_help)
         self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "EntityTypeId")
@@ -356,16 +337,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_value'],        "testtype")
         self.assertEqual(set(r.context['fields'][1]['options']),       set(self.type_ids))
         # 3rd field
-        field_label_help = (
-            "Short string used to describe entity when displayed"
-            )
         field_label_value = (
             "Entity testcoll/testtype/entity1"
             )
         self.assertEqual(r.context['fields'][2]['field_id'],           'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_name'],         'Entity_label')
         self.assertEqual(r.context['fields'][2]['field_label'],        'Label')
-        self.assertEqual(r.context['fields'][2]['field_help'],         field_label_help)
         self.assertEqual(r.context['fields'][2]['field_placeholder'],  "(label)")
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'],  "Text")
@@ -374,16 +351,12 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_value'],        field_label_value)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
         # 4th field
-        field_comment_help = (
-            "Descriptive text about an entity."
-            )
         field_comment_value = (
             "Entity coll testcoll, type testtype, entity entity1"
             )
         self.assertEqual(r.context['fields'][3]['field_id'],           'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_name'],         'Entity_comment')
         self.assertEqual(r.context['fields'][3]['field_label'],        'Comment')
-        self.assertEqual(r.context['fields'][3]['field_help'],         field_comment_help)
         self.assertEqual(r.context['fields'][3]['field_placeholder'],  "(description)")
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][3]['field_render_type'],  "Markdown")

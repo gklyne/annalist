@@ -3,7 +3,7 @@
 , "@context":           ["../../coll_context.jsonld"]
 , "annal:id":           "Value_upload"
 , "annal:type_id":      "Enum_value_mode"
-, "annal:uri":          "annal:value_mode/Value_upload"
+, "annal:uri":          "annal:Enum_value_mode/Value_upload"
 , "rdfs:label":         "File upload"
-, "rdfs:comment":       "Field value is uploaded attachment, and may be rendered for viewing using a resource reference renderer such as `RefImage` or `RefAudio`.\n\nWhen editing the containing entity, a browser file-upload control is displayed."
+, "rdfs:comment":       "# Value mode: File upload\r\n\r\nField value is uploaded attachment, and may be rendered for viewing using a resource reference renderer such as [Image reference](/annalist/c/_annalist_site/d/Enum_render_type/RefImage/) or [Audio clip reference](/annalist/c/_annalist_site/d/Enum_render_type/RefAudio/).\r\n\r\nWhen editing the containing entity, a browser file-upload control is displayed."
 }

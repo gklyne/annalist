@@ -9,8 +9,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import os.path
 import json
+import markdown
 import traceback
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -153,13 +153,17 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return {"error_head": error_head, "error_message": error_message}
 
-    def redirect_error(self, viewuri, view_params={}, error_message=None, error_head=message.INPUT_ERROR):
+    def redirect_error(self, 
+        viewuri, view_params={}, error_message=None, error_head=message.INPUT_ERROR
+        ):
         """
         Redirect to a specified view with an error message for display
 
         (see templates/base_generic.html for display details)
         """
-        redirect_uri = uri_with_params(viewuri, view_params, self.error_params(error_head, error_message))
+        redirect_uri = uri_with_params(
+            viewuri, view_params, self.error_params(error_message, error_head=error_head)
+            )
         return HttpResponseRedirect(redirect_uri)
 
     def check_site_data(self):
@@ -371,7 +375,7 @@ class AnnalistGenericView(ContentNegotiationView):
         otherwise a new entity object is created but not yet saved.
         """
         # log.info(
-        #     "get_entity id %s, parent %s, action %s, altparent %s"%
+        #     "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
         #     (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
         #     )
         entity = typeinfo.get_entity(entity_id, action)
@@ -382,12 +386,12 @@ class AnnalistGenericView(ContentNegotiationView):
                 else "(none)"
                 )
             log.info(
-                "Entity not found: parent %s, altparent %s, entity_id %s"%
-                (parent_id, altparent_id, entity_id)
+                "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
+                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
                 )
             log.info(
-                "get_entity id %s, parent %s, action %s, altparent %s"%
-                (entity_id, typeinfo.entityparent, action, typeinfo.entityaltparent)
+                "Entity not found: parent %s, altparent %s, entity_id %s"%
+                (parent_id, altparent_id, entity_id)
                 )
         return entity
 
@@ -422,6 +426,8 @@ class AnnalistGenericView(ContentNegotiationView):
             if os.path.isfile(help_filepath):
                 with open(help_filepath, "r") as helpfile:
                     resultdata['help_text'] = helpfile.read()
+        if 'help_markdown' in resultdata:
+            resultdata['help_text'] = markdown.markdown(resultdata['help_markdown'])
         template  = loader.get_template(template_name)
         context   = RequestContext(self.request, resultdata)
         # log.debug("render_html - data: %r"%(resultdata))

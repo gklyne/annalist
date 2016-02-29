@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_groupref"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Field group"
-, "rdfs:comment":               "Reference to view whose fields are used for a composite field."
+, "rdfs:comment":               "Field group that defines fields used for a repeat group or multifield reference display."
 , "annal:field_name":           "Field_groupref"
 , "annal:field_render_type":    "Enum_optional"
 , "annal:field_value_mode":     "Value_direct"

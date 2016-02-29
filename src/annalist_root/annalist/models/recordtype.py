@@ -48,8 +48,8 @@ class RecordType(EntityData):
         """
         super(RecordType, self).__init__(parent, type_id)
         self._parent = parent
-        log.debug("RecordType %s: dir %s"%(type_id, self._entitydir))
-        log.debug("RecordType %s: uri %s"%(type_id, self._entityurl))
+        # log.debug("RecordType %s: dir %s"%(type_id, self._entitydir))
+        # log.debug("RecordType %s: uri %s"%(type_id, self._entityurl))
         return
 
     def _migrate_filenames(self):

@@ -4,7 +4,7 @@
 , "annal:id":                   "Coll_comment"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Collection metadata"
-, "rdfs:comment":               "Description of Collection metadata creation details."
+, "rdfs:comment":               "Description of Collection metadata creation details - this is used for maintenance purposes to provide an indication of the provenance of the collection metadata, and can be ignored for most purposes."
 , "annal:field_render_type":    "Markdown"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Richtext"

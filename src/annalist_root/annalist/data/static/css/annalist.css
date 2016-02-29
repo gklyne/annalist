@@ -97,7 +97,11 @@ form div.row .columns .row .columns .row
     ------------------------------------------------------------------------- */
 
 h2.page-heading {
-    padding: 0 0.9375rem;
+    margin-top:    0.2rem;
+    margin-bottom: 0;
+    padding:       0 0.9375rem;
+    font-size:     1.625rem;
+    color:         #666666;
 }
 
 p.djangolinks 
@@ -315,6 +319,15 @@ div.row > div.columns.view-value
     /* vertical-align: middle; */
 }
 
+/* Word-wrap for link fields */
+div.row > div.column.view-value  > a,
+div.row > div.columns.view-value > a
+{
+    word-wrap: break-word;
+}
+
+
+
 /* Suppress padding for nested column values */
 div.row > div.column.view-value  div.row > div.column.view-value,
 div.row > div.columns.view-value div.row > div.columns.view-value
@@ -413,10 +426,12 @@ div.columns.view-value > div.row > div.columns > select
     /* border: 0; - causes buttons to display differently - WTF? */
 }
 
-div.columns.view-value > input[type="checkbox"]
+div.columns.view-value > input[type="checkbox"] ,
+div.columns.view-value > span > input[type="checkbox"]
 {
-    margin-top:    0.2rem ;
+    margin-top:    0.2rem;
     margin-bottom: 0.2rem;
+    margin-right:  0.2rem;
     height:        1rem;
 }
 
@@ -433,6 +448,11 @@ div.columns.view-value > span
     padding-top:    0rem;
     padding-bottom: 0rem;
     font-size:      0.875rem;
+}
+
+div.columns.view-value > span.checkbox
+{   /* Wrapper for checkbox and label text */
+    white-space: nowrap;
 }
 
 div.columns.view-value > span.value-placeholder
@@ -539,6 +559,7 @@ div.columns.view-value > span.markdown h2
 }
 
 div.columns.view-value > span.markdown p ,
+div.columns.view-value > span.markdown pre ,
 div.columns.view-value > span.markdown li ,
 div.columns.view-value > span.markdown h3 ,
 div.columns.view-value > span.markdown h4
@@ -763,8 +784,8 @@ div.row div.new-button button span.select-edit-button-text
 
 div.row.table
 {   /* Spacing around list of entities */
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     border:0;
     /* border-collapse: collapse;  / * Prevents gap before checkbox in table column */
 }
@@ -822,45 +843,85 @@ div.row.table div.tbody div.columns
 
     ------------------------------------------------------------------------- */
 
+div.help {
+    margin-top:     -0.5rem;
+    padding-left:   1.0rem;
+    padding-right:  1.0rem;
+}
+
 div.help > h1 {
-    margin-top: 1rem;
-    border-top: medium solid #CCCCCC;
-    padding-top: 0.75rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1.25rem;
+    margin-top:     1rem;
+    border-top:     medium solid #CCCCCC;
+    padding-top:    0.75rem;
+    padding-left:   0rem;    
+    padding-right:  0rem;    
+    color:          #666666;
+    font-size:      1.25rem;
 }
 
 div.help > h2 {
-    padding-top: 0.75rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1.125rem;
+    padding-top:    0.75rem;
+    padding-left:   0rem;    
+    padding-right:  0rem;    
+    color:          #666666;
+    font-size:      1.125rem;
 }
 
 div.help > h3 {
-    padding-top: 0.5rem;
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: 1rem;
+    padding-top:    0.5rem;
+    padding-left:   0rem;    
+    padding-right:  0rem;    
+    color:          #666666;
+    font-size:      1rem;
+}
+
+div.help > h4 {
+    padding-top:    0.5rem;
+    padding-left:   0rem;    
+    padding-right:  0rem;    
+    color:          #666666;
+    font-size:      1rem;
+    font-style:     italic;
 }
 
 div.help > p {
     margin: 0rem;
-    padding-top: 0.25rem;    
-    padding-bottom: 0.25rem;    
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: smaller;
+    padding-top:    0.4rem;    
+    padding-bottom: 0rem;    
+    padding-left:   0rem;
+    padding-right:  0rem;
+    color:          #666666;
+    font-size:      smaller;
+    line-height:    1.5;
 }
 
+/* NOTE: with "list-style-position: outside", 
+   use margin, not padding, to indent the bullet *and* item text
+ */
 div.help li {
-    margin: 0rem;
-    padding-top: 0.25rem;    
+    margin-top:     0.25rem;
+    margin-bottom:  0rem;    
+    margin-left:    1.5rem;
+    margin-right:   0rem;
+    color:          #666666;
+    font-size:      smaller;
+    line-height:    1.25;
+}
+
+/* Nexted lists: reduce margin indent; */
+div.help li li {
+    margin-left:    0rem;
+}
+
+div.help > ul,
+div.help > ol {
+    list-style-position: outside;
+    margin-left:    0rem;
+    padding-top:    0rem;    
     padding-bottom: 0rem;    
-    padding-left: 0.75rem;    
-    color: #666666;
-    font-size: smaller;
+    padding-left:   0rem;
+    color:          #666666;
+    line-height:    1.25;
 }
 
 /*  ------------------------------------------------------------------------- 
@@ -873,7 +934,25 @@ div.help li {
 
 .top-bar {
     margin-bottom: 0.75rem;
+    vertical-align: text-bottom;
 }
+nav.top-bar                  ul li.name h1 ,
+nav.top-bar                  ul li      h1 {
+    /* Foundation CSS sets line-height for top bar to 45px.         */
+    /* Reducing line height allows the <h1> baseline to be raised   */
+    /* to match other menu items.                                   */
+    /* line-height:    43px; */
+    line-height:       2.7rem;
+    padding-bottom: 0px;
+}
+
+/*
+nav.top-bar                  ul li a ,
+nav.top-bar .top-bar-section ul li a ,
+nav.top-bar .top-bar-section ul li:not(.has-form) a:not(.button) {
+    vertical-align: inherit;
+}
+*/
 
 /* Footer bar.  Adapted from Foundation / ZURB examples */
 

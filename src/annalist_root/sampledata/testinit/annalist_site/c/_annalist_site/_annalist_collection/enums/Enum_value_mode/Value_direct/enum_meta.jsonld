@@ -3,7 +3,7 @@
 , "@context":           ["../../coll_context.jsonld"]
 , "annal:id":           "Value_direct"
 , "annal:type_id":      "Enum_value_mode"
-, "annal:uri":          "annal:value_mode/Value_direct"
+, "annal:uri":          "annal:Enum_value_mode/Value_direct"
 , "rdfs:label":         "Direct value"
-, "rdfs:comment":       "Field value is actual value to be displayed."
+, "rdfs:comment":       "# Value mode: Direct value\r\n\r\nField value is actual value to be displayed."
 }

@@ -41,7 +41,7 @@ class RecordVocab(EntityData):
         """
         super(RecordVocab, self).__init__(parent, vocab_id)
         self._parent = parent
-        log.debug("RecordVocab %s: dir %s"%(vocab_id, self._entitydir))
+        # log.debug("RecordVocab %s: dir %s"%(vocab_id, self._entitydir))
         return
 
     def _migrate_filenames(self):

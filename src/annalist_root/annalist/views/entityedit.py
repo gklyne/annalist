@@ -22,6 +22,7 @@ from annalist                           import message
 from annalist                           import layout
 from annalist.util                      import (
     valid_id, split_type_entity_id, extract_entity_id,
+    label_from_id,
     open_url, copy_resource_to_fileobj
     )
 
@@ -53,8 +54,7 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='coll_id',          e=None,                    f=None               )
-        , SimpleValueMap(c='type_id',          e=None,                    f=None               )
+        [ SimpleValueMap(c='url_type_id',      e=None,                    f=None               )
         , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
         , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
         , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
@@ -130,6 +130,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         if viewinfo.http_response:
             return viewinfo.http_response
+        self.help_markdown = viewinfo.recordview.get(RDFS.CURIE.comment, None)
 
         # Create local entity object or load values from existing
         typeinfo = viewinfo.entitytypeinfo
@@ -146,12 +147,24 @@ class GenericEntityEditView(AnnalistGenericView):
                     message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
                     )
                 )
-        # @@TODO: build context_extra_values here and pass into form_render.
-        #         eventually, form_render will ideally be used for both GET and POST 
-        #         handlers that respond with a rendered form.
+        entityvals  = get_entity_values(
+            viewinfo.entitytypeinfo, entity,
+            action=viewinfo.action
+            )
+
+        # Set up rendered form response
+        context_extra_values = (
+            { 'request_url':        self.get_request_path()
+            , 'url_type_id':        type_id
+            , 'orig_id':            entityvals['entity_id']
+            , 'orig_type':          type_id
+            })
         add_field = request.GET.get('add_field', None)
         try:
-            response = self.form_render(viewinfo, entity, add_field)
+            response = self.form_render(
+                viewinfo, entity, entityvals, context_extra_values, 
+                add_field
+                )
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -215,19 +228,10 @@ class GenericEntityEditView(AnnalistGenericView):
         #     )
         typeinfo        = viewinfo.entitytypeinfo
         context_extra_values = (
-            { 'site_title':       viewinfo.sitedata["title"]
-            , 'title':            viewinfo.collection[RDFS.CURIE.label]
-            , 'action':           action
-            , 'edit_view_button': viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
-            , 'continuation_url': viewinfo.get_continuation_url() or ""
-            , 'request_url':      self.get_request_path()
-            , 'coll_id':          coll_id
-            , 'coll_label':       viewinfo.collection[RDFS.CURIE.label]
-            , 'type_id':          type_id
-            , 'view_choices':     self.get_view_choices_field(viewinfo)
+            { 'request_url':      self.get_request_path()
+            , 'url_type_id':      type_id
             , 'orig_id':          orig_entity_id
             , 'orig_type':        orig_entity_type_id
-            , 'view_id':          view_id
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (
@@ -269,7 +273,6 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        #@@ self.site_view_url        = self.view_uri("AnnalistSiteView")
         self.collection_view_url  = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = self.view_uri(
             "AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id
@@ -355,7 +358,10 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
-        log.debug("entityview: %r"%viewinfo.recordview.get_values())
+        # log.debug(
+        #     "GenericEntityEditView.get_view_entityvaluemap entityview: %r"%
+        #     viewinfo.recordview.get_values()
+        #     )
         fieldlistmap = FieldListValueMap('fields',
             viewinfo.collection, 
             viewinfo.recordview.get_values()[ANNAL.CURIE.view_fields],
@@ -384,9 +390,13 @@ class GenericEntityEditView(AnnalistGenericView):
         augmented with inferred values and other context data.
         """
         # log.info("get_form_display_context, entityvals: %r"%(entityvals,))
-        entityvals   = viewinfo.entitytypeinfo.get_entity_inferred_values(entityvals)
+        context_extra_values.update(
+            { 'continuation_url':   viewinfo.get_continuation_url() or ""
+            , 'view_choices':       self.get_view_choices_field(viewinfo)
+            })
+        entityvals   = viewinfo.entitytypeinfo.get_entity_implied_values(entityvals)
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
-        form_context.update(viewinfo.context_data())
+        form_context.update(viewinfo.context_data(entity_label=entityvals.get(RDFS.CURIE.label, None)))
         return form_context
 
     def merge_entity_form_values(self, orig_entityvals, entityformvals):
@@ -416,7 +426,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # log.info("orig entity_values %r"%(entity_values,))
         return upd_entityvals
 
-    def form_render(self, viewinfo, entity, add_field):
+    def form_render(self, viewinfo, entity, entityvals, context_extra_values, add_field):
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data
@@ -440,21 +450,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 # Add empty fields per named repeat group
                 self.add_entity_field(add_field_desc, entity)
         #@@
-        entityvals  = get_entity_values(
-            viewinfo.entitytypeinfo, entity, entity_id, 
-            action=viewinfo.action
-            )
-        context_extra_values = (
-            { 'edit_view_button':   viewinfo.recordview.get(ANNAL.CURIE.open_view, "yes")
-            , 'continuation_url':   viewinfo.get_continuation_url() or ""
-            , 'request_url':        self.get_request_path()
-            , 'coll_id':            coll_id
-            , 'type_id':            type_id
-            , 'view_choices':       self.get_view_choices_field(viewinfo)
-            , 'orig_id':            entityvals['entity_id']
-            , 'orig_type':          type_id
-            , 'view_id':            viewinfo.view_id
-            })
         viewcontext = self.get_form_display_context(
             viewinfo, entityvaluemap, entityvals, **context_extra_values
             )
@@ -961,6 +956,14 @@ class GenericEntityEditView(AnnalistGenericView):
                 entity_values.pop(ANNAL.CURIE.uri, None)
         entity_values[ANNAL.CURIE.type_id] = entity_type_id
         entity_values[ANNAL.CURIE.type]    = new_typeinfo.get_type_uri() # or new_typeinfo.entityclass._entitytype
+        # Supply values for label and comment if not already provided or aliased
+        entity_implied_vals = typeinfo.get_entity_implied_values(entity_values)
+        entity_label        = entity_implied_vals.get(RDFS.CURIE.label, None)
+        if not entity_label:
+            entity_label = label_from_id(entity_id)
+            entity_values[RDFS.CURIE.label] = entity_label
+        if not entity_implied_vals.get(RDFS.CURIE.comment, None):
+            entity_values[RDFS.CURIE.comment] = entity_label
         # log.info("save entity_values%r"%(entity_values))
 
         # Create/update stored data now

@@ -5,7 +5,7 @@
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:List"
 , "rdfs:label":         "List"
-, "rdfs:comment":       "Type of list description record."
+, "rdfs:comment":       "# List definition\r\n\r\nDefines selection criteria and presentation for displaying a list of entities."
 , "annal:type_view":    "_view/List_view"
 , "annal:type_list":    "_list/List_list"
 }

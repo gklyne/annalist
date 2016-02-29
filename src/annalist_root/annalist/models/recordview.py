@@ -41,7 +41,7 @@ class RecordView(EntityData):
         """
         super(RecordView, self).__init__(parent, view_id)
         self._parent = parent
-        log.debug("RecordView %s: dir %s"%(view_id, self._entitydir))
+        # log.debug("RecordView %s: dir %s"%(view_id, self._entitydir))
         return
 
     def _migrate_filenames(self):

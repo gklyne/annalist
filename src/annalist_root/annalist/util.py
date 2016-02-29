@@ -119,6 +119,17 @@ def make_entity_base_url(url):
     """
     return url if url.endswith("/") else url + "/"
 
+def label_from_id(id):
+    """
+    Returns a label string constructed from the suppliued Id string
+
+    Underscore characters in the Id are replaced by spaces.
+    The first character may be capirtalized.
+    """
+    temp  = id.replace('_', ' ').strip()
+    label = temp[0].upper() + temp[1:] 
+    return label
+
 def slug_from_name(filename):
     """
     Extracts a slug (id) value from a filename

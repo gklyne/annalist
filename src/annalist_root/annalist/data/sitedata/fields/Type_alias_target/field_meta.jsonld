@@ -4,9 +4,9 @@
 , "annal:id":                   "Type_alias_target"
 , "annal:type_id":              "_field"
 , "annal:type":                 "annal:Field"
-, "rdfs:label":                 "Type alias target"
+, "rdfs:label":                 "Field alias name"
 , "rdfs:comment": 
-    "An entity field property whose value may be derived from some other property URI (see Type_alias_source)"
+    "An entity field property whose value may be derived from some other property URI (see field 'Field alias value')"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Identifier"

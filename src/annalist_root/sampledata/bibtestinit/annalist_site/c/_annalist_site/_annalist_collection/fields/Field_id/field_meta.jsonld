@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_id"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Id"
-, "rdfs:comment":               "A short identifier that distinguishes this field from all other fields in the same collection.  A given field may occur in a number of different record types and/or views, so is scoped to the containing collection."
+, "rdfs:label":                 "Field Id"
+, "rdfs:comment":               "A short identifier that distinguishes this field type from all other field types in the same collection.  (A given field may occur in a number of different record views and/or lists.)"
 , "annal:field_name":           "entity_id"
 , "annal:field_render_type":    "EntityId"
 , "annal:field_value_mode":     "Value_direct"

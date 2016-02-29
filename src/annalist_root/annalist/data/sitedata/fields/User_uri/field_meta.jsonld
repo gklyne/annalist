@@ -4,7 +4,7 @@
 , "annal:id":                   "User_uri"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "URI"
-, "rdfs:comment":               "User URI - generally mailto:<email-address>"
+, "rdfs:comment":               "User authenticated URI - generally 'mailto:<email-address>', using an authenticated email address."
 , "annal:placeholder":          "(User URI - e.g. mailto:local-name@example.com)"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_mode":     "Value_direct"

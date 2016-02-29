@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_missing"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Missing"
-, "rdfs:comment":               "Stand-in for missing field description"
+, "rdfs:comment":               "Interbnal stand-in for missing field description. Not for normal use."
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

@@ -196,22 +196,23 @@ class ImageReferenceTest(AnnalistTestCase):
             , "entity_id":  "test1"
             , "image_uri":  self.imageuri
             , "field_id":   "ref_image"
+            , "tooltip":    r.context['fields'][i].field_help
             })
-        img_element = (
-            """<div class="small-12 columns"> """+
-              """<div class="row view-value-row"> """+
-                """<div class="view-label small-12 medium-2 columns"> """+
-                  """<span>test_image_ref_field label</span> """+
-                """</div> """+
-                """<div class="view-value small-12 medium-10 columns"> """+
-                  """<a href="%(image_uri)s" target="_blank"> """+
-                    """<img src="%(image_uri)s" """+
-                    """     alt="Image at '%(image_uri)s'" /> """+
-                  """</a> """+
-                """</div> """+
-              """</div> """+
-            """</div> """
-            )%field_details
+        img_element = """
+            <div class="small-12 columns" title="%(tooltip)s">
+              <div class="row view-value-row">
+                <div class="view-label small-12 medium-2 columns">
+                  <span>test_image_ref_field label</span>
+                </div>
+                <div class="view-value small-12 medium-10 columns">
+                  <a href="%(image_uri)s" target="_blank">
+                    <img src="%(image_uri)s"
+                         alt="Image at '%(image_uri)s'" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            """%field_details
         self.assertContains(r, img_element, html=True)
         return
 

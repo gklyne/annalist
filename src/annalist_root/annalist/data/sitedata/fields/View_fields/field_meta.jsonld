@@ -4,7 +4,7 @@
 , "annal:id":                   "View_fields"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Fields"
-, "rdfs:comment":               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+, "rdfs:comment":               "Lists the fields that appear in a view, where each field is specified with a 'Field id' and optional 'Property' and 'Position/size' values.  If the optional values are omitted, corresponding values from the identified field definition are used."
 , "annal:field_render_type":    "RepeatGroupRow"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Field_group"

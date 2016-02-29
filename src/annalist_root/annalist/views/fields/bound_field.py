@@ -16,6 +16,7 @@ from urlparse               import urljoin  # py3: from urllib.parse ...
 from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
+from django.utils.html      import escape
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
@@ -132,6 +133,10 @@ class bound_field(object):
             return self.get_field_value()
         elif name == "field_value_link":
             return self.get_field_link()
+        elif name == "field_help":
+            return self.get_field_help_esc()
+        elif name == "field_tooltip":
+            return self.get_field_tooltip()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
@@ -167,6 +172,9 @@ class bound_field(object):
             return self._field_description.get(name, "@@bound_field.%s@@"%(name))
 
     def get_field_value(self):
+        """
+        Return field value corresponding to key from field description.
+        """
         field_val = None
         if self._key in self._entityvals:
             field_val = self._entityvals[self._key]
@@ -183,17 +191,27 @@ class bound_field(object):
     def get_field_link(self):
         # Return link corresponding to field value that is a selection from an enumeration of entities
         # (or some other value with an associated link), or None
-        #@@
-        # links = self._field_description['field_choice_links']
-        # v     = self.field_value
-        # if links and v in links:
-        #     return links[v]
-        #@@
         choices = self._field_description['field_choices']  # OrderedDict
         v       = self.field_value
         if choices and v in choices:
             return choices[v].link
         return None
+
+    def get_field_help_esc(self):
+        """
+        Return help text from field description, for use as tooltip
+        """
+        return escape(
+            self._field_description['field_help'] or 
+            "@@field help for %(field_label)s@@"%self._field_description
+            )
+
+    def get_field_tooltip(self):
+        """
+        Return tooltip attribute for displaying field help, or blank
+        """
+        help_text_esc = self.get_field_help_esc()
+        return ''' title="%s"'''%help_text_esc if help_text_esc else ''
 
     def get_target_value(self):
         """
@@ -202,7 +220,7 @@ class bound_field(object):
         This may be different from field_value if it references another entity field
         """
         targetvals = self.get_targetvals()
-        log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
+        # log.debug("bound_field.get_target_value: targetvals %r"%(targetvals,))
         target_key = self._field_description.get('field_ref_field', None)
         target_key = target_key and target_key.strip()
         if targetvals is not None:
@@ -215,7 +233,7 @@ class bound_field(object):
             target_value = self._entityvals.get(target_key, "(@%s)"%(target_key))
         else:
             target_value = self.field_value
-        log.debug("bound_field.get_target_value result: %r"%(target_value,))
+        # log.debug("bound_field.get_target_value result: %r"%(target_value,))
         return target_value
 
     def get_target_link(self):
@@ -230,7 +248,7 @@ class bound_field(object):
         """
         target_base  = self.get_field_link() or self.entity_link
         target_value = self.get_target_value()
-        log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
+        # log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
@@ -251,10 +269,10 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        # log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
         target_type = self._field_description.get('field_ref_type',  None)
         target_key  = self._field_description.get('field_ref_field', None)
-        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        # log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr
@@ -274,6 +292,7 @@ class bound_field(object):
                     targetentity = typeinfo.get_entity(entity_id)
                     if targetentity is None:
                         raise TargetEntityNotFound_Error(value=(target_type, entity_id))
+                    targetentity = typeinfo.get_entity_implied_values(targetentity)
                     self._targetvals = get_entity_values(typeinfo, targetentity)
                     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
@@ -281,29 +300,6 @@ class bound_field(object):
                         "bound_field.get_targetvals: target value type %s requires %r permissions"%
                         (target_type, req_permissions)
                         )
-                # # Get entity type info
-                # #@@TODO: eliminate site param...
-                # coll           = self._field_description._collection
-                # targettypeinfo = EntityTypeInfo(coll.get_site(), coll, target_type)
-                # # Check access permission, assuming user has "VIEW" permission in current collection
-                # # This is primarily to prevent a loophole for accessing user account details
-                # #@@TODO: pass actual user permissions in to bound_field or field description or extra params
-                # user_permissions = ["VIEW"]
-                # req_permissions  = list(set( targettypeinfo.permissions_map[a] for a in ["view", "list"] ))
-                # if all([ p in user_permissions for p in req_permissions]):
-                #     target_id    = self.get_field_value()
-                #     if target_id is None or target_id == "":
-                #         raise TargetIdNotFound_Error(value=(targettypeinfo.type_id, self.field_name))
-                #     targetentity = targettypeinfo.get_entity(target_id)
-                #     if targetentity is None:
-                #         raise TargetEntityNotFound_Error(value=(targettypeinfo.type_id, target_id))
-                #     self._targetvals = get_entity_values(targettypeinfo, targetentity)
-                #     log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
-                # else:
-                #     log.warning(
-                #         "bound_field.get_targetvals: target value type %s requires %r permissions"%
-                #         (target_type, req_permissions)
-                #         )
         log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
@@ -337,7 +333,7 @@ class bound_field(object):
             requrl = self._extras.get("request_url", "")
             if requrl:
                 chere  = uri_with_params(requrl, continuation_params(self._extras))
-        log.debug('bound_field.get_continuation_url %s'%(chere,))
+        # log.debug('bound_field.get_continuation_url %s'%(chere,))
         return chere
 
     def get_field_options(self):
@@ -369,6 +365,8 @@ class bound_field(object):
         yield "field_value"
         yield "field_value_link"
         yield "field_value_link_continuation"
+        yield "field_help"
+        yield "field_tooltip"
         yield "target_value"
         yield "target_value_link"
         yield "target_value_link_continuation"

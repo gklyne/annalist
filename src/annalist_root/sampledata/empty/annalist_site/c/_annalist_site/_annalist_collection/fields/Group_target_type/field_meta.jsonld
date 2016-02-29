@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Group_target_type"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Record type"
-, "rdfs:comment":               "Type (URI or CURIE) of record displayed using this field group.  Used to determine field choices appropriate to this group."
+, "rdfs:label":                 "Group entity type"
+, "rdfs:comment":               "Type (URI or CURIE) of entity to which this field group applies. Used to determine field choices appropriate to this group.  (See also field 'Entity type' in field definition.)"
 , "annal:field_name":           "Group_target_type"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_mode":     "Value_direct"

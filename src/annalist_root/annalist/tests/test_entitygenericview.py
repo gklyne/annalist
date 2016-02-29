@@ -181,20 +181,31 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<title>Collection testcoll</title>")
+        # log.info(r.content)     #@@
+        entity_label = "Entity testcoll/testtype/entity1"
+        view_label   = "Type definition"
+        entity_title = "%s - %s - Collection testcoll"%(entity_label, view_label)
+        self.assertContains(r, "<title>%s</title>"%(entity_title,))
+        self.assertContains(r, '<h2 class="page-heading">%s</h2>'%(view_label,), html=True)
         cont_uri = "?continuation_url=%s"%u + "%3Fcontinuation_url=/xyzzy/"
-        # cont_uri = ""
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
             default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
-            default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri
+            default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri,
+            tooltip1=r.context['fields'][0]['field_help'],
+            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip3=r.context['fields'][2]['field_help'],
+            tooltip4=r.context['fields'][3]['field_help'],
+            tooltip5=r.context['fields'][4]['field_help'],
+            tooltip6=r.context['fields'][5]['field_help'],
+            tooltip7=r.context['fields'][6]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Type Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(entity_url)s">entity1</a>
@@ -203,7 +214,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -215,7 +226,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Comment</span>
@@ -229,7 +240,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 columns">
+            <div class="small-12 columns" title="%(tooltip4)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>URI</span>
@@ -241,7 +252,19 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow5 = """
-            <div class="small-12 medium-6 columns">
+            <div class="small-12 columns" title="%(tooltip5)s">
+              <div class="row">
+                <div class="%(group_label_classes)s">
+                  <span>Supertype URIs</span>
+                </div>
+                <div class="%(group_placeholder_classes)s">
+                  <span>(None)</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow6 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip6)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default view</span>
@@ -252,8 +275,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow6 = """
-            <div class="small-12 medium-6 columns">
+        formrow7 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip7)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default list</span>
@@ -264,7 +287,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow7a = """
+        formrow8a = """
             <div class="%(space_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -273,7 +296,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=2)
-        formrow7b = """
+        formrow8b = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
@@ -284,7 +307,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
-        formrow7c = """
+        formrow8c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_right_classes)s">
@@ -293,7 +316,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
-        formrow8 = ("""
+        formrow9 = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
                 <span>Choose view</span>
@@ -315,7 +338,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow9 = """
+        formrow10 = """
             <div class="%(button_right_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -327,19 +350,20 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        # log.info(r.content)
+        # log.info(r.content)     #@@
         self.assertContains(r, formrow1,  html=True)
         self.assertContains(r, formrow2,  html=True)
         self.assertContains(r, formrow3,  html=True)
         self.assertContains(r, formrow4,  html=True)
         self.assertContains(r, formrow5,  html=True)
         self.assertContains(r, formrow6,  html=True)
-        self.assertContains(r, formrow7a, html=True)
-        self.assertContains(r, formrow7b, html=True)
+        self.assertContains(r, formrow7,  html=True)
+        self.assertContains(r, formrow8a, html=True)
+        self.assertContains(r, formrow8b, html=True)
         # self.assertContains(r, formrow7c, html=True)
-        self.assertContains(r, formrow8,  html=True)
+        self.assertContains(r, formrow9,  html=True)
         # New buttons hidden (for now)
-        # self.assertContains(r, formrow9, html=True)
+        # self.assertContains(r, formrow10, html=True)
         return
 
     def test_get_view(self):
@@ -348,7 +372,6 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>'testtype' data in collection 'testcoll'</h3>")
         # Test context
         view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -361,7 +384,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         # 1st field - Id
         self.assertEqual(r.context['fields'][0]['field_id'],           'Type_id')
         self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
+        self.assertEqual(r.context['fields'][0]['field_label'],        'Type Id')
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
@@ -407,13 +430,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][3]['field_value'],        "")
         self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
         # 5th field - Supertype URIs
-        type_supertype_uris_help = (
-            "References to URIs/CURIEs of supertypes."
-            )
         self.assertEqual(r.context['fields'][4]['field_id'],          'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
-        self.assertEqual(r.context['fields'][4]['field_help'],        type_supertype_uris_help)
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
         self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")

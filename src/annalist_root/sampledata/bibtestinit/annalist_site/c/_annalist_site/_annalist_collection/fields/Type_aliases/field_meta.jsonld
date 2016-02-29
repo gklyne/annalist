@@ -6,7 +6,7 @@
 , "annal:type":                 "annal:Field"
 , "rdfs:label":                 "Field aliases"
 , "rdfs:comment":
-    "This field lists any field aliases that may be associated with a type.  That is, field values that may be returned based on some property URI other than the one associated with the field.  The motivating case for this is to allow fields associated with different properties to be associated with entity labels (rdfs:label), which are used by many generic views."
+    "This field lists any field aliases that may be associated with a type.  That is, field values that may be returned based on some property URI other than the one directly associated with the field.  (This allows fields with different property URIs to be used as entity labels ('rdfs:label') by generic views.)"
 , "annal:field_render_type":    "RepeatGroupRow"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Type_aliases"

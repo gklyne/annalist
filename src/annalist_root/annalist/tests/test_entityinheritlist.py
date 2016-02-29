@@ -96,7 +96,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.testsite  = init_annalist_bib_site()
         self.testcoll  = init_annalist_bib_coll()
         self.testdata  = RecordTypeData.load(self.testcoll, "testtype")
-        self.testtype2 = RecordType.create(self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2"))
+        self.testtype2 = RecordType.create(
+            self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2")
+            )
         self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -146,9 +148,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "Collection testcoll")
-        self.assertContains(r, "<h3>List entities with type information</h3>", html=True)
+        self.assertContains(r, '<h2 class="page-heading">List entities with type information</h2>', html=True)
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "List entities with type information - Collection testcoll")
+        self.assertEqual(r.context['heading'],          "List entities with type information")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "Default_type")
         list_choices = r.context['list_choices']
@@ -162,10 +165,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        if len(entities) != 210:
+        if len(entities) != 217:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 217)    # Will change with site data
+        self.assertEqual(len(entities), 219)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):
@@ -178,7 +181,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "Entity types - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
         # Fields
@@ -208,33 +211,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content) #@@
-        # self.assertContains(r, site_title("<title>%s</title>"))
-        # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-        cont = uri_params({"continuation_url": u})
-        rowdata1 = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
-              </div>
-              <div class="small-11 columns">
-                <div class="row view-listrow">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        # log.info(r.content)
-        self.assertContains(r, rowdata1, html=True)
+        #
         # Test context
-        self.assertEqual(r.context['title'],            "Collection testcoll")
+        self.assertEqual(r.context['title'],            "Field definitions - Collection testcoll")
+        self.assertEqual(r.context['heading'],          "Field definitions")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -296,7 +276,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
             , ('Entity_type',       "EntityTypeId",  "annal:Slug",          "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
-            , ('Field_comment',     "Markdown",      "annal:Richtext",      "Help")
+            , ('Field_comment',     "Textarea",      "annal:Longtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
             , ('Field_type',        "Identifier",    "annal:Identifier",    "Field value type")
             , ('Field_render',      "Enum_choice",   "annal:Slug",          "Field render type")
@@ -304,8 +284,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
-            , ('List_default_type', "Enum_optional", "annal:Type",          "Record type")
-            , ('List_default_view', "Enum_optional", "annal:View",          "View")
+            , ('List_default_type', "Enum_optional", "annal:Type",          "Default type")
+            , ('List_default_view', "Enum_optional", "annal:View",          "Default view")
+            , ('List_target_type',  "Identifier",    "annal:Identifier",    "List entity type")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
@@ -341,8 +322,12 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-        curi = continuation_params_url(u)
-        cont = uri_params({"continuation_url": curi})
+        curi     = continuation_params_url(u)
+        cont     = uri_params({"continuation_url": curi})
+        tooltip1 = r.context['fields'][0]['field_help']
+        tooltip2 = r.context['fields'][1]['field_help']
+        tooltip3 = r.context['fields'][2]['field_help']
+        tooltip4 = r.context['fields'][3]['field_help']
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -351,18 +336,30 @@ class EntityInheritListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns">
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
+                    <span>annal:Text</span>
+                  </div>
+                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
+                    <span>Address</span>
+                  </div>
                 </div>
               </div>
             </div>
-            """%({'base': TestBasePath, 'cont': cont})
+            """%(
+                { 'base':     TestBasePath
+                , 'cont':     cont
+                , 'tooltip1': tooltip1
+                , 'tooltip2': tooltip2
+                , 'tooltip3': tooltip3
+                , 'tooltip4': tooltip4
+                }
+            )
         # log.info("*** r.content: "+r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
@@ -388,30 +385,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertContains(r, site_title("<title>%s</title>"))
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
-        cont = uri_params({"continuation_url": u})
-        rowdata = """
-            <div class="tbody row select-row">
-              <div class="small-1 columns">
-                <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
-              </div>
-              <div class="small-11 columns">
-                <div class="row view-listrow">
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
-                  </div>
-                  <div class="view-value small-4 medium-3 columns">
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
-                  </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up"><span>annal:Text</span></div>
-                  <div class="view-value small-4 medium-3 columns"><span>Address</span></div>
-                </div>
-              </div>
-            </div>
-            """%({'base': TestBasePath, 'cont': cont})
-        # log.info(r.content)
-        # If this test fails, check ordering of URI parameters
-        self.assertContains(r, rowdata, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_field")

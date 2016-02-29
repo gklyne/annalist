@@ -228,6 +228,12 @@ def recordview_entity_view_context_data(
         add_field=None, remove_field=None, move_up=None, move_down=None,
         update="RecordView"
     ):
+    if view_id:
+        view_label = "%s %s/%s"%(update, coll_id, view_id)
+        view_descr = "%s help for %s in collection %s"%(update, view_id, coll_id)
+    else:
+        view_label = "%s data ... (%s/%s)"%(update, coll_id, view_id)
+        view_descr = "%s description ... (%s/%s)"%(update, coll_id, view_id)
     # Target record fields listed in the view description
     view_fields = (
           [ { 'annal:field_id':         "_field/Entity_id"
@@ -249,7 +255,8 @@ def recordview_entity_view_context_data(
     #       bound_field, so type prefix is stripped.  This does not apply to the field
     #       ids actually coming from the view form.
     context_dict = (
-        { 'title':              "Collection %s"%(coll_id)
+        { 'title':              "%s - View definition - Collection %s"%(view_label, coll_id)
+        , 'heading':            "View definition"
         , 'coll_id':            coll_id
         , 'type_id':            '_view'
         , 'orig_id':            'orig_view_id'
@@ -258,7 +265,7 @@ def recordview_entity_view_context_data(
           [ { 'field_id':           'View_id'               # fields[0]
             , 'field_name':         'entity_id'
             , 'field_target_type':  'annal:Slug'
-            , 'field_label':        'Id'
+            , 'field_label':        'View Id'
             , 'field_render_type':  'EntityId'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
@@ -272,7 +279,7 @@ def recordview_entity_view_context_data(
             , 'field_render_type':  'Text'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        '%s data ... (%s/%s)'%(update, coll_id, view_id)
+            , 'field_value':        view_label
             , 'options':            []
             }
           , { 'field_id':           'View_comment'          # fields[2]
@@ -282,13 +289,13 @@ def recordview_entity_view_context_data(
             , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        '%s description ... (%s/%s)'%(update, coll_id, view_id)
+            , 'field_value':        view_descr
             , 'options':            []
             }
           , { 'field_id':           'View_target_type'      # fields[3]
             , 'field_name':         'View_target_type'
             , 'field_target_type':  'annal:Identifier'
-            , 'field_label':        'Record type'
+            , 'field_label':        'View entity type'
             , 'field_render_type':  'Identifier'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
@@ -321,7 +328,7 @@ def recordview_entity_view_context_data(
         })
     if view_id:
         context_dict['fields'][0]['field_value'] = view_id
-        context_dict['fields'][1]['field_value'] = '%s %s/%s'%(update, coll_id, view_id)
+        context_dict['fields'][1]['field_value'] = view_label
         context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
         context_dict['orig_id']     = view_id
     if orig_id:

@@ -58,7 +58,9 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
             })
         err = typeinfo.entityclass.remove(typeinfo.entityparent, entity_id)
         if err:
-            return self.redirect_error(continuation_url, continuation_url_params, error_message=str(err))
+            return self.redirect_error(
+                continuation_url, continuation_url_params, error_message=str(err)
+                )
         return self.redirect_info(
             continuation_url, continuation_url_params, 
             info_message=messages['entity_removed']

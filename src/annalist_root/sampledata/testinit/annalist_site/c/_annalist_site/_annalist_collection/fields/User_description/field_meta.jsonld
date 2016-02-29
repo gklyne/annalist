@@ -4,7 +4,7 @@
 , "annal:id":                   "User_description"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Description"
-, "rdfs:comment":               "Optional string describing user/permissions record"
+, "rdfs:comment":               "Optional string describing user and/or role associated with this permissions record."
 , "annal:placeholder":          "(user description)"
 , "annal:field_render_type":    "Markdown"
 , "annal:field_value_mode":     "Value_direct"

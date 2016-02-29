@@ -4,7 +4,7 @@
 , "annal:id":                   "User_id"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "User Id"
-, "rdfs:comment":               "Username or user identifier must be unique among usernames for this site.  This is a local id that us used with an authenticated URI (e.g. mailto:) to determine access permissions."
+, "rdfs:comment":               "Username or user identifier, which must be unique among usernames for this site.  This is a local id that is used with an authenticated URI (e.g. mailto:) to determine access permissions."
 , "annal:field_name":           "entity_id"
 , "annal:placeholder":          "(user id)"
 , "annal:field_render_type":    "EntityId"

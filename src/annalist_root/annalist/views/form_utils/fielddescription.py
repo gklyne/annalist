@@ -140,28 +140,28 @@ class FieldDescription(object):
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             # Determine subtypes of field entity type, if specified
-            # @@TODO: subtype logic here is just ugly...
-            #         need context to convert info that can be used to calculate supertypes
+            # @@TODO: subtype logic here is just pig ugly...
+            #         need context to provide info that can be used to calculate supertypes
             #         on-the-fly as needed by the field restriction expression.  E.g. include
             #         collection object in context.
             if field_entity_type and restrict_values:
                 field_entity_subtypes = (
                     [ t.get_type_uri()
-                      for t in entity_finder.get_collection_uri_subtypes(field_entity_type)
+                      for t in entity_finder.get_collection_uri_subtypes(field_entity_type, altscope="all")
                     ])
                 self._field_desc['field_entity_subtypes'] = field_entity_subtypes
                 field_view_context = dict(view_context or {}, field={'subtypes': field_entity_subtypes})
             else:
                 field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=field_view_context, scope="select"
+                type_id=type_ref, context=field_view_context, altscope="select"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
-            # 'Enum_optional' adds a blank entry at the start of the list
             self._field_desc['field_choices'] = collections.OrderedDict()
-            if field_render_type == "Enum_optional":
+            if field_render_type in ["Enum_optional", "Enum_choice_opt"]:
+                # Add blank choice for optional selections
                 self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
             for e in entities:
                 eid = e.get_id()
@@ -170,9 +170,9 @@ class FieldDescription(object):
                     self._field_desc['field_choices'][val] = FieldChoice(
                         val, label=e.get_label(), link=e.get_view_url_path()
                         )
-            log.debug("FieldDescription: typeref %s: %r"%
-                (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
-                )
+            # log.debug("FieldDescription: typeref %s: %r"%
+            #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
+            #     )
         # If field references group, pull in field details
         if group_view:
             if field_id in group_ids_seen:

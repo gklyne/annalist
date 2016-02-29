@@ -54,22 +54,22 @@ _unused_col_head_template = (
 #         save renderer for label in class init, based on (reduced) label_template (above)
 
 # Wrap field label
-label_wrapper_template = (
+label_wrapper_template = ( "<!-- label_wrapper_template -->"+
     """<div class="view-label {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     "</div>"""
     )
 
 # Wrap bare value (e.g. column value)
-value_wrapper_template = (
-    """<div class="view-value {{field.field_placement.field}}">\n"""+
+value_wrapper_template = ( # "<!-- value_wrapper_template -->"+
+    """<div class="view-value {{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
     )
 
 # Wrap value and include label
-label_value_wrapper_template = (
-    """<div class="{{field.field_placement.field}}">\n"""+
+label_value_wrapper_template = ( # "<!-- label_value_wrapper_template -->"+
+    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  <div class="row view-value-row">\n"""+
     """    <div class="view-label {{field.field_placement.label}}">\n"""+
     """      <span>{{field.field_label}}</span>\n"""+
@@ -81,14 +81,16 @@ label_value_wrapper_template = (
     """</div>"""
     )
 
-col_head_wrapper_template = (
+# Wrap field label with column heading styling
+col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
     """<div class="view-label col-head {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
     )
 
-col_label_value_wrapper_template = (
-    """<div class="{{field.field_placement.field}}">\n"""+
+# Wrap value with column value styling; include label on small displays only
+col_label_value_wrapper_template = ( # "<!-- col_label_value_wrapper_template -->"+
+    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
     """  <div class="row show-for-small-only">\n"""+
     """    <div class="view-label small-12 columns">\n"""+
     """      <span>{{field.field_label}}</span>\n"""+

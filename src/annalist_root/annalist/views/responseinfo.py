@@ -129,7 +129,7 @@ class ResponseInfo(object):
         set up for the current responseinfo.  The responseinfo object is updated with
         the generated response, which is also returned as the result of thismethod.
         """
-        # NOTE: supplied URI is presumed to ioncl;ude continuation and other parameters.
+        # NOTE: supplied URI is presumed to include continuation and other parameters.
         # These need to be extracted and passed separately to the underlying
         # `redirect_error` or `redirect_info` method so that they can be reassembled 
         # along with the status messages.

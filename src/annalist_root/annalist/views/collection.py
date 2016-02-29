@@ -15,6 +15,7 @@ from django.http                import HttpResponseRedirect
 from django.core.urlresolvers   import resolve, reverse
 
 from annalist                   import message
+from annalist.identifiers       import ANNAL, RDFS
 from annalist.exceptions        import Annalist_Error
 
 import annalist.models.entitytypeinfo as entitytypeinfo
@@ -116,12 +117,14 @@ class CollectionEditView(AnnalistGenericView):
                 , 'select_rows':        "6"
                 })
             context.update(viewinfo.context_data())
+            context['heading'] = "Customize collection: %(coll_label)s"%context
             return context
         continuation_url = None
         # View permission only to display form, as it presents useful information even when not editing.
         viewinfo = self.collection_edit_setup(coll_id, "view", request.GET.dict())
         if viewinfo.http_response:
             return viewinfo.http_response
+        self.help_markdown = viewinfo.collection.get(RDFS.CURIE.comment, None)
         return (
             self.render_html(resultdata(viewinfo), 'annalist_collection_edit.html') or 
             self.error(self.error406values())

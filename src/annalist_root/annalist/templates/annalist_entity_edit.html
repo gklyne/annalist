@@ -2,17 +2,9 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block heading %}{{ title }}{% endblock %}
+{% block heading %}{{ heading }}{% endblock %}
 
 {% block content %}
-
-<!--
-<div class="row">
-  <div class="large-12 columns">
-    <h3>'{{type_id}}' data in collection '{{coll_id}}'</h3>
-  </div>
-</div>
--->
 
 <div class="row">
   <div class="large-12 columns">
@@ -39,9 +31,12 @@
         <div class="small-12 medium-4 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
-              <input type="submit" name="save"          value="Save" />
-              <input type="submit" name="view"          value="View" />
-              <input type="submit" name="cancel"        value="Cancel" />
+              <input type="submit" name="save"          value="Save"   
+                     title="Save values and return to previous view."/>
+              <input type="submit" name="view"          value="View"
+                     title="Save values and switch to entity view."/>
+              <input type="submit" name="cancel"        value="Cancel"
+                     title="Discard unsaved changes and return to previous view."/>
             </div>
           </div>
         </div>
@@ -49,10 +44,10 @@
           <div class="row">
             <div class="form-buttons small-12 columns text-right">
               {% for b in task_buttons %}
-              <input type="submit" name="{{b.button_name}}" value="{{b.button_label}}" />
+              <input type="submit" name="{{b.button_name}}" value="{{b.button_label}}" title="{{b.button_help}}"/>
               {% endfor %}
               {% if auth_config and edit_view_button and edit_view_button != "no" %}
-              <input type="submit" name="open_view"       value="Edit view" />
+              <input type="submit" name="open_view" value="Edit view" title="Edit definition for this entity view."/>
               {% else %}
               {%if not task_buttons %}
               &nbsp;

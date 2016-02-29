@@ -4,7 +4,7 @@
 , "annal:id":                   "Coll_software_version"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "S/W version"
-, "rdfs:comment":               "Software version compatibility for this collection (requires given or later version of Annalist)"
+, "rdfs:comment":               "Software version compatibility for this collection (requires given or later version of Annalist).  Set automatically when a collection is updated."
 , "annal:field_render_type":    "Showtext"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"
