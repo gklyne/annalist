@@ -306,7 +306,7 @@ Notes for Future TODOs:
         3. group description to use 'annal:member' property override
     - IMPLEMENTING: use `owl:sameAs` for singleton dictionaries in a JSON list.
         - equivalent to `[ owl:sameAs <some_resource> ]`
-        - (could use `@id` has key ?)
+        - (could use `@id` as key ?)
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -327,10 +327,10 @@ Notes for Future TODOs:
 - [x] Provide a way to edit collection metadata (e.g. link from Customize page)
 - [x] Provide a way to edit site metadata (e.g. via link from site front page)
 - [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
-- [ ] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
+- [x] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
     - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
-- [ ] Help display for view: use commentary text from view description; thus can tailor help for each view.
+- [x] Help display for view: use commentary text from view description; thus can tailor help for each view.
 - [ ] Use markdown directly for help text
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
@@ -341,7 +341,7 @@ Notes for Future TODOs:
 - [ ] 3D rendering - check out JSMOL - http://wiki.jmol.org/index.php/JSmol
 - [ ] Visualize data structures from view definitions; generate OWL descriptions; etc.
 - [ ] Remixing spreadsheets: spreadsheet generation from queries as well as ingesting through data bridges.
-- [ ] SPARQL data bridge: use combination opf SPARQL CONSTRUCT query + JSON-LD frame?
+- [ ] SPARQL data bridge: use combination of SPARQL CONSTRUCT query + JSON-LD frame?
 - [ ] View selection based on pattern match; e.g. JSON PATCH "Test" operation.
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
