@@ -85,7 +85,7 @@
         - `git checkout master`
         - `git merge release-prep-x.y.z`
 - [x] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
