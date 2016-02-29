@@ -4,7 +4,7 @@
 , "annal:id":                   "Coll_default_view_type"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Default view type"
-, "rdfs:comment":               "Default view entity type"
+, "rdfs:comment":               "Default view entity type - 'see Default view'."
 , "annal:field_render_type":    "Showtext"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

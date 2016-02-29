@@ -4,7 +4,7 @@
 , "annal:id":                   "List_entity_selector"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Selector"
-, "rdfs:comment":               "An expression that is used to select records to be included in the list view.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type."
+, "rdfs:comment":               "An expression that is used to select records to be included in the list view.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type.  @@TODO: add details of selection expression to online help@@"
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

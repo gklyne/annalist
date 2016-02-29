@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_property"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Property"
-, "rdfs:comment":               "Property URI (or CURIE) used to represent this field data in a record.  A value specified in a view description overrides the value from the corresponding field description."
+, "rdfs:comment":               "Property URI (or CURIE) used to access this field data in JSON data for an entity record, and to construct a property URI in exported RDF data.  A value specified in a view description overrides the value from the corresponding field description."
 , "annal:placeholder":          "(field URI or CURIE)"
 , "annal:field_name":           "Field_property"
 , "annal:field_render_type":    "Identifier"

@@ -4,7 +4,7 @@
 , "annal:id":                   "Type_view"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Default view"
-, "rdfs:comment":               "Default view id for this type"
+, "rdfs:comment":               "Default view definition used when displaying or editing instances of this type"
 , "annal:field_render_type":    "Enum_optional"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:View"

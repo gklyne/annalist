@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_placeholder"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Placeholder"
-, "rdfs:comment":               "Placeholder string displayed in field until actual value is selected"
+, "rdfs:comment":               "Placeholder string displayed in test input area until actual value is entered.  Also be used to indicate no value selected in dropdown box.  Convention is use use value in parentheses to distinguish from actual value."
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

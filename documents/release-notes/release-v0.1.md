@@ -4,11 +4,11 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
-## Current release: 0.1.26
+## Current release: 0.1.28
 
-(See "History" below for information about previous releases)
+(See "History" below for morte details about this and previous releases)
 
-This release provides usability and presentation improvements, and some bug fixes.
+This release contains substantial cosmetic updates, and some bug fixes.
 
 ## Status
 
@@ -84,6 +84,60 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+
+## Version 0.1.28
+
+This release contains substantial cosmetic updates, and some bug fixes.
+
+The main visible change is in the use of view, list and field comment text to provide online hekp and tooltips when editing or viewing data.  This provide some key documentation of user operation details in the user interface itself, rather than in separate documentation files.  External documentation is still needed for overview and HOWTO type information, but the aim is that it will not be so critical for finding details - especially in the area of view and field definitions and use.  These changes also mean that Annalist collections can contain domain-specific online help for their specific purposes and definitions provided.
+
+New functionality in this release is the possibility to use common fields for uploaded, imported and linked resources (e.g. images and audio clips).  This is achieved by creating supertypes that subsume the various sources, which can then be referenced and displayed.  An example of this is the FAST project "Performances" collection description of the [Phil Langran Band](http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/), which presents an image linked from the band's web site, and another that has been uploadsed to Annalist.  This capability was previously unavailable due to bugs in the form presentation logic, which have been fixed inthis release.
+
+There are some smaller usability enhancements.
+
+For more details, see the change notes for release 0.1.27 (below).
+
+
+## Version 0.1.27, towards 0.1.28
+
+- [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
+    - Changed calling enumeration logic to log a warning rather than error when referenced type is absent.
+- [x] Provide option to remove type constraint when listing entities. ('All types' checkbox.)
+- [x] Set default from list view: clear default view details so that default reverts to list
+- [x] Update menu bar to indicate explicit/default type id.  Also list id.
+- [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
+- [x] Re-work entity enumeration to avoid use of predefined built-in types. Fix some enumeration scope bugs.
+- [x] Support references to uploaded OR linked images via subtyping.
+- [x] When referencing fields of a target entity, include implied fields.
+- [x] Adjust use of logging level settings in entity list view.
+- [x] In FieldDescription, setup for value 'field_entity_subtypes' (~L150) - use `scope="all"`.
+    - this allows values of subtypes inherited from other collections (or site-wide) to be included in selection drop-down boxes.
+- [x] Place entity/view labels at start of page title for entity view, edit and list pages
+    - Refactored entityedit for greater symmetry across GET/POST handling
+- [x] Place list label at start of page title for lists
+- [x] Entity save: If no label specified, default to ID with '_' replaced by space
+- [x] Entity save: If no comment specified, default to label
+- [x] Use site comment field to populate help panes on site front page; use Markdown.
+- [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
+- [x] Use list definition comment to populate the help pane for a list display.
+- [x] Use view definition comment as help text on forms
+- [x] Add/update online help documentation to site data view/list definitions
+    - [x] types
+    - [x] views
+    - [x] lists
+    - [x] field groups
+    - [x] enumerations (add label as header)
+    - [x] user permissions
+    - [x] vocabulary namespaces
+- [x] Top menu bar vertical alignment: menu text to use common baseline
+- [x] Use field comment text as tooltip on forms, to tell user how a field value is used
+    - [x] Update renderer logic to include tool tips based on field help text
+    - [x] Update test cases to avoid help-text sensitivity
+    - [x] Added render type `Optional entity choice` for optional reference without edit button
+    - [x] Update field help text
+- [x] Add title attributes to buttons - used as tooltip
+- [x] Create new field type for namespace/vocab id - label 'Prefix'
 
 
 ## Version 0.1.26

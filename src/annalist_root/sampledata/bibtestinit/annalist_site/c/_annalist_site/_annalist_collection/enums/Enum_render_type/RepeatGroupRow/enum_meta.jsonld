@@ -3,7 +3,7 @@
 , "@context":           ["../../coll_context.jsonld"]
 , "annal:id":           "RepeatGroupRow"
 , "annal:type_id":      "Enum_render_type"
-, "rdfs:label":         "Repeating fields as row"
-, "rdfs:comment":       "Field consists of a row of sub-fields, which may be repeated zero or more times in the containing form.  Each field is rendered as a column of a table within the containing form, with field labels as column headers."
-, "annal:uri":          "annal:field_render_type/RepeatGroupRow"
+, "rdfs:label":         "Repeating fields as table"
+, "rdfs:comment":       "# Repeating fields as table\r\n\r\nPresents a group of sub-fields, which may be repeated zero or more times in the containing form.\r\n\r\nEach repetition is presented as a row of a table, and each sub-field as a column, and with sub-field labels as column headers."
+, "annal:uri":          "annal:Enum_render_type/RepeatGroupRow"
 }

@@ -4,6 +4,6 @@
 , "annal:id":           "Textarea"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Multiline text"
-, "rdfs:comment":       "Field rendered as multiple lines of text"
-, "annal:uri":          "annal:field_render_type/Textarea"
+, "rdfs:comment":       "# Multi-line text\r\n\r\nThe stored field value is a string, which is rendered as multiple lines of text."
+, "annal:uri":          "annal:Enum_render_type/Textarea"
 }

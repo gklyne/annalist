@@ -4,6 +4,6 @@
 , "annal:id":           "ZZZZ"
 , "annal:type_id":      "Enum_value_type"
 , "rdfs:label":         "annal:ZZZZ"
-, "rdfs:comment":       "..."
+, "rdfs:comment":       "# Value type: annal:ZZZZ\r\n\r\n..."
 , "annal:uri":          "annal:ZZZZ"
 }

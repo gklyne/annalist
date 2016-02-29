@@ -5,7 +5,7 @@
 , "annal:type_id":  "_vocab"
 , "annal:type":     "annal:Vocabulary"
 , "rdfs:label":     "RDF schema namespace"
-, "rdfs:comment":   "Namespace used for built-in RDF schema terms"
+, "rdfs:comment":   "# Namespace: `rdfs`\r\n\r\nNamespace used for built-in RDF schema terms"
 , "annal:uri":      "http://www.w3.org/2000/01/rdf-schema#"
 , "rdfs:seeAlso":
     [ { "owl:sameAs":   "http://www.w3.org/TR/rdf-schema/" }

@@ -5,7 +5,7 @@
 , "annal:type_id":  "_vocab"
 , "annal:type":     "annal:Vocabulary"
 , "rdfs:label":     "XML Schema datatypes namespace"
-, "rdfs:comment":   "Vocabulary namespace for XML Schema datatypes"
+, "rdfs:comment":   "# Namespace: `xsd`\r\n\r\nVocabulary namespace for XML Schema datatypes"
 , "annal:uri":      "http://www.w3.org/2001/XMLSchema#"
 , "rdfs:seeAlso":
     [ { "owl:sameAs":   "http://www.w3.org/TR/xmlschema11-2/" }

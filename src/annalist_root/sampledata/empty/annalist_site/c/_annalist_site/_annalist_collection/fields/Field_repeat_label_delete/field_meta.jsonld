@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_repeat_label_delete"
 , "annal:type_id":              "_field"
-, "rdfs:label":                 "Delete fields label"
-, "rdfs:comment":               "Short string used to label delete repeated field(s) button in form display"
+, "rdfs:label":                 "Delete value label"
+, "rdfs:comment":               "Short string used to label 'delete' button for repeated field group in form display."
 , "annal:field_render_type":    "Text"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

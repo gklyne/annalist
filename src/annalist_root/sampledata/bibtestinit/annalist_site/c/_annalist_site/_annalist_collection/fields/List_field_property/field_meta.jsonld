@@ -4,7 +4,7 @@
 , "annal:id":                   "List_field_property"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Property"
-, "rdfs:comment":               "Property URI (or CURIE) used in a field-group to indicate the property URI/CURIE of field data to be presented in a list display.  If specified, overrides the property URI value from the corresponding field description."
+, "rdfs:comment":               "Property URI (or CURIE) used in a list definition to indicate the property URI/CURIE of a field to be displayed in that list.  If specified, overrides the property URI value from the corresponding field definition."
 , "annal:placeholder":          "(field URI or CURIE)"
 , "annal:field_name":           "Field_property"
 , "annal:field_render_type":    "Identifier"

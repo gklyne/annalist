@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "annal:type":                 "annal:Field"
 , "rdfs:label":                 "Link to further information"
-, "rdfs:comment":               "Link to additional information."
+, "rdfs:comment":               "Link (URL) for accessing additional information, presented for viewing as a hyperlink."
 , "annal:field_render_type":    "Enum_render_type/URILink"
 , "annal:field_value_mode":     "Enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Identifier"

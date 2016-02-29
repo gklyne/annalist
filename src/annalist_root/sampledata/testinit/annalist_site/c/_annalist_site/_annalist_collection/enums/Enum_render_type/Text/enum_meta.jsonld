@@ -4,6 +4,6 @@
 , "annal:id":           "Text"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Short text"
-, "rdfs:comment":       "Field rendered as single line of text"
-, "annal:uri":          "annal:field_render_type/Text"
+, "rdfs:comment":       "# Short text\r\n\r\nThe stored value is a string, which is rendered as a single line of text."
+, "annal:uri":          "annal:Enum_render_type/Text"
 }

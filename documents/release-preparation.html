@@ -1,0 +1,976 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 980px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+body .markdown-body {
+    padding: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
+
+pre {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background-color: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body input {
+  font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4078c0;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body .select::-ms-expand {
+  opacity: 0;
+}
+
+.markdown-body .octicon {
+  font: normal normal normal 16px/1 octicons-anchor;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .anchor {
+  display: inline-block;
+  padding-right: 2px;
+  margin-left: -18px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  color: #000;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h1 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h3 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h5 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body h6 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .pl-c {
+  color: #969896;
+}
+
+.markdown-body .pl-c1,
+.markdown-body .pl-s .pl-v {
+  color: #0086b3;
+}
+
+.markdown-body .pl-e,
+.markdown-body .pl-en {
+  color: #795da3;
+}
+
+.markdown-body .pl-s .pl-s1,
+.markdown-body .pl-smi {
+  color: #333;
+}
+
+.markdown-body .pl-ent {
+  color: #63a35c;
+}
+
+.markdown-body .pl-k {
+  color: #a71d5d;
+}
+
+.markdown-body .pl-pds,
+.markdown-body .pl-s,
+.markdown-body .pl-s .pl-pse .pl-s1,
+.markdown-body .pl-sr,
+.markdown-body .pl-sr .pl-cce,
+.markdown-body .pl-sr .pl-sra,
+.markdown-body .pl-sr .pl-sre {
+  color: #183691;
+}
+
+.markdown-body .pl-v {
+  color: #ed6a43;
+}
+
+.markdown-body .pl-id {
+  color: #b52a1d;
+}
+
+.markdown-body .pl-ii {
+  background-color: #b52a1d;
+  color: #f8f8f8;
+}
+
+.markdown-body .pl-sr .pl-cce {
+  color: #63a35c;
+  font-weight: bold;
+}
+
+.markdown-body .pl-ml {
+  color: #693a17;
+}
+
+.markdown-body .pl-mh,
+.markdown-body .pl-mh .pl-en,
+.markdown-body .pl-ms {
+  color: #1d3e81;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mq {
+  color: #008080;
+}
+
+.markdown-body .pl-mi {
+  color: #333;
+  font-style: italic;
+}
+
+.markdown-body .pl-mb {
+  color: #333;
+  font-weight: bold;
+}
+
+.markdown-body .pl-md {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.markdown-body .pl-mi1 {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.markdown-body .pl-mdr {
+  color: #795da3;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mo {
+  color: #1d3e81;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .plan-price-unit {
+  color: #767676;
+  font-weight: normal;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.markdown-body .plan-choice {
+  padding: 15px;
+  padding-left: 40px;
+  display: block;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  font-weight: normal;
+  background-color: #fafafa;
+}
+
+.markdown-body .plan-choice.open {
+  background-color: #fff;
+}
+
+.markdown-body .plan-choice.open .plan-choice-seat-breakdown {
+  display: block;
+}
+
+.markdown-body .plan-choice-free {
+  border-radius: 3px 3px 0 0;
+}
+
+.markdown-body .plan-choice-paid {
+  border-radius: 0 0 3px 3px;
+  border-top: 0;
+  margin-bottom: 20px;
+}
+
+.markdown-body .plan-choice-radio {
+  position: absolute;
+  left: 15px;
+  top: 18px;
+}
+
+.markdown-body .plan-choice-exp {
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.markdown-body .plan-choice-seat-breakdown {
+  margin-top: 10px;
+  display: none;
+}
+
+.markdown-body :checked+.radio-label {
+  z-index: 1;
+  position: relative;
+  border-color: #4078c0;
+}
+</style><title>release-preparation</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-notes-for-software-release-preparation" class="anchor" href="#notes-for-software-release-preparation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Notes for software release preparation</h1>
+
+<h2>
+<a id="user-content-summary-of-release-tasks" class="anchor" href="#summary-of-release-tasks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary of release tasks</h2>
+
+<ul>
+<li>[ ] Feature freeze</li>
+<li>[ ] Uninstall annalist (if installed): <code>pip uninstall annalist</code>
+</li>
+<li>[ ] Delete contents of build directory (remove old files) - python setup.py clean --all</li>
+<li>[ ] Clean old .pyc and temporary files
+
+<ul>
+<li>
+<code>git clean -nX</code> (trial run)</li>
+<li>
+<code>git clean -fX</code> (do it)</li>
+</ul>
+</li>
+<li>[ ] Local install</li>
+<li>[ ] Run test suite - <code>annalist-manager runtest</code>
+</li>
+<li>[ ] Update site data in local 'personal' installation
+
+<ul>
+<li><code>annalist-manager updatesitedata</code></li>
+<li><code>annalist-manager initialize</code></li>
+</ul>
+</li>
+<li>[ ] Test 'personal' deployment in actual use
+
+<ul>
+<li><code>annalist-manager runserver</code></li>
+</ul>
+</li>
+<li>[ ] Documentation and tutorial updates</li>
+<li>[ ] Demo screencast update</li>
+<li><p>[ ] Check all recent changes are committed (<code>git status</code>)</p></li>
+<li>
+<p>[x] Create release preparation branch</p>
+
+<ul>
+<li>git stash</li>
+<li>git checkout -b release-prep-x.y.z develop</li>
+<li>git stash pop</li>
+<li>
+<em>NOTE</em> use a different name to that which will be used to tag the release</li>
+</ul>
+</li>
+<li>[x] Add TODO list to release notes (edit out working notes)</li>
+<li>[x] Bump version to even value in <code>src/annalist_root/annalist/__init__.py</code>
+</li>
+<li>[x] Bump data compatibility version if new data is not compatible with older releases</li>
+<li>[x] Regenerate test data (e.g. <code>maketestsitedata.sh</code>, <code>makebibtestsitedata.sh</code> and <code>makeemptysitedata.sh</code>)</li>
+<li>[x] Reinstall and re-run test suite</li>
+<li>[x] Add release highlights description to release notes</li>
+<li>[x] Review issues list in GitHub (<a href="https://github.com/gklyne/annalist/issues">https://github.com/gklyne/annalist/issues</a>)</li>
+<li>[x] Review roadmap (<code>documents/roadmap.md</code>)</li>
+<li>[ ] Update version number in scripts, documents, etc.
+
+<ul>
+<li>[x] Release notes</li>
+<li>[x] documents/installing-annalist.md</li>
+<li>[x] documents/roadmap.md</li>
+<li>[x] documents/pages/index.html</li>
+<li>[x] documents/tutorial/annalist-tutorial.adoc</li>
+<li>[x] src/newkit_to_annalist_net.sh</li>
+<li>[x] src/newkit_to_conina_ubuntu.sh</li>
+<li>[x] Docker build scripts and makefiles</li>
+</ul>
+</li>
+<li>[x] Create announcement text in <code>documents/release-notes/announce_0.1.*.md</code>
+</li>
+<li>
+<p>[ ] Check for new dependencies; update setup.py as needed.</p>
+
+<ul>
+<li>copy kit to dev.annalist.net, install and test
+. newkit_to_annalist_net.sh</li>
+<li>login to dev.annalist.net, then
+rm -rf anenv
+virtualenv anenv
+. anenv/bin/activate
+pip install software/Annalist-0.1.28.tar.gz
+annalist-manager runtest</li>
+</ul>
+</li>
+<li>
+<p>[x] Regenerate tutorial document</p>
+
+<ul>
+<li>
+<code>asciidoctor -b html5 annalist-tutorial.adoc</code> or <code>. make-annalist-tutorial.sh</code> run in the <code>documents/tutorial</code> directory.</li>
+</ul>
+</li>
+<li>[ ] Create and post updated kit download and web pages to annalist.net
+
+<ul>
+<li>use <code>src/newkit_to_annalist_net.sh</code>
+</li>
+</ul>
+</li>
+<li>[ ] Update and test demo installation on annalist.net
+
+<ul>
+<li>ssh to <a href="mailto:annalist@annalist.net">annalist@annalist.net</a>
+</li>
+<li><code>killall python</code></li>
+<li><code>. anenv/bin/activate</code></li>
+<li><code>pip uninstall annalist</code></li>
+<li><code>pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade</code></li>
+<li><code>annalist-manager runtests</code></li>
+<li><code>. update-run-annalist.sh</code></li>
+<li><code>cat annalist.out</code></li>
+</ul>
+</li>
+<li>[ ] Update front page link at annalist.net - copy <code>~annalist/uploads/pages/index.html</code> to <code>/var/www</code>
+    cp ~annalist/uploads/pages/index.html /var/www</li>
+<li>[ ] Update tutorial document at annalist.net
+    cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/</li>
+<li>[ ] Check out demo system.</li>
+<li>[ ] Commit changes</li>
+<li>[ ] Upload to PyPI (see below)</li>
+<li>[ ] Tag release on release branch
+
+<ul>
+<li><code>git tag -a release-x.y.z</code></li>
+</ul>
+</li>
+<li>[ ] Merge release branch to master
+
+<ul>
+<li>e.g.
+
+<ul>
+<li><code>git checkout master</code></li>
+<li><code>git merge release-prep-x.y.z</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>[ ] Test again on master branch</li>
+<li>[ ] Push master branch, and tags
+
+<ul>
+<li><code>git add ..</code></li>
+<li><code>git commit -m "Master branch updated to Vx.y.z"</code></li>
+<li><code>git push</code></li>
+<li><code>git push --tags</code></li>
+</ul>
+</li>
+<li>[ ] Merge release branch to develop
+
+<ul>
+<li>take care to ensure the branch is merged, not the tagged release</li>
+<li>e.g.
+
+<ul>
+<li><code>git checkout develop</code></li>
+<li><code>git merge release-prep-x.y.z</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>[ ] Bump/check Zenodo DOI details:
+
+<ul>
+<li>On GitHub, create a new release</li>
+<li>The rest should just happen.</li>
+<li>The DOI in the badge should update</li>
+<li>It may take a few minutes for the new DOI to resolve.</li>
+</ul>
+</li>
+<li>[ ] On develop branch, bump version number again (back to odd value)</li>
+<li>[ ] Reset TODO list (remove entries moved to release notes, update version)</li>
+<li>[ ] Commit and push changes</li>
+<li>[ ] Delete release branch
+
+<ul>
+<li><code>git branch -d release-prep-x.y.z</code></li>
+</ul>
+</li>
+<li>[ ] Regenerate test data (e.g. <code>maketestsitedata.sh</code>, <code>makebibtestsitedata.sh</code> and <code>makeemptysitedata.sh</code>), retest</li>
+<li><p>[ ] Commit and push changes</p></li>
+<li><p>[ ] Create Docker image, test (see below)</p></li>
+<li>[ ] Push docker image to DockerHub (see below)</li>
+<li>[ ] Post announcement to Google Group, Twitter and elsewhere</li>
+</ul>
+
+<h2>
+<a id="user-content-build-kit-and-pypi-upload" class="anchor" href="#build-kit-and-pypi-upload" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build kit and PyPI upload</h2>
+
+<p>Local:</p>
+
+<pre><code>python setup.py clean --all
+python setup.py build
+python setup.py sdist
+python setup.py install
+</code></pre>
+
+<p>Register with PyPI:</p>
+
+<pre><code>python setup.py register
+</code></pre>
+
+<p>Upload to PyPI:</p>
+
+<pre><code>python setup.py sdist upload
+</code></pre>
+
+<h2>
+<a id="user-content-create-docker-images" class="anchor" href="#create-docker-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create docker images</h2>
+
+<p>The following sequence must be run on any system with docker installed (cf. ssh-dev-annalist.sh).  It assumes that the relevant version of Annalist has been installed and tested on the local system.</p>
+
+<p>Use a well-connected Linux system for the following steps, and set the python virtual environment.</p>
+
+<pre><code># On dev.annalist.net:
+ANNALIST=~/github/gklyne/annalist
+cd ${ANNALIST}/src
+git checkout master
+git pull
+pip uninstall annalist
+python setup.py clean --all
+python setup.py build
+python setup.py install
+annalist-manager version  # Check display
+
+cd ${ANNALIST}/src/docker/annalist_site
+make all
+make push
+
+cd ${ANNALIST}/src/docker/annalist
+make all
+make push
+</code></pre>
+
+<p>See <a href="/usr/workspace/github/gklyne/annalist/documents/installing-annalist.md">installing-annalist.md</a> for details of how to run and test the resulting container.  Or just some combination of:</p>
+
+<pre><code>docker ps
+docker pull gklyne/annalist_site
+docker pull gklyne/annalist
+docker run --detach --publish=8000:8000 --volumes-from=annalist_site     gklyne/annalist     annalist-manager runserver
+docker ps
+curl -v http://localhost:8000/annalist/
+curl -v http://localhost:8000/annalist/site/
+docker run --interactive --tty --rm     --volumes-from=annalist_site     gklyne/annalist bash
+  # check out admin stripts, etc
+docker stop &lt;container-id&gt;
+docker ps
+</code></pre>
+</article></body></html>

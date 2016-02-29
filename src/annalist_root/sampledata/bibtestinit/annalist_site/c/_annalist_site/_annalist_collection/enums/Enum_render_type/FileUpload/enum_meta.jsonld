@@ -4,6 +4,6 @@
 , "annal:id":           "FileUpload"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "File upload"
-, "rdfs:comment":       "Choose and upload file from client computer. Mostly supeseded by ``Value_mode` options."
-, "annal:uri":          "annal:field_render_type/FileUpload"
+, "rdfs:comment":       "# Render type: file upload\r\n\r\nChoose and upload file from client computer. (Mostly superseded by ``Value_mode` options.)"
+, "annal:uri":          "annal:Enum_render_type/FileUpload"
 }

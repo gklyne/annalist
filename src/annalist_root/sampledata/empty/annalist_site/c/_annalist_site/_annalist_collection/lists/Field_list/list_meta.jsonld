@@ -3,8 +3,8 @@
 , "@context":                   ["../../coll_context.jsonld"]
 , "annal:id":                   "Field_list"
 , "annal:type_id":              "_list"
-, "rdfs:label":                 "List fields"
-, "rdfs:comment":               "Description of list of fields"
+, "rdfs:label":                 "Field definitions"
+, "rdfs:comment":               "# Field definitions\r\n\r\nThis display lists [field definitions](/annalist/c/_annalist_site/d/_type/_field/) that may be referenced by [views](/annalist/c/_annalist_site/d/_type/_view/), [lists](/annalist/c/_annalist_site/d/_type/_list/) or\r\n[field groups](/annalist/c/_annalist_site/d/_type/_group/)."
 , "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/Field_view"
 , "annal:default_type":         "_type/_field"

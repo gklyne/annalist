@@ -4,7 +4,7 @@
 , "annal:id":                   "Coll_default_list_id"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Default list"
-, "rdfs:comment":               "Default list for viewing collection"
+, "rdfs:comment":               "Default list for viewing a collection. Overridden by 'Default view' and friends if specified, but even then is accessible using a URL of the form '/annalist/collection/l/'. This value is set by clicking 'Set default' in an explicitly chosen list view."
 , "annal:field_render_type":    "Showtext"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Text"

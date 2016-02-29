@@ -4,6 +4,6 @@
 , "annal:id":           "Markdown"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Markdown rich text"
-, "rdfs:comment":       "Text value rendered for viewing as Markdown"
-, "annal:uri":          "annal:field_render_type/Markdown"
+, "rdfs:comment":       "# Render type: Markdown rich text\r\n\r\nText value rendered for viewing as rich text, with formatting described using Markdown conventions."
+, "annal:uri":          "annal:Enum_render_type/Markdown"
 }

@@ -4,7 +4,7 @@
 , "annal:id":                   "View_edit_view"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Editable view?"
-, "rdfs:comment":               "Selects whether an 'Edit view' option is provided while editing an entity.  If present, this button provides access to the view (and maybe other) edit forms to define new field details while editing an entity.  (This option is view-specific: built-in views are not intended to be edited and do not present an 'Edit view' button.  Subject to permisions, any view description can always be edited directly.)"
+, "rdfs:comment":               "Selects whether an 'View description' button is provided when viewing an entity, and an 'Edit view' button while editing an entity.  If present, these buttons provides access to the view (and maybe other) edit forms to view and/or define new field details while editing an entity.  (This option is view-specific: built-in views are not intended to be edited and do not present these buttons.  Subject to permisions, any view description can be edited directly.)"
 , "annal:field_name":           "View_edit_view"
 , "annal:field_render_type":    "CheckBox"
 , "annal:field_value_mode":     "Value_direct"
