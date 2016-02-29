@@ -15,64 +15,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] New demo screencasts
 
 
-# Version 0.1.27, towards 0.1.28
+# Version 0.1.29, towards 0.1.30
 
-- [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
-    - Changed calling enumeration logic to log a warning rather than error when referenced type is absent.
-    - May want to revisit to enumerate values without implied values if type is missing.
-    - rename "inferred_values" to "implied values".
-- [x] Provide option to remove type constraint when listing entities.
-- [x] Set default from list view: clear default view details so that default reverts to list
-- [x] Update menu bar to indicate explicit/default type id.  Also list id.
-- [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
-- [x] Re-work entity enumeration to avoid use of predefined built-in types. Fix some enumeration scope bugs.
-- [x] Support references to uploaded OR linked images via subtyping.
-- [x] When referencing fields of a target entity, include implied fields.
-- [x] Adjust use of logging level settings in entity list view.
-- [x] In FieldDescription, setup for value 'field_entity_subtypes' (~L150) - use `scope="all"`.
-- [x] Place entity/view labels at start of page title for entity view, edit and list pages
-    - Refactored entityedit for greater symmetry across GET/POST handling
-    - displayinfo.context_data is used to supply additional context needed
-- [x] Place list label at start of page title for lists
-- [x] If no label specified, default to ID with '_' replaced by space
-- [x] If no comment specified, default to label
-
-- [x] Use site comment field to populate help panes on site; use Markdown.
-- [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
-- [x] Use list comment to populate the help pane for a list display.
-- [x] Use view description comment as help text on forms
-- [x] Add/update online help documentation to site data definitions
-    - [x] types
-    - [x] views
-    - [x] lists
-    - [x] field groups
-    - [x] enumerations (add label as header)
-    - [x] user permissions
-    - [x] vocabulary namespaces
-- [x] Top menu bar vertical alignment: menu text should use common baseline
-    - A bit hacky - had to pixel-tweak the height - is there a better way?
-    - Converted pixels to REMs - maybe this will be slightly more consistent
-- [x] Use field comment text as tooltip on forms, to tell user how a field value is used
-    - [x] Update renderer logic to include tool tips based on field help text
-    - [x] Update test cases to avoid help-text sensitivity
-    - [x] Field `Coll_parent` needs option fopr optional reference without button
-    - [x] Update field help text to match
-    - [x] Update test cases
-    - [x] Check field names in help text for type/view/list/etc views (see above for list to check)
-- [x] Add title attributes to all buttons - used as tooltip
-- [x] Create new field type for namespace/vocab id - label 'Prefix'
-
-(release?)
-
-- [ ] Edit collection metadata button on collection edit (customize) view.
-- [ ] Collection edit (customize) option from view?
+- [ ] Add "Edit collection metadata" button to collection edit (customize) view.
 - [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
-    - relative references are unreliable, and collection name 
+    - relative references are unreliable 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 - [ ] Implement at least one other identify provider (ORCID?)
+    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+        - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+    - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
+        - hard to find actual provider service other than Google
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
@@ -121,10 +77,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
 
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
-    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
-    - hard to find actual provider service other than Google
 
 (feature freeze for V0.9alpha?)
 (0.5?)

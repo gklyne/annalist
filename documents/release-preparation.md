@@ -19,30 +19,30 @@
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 
-- [x] Create release preparation branch
+- [ ] Create release preparation branch
     - git stash
     - git checkout -b release-prep-x.y.z develop
     - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [x] Add TODO list to release notes (edit out working notes)
-- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [x] Bump data compatibility version if new data is not compatible with older releases
-- [x] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
-- [x] Reinstall and re-run test suite
-- [x] Add release highlights description to release notes
-- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [x] Review roadmap (`documents/roadmap.md`)
+- [ ] Add TODO list to release notes (edit out working notes)
+- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [ ] Bump data compatibility version if new data is not compatible with older releases
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
+- [ ] Reinstall and re-run test suite
+- [ ] Add release highlights description to release notes
+- [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
+- [ ] Review roadmap (`documents/roadmap.md`)
 - [ ] Update version number in scripts, documents, etc.
-    - [x] Release notes
-    - [x] documents/installing-annalist.md
-    - [x] documents/roadmap.md
-    - [x] documents/pages/index.html
-    - [x] documents/tutorial/annalist-tutorial.adoc
-    - [x] src/newkit_to_annalist_net.sh
-    - [x] src/newkit_to_conina_ubuntu.sh
-    - [x] Docker build scripts and makefiles
-- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [x] Check for new dependencies; update setup.py as needed.
+    - [ ] Release notes
+    - [ ] documents/installing-annalist.md
+    - [ ] documents/roadmap.md
+    - [ ] documents/pages/index.html
+    - [ ] documents/tutorial/annalist-tutorial.adoc
+    - [ ] src/newkit_to_annalist_net.sh
+    - [ ] src/newkit_to_conina_ubuntu.sh
+    - [ ] Docker build scripts and makefiles
+- [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [ ] Check for new dependencies; update setup.py as needed.
     - copy kit to dev.annalist.net, install and test
         . newkit_to_annalist_net.sh
     - login to dev.annalist.net, then
@@ -57,11 +57,11 @@
         annalist-manager defaultadmin
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
-- [x] Regenerate tutorial document
+- [ ] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
-- [x] Create and post updated kit download and web pages to annalist.net
+- [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update and test demo installation on annalist.net
+- [ ] Update and test demo installation on annalist.net
     - ssh to annalist@annalist.net
     - `killall python`
     - `. anenv/bin/activate`
@@ -71,11 +71,11 @@
     - `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [x] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
         cp ~annalist/uploads/pages/index.html /var/www
-- [x] Update tutorial document at annalist.net
+- [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [x] Check out demo system.
+- [ ] Check out demo system.
 - [ ] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
@@ -102,11 +102,10 @@
     - It may take a few minutes for the new DOI to resolve.
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
-- [ ] Commit and push changes
 
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
