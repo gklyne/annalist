@@ -166,7 +166,7 @@ See [installing-annalist.md](installing-annalist.md) for details of how to run a
     curl -v http://localhost:8000/annalist/
     curl -v http://localhost:8000/annalist/site/
     docker run --interactive --tty --rm     --volumes-from=annalist_site     gklyne/annalist bash
-      # check out admin stripts, etc
+      # check out admin scripts, etc
     docker stop <container-id>
     docker ps
 
