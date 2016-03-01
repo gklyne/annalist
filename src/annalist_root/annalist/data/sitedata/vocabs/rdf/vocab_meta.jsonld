@@ -8,6 +8,6 @@
 , "rdfs:comment":   "# Namespace: `rdf`\r\n\r\nNamespace used for built-in RDF classes and properties"
 , "annal:uri":      "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 , "rdfs:seeAlso":
-    [ { "owl:sameAs":   "http://www.w3.org/TR/rdf11-concepts/" }
+    [ { "@id":   "http://www.w3.org/TR/rdf11-concepts/" }
     ]
 }

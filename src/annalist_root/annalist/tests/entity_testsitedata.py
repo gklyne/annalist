@@ -212,7 +212,7 @@ def get_site_bib_views():
 
 site_field_groups = (
     [ FieldChoice("_group/_initial_values")
-    , FieldChoice("_group/Entity_see_also_repeat",     label="Links to further information")
+    , FieldChoice("_group/Entity_see_also_r",          label="Links to further information")
     , FieldChoice("_group/Group_field_group",          label="Group field fields"         )
     , FieldChoice("_group/List_field_group",           label="List field fields"          )
     , FieldChoice("_group/Type_alias_group",           label="Field alias fields"         )
@@ -239,7 +239,7 @@ site_default_entity_fields = (
     , FieldChoice("_field/Entity_comment",             label="Comment"          )
     , FieldChoice("_field/Entity_id",                  label="Id"               )
     , FieldChoice("_field/Entity_label",               label="Label"            )
-    , FieldChoice("_field/Entity_see_also_repeat",     label="See also"         )
+    , FieldChoice("_field/Entity_see_also_r",          label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )
     ])
 

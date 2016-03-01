@@ -17,6 +17,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.29, towards 0.1.30
 
+- [ ] Site vocabulary changes
+    - `Entity_see_also_repeat` -> `Entity_see_also_r`
+    - `Entity_see_also_repeat_field` -> `Entity_see_also_group`
+    - `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
+- [ ] Add data migration logic for vocabs
+- [ ] Absorb groups into field defs?
+
+(release?)
+
 - [ ] Add "Edit collection metadata" button to collection edit (customize) view.
 - [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 

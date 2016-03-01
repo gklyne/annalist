@@ -194,10 +194,10 @@ SUFFIX_VIEW             = ""
 SUFFIX_TYPE             = ""
 SUFFIX_REPEAT           = "_r"
 SUFFIX_REPEAT_P         = "_r"
-SUFFIX_REPEAT_G         = "_g"
+SUFFIX_REPEAT_G         = "_r"
 SUFFIX_MULTI            = "_m"
 SUFFIX_MULTI_P          = "_m"
-SUFFIX_MULTI_G          = "_g"
+SUFFIX_MULTI_G          = "_m"
 
 class Layout(object):
     """

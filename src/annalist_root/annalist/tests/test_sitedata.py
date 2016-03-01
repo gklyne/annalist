@@ -849,7 +849,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             # [ [ "_group/_initial_values",          ["_initial_values"] ]
-            [ [ "_group/Entity_see_also_repeat",   ["Entity_see_also_repeat",   "Links to further information"] ]
+            [ [ "_group/Entity_see_also_r",        ["Entity_see_also_r",        "Links to further information"] ]
             , [ "_group/Group_field_group",        ["Group_field_group",        "Group field fields"] ]
             , [ "_group/List_field_group",         ["List_field_group",         "List field fields"] ]
             , [ "_group/Type_alias_group",         ["Type_alias_group",         "Field alias fields"] ]
@@ -972,8 +972,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:Slug"            ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"            ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "annal:Identifier"      ] ]
-            , [ "_field/Entity_see_also_repeat",    ["Entity_see_also_repeat", 
-                                                                          "Repeating fields as table", 
+            , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Repeating fields as table", 
                                                                                             "annal:Field_group"     ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"        ] ]
@@ -1206,7 +1205,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Entity_label"
             , "_field/Entity_comment"
             , "_field/Vocab_uri"
-            , "_field/Entity_see_also_repeat"
+            , "_field/Entity_see_also_r"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(s, "view_choice", self.views_expected, "_view/View_view")

@@ -30,6 +30,6 @@ presumption that new software can read older data, and migrate it where necessar
 Not all software updates create data that cannot be read by older software: for 
 these updates the __version_data__ value can be left unchanged.
 """
-__version_data__   = "0.1.23"   # Data compatibility version number
+__version_data__   = "0.1.29"   # Data compatibility version number
 
 # End.
