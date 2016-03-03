@@ -23,7 +23,7 @@ command_summary_help = ("\n"+
     "  %(prog)s help [command]\n"+
     "  %(prog)s runtests\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
-    # "  %(prog)s idprovider ...\n"+  #@@ TODO
+    #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s defaultadminuser [ CONFIG ]\n"+
     "  %(prog)s updateadminuser [ username ] [ CONFIG ]\n"+
@@ -32,6 +32,7 @@ command_summary_help = ("\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
+    "  %(prog)s migratecollection old_coll new_coll [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
@@ -230,6 +231,21 @@ def am_help(options, progname):
             "\nExisting collection data is left untouched.\n"+
             "\n"+
             "If the site does not exist, the command fails.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migratec"):
+        help_text = ("\n"+
+            "  %(prog)s migratecollection old_coll new_coll [ CONFIG ]\n"+
+            "\n"+
+            "Data migration helper generates report of changes needed to move data from\n"+
+            "collection 'old_coll' to 'new_coll', based on the type, view and field definitions\n"+
+            "in those collections.\n"+
+            "\n"+
+            "Existing collection data is left untouched.\n"+
+            "\n"+
+            "@@NOTE: this is exploratoty code.\n"+
             "\n"+
             config_options_help+
             "\n"+

@@ -21,8 +21,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - `Entity_see_also_repeat` -> `Entity_see_also_r`
     - `Entity_see_also_repeat_field` -> `Entity_see_also_group`
     - `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
-- [ ] Add data migration logic for vocabs
+- [x] Add data migration logic for vocabs
+- [ ] Review data migration requirements
+    - think about migration assistant and workflow; e.g.
+        1. create new collection with inheritance, make changes, then compare changes with original
+        2. extract definitions, update and augment, then compare changes with definitions in original
 - [ ] Absorb groups into field defs?
+- [ ] When copying entity, generate new ID by prepending number to copied Id
+- [ ] Generate default value type for field based on render type + value mode (to help with consistency)
+    - See notes.
 
 (release?)
 

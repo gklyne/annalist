@@ -41,5 +41,6 @@ AM_MISSINGEMAIL    = 10     # No email address for createuser or creaeadminuser
 AM_UNKNOWNCMD      = 11     # Unknown command name for help
 AM_USEREXISTS      = 12     # Username for creation already exists
 AM_USERNOTEXISTS   = 13     # Username for deletion does not exist
+AM_NOCOLLECTION    = 14     # Identified collection not found
 
 # End.
