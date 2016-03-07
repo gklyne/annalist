@@ -499,10 +499,10 @@ class EntityTypeInfo(object):
 
     def get_entity_implied_values(self, entity):
         """
-        Adds inferrable values to the supplied entity value (e.g. aliases),
+        Adds implied values to the supplied entity value (e.g. aliases),
         and returns a new value with the additional values
 
-        Inferred values are determined by the type of the entity, and if type
+        Implied values are determined by the type of the entity, and if type
         information is not present this function generates a failure.
         """
         if not self.recordtype: 
@@ -510,15 +510,15 @@ class EntityTypeInfo(object):
                 "EntityTypeInfo.get_entity_implied_values called with no type information available.  "+
                 "entity_id %s/%s, type_id %s"%(entity.get_type_id(), entity.get_id(), self.type_id)
                 )
-        inferred_entity = entity
-        if inferred_entity and ANNAL.CURIE.field_aliases in self.recordtype:
-            inferred_entity = copy.deepcopy(entity)
+        implied_entity = entity
+        if implied_entity and ANNAL.CURIE.field_aliases in self.recordtype:
+            implied_entity = copy.deepcopy(entity)
             for alias in self.recordtype[ANNAL.CURIE.field_aliases]:
                 tgt = alias[ANNAL.CURIE.alias_target]
                 src = alias[ANNAL.CURIE.alias_source]
-                if inferred_entity.get(tgt, None) in [None, ""]:
-                    inferred_entity[tgt] = inferred_entity.get(src, "")
-        return inferred_entity
+                if implied_entity.get(tgt, None) in [None, ""]:
+                    implied_entity[tgt] = implied_entity.get(src, "")
+        return implied_entity
 
     def copy_data_files(self, new_entity_id, old_typeinfo, old_entity_id):
         """
