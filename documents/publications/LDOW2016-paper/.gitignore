@@ -1,0 +1,12 @@
+Annalist-paper-body.tex
+Annalist-paper-ACMSIG-blx.bib
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf
+*.xml
+*.zip
+*.out
+*.backup
+
