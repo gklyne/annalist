@@ -520,38 +520,6 @@ class EntityTypeInfo(object):
                     implied_entity[tgt] = implied_entity.get(src, "")
         return implied_entity
 
-    def _unused_copy_data_files(self, new_entity_id, old_typeinfo, old_entity_id):
-        """
-        Copy associated data files from specified entity to new.
-        """
-        if self.entity_exists(new_entity_id):
-            if old_typeinfo.entity_exists(old_entity_id):
-                # _new_entity just constructs a new object of the appropriate class
-                new_entity = self._new_entity(new_entity_id)
-                old_entity = old_typeinfo._new_entity(old_entity_id)
-                new_entity._copy_entity(old_entity)
-                #@@
-                # for p, f in old_entity._entity_files():
-                #     if not new_entity._exists_file(f):
-                #         p_new = new_entity._copy_file(p, f)
-                #         if not p_new:
-                #             log.warning(
-                #                 "EntityTypeInfo.copy_data_files: error copying file %s from %s to %s"%
-                #                 (f, old_entity_id, new_entity_id)
-                #                 )
-                #@@
-            else:
-                log.warning(
-                    "EntityTypeInfo.copy_data_files: source entity not found %s/%s"%
-                    (old_typeinfo.type_id, old_entity_id)
-                    )
-        else:
-            log.warning(
-                "EntityTypeInfo.copy_data_files: target entity not found %s/%s"
-                %(self.type_id, entity_id)
-                )
-        return
-
     def rename_entity(self, new_entity_id, old_typeinfo, old_entity_id):
         """
         Copy associated data files from specified entity to new.

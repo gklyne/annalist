@@ -1367,7 +1367,6 @@ class GenericEntityEditView(AnnalistGenericView):
         msg        = new_entity._copy_entity_files(old_entity)
         if msg:
             return (message.SYSTEM_ERROR,  msg)
-        # new_typeinfo.copy_data_files(new_entity_id, old_typeinfo, old_entity_id)
         if new_typeinfo.entity_exists(new_entity_id):    # Precautionary
             old_typeinfo.remove_entity(old_entity_id)
         else:
