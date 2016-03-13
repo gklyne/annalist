@@ -32,7 +32,9 @@ command_summary_help = ("\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
-    "  %(prog)s migratecollection old_coll new_coll [ CONFIG ]\n"+
+    "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
+    "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
+    "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
@@ -235,17 +237,41 @@ def am_help(options, progname):
             config_options_help+
             "\n"+
             "")
-    elif options.args[0].startswith("migratec"):
+    elif options.args[0].startswith("copyc"):
         help_text = ("\n"+
-            "  %(prog)s migratecollection old_coll new_coll [ CONFIG ]\n"+
+            "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
             "\n"+
-            "Data migration helper generates report of changes needed to move data from\n"+
-            "collection 'old_coll' to 'new_coll', based on the type, view and field definitions\n"+
-            "in those collections.\n"+
+            "Copy collection 'old_coll_id' to a new collection called 'new_coll_id'\n"+
             "\n"+
-            "Existing collection data is left untouched.\n"+
+            "Existing collection data in 'old_coll_id' is left untouched.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migrationr"):
+        help_text = ("\n"+
+            "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
+            "\n"+
+            "This data migration helper generates report of changes needed to move data\n"+
+            "from collection 'old_coll_id' to 'new_coll_id', based on the type, view and\n"+
+            "field definitions in those collections.\n"+
+            "\n"+
+            "Existing collection data in 'old_coll_id' is left untouched.\n"+
             "\n"+
             "@@NOTE: this is exploratoty code.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migratec"):
+        help_text = ("\n"+
+            "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
+            "\n"+
+            "This command applies migrations to data for all entities in\n"+
+            "collection 'coll_id', by reading and rewriting data for each entity.\n"+
+            "The migrations applied are defined by supertypes and fiekld aliases\n"+
+            "defined for types used by the collection, along with any software version\mn"+
+            "migrations that may be applicable.\n"+
             "\n"+
             config_options_help+
             "\n"+

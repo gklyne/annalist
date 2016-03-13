@@ -76,6 +76,7 @@ ENTITY_MESSAGE_LABEL        = "%(type_id)s/%(entity_id)s in collection %(coll_id
 ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DOES_NOT_EXIST       = "Entity %(id)s does not exist"
+ENTITY_COPY_FILE_ERROR      = "Failed to copy file %(file)s while copying entity %(src_id)s to %(id)%"
 
 RESOURCE_DOES_NOT_EXIST     = "Resource %(ref)s for entity %(id)s does not exist"
 RESOURCE_NOT_DEFINED        = "Resource %(ref)s is not present for entity %(id)s"

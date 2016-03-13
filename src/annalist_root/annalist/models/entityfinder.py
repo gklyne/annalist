@@ -196,7 +196,7 @@ class EntityFinder(object):
         user_permissions=None, type_id=None, altscope=None, context=None, search=None
         ):
         """
-        Get list of entities of the specified type, matching search term and visible to 
+        Iterates over entities of the specified type, matching search term and visible to 
         supplied user permissions.
         """
         entities = self._selector.filter(

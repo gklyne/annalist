@@ -17,21 +17,35 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.29, towards 0.1.30
 
+- [x] Add data migration logic for vocabs
+- [x] Think further about how data migration can be handled.  
+    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+    - For now, using supertypes and proprty aliases, with migration report option in annalist-manager.
+- [x] annalist-manager option for migrating collection data
+    - [x] `annalist-manager migratecollection`: needs to load and save every entity in a collection and force rewriting of context data.  
+    - [x] test
+    - [x] also regenerate collection context data
+- [x] annalist-manager option to copy collection data
+    - [x] `annalist-manager copycollection from to` (copy existing)
+    - [ ] `annalist-manager installcollection name` (predefined)
+- [ ] When supertypes are changed, need to regenerate @type fields of instances?
+    - [ ] consider migration option on customize page
+- [ ] Add "Edit collection metadata" button to collection edit (customize) view.
+- [ ] Drop tooltips from fields in view-only mode: they aren't really very helpful.
+    - it would be nice if link field tooltips describe what they link to
 - [ ] Site vocabulary changes
     - [ ] `Entity_see_also_repeat` -> `Entity_see_also_r`
     - [ ] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
     - [ ] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
-- [x] Add data migration logic for vocabs
-- [ ] Review data migration requirements
-- [ ] Absorb groups into field defs?
-- [ ] When copying entity, generate new ID by prepending number to copied Id
+- [ ] When copying entity, generate new ID by prepending/appending number to copied Id
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
-- [ ] Consider dropping tooltips from fields in view-only mode: they aren't really very helpful.
+- [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
+- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
 
 (release?)
 
-- [ ] Add "Edit collection metadata" button to collection edit (customize) view.
 - [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
@@ -47,17 +61,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
-- [ ] Task button option to copy type+view+list and update names and URIs
-- [ ] Create schema definitions in Annalist for ANNAL namespace
 
-- [ ] When supertypes are changed, need to regenerate @type fields of instances
-    - Or be smarter about how entries for listing are selected.  
-    - Link to migration?
-- [ ] Think further about how data migration can be handled.  
-    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-- [ ] Add image and audio resource fields to site data
-- [ ] Add journal and note entry definitions to site data
+- [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [x] avoid explicit reference to `_annalist_collection`?
     - [ ] review base URI designation in JSON-LD:
@@ -80,11 +85,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
     - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
-- [ ] annalist-manager option for migrating collection data
-    - needs to load and save every entity in a collection and force rewriting of context data.  
-    - or option on customize page?
-    - also regenerate collection context data
-- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
@@ -179,6 +179,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Absorb groups into field defs?
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.

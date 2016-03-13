@@ -38,7 +38,7 @@ from am_createuser          import (
     am_deleteuser
     )
 from am_createsite          import am_createsite, am_updatesite
-from am_migratecoll         import am_migratecollection
+from am_managecollections   import am_migrationreport, am_migratecollection, am_copycollection
 from am_help                import am_help, command_summary_help
 
 VERSION = annalist.__version__
@@ -133,6 +133,10 @@ def run(userhome, userconfig, options, progname):
         return am_createsite(annroot, userhome, options)
     if options.command.startswith("updates"):               # updatesitedata
         return am_updatesite(annroot, userhome, options)
+    if options.command.startswith("copyc"):                 # copycollection
+        return am_copycollection(annroot, userhome, options)
+    if options.command.startswith("migrationr"):            # migrationreport
+        return am_migrationreport(annroot, userhome, options)
     if options.command.startswith("migratec"):              # migratecollection
         return am_migratecollection(annroot, userhome, options)
     if options.command.startswith("runs"):                  # runserver

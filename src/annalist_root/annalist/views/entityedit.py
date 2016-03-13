@@ -813,7 +813,7 @@ class GenericEntityEditView(AnnalistGenericView):
         no data is saved.
 
         viewinfo        contains display context for the form which is being processed
-        entityvaluemap  a list of field descriptions that are used to map valuyes between
+        entityvaluemap  a list of field descriptions that are used to map values between
                         the edited entyity and the form display, including references to
                         field descriptions that control hopw values are rendered.  This
                         is used to find form 
@@ -1361,11 +1361,13 @@ class GenericEntityEditView(AnnalistGenericView):
         heading and the message body.
         """
         log.info("rename_entity old: %s, new: %s, vals: %r"%(old_entity_id, new_entity_id, entity_values))
-        #@@TODO: this might be easier if copy data first, then write new metadata
-        #        then copy_data_files logic can be simplified.
-        #        e.g. see rename_collection above
-        new_typeinfo.create_entity(new_entity_id, entity_values)
-        new_typeinfo.copy_data_files(new_entity_id, old_typeinfo, old_entity_id)
+        # _new_entity just constructs a new object of the appropriate class
+        old_entity = old_typeinfo._new_entity(old_entity_id)
+        new_entity = new_typeinfo.create_entity(new_entity_id, entity_values)
+        msg        = new_entity._copy_entity_files(old_entity)
+        if msg:
+            return (message.SYSTEM_ERROR,  msg)
+        # new_typeinfo.copy_data_files(new_entity_id, old_typeinfo, old_entity_id)
         if new_typeinfo.entity_exists(new_entity_id):    # Precautionary
             old_typeinfo.remove_entity(old_entity_id)
         else:

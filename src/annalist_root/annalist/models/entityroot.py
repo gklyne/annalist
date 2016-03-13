@@ -534,6 +534,8 @@ class EntityRoot(object):
         return iter(())     # Empty iterator
 
     def _entity_files(self):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entitytypeinfo'
         """
         Iterates over files/resources (not subdirectories) that are part of the current entity.
 
@@ -546,7 +548,37 @@ class EntityRoot(object):
                 yield (p, f)
         return
 
-    def _entity_files_dirs(self):
+    def _copy_entity_files(self, src_entity):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entityedit', 'am_managecollections'
+        """
+        Copy metadata abnd attached resources from the supplied `src_entity` 
+        to the current entity.
+
+        Resources that already exist for the current entty are not copied.
+
+        returns     None if all files are copied OK, 
+                    otherwise a message string for reporting.
+        """
+        msg = None
+        for p, f in src_entity._entity_files():
+            if not self._exists_file(f):
+                p_new = self._copy_file(p, f)
+                if not p_new:
+                    msg_vals = (
+                        { 'id':     self.get_id()
+                        , 'src_id': src_entity.get_id()
+                        , 'file':   f
+                        })
+                    log.warning(
+                        "EntityRoot._copy_entity_files: error copying file %(file)s from %(src_id)s to %(id)s"%
+                        msg_vals
+                        )
+                    msg = message.ENTITY_COPY_FILE_ERROR%msg_vals
+        return
+
+    def _unused_entity_files_dirs(self):
+        #@@TODO: abstract logic to work with non-file storage
         """
         Iterates over files/resources that are part of the current entity.
 
@@ -560,12 +592,16 @@ class EntityRoot(object):
         return
 
     def _exists_file(self, f):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entitytypeinfo'
         """
         Test if a file named 'f' exists in the current entity directory
         """
         return os.path.isfile(os.path.join(self._entitydir, f))
 
     def _copy_file(self, p, f):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entitytypeinfo'
         """
         Copy file with path 'p' to a new file 'f' in the current entity directory
         """
@@ -581,6 +617,8 @@ class EntityRoot(object):
         return new_p
 
     def _rename_files(self, old_entity):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entitytypeinfo'
         """
         Rename old entity files to path of current entity (which must not exist),
         and return path to resulting entity, otherwise None.
@@ -607,6 +645,9 @@ class EntityRoot(object):
         return new_p
 
     def _fileobj(self, localname, filetypeuri, mimetype, mode):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'entity', 'entitytypeinfo', 'site', 'entityedit', 'util',
+        #                'test_import_resource', 'test_render_ref_multifields', 'test_upload_file'
         """
         Returns a file object for accessing a blob associated with the current entity.
 
@@ -628,6 +669,8 @@ class EntityRoot(object):
         return open(file_name, mode)
 
     def _metaobj(self, localpath, localname, mode):
+        #@@TODO: abstract logic to work with non-file storage
+        #        Used by 'collection', 'site'
         """
         Returns a file object for accessing a metadata resource associated with 
         the current entity.
