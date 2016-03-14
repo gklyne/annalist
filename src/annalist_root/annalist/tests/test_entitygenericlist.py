@@ -958,7 +958,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_list(self):
         # 'View' button on list view: change displayed list
-        f = entitylist_form_data("view", list_id="View_list")
+        f = entitylist_form_data("list_type", list_id="View_list")
         u = entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -971,7 +971,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_all_list(self):
         # 'View' button on list view: change displayed list
-        f = entitylist_form_data("view_all", list_id="View_list")
+        f = entitylist_form_data("list_type", list_scope_all="all", list_id="View_list")
         u = entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -984,13 +984,15 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_search(self):
         # Redisplay list with entries matching search string
-        f = entitylist_form_data("view", search="search&term", continuation_url="/xyzxy/")
+        f = entitylist_form_data("list_type", search="search&term", continuation_url="/xyzxy/")
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_list_type_url("testcoll", "testtype", list_id="Default_list")
+        v = TestHostUri + entitydata_list_type_url(
+            "testcoll", "testtype", list_id="Default_list"
+            )
         c = continuation_url_param("/xyzxy/")
         s = "search=search%26term"
         self.assertIn(v, r['location'])
@@ -1001,13 +1003,19 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_all_search(self):
         # Redisplay list with entries matching search string
-        f = entitylist_form_data("view_all", search="search&term", continuation_url="/xyzxy/")
+        f = entitylist_form_data(
+            "list_type", list_scope_all="all", 
+            search="search&term", 
+            continuation_url="/xyzxy/"
+            )
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_list_type_url("testcoll", "testtype", list_id="Default_list")
+        v = TestHostUri + entitydata_list_type_url(
+            "testcoll", "testtype", list_id="Default_list"
+            )
         c = continuation_url_param("/xyzxy/")
         s = "search=search%26term"
         self.assertIn(v, r['location'])
@@ -1018,7 +1026,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_view_no_type(self):
         # Redisplay list with entries matching search string
-        f = entitylist_form_data("view", list_id="Type_list")
+        f = entitylist_form_data("list_all", list_id="Type_list")
         u = entitydata_list_all_url("testcoll", list_id="Default_list")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

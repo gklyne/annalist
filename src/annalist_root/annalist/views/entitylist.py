@@ -356,13 +356,12 @@ class EntityGenericListView(AnnalistGenericView):
                         listinfo.get_continuation_url_dict()
                         )
                     )
-            if ( ("view" in request.POST) or ("view_all"  in request.POST) ):
+            if ( ("list_type" in request.POST) or ("list_all"  in request.POST) ):
                 action       = "list"
-                list_type_id = None if "view_all_types" in request.POST else type_id
                 redirect_uri = self.get_list_url(
                     coll_id, extract_entity_id(request.POST['list_choice']),
-                    type_id=list_type_id,
-                    scope="all" if "view_all" in request.POST else None,
+                    type_id=None if "list_all" in request.POST else type_id,
+                    scope="all" if "list_scope_all" in request.POST else None,
                     search=request.POST['search_for'],
                     query_params=listinfo.get_continuation_url_dict()
                     )

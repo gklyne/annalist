@@ -55,6 +55,18 @@
           <div class="small-12 medium-4 columns text-right">
             <div class="view-value-row row">
               <div class="view-value small-12 columns">
+                {% if url_type_id %}
+                <input type="submit" name="list_type" value="List '{{url_type_id}}'" 
+                       title="List entities of type {{url_type_id}}" />
+                {% endif %}
+                <input type="submit" name="list_all" value="List" 
+                       title="List entities of all types" />
+                <span class="checkbox" 
+                      title="Scope all: list entries inherited from other collections.">
+                  Scope all
+                  <input type="checkbox" name="list_scope_all" value="list_scope_all" />
+                </span>               
+                <!--
                 <input type="submit" name="view" value="View" 
                        title="View entities from current collection" />
                 <input type="submit" name="view_all" value="View all" 
@@ -66,6 +78,7 @@
                   All types
                 </span>               
                 {% endif %}
+                -->
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>

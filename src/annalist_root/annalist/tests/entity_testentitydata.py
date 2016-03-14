@@ -687,7 +687,10 @@ def entitydata_recordtype_view_form_data(
 #
 #   -----------------------------------------------------------------------------
 
-def entitylist_form_data(action, search="", list_id="Default_list", entities=None, continuation_url=None):
+def entitylist_form_data(
+        action, list_scope_all=None, search="", 
+        list_id="Default_list", entities=None, 
+        continuation_url=None):
     """
     Form data from entity list form submission
 
@@ -724,6 +727,8 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'list_choice':        "_list/"+list_id
         , 'continuation_url':   continuation_url
         })
+    if list_scope_all is not None:
+        form_data['list_scope_all'] = list_scope_all
     if entities is not None:
         form_data['entity_select'] = entities
     if action in form_actions:
