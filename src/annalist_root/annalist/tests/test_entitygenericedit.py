@@ -1030,6 +1030,51 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(v2, r2['location'])
         return
 
+    def test_post_new_entity_customize(self):
+        self.assertFalse(EntityData.exists(self.testdata, "entitycustomize"))
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entitycustomize", action="new",
+                customize="Customize"
+                )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + collection_edit_url(coll_id="testcoll")
+        w = entitydata_edit_url(
+            action="edit", 
+            coll_id="testcoll", 
+            type_id="testtype", 
+            entity_id="entitycustomize", 
+            view_id="Type_view"
+            )
+        c = continuation_url_param(w)
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entitycustomize")
+        return
+
+    def test_post_new_entity_customize_no_config_permission(self):
+        self.client.logout()
+        create_test_user(
+            self.testcoll, "noconfiguser", "testpassword",
+            user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE"]
+            )
+        loggedin = self.client.login(username="noconfiguser", password="testpassword")
+        self.assertTrue(loggedin)
+        f = entitydata_recordtype_view_form_data(
+                entity_id="entitycustomize", action="new",
+                customize="Customize"
+                )
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Type_view")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   403)
+        self.assertEqual(r.reason_phrase, "Forbidden")
+        # print r.content
+        self._check_entity_data_values("entitycustomize")
+        return
+
     #   -------- copy type --------
 
     def test_post_copy_entity(self):

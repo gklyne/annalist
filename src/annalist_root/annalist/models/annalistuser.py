@@ -34,6 +34,12 @@ from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
 
+default_user_id  = "_default_user_perms"
+default_user_uri = "annal:User/_default_user_perms"
+
+unknown_user_id  = "_unknown_user_perms"
+unknown_user_uri = "annal:User/_unknown_user_perms"
+
 class AnnalistUser(EntityData):
 
     _entitytype     = ANNAL.CURIE.User

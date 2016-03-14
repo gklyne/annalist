@@ -51,6 +51,8 @@ NO_COLLECTION_EDIT          = "No collection selected for editing"
 MANY_COLLECTIONS_EDIT       = "Too many collections selected for viewing:  %(ids)s"
 NO_COLLECTIONS_REMOVE       = "No collections selected for removal"
 REMOVE_COLLECTIONS          = "Remove collection(s): %(ids)s"
+MIGRATE_COLLECTION_ERROR    = "Error(s) occurred while migrating collection data for %(id)s"
+MIGRATED_COLLECTION_DATA    = "Migrated data for collection %(id)s"
 
 TOO_MANY_ENTITIES_SEL       = "Too many items selected"
 NO_ENTITY_FOR_COPY          = "No data record selected to copy"

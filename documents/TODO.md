@@ -30,8 +30,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] `annalist-manager installcollection name` (predefined)
 - [x] When supertypes are changed, need to regenerate @type fields of instances?
     - [x] refactor methods used for initialization, copy and migration
-    - [ ] consider migration task button on type edit page
-    - [ ] consider migration option on customize page
+    - [x] add migration option on customize page
+- [x] Add "Customize" button on entity edit and view pages, enabled with config permissions
+- [ ] List view: reorganize scope/type selection: use "List <type>" and "List all" buttons, with checkbox for "Scope all".  Suppress "List <type>" if no type id is defined by the URI?
 - [ ] Add "Edit collection metadata" button to collection edit (customize) view.
 - [ ] Drop tooltips from fields in view-only mode: they aren't really very helpful.
     - it would be nice if link field tooltips describe what they link to

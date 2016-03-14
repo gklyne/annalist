@@ -42,22 +42,20 @@
         <div class="small-12 medium-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns medium-up-text-right">
-              {% if auth_config %}
-              <input type="submit" name="default_view"     value="Set default view" {{default_view_enable}} 
-                     title="Select this display as the default view for collection '{{coll_id}}'."/>
               {% if edit_view_button and edit_view_button != "no" %}
               <input type="submit" name="open_view"        value="View description" 
                      title="Open view definition for the current display."/>
               {% endif %}
-              {% else %}
-              &nbsp;
-              {% endif %}
+              <input type="submit" name="default_view" value="Set default view"
+                     title="Select this display as the default view for collection '{{coll_id}}'."
+                     {{default_view_enable}} />
+              <input type="submit" name="customize"    value="Customize"
+                     title="Open 'Customize' view for collection '{{coll_id}}'."
+                     {{customize_view_enable}} />
             </div>
           </div>
         </div>
       </div>
-
-      <hr />
 
       <!-- View options -->
       <div class="row">

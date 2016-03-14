@@ -24,6 +24,7 @@ from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist                       import message
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.annalistuser   import AnnalistUser
@@ -444,7 +445,10 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection coll1</title>")
-        self.assertContains(r, "<h3>Customize collection coll1</h3>")
+        self.assertContains(r, 
+            '<h2 class="page-heading">Customize collection: Collection coll1</h2>', 
+            html=True
+            )
         return
 
     def test_get_edit_no_collection(self):
@@ -557,6 +561,18 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], TestHostUri+erroruri)
+        return
+
+    def test_post_migrate(self):
+        form_data = (
+            { "migrate":  "Migrate data"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        completeduri = self.edit_url+r"\?info_head=.*\&info_message=.*"
+        self.assertMatch(r['location'], TestHostUri+completeduri)
         return
 
     def test_post_close(self):

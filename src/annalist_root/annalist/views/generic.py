@@ -33,7 +33,7 @@ from annalist                       import layout
 from annalist                       import util
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
-from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.annalistuser   import AnnalistUser, default_user_id, default_user_uri
 
 from annalist.views.uri_builder     import uri_with_params, continuation_params
 
@@ -272,11 +272,16 @@ class AnnalistGenericView(ContentNegotiationView):
             #     log.info("user_id %s (%s), coll_id %s, %r"%
             #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
             #         )
+            parentcoll = collection or self.site()
             user_perms = (
-                (collection and collection.get_user_permissions(user_id, user_uri)) or
-                self.site().get_user_permissions(user_id, user_uri) or
-                self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
+                parentcoll.get_user_permissions(user_id, user_uri) or
+                parentcoll.get_user_permissions(default_user_id, default_user_uri)
                 )
+            # user_perms = (
+            #     (collection and collection.get_user_permissions(user_id, user_uri)) or
+            #     self.site().get_user_permissions(user_id, user_uri) or
+            #     self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
+            #     )
             self._user_perms[coll_id] = user_perms
             # log.debug("get_user_permissions %r"%(self._user_perms,))
         return self._user_perms[coll_id]

@@ -10,25 +10,26 @@ import logging
 log = logging.getLogger(__name__)
 
 from django.conf import settings
-from django.http                import HttpResponse
-from django.http                import HttpResponseRedirect
-from django.core.urlresolvers   import resolve, reverse
+from django.http                    import HttpResponse
+from django.http                    import HttpResponseRedirect
+from django.core.urlresolvers       import resolve, reverse
 
-from annalist                   import message
-from annalist.identifiers       import ANNAL, RDFS
-from annalist.exceptions        import Annalist_Error
+from annalist                       import message
+from annalist.identifiers           import ANNAL, RDFS
+from annalist.exceptions            import Annalist_Error
 
-import annalist.models.entitytypeinfo as entitytypeinfo
-from annalist.models.site       import Site
-from annalist.models.collection import Collection
-from annalist.models.recordtype import RecordType
-from annalist.models.recordview import RecordView
-from annalist.models.recordlist import RecordList
+from annalist.models                import entitytypeinfo
+from annalist.models.site           import Site
+from annalist.models.collection     import Collection
+from annalist.models.recordtype     import RecordType
+from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
+from annalist.models.collectiondata import migrate_coll_data
 
-from annalist.views.uri_builder import uri_with_params
-from annalist.views.displayinfo import DisplayInfo
-from annalist.views.generic     import AnnalistGenericView
-from annalist.views.confirm     import ConfirmView
+from annalist.views.uri_builder     import uri_with_params
+from annalist.views.displayinfo     import DisplayInfo
+from annalist.views.generic         import AnnalistGenericView
+from annalist.views.confirm         import ConfirmView
 
 
 class CollectionView(AnnalistGenericView):
@@ -148,6 +149,23 @@ class CollectionEditView(AnnalistGenericView):
             return viewinfo.http_response
         if "close" in request.POST:
             redirect_uri = viewinfo.get_continuation_next()
+        if "migrate" in request.POST:
+            msgs = migrate_coll_data(viewinfo.collection)
+            msg_vals = {'id': coll_id}
+            if msgs:
+                for msg in msgs:
+                    log.warning(msg)
+                err = message.MIGRATE_COLLECTION_ERROR%msg_vals
+                msg = "\n".join([err]+msgs)
+                log.error(msg)
+                http_response = self.error(dict(self.error500values(),message=msg))
+            else:
+                http_response = self.redirect_info(
+                    self.get_request_path(), 
+                    info_message=message.MIGRATED_COLLECTION_DATA%msg_vals
+                    )
+            return http_response
+
         # Record types
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:
@@ -240,7 +258,14 @@ class CollectionEditView(AnnalistGenericView):
             http_response = http_response or HttpResponseRedirect(redirect_uri)
         if http_response:
             return http_response
-        raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
+        e = Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
+        log.exception(str(e))
+        return self.error(
+            dict(self.error500values(),
+                message=str(e)+" - see server log for details"
+                )
+            )
+        # raise Annalist_Error(request.POST, "Unexpected values in POST to "+self.get_request_path())
 
     # POST helper methods
 

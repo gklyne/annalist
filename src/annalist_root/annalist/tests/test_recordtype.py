@@ -451,8 +451,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_right_classes)s">
-                  <input name="Define_view_list" value="Define view+list" type="submit" 
+                  <input type="submit" name="Define_view_list" value="Define view+list"
                          title="%(button_view_list_tip)s" />
+                  <input type="submit" name="customize" value="Customize"
+                         title="Open 'Customize' view for collection 'testcoll'." />
                 </div>
               </div>
             </div>

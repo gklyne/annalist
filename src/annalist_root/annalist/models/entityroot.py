@@ -389,7 +389,7 @@ class EntityRoot(object):
 
         Adds value for 'annal:url' to the entity data returned.
         """
-        log.debug("EntityRoot._load_values %s/%s"%(self.get_type_id(), self.get_id()))
+        # log.debug("EntityRoot._load_values %s/%s"%(self.get_type_id(), self.get_id()))
         body_file = self._exists_path()
         if body_file:
             # log.debug("EntityRoot._load_values body_file %r"%(body_file,))

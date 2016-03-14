@@ -59,6 +59,7 @@ listentityvaluemap  = (
         , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_enable',   e=None,                  f=None                  )
+        , SimpleValueMap(c='customize_view_enable', e=None,                  f=None                  )
         , SimpleValueMap(c='search_for',            e=None,                  f='search_for'          )
         , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url'    )
         # Field data is handled separately during processing of the form description
@@ -192,8 +193,13 @@ class EntityGenericListView(AnnalistGenericView):
                 , 'list_choices':           self.get_list_choices_field(listinfo)
                 , 'collection_view':        self.collection_view_url
                 , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
-                , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
+                , 'default_view_enable':    'disabled="disabled"'
+                , 'customize_view_enable':  'disabled="disabled"'
                 })
+            if listinfo.authorizations['auth_config']:
+                context_extra_values['customize_view_enable'] = ""
+                if list_id:
+                    context_extra_values['default_view_enable']   = ""
             entityvaluemap = self.get_list_entityvaluemap(listinfo, context_extra_values)
             listcontext = entityvaluemap.map_value_to_context(
                 entityvallist,

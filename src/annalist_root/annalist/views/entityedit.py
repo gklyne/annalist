@@ -54,17 +54,20 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 
 # Table used as basis, or initial values, for a dynamically generated entity-value map
 baseentityvaluemap  = (
-        [ SimpleValueMap(c='url_type_id',      e=None,                    f=None               )
-        , SimpleValueMap(c='view_choices',     e=None,                    f=None               )
-        , SimpleValueMap(c='edit_view_button', e=None,                    f=None               )
-        , StableValueMap(c='entity_id',        e=ANNAL.CURIE.id,          f='entity_id'        )
-        , SimpleValueMap(c='entity_uri',       e=ANNAL.CURIE.uri,         f='entity_uri'       )
-        , SimpleValueMap(c='record_type',      e=ANNAL.CURIE.record_type, f='record_type'      )
-        , SimpleValueMap(c='view_id',          e=None,                    f='view_id'          )
-        , SimpleValueMap(c='orig_id',          e=None,                    f='orig_id'          )
-        , SimpleValueMap(c='orig_type',        e=None,                    f='orig_type'        )
-        , SimpleValueMap(c='action',           e=None,                    f='action'           )
-        , SimpleValueMap(c='continuation_url', e=None,                    f='continuation_url' )
+        [ SimpleValueMap(c='url_type_id',           e=None,                    f=None               )
+        , SimpleValueMap(c='view_choices',          e=None,                    f=None               )
+        , SimpleValueMap(c='edit_view_button',      e=None,                    f=None               )
+        , SimpleValueMap(c='edit_view_enable',      e=None,                    f=None               )
+        , SimpleValueMap(c='default_view_enable',   e=None,                    f=None               )
+        , SimpleValueMap(c='customize_view_enable', e=None,                    f=None               )
+        , StableValueMap(c='entity_id',             e=ANNAL.CURIE.id,          f='entity_id'        )
+        , SimpleValueMap(c='entity_uri',            e=ANNAL.CURIE.uri,         f='entity_uri'       )
+        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.record_type, f='record_type'      )
+        , SimpleValueMap(c='view_id',               e=None,                    f='view_id'          )
+        , SimpleValueMap(c='orig_id',               e=None,                    f='orig_id'          )
+        , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )
+        , SimpleValueMap(c='action',                e=None,                    f='action'           )
+        , SimpleValueMap(c='continuation_url',      e=None,                    f='continuation_url' )
         # + Field data: added separately during processing of the form description
         # + Form and interaction control (hidden fields)
         ])
@@ -154,11 +157,18 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Set up rendered form response
         context_extra_values = (
-            { 'request_url':        self.get_request_path()
-            , 'url_type_id':        type_id
-            , 'orig_id':            entityvals['entity_id']
-            , 'orig_type':          type_id
+            { 'request_url':            self.get_request_path()
+            , 'url_type_id':            type_id
+            , 'orig_id':                entityvals['entity_id']
+            , 'orig_type':              type_id
+            , 'edit_view_enable':       'disabled="disabled"'
+            , 'default_view_enable':    'disabled="disabled"'
+            , 'customize_view_enable':  'disabled="disabled"'
             })
+        if viewinfo.authorizations['auth_config']:
+            context_extra_values['edit_view_enable']      = ""
+            context_extra_values['default_view_enable']   = ""
+            context_extra_values['customize_view_enable'] = ""
         add_field = request.GET.get('add_field', None)
         try:
             response = self.form_render(
@@ -510,6 +520,10 @@ class GenericEntityEditView(AnnalistGenericView):
         responseinfo = ResponseInfo()
         typeinfo     = viewinfo.entitytypeinfo
         messages     = viewinfo.type_messages
+        if typeinfo:
+            permissions_map = typeinfo.permissions_map
+        else:
+            permissions_map = CONFIG_PERMISSIONS
         orig_entity  = self.get_entity(viewinfo.orig_entity_id, typeinfo, viewinfo.action)
         # log.info("orig_entity %r"%(orig_entity.get_values(),))
         try:
@@ -570,10 +584,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                if viewinfo.entitytypeinfo:
-                    permissions_map = viewinfo.entitytypeinfo.permissions_map
-                else:
-                    permissions_map = CONFIG_PERMISSIONS
+                #@@ - moved to head of function
+                # if viewinfo.entitytypeinfo:
+                #     permissions_map = viewinfo.entitytypeinfo.permissions_map
+                # else:
+                #     permissions_map = CONFIG_PERMISSIONS
+                #@@
                 auth_check = self.form_action_auth("config", viewinfo.collection, permissions_map)
                 if auth_check:
                     return auth_check
@@ -592,6 +608,44 @@ class GenericEntityEditView(AnnalistGenericView):
                         self.get_request_path(), 
                         self.info_params(msg),
                         viewinfo.get_continuation_url_dict()
+                        )
+                    )
+                responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+            return responseinfo.get_http_response()
+
+        # Display "customize" page (collection edit view)
+        if "customize" in form_data:
+            responseinfo = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                responseinfo=responseinfo
+                )
+            if not responseinfo.has_http_response():
+                #@@ - moved to head of function
+                # if viewinfo.entitytypeinfo:
+                #     permissions_map = viewinfo.entitytypeinfo.permissions_map
+                # else:
+                #     permissions_map = CONFIG_PERMISSIONS
+                responseinfo.set_http_response(
+                    self.form_action_auth("config", viewinfo.collection, permissions_map)
+                    )
+            if not responseinfo.has_http_response():
+                cont_here = viewinfo.get_continuation_here(
+                    base_here=self.view_uri(
+                        "AnnalistEntityEditView", 
+                        coll_id=viewinfo.coll_id,
+                        view_id=viewinfo.view_id,
+                        type_id=viewinfo.curr_type_id,
+                        entity_id=viewinfo.curr_entity_id or viewinfo.orig_entity_id,
+                        action=self.uri_action
+                        )
+                    )
+                redirect_uri = (
+                    uri_with_params(
+                        self.view_uri(
+                            "AnnalistCollectionEditView", 
+                            coll_id=viewinfo.coll_id
+                            ),
+                        {'continuation_url': cont_here}
                         )
                     )
                 responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
@@ -713,9 +767,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 {"add_field": "View_fields"} if ('add_view_field' in form_data) else {}
                 )
             # log.info("Open view: entity_id: %s"%viewinfo.curr_entity_id)
+            auth_req = "view" if viewinfo.action == "view" else "config"
             responseinfo = self.save_invoke_edit_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                view_edit_uri_base, "config",
+                view_edit_uri_base, auth_req,
                 add_field_param,
                 responseinfo=responseinfo
                 )

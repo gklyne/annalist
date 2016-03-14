@@ -638,7 +638,7 @@ def entitydata_recordtype_view_form_data(
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id="", orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None, open_view=None):
+        add_view_field=None, open_view=None, customize=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -675,6 +675,8 @@ def entitydata_recordtype_view_form_data(
         form_data_dict['add_view_field']  = add_view_field
     elif open_view:
         form_data_dict['open_view']       = open_view
+    elif customize:
+        form_data_dict['customize']       = customize
     else:
         form_data_dict['save']            = 'Save'
     return form_data_dict

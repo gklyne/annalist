@@ -388,7 +388,7 @@ def create_test_user(
     django_user.save()
     if coll:
         user_perms = coll.create_user_permissions(
-            "testuser", "mailto:%s@%s"%(user_id, TestHost),
+            user_id, "mailto:%s@%s"%(user_id, TestHost),
             "Test User",
             "User %s: permissions for %s in collection %s"%(user_id, "Test User", coll.get_id()),
             user_permissions)

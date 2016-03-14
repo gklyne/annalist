@@ -252,8 +252,8 @@ class Entity(EntityRoot):
                 return (e, v)
         # Failed: log details
         log.debug(
-            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s"%
-            (cls._entitytypeid, entityid, parent.get_id())
+            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
+            (cls._entitytypeid, entityid, parent.get_id(), altscope)
             )
         for ap in alt_parents:
             log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
