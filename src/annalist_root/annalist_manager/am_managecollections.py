@@ -30,12 +30,17 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
-from annalist.models.entitytypeinfo import EntityTypeInfo
-from annalist.models.entityfinder   import EntityFinder
+#@@
+# from annalist.models.entitytypeinfo import EntityTypeInfo
+# from annalist.models.entityfinder   import EntityFinder
+#@@
+from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
 
+#@@
 # from utils.SetcwdContext            import ChangeCurrentDir
 # from utils.SuppressLoggingContext   import SuppressLogging
 # from annalist                       import __version__
+#@@
 
 import am_errors
 from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
@@ -398,15 +403,6 @@ def am_migrationreport(annroot, userhome, options):
                 This value is intended to be used as an exit status code
                 for the calling program.
     """
-    # settings = am_get_settings(annroot, userhome, options)
-    # if not settings:
-    #     print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # sitesettings = am_get_site_settings(annroot, userhome, options)
-    # if not sitesettings:
-    #     print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # site        = am_get_site(sitesettings)
     status, settings, site = get_settings_site(annroot, userhome, options)
     if status != am_errors.AM_SUCCESS:
         return status
@@ -490,49 +486,6 @@ def am_migrationreport(annroot, userhome, options):
     print("")
     return status
 
-def am_migratecollection(annroot, userhome, options):
-    """
-    Apply migrations for a specified collection
-
-        annalist_manager migratecollection coll
-
-    Reads and writes every entity in a collection, thereby applying data 
-    migrations and saving them in the stored data.
-
-    annroot     is the root directory for the Annalist software installation.
-    userhome    is the home directory for the host system user issuing the command.
-    options     contains options parsed from the command line.
-
-    returns     0 if all is well, or a non-zero status code.
-                This value is intended to be used as an exit status code
-                for the calling program.
-    """
-    # settings = am_get_settings(annroot, userhome, options)
-    # if not settings:
-    #     print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # if len(options.args) > 1:
-    #     print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
-    #     return am_errors.AM_UNEXPECTEDARGS
-    # sitesettings = am_get_site_settings(annroot, userhome, options)
-    # if not sitesettings:
-    #     print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # site    = am_get_site(sitesettings)
-    status, settings, site = get_settings_site(annroot, userhome, options)
-    if status != am_errors.AM_SUCCESS:
-        return status
-    coll_id = getargvalue(getarg(options.args, 0), "Collection Id: ")
-    coll    = Collection.load(site, coll_id)
-    if not (coll and coll.get_values()):
-        print("Collection not found: %s"%(coll_id), file=sys.stderr)
-        return am_errors.AM_NOCOLLECTION
-    status       = am_errors.AM_SUCCESS
-    entityfinder = EntityFinder(coll)
-    for e in entityfinder.get_entities():
-        e._save()
-    return status
-
 # Collection management functions
 
 def am_installcollection(annroot, userhome, options):
@@ -579,15 +532,23 @@ def am_installcollection(annroot, userhome, options):
     src_dir = os.path.join(annroot, "annalist/data", src_dir_name)
     print("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
     coll = site.add_collection(coll_id, installable_collections[coll_id]['coll_meta'])
-    coll_data_tgt, coll_data_file = coll._dir_path()
-    for sdir in ("enums", "fields", "groups", "lists", "types", "views", "vocabs"):
-        expand_sdir = os.path.join(src_dir, sdir)
-        if os.path.isdir(expand_sdir):
-            print("- %s -> %s"%(sdir, coll_data_tgt))
-            Site.replace_site_data_dir(coll, sdir, src_dir)
-    context_file = os.path.join(coll_data_tgt, layout.COLL_META_CONTEXT_PATH, layout.COLL_CONTEXT_FILE)
-    print("Generating context %s"%(context_file))
-    coll.generate_coll_jsonld_context()
+    msgs = initialize_coll_data(src_dir, coll)
+    if msgs:
+        for msg in msgs:
+            print(msg)
+        status = am_errors.AM_INSTALLCOLLFAIL
+
+    #@@
+    # coll_data_tgt, coll_data_file = coll._dir_path()
+    # for sdir in ("enums", "fields", "groups", "lists", "types", "views", "vocabs"):
+    #     expand_sdir = os.path.join(src_dir, sdir)
+    #     if os.path.isdir(expand_sdir):
+    #         print("- %s -> %s"%(sdir, coll_data_tgt))
+    #         Site.replace_site_data_dir(coll, sdir, src_dir)
+    # context_file = os.path.join(coll_data_tgt, layout.COLL_META_CONTEXT_PATH, layout.COLL_CONTEXT_FILE)
+    # print("Generating context %s"%(context_file))
+    # coll.generate_coll_jsonld_context()
+    #@@
     return status
 
 def am_copycollection(annroot, userhome, options):
@@ -606,15 +567,6 @@ def am_copycollection(annroot, userhome, options):
                 This value is intended to be used as an exit status code
                 for the calling program.
     """
-    # settings = am_get_settings(annroot, userhome, options)
-    # if not settings:
-    #     print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # sitesettings = am_get_site_settings(annroot, userhome, options)
-    # if not sitesettings:
-    #     print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
-    #     return am_errors.AM_NOSETTINGS
-    # site        = am_get_site(sitesettings)
     status, settings, site = get_settings_site(annroot, userhome, options)
     if status != am_errors.AM_SUCCESS:
         return status
@@ -638,24 +590,70 @@ def am_copycollection(annroot, userhome, options):
     # Copy collection now
     print("Copying collection '%s' to '%s'"%(old_coll_id, new_coll_id))
     new_coll = site.add_collection(new_coll_id, old_coll.get_values())
-    entityfinder = EntityFinder(old_coll)
-    for e in entityfinder.get_entities():
-        # @@TODO: consider this logic for a separate entity or collection method
-        entity_id  = e.get_id()
-        typeinfo   = EntityTypeInfo(
-            site, new_coll, e.get_type_id(), create_typedata=True
-            )
-        new_entity = typeinfo.create_entity(entity_id, e.get_values())
-        if not typeinfo.entity_exists(entity_id):
-            print(
-                "EntityEdit.create_update_entity: Failed to copy entity %s/%s"%
-                    (typeinfo.type_id, entity_id)
-                )
-            return am_errors.AM_COPYENTITYFAIL
-        msg = new_entity._copy_entity_files(e)
-        if msg:
+    msgs     = copy_coll_data(old_coll, new_coll)
+    if msgs:
+        for msg in msgs:
             print(msg)
+        status = am_errors.AM_COPYCOLLFAIL
+    #@@
+    # entityfinder = EntityFinder(old_coll)
+    # for e in entityfinder.get_entities():
+    #     # @@TODO: consider this logic for a separate entity or collection method
+    #     entity_id  = e.get_id()
+    #     typeinfo   = EntityTypeInfo(
+    #         site, new_coll, e.get_type_id(), create_typedata=True
+    #         )
+    #     new_entity = typeinfo.create_entity(entity_id, e.get_values())
+    #     if not typeinfo.entity_exists(entity_id):
+    #         print(
+    #             "EntityEdit.create_update_entity: Failed to copy entity %s/%s"%
+    #                 (typeinfo.type_id, entity_id)
+    #             )
+    #         return am_errors.AM_COPYENTITYFAIL
+    #     msg = new_entity._copy_entity_files(e)
+    #     if msg:
+    #         print(msg)
+    #@@
     print("")
+    return status
+
+def am_migratecollection(annroot, userhome, options):
+    """
+    Apply migrations for a specified collection
+
+        annalist_manager migratecollection coll
+
+    Reads and writes every entity in a collection, thereby applying data 
+    migrations and saving them in the stored data.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
+    coll_id = getargvalue(getarg(options.args, 0), "Collection Id: ")
+    coll    = Collection.load(site, coll_id)
+    if not (coll and coll.get_values()):
+        print("Collection not found: %s"%(coll_id), file=sys.stderr)
+        return am_errors.AM_NOCOLLECTION
+    status = am_errors.AM_SUCCESS
+    print("Apply data migrations in collection '%s'"%(coll_id,))
+    msgs   = migrate_coll_data(coll)
+    if msgs:
+        for msg in msgs:
+            print(msg)
+        status = am_errors.AM_MIGRATECOLLFAIL
+    #@@
+    # entityfinder = EntityFinder(coll)
+    # for e in entityfinder.get_entities():
+    #     e._save()
+    #@@
     return status
 
 # End.

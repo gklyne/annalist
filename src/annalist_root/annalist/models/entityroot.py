@@ -557,10 +557,9 @@ class EntityRoot(object):
 
         Resources that already exist for the current entty are not copied.
 
-        returns     None if all files are copied OK, 
-                    otherwise a message string for reporting.
+        returns     list of error messages; an empty list indicates success.
         """
-        msg = None
+        msgs = []
         for p, f in src_entity._entity_files():
             if not self._exists_file(f):
                 p_new = self._copy_file(p, f)
@@ -574,8 +573,8 @@ class EntityRoot(object):
                         "EntityRoot._copy_entity_files: error copying file %(file)s from %(src_id)s to %(id)s"%
                         msg_vals
                         )
-                    msg = message.ENTITY_COPY_FILE_ERROR%msg_vals
-        return
+                    msgs.APPEND(message.ENTITY_COPY_FILE_ERROR%msg_vals)
+        return msgs
 
     def _unused_entity_files_dirs(self):
         #@@TODO: abstract logic to work with non-file storage

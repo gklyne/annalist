@@ -43,6 +43,9 @@ AM_USEREXISTS       = 12        # Username for creation already exists
 AM_USERNOTEXISTS    = 13        # Username for deletion does not exist
 AM_NOCOLLECTION     = 14        # Identified collection not found
 AM_COLLECTIONEXISTS = 14        # Identified collection already exists
-AM_COPYENTITYFAIL   = 15        # Failed to copy entity
+AM_INSTALLCOLLFAIL  = 15        # Failed to install collection
+AM_COPYCOLLFAIL     = 16        # Failed to copy collection
+AM_MIGRATECOLLFAIL  = 17        # Failed to migrate collection
+AM_COPYENTITYFAIL   = 18        # Failed to copy entity
 
 # End.

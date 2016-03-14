@@ -285,11 +285,11 @@ class EntityTypeInfo(object):
         Type-dependent messages
     """
 
-    def __init__(self, site, coll, type_id, create_typedata=False):
+    def __init__(self, _unused_site, coll, type_id, create_typedata=False):
         """
         Set up type attribute values.
 
-        site            current site object
+        site            current site object @@unused@@
         coll            collection object in which type is used
         type_id         entity type id, which is a collection-defined value,
                         or one of a number of special site-wide built-in types.
@@ -313,7 +313,8 @@ class EntityTypeInfo(object):
         and other values as initialized here.
         """
         #@@TODO: remove site param and access through coll
-        self.entitysite      = site
+        # self.entitysite      = site
+        site = coll.get_site()
         self.entitycoll      = coll
         self.recordtype      = None
         self.entityparent    = None
@@ -329,8 +330,8 @@ class EntityTypeInfo(object):
             #
             # (See use of attribute DisplayInfo.coll_perms.)
             #
-            self.recordtype      = site.site_data_collection().get_type(type_id)
-            self.entityparent    = site
+            self.recordtype      = coll.get_site().site_data_collection().get_type(type_id)
+            self.entityparent    = coll.get_site()
             self.entityaltparent = None
             self.entityclass     = Collection
             self.entitymessages  = COLL_MESSAGES
@@ -338,7 +339,7 @@ class EntityTypeInfo(object):
         elif type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
-            self.entityaltparent = site
+            self.entityaltparent = coll.get_site()
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
             if self.coll_id == layout.SITEDATA_ID:

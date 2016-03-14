@@ -29,6 +29,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] `annalist-manager copycollection from to` (copy existing)
     - [x] `annalist-manager installcollection name` (predefined)
 - [ ] When supertypes are changed, need to regenerate @type fields of instances?
+    - [ ] perform initialization copy and migration using collection methods
+    - [ ] consider migration task button on type edit page
     - [ ] consider migration option on customize page
 - [ ] Add "Edit collection metadata" button to collection edit (customize) view.
 - [ ] Drop tooltips from fields in view-only mode: they aren't really very helpful.
@@ -40,9 +42,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] When copying entity, generate new ID by prepending/appending number to copied Id
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
-- [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
+- [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
 
 (release?)
 
