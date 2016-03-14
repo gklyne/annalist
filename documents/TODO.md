@@ -25,9 +25,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] `annalist-manager migratecollection`: needs to load and save every entity in a collection and force rewriting of context data.  
     - [x] test
     - [x] also regenerate collection context data
-- [x] annalist-manager option to copy collection data
+- [x] annalist-manager options to install/copy collection data
     - [x] `annalist-manager copycollection from to` (copy existing)
-    - [ ] `annalist-manager installcollection name` (predefined)
+    - [x] `annalist-manager installcollection name` (predefined)
 - [ ] When supertypes are changed, need to regenerate @type fields of instances?
     - [ ] consider migration option on customize page
 - [ ] Add "Edit collection metadata" button to collection edit (customize) view.

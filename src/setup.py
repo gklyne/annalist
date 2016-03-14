@@ -126,6 +126,13 @@ setup(
             , 'data/bibdata/types/*/*.jsonld'
             , 'data/bibdata/views/*/*.jsonld'
             , 'data/bibdata/vocabs/*/*.jsonld'
+            , 'data/namedata/enums/*/*/*.jsonld'
+            , 'data/namedata/fields/*/*.jsonld'
+            , 'data/namedata/groups/*/*.jsonld'
+            , 'data/namedata/lists/*/*.jsonld'
+            , 'data/namedata/types/*/*.jsonld'
+            , 'data/namedata/views/*/*.jsonld'
+            , 'data/namedata/vocabs/*/*.jsonld'
             , 'data/test/*.md'
             , 'data/test/*.jpg'
             ]

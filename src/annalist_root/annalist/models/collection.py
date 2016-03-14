@@ -470,15 +470,25 @@ class Collection(Entity):
         log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
         return (view_id, type_id, entity_id) 
 
+
+    def initialize_coll_data(self, coll_data_src):
+        """
+        Initialize definitions data for the current collection.
+        """
+        data_tgt, data_file = self._dir_path()
+        log.info("Copy Annalist bibliographic definitions data from %s to %s"%(bib_data_src, bib_data_tgt))
+        for sdir in ("types", "lists", "views", "groups", "fields", "enums"):
+            log.info("- %s -> %s"%(sdir, bib_data_tgt))
+            Site.replace_site_data_dir(bibdatacoll, sdir, bib_data_src)
+        bibdatacoll.generate_coll_jsonld_context()
+        return bibdatacoll
+
+
     # JSON-LD context data
 
     def generate_coll_jsonld_context(self):
         """
         (Re)generate JSON-LD context description for the current collection.
-
-        get_field_uri_context
-                is a supplied function that accepts a RecordField object abnd
-                returns a context dictionary for the field thus described.
         """
         # Build context data
         context      = self.get_coll_jsonld_context()

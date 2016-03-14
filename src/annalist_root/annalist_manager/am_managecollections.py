@@ -19,9 +19,11 @@ import shutil
 
 log = logging.getLogger(__name__)
 
+from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
 
+from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
@@ -38,6 +40,45 @@ from annalist.models.entityfinder   import EntityFinder
 import am_errors
 from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
 from am_getargvalue                 import getarg, getargvalue
+
+# Collection data
+#
+# NOTE: when updating this, src/setup.py and src/MANIFEST.in also need to be updated.
+#
+# @@TODO: consider ways to discover these details by scanning the file system?
+#
+installable_collections = (
+    { "Namespace_defs":      
+        { 'data_dir': "namedata"
+        , 'coll_meta':
+            { "rdfs:label":     "Namespace definitions"
+            , "rdfs:comment":   "# Namespace definitions\r\n\r\n"+
+                                "Defines some common vocabulary namespaces "+
+                                "not included in the base site data."
+            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            }
+        } 
+    , "Bibliography_defs":   
+        { 'data_dir': "bibdata"
+        , 'coll_meta':
+            { "rdfs:label":     "Bibliography definitions"
+            , "rdfs:comment":   "# Bibliography definitions\r\n\r\n"+
+                                "Defines types and views for bibliographic definitions, "+
+                                "based loosely on BibJSON."
+            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            }
+        }
+    # , "...":   
+    #     { 'data_dir': "..."
+    #     , 'coll_meta':
+    #         { "rdfs:label":     "..."
+    #         , "rdfs:comment":   "# ...\r\n\r\n"+
+    #                             "... "+
+    #                             "..."
+    #         , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+    #         }
+    #     }
+    })
 
 # Collection access helpers
 
@@ -357,18 +398,21 @@ def am_migrationreport(annroot, userhome, options):
                 This value is intended to be used as an exit status code
                 for the calling program.
     """
-    settings = am_get_settings(annroot, userhome, options)
-    if not settings:
-        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
+    # settings = am_get_settings(annroot, userhome, options)
+    # if not settings:
+    #     print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+    #     return am_errors.AM_NOSETTINGS
+    # sitesettings = am_get_site_settings(annroot, userhome, options)
+    # if not sitesettings:
+    #     print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
+    #     return am_errors.AM_NOSETTINGS
+    # site        = am_get_site(sitesettings)
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
     if len(options.args) > 2:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = am_get_site_settings(annroot, userhome, options)
-    if not sitesettings:
-        print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
-    site        = am_get_site(sitesettings)
     old_coll_id = getargvalue(getarg(options.args, 0), "Old collection Id: ")
     old_coll    = Collection.load(site, old_coll_id)
     if not (old_coll and old_coll.get_values()):
@@ -463,18 +507,21 @@ def am_migratecollection(annroot, userhome, options):
                 This value is intended to be used as an exit status code
                 for the calling program.
     """
-    settings = am_get_settings(annroot, userhome, options)
-    if not settings:
-        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
-    if len(options.args) > 1:
-        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
-        return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = am_get_site_settings(annroot, userhome, options)
-    if not sitesettings:
-        print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
-        return am_errors.AM_NOSETTINGS
-    site    = am_get_site(sitesettings)
+    # settings = am_get_settings(annroot, userhome, options)
+    # if not settings:
+    #     print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+    #     return am_errors.AM_NOSETTINGS
+    # if len(options.args) > 1:
+    #     print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+    #     return am_errors.AM_UNEXPECTEDARGS
+    # sitesettings = am_get_site_settings(annroot, userhome, options)
+    # if not sitesettings:
+    #     print("Site settings not found (%s)"%(options.configuration), file=sys.stderr)
+    #     return am_errors.AM_NOSETTINGS
+    # site    = am_get_site(sitesettings)
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
     coll_id = getargvalue(getarg(options.args, 0), "Collection Id: ")
     coll    = Collection.load(site, coll_id)
     if not (coll and coll.get_values()):
@@ -488,11 +535,66 @@ def am_migratecollection(annroot, userhome, options):
 
 # Collection management functions
 
+def am_installcollection(annroot, userhome, options):
+    """
+    Install software-defined collection data
+
+        annalist_manager installcollection coll_id
+
+    Copies data from an existing collection to a new collection.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
+    if len(options.args) > 1:
+        print(
+            "Unexpected arguments for %s: (%s)"%
+              (options.command, " ".join(options.args)), 
+            file=sys.stderr
+            )
+        return am_errors.AM_UNEXPECTEDARGS
+    coll_id = getargvalue(getarg(options.args, 0), "Collection Id to install: ")
+    coll    = Collection.load(site, coll_id)
+    if (coll and coll.get_values()):
+        print("Collection already exists: %s"%(coll_id), file=sys.stderr)
+        return am_errors.AM_COLLECTIONEXISTS
+
+    # Check collection Id
+    if coll_id in installable_collections:
+        src_dir_name = installable_collections[coll_id]['data_dir']
+    else:
+        print("Collection name to installation not known: %s"%(coll_id), file=sys.stderr)
+        print("Available collection Ids are: %s"%(",".join(installable_collections.keys())))
+        return am_errors.AM_NOCOLLECTION
+
+    # Install collection now
+    src_dir = os.path.join(annroot, "annalist/data", src_dir_name)
+    print("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
+    coll = site.add_collection(coll_id, installable_collections[coll_id]['coll_meta'])
+    coll_data_tgt, coll_data_file = coll._dir_path()
+    for sdir in ("enums", "fields", "groups", "lists", "types", "views", "vocabs"):
+        expand_sdir = os.path.join(src_dir, sdir)
+        if os.path.isdir(expand_sdir):
+            print("- %s -> %s"%(sdir, coll_data_tgt))
+            Site.replace_site_data_dir(coll, sdir, src_dir)
+    context_file = os.path.join(coll_data_tgt, layout.COLL_META_CONTEXT_PATH, layout.COLL_CONTEXT_FILE)
+    print("Generating context %s"%(context_file))
+    coll.generate_coll_jsonld_context()
+    return status
+
 def am_copycollection(annroot, userhome, options):
     """
     Copy collection data
 
-        annalist_manager copycollection old_coll new_coll
+        annalist_manager copycollection old_coll_id new_coll_id
 
     Copies data from an existing collection to a new collection.
 
@@ -534,8 +636,7 @@ def am_copycollection(annroot, userhome, options):
         print("New collection already exists: %s"%(new_coll_id), file=sys.stderr)
         return am_errors.AM_COLLECTIONEXISTS
     # Copy collection now
-    print("# Copying collection '%s' to '%s' #"%(old_coll_id, new_coll_id))
-    print("")
+    print("Copying collection '%s' to '%s'"%(old_coll_id, new_coll_id))
     new_coll = site.add_collection(new_coll_id, old_coll.get_values())
     entityfinder = EntityFinder(old_coll)
     for e in entityfinder.get_entities():

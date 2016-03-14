@@ -32,6 +32,7 @@ command_summary_help = ("\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
+    "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
     "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
@@ -244,6 +245,26 @@ def am_help(options, progname):
             "Copy collection 'old_coll_id' to a new collection called 'new_coll_id'\n"+
             "\n"+
             "Existing collection data in 'old_coll_id' is left untouched.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("installc"):
+        help_text = ("\n"+
+            "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
+            "\n"+
+            "Install collection 'coll_id' from site data included in software distribution.\n"+
+            "\n"+
+            "Annalist software ships with a number of predefined collections that are part of\n"+
+            "the annalist software installation.  These collections can be used as starting\n"+
+            "points for defining a new collection.\n"+
+            "\n"+
+            "Available collections include:\n"+
+            "  bibdata: BiblioGraphic data definitions, creating structures similar to BibJSON.\n"+
+            "  namedata: defines some additional vocabulary namespaces beyond tghose that are part\n"+
+            "      of a standard Annalistr installation.\n"+
+            "  Journal_defs: @@to be added@@\n"+
+            "  Provenance_defs: @@to be added@@\n"+
             "\n"+
             config_options_help+
             "\n"+
