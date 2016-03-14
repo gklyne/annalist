@@ -73,7 +73,7 @@ def copy_coll_data(src_coll, tgt_coll):
     for e in entityfinder.get_entities():
         entity_id  = e.get_id()
         typeinfo   = EntityTypeInfo(
-            None, tgt_coll, e.get_type_id(), create_typedata=True
+            tgt_coll, e.get_type_id(), create_typedata=True
             )
         new_entity = typeinfo.create_entity(entity_id, e.get_values())
         if not typeinfo.entity_exists(entity_id):

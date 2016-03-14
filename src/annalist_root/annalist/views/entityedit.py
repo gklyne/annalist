@@ -657,7 +657,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if new_enum:
             new_type_id    = extract_entity_id(new_enum['field_ref_type'])
             new_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, new_type_id
+                viewinfo.collection, new_type_id
                 )
             new_view_id  = new_typeinfo.get_default_view_id()
 
@@ -671,7 +671,7 @@ class GenericEntityEditView(AnnalistGenericView):
             if edit_entity_id:
                 # Entity selected: edit (use type from selected entity)
                 edit_typeinfo = EntityTypeInfo(
-                    viewinfo.site, viewinfo.collection, edit_type_id
+                    viewinfo.collection, edit_type_id
                     )
                 edit_view_id  = edit_typeinfo.get_default_view_id()
                 edit_action   = "edit"
@@ -904,7 +904,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if entity_type_id != orig_type_id:
             # log.info("new_typeinfo: entity_type_id %s"%(entity_type_id))
             new_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entity_type_id, 
+                viewinfo.collection, entity_type_id, 
                 create_typedata=True
                 )
         else:
@@ -1279,10 +1279,10 @@ class GenericEntityEditView(AnnalistGenericView):
 
         # Update instances of type
         src_typeinfo = EntityTypeInfo(
-            viewinfo.site, viewinfo.collection, old_type_id
+            viewinfo.collection, old_type_id
             )
         dst_typeinfo = EntityTypeInfo(
-            viewinfo.site, viewinfo.collection, new_type_id, 
+            viewinfo.collection, new_type_id, 
             create_typedata=True
             )
         if new_typeinfo.entity_exists(new_type_id):
@@ -1502,7 +1502,7 @@ class GenericEntityEditView(AnnalistGenericView):
             list_selector  = "'%s' in [@type]"%(type_uri) if type_uri else "ALL"
             # Set up view details (other defaults from sitedata '_initial_values')
             view_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.VIEW_ID
+                viewinfo.collection, entitytypeinfo.VIEW_ID
                 )
             view_entity   = view_typeinfo.get_create_entity(view_entity_id)
             view_entity[ANNAL.CURIE.record_type] = type_uri
@@ -1511,7 +1511,7 @@ class GenericEntityEditView(AnnalistGenericView):
             view_entity._save()
             # Set up list details (other defaults from sitedata '_initial_values')
             list_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.LIST_ID
+                viewinfo.collection, entitytypeinfo.LIST_ID
                 )
             list_entity   = list_typeinfo.get_create_entity(list_entity_id)
             list_entity.setdefault(RDFS.CURIE.label,         "List of "+type_label)
@@ -1546,7 +1546,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_label  = "Repeat field '%s'"%field_label
             # Create repeat-field group (defaults from sitedata '_group/_initial_values')
             group_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.GROUP_ID
+                viewinfo.collection, entitytypeinfo.GROUP_ID
                 )
             group_entity   = group_typeinfo.get_create_entity(repeat_group_id)
             group_entity.setdefault(RDFS.CURIE.label,           repeat_field_label)
@@ -1562,7 +1562,7 @@ class GenericEntityEditView(AnnalistGenericView):
             group_entity._save()
             # Create repeat-field referencing group
             field_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.FIELD_ID
+                viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
             field_entity   = field_typeinfo.get_create_entity(repeat_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "RepeatGroupRow"
@@ -1597,7 +1597,7 @@ class GenericEntityEditView(AnnalistGenericView):
             ref_field_label     = "Reference field '%s'"%field_label
             # Create field-reference group (defaults from sitedata '_group/_initial_values')
             group_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.GROUP_ID
+                viewinfo.collection, entitytypeinfo.GROUP_ID
                 )
             group_entity   = group_typeinfo.get_create_entity(ref_group_id)
             group_entity.setdefault(RDFS.CURIE.label,         ref_field_label)
@@ -1612,7 +1612,7 @@ class GenericEntityEditView(AnnalistGenericView):
             group_entity._save()
             # Create field group reference
             field_typeinfo = EntityTypeInfo(
-                viewinfo.site, viewinfo.collection, entitytypeinfo.FIELD_ID
+                viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
             field_entity   = field_typeinfo.get_create_entity(ref_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"

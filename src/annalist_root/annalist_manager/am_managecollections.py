@@ -30,17 +30,7 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
-#@@
-# from annalist.models.entitytypeinfo import EntityTypeInfo
-# from annalist.models.entityfinder   import EntityFinder
-#@@
 from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
-
-#@@
-# from utils.SetcwdContext            import ChangeCurrentDir
-# from utils.SuppressLoggingContext   import SuppressLogging
-# from annalist                       import __version__
-#@@
 
 import am_errors
 from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
@@ -537,18 +527,6 @@ def am_installcollection(annroot, userhome, options):
         for msg in msgs:
             print(msg)
         status = am_errors.AM_INSTALLCOLLFAIL
-
-    #@@
-    # coll_data_tgt, coll_data_file = coll._dir_path()
-    # for sdir in ("enums", "fields", "groups", "lists", "types", "views", "vocabs"):
-    #     expand_sdir = os.path.join(src_dir, sdir)
-    #     if os.path.isdir(expand_sdir):
-    #         print("- %s -> %s"%(sdir, coll_data_tgt))
-    #         Site.replace_site_data_dir(coll, sdir, src_dir)
-    # context_file = os.path.join(coll_data_tgt, layout.COLL_META_CONTEXT_PATH, layout.COLL_CONTEXT_FILE)
-    # print("Generating context %s"%(context_file))
-    # coll.generate_coll_jsonld_context()
-    #@@
     return status
 
 def am_copycollection(annroot, userhome, options):
@@ -595,25 +573,6 @@ def am_copycollection(annroot, userhome, options):
         for msg in msgs:
             print(msg)
         status = am_errors.AM_COPYCOLLFAIL
-    #@@
-    # entityfinder = EntityFinder(old_coll)
-    # for e in entityfinder.get_entities():
-    #     # @@TODO: consider this logic for a separate entity or collection method
-    #     entity_id  = e.get_id()
-    #     typeinfo   = EntityTypeInfo(
-    #         site, new_coll, e.get_type_id(), create_typedata=True
-    #         )
-    #     new_entity = typeinfo.create_entity(entity_id, e.get_values())
-    #     if not typeinfo.entity_exists(entity_id):
-    #         print(
-    #             "EntityEdit.create_update_entity: Failed to copy entity %s/%s"%
-    #                 (typeinfo.type_id, entity_id)
-    #             )
-    #         return am_errors.AM_COPYENTITYFAIL
-    #     msg = new_entity._copy_entity_files(e)
-    #     if msg:
-    #         print(msg)
-    #@@
     print("")
     return status
 
@@ -649,11 +608,6 @@ def am_migratecollection(annroot, userhome, options):
         for msg in msgs:
             print(msg)
         status = am_errors.AM_MIGRATECOLLFAIL
-    #@@
-    # entityfinder = EntityFinder(coll)
-    # for e in entityfinder.get_entities():
-    #     e._save()
-    #@@
     return status
 
 # End.

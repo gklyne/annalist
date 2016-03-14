@@ -319,7 +319,7 @@ class EntityGenericListView(AnnalistGenericView):
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     typeinfo = listinfo.entitytypeinfo
                     if typeinfo is None:
-                        typeinfo = EntityTypeInfo(listinfo.site, listinfo.collection, entity_type)
+                        typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
                     return (
                         self.form_action_auth(
                             "delete", listinfo.collection, typeinfo.permissions_map
@@ -410,7 +410,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         if entity_type == "_type":
             typeinfo = EntityTypeInfo(
-                listinfo.site, listinfo.collection, entity_id
+                listinfo.collection, entity_id
                 )
             if next(typeinfo.enum_entity_ids(), None) is not None:
                 return (

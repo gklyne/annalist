@@ -138,7 +138,7 @@ class ImageReferenceTest(AnnalistTestCase):
             )
         # Create data records for testing image references:
         self.test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         self.test_ref_type_info.create_entity("test1", test_ref_entity_create_values(self.imageuri))
         # Login and permissions

@@ -202,14 +202,14 @@ class ImportResourceTest(AnnalistTestCase):
             )
         # Create data records for testing import and references:
         self.test_imp_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testimptype", create_typedata=True
+            self.testcoll, "testimptype", create_typedata=True
             )
         for entity_id in ("test1", "test2"):
             self.test_imp_type_info.create_entity(
                 entity_id, test_imp_entity_create_values(entity_id)
                 )
         self.test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         for entity_id in ("test1", "test2"):
             self.test_ref_type_info.create_entity(

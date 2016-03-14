@@ -218,7 +218,7 @@ class DisplayInfo(object):
             assert ((self.site and self.collection) is not None)
             if type_id:
                 self.type_id        = type_id
-                self.entitytypeinfo = EntityTypeInfo(self.site, self.collection, type_id)
+                self.entitytypeinfo = EntityTypeInfo(self.collection, type_id)
                 if not self.entitytypeinfo.recordtype:
                     # log.warning("DisplayInfo.get_type_data: RecordType %s not found"%type_id)
                     self.http_response = self.view.error(
@@ -443,7 +443,7 @@ class DisplayInfo(object):
         redirect_uri = None
         typeinfo     = self.entitytypeinfo
         if not typeinfo or typeinfo.get_type_id() != entity_type:
-            typeinfo = EntityTypeInfo(self.site, self.collection, entity_type)
+            typeinfo = EntityTypeInfo(self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
             redirect_uri = (
                 uri_with_params(

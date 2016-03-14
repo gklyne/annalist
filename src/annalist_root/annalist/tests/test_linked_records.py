@@ -214,8 +214,8 @@ class LinkedRecordTest(AnnalistTestCase):
               for v in ["testtgt1", "testtgt2"]
             ])
         # Create data records for testing:
-        self.testtgt_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testtgt_type", create_typedata=True)
-        self.testsrc_type_info = EntityTypeInfo(self.testsite, self.testcoll, "testsrc_type", create_typedata=True)
+        self.testtgt_type_info = EntityTypeInfo(self.testcoll, "testtgt_type", create_typedata=True)
+        self.testsrc_type_info = EntityTypeInfo(self.testcoll, "testsrc_type", create_typedata=True)
         for tgt_id in ("testtgt1", "testtgt2"):
             self.testtgt_type_info.create_entity(tgt_id, testtgt_entity_create_values(tgt_id))
         for src_id, tgt_ref in (("testsrc1", "testtgt1"), ("testsrc2", "testtgt2")):

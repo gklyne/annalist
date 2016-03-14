@@ -285,7 +285,7 @@ class EntityTypeInfo(object):
         Type-dependent messages
     """
 
-    def __init__(self, _unused_site, coll, type_id, create_typedata=False):
+    def __init__(self, coll, type_id, create_typedata=False):
         """
         Set up type attribute values.
 
@@ -312,9 +312,6 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
-        #@@TODO: remove site param and access through coll
-        # self.entitysite      = site
-        site = coll.get_site()
         self.entitycoll      = coll
         self.recordtype      = None
         self.entityparent    = None
@@ -605,16 +602,10 @@ class EntityTypeInfo(object):
                         altscope=altscope):
                     yield self.get_entity(eid)
             else:
-                #@@
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
                     yield self.get_entity_implied_values(self.get_entity(eid))
-                #@@
-                # for eid in self.entityparent._children(self.entityclass, altscope=altscope):
-                #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
-                #         yield self.get_entity_implied_values(self.get_entity(eid))
-                #@@
         return
 
     def get_initial_entity_values(self, entity_id):

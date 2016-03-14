@@ -28,8 +28,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] annalist-manager options to install/copy collection data
     - [x] `annalist-manager copycollection from to` (copy existing)
     - [x] `annalist-manager installcollection name` (predefined)
-- [ ] When supertypes are changed, need to regenerate @type fields of instances?
-    - [ ] perform initialization copy and migration using collection methods
+- [x] When supertypes are changed, need to regenerate @type fields of instances?
+    - [x] refactor methods used for initialization, copy and migration
     - [ ] consider migration task button on type edit page
     - [ ] consider migration option on customize page
 - [ ] Add "Edit collection metadata" button to collection edit (customize) view.

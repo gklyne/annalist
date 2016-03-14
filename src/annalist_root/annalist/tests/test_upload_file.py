@@ -377,21 +377,21 @@ class UploadResourceTest(AnnalistTestCase):
         test_entity_ids = ("test1", "test2")
         test_entity_ids = ("test1",)
         self.test_upl_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testupltype", create_typedata=True
+            self.testcoll, "testupltype", create_typedata=True
             )
         for entity_id in test_entity_ids:
             self.test_upl_type_info.create_entity(
                 entity_id, test_imp_entity_create_values(entity_id)
                 )
         self.test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         for entity_id in test_entity_ids:
             self.test_ref_type_info.create_entity(
                 entity_id, test_ref_entity_create_values(entity_id)
                 )
         self.test_img_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testimgtype", create_typedata=True
+            self.testcoll, "testimgtype", create_typedata=True
             )
         for entity_id in test_entity_ids:
             self.test_img_type_info.create_entity(

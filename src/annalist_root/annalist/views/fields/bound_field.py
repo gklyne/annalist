@@ -280,7 +280,7 @@ class bound_field(object):
                 # Get entity type info
                 #@@TODO: eliminate site param...
                 coll     = self._field_description._collection
-                typeinfo = EntityTypeInfo(coll.get_site(), coll, type_id)
+                typeinfo = EntityTypeInfo(coll, type_id)
                 # Check access permission, assuming user has "VIEW" permission in current collection
                 # This is primarily to prevent a loophole for accessing user account details
                 #@@TODO: pass actual user permissions in to bound_field or field description or extra params

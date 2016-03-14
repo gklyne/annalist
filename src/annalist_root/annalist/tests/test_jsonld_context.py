@@ -572,7 +572,7 @@ class JsonldContextTest(AnnalistTestCase):
             )
         # Create data records for testing image references:
         test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         test_ref_type_info.create_entity("refentity", test_ref_entity_create_values(imageuri))
         # Generate collection JSON-LD context data

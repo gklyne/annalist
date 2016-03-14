@@ -24,7 +24,7 @@ class AnnalistTestCase(TestCase):
 
     def check_entity_values(self, type_id, entity_id, check_values=None):
         "Helper function checks content of entity record"
-        typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
+        typeinfo = EntityTypeInfo(self.testcoll, type_id)
         self.assertTrue(typeinfo.entity_exists(entity_id))
         t = typeinfo.get_entity(entity_id)
         self.assertEqual(t.get_id(), entity_id)

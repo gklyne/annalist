@@ -129,7 +129,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
     def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         # log.info("_check_entity_data_values: type_id %s, entity_id %s"%(type_id, entity_id))
-        typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
+        typeinfo = EntityTypeInfo(self.testcoll, type_id)
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
         self.assertEqual(e.get_id(), entity_id)

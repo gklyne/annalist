@@ -75,7 +75,7 @@ class EntityFinder(object):
         of the supplied type in the current collection, including the 
         identified type itself.
         """
-        supertypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
+        supertypeinfo = EntityTypeInfo(self._coll, type_id)
         supertypeuri  = supertypeinfo.get_type_uri()
         if supertypeuri is None:
             log.warning("EntityFinder.get_collection_uri_subtypes: no type_uri for %s"%(type_id,))
@@ -93,7 +93,7 @@ class EntityFinder(object):
         #     )
         if type_uri is not None:
             for tid in self.get_collection_type_ids(altscope):
-                tinfo = EntityTypeInfo(self._site, self._coll, tid)
+                tinfo = EntityTypeInfo(self._coll, tid)
                 # log.info(
                 #     "@@ EntityFinder.get_collection_uri_subtypes: tid %s, type_uris %r"%
                 #     (tid, tinfo and tinfo.get_all_type_uris())
@@ -117,7 +117,7 @@ class EntityFinder(object):
         #@@
         # log.info("get_type_entities: type_id %s"%type_id)
         #@@
-        entitytypeinfo = EntityTypeInfo(self._site, self._coll, type_id)
+        entitytypeinfo = EntityTypeInfo(self._coll, type_id)
         for e in entitytypeinfo.enum_entities_with_inferred_values(
                 user_permissions, altscope=altscope
                 ):
@@ -499,7 +499,7 @@ class FieldComparison(object):
         Return typeinfo corresponding to the supplied type URI
         """
         t     = self._coll.get_uri_type(type_uri)
-        return t and EntityTypeInfo(self._site, self._coll, t.get_id())
+        return t and EntityTypeInfo(self._coll, t.get_id())
 
     def subtype(self, type1_uri, type2_uri):
         """
