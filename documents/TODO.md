@@ -36,8 +36,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] use "List <type>" and "List" buttons, with checkbox for "Scope all".
     - [x] Suppress "List <type>" if no type id is defined by the URI.
 - [x] Add "Collection metadata" button to collection edit (customize) view.
-- [ ] Drop tooltips from fields in view-only mode: they aren't really very helpful.
-    - it would be nice if link field tooltips describe what they link to
+- [x] Drop tooltips from fields in view-only mode (they weren't very helpful).
+- [ ] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
 - [ ] Site vocabulary changes
     - [ ] `Entity_see_also_repeat` -> `Entity_see_also_r`
     - [ ] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
@@ -227,6 +227,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] It would be nice if link field tooltips describe what they link to.
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.

@@ -193,16 +193,16 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
             default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
             default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri,
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
-            tooltip5=r.context['fields'][4]['field_help'],
-            tooltip6=r.context['fields'][5]['field_help'],
-            tooltip7=r.context['fields'][6]['field_help'],
+            tooltip1="", # 'title="%s"'%r.context['fields'][0]['field_help'],
+            tooltip2="", # 'title="%s"'%r.context['fields'][1]['field_help'],
+            tooltip3="", # 'title="%s"'%r.context['fields'][2]['field_help'],
+            tooltip4="", # 'title="%s"'%r.context['fields'][3]['field_help'],
+            tooltip5="", # 'title="%s"'%r.context['fields'][4]['field_help'],
+            tooltip6="", # 'title="%s"'%r.context['fields'][5]['field_help'],
+            tooltip7="", # 'title="%s"'%r.context['fields'][6]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
+            <div class="small-12 medium-6 columns" %(tooltip1)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Type Id</span>
@@ -214,7 +214,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns" title="%(tooltip2)s">
+            <div class="small-12 columns" %(tooltip2)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -226,7 +226,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns" title="%(tooltip3)s">
+            <div class="small-12 columns" %(tooltip3)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Comment</span>
@@ -240,7 +240,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 columns" title="%(tooltip4)s">
+            <div class="small-12 columns" %(tooltip4)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>URI</span>
@@ -252,7 +252,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow5 = """
-            <div class="small-12 columns" title="%(tooltip5)s">
+            <div class="small-12 columns" %(tooltip5)s>
               <div class="row">
                 <div class="%(group_label_classes)s">
                   <span>Supertype URIs</span>
@@ -264,7 +264,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow6 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip6)s">
+            <div class="small-12 medium-6 columns" %(tooltip6)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default view</span>
@@ -276,7 +276,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow7 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip7)s">
+            <div class="small-12 medium-6 columns" %(tooltip7)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default list</span>
@@ -300,9 +300,12 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
-                  <input type="submit" name="edit"  value="Edit" />
-                  <input type="submit" name="copy"  value="Copy" />
-                  <input type="submit" name="close" value="Close" />
+                  <input type="submit" name="edit"  value="Edit"
+                         title="Edit entity data." />
+                  <input type="submit" name="copy"  value="Copy"
+                         title="Copy, then edit entity data as new entity." />
+                  <input type="submit" name="close" value="Close"
+                         title="Return to previous page." />
                 </div>
               </div>
             </div>
@@ -310,12 +313,16 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         formrow8c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
-                <div class="%(button_right_classes)s">
-                  <input type="submit" name="open_view"     value="View description" />
+                <div class="%(button_r_med_up_classes)s">
+                  <!-- <input type="submit" name="open_view"    value="View description" /> -->
+                  <input type="submit" name="default_view" value="Set default view"
+                         title="Select this display as the default view for collection 'testcoll'." />
+                  <input type="submit" name="customize"    value="Customize"
+                         title="Open 'Customize' view for collection 'testcoll'." />
                 </div>
               </div>
             </div>
-            """%field_vals(width=4)
+            """%field_vals(width=6)
         formrow9 = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
@@ -360,7 +367,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow7,  html=True)
         self.assertContains(r, formrow8a, html=True)
         self.assertContains(r, formrow8b, html=True)
-        # self.assertContains(r, formrow7c, html=True)
+        self.assertContains(r, formrow8c, html=True)
         self.assertContains(r, formrow9,  html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow10, html=True)

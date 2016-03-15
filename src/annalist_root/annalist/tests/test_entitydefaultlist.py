@@ -146,9 +146,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         # print "@@ "+repr(r.context['fields'][0]['field_help'])
         # print "@@ "+repr(r.context['fields'][1]['field_help'])
         # print "@@ "+repr(r.context['fields'][2]['field_help'])
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
-        tooltip3 = r.context['fields'][2]['field_help']
+        tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
+        tooltip3 = "" # 'title="%s"'%r.context['fields'][2]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -157,13 +157,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-2 columns" title="%(tooltip2)s">
+                  <div class="view-value small-2 columns" %(tooltip2)s>
                     <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
-                  <div class="view-value small-7 columns" title="%(tooltip3)s">
+                  <div class="view-value small-7 columns" %(tooltip3)s>
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
@@ -267,8 +267,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         # cont = ""
         # log.info(r.content)
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
+        tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -277,10 +277,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-9 columns" title="%(tooltip2)s">
+                  <div class="view-value small-9 columns" %(tooltip2)s>
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>

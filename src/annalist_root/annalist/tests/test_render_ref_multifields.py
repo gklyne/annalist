@@ -342,10 +342,10 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             basepath=TestBasePath,
             cont_uri_param=cont_uri_param,
-            tooltip1=r.context['fields'][0]['field_help'],
+            # tooltip1=r.context['fields'][0]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -364,11 +364,11 @@ class RefMultifieldTest(AnnalistTestCase):
             basepath=TestBasePath,
             ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,),
             cont_uri_param=cont_uri_param,
-            tooltip2a=r.context['fields'][1]._field_description['group_field_descs'][0]['field_help'],
-            tooltip2b=r.context['fields'][1]._field_description['group_field_descs'][1]['field_help'],
+            tooltip2a="", # 'title="%s"'%r.context['fields'][1]._field_description['group_field_descs'][0]['field_help'],
+            tooltip2b="", # 'title="%s"'%r.context['fields'][1]._field_description['group_field_descs'][1]['field_help'],
             )
         formrow2a = """
-            <div class="small-12 medium-6 columns" title="%(tooltip2a)s">
+            <div class="small-12 medium-6 columns" %(tooltip2a)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>View comment field</span>
@@ -380,7 +380,7 @@ class RefMultifieldTest(AnnalistTestCase):
             </div>
             """%tgt_field_vals(width=6)
         formrow2b = """
-            <div class="small-12 medium-6 columns" title="%(tooltip2b)s">
+            <div class="small-12 medium-6 columns" %(tooltip2b)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>View image field</span>
@@ -536,11 +536,9 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_rptimg_view",
             basepath=TestBasePath,
             cont_uri_param=cont_uri_param,
-            tooltip1=r.context['fields'][0]['field_help'],
-            # tooltip3b=r.context['fields'][1]._field_description['group_field_descs'][0]['field_help']
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
+            <div class="small-12 medium-6 columns">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>
@@ -585,11 +583,6 @@ class RefMultifieldTest(AnnalistTestCase):
             basepath=TestBasePath,
             ref_image="%s/c/testcoll/d/img_type/Test_img_entity/image_field.jpeg"%(TestBasePath,),
             cont_uri_param=cont_uri_param,
-            tooltip3b=r.context['fields'][1]._field_description['group_field_descs'][0]['field_help'],
-            tooltip3b1=r.context['fields'][1]._field_description['group_field_descs'][0]
-                                                                ['group_field_descs'][0]['field_help'],
-            tooltip3b2=r.context['fields'][1]._field_description['group_field_descs'][0]
-                                                                ['group_field_descs'][1]['field_help'],
             )
         formrow3a = """
             <div class="small-12 medium-2 columns">
@@ -601,7 +594,7 @@ class RefMultifieldTest(AnnalistTestCase):
               <div class="row select-row">
                 <div class="small-12 columns">
                   <div class="view-grouprow row">
-                    <div class="small-12 medium-6 columns" title="%(tooltip3b)s">
+                    <div class="small-12 medium-6 columns">
                       <div class="row show-for-small-only">
                         <div class="view-label small-12 columns">
                           <span>Image reference</span>
@@ -610,7 +603,7 @@ class RefMultifieldTest(AnnalistTestCase):
                       <div class="row view-value-col">
                         <div class="view-value small-12 columns">
                           <div class="view-grouprow row">
-                            <div class="%(col_item_classes)s" title="%(tooltip3b1)s">
+                            <div class="%(col_item_classes)s">
                               <div class="row show-for-small-only">
                                 <div class="view-label small-12 columns">
                                   <span>View comment field</span>
@@ -622,7 +615,7 @@ class RefMultifieldTest(AnnalistTestCase):
                                 </div>
                               </div>
                             </div>
-                            <div class="%(col_item_classes)s" title="%(tooltip3b2)s">
+                            <div class="%(col_item_classes)s">
                               <div class="row show-for-small-only">
                                 <div class="view-label small-12 columns">
                                   <span>View image field</span>

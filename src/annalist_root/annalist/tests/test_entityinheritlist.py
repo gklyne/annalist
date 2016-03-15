@@ -324,10 +324,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         curi     = continuation_params_url(u)
         cont     = uri_params({"continuation_url": curi})
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
-        tooltip3 = r.context['fields'][2]['field_help']
-        tooltip4 = r.context['fields'][3]['field_help']
+        tooltip1 = "" # 'title="%s"%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"%r.context['fields'][1]['field_help']
+        tooltip3 = "" # 'title="%s"%r.context['fields'][2]['field_help']
+        tooltip4 = "" # 'title="%s"%r.context['fields'][3]['field_help']
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -336,16 +336,16 @@ class EntityInheritListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:Text</span>
                   </div>
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip4)s>
                     <span>Address</span>
                   </div>
                 </div>

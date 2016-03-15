@@ -46,6 +46,9 @@ _unused_col_head_template = (
     """</div>"""
     )
 
+no_tooltip   = ""
+with_tooltip = "{{field.field_tooltip|safe}}"
+
 # Renderer wrapper templates
 # NOTE: _get_renderer method creates context value "value_renderer" for the wrapped renderer;
 #       hence "{% include value_renderer %}" in the following
@@ -61,25 +64,33 @@ label_wrapper_template = ( "<!-- label_wrapper_template -->"+
     )
 
 # Wrap bare value (e.g. column value)
-value_wrapper_template = ( # "<!-- value_wrapper_template -->"+
-    """<div class="view-value {{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
-    """  {% include value_renderer %}\n"""+
-    """</div>"""
-    )
+def value_wrapper_template(tooltip):
+    return ( # "<!-- value_wrapper_template -->"+
+        """<div class="view-value {{field.field_placement.field}}"%s>\n"""+
+        """  {%% include value_renderer %%}\n"""+
+        """</div>"""
+        )%(tooltip,)
+
+view_value_wrapper_template = value_wrapper_template(no_tooltip)
+edit_value_wrapper_template = value_wrapper_template(with_tooltip)
 
 # Wrap value and include label
-label_value_wrapper_template = ( # "<!-- label_value_wrapper_template -->"+
-    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
-    """  <div class="row view-value-row">\n"""+
-    """    <div class="view-label {{field.field_placement.label}}">\n"""+
-    """      <span>{{field.field_label}}</span>\n"""+
-    """    </div>\n"""+
-    """    <div class="view-value {{field.field_placement.value}}">\n"""+
-    """      {% include value_renderer %}\n"""+
-    """    </div>\n"""+
-    """  </div>\n"""+
-    """</div>"""
-    )
+def label_value_wrapper_template(tooltip):
+    return ( # "<!-- label_value_wrapper_template -->"+
+        """<div class="{{field.field_placement.field}}"%s>\n"""+
+        """  <div class="row view-value-row">\n"""+
+        """    <div class="view-label {{field.field_placement.label}}">\n"""+
+        """      <span>{{field.field_label}}</span>\n"""+
+        """    </div>\n"""+
+        """    <div class="view-value {{field.field_placement.value}}">\n"""+
+        """      {%% include value_renderer %%}\n"""+
+        """    </div>\n"""+
+        """  </div>\n"""+
+        """</div>"""
+        )%(tooltip,)
+
+label_view_value_wrapper_template = label_value_wrapper_template(no_tooltip)
+label_edit_value_wrapper_template = label_value_wrapper_template(with_tooltip)
 
 # Wrap field label with column heading styling
 col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
@@ -89,20 +100,24 @@ col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
     )
 
 # Wrap value with column value styling; include label on small displays only
-col_label_value_wrapper_template = ( # "<!-- col_label_value_wrapper_template -->"+
-    """<div class="{{field.field_placement.field}}"{{field.field_tooltip|safe}}>\n"""+
-    """  <div class="row show-for-small-only">\n"""+
-    """    <div class="view-label small-12 columns">\n"""+
-    """      <span>{{field.field_label}}</span>\n"""+
-    """    </div>\n"""+
-    """  </div>\n"""+
-    """  <div class="row view-value-col">\n"""+
-    """    <div class="view-value small-12 columns">\n"""+
-    """      {% include value_renderer %}\n"""+
-    """    </div>\n"""+
-    """  </div>\n"""+
-    """</div>"""
-    )
+def col_label_value_wrapper_template(tooltip):
+    return ( # "<!-- col_label_value_wrapper_template -->"+
+        """<div class="{{field.field_placement.field}}"%s>\n"""+
+        """  <div class="row show-for-small-only">\n"""+
+        """    <div class="view-label small-12 columns">\n"""+
+        """      <span>{{field.field_label}}</span>\n"""+
+        """    </div>\n"""+
+        """  </div>\n"""+
+        """  <div class="row view-value-col">\n"""+
+        """    <div class="view-value small-12 columns">\n"""+
+        """      {%% include value_renderer %%}\n"""+
+        """    </div>\n"""+
+        """  </div>\n"""+
+        """</div>"""
+        )%(tooltip,)
+
+col_label_view_value_wrapper_template = col_label_value_wrapper_template(no_tooltip)
+col_label_edit_value_wrapper_template = col_label_value_wrapper_template(with_tooltip)
 
 #   ------------------------------------------------------------
 #   Renderer factory class
@@ -318,7 +333,7 @@ class RenderFieldValue(object):
         # log.info("self._view_renderer %r"%self._view_renderer)
         if not self._render_view:
             self._render_view = self._set_render_mode(
-                self._get_renderer(value_wrapper_template, self._view_renderer),
+                self._get_renderer(view_value_wrapper_template, self._view_renderer),
                 "view"
                 )
         return self._render_view
@@ -329,7 +344,7 @@ class RenderFieldValue(object):
         """
         if not self._render_edit:
             self._render_edit = self._set_render_mode(
-                self._get_renderer(value_wrapper_template, self._edit_renderer),
+                self._get_renderer(edit_value_wrapper_template, self._edit_renderer),
                 "edit"
                 )
         return self._render_edit
@@ -340,7 +355,7 @@ class RenderFieldValue(object):
         """
         if not self._render_label_view:
             self._render_label_view = self._set_render_mode(
-                self._get_renderer(label_value_wrapper_template, self._view_renderer),
+                self._get_renderer(label_view_value_wrapper_template, self._view_renderer),
                 "label_view"
                 )
         return self._render_label_view
@@ -351,7 +366,7 @@ class RenderFieldValue(object):
         """
         if not self._render_label_edit:
             self._render_label_edit = self._set_render_mode(
-                self._get_renderer(label_value_wrapper_template, self._edit_renderer),
+                self._get_renderer(label_edit_value_wrapper_template, self._edit_renderer),
                 "label_edit"
                 )
         return self._render_label_edit
@@ -402,7 +417,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_view:
             self._render_col_view = self._set_render_mode(
-                self._get_renderer(col_label_value_wrapper_template, self._view_renderer),
+                self._get_renderer(col_label_view_value_wrapper_template, self._view_renderer),
                 "col_view"
                 )
         return self._render_col_view
@@ -414,7 +429,7 @@ class RenderFieldValue(object):
         """
         if not self._render_col_edit:
             self._render_col_edit = self._set_render_mode(
-                self._get_renderer(col_label_value_wrapper_template, self._edit_renderer),
+                self._get_renderer(col_label_edit_value_wrapper_template, self._edit_renderer),
                 "col_edit"
                 )
         return self._render_col_edit

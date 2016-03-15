@@ -596,10 +596,10 @@ class UploadResourceTest(AnnalistTestCase):
             , "type_id":    "testupltype"
             , "entity_id":  "test1"
             , "field_id":   "upl_field"
-            , "tooltip":    r.context['fields'][i].field_help
+            , "tooltip":    "" # 'title="%s"'%r.context['fields'][i].field_help
             })
         img_element = """
-            <div class="small-12 columns" title="%(tooltip)s">
+            <div class="small-12 columns" %(tooltip)s>
               <div class="row view-value-row">
                 <div class="view-label small-12 medium-2 columns">
                   <span>test_image_ref_field label</span>
@@ -683,10 +683,10 @@ class UploadResourceTest(AnnalistTestCase):
             , "type_id":    "testimgtype"
             , "entity_id":  "test1"
             , "field_id":   "img_field"
-            , "tooltip":    r.context['fields'][i].field_help
+            , "tooltip":    "" # 'title="%s"'%r.context['fields'][i].field_help
             })
         img_element = """
-            <div class="small-12 columns" title="%(tooltip)s">
+            <div class="small-12 columns" %(tooltip)s>
               <div class="row view-value-row">
                 <div class="view-label small-12 medium-2 columns">
                   <span>test_image_field label</span>

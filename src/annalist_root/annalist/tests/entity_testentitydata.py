@@ -812,8 +812,6 @@ def layout_classes(width=12):
             , 'col_head_classes':       "view-label col-head small-12 medium-4 columns"
             , 'col_item_classes':       "view-value col-???? small-12 medium-4 columns"
             , 'button_wide_classes':    "small-12 medium-4 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 6:
         class_dict = (
@@ -822,8 +820,6 @@ def layout_classes(width=12):
             , 'col_head_classes':       "view-label col-head small-12 medium-6 columns"
             , 'col_item_classes':       "small-12 medium-6 columns"
             , 'button_wide_classes':    "small-12 medium-6 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 10:
         class_dict = (
@@ -844,11 +840,14 @@ def layout_classes(width=12):
             , 'space_classes':          "medium-2 columns show-for-medium-up"
             , 'button_wide_classes':    "small-12 medium-10 columns"
             , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     else:
         assert False, "Unexpected width %r"%width
+    class_dict.update(
+        { 'button_left_classes':        "form-buttons small-12 columns"
+        , 'button_right_classes':       "form-buttons small-12 columns text-right"
+        , 'button_r_med_up_classes':    "form-buttons small-12 columns medium-up-text-right"        
+        })
     return class_dict
 
 # End.

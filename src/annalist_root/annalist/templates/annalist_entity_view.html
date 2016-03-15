@@ -33,9 +33,12 @@
         <div class="small-12 medium-4 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
-              <input type="submit" name="edit"             value="Edit" />
-              <input type="submit" name="copy"             value="Copy" />
-              <input type="submit" name="close"            value="Close" />
+              <input type="submit" name="edit"  value="Edit" 
+                     title="Edit entity data."/>
+              <input type="submit" name="copy"  value="Copy" 
+                     title="Copy, then edit entity data as new entity." />
+              <input type="submit" name="close" value="Close" 
+                     title="Return to previous page." />
             </div>
           </div>
         </div>
@@ -69,7 +72,7 @@
             <div class="view-value small-12 columns">
               <!-- Cf. https://github.com/BetaNYC/getDataButton -->
               <a href="{{entity_data_ref}}">JSON-LD</a>
-              <a href="{{entity_data_ref}}">
+              <a href="{{entity_data_ref}}" title="Retrieve underlying JSON-LD data">
                 <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
               </a>
             </div>
