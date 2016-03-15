@@ -27,7 +27,7 @@ import annalist
 from annalist                       import message
 from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.util                  import valid_id, extract_entity_id, make_resource_ref_query
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
 from annalist.models.collection     import Collection
@@ -40,6 +40,8 @@ from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
 
 from annalist.views.uri_builder     import (
+    uri_param_dict,
+    scope_params,
     uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
@@ -62,6 +64,26 @@ authorization_map = (
     , "auth_create_coll":   ["CREATE_COLLECTION", "ADMIN"]
     , "auth_delete_coll":   ["DELETE_COLLECTION", "ADMIN"]
     })
+
+#   -------------------------------------------------------------------------------------------
+#
+#   Helper functions
+#
+#   -------------------------------------------------------------------------------------------
+
+def make_data_ref(request_url, data_ref, resource_type=None):
+    """
+    Returns a URL reference rel.atiove to the suppliued request_url 
+    that can be used as a reference to a data resource based on
+    the supplied request URL, data reference and optional type.
+
+    Scope-repated query parameters from the original request_url are 
+    preserved, and others are discarded.
+    """
+    params = scope_params(uri_param_dict(request_url))
+    if resource_type:
+        params['type'] = resource_type
+    return uri_with_params(data_ref, params)
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -556,30 +578,28 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
-    def get_entity_data_ref(self):
+    def get_entity_data_ref(self, return_type=None):
         """
         Returns a string that can be used as a reference to the entity metadata resource
-        relative to an entity URL.
-
-        (Preserves query params from original request)
+        relative to an entity URL, optionally with a specified type parameter added.
         """
         assert self.entitytypeinfo is not None
-        request_url = self.view.get_request_path()
-        data_ref = make_resource_ref_query(
-            request_url, self.entitytypeinfo.entityclass._entityfile
+        return make_data_ref(
+            self.view.get_request_path(), 
+            self.entitytypeinfo.entityclass._entityfile, 
+            return_type
             )
-        return data_ref
 
-    def get_entity_list_ref(self):
+    def get_entity_list_ref(self, return_type=None):
         """
         Returns a string that can be used as a reference to the entity list data
-        relative to the list URL.
-
-        (Preserves query params from original request)
+        relative to the current list URL.
         """
-        request_url = self.view.get_request_path()
-        list_ref = make_resource_ref_query(request_url, layout.ENTITY_LIST_FILE)
-        return list_ref
+        return make_data_ref(
+            self.view.get_request_path(), 
+            layout.ENTITY_LIST_FILE, 
+            return_type
+            )
 
     def context_data(self, entity_label=None):
         """
@@ -632,14 +652,16 @@ class DisplayInfo(object):
             self.add_task_button_context(task_buttons, context)
         if self.recordlist:
             context.update(
-                { 'heading':            self.recordlist[RDFS.CURIE.label]
-                , 'list_label':         self.recordlist[RDFS.CURIE.label]
-                , 'entity_list_ref':    self.get_entity_list_ref()
+                { 'heading':                self.recordlist[RDFS.CURIE.label]
+                , 'list_label':             self.recordlist[RDFS.CURIE.label]
+                , 'entity_list_ref':        self.get_entity_list_ref()
+                , 'entity_list_ref_json':   self.get_entity_list_ref("application/json")
                 })
             context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.entitytypeinfo:
             context.update(
-                { 'entity_data_ref':    self.get_entity_data_ref()
+                { 'entity_data_ref':        self.get_entity_data_ref()
+                , 'entity_data_ref_json':   self.get_entity_data_ref("application/json")
                 })
         if entity_label:
             context.update(

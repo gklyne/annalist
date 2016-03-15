@@ -37,14 +37,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Suppress "List <type>" if no type id is defined by the URI.
 - [x] Add "Collection metadata" button to collection edit (customize) view.
 - [x] Drop tooltips from fields in view-only mode (they weren't very helpful).
-- [ ] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
+- [x] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
 - [ ] Site vocabulary changes
     - [ ] `Entity_see_also_repeat` -> `Entity_see_also_r`
     - [ ] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
     - [ ] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
 - [ ] When copying entity, generate new ID by prepending/appending number to copied Id
-- [ ] Generate default value type for field based on render type + value mode (to help with consistency)
-    - See notes.
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
 - [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
@@ -227,6 +225,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Generate default value type for field based on render type + value mode (to help with consistency)
+    - See notes.
 - [ ] It would be nice if link field tooltips describe what they link to.
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:

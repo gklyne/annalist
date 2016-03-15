@@ -91,7 +91,14 @@ class EntityResourceAccess(AnnalistGenericView):
                 )
         # Return resource
         try:
-            response = self.resource_response(resource_file, resource_info["resource_type"])
+            return_type = resource_info["resource_type"]
+            # URL parameter ?type=mime/type overrides specified content type
+            #
+            # @@TODO: this is to allow links to return different content-types:
+            #         is there a cleaner way?
+            if "type" in viewinfo.request_dict:
+                return_type = viewinfo.request_dict["type"]
+            response = self.resource_response(resource_file, return_type)
         except Exception as e:
             log.exception(str(e))
             response = self.error(
