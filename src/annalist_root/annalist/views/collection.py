@@ -15,6 +15,7 @@ from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
 
 from annalist                       import message
+from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.exceptions            import Annalist_Error
 
@@ -165,7 +166,14 @@ class CollectionEditView(AnnalistGenericView):
                     info_message=message.MIGRATED_COLLECTION_DATA%msg_vals
                     )
             return http_response
-
+        # Edit collection metadata
+        if "metadata" in request.POST:
+            redirect_uri = self.item_edit_uri(
+                layout.SITEDATA_ID, "_coll", "Collection_view", coll_id, 
+                message.NO_COLLECTION_METADATA, 
+                viewinfo.get_continuation_here(),
+                viewinfo.get_continuation_url()
+                )
         # Record types
         type_id = request.POST.get('typelist', None)
         if "type_new" in request.POST:

@@ -71,6 +71,9 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
+from entity_testcolldata    import (
+    collectiondata_view_url
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -573,6 +576,18 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         completeduri = self.edit_url+r"\?info_head=.*\&info_message=.*"
         self.assertMatch(r['location'], TestHostUri+completeduri)
+        return
+
+    def test_post_metadata(self):
+        form_data = (
+            { "metadata":  "Collection metadata"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        metadataurl = collectiondata_view_url(coll_id="coll1", action="edit")
+        self.assertEqual(r['location'], TestHostUri+metadataurl+self.continuation)
         return
 
     def test_post_close(self):

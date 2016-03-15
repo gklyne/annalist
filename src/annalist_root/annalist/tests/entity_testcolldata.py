@@ -74,7 +74,7 @@ def collectiondata_resource_url(coll_id="testcoll", resource_ref=layout.COLL_MET
 
 def collectiondata_view_url(coll_id="testcoll", action=None):
     """
-    Return URL for edit view of entity
+    Return URL for edit view of collection metadata
 
     e.g. 
       http://example.com/site/c/_annalist_site/v/Collection_view/_coll/testcoll/!view

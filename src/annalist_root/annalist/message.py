@@ -21,6 +21,7 @@ UNEXPECTED_FORM_DATA        = "Unexpected form data: %r"
 MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
 CREATED_COLLECTION_ID       = "Created new collection: '%(coll_id)s'"
+NO_COLLECTION_METADATA      = "Metadata not found for collection '%(id)s'"
 
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
 INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"

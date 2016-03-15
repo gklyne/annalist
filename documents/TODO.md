@@ -35,7 +35,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] List view: reorganize scope/type selection: 
     - [x] use "List <type>" and "List" buttons, with checkbox for "Scope all".
     - [x] Suppress "List <type>" if no type id is defined by the URI.
-- [ ] Add "Edit collection metadata" button to collection edit (customize) view.
+- [x] Add "Collection metadata" button to collection edit (customize) view.
 - [ ] Drop tooltips from fields in view-only mode: they aren't really very helpful.
     - it would be nice if link field tooltips describe what they link to
 - [ ] Site vocabulary changes
