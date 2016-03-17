@@ -454,7 +454,7 @@ class UploadResourceTest(AnnalistTestCase):
     def test_upload_file_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
         with open(self.filepath) as fp:
-            f = entitydata_default_view_form_data(entity_id="test1", action="edit")
+            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview")
             r = self.client.post(u, f)
@@ -485,7 +485,7 @@ class UploadResourceTest(AnnalistTestCase):
     def test_reference_uploaded_resource(self):
         # Create uploaded resource (see previous test)
         with open(self.filepath) as fp:
-            f = entitydata_default_view_form_data(entity_id="test1", action="edit")
+            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url(
                 "view", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview"
@@ -528,7 +528,7 @@ class UploadResourceTest(AnnalistTestCase):
     def test_upload_image_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
         with open(self.imagepath) as fp:
-            f = entitydata_default_view_form_data(entity_id="test1", action="edit")
+            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplimageview")
             r = self.client.post(u, f)
@@ -619,7 +619,7 @@ class UploadResourceTest(AnnalistTestCase):
     def test_image_edit_field(self):
         # Upload to an image view field
         with open(self.imagepath) as fp:
-            f = entitydata_default_view_form_data(entity_id="test1", action="edit")
+            f = entitydata_default_view_form_data(type_id="testimgtype", entity_id="test1", action="edit")
             f['img_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
             r = self.client.post(u, f)
@@ -710,7 +710,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.test_image_edit_field()
 
         # Edit entity
-        f = entitydata_default_view_form_data(entity_id="test1", action="edit", update="Updated")
+        f = entitydata_default_view_form_data(type_id="testimgtype", entity_id="test1", action="edit", update="Updated")
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -725,7 +725,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][i].field_value,  "test1")
         i = 1
         self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
-        self.assertEqual(r.context['fields'][i].field_value,  "Updated testcoll/testtype/test1")
+        self.assertEqual(r.context['fields'][i].field_value,  "Updated testcoll/testimgtype/test1")
         i = 2
         self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
         i = 3
@@ -747,7 +747,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.test_image_edit_field()
 
         # Rename entity
-        f = entitydata_default_view_form_data(orig_id="test1", entity_id="test_new", action="edit")
+        f = entitydata_default_view_form_data(type_id="testimgtype", orig_id="test1", entity_id="test_new", action="edit")
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

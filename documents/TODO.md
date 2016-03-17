@@ -38,11 +38,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Add "Collection metadata" button to collection edit (customize) view.
 - [x] Drop tooltips from fields in view-only mode (they weren't very helpful).
 - [x] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
-- [ ] Site vocabulary changes
-    - [ ] `Entity_see_also_repeat` -> `Entity_see_also_r`
-    - [ ] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
-    - [ ] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
+- [x] Site vocabulary changes
+    - [x] `Entity_see_also_repeat` -> `Entity_see_also_r`
+    - [x] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
+    - [x] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
+    - NOTE: only references found are in site data, so should be superseded by software update.
+    - Check when software updates are applied to various deployments
 - [ ] When copying entity, generate new ID by prepending/appending number to copied Id
+    - (entity.allocate_new_id, called by get_entity_info.get_entity_info, called by entityedit.view_setup)
 - [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
 - [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
 - [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data

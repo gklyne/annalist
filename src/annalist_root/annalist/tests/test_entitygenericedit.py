@@ -1794,6 +1794,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # View doesn't return form entry field values...
         f  = entitydata_default_view_form_data(
                 action="view",
+                type_id="testtype",
+                entity_id="entityuseview",
                 use_view="_view/Type_view", 
                 )
         u  = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Default_view")

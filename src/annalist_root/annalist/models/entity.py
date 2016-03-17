@@ -262,14 +262,27 @@ class Entity(EntityRoot):
     # Class helper methods
 
     @classmethod
-    def allocate_new_id(cls, parent):
-        if cls._last_id is None:
-            cls._last_id = 1
+    def allocate_new_id(cls, parent, base_id=None):
+        """
+        Allocate and return an as-yet-unused entity id for a member of the 
+        indicated entity class as an offsprintof the indicated parent.  
+
+        If "base_id" is specified, it is used as part of the new Id allocated 
+        (used when copying an entity).
+        """
+        if base_id:
+            last_id     = 1
+            name_format = base_id+"_%02d"
+        else:
+            last_id     = cls._last_id or 1
+            name_format = "%08d"
         while True:
-            newid = "%08d"%cls._last_id
+            newid = name_format%last_id
             if not cls.exists(parent, newid):
                 break
-            cls._last_id += 1
+            last_id += 1
+        if not base_id:
+            cls._last_id = last_id
         return newid
 
     @classmethod

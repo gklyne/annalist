@@ -215,19 +215,24 @@ class GenericEntityEditView(AnnalistGenericView):
                         )
                     )
         self.get_view_template(action, type_id, entity_id)
-        action      = request.POST.get('action', action)
-        viewinfo    = self.view_setup(
-            action, coll_id, type_id, view_id, entity_id, request.POST.dict()
+        action              = request.POST.get('action', action)
+        orig_entity_id      = request.POST.get('orig_id', entity_id)
+        orig_entity_type_id = request.POST.get('orig_type', type_id)
+        entity_type_id      = extract_entity_id(request.POST.get('entity_type', type_id))
+        entity_id           = request.POST.get('entity_id', None)
+        view_id             = request.POST.get('view_id', view_id)
+        viewinfo            = self.view_setup(
+            action, coll_id, orig_entity_type_id, view_id, entity_id, request.POST.dict()
             )
         if viewinfo.http_response:
             return viewinfo.http_response
         # Get key form data values
         # Except for entity_id, use values from URI when form does not supply a value
-        entity_id            = request.POST.get('entity_id', None)
-        orig_entity_id       = request.POST.get('orig_id', entity_id)
-        entity_type_id       = extract_entity_id(request.POST.get('entity_type', type_id))
-        orig_entity_type_id  = request.POST.get('orig_type', type_id)
-        view_id              = request.POST.get('view_id', view_id)
+        #@@@ entity_id            = request.POST.get('entity_id', None)
+        #@@@ orig_entity_id       = request.POST.get('orig_id', entity_id)
+        #@@@ entity_type_id       = extract_entity_id(request.POST.get('entity_type', type_id))
+        #@@@ orig_entity_type_id  = request.POST.get('orig_type', type_id)
+        #@@@ view_id              = request.POST.get('view_id', view_id)
         viewinfo.set_type_entity_id(
             orig_type_id=orig_entity_type_id, orig_entity_id=orig_entity_id,
             curr_type_id=entity_type_id, curr_entity_id=entity_id
@@ -895,12 +900,16 @@ class GenericEntityEditView(AnnalistGenericView):
             raise ValueError("entityedit.save_entity expects ResponseInfo object")
         if responseinfo.has_http_response():
             return responseinfo
-        # log.info("save_entity: formvals: %r, import_field %r"%(entityformvals, import_field))
         entity_id      = viewinfo.curr_entity_id
         entity_type_id = viewinfo.curr_type_id
         orig_entity_id = viewinfo.orig_entity_id
         orig_type_id   = viewinfo.orig_type_id
         action         = viewinfo.action
+        # log.info("save_entity: formvals: %r, import_field %r"%(entityformvals, import_field))
+        # log.info(
+        #     "entity_id %s, entity_type_id %s, orig_entity_id %s, orig_type_id %s, action %s"%
+        #     (entity_id, entity_type_id, orig_entity_id, orig_type_id, action)
+        #     )
         typeinfo       = viewinfo.entitytypeinfo
         messages       = viewinfo.type_messages
         if self.uri_action == "view":
@@ -920,6 +929,7 @@ class GenericEntityEditView(AnnalistGenericView):
             ( (entity_id      != orig_entity_id) or 
               (entity_type_id != orig_type_id  ) )
             )
+        # log.info("@@ Renamed: %s"%entity_renamed)
 
         # @@TODO: factor out repeated re-rendering logic
 
@@ -1026,8 +1036,18 @@ class GenericEntityEditView(AnnalistGenericView):
             # Normal (non-type) entity create or update, no renaming
             err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
         else:
+            # log.info(
+            #     "@@ rename_??? %s/%s to %s/%s"%
+            #     ( typeinfo.get_type_id(), orig_entity_id, 
+            #       new_typeinfo.get_type_id(), entity_id) 
+            #     )
             if entitytypeinfo.TYPE_ID in [entity_type_id, orig_type_id]:
                 # Type renamed
+                # log.info(
+                #     "@@ rename_entity_type %s/%s to %s/%s"%
+                #     ( typeinfo.get_type_id(), orig_entity_id, 
+                #       new_typeinfo.get_type_id(), entity_id) 
+                #     )
                 err_vals = self.rename_entity_type(
                     viewinfo, 
                     typeinfo, orig_entity_id, 
@@ -1043,6 +1063,11 @@ class GenericEntityEditView(AnnalistGenericView):
             #@@
             else:
                 # Non-type record rename
+                # log.info(
+                #     "@@ rename_entity %s/%s to %s/%s"%
+                #     ( typeinfo.get_type_id(), orig_entity_id, 
+                #       new_typeinfo.get_type_id(), entity_id) 
+                #     )
                 err_vals = self.rename_entity(
                     typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
                     )

@@ -572,7 +572,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("entityedittype")
         e1 = self._check_entity_data_values("entityedittype")
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        newtype = RecordType.create(self.testcoll, "newtype", recordtype_create_values("newtype"))
+        newtype     = RecordType.create(self.testcoll, "newtype", recordtype_create_values("newtype"))
         newtypedata = RecordTypeData(self.testcoll, "newtype")
         self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
         self.assertFalse(RecordTypeData.exists(self.testcoll, "newtype"))

@@ -569,7 +569,7 @@ class AuthorizationTest(AnnalistTestCase):
             view_id="Default_view"
             )
         f = entitydata_form_data(action="edit",
-            coll_id="testcoll", type_id="Default_data", 
+            coll_id="testcoll", type_id="Default_type", 
             entity_id="view_data", orig_id="view_data",
             edit="edit"
             )
@@ -584,7 +584,7 @@ class AuthorizationTest(AnnalistTestCase):
             view_id="Default_view"
             )
         f = entitydata_form_data(action="copy",
-            coll_id="testcoll", type_id="Default_data", 
+            coll_id="testcoll", type_id="Default_type", 
             entity_id="copy_view_data", orig_id="view_data",
             copy="copy"
             )

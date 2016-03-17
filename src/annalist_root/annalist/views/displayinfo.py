@@ -684,8 +684,8 @@ class DisplayInfo(object):
                 { 'task_buttons':
                     [ { 'button_id':    b[ANNAL.CURIE.button_id]
                       , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
-                      , 'button_label': b[ANNAL.CURIE.button_label]
-                      , 'button_help':  b[ANNAL.CURIE.button_help]
+                      , 'button_label': b.get(ANNAL.CURIE.button_label, "@@annal:button_label@@")
+                      , 'button_help':  b.get(ANNAL.CURIE.button_help,  "@@annal:button_help@@")
                       } for b in task_buttons
                     ]
                 })
