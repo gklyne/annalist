@@ -499,14 +499,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_type")
-        self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['entity_id'],        "Default_type_01")
+        self.assertEqual(r.context['orig_id'],          "Default_type_01")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
         self._check_context_fields(r, 
-            type_id="00000001",
+            type_id="Default_type_01",
             type_label="Default record",
             type_uri="", type_supertype_uris=""
             )

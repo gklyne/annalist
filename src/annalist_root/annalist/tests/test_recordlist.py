@@ -521,8 +521,8 @@ class RecordListEditViewTest(AnnalistTestCase):
         list_url = collection_entity_view_url(coll_id="testcoll", type_id="_list", entity_id="Default_list")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_list")
-        self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['entity_id'],        "Default_list_01")
+        self.assertEqual(r.context['orig_id'],          "Default_list_01")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -530,7 +530,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="copy",
             num_fields=2,
-            list_id="00000001",
+            list_id="Default_list_01",
             list_label="List entities",
             list_url=list_url,
             list_uri=None

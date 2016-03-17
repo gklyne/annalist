@@ -337,7 +337,7 @@ class EntityRoot(object):
         if not self._values:
             raise ValueError("Entity._save without defined entity values")
         (body_dir, body_file) = self._dir_path()
-        log.debug("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
+        # log.debug("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
         fullpath = os.path.join(settings.BASE_DATA_DIR, "annalist_site", body_file)
         # Next is partial protection against code errors
         if not fullpath.startswith(os.path.join(settings.BASE_DATA_DIR, "annalist_site")):
@@ -685,9 +685,9 @@ class EntityRoot(object):
         local_dir = os.path.join(body_dir, localpath)
         util.ensure_dir(local_dir)
         filename = os.path.join(local_dir, localname)
-        log.debug("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
-        log.debug("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
-        log.debug("entityroot._metaobj: filename %s"%(filename,))
+        # log.debug("entityroot._metaobj: self._entitydir %s"%(self._entitydir,))
+        # log.debug("entityroot._metaobj: body_dir %s, body_file %s"%(body_dir, body_file))
+        # log.debug("entityroot._metaobj: filename %s"%(filename,))
         return open(filename, mode)
 
     def _read_stream(self):

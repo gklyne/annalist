@@ -625,8 +625,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         view_url = collection_entity_view_url(coll_id="testcoll", type_id="_view", entity_id="Default_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "_view")
-        self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['entity_id'],        "Default_view_01")
+        self.assertEqual(r.context['orig_id'],          "Default_view_01")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['edit_view_button'],   False)
@@ -634,7 +634,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Fields
         self._check_default_entity_context_fields(r, 
             action="copy",
-            view_id="00000001",
+            view_id="Default_view_01",
             view_label="Default record view",
             view_url=view_url,
             view_uri=None,

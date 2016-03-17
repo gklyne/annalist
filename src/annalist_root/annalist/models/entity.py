@@ -270,20 +270,21 @@ class Entity(EntityRoot):
         If "base_id" is specified, it is used as part of the new Id allocated 
         (used when copying an entity).
         """
-        if base_id:
-            last_id     = 1
+        if base_id and util.valid_id(base_id):
+            last_id     = 0
             name_format = base_id+"_%02d"
         else:
-            last_id     = cls._last_id or 1
+            last_id     = cls._last_id or 0
             name_format = "%08d"
         while True:
-            newid = name_format%last_id
-            if not cls.exists(parent, newid):
-                break
             last_id += 1
+            new_id   = name_format%last_id
+            if not cls.exists(parent, new_id):
+                break
         if not base_id:
             cls._last_id = last_id
-        return newid
+        # print "base_id %s, new_id %s, last_id %d"%(base_id, new_id, last_id)
+        return new_id
 
     @classmethod
     def relpath(cls, entityid):

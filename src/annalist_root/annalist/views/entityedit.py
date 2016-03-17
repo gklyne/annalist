@@ -133,6 +133,7 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         if viewinfo.http_response:
             return viewinfo.http_response
+        # print "@@ viewinfo old_entity_id %s, new_entity_id %s"%(viewinfo.entity_id, viewinfo.new_entity_id)
         self.help_markdown = viewinfo.recordview.get(RDFS.CURIE.comment, None)
 
         # Create local entity object or load values from existing
@@ -152,6 +153,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         entityvals  = get_entity_values(
             viewinfo.entitytypeinfo, entity,
+            entity_id=viewinfo.new_entity_id,
             action=viewinfo.action
             )
 
@@ -228,11 +230,6 @@ class GenericEntityEditView(AnnalistGenericView):
             return viewinfo.http_response
         # Get key form data values
         # Except for entity_id, use values from URI when form does not supply a value
-        #@@@ entity_id            = request.POST.get('entity_id', None)
-        #@@@ orig_entity_id       = request.POST.get('orig_id', entity_id)
-        #@@@ entity_type_id       = extract_entity_id(request.POST.get('entity_type', type_id))
-        #@@@ orig_entity_type_id  = request.POST.get('orig_type', type_id)
-        #@@@ view_id              = request.POST.get('view_id', view_id)
         viewinfo.set_type_entity_id(
             orig_type_id=orig_entity_type_id, orig_entity_id=orig_entity_id,
             curr_type_id=entity_type_id, curr_entity_id=entity_id
@@ -2048,13 +2045,13 @@ class GenericEntityEditView(AnnalistGenericView):
                 return
             # Always called with list of field descriptions
             for field_desc in fieldmap:
-                log.debug("find_fields: field_desc %r"%(field_desc))
+                # log.debug("find_fields: field_desc %r"%(field_desc))
                 if filter_f(field_desc):
                     field_desc['group_list'] = group_list
-                    log.debug(
-                        "entityedit.find_fields: field name %s, prefixes %r"%
-                        (field_desc.get_field_name(), group_list)
-                        )
+                    # log.debug(
+                    #     "entityedit.find_fields: field name %s, prefixes %r"%
+                    #     (field_desc.get_field_name(), group_list)
+                    #     )
                     yield field_desc
                 if field_desc.has_field_group_ref():
                     groupref = field_desc.group_ref()

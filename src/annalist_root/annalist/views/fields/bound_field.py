@@ -438,9 +438,9 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None, action="view")
     if action == "copy":
         # Allocate new entity Id and lose values based on original Id 
         # when performing a copy operation.
-        entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
-        log.info("@@ copy new entity_id %s"%entity_id)
-        entityvals['entity_id'] = entity_id
+        # entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
+        # log.info("@@ copy new entity_id %s"%entity_id)
+        # entityvals['entity_id'] = entity_id
         entityvals.pop('entity_link', None)
         entityvals[ANNAL.CURIE.id] = entity_id
         entityvals.pop(ANNAL.CURIE.uri, None)

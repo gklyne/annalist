@@ -87,7 +87,7 @@ class EntityValueMap(object):
         Returns a deep copy of the supplied `entityvals` updated with values from
         then form.  Values not mentioned in the form data are not updated.
         """
-        log.debug("map_form_data_to_values: form_data %r, entityvals %r"%(form_data, entityvals))
+        # log.debug("map_form_data_to_values: form_data %r, entityvals %r"%(form_data, entityvals))
         values = copy.deepcopy(entityvals) or {}
         for kmap in self._map:
             kmap.map_form_to_entity(form_data, values)

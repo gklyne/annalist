@@ -331,11 +331,18 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             assert self.entitytypeinfo is not None
-            if (not entity_id) and (action == "new"):
-                entity_id = self.entitytypeinfo.entityclass.allocate_new_id(
-                    self.entitytypeinfo.entityparent
+            # if (not entity_id) and (action == "new"):
+            #     entity_id = self.entitytypeinfo.entityclass.allocate_new_id(
+            #         self.entitytypeinfo.entityparent
+            #         )
+            if action in["new", "copy"]:
+                new_entity_id = self.entitytypeinfo.entityclass.allocate_new_id(
+                    self.entitytypeinfo.entityparent, base_id=entity_id
                     )
-            self.entity_id = entity_id
+            else:
+                new_entity_id  = entity_id
+            self.new_entity_id = new_entity_id or entity_id
+            self.entity_id     = entity_id or new_entity_id
             # Special case permissions...
             if self.type_id == "_coll":
                 # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)

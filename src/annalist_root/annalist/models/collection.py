@@ -69,7 +69,7 @@ class Collection(Entity):
                     Collection.  Effectively, the new Collection inherits definitions
                     from this alternative parent.
         """
-        log.debug("Collection.__init__: coll_id %s, parent dir %s"%(coll_id, parentsite._entitydir))
+        # log.debug("Collection.__init__: coll_id %s, parent dir %s"%(coll_id, parentsite._entitydir))
         if altparent is not None:
             if not isinstance(altparent, Collection):
                 msg = "Collection altparent value must be a Collection (got %r)"%(altparent,)
@@ -162,7 +162,7 @@ class Collection(Entity):
         Returns an instance of the indicated Collection class with data loaded from 
         the corresponding Annalist storage, or None if there is no such entity.
         """
-        log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
+        # log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
         coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
         if coll is not None:
             parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
@@ -179,8 +179,8 @@ class Collection(Entity):
                         (entityid, parent_coll_id)
                         )
                     coll.set_alt_entities(parent_coll)
-            else:
-                log.debug("Collection.load: coll %s references no parent"%(entityid,))
+            # else:
+            #     log.debug("Collection.load: coll %s references no parent"%(entityid,))
         return coll
 
     # User permissions
