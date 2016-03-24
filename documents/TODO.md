@@ -46,8 +46,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Check when software updates are applied to various deployments
 - [x] When copying entity, generate new ID using id of opriginal entity
     - (entity.allocate_new_id, called by displayinfo.get_entity_info, called by entityedit.view_setup)
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+- [x] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+    - Except migration entry in models.recordfield
 - [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
+    - [ ] When creating repeat field for field, display the created field.
+    - [ ] Review default name/label/desc used for type list/view definitions
+    - [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
 - [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
 
 (release?)
