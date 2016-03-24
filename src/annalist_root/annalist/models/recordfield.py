@@ -63,9 +63,10 @@ class RecordField(EntityData):
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
         migration_map = (
-            [ (ANNAL.CURIE.options_typeref,  ANNAL.CURIE.field_ref_type       )
-            , (ANNAL.CURIE.restrict_values,  ANNAL.CURIE.field_ref_restriction)
-            , (ANNAL.CURIE.target_field,     ANNAL.CURIE.field_ref_field      )
+            [ (ANNAL.CURIE.options_typeref,     ANNAL.CURIE.field_ref_type       )
+            , (ANNAL.CURIE.restrict_values,     ANNAL.CURIE.field_ref_restriction)
+            , (ANNAL.CURIE.target_field,        ANNAL.CURIE.field_ref_field      )
+            , (ANNAL.CURIE.field_target_type,   ANNAL.CURIE.field_value_type     )
             ])
         for old_key, new_key in migration_map:
             if old_key in entitydata:
@@ -86,9 +87,11 @@ class RecordField(EntityData):
                 val_mode = "Value_field"
             elif val_render == "RefMultifield":
                 val_mode = "Value_entity"
-            elif val_type == ANNAL.CURIE.Import or val_render == "URIImport":
+            #@@ elif val_type == ANNAL.CURIE.Import or val_render == "URIImport":
+            elif val_render == "URIImport":
                 val_mode = "Value_import"
-            elif val_type == ANNAL.CURIE.Upload or val_render == "FileUpload":
+            #@@ elif val_type == ANNAL.CURIE.Upload or val_render == "FileUpload":
+            elif val_render == "FileUpload":
                 val_mode = "Value_upload"
             entitydata[ANNAL.CURIE.field_value_mode] = val_mode
         # Consistency checks

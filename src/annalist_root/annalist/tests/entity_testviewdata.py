@@ -264,7 +264,7 @@ def recordview_entity_view_context_data(
         , 'fields':
           [ { 'field_id':           'View_id'               # fields[0]
             , 'field_name':         'entity_id'
-            , 'field_target_type':  'annal:Slug'
+            , 'field_value_type':  'annal:Slug'
             , 'field_label':        'View Id'
             , 'field_render_type':  'EntityId'
             , 'field_value_mode':   'Value_direct'
@@ -274,7 +274,7 @@ def recordview_entity_view_context_data(
             }
           , { 'field_id':           'View_label'            # fields[1]
             , 'field_name':         'View_label'
-            , 'field_target_type':  'annal:Text'
+            , 'field_value_type':  'annal:Text'
             , 'field_label':        'Label'
             , 'field_render_type':  'Text'
             , 'field_value_mode':   'Value_direct'
@@ -285,7 +285,7 @@ def recordview_entity_view_context_data(
           , { 'field_id':           'View_comment'          # fields[2]
             , 'field_name':         'View_comment'
             , 'field_label':        'Help'
-            , 'field_target_type':  'annal:Richtext'
+            , 'field_value_type':  'annal:Richtext'
             , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
@@ -294,7 +294,7 @@ def recordview_entity_view_context_data(
             }
           , { 'field_id':           'View_target_type'      # fields[3]
             , 'field_name':         'View_target_type'
-            , 'field_target_type':  'annal:Identifier'
+            , 'field_value_type':  'annal:Identifier'
             , 'field_label':        'View entity type'
             , 'field_render_type':  'Identifier'
             , 'field_value_mode':   'Value_direct'
@@ -304,7 +304,7 @@ def recordview_entity_view_context_data(
             }
           , { 'field_id':           'View_edit_view'        # fields[4]
             , 'field_name':         'View_edit_view'
-            , 'field_target_type':  'annal:Boolean'
+            , 'field_value_type':  'annal:Boolean'
             , 'field_label':        'Editable view?'
             , 'field_render_type':  'CheckBox'
             , 'field_value_mode':   'Value_direct'
@@ -315,7 +315,7 @@ def recordview_entity_view_context_data(
           , { "field_id":           'View_fields'           # fields[5]
             , 'field_render_type':  'RepeatGroupRow'
             , 'field_name':         'View_fields'
-            , 'field_target_type':  'annal:Field_group'
+            , 'field_value_type':  'annal:Field_group'
             , 'field_label':        'Fields'
             , 'field_render_type':  'RepeatGroupRow'
             , 'field_value_mode':   'Value_direct'

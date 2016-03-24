@@ -1199,7 +1199,7 @@ class GenericEntityEditView(AnnalistGenericView):
             field_vals['uploaded_file'] = field_vals.get('uploaded_file', field_string)
             return
         def read_resource(field_desc, field_name, field_vals):
-            value_type    = field_desc.get('field_target_type', ANNAL.CURIE.unknown_type)
+            value_type    = field_desc.get('field_value_type', ANNAL.CURIE.unknown_type)
             uploaded_file = uploaded_files[field_name]
             resource_type = uploaded_file.content_type
             with typeinfo.get_fileobj(
@@ -1265,7 +1265,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 (import_url, resource_url, resource_type)
                 )
             try:
-                value_type    = import_field.get('field_target_type', ANNAL.CURIE.unknown_type)
+                value_type    = import_field.get('field_value_type', ANNAL.CURIE.unknown_type)
                 with typeinfo.get_fileobj(
                         entity_id, field_name, value_type, resource_type, "wb"
                         ) as local_fileobj:
@@ -1660,7 +1660,24 @@ class GenericEntityEditView(AnnalistGenericView):
                 message.TASK_CREATE_REPEAT_FIELD%
                   {'field_id': repeat_field_id, 'group_id': repeat_group_id, 'label': field_label}
                 )
-            redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
+            #@@ Redisplay original field
+            #@@ redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
+            #@@ Redirect to display repeating value field...
+            view_uri_params = (
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    entitytypeinfo.FIELD_ID
+                , 'entity_id':  repeat_field_id
+                , 'view_id':    "Field_view"
+                , 'action':     "edit"
+                })
+            more_uri_params = viewinfo.get_continuation_url_dict()
+            more_uri_params.update(info_values)
+            redirect_uri = (
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                    more_uri_params
+                    )
+                )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
         elif task_id == entitytypeinfo.TASK_ID+"/Define_field_ref":
             # Extract info from entityformvals (form is a field description)

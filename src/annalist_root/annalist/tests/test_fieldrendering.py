@@ -94,7 +94,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                 # ----- Field description -----
                 , 'field_id':                   'View_fields'
                 , 'field_name':                 'View_fields'
-                , 'field_target_type':          'annal:Field_group'
+                , 'field_value_type':          'annal:Field_group'
                 , 'field_label':                'Fields'
                 , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
                 , 'field_render_type':          'RepeatGroup'

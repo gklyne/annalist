@@ -199,7 +199,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value'],        "")
         self.assertEqual(r.context['fields'][0]['entity_type_id'],     "")
@@ -211,7 +211,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "EntityTypeId")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-2 columns")
         self.assertEqual(r.context['fields'][1]['field_value'],        "")
         self.assertEqual(r.context['fields'][1]['entity_type_id'],     "")
@@ -223,7 +223,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'],  "Text")
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][2]['field_value_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-7 columns")
         self.assertEqual(r.context['fields'][2]['field_value'],        "")
         self.assertEqual(r.context['fields'][2]['entity_type_id'],     "")
@@ -249,7 +249,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_type',
-                        'field_placement', 'field_target_type'):
+                        'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
                 fkey = field_keys[fid]
@@ -313,7 +313,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value'],        "")
         # 2nd field
@@ -324,7 +324,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "Text")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-9 columns")
         self.assertEqual(r.context['fields'][1]['field_value'],        "")
         # Entities
@@ -338,7 +338,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_type',
-                        'field_placement', 'field_target_type'):
+                        'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 self.assertEqual(item_field['field_value'], field_val[fid]%(eid+1))
         return

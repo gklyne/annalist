@@ -141,7 +141,7 @@ test_image_ref_field_create_values = (
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "RefImage"
     , 'annal:field_value_mode':         "Value_direct"
-    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:field_value_type':        "annal:Identifier"
     , 'annal:placeholder':              "(Image reference)"
     , 'annal:default_value':            ""
     })

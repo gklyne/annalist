@@ -231,7 +231,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_type',
-                        'field_placement', 'field_target_type'):
+                        'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
                 fkey = field_keys[fid]
@@ -377,7 +377,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[0]['field_property_uri'], "annal:id")
         self.assertEqual(head_fields[0]['field_render_type'],  "EntityId")
         self.assertEqual(head_fields[0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(head_fields[0]['field_value_type'],  "annal:Slug")
         self.assertEqual(head_fields[0]['field_placement'].field, "small-4 medium-3 columns")
         self.assertEqual(head_fields[0]['field_value'],        "")
         # 2nd field
@@ -388,7 +388,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[1]['field_property_uri'], "annal:field_render_type")
         self.assertEqual(head_fields[1]['field_render_type'],  "Enum_choice")
         self.assertEqual(head_fields[1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[1]['field_target_type'],  "annal:Slug")
+        self.assertEqual(head_fields[1]['field_value_type'],  "annal:Slug")
         self.assertEqual(head_fields[1]['field_placement'].field, "small-4 medium-3 columns")
         # 3rd field
         self.assertEqual(head_fields[2]['field_id'],           'Field_type')
@@ -398,7 +398,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_property_uri'], "annal:field_value_type")
         self.assertEqual(head_fields[2]['field_render_type'],  "Identifier")
         self.assertEqual(head_fields[2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[2]['field_target_type'],  "annal:Identifier")
+        self.assertEqual(head_fields[2]['field_value_type'],  "annal:Identifier")
         self.assertEqual(head_fields[2]['field_placement'].field, "small-12 medium-3 columns show-for-medium-up")
         # 3th field
         self.assertEqual(head_fields[3]['field_id'],           'Entity_label')
@@ -408,7 +408,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[3]['field_property_uri'], "rdfs:label")
         self.assertEqual(head_fields[3]['field_render_type'],  "Text")
         self.assertEqual(head_fields[3]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[3]['field_target_type'],  "annal:Text")
+        self.assertEqual(head_fields[3]['field_value_type'],  "annal:Text")
         self.assertEqual(head_fields[3]['field_placement'].field, "small-4 medium-3 columns")
         # Entities
         entities = context_list_entities(r.context)
@@ -448,7 +448,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_target_type'):
+                                'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
                     break
@@ -617,7 +617,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_target_type'):
+                                'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
                     break

@@ -329,7 +329,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][8]['field_label'],        'Fields')
         self.assertEqual(r.context['fields'][8]['field_property_uri'], "annal:list_fields")
         self.assertEqual(r.context['fields'][8]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][8]['field_target_type'],  "annal:Field_group")
+        self.assertEqual(r.context['fields'][8]['field_value_type'],  "annal:Field_group")
         self.assertEqual(len(r.context['fields'][8]['field_value']),   num_fields)
         self.assertEqual(r.context['fields'][8]['field_value'],        expect_field_data)
         self.assertEqual(r.context['fields'][8]['options'],            self.no_options)
