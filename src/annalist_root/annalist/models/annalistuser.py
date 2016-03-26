@@ -64,4 +64,14 @@ class AnnalistUser(EntityData):
         # log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
         return
 
+    def _migrate_values(self, userpermissions):
+        """
+        User permission data format migration method.
+        """
+        migration_map = (
+            [ (ANNAL.CURIE.user_permissions, ANNAL.CURIE.user_permission)
+            ])
+        userpermissions = self._migrate_values_map_field_names(migration_map, userpermissions)
+        return userpermissions
+
 # End.

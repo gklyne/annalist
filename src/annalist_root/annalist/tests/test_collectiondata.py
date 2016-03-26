@@ -267,7 +267,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                     <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Coll_comment" 
                                   class="small-rows-4 medium-rows-8" 
-                                  placeholder="(annal:comment)"
+                                  placeholder="(annal:meta_comment)"
                                   >
                         </textarea>
                     </div>

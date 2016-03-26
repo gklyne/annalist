@@ -849,12 +849,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             # [ [ "_group/_initial_values",          ["_initial_values"] ]
-            [ [ "_group/Entity_see_also_r",        ["Entity_see_also_r",        "Links to further information"] ]
-            , [ "_group/Group_field_group",        ["Group_field_group",        "Group field fields"] ]
-            , [ "_group/List_field_group",         ["List_field_group",         "List field fields"] ]
-            , [ "_group/Type_alias_group",         ["Type_alias_group",         "Field alias fields"] ]
-            , [ "_group/Type_supertype_uri_group", ["Type_supertype_uri_group", "Supertype URIs"] ]
-            , [ "_group/View_field_group",         ["View_field_group",         "View field fields"] ]
+            [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
+            , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
+            , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
+            , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
+            , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
+            , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -1260,7 +1260,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         thead = s.form.find("div", class_="thead").find("div", class_="row").find_all("div", class_="columns")
         self.assertEqual(thead[0].span.string, "User Id")
-        self.assertEqual(thead[1].span.string, "URI")
+        self.assertEqual(thead[1].span.string, "User URI")
         self.assertEqual(thead[2].span.string, "Permissions")
 
         trows_expected = (

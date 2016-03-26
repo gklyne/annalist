@@ -68,9 +68,7 @@ class RecordField(EntityData):
             , (ANNAL.CURIE.target_field,        ANNAL.CURIE.field_ref_field      )
             , (ANNAL.CURIE.field_target_type,   ANNAL.CURIE.field_value_type     )
             ])
-        for old_key, new_key in migration_map:
-            if old_key in entitydata:
-                entitydata[new_key] = entitydata.pop(old_key)
+        entitydata = self._migrate_values_map_field_names(migration_map, entitydata)
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
             entitydata[ANNAL.CURIE.field_render_type] = "Text"

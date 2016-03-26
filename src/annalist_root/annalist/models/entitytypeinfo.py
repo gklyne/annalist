@@ -399,11 +399,11 @@ class EntityTypeInfo(object):
         """
         types = [self.get_type_uri()]
         if self.recordtype:
-            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uri, None)
             if supertypes:
                 for st in supertypes:
                     # supertype_uris is list of objects { 'annal:supertype_uri': uri }
-                    t = st.get(ANNAL.CURIE.supertype_uri, None)
+                    t = st.get('@id', None)
                     if t:
                         types.append(t)
         return types
@@ -559,7 +559,7 @@ class EntityTypeInfo(object):
         Iterate over entities in collection with current type.
         """
         if (not user_perms or 
-            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permission]):
             if not self.entityparent:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
             else:
@@ -585,7 +585,7 @@ class EntityTypeInfo(object):
         #     )
         #@@
         if (not user_perms or 
-            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permission]):
             if not self.entityparent:
                 log.warning(
                     "EntityTypeInfo.enum_entities_with_inferred_values: missing entityparent; type_id %s"%

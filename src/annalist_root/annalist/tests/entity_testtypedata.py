@@ -111,7 +111,7 @@ def recordtype_value_keys(type_uri=False, supertype_uris=False):
     if type_uri:
         ks.add('annal:uri')
     if supertype_uris:
-        ks.add('annal:supertype_uris')
+        ks.add('annal:supertype_uri')
     return ks
 
 def recordtype_load_keys(type_uri=False, supertype_uris=False):
@@ -137,13 +137,13 @@ def recordtype_create_values(
     if type_uri:
         d['annal:uri'] = type_uri
         if supertype_uris is not None:
-            d['annal:supertype_uris'] = (
-                [ { 'annal:supertype_uri': st } for st in supertype_uris ]
+            d['annal:supertype_uri'] = (
+                [ { '@id': st } for st in supertype_uris ]
                 )
         else:
-            d['annal:supertype_uris'] = (
-                [ { 'annal:supertype_uri': type_uri+"/super1" }
-                , { 'annal:supertype_uri': type_uri+"/super2" }
+            d['annal:supertype_uri'] = (
+                [ { '@id': type_uri+"/super1" }
+                , { '@id': type_uri+"/super2" }
                 ])
     return d
 
@@ -233,7 +233,7 @@ def recordtype_entity_view_context_data(
           , { 'field_id':           'Type_uri'
             , 'field_name':         'Type_uri'
             , 'field_value_type':  'annal:Identifier'
-            , 'field_label':        'URI'
+            , 'field_label':        'Type URI'
             , 'field_render_type':  'Identifier'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')

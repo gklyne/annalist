@@ -243,7 +243,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="small-12 columns" %(tooltip4)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>URI</span>
+                  <span>Type URI</span>
                 </div>
                 <div class="%(input_classes)s">
                   <span>&nbsp;</span>
@@ -429,7 +429,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         # (NOTE: blank unless explcicit value specified)
         self.assertEqual(r.context['fields'][3]['field_id'],           'Type_uri')
         self.assertEqual(r.context['fields'][3]['field_name'],         'Type_uri')
-        self.assertEqual(r.context['fields'][3]['field_label'],        'URI')
+        self.assertEqual(r.context['fields'][3]['field_label'],        'Type URI')
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:uri")
         self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][3]['field_value_type'],  "annal:Identifier")
@@ -441,7 +441,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uri")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
         self.assertEqual(r.context['fields'][4]['field_value_type'],  "annal:Type_supertype_uri")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")

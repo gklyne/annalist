@@ -373,7 +373,7 @@ def create_user_permissions(parent,
         , 'rdfs:label':             "Test User"
         , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, "Test User", parent.get_id())
         , 'annal:user_uri':         "mailto:%s@%s"%(user_id, TestHost)
-        , 'annal:user_permissions': user_permissions
+        , 'annal:user_permission':  user_permissions
         })
     user = AnnalistUser.create(parent, user_id, user_values)
     return user

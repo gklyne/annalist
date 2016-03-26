@@ -315,10 +315,10 @@ class AnnalistGenericView(ContentNegotiationView):
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
             log.warning("".join(traceback.format_stack()))
             return self.error(self.error403values(scope=scope))
-        # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permissions]))
+        # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permission]))
         # user_perms is an AnnalistrUser object
         coll_id = collection.get_id() if collection else "(No coll)"
-        if scope not in user_perms[ANNAL.CURIE.user_permissions]:
+        if scope not in user_perms[ANNAL.CURIE.user_permission]:
             if user_id == "_unknown_user_perms":
                 err = self.error401values(scope=scope)
             else:

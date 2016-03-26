@@ -52,7 +52,7 @@ resource_types = (
       , ("ogg",     "audio/ogg")
       #@@ needs fleshing out?
       ]
-    , ANNAL.CURIE.Upload:
+    , ANNAL.CURIE.Resource:
       [ ("md",      "text/markdown")
       , ("txt",     "text/plain")
       , ("png",     "image/png")

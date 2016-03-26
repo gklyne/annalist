@@ -51,7 +51,7 @@ from entity_testtypedata    import (
 site_data_keys = (
     { '@id', '@type', '@context'
     , 'annal:type_id', 'annal:id', 'annal:type'
-    , 'annal:url', 'annal:comment'
+    , 'annal:url', 'annal:meta_comment'
     , 'rdfs:label', 'rdfs:comment'
     , 'collections', 'title'
     , 'annal:software_version'
@@ -129,7 +129,7 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
     def test_get_local_user_not_defined(self):
@@ -156,7 +156,7 @@ class SiteTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Default permissions")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_default_user_perms")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW"])
         return
 
     # Collections
@@ -403,7 +403,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(testuser_perms[RDFS.CURIE.label],              "Test User")
         self.assertEqual(testuser_perms[RDFS.CURIE.comment],            expect_descr)
         self.assertEqual(testuser_perms[ANNAL.CURIE.user_uri],          "mailto:testuser@%s"%TestHost)
-        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permissions],  expect_perms)
+        self.assertEqual(testuser_perms[ANNAL.CURIE.user_permission],   expect_perms)
         return
 
     def test_post_remove(self):

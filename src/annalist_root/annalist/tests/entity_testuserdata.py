@@ -100,7 +100,7 @@ def annalistuser_value_keys():
         , 'annal:url'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:user_uri'
-        , 'annal:user_permissions'
+        , 'annal:user_permission'
         ])
     return keys
 
@@ -121,7 +121,7 @@ def annalistuser_create_values(
         , 'rdfs:label':             user_name
         , 'rdfs:comment':           "User %s: permissions for %s in collection %s"%(user_id, user_name, coll_id)
         , 'annal:user_uri':         user_uri
-        , 'annal:user_permissions': user_permissions
+        , 'annal:user_permission': user_permissions
         })
     return d
 

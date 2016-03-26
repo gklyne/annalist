@@ -116,7 +116,7 @@ class EntityGenericListView(AnnalistGenericView):
         # 1. 'fields':  (context receives list of field descriptions used to generate row headers)
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
-        # NOTE - supplied entity has single field 'annal:list_entities' (see 'get')
+        # NOTE - supplied entity has single field '_list_entities_' (see 'get' below)
         #        entitylist template uses 'fields' from context to display headings
 
         fieldlistmap = FieldListValueMap('fields',
@@ -155,7 +155,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Create a form for listing entities.
         """
-        scope      = request.GET.get('scope', None)
+        scope      = request.GET.get('scope',  None)
         search_for = request.GET.get('search', "")
         log.info(
             "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s, search %s"%
@@ -170,11 +170,13 @@ class EntityGenericListView(AnnalistGenericView):
         try:
             selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
             user_perms  = self.get_permissions(listinfo.collection)
+            # @@TODO: is this context value even usable??
             entity_list = (
                 EntityFinder(listinfo.collection, selector=selector)
                     .get_entities_sorted(
                         user_perms, type_id=type_id, altscope=scope,
-                        context=listinfo.recordlist, search=search_for
+                        context={'list': listinfo.recordlist}, 
+                        search=search_for
                         )
                 )
             typeinfo      = listinfo.entitytypeinfo

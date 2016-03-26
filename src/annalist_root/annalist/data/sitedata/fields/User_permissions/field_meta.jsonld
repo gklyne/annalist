@@ -10,7 +10,7 @@
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:TokenSet"
 , "annal:field_entity_type":    "annal:User"
-, "annal:property_uri":         "annal:user_permissions"
+, "annal:property_uri":         "annal:user_permission"
 , "annal:field_placement":      "small:0,12"
 , "annal:default_value":        []
 }

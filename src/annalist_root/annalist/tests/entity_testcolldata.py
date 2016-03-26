@@ -117,8 +117,8 @@ def collectiondata_value_keys():
         [ 'annal:id', 'annal:type_id', 'annal:type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:software_version'
-        , 'annal:comment'
-        ])
+        , 'annal:meta_comment'
+        ])    
     return keys
 
 def collectiondata_load_keys():
@@ -141,7 +141,7 @@ def collectiondata_create_values(
         , 'rdfs:label':             coll_label
         , 'rdfs:comment':           coll_descr
         , 'annal:software_version': annalist.__version_data__
-        , 'annal:comment':          "Created by Annalist test suite"
+        , 'annal:meta_comment':     "Created by Annalist test suite"
         })
     return d
 

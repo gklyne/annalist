@@ -156,7 +156,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
-            , '''<div class="view-label small-12 medium-4 columns"> <span>Property</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Property URI</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Position/size</span> </div>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+

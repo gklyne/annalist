@@ -534,7 +534,7 @@ class JsonldContextTest(AnnalistTestCase):
         subj              = b #@@ user_default.get_url()
         user_default_data = user_default.get_values()
         user_uri          = ANNAL.to_uri(user_default_data[ANNAL.CURIE.user_uri])
-        user_perms        = user_default_data[ANNAL.CURIE.user_permissions]
+        user_perms        = user_default_data[ANNAL.CURIE.user_permission]
         for (s, p, o) in (
             [ (subj, RDF.type,          URIRef(ANNAL.User)                              )
             , (subj, RDFS.label,        Literal(user_default_data[RDFS.CURIE.label])    )
@@ -542,7 +542,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.id,          Literal(user_default_data[ANNAL.CURIE.id])      )
             , (subj, ANNAL.type_id,     Literal(user_default_data[ANNAL.CURIE.type_id]) )
             , (subj, ANNAL.user_uri,    URIRef(user_uri)                                )
-            , (subj, ANNAL.user_permissions, Literal(user_perms[0])                     )
+            , (subj, ANNAL.user_permission, Literal(user_perms[0])                      )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
 

@@ -268,7 +268,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             { 'field_id':                   'View_field_property'
             , 'field_name':                 'Field_property'
             , 'field_value_type':          ANNAL.CURIE.Identifier
-            , 'field_label':                'Property'
+            , 'field_label':                'Property URI'
             , 'field_render_type':          'Identifier'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.property_uri

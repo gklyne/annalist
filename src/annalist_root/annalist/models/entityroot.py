@@ -364,7 +364,7 @@ class EntityRoot(object):
             values[ANNAL.CURIE.id] = self._entityid
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
-            json.dump(values, entity_io, indent=2, separators=(',', ': '))
+            json.dump(values, entity_io, indent=2, separators=(',', ': '), sort_keys=True)
         self._post_update_processing(values)
         return
 
@@ -483,6 +483,22 @@ class EntityRoot(object):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
+        return entitydata
+
+    def _migrate_values_map_field_names(self, migration_map, entitydata):
+        """
+        Support function to map field names using a supplied map.
+
+        The map is a list of pairs (old_uri, new_uri), where occurrences of the 
+        old property URI are replaced with the same value using the new URI.
+
+        The migrations are applied in-place, and the resulting updated entity 
+        data is returned.
+        """
+        for old_key, new_key in migration_map:
+            if old_key in entitydata:
+                entitydata[new_key] = entitydata.pop(old_key)
+        # Return result
         return entitydata
 
     def _post_update_processing(self, entitydata):

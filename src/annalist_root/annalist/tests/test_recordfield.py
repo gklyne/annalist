@@ -598,7 +598,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Property</span>
+                  <span>Property URI</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_property" 

@@ -155,7 +155,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
     def test_get_local_user_not_defined(self):
@@ -172,7 +172,7 @@ class CollectionTest(AnnalistTestCase):
     def test_get_local_user_missing_fields(self):
         # E.g. what happens if user record is created through default view?  Don't return value.
         d = annalistuser_create_values(user_id="user1")
-        d.pop(ANNAL.CURIE.user_permissions)
+        d.pop(ANNAL.CURIE.user_permission)
         usr = AnnalistUser.create(self.testcoll, "user1", d)
         ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
@@ -184,7 +184,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_unknown_user_perms")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW"])
         return
 
     def test_get_site_user_uri_mismatch(self):

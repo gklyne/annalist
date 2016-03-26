@@ -300,7 +300,7 @@ def recordfield_entity_view_context_data(
             }
           , { 'field_id':               "Field_property"            # 6
             , 'field_name':             "Field_property"
-            , 'field_label':            "Property"
+            , 'field_label':            "Property URI"
             , 'field_value_type':      "annal:Identifier"
             , 'field_render_type':      "Identifier"
             , 'field_value_mode':       "Value_direct"

@@ -606,7 +606,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_value':        entity_descr
             , 'options':            []
             }
-          , { 'field_label':        'URI'
+          , { 'field_label':        'Type URI'
             , 'field_name':         'Type_uri'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'

@@ -47,12 +47,32 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] When copying entity, generate new ID using id of opriginal entity
     - (entity.allocate_new_id, called by displayinfo.get_entity_info, called by entityedit.view_setup)
 - [x] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-    - Except migration entry in models.recordfield
+    - Add migration entry in models.recordfield
+- [x] Canonicalize JSON generation to minimize arbitrary version differences
 - [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
-    - [ ] When creating repeat field for field, display the created field.
-    - [ ] Review default name/label/desc used for type list/view definitions
-    - [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
+    - [x] When creating repeat field for field, display the created field.
+    - [x] Create definitions for schema entities: classes and properties
+    - [x] Create records for classes
+    - [x] Create records for properties
+    - [ ] Separate collection into `Schema_defs` and `Annalist_schema`
+    - [ ] Add `Schema_defs` and `Annalist_schema` as predefined collection data
+- [ ] Review default name/label/desc used for type list/view definitions creation task
+- [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
 - [ ] Add journal and note entry definitions (image and audio resource fields) as predefined collection data
+- [ ] Tutorial data - check layout/field alignment, adjust CSS
+- [ ] Field option to display item(s) from list (e.g. domain).
+    - Handle in repeatgrouprow?
+        - problem when grouprow references group.
+        - rethink how nested renderers are processed? (Currently uses "view mode" fudge.)
+    - Generalize to path?
+    - cf. https://tools.ietf.org/html/rfc6901
+- [ ] Entity types list (and List list?) - provide link field to display list
+- [ ] Keyboard shortcuts on forms - C-S to save, ...?
 
 (release?)
 
