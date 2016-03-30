@@ -25,6 +25,8 @@ from django.test.client                 import Client
 
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
+from annalist                           import message
+
 from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
@@ -816,6 +818,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Check content of type, view and list
         common_vals = (
             { 'type_id':      "tasktype"
+            , 'type_label':   "RecordType testcoll/tasktype"
             })
         expect_type_values = (
             { 'annal:type':         "annal:Type"
@@ -826,12 +829,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             })
         expect_view_values = (
             { 'annal:type':         "annal:View"
-            , 'rdfs:label':         "View of RecordType testcoll/%(type_id)s"%common_vals
+            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals['type_label']
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
             })
         expect_list_values = (
             { 'annal:type':         "annal:List"
-            , 'rdfs:label':         "List of RecordType testcoll/%(type_id)s"%common_vals
+            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals['type_label']
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals

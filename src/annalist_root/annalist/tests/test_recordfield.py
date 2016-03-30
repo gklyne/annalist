@@ -26,6 +26,8 @@ from django.test.client                     import Client
         
 from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist                               import layout
+from annalist                               import message
+
 from annalist.models.site                   import Site
 from annalist.models.collection             import Collection
 from annalist.models.recordfield            import RecordField
@@ -1155,7 +1157,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_repeat_group_values = (
             { "annal:id":           rpt_group_id
             , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         "Repeat field '%(field_label)s'"%common_vals
+            , "rdfs:label":         message.REPEAT_GROUP_LABEL%common_vals['field_label']
             , "annal:record_type":  "%(type_uri)s"%common_vals
             , "annal:group_fields":
               [ { "annal:field_id":         "_field/%(field_id)s"%common_vals
@@ -1167,7 +1169,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_repeat_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 "Repeat field '%(field_label)s'"%common_vals
+            , "rdfs:label":                 message.REPEAT_FIELD_LABEL%common_vals['field_label']
             , "annal:field_render_type":    "RepeatGroupRow"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
@@ -1236,7 +1238,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_ref_group_values = (
             { "annal:id":           ref_group_id
             , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         "Reference field '%(field_label)s'"%common_vals
+            , "rdfs:label":         message.FIELD_REF_LABEL%common_vals['field_label']
             , "annal:record_type":  "%(type_uri)s"%common_vals
             , "annal:group_fields":
               [ { "annal:field_id":         "_field/%(field_id)s"%common_vals
@@ -1247,13 +1249,13 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_ref_field_values = (
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 "Reference field '%(field_label)s'"%common_vals
+            , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals['field_label']
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_mode":     "Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
-            , "annal:placeholder":          "(Reference field %(field_label)s)"%common_vals
+            , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
             , "annal:field_ref_type":       "Default_type"
             })
         self.check_entity_values("_field", tgt_field_id, expect_field_values)
