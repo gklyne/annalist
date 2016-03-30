@@ -39,6 +39,7 @@ from am_getargvalue                 import getarg, getargvalue
 # Collection data
 #
 # NOTE: when updating this, src/setup.py and src/MANIFEST.in also need to be updated.
+#       Also, am_help.py
 #
 # @@TODO: consider ways to discover these details by scanning the file system?
 #
@@ -60,6 +61,40 @@ installable_collections = (
             , "rdfs:comment":   "# Bibliography definitions\r\n\r\n"+
                                 "Defines types and views for bibliographic definitions, "+
                                 "based loosely on BibJSON."
+            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            }
+        }
+    , "RDF_schema_defs":   
+        { 'data_dir': "RDF_schema_defs"
+        , 'coll_meta':
+            { "rdfs:label":     "RDF schema terms for defining vocabularies"
+            , "rdfs:comment":   "# Definitions for defining RDF schema for vocabularies\r\n\r\n"+
+                                "This Annalist collection contains definitions that may "+
+                                "be imported to creaing RDF schema definitions as an "+
+                                "Annalist collection."+
+                                "\r\n\r\n"+
+                                "NOTE: current limitations of Annalist mean that the "+
+                                "exported JSON-LD does not directly use standard "+
+                                "RDF schema terms for everything.  "+
+                                "For example, subclasses are referenced using a "+
+                                "local URI reference rather than the global "+
+                                "absolute URI, which can be obtained by defererencing "+
+                                "the given reference and extracting the `annal:uri` "+
+                                "value from there."+
+                                ""
+            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            }
+        }
+    , "Annalist_schema":   
+        { 'data_dir': "Annalist_schema"
+        , 'coll_meta':
+            { "rdfs:label":     "Schema definitions for terms in the Annalist namespace"
+            , "rdfs:comment":   "# Schema definitions for terms in the Annalist namespace\r\n\r\n"+
+                                "This is an Annalist collection which describes terms "+
+                                "in the Annalist (`annal:`) namespace."+
+                                "\r\n\r\n"+
+                                "It uses definitions from collection `RDF_schema_defs`."+
+                                ""
             , "annal:comment":  "Initialized by `annalist-manager installcollection`"
             }
         }

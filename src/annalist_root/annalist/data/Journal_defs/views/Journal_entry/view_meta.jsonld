@@ -1,0 +1,63 @@
+{
+  "annal:view_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:0,6",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:6,6",
+      "annal:field_id": "_field/Entity_type"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:0,6",
+      "annal:field_id": "_field/Journal_date"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:6,6",
+      "annal:field_id": "_field/Journal_location"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_comment"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Web_resource_r"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Included_image_r"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Included_audio_r"
+    }
+  ],
+  "rdfs:label": "Journal entry view",
+  "rdfs:comment": "# Journal entry\r\n\r\nThis view presents a generic journal entry, which may be useful for collecting unstructured data and associated resources about a project.  Later, when the nature and scope of the collected material is clearer, more structured descriptions may be created around the resources, possibly with references to related journal entries for background information.\r\n",
+  "annal:open_view": true,
+  "annal:type_id": "_view",
+  "annal:record_type": "coll:Journal",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Journal_entry",
+  "@id": "./",
+  "@type": [
+    "annal:View"
+  ],
+  "annal:type": "annal:View"
+}

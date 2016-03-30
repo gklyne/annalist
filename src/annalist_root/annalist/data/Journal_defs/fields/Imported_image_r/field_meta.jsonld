@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Imported images",
+  "rdfs:comment": "(Import image from web)",
+  "annal:group_ref": "_group/Imported_image_g",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(Repeat field Imported image)",
+  "annal:property_uri": "coll:imported_images",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "Remove Imported image",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "Add Imported image",
+  "annal:default_value": "",
+  "annal:field_value_type": "annal:Field_group",
+  "annal:field_value_mode": "Enum_value_mode/Value_direct",
+  "annal:field_render_type": "Enum_render_type/RepeatGroupRow",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Imported_image_r",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

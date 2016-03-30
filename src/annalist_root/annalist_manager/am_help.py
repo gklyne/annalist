@@ -261,10 +261,12 @@ def am_help(options, progname):
             "\n"+
             "Available collections include:\n"+
             "  bibdata: BiblioGraphic data definitions, creating structures similar to BibJSON.\n"+
-            "  namedata: defines some additional vocabulary namespaces beyond tghose that are part\n"+
+            "  namedata: defines some additional vocabulary namespaces beyond those that are part\n"+
             "      of a standard Annalistr installation.\n"+
-            "  Journal_defs: @@to be added@@\n"+
+            "  RDF_Schema_defs: for creating RDF schema in an Annalist collection.\n"+
+            "  Journal_defs: definitions for creating a journal with web and media resources.\n"+
             "  Provenance_defs: @@to be added@@\n"+
+            "  Annalist_schema: defines RDF schema for terms in Annalist namespace.\n"+
             "\n"+
             config_options_help+
             "\n"+

@@ -1,0 +1,22 @@
+{
+  "rdfs:label": "Journal entry reference",
+  "rdfs:comment": "Reference to journal entry",
+  "annal:type_id": "_group",
+  "annal:record_type": "",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "annal:member",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Journal_ref"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Journal_ref",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

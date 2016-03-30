@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:add_field": true,
+  "annal:group_fields": [
+    {
+      "annal:field_id": "_field/subclassOf",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "@id"
+    }
+  ],
+  "annal:id": "subclassOf_r",
+  "annal:record_type": "rdfs:Class",
+  "annal:type": "annal:Field_group",
+  "annal:type_id": "_group",
+  "annal:uri": "annal:group/_initial_values",
+  "rdfs:comment": "Repeat field 'subclass of'",
+  "rdfs:label": "Superclass group"
+}

@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "list_fields",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:list_fields",
+  "rdfs:comment": "# List fields\r\n\r\nList of fields in a list definition.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:label": "List fields",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field_group"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

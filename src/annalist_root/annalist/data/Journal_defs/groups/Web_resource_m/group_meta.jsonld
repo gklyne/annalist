@@ -1,0 +1,32 @@
+{
+  "rdfs:label": "Web resource Id+URL+label",
+  "rdfs:comment": "Show id and label fields of web resource",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Web_resource",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:3,3",
+      "annal:field_id": "_field/Web_resource"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:6,6",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Web_resource_m",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

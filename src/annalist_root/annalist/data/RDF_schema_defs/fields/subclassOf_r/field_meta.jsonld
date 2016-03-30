@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "rdfs:Class",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "Enum_render_type/RepeatGroupRow",
+  "annal:field_value_mode": "Enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Field_group",
+  "annal:group_ref": "_group/subclassOf_r",
+  "annal:id": "subclassOf_r",
+  "annal:placeholder": "(Repeat field subclass of)",
+  "annal:property_uri": "rdfs:subClassOf",
+  "annal:repeat_label_add": "Add superclass",
+  "annal:repeat_label_delete": "Remove superclass",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "List of superclasses of the current class.",
+  "rdfs:label": "Superclasses"
+}

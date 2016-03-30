@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "type",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:type",
+  "rdfs:comment": "# Primary type URI\r\n\r\nThe URI or CURIE of the primary type with which an entity is associated.  The primary type is the type URI associated with an entities `type_id` property, and is the most specific of all the types of the entity indicated by its `@type` property. It is used internally by Annalist for data record organization.\r\n\r\nIf an entity has no `anna:type` property, the primary type URI may be derived from its `annal:type_id` property.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:EntityRoot"
+    }
+  ],
+  "rdfs:label": "Type URI",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

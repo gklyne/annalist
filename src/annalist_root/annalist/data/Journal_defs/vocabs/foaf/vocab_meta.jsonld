@@ -1,0 +1,23 @@
+{
+  "rdfs:label": "Friend of a Friend",
+  "rdfs:comment": "FOAF is a project devoted to linking people and information using the Web. Regardless of whether information is in people's heads, in physical or digital documents, or in the form of factual data, it can be linked. FOAF integrates three kinds of network: social networks of human collaboration, friendship and association; representational networks that describe a simplified view of a cartoon universe in factual terms, and information networks that use Web-based linking to share independently published descriptions of this inter-connected world.",
+  "rdfs:seeAlso": [
+    {
+      "@id": "http://xmlns.com/foaf/spec/"
+    },
+    {
+      "@id": "http://xmlns.com/foaf/spec/index.rdf"
+    }
+  ],
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://xmlns.com/foaf/0.1/",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "foaf",
+  "@id": "./",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:type": "annal:Vocabulary"
+}

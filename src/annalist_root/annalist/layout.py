@@ -171,6 +171,7 @@ COLL_TYPEDATA_PATH      = "d/%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"
 META_TYPEDATA_REF       = "./"
 
+COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
 TYPEDATA_ENTITY_PATH    = "%(id)s"
 COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"

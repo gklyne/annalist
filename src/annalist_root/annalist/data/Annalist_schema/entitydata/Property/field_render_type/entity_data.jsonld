@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_render_type",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_render_type",
+  "rdfs:comment": "# Field render type\r\n\r\nUsed in a field definition to indicate a renderer that is used to present the field content.\r\n\r\nPossible values include:\r\n\r\n* `Enum_render_type/CheckBox` - Boolean value rendered as checkbox.\r\n* `Enum_render_type/Codearea` - Multiline text rendered using a monospace font.\r\n* `Enum_render_type/EntityId` - Entity identifier.\r\n* `Enum_render_type/EntityTypeId` - Entity type identifier.\r\n* `Enum_render_type/Enum` - Required enumerated value with new/edit button, entered through a dropdown list.\r\n* `Enum_render_type/Enum_choice` - Required enumerated value without new/edit button, entered through a dropdown list.\r\n* `Enum_render_type/Enum_choice_opt` - Optional enumerated value without new/edit button, entered through a dropdown list.\r\n* `Enum_render_type/Enum_optional` - Optional enumerated value with new/edit button, entered through a dropdown list.\r\n* `Enum_render_type/FileUpload` - Upload file in browser: presents a browser file selection option, and uploads the file with the form response.\r\n* `Enum_render_type/Identifier` - Resource identifier: URI or CURIE, rendered and entered as a simple text string.\r\n* `Enum_render_type/Markdown` - Multiline text with formatting; entered and stored as text with embedded Markdown formatting.\r\n* `Enum_render_type/Placement` - Field placement description; this is an internal Annalist feature used for field placement entry and display as a selection from a list of grid placement options.\r\n* `Enum_render_type/RefAudio` - reference to audio resource, presented for viewing as an audio playback widget.  Resource selection depends on the value of the corresponding `Value_mode` field, which may select file upload, web resource import or web resource linking.\r\n* `Enum_render_type/RefImage` - reference to image, presented for viewing as an image.  Resource selection depends on the value of the corresponding `Value_mode` field, which may select file upload, web resource import or web resource linking.\r\n* `Enum_render_type/RefMultifield` - reference to multiple fields in a referenced resource.  For data entry, presents a dropdown list similar to `Enum_render_type/Enum`.  For display, presents fields defined by the associated field group reference.\r\n* `Enum_render_type/RepeatGroup` - reference to a list of values, each consisting of one or more fields defined by the associated group reference, and rendered as a group, with additional buttons to add, remove and reorder entries in the list.\r\n* `Enum_render_type/RepeatGroupRow` - reference to a list of values, each consisting of one or more fields defined by the associated group reference, and rendered as a table (where each entry is a row), and with additional buttons to add, remove and reorder entries in the list.\r\n* `Enum_render_type/ShowMarkdown` - Display only multiline text with formatting; stored as text with embedded Markdown formatting.  When editing an entity, the formatted text is displayed in the form and is not available for editing. (This is used mainly for displaying internally generated data or descriptions in editing forms.)\r\n* `Enum_render_type/Showtext` - Display only short text.  When editing an entity, the text is displayed in the form and is not available for editing. (This is used mainly for displaying internally generated data or descriptions in editing forms.)\r\n* `Enum_render_type/Slug`- local reference to entity within the containing collection. May consist of simple `entity_id` string, or a `type_id/entity_id` combination; if the `type_id` is omitted it may be inferred from the field definition.  Rendered as a short text string (same as `Enum_render_type/Text`).  @@TODO: this should be separated into two fields: one for an arbitrary id string, and another for local entity reference.\r\n* `Enum_render_type/Text` - A short, single-line text string (without layout or formatting controls).\r\n* `Enum_render_type/Textarea` - A multi-line text string (without layout or formatting controls).\r\n* `Enum_render_type/TokenSet` - A list of token strings (currently used for permissions).  Presents as string of space-separated token values.\r\n* `Enum_render_type/URIImport` - Import web resource:  for editing, presents as a text box for entering a URL and an \"Import\" button, and for viewing presents as a link to a locally stored resource.\r\n* `Enum_render_type/URILink` - Linked web resource:  for editing, presents as a text box for entering a URL, and for viewing presents as a link.\r\n\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field render type",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

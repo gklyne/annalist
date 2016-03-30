@@ -1,0 +1,29 @@
+{
+  "annal:display_type": "Enum_list_type/List",
+  "rdfs:label": "Journal entries",
+  "rdfs:comment": "# List of journal entries\r\n\r\nA journal entry consists primarily of narrative text and some associated resources.  It may also contain some minimal metadata (e.g., time, place).\r\n",
+  "annal:id": "Journal_entries",
+  "annal:default_type": "_type/Journal",
+  "annal:type_id": "_list",
+  "annal:list_entity_selector": "\"coll:Journal\" in [@type]",
+  "annal:record_type": "coll:Journal",
+  "annal:list_fields": [
+    {
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:field_placement": "small:3,9",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:default_view": "_view/Journal_entry",
+  "@id": "./",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:type": "annal:List"
+}

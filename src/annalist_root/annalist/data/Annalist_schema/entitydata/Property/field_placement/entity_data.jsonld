@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_placement",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_placement",
+  "rdfs:comment": "# Field placement\r\n\r\nThis property is used in a field definition to define the placement (horizontal position and size) of a field on a 12-column grid.\r\n\r\nFor more details see class [Placement](/annalist/c/Annalist_schema/d/Class/Placement/).\r\n\r\nThis property may also appear in field references in view, list and field group definitions, locally overriding the value defined in the field definition.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field placement",
+  "rdfs:range": [
+    {
+      "@id": "annal:Placement"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

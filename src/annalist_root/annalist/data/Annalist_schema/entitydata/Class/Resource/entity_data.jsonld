@@ -1,0 +1,19 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Resource",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "rdfs:Resource",
+  "rdfs:comment": "# Resource\r\n\r\nClass of all web resources: anything that can be denoted by a URI.\r\n\r\nSuperclass of all other classes.\r\n",
+  "rdfs:label": "Resource",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": []
+}

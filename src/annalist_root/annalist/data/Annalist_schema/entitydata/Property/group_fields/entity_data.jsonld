@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "group_fields",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:group_fields",
+  "rdfs:comment": "# Group fields\r\n\r\nList of fields in a group definition.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field_group"
+    }
+  ],
+  "rdfs:label": "Group fields",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field_group"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

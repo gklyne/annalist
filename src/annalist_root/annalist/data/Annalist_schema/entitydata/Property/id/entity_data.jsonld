@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "id",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:id",
+  "rdfs:comment": "# Entity identifier\r\n\r\nA short identifier that distinguishes this entity from all other entities of the same type in the same collection. \r\n\r\nThis entity identifier is used, along with the entity type identifier (``annal:type_id`) and the collection identifier to form a URL for accessing the entity's data record.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:EntityRoot"
+    }
+  ],
+  "rdfs:label": "Entity identifier",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

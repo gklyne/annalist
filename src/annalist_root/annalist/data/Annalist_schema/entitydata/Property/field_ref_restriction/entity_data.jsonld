@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_ref_restriction",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_ref_restriction",
+  "rdfs:comment": "# Referenced entity restriction\r\n\r\nA string expression that is interpreted to define a filter used in selecting entities displayed in a drop-down list of entities that may be referenced.  This field is used in conjunction with [annal:field_ref_type](/annalist/c/Annalist_schema/v/Property/Property/field_ref_type/).\r\n\r\nFilter formats:\r\n\r\n* `ALL` (or blank)\r\n\r\n    match any entity\r\n\r\n* `<val1> == <val2>`\r\n\r\n    matches if the values are the same\r\n\r\n* `<val1> in <val2>`\r\n\r\n    matches if `<val2>` is a list containing `<val1>`,  or the values are the same, or `<val1>` is `None`.\r\n\r\n* `<val1> subtype <val2>`\r\n\r\n    matches when `<val1>` denotes a subtype of `<val2>`, where the values themselves are type URIs or CURIEs.  The subtype relationship is defined though URI and supertype URI values contained in type definitions.\r\n\r\nIn the above, `<val1>` and `<val2>` may be:\r\n\r\n* `[<field-id>]`\r\n\r\n    refers to the identified field in the candidate entity considered for display.\r\n\r\n* `<name>[<field-id>]`\r\n\r\n    refers to a field of a named context value, or None if the indicated context value or field is not defined.  Possible context names are: `view` is the view definition dictionary for the form being used, and `entity` is the value dictionary for the entity being edited in that form.\r\n\r\n* `\"<string>\"` or `'<string>'`\r\n\r\n    is a literal string value.  Quotes within are escaped.\r\n\r\n*  `<field_id>`\r\n\r\n    values are property URIs or CURIEs, using characters allowed by RFC3986, except \"[\" and \"]\"\r\n\r\n## From RFC3986:\r\n\r\n           unreserved    = ALPHA / DIGIT / \"-\" / \".\" / \"_\" / \"~\"\r\n           reserved      = gen-delims / sub-delims\r\n           gen-delims    = \":\" / \"/\" / \"?\" / \"#\" / \"[\" / \"]\" / \"@\"\r\n           sub-delims    = \"!\" / \"$\" / \"&\" / \"'\" / \"(\" / \")\"\r\n                         / \"*\" / \"+\" / \",\" / \";\" / \"=\"\r\n\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Referenced entity restriction",
+  "rdfs:range": [
+    {
+      "@id": "annal:Text"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

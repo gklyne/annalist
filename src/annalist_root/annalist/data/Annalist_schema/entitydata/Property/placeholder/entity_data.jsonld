@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "placeholder",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:placeholder",
+  "rdfs:comment": "# Placeholder text\r\n\r\nIn field definitions, this property provides a short piece of text that is displayed as a placeholder prompt in text edit fields for which no value has been entered.  (This is separate from the field help text, which is displayed as a pop-up when hovering over a field.)",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Placeholder",
+  "rdfs:range": [
+    {
+      "@id": "annal:Text"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

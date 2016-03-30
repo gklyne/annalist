@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_value_mode",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_value_mode",
+  "rdfs:comment": "# Field value access mode\r\n\r\nUsed in a field definition, indicates how the field target value is accessed, or how it relates to the value actually stored in the entity. Possible values are:\r\n\r\n* `Enum_value_mode/Value_direct` - the stored field value is the actual target value.\r\n* `Enum_value_mode/Value_entity` - the stored value is a reference to an entity in the same collection.\r\n* `Enum_value_mode/Value_field` - the stored value references an entity in the same collection, from which the target value is obtained by accessing a field whose property URI is specified in the field definition.\r\n* `Enum_value_mode/Value_import` - the stored value is an internal dictionary structure which contains information about a resource imported from the web.\r\n* `Enum_value_mode/Value_upload` - the stored value is an internal dictionary structure, similar to that of `Enum_value_mode/Value_import`, which contains information about a resource uploaded using a browser.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field value mode",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -1,0 +1,23 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "List",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:List",
+  "rdfs:comment": "# List definition\r\n\r\nClass of entities that define list presentation of entities in a collection.\r\n",
+  "rdfs:label": "List definition",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

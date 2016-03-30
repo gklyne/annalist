@@ -1,0 +1,43 @@
+{
+  "annal:view_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:0,6",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:6,6",
+      "annal:field_id": "_field/Entity_type"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_comment"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Imported_audio"
+    }
+  ],
+  "rdfs:label": "Imported audio clip view",
+  "rdfs:comment": "# Imported audio clip view\r\n\r\nPresents an audio clip imported from the web, along with Id, type, label and comment.\r\n",
+  "annal:id": "Imported_audio",
+  "annal:type_id": "_view",
+  "annal:record_type": "coll:Imported_audio",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:open_view": true,
+  "@id": "./",
+  "@type": [
+    "annal:View"
+  ],
+  "annal:type": "annal:View"
+}

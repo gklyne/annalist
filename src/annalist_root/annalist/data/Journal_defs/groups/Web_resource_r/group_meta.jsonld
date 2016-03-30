@@ -1,0 +1,22 @@
+{
+  "rdfs:label": "Web resources group",
+  "rdfs:comment": "Reference to web resource record",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Web_resource",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Web_resource_m"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Web_resource_r",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

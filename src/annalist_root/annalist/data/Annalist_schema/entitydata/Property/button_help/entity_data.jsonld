@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "button_help",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:button_help",
+  "rdfs:comment": "# Button tooltip help\r\n\r\nSpecifies the tooltip help text for a task button.\r\n\r\nSee also the [Task buttons](/annalist/c/Annalist_schema/d/Property/task_buttons/) property.",
+  "rdfs:domain": [],
+  "rdfs:label": "Button tooltip help",
+  "rdfs:range": [
+    {
+      "@id": "annal:Longtext"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

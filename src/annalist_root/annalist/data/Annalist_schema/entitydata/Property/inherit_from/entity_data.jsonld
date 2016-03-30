@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "inherit_from",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:inherit_from",
+  "rdfs:comment": "# Inherit from collection\r\n\r\nReference to a parent collection, from which type, view and other definitions are inherited. This allows new collections to be quickly created using predefined types, views, fields, etc. These inherited definitions may be edited, resulting in new definitions being created within the inheriting collection.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Collection"
+    }
+  ],
+  "rdfs:label": "Inherit from",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

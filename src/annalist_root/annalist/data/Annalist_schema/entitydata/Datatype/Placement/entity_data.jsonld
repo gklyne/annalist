@@ -1,0 +1,27 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Datatype",
+    "rdfs:Resource",
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Placement",
+  "annal:type": "rdfs:Datatype",
+  "annal:type_id": "Datatype",
+  "annal:uri": "annal:Placement",
+  "rdfs:comment": "# Field placement\r\n\r\nClass of strings used internally by Annalist to describe the placement (position and size) of a displayed field.\r\n\r\nThe placement description is based on a 12-column grid, with possible different placements for small, medium and large displays.  The basic general form is:\r\n\r\n        small:pos,size [ ; medium:pos,size [ ; large:pos,size ] ]\r\n\r\nwhere `Pos` is a number 0..1, and `size` is a number 1..12, indicating respectively the grid column of the start of the field, and the number of grid columns spanned by the field.\r\n\r\nIf `medium` and/or `large` are omitted then the value of the preceding display option is propagated.\r\n",
+  "rdfs:label": "Field placement",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Datatype/Text"
+    }
+  ]
+}

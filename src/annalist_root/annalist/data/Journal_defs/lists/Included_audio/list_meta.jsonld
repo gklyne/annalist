@@ -1,0 +1,33 @@
+{
+  "rdfs:label": "Included audio clips",
+  "rdfs:comment": "# List of Included audio clips\r\n\r\nEach listed entity contains a reference to an included (uploaded, imported or linked) audio clip, which can be referenced to present an image obtained by any of these means.",
+  "annal:default_view": "_view/Included_audio",
+  "annal:default_type": "_type/Included_audio",
+  "annal:record_type": "coll:Included_audio",
+  "annal:type_id": "_list",
+  "annal:list_entity_selector": "'coll:Included_audio' in [@type]",
+  "annal:display_type": "Enum_list_type/List",
+  "annal:list_fields": [
+    {
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:field_placement": "small:3,3",
+      "annal:field_id": "_field/Entity_type"
+    },
+    {
+      "annal:field_placement": "small:6,6",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_audio",
+  "@id": "./",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:type": "annal:List"
+}

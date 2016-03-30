@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Datatype",
+    "rdfs:Resource",
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Richtext",
+  "annal:type": "rdfs:Datatype",
+  "annal:type_id": "Datatype",
+  "annal:uri": "annal:Richtext",
+  "rdfs:comment": "#  Multiline text with formatting\r\n\r\nClass of strings that may contain multiple lines of text and associated formatting information; strings that carry information for styled rendering of text.\r\n\r\nThe particular mechanism is not specified, and is implied by the field renderer used; Annalist currently supports rendering of Markdown-formatted text.\r\n",
+  "rdfs:label": "Rich text",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

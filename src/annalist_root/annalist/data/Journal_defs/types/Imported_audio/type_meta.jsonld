@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Imported audio clip (internal type)",
+  "rdfs:comment": "# Imported audio clip\r\n\r\nContains a copy of an audio clip, which is obtained by importing from a web URL.  May also contain a short identifying label and a longer description of the audio.\r\n",
+  "annal:field_aliases": [
+    {
+      "annal:alias_target": "coll:included_audio",
+      "annal:alias_source": "coll:imported_audio"
+    }
+  ],
+  "annal:type_id": "_type",
+  "annal:supertype_uris": [
+    {
+      "annal:supertype_uri": "coll:Included_audio"
+    }
+  ],
+  "annal:uri": "coll:Imported_audio",
+  "annal:type_list": "_list/Imported_audio",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Imported_audio",
+  "@id": "./",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_view": "_view/Imported_audio"
+}

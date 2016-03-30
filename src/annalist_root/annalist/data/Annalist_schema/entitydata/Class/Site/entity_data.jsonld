@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Site",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Site",
+  "rdfs:comment": "# Annalist site\r\n\r\nClass of Annalist sites.  In any particular annalist deployment there is exactly one instance of this class, which is also the root container of all Annalist collection data and definitions.\r\n",
+  "rdfs:label": "Annalist site",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/EntityRoot"
+    }
+  ]
+}

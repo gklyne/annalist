@@ -111,6 +111,7 @@ setup(
             , 'data/static/foundation/css/*.css'
             , 'data/static/foundation/js/foundation/*.js'
             , 'data/static/foundation/js/vendor/*.js'
+            # Site-wide data definitions
             , 'data/sitedata/enums/*/*/*.jsonld'
             , 'data/sitedata/fields/*/*.jsonld'
             , 'data/sitedata/groups/*/*.jsonld'
@@ -119,6 +120,7 @@ setup(
             , 'data/sitedata/views/*/*.jsonld'
             , 'data/sitedata/users/*/*.jsonld'
             , 'data/sitedata/vocabs/*/*.jsonld'
+            # Bibliographic data definitions
             , 'data/bibdata/enums/*/*/*.jsonld'
             , 'data/bibdata/fields/*/*.jsonld'
             , 'data/bibdata/groups/*/*.jsonld'
@@ -126,6 +128,7 @@ setup(
             , 'data/bibdata/types/*/*.jsonld'
             , 'data/bibdata/views/*/*.jsonld'
             , 'data/bibdata/vocabs/*/*.jsonld'
+            # Vocabulary namespace definitions
             , 'data/namedata/enums/*/*/*.jsonld'
             , 'data/namedata/fields/*/*.jsonld'
             , 'data/namedata/groups/*/*.jsonld'
@@ -133,6 +136,25 @@ setup(
             , 'data/namedata/types/*/*.jsonld'
             , 'data/namedata/views/*/*.jsonld'
             , 'data/namedata/vocabs/*/*.jsonld'
+            # RDF schema definitions
+            , 'data/RDF_schema_defs/fields/*/*.jsonld'
+            , 'data/RDF_schema_defs/groups/*/*.jsonld'
+            , 'data/RDF_schema_defs/lists/*/*.jsonld'
+            , 'data/RDF_schema_defs/types/*/*.jsonld'
+            , 'data/RDF_schema_defs/views/*/*.jsonld'
+            # Journal definitions
+            , 'data/Journal_defs/fields/*/*.jsonld'
+            , 'data/Journal_defs/groups/*/*.jsonld'
+            , 'data/Journal_defs/lists/*/*.jsonld'
+            , 'data/Journal_defs/types/*/*.jsonld'
+            , 'data/Journal_defs/views/*/*.jsonld'
+            , 'data/Journal_defs/vocabs/*/*.jsonld'
+            , 'data/Journal_defs/entitydata/*/*/*.jsonld'
+            , 'data/Journal_defs/entitydata/*/*/*/*.jsonld'
+            # Annalist schema
+            , 'data/Annalist_schema/entitydata/*/*/*.jsonld'
+            , 'data/Annalist_schema/entitydata/*/*/*/*.jsonld'
+            # Test data
             , 'data/test/*.md'
             , 'data/test/*.jpg'
             ]

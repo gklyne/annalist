@@ -1,0 +1,32 @@
+{
+  "rdfs:label": "Included audio Id+label+audio",
+  "rdfs:comment": "Show id+label+audio fields of included audio",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Included_audio",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,4",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:4,4",
+      "annal:field_id": "_field/Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:8,4",
+      "annal:field_id": "_field/Included_audio"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_audio_m",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

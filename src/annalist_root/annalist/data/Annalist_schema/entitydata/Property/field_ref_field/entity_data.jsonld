@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_ref_field",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_ref_field",
+  "rdfs:comment": "# Property URI or CURIE of referenced entity field\r\n\r\nThis option is most deprecated in favour of using \"multi-field reference\" render type.\r\n\r\nRather than displaying a link to a referenced entity, this option used in a field definition allows a designated field from the referenced entity to be displayed in view mode.  In edit mode, the entity ID options are still displayed as a drop-down list.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Referenced field URI",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

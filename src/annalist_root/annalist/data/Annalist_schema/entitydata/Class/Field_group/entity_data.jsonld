@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Field_group",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Field_group",
+  "rdfs:comment": "# Field group definition\r\n\r\nClass of Annalist data records that define field groups.  Field groups are referenced by field definitions that themselves incorporate references to field definitions, such as repeat fields and multi-field reference fields.",
+  "rdfs:label": "Field group",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/Entity"
+    }
+  ]
+}

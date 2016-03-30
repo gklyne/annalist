@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "task_buttons",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:task_buttons",
+  "rdfs:comment": "# Task buttons\r\n\r\nThis property may be used in a view definition to describe task buttons that are added to the view.  It references a list of internal resources, each of which defines a button id, button label and tooltip help text for the button (see example below).\r\n\r\nThe declared button id must correspond to a defined task, and then the button is clicked while editing an entity, that task is invoked.  (Currently, the only tasks are those predefined by Annalist, but future revisions may also support user-definable tasks.)\r\n\r\nSee also: `annal:button_id`, `annal:button_label` and `annal:button_help`.\r\n\r\n## Example\r\n\r\nTaken from Annalist's internal definition of the field definition view:\r\n\r\n        {\r\n          :\r\n          \"annal:task_buttons\":\r\n            [ { \"annal:button_id\":        \"_task/Define_repeat_field\" \r\n              , \"annal:button_label\":     \"Define repeat field\"\r\n              , \"annal:button_help\":      \"Define repeated value field ...\"\r\n              }\r\n            , { \"annal:button_id\":        \"_task/Define_field_ref\"\r\n              , \"annal:button_label\":     \"Define field reference\"\r\n              , \"annal:button_help\":      \"Define multi-field reference field ...\"\r\n              }\r\n            ]\r\n          :\r\n        }\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:label": "Task buttons",
+  "rdfs:range": [],
+  "rdfs:subPropertyOf": []
+}

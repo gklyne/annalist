@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "list_entity_selector",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:list_entity_selector",
+  "rdfs:comment": "# List entity selector\r\n\r\nA string expression that is interpreted to define a filter used in selecting entities displayed in a list.\r\n\r\nThe displayed entities are determined by this expression in conjunction with a possible entity type id that may appear in the URL for the list display.\r\n\r\nSelector formats:\r\n\r\n* `ALL` (or blank)\r\n\r\n    match any entity\r\n\r\n* `<val1> == <val2>`\r\n\r\n    matches if the values are the same\r\n\r\n* `<val1> in <val2>`\r\n\r\n    matches if `<val2>` is a list containing `<val1>`,  or the values are the same, or `<val1>` is `None`.\r\n\r\n* `<val1> subtype <val2>`\r\n\r\n    matches when `<val1>` denotes a subtype of `<val2>`, where the values themselves are type URIs or CURIEs.  The subtype relationship is defined though URI and supertype URI values contained in type definitions.\r\n\r\nIn the above, `<val1>` and `<val2>` may be:\r\n\r\n* `[<field-id>]`\r\n\r\n    refers to the identified field in the candidate entity considered for selection.\r\n\r\n* `<name>[<field-id>]`\r\n\r\n    refers to a field of a named context value, or None if the indicated context value or field is not defined.  Currently, for entity selectors used in a list definition, the only named context value is `list`, which refers to the value dictionary of the list definition record.\r\n\r\n(@@NOTE: for field selectors, 'view' is the view definition for the presented form, and 'entity' is the value dictionary for the entity being edited in that form.)\r\n\r\n* `\"<string>\"` or `'<string>'`\r\n\r\n    is a literal string value.  Quotes within are escaped.\r\n\r\n*  `<field_id>`\r\n\r\n    values are property URIs or CURIEs, using characters allowed by RFC3986, except \"[\" and \"]\"\r\n\r\n## From RFC3986:\r\n\r\n           unreserved    = ALPHA / DIGIT / \"-\" / \".\" / \"_\" / \"~\"\r\n           reserved      = gen-delims / sub-delims\r\n           gen-delims    = \":\" / \"/\" / \"?\" / \"#\" / \"[\" / \"]\" / \"@\"\r\n           sub-delims    = \"!\" / \"$\" / \"&\" / \"'\" / \"(\" / \")\"\r\n                         / \"*\" / \"+\" / \",\" / \";\" / \"=\"\r\n\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:label": "List entity selector",
+  "rdfs:range": [
+    {
+      "@id": "annal:Text"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

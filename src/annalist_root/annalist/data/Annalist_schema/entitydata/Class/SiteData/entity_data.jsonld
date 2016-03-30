@@ -1,0 +1,29 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "SiteData",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:SiteData",
+  "rdfs:comment": "# Site data\r\n\r\nA SiteData instance is a distinguished member of class Collection that contains site-wide definitions that are applied to all collections.",
+  "rdfs:label": "Site data",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/Entity"
+    },
+    {
+      "@id": "Class/Collection"
+    }
+  ]
+}

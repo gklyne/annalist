@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "repeat_label_delete",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:repeat_label_delete",
+  "rdfs:comment": "# Delete repeated field button label\r\n\r\nUsed in a field definition for a repeated field (`RepeatGroup` or `RepeatGroupRow`), the value is used to label the button that deletes a selected repeated entry.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Delete field button label",
+  "rdfs:range": [
+    {
+      "@id": "annal:Text"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -54,8 +54,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Create definitions for schema entities: classes and properties
     - [x] Create records for classes
     - [x] Create records for properties
-    - [ ] Separate collection into `Schema_defs` and `Annalist_schema`
-    - [ ] Add `Schema_defs` and `Annalist_schema` as predefined collection data
+    - [x] Separate collection into `RDF_schema_defs` and `Annalist_schema`
+    - [ ] Add `RDF_schema_defs` and `Annalist_schema` as predefined collection data
+        - NOTE: current limitations of Annalist mean that the exported JSON-LD for RDF schema does not directly use standard RDF terms for everything.  For example, subclasses are referenced using a local URI reference rather than the global absolute URI, which can be obtained by defererencing the given reference and extracting the `annal:uri` value from there.
 - [ ] Review default name/label/desc used for type list/view definitions creation task
 - [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
@@ -94,7 +95,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
-    - [x] avoid explicit reference to `_annalist_collection`?
+    - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
+        - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
+        - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
     - [ ] review base URI designation in JSON-LD:
         - note `@base` ignored if used in external contexts;
         - can specified value be relative? YES:
@@ -106,9 +109,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
         - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
             - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
-    - [ ] collections and repeated properties:
-        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
-        - could use `@id`?
+    - [x] avoid explicit reference to `_annalist_collection`?
+    - [x] collections and repeated properties:
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)

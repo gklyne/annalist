@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_aliases",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_aliases",
+  "rdfs:comment": "# Field aliases\r\n\r\nA list of field aliases associated with a data type.  When reading a value of the corresponding data type, and if there is no value for the designated target property URI, Annalist looks for a value of the corresponding source URI and uses that in its place.\r\n\r\nOne motivating case for this is to allow fields associated with different properties to be associated with entity labels (rdfs:label), which are used by many generic views. The alias mechanism has also been used to implement a limited form of \"superproperty URI\", which can be useful for creating a unified view over disparate field types, such as linked and uploaded images. And, finally, the alias mechanism can be used to support a limited kind of schema migration:  where a property URI is renamed, the old value can be declared as an alias for the new value, and records will subsequently be saved with the new property URI as well as the original.\r\n\r\nThe range of this property is an RDF resource that itself has two properties:\r\n\r\n* [annal:alias_target](/annalist/c/Annalist_schema/d/Property/alias_target/)\r\n* [annal:alias_source](/annalist/c/Annalist_schema/d/Property/alias_source/)\r\n\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "rdfs:label": "Field aliases",
+  "rdfs:range": [],
+  "rdfs:subPropertyOf": []
+}

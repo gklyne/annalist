@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "type_view",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:type_view",
+  "rdfs:comment": "# Type default view\r\n\r\nDefault view definition used when displaying an instance of a type.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "rdfs:label": "Type default view",
+  "rdfs:range": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}
