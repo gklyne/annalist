@@ -133,18 +133,19 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         if viewinfo.http_response:
             return viewinfo.http_response
-        # print "@@ viewinfo old_entity_id %s, new_entity_id %s"%(viewinfo.entity_id, viewinfo.new_entity_id)
         self.help_markdown = viewinfo.recordview.get(RDFS.CURIE.comment, None)
 
         # Create local entity object or load values from existing
         typeinfo = viewinfo.entitytypeinfo
-        entity   = self.get_entity(viewinfo.entity_id, typeinfo, action)
+        entity   = self.get_entity(
+            viewinfo.src_entity_id or viewinfo.use_entity_id, typeinfo, action
+            )
         # log.debug("GenericEntityEditView.get %r"%(entity,))
         if entity is None:
             entity_label = (message.ENTITY_MESSAGE_LABEL%
                 { 'coll_id':    viewinfo.coll_id
                 , 'type_id':    viewinfo.type_id
-                , 'entity_id':  viewinfo.entity_id
+                , 'entity_id':  viewinfo.src_entity_id
                 })
             return self.error(
                 dict(self.error404values(),
@@ -153,7 +154,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         entityvals  = get_entity_values(
             viewinfo.entitytypeinfo, entity,
-            entity_id=viewinfo.new_entity_id,
+            entity_id=viewinfo.use_entity_id,
             action=viewinfo.action
             )
 
@@ -336,7 +337,7 @@ class GenericEntityEditView(AnnalistGenericView):
         view_uri_params = (
             { 'coll_id':    viewinfo.coll_id
             , 'type_id':    viewinfo.curr_type_id
-            , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
+            , 'entity_id':  viewinfo.curr_entity_id or viewinfo.orig_entity_id
             , 'view_id':    view_id or viewinfo.view_id     # form_data['view_choice']
             , 'action':     action  or self.uri_action
             })
@@ -567,7 +568,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     { 'coll_id':    viewinfo.coll_id
                     , 'type_id':    viewinfo.curr_type_id
                     , 'view_id':    extract_entity_id(form_data['view_choice'])
-                    , 'entity_id':  viewinfo.curr_entity_id or viewinfo.entity_id
+                    , 'entity_id':  viewinfo.curr_entity_id or viewinfo.orig_entity_id
                     , 'action':     self.uri_action
                     })
                 redirect_uri = (
@@ -596,14 +597,14 @@ class GenericEntityEditView(AnnalistGenericView):
                 if auth_check:
                     return auth_check
                 viewinfo.collection.set_default_view(
-                    view_id=viewinfo.view_id, type_id=viewinfo.type_id, entity_id=viewinfo.entity_id
+                    view_id=viewinfo.view_id, type_id=viewinfo.type_id, entity_id=viewinfo.orig_entity_id
                     )
                 action = "list"
                 msg    = (message.DEFAULT_VIEW_UPDATED%
                     { 'coll_id':   viewinfo.coll_id
                     , 'view_id':   viewinfo.view_id
                     , 'type_id':   viewinfo.type_id
-                    , 'entity_id': viewinfo.entity_id
+                    , 'entity_id': viewinfo.orig_entity_id
                     })
                 redirect_uri = (
                     uri_with_params(

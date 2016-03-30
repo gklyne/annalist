@@ -56,11 +56,11 @@ class EntityResourceAccess(AnnalistGenericView):
 
         # Load values from entity
         typeinfo     = viewinfo.entitytypeinfo
-        entity       = self.get_entity(viewinfo.entity_id, typeinfo, "view")
+        entity       = self.get_entity(viewinfo.src_entity_id, typeinfo, "view")
         entity_label = (message.ENTITY_MESSAGE_LABEL%
             { 'coll_id':    viewinfo.coll_id
             , 'type_id':    viewinfo.type_id
-            , 'entity_id':  viewinfo.entity_id
+            , 'entity_id':  viewinfo.src_entity_id
             })
         if entity is None:
             return self.error(

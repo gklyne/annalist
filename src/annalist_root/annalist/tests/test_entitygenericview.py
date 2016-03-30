@@ -44,6 +44,7 @@ from entity_testutils       import (
     collection_create_values,
     site_dir, collection_dir, 
     continuation_url_param,
+    collection_view_url,
     collection_edit_url,
     collection_entity_view_url,
     site_title,
@@ -145,7 +146,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return e
 
     #   -----------------------------------------------------------------------------
-    #   Form rendering tests
+    #   Form rendering and response tests
     #   -----------------------------------------------------------------------------
 
     def test_get_default_form_no_login(self):
@@ -154,6 +155,68 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_post_default_form_use_view(self):
+        self._create_entity_data("entityuseview")
+        self.assertTrue(EntityData.exists(self.testdata, "entityuseview"))
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview", action="view",
+                use_view="_view/Type_view", 
+                )
+        f.pop('entity_id', None)
+        u = entitydata_edit_url(
+            "view", "testcoll", "testtype", "entityuseview", view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url(
+            "view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view"
+            )
+        c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityuseview")
+        return
+
+    def test_post_default_form_default_view(self):
+        # Set default entity view, then ensure collection view redirects to it
+        self._create_entity_data("entitydefaultview")
+        f = entitydata_default_view_form_data(
+                entity_id="entitydefaultview", action="view",
+                default_view="default_view", 
+                )
+        f.pop('entity_id', None)
+        u = entitydata_edit_url(
+            action="view", view_id="Default_view",
+            coll_id="testcoll", type_id="testtype", entity_id="entitydefaultview"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u
+        self.assertIn(v, r['location'])
+        ih = "info_head=Action%20completed"
+        im = (
+            "info_message="+
+            "Default%20view%20for%20collection%20testcoll%20changed%20to%20"+
+            "Default_view/testtype/entitydefaultview"
+            )
+        self.assertIn(ih, r['location'])
+        self.assertIn(im, r['location'])
+        # Get collection root and check redirect to entity view
+        u2 = collection_view_url(coll_id="testcoll")
+        r2 = self.client.get(u2)
+        self.assertEqual(r2.status_code,   302)
+        self.assertEqual(r2.reason_phrase, "FOUND")
+        self.assertEqual(r2.content,       "")
+        v2 = TestHostUri + entitydata_edit_url(
+            coll_id="testcoll", view_id="Default_view", type_id="testtype", entity_id="entitydefaultview"
+            )
+        self.assertEqual(v2, r2['location'])
         return
 
     def test_post_default_form_use_view_no_login(self):
