@@ -125,15 +125,14 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             sotware_ver=annalist.__version_data__,
             tooltip1a=r.context['fields'][0]['field_help'],
             tooltip1b=r.context['fields'][1]['field_help'],
-            tooltip2=r.context['fields'][2]['field_help'],
-            tooltip3=r.context['fields'][3]['field_help'],
-            tooltip4=r.context['fields'][4]['field_help'], # +padding
-            tooltip5a=r.context['fields'][6]['field_help'],
-            tooltip5b=r.context['fields'][7]['field_help'],
-            tooltip6a=r.context['fields'][8]['field_help'],
-            tooltip6b=r.context['fields'][9]['field_help'],
-            tooltip7=r.context['fields'][10]['field_help'],
-            # tooltipf0=r.context['fields'][5]._field_description['group_field_descs'][0]['field_help']
+            tooltip2 =r.context['fields'][2]['field_help'],
+            tooltip3 =r.context['fields'][3]['field_help'],
+            tooltip4 =r.context['fields'][4]['field_help'],
+            tooltip5a=r.context['fields'][5]['field_help'],
+            tooltip5b=r.context['fields'][6]['field_help'],
+            tooltip6a=r.context['fields'][7]['field_help'],
+            tooltip6b=r.context['fields'][8]['field_help'],
+            tooltip7 =r.context['fields'][9]['field_help'],
             )
         formrow1a = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -192,7 +191,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip4)s">
+            <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
                         <span>Parent</span>
@@ -209,7 +208,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
                     </div>
                 </div>
             </div>
-            """%field_vals(width=6)
+            """%field_vals(width=12)
         formrow5a = """
              <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
                 <div class="row view-value-row">

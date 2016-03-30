@@ -50,8 +50,8 @@ def initialize_coll_data(src_data_dir, tgt_coll):
         tgt_data_dir, layout.META_COLL_REF+layout.COLL_ENTITYDATA_PATH
         )
     if os.path.isdir(expand_sdir):
-        log.info("@@ - %s -> %s"%(expand_sdir, expand_tdir))
-        #@@ replacetree(expand_sdir, expand_tdir)
+        log.info("- %s -> %s"%(sdir, expand_tdir))
+        replacetree(expand_sdir, expand_tdir)
     # Generate initial JSON-LD context data
     tgt_coll.generate_coll_jsonld_context()
     return []

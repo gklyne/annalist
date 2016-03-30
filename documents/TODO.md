@@ -49,14 +49,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
     - Add migration entry in models.recordfield
 - [x] Canonicalize JSON generation to minimize arbitrary version differences
-- [ ] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
+- [x] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
     - [x] When creating repeat field for field, display the created field.
     - [x] Create definitions for schema entities: classes and properties
     - [x] Create records for classes
     - [x] Create records for properties
     - [x] Separate collection into `RDF_schema_defs` and `Annalist_schema`
-    - [ ] Add `RDF_schema_defs` and `Annalist_schema` as predefined collection data
+    - [x] Add `RDF_schema_defs` and `Annalist_schema` as predefined collection data
         - NOTE: current limitations of Annalist mean that the exported JSON-LD for RDF schema does not directly use standard RDF terms for everything.  For example, subclasses are referenced using a local URI reference rather than the global absolute URI, which can be obtained by defererencing the given reference and extracting the `annal:uri` value from there.
+- [x] Add Journal_defs as installable collection
 - [ ] Review default name/label/desc used for type list/view definitions creation task
 - [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
@@ -77,6 +78,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release?)
 
+- [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.

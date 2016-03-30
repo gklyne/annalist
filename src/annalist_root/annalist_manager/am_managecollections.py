@@ -16,6 +16,7 @@ import logging
 import subprocess
 import importlib
 import shutil
+import datetime
 
 log = logging.getLogger(__name__)
 
@@ -48,17 +49,40 @@ installable_collections = (
         { 'data_dir': "namedata"
         , 'coll_meta':
             { "rdfs:label":     "Namespace definitions"
-            , "rdfs:comment":   "# Namespace definitions\r\n\r\n"+
+            , "rdfs:comment":   "# Namespace definitions"+
+                                "\r\n\r\n"+
                                 "Defines some common vocabulary namespaces "+
-                                "not included in the base site data."
-            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+                                "not included in the base site data."+
+                                "\r\n"
+            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
             }
         } 
+    , "Journal_defs":   
+        { 'data_dir': "Journal_defs"
+        , 'coll_meta':
+            { "rdfs:label":     "Journal and resource definitions"
+            , "rdfs:comment":   "# Journal and resource definitions"+
+                                "\r\n\r\n"+
+                                "This collection defines types, views and fields that "+
+                                "can be used to incorporate references to uploaded, "+
+                                "imported or linked media resources into entity views."+
+                                "\r\n\r\n"+
+                                "Also defines a \"Journal\" type that can be used to record "+
+                                "(mostly) unstructured information about some process, "+
+                                "along with associated resources."+
+                                "\r\n"
+            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
+            , "annal:default_view_id":      "Journal_note_view"
+            , "annal:default_view_type":    "Journal"
+            , "annal:default_view_entity":  "01_journal_resources"
+            }
+        }
     , "Bibliography_defs":   
         { 'data_dir': "bibdata"
         , 'coll_meta':
             { "rdfs:label":     "Bibliography definitions"
-            , "rdfs:comment":   "# Bibliography definitions\r\n\r\n"+
+            , "rdfs:comment":   "# Bibliography definitions"+
+                                "\r\n\r\n"+
                                 "Defines types and views for bibliographic definitions, "+
                                 "based loosely on BibJSON."
             , "annal:comment":  "Initialized by `annalist-manager installcollection`"
@@ -68,7 +92,8 @@ installable_collections = (
         { 'data_dir': "RDF_schema_defs"
         , 'coll_meta':
             { "rdfs:label":     "RDF schema terms for defining vocabularies"
-            , "rdfs:comment":   "# Definitions for defining RDF schema for vocabularies\r\n\r\n"+
+            , "rdfs:comment":   "# Definitions for defining RDF schema for vocabularies"+
+                                "\r\n\r\n"+
                                 "This Annalist collection contains definitions that may "+
                                 "be imported to creaing RDF schema definitions as an "+
                                 "Annalist collection."+
@@ -81,21 +106,24 @@ installable_collections = (
                                 "absolute URI, which can be obtained by defererencing "+
                                 "the given reference and extracting the `annal:uri` "+
                                 "value from there."+
-                                ""
-            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+                                "\r\n"
+            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
             }
         }
     , "Annalist_schema":   
         { 'data_dir': "Annalist_schema"
         , 'coll_meta':
             { "rdfs:label":     "Schema definitions for terms in the Annalist namespace"
-            , "rdfs:comment":   "# Schema definitions for terms in the Annalist namespace\r\n\r\n"+
+            , "rdfs:comment":   "# Schema definitions for terms in the Annalist namespace"+
+                                "\r\n\r\n"+
                                 "This is an Annalist collection which describes terms "+
                                 "in the Annalist (`annal:`) namespace."+
                                 "\r\n\r\n"+
                                 "It uses definitions from collection `RDF_schema_defs`."+
-                                ""
+                                "\r\n"
             , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            , "annal:inherit_from": "_coll/RDF_schema_defs"
+            , "annal:default_list": "Classes"
             }
         }
     # , "...":   
@@ -549,14 +577,20 @@ def am_installcollection(annroot, userhome, options):
     if coll_id in installable_collections:
         src_dir_name = installable_collections[coll_id]['data_dir']
     else:
-        print("Collection name to installation not known: %s"%(coll_id), file=sys.stderr)
+        print("Collection name to install not known: %s"%(coll_id), file=sys.stderr)
         print("Available collection Ids are: %s"%(",".join(installable_collections.keys())))
         return am_errors.AM_NOCOLLECTION
 
     # Install collection now
     src_dir = os.path.join(annroot, "annalist/data", src_dir_name)
     print("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
-    coll = site.add_collection(coll_id, installable_collections[coll_id]['coll_meta'])
+    coll_metadata = installable_collections[coll_id]['coll_meta']
+    date_time_now = datetime.datetime.now().replace(microsecond=0)
+    coll_metadata[ANNAL.CURIE.comment] = (
+        "Initialized at %s by `annalist-manager installcollection`"%
+        date_time_now.isoformat()
+        )
+    coll = site.add_collection(coll_id, coll_metadata)
     msgs = initialize_coll_data(src_dir, coll)
     if msgs:
         for msg in msgs:
