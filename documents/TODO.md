@@ -67,6 +67,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Generalize to path?
     - cf. https://tools.ietf.org/html/rfc6901
 - [ ] Entity types list (and List list?) - provide link field to display list
+- [ ] Provide overview description and resource links at annalist.net - try to make this the "goto" for finding further information.
 
 (release?)
 
