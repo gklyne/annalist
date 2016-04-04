@@ -14,6 +14,8 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
+from annalist.exceptions                import Annalist_Error
+
 from annalist.views.fields.bound_field  import bound_field
 
 from render_fieldvalue  import (
@@ -499,7 +501,7 @@ def get_repeatgrouprow_renderer():
         edit_renderer=RenderRepeatGroup(edit_grouprow)
         )
 
-def get_repeatgrouplist_renderer():
+def get_repeatlistrow_renderer():
     """
     Return field renderer object for RepeatGroup as list (col header labels)
     """

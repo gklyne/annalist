@@ -2,8 +2,6 @@
 This module contains utilities for use in conjunction with field renderers.
 """
 
-#@@TODO: rename module something like `find_renderer` or `renderer_discovery`
-
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -36,12 +34,10 @@ from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_import          import get_uri_import_renderer, URIImportValueMapper
 from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
 from render_repeatgroup         import (
-    RenderRepeatGroup,
     get_repeatgroup_renderer,
     get_repeatgrouprow_renderer,
-    get_repeatgrouplist_renderer,
+    get_repeatlistrow_renderer,
     )
-import render_repeatgroup
 from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
 
 # Render type mappings to templates and/or renderer access functions
@@ -90,7 +86,7 @@ _field_get_renderer_functions = (
     , "RefMultifield":      get_ref_multifield_renderer
     , "RepeatGroup":        get_repeatgroup_renderer
     , "RepeatGroupRow":     get_repeatgrouprow_renderer
-    , "RepeatGroupList":    get_repeatgrouplist_renderer
+    , "RepeatListRow":      get_repeatlistrow_renderer
     # Render types recognized for backward compatibility
     , "URIImage":           get_ref_image_renderer
     , "Type":               get_select_renderer
@@ -209,20 +205,11 @@ def get_edit_renderer(field_render_type, field_value_mode):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if field_render_type == "RepeatGroup":
-        renderer = get_repeatgroup_renderer()
-    elif field_render_type == "RepeatGroupRow":
-        renderer = get_repeatgrouprow_renderer()
-    elif field_render_type == "RefMultifield":
-        renderer = get_select_renderer()
-    else:
-        renderer = get_field_edit_renderer(field_render_type, field_value_mode)
-    if renderer:
-        return renderer.edit()
-    log.debug("get_edit_renderer: %s not found"%field_render_type)
-    # raise ValueError("get_edit_renderer: %s not found"%field_render_type)
-    # Default to simple text for unknown renderer type
-    renderer = get_field_base_renderer("Text")
+    renderer = get_field_edit_renderer(field_render_type, field_value_mode)
+    if not renderer:
+        # Default to simple text for unknown renderer type
+        log.warning("get_edit_renderer: %s not found"%field_render_type)
+        renderer = get_field_base_renderer("Text")
     return renderer.edit()
 
 def get_view_renderer(field_render_type, field_value_mode):
@@ -238,19 +225,11 @@ def get_view_renderer(field_render_type, field_value_mode):
         a context. This allows you to reference a compiled Template in your context.
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
-    if field_render_type == "RepeatGroup":
-        renderer = get_repeatgroup_renderer()
-    elif field_render_type == "RepeatGroupRow":
-        renderer = get_repeatgrouprow_renderer()
-    elif field_render_type == "RepeatListRow":
-        renderer = get_repeatgrouplist_renderer()
-    else:
-        renderer = get_field_base_renderer(field_render_type)
-    if renderer:
-        return renderer.view()
-    # Default to simple text for unknown renderer type
-    log.warning("get_view_renderer: %s not found"%field_render_type)
-    renderer = get_field_base_renderer("Text")
+    renderer = get_field_base_renderer(field_render_type)
+    if not renderer:
+        # Default to simple text for unknown renderer type
+        log.warning("get_view_renderer: %s not found"%field_render_type)
+        renderer = get_field_base_renderer("Text")
     return renderer.view()
 
 def get_label_edit_renderer(field_render_type, field_value_mode):
@@ -258,20 +237,11 @@ def get_label_edit_renderer(field_render_type, field_value_mode):
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if field_render_type == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.edit_group)
-    if field_render_type == "RepeatGroupRow":
-        return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
-    if field_render_type == "RefMultifield":
-        renderer = get_select_renderer()
-    else:
-        renderer = get_field_edit_renderer(field_render_type, field_value_mode)
-    if renderer:
-        return renderer.label_edit()
-    log.debug("get_label_edit_renderer: %s not found"%field_render_type)
-    # raise ValueError("get_label_edit_renderer: %s not found"%field_render_type)
-    # Default to simple text for unknown renderer type
-    renderer = get_field_base_renderer("Text")
+    renderer = get_field_base_renderer(field_render_type)
+    if not renderer:
+        # Default to simple text for unknown renderer type
+        log.warning("get_label_edit_renderer: %s not found"%field_render_type)
+        renderer = get_field_base_renderer("Text")
     return renderer.label_edit()
 
 def get_label_view_renderer(field_render_type, field_value_mode):
@@ -279,18 +249,11 @@ def get_label_view_renderer(field_render_type, field_value_mode):
     Returns a field view renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    if field_render_type == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.view_group)
-    if field_render_type == "RepeatListRow":
-        return RenderRepeatGroup(render_repeatgroup.view_listrow)
-    if field_render_type == "RepeatGroupRow":
-        return RenderRepeatGroup(render_repeatgroup.view_grouprow)
     renderer = get_field_base_renderer(field_render_type)
-    if renderer:
-        return renderer.label_view()
-    # Default to simple text for unknown renderer type
-    log.warning("get_label_view_renderer: %s not found"%field_render_type)
-    renderer = get_field_base_renderer("Text")
+    if not renderer:
+        # Default to simple text for unknown renderer type
+        log.warning("get_label_view_renderer: %s not found"%field_render_type)
+        renderer = get_field_base_renderer("Text")
     return renderer.label_view()
 
 def get_col_head_renderer(field_render_type, field_value_mode):
@@ -354,20 +317,10 @@ def get_mode_renderer(field_render_type, field_value_mode):
     current render_mode (used for nested renderers which can be invoked in different 
     view contexts).
     """
-    # @@TODO: factor out this selection?
-    #         (common with get_view_renderer, get_label_view_renderer)
-    if field_render_type == "RepeatGroup":
-        renderer = RenderRepeatGroup(render_repeatgroup.view_group)
-    elif field_render_type == "RepeatListRow":
-        renderer = RenderRepeatGroup(render_repeatgroup.view_listrow)
-    elif field_render_type == "RepeatGroupRow":
-        renderer = RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    else:
-        renderer = get_field_base_renderer(field_render_type)
+    renderer = get_field_base_renderer(field_render_type)
     if not renderer:
-        # Repeat group: revert to normal renderer ....
         # Default to simple text for unknown renderer type
-        log.warning("get_mode_renderer: %s not supported"%field_render_type)
+        log.debug("get_mode_renderer: %s not found"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.render_mode()
 
