@@ -177,6 +177,18 @@ def get_field_edit_renderer(field_render_type, field_value_mode):
         renderer = get_fileupload_edit_renderer(renderer, field_render_type)
     return renderer
 
+def get_label_renderer(field_render_type, field_value_mode):
+    """
+    Returns a field label renderer object that can be referenced in a 
+    Django template "{% include ... %}" element.
+    """
+    class _renderer(object):
+        def __init__(self):
+            pass
+        def render(self, context):
+            return context.get('field_label', "@@no 'field_label'@@")
+    return _renderer()
+
 def get_edit_renderer(field_render_type, field_value_mode):
     """
     Returns an field edit renderer object that can be referenced in a 

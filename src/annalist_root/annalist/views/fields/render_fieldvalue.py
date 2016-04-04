@@ -312,8 +312,7 @@ class RenderFieldValue(object):
 
     # Template access functions
 
-    #@@ Is this used - seems not???
-    def _unused_label(self):
+    def label(self):
         """
         Returns a renderer object to display a field label from the 
         supplied `context['field']` value.
@@ -379,7 +378,6 @@ class RenderFieldValue(object):
         if not self._render_col_head:
             self._render_col_head = self._set_render_mode(
                 self._get_renderer(col_head_wrapper_template, self._label_renderer),
-                #@@ Template(col_head_template),
                 "col_head"
                 )
         return self._render_col_head

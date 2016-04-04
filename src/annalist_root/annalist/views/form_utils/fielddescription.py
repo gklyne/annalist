@@ -23,6 +23,7 @@ from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
 from annalist.views.fields.render_utils     import (
+    get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 
     get_label_view_renderer,
@@ -116,6 +117,7 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_view':                 None
             , 'group_field_descs':          None
+            , 'field_render_label':         get_label_renderer(        field_render_type, field_value_mode)
             , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
             , 'field_render_edit':          get_edit_renderer(         field_render_type, field_value_mode)
             , 'field_render_label_view':    get_label_view_renderer(   field_render_type, field_value_mode)

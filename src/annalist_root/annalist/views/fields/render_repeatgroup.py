@@ -340,6 +340,23 @@ edit_listrow_unused = (
         </div>"""
     })
 
+view_group_col = (
+    { 'head':
+        """
+        {% for f in field.group_field_descs %}
+        {% include f.field_render_label with field=f %}
+        {% endfor %}
+        """
+    , 'body':
+        """
+        {% for f in repeat_bound_fields %}
+        {% include f.field_render_view with field=f %}
+        {% endfor %}
+        """
+    # , 'tail':
+    #     """
+    #     """
+    })
 
 class RenderRepeatGroup(object):
     """
@@ -347,10 +364,10 @@ class RenderRepeatGroup(object):
     """
 
     def __init__(self, templates=None):
+        """
+        Creates a renderer object for a repeating group field
+        """
         # Later, may introduce a template_file= option to read from templates directory
-        """
-        Creates a renderer object for a simple text field
-        """
         # log.info("RenderRepeatGroup: __init__ %r"%(templates))
         super(RenderRepeatGroup, self).__init__()
         assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
@@ -429,9 +446,31 @@ class RenderRepeatGroup(object):
         """
         Returns a renderer object that renders whatever is required for the 
         current value of "render_mode" in the view context.
-
-        In the case of a repeat group, invokes the repeat render object.
         """
-        return self
+        return RenderRepeatGroup(   )
+
+    #@@
+    # class RenderModeRepeatGroup(object):
+    #     """
+    #     Render class for a repeated field group that renders according to the "render_mode"
+    #     value inthe supplied context.
+    #     """
+    #     def __init__(self, baserenderer):
+    #         self._baserenderer = baserenderer
+    #         return
+    #     def render(self, context):
+    #         """
+    #         Renders a repeat group according to render_mode.
+    #         """
+    #         value_list = context['field']['field_value']
+    #         mode       = context['render_mode']
+    #         if mode in ["col_head", "col_head_view", "col_head_edit"]:
+    #             # Render row headings
+    #         elif mode in ["col_view", "col_edit"]:
+    #             # render row value
+    #         else
+    #             response = self._baserenderer.render(context)
+    #         return response
+    #@@
 
 # End.
