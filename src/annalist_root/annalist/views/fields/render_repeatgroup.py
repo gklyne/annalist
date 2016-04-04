@@ -16,6 +16,16 @@ from django.template    import Template, Context
 
 from annalist.views.fields.bound_field  import bound_field
 
+from render_fieldvalue  import (
+    RenderFieldValue,
+    TemplateWrapValueRenderer, 
+    ModeWrapValueRenderer
+    )
+
+#   ------------------------------------------------------------
+#   Local data values
+#   ------------------------------------------------------------
+
 view_group = (
     { 'head':
         """
@@ -283,63 +293,6 @@ view_listrow = (
         """
     })
 
-edit_listrow_unused = (
-    { 'head':
-        """
-        <!-- views.fields.render_repeatgroup.edit_listrow -->
-        <div class="thead row">
-          <div class="small-12 columns">
-            <div class="row">
-              <div class="group-label small-12 columns">
-                <span>{{field.field_label}}</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-1 columns">
-                &nbsp;
-              </div>
-              <div class="small-11 columns">
-                <div class="edit-listrow col-head row">
-                  {% for f in field.group_field_descs %}
-                  {% include f.field_render_colhead with field=f %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        """
-    , 'body':
-        """
-        <div class="tbody row select-row">
-          <div class="small-1 columns checkbox-in-edit-padding">
-            <input type="checkbox" class="select-box right" name="entity_select" 
-                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
-          </div>
-          <div class="small-11 columns">
-            <div class="edit-listbody row">
-              {% for f in repeat_bound_fields %}
-              {% include f.field_render_coledit with field=f %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>"""
-    , 'tail':
-        """
-        <div class="row">
-          <div class="small-12 columns">
-            <input type="submit" name="{{field.group_id}}__remove" 
-                   value="{{field.group_delete_label}}" />
-            <input type="submit" name="{{field.group_id}}__add"    
-                   value="{{field.group_add_label}}" />
-            <input type="submit" name="{{field.group_id}}__up"
-                   value="Move up" />
-            <input type="submit" name="{{field.group_id}}__down"
-                   value="Move down" />
-          </div>
-        </div>"""
-    })
-
 view_group_col = (
     { 'head':
         """
@@ -357,6 +310,10 @@ view_group_col = (
     #     """
     #     """
     })
+
+#   ------------------------------------------------------------
+#   Repeat group render class
+#   ------------------------------------------------------------
 
 class RenderRepeatGroup(object):
     """
@@ -447,7 +404,8 @@ class RenderRepeatGroup(object):
         Returns a renderer object that renders whatever is required for the 
         current value of "render_mode" in the view context.
         """
-        return RenderRepeatGroup(   )
+        return self
+        # return RenderRepeatGroup(view_group_col)
 
     #@@
     # class RenderModeRepeatGroup(object):
@@ -472,5 +430,82 @@ class RenderRepeatGroup(object):
     #             response = self._baserenderer.render(context)
     #         return response
     #@@
+
+
+#   ------------------------------------------------------------
+#   Repeat group renderer factory class and functions
+#   ------------------------------------------------------------
+
+class RenderGroupFieldValue(RenderFieldValue):
+    """
+    Return field render factory for a repeated group based on 
+    the supplied render value objects.
+    """
+    def __init__(self, view_renderer=None, edit_renderer=None):
+        """
+        Creates a renderer factory for a repeating value field.
+
+        view_renderer   is a render object that formats values for viewing
+        edit_renderer   is a render object that formats value editing widgets
+
+        Methods provided return composed renderers for a variety of contexts.
+        """
+        super(RenderGroupFieldValue, self).__init__(
+            view_renderer=view_renderer, 
+            edit_renderer=edit_renderer
+            )
+        # Override view/edit renderers to not use wrapper.
+        self._render_view = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_edit = ModeWrapValueRenderer("edit", self._edit_renderer)
+        return
+
+        def label_view(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no label_view method")
+
+        def label_edit(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no label_edit method")
+
+        def col_head(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no col_head method")
+
+        def col_head_view(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no col_head_view method")
+
+        def col_head_edit(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no col_head_edit method")
+
+        def col_view(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no col_view method")
+
+        def col_edit(self, context):
+            raise Annalist_Error("RepeatGroup renderer has no col_edit method")
+
+
+def get_repeatgroup_renderer():
+    """
+    Return field renderer object for RepeatGroup (labeled fields)
+    """
+    return RenderGroupFieldValue(
+        view_renderer=RenderRepeatGroup(view_group),
+        edit_renderer=RenderRepeatGroup(edit_group)
+        )
+
+def get_repeatgrouprow_renderer():
+    """
+    Return field renderer object for RepeatGroup as row (col headier labels)
+    """
+    return RenderGroupFieldValue(
+        view_renderer=RenderRepeatGroup(view_grouprow),
+        edit_renderer=RenderRepeatGroup(edit_grouprow)
+        )
+
+def get_repeatgrouplist_renderer():
+    """
+    Return field renderer object for RepeatGroup as list (col header labels)
+    """
+    return RenderGroupFieldValue(
+        view_renderer=RenderRepeatGroup(view_listrow),
+        edit_renderer=Template("@@repeatgrouplist_renderer cannot be used for editing@@")
+        )
 
 # End.

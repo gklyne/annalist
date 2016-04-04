@@ -23,6 +23,7 @@ from annalist.models.collection         import Collection
 from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 
 from annalist.views.form_utils.fieldchoice      import FieldChoice
+from annalist.views.fields.render_fieldvalue    import TemplateWrapValueRenderer, ModeWrapValueRenderer
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_placement     import (
     Placement, make_field_width, make_field_offset, make_field_display
@@ -223,10 +224,12 @@ class FieldDescriptionTest(AnnalistTestCase):
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "RepeatGroupRow")
-        self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
-        self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
-        self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)
-        self.assertIsInstance(fd['field_render_edit'], RenderRepeatGroup)
+        # self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
+        # self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
+        self.assertIsInstance(fd['field_render_colhead'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_colview'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_view'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_edit'], ModeWrapValueRenderer)
         expect_group_details = (
             { 'group_id':           "View_fields"
             , 'group_label':        "Fields"

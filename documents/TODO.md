@@ -1,4 +1,3 @@
-
 # Annalist TODO
 
 NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
@@ -296,23 +295,13 @@ Notes for Future TODOs:
     - see EntityTypeInfo.__init__
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
-- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
+- [ ] consider render type option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?
-- [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
-    - e.g. see /annalist/c/Carolan_Guitar/d/_field/Event_r/
-    - DOES NOT WORK:  if used to reference group, can only have one repeat group; if used to reference item, cannot use item field in isolation.
-    - Options (#1 looking favourite):
-        1. use same property for group and field; recognize and elide when generating/reading RDF?
-        2. use auto-generated unique property for group ref.  Can recognize for RDF?
-        3. group description to use 'annal:member' property override
-    - IMPLEMENTING: use `owl:sameAs` for singleton dictionaries in a JSON list.
-        - equivalent to `[ owl:sameAs <some_resource> ]`
-        - (could use `@id` as key ?)
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.

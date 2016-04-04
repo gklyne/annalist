@@ -35,10 +35,14 @@ from render_select              import (
 from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
 from render_uri_import          import get_uri_import_renderer, URIImportValueMapper
 from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
-from render_repeatgroup         import RenderRepeatGroup
+from render_repeatgroup         import (
+    RenderRepeatGroup,
+    get_repeatgroup_renderer,
+    get_repeatgrouprow_renderer,
+    get_repeatgrouplist_renderer,
+    )
 import render_repeatgroup
 from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
-import render_ref_multifields
 
 # Render type mappings to templates and/or renderer access functions
 
@@ -84,6 +88,9 @@ _field_get_renderer_functions = (
     , "Enum_choice_opt":    get_choice_renderer
     , "View_choice":        get_view_choice_renderer
     , "RefMultifield":      get_ref_multifield_renderer
+    , "RepeatGroup":        get_repeatgroup_renderer
+    , "RepeatGroupRow":     get_repeatgrouprow_renderer
+    , "RepeatGroupList":    get_repeatgrouplist_renderer
     # Render types recognized for backward compatibility
     , "URIImage":           get_ref_image_renderer
     , "Type":               get_select_renderer
@@ -164,8 +171,8 @@ def get_fileupload_edit_renderer(renderer, field_render_type):
 
 def get_field_edit_renderer(field_render_type, field_value_mode):
     """
-    Get edit renderer for supplied field details, taking account of variations on the 
-    base renderer due to field reference and field value type.
+    Get edit renderer for supplied field details, taking account of variations 
+    on the base renderer due to field reference and field value type.
     """
     # log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
     renderer = get_field_base_renderer(field_render_type)
@@ -203,10 +210,10 @@ def get_edit_renderer(field_render_type, field_value_mode):
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
     if field_render_type == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.edit_group)
-    if field_render_type == "RepeatGroupRow":
-        return RenderRepeatGroup(render_repeatgroup.edit_grouprow)
-    if field_render_type == "RefMultifield":
+        renderer = get_repeatgroup_renderer()
+    elif field_render_type == "RepeatGroupRow":
+        renderer = get_repeatgrouprow_renderer()
+    elif field_render_type == "RefMultifield":
         renderer = get_select_renderer()
     else:
         renderer = get_field_edit_renderer(field_render_type, field_value_mode)
@@ -232,12 +239,13 @@ def get_view_renderer(field_render_type, field_value_mode):
         - https://docs.djangoproject.com/en/dev/ref/templates/builtins/#include
     """
     if field_render_type == "RepeatGroup":
-        return RenderRepeatGroup(render_repeatgroup.view_group)
-    if field_render_type == "RepeatListRow":
-        return RenderRepeatGroup(render_repeatgroup.view_listrow)
-    if field_render_type == "RepeatGroupRow":
-        return RenderRepeatGroup(render_repeatgroup.view_grouprow)
-    renderer = get_field_base_renderer(field_render_type)
+        renderer = get_repeatgroup_renderer()
+    elif field_render_type == "RepeatGroupRow":
+        renderer = get_repeatgrouprow_renderer()
+    elif field_render_type == "RepeatListRow":
+        renderer = get_repeatgrouplist_renderer()
+    else:
+        renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.view()
     # Default to simple text for unknown renderer type
