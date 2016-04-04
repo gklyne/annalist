@@ -66,6 +66,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - rethink how nested renderers are processed? (Currently uses "view mode" fudge.)
     - Generalize to path?
     - cf. https://tools.ietf.org/html/rfc6901
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
 - [ ] Entity types list (and List list?) - provide link field to display list
 - [ ] Provide overview description and resource links at annalist.net - try to make this the "goto" for finding further information.
 
