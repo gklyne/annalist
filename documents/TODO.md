@@ -60,12 +60,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Add journal and note entry definitions (with image and audio resource fields) as installable collection.
 - [x] Check layout/field alignment, adjust CSS: check with tutorial data (photo example)
 - [x] Refactored handling of field rendering dispatch: hand off to individual render modules to eliminate special case logioc in find_renderers module.
-- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
-- [ ] Entity types list (and List list?) - provide link field to display list
-- [ ] Provide overview description and resource links at annalist.net - try to make this the "goto" for finding further information.
+- [x] Provide overview description and resource links at annalist.net.
 
 (release?)
 
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
+- [ ] Entity types list (and List list?) - provide link field to display list
 - [ ] Field option to display item(s) from list (e.g. domain).
     - Generalize to path in list objects?
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
