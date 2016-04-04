@@ -19,7 +19,7 @@ from annalist.layout import Layout
 
 import annalist.util
 
-import annalist.views.fields.render_utils
+import annalist.views.fields.find_renderers
 import annalist.views.fields.render_placement
 
 test_layout     = Layout(settings.BASE_DATA_DIR)    # e.g. ".../sampledata/data/"
@@ -40,7 +40,7 @@ def load_tests(loader, tests, ignore):
         tests.addTests(doctest.DocTestSuite(annalist.identifiers))
         tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.views.form_utils.fieldchoice))
-        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_utils))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.find_renderers))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
         tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))

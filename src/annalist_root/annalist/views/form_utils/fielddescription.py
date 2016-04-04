@@ -22,7 +22,7 @@ from annalist.models.recordfield            import RecordField
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
-from annalist.views.fields.render_utils     import (
+from annalist.views.fields.find_renderers   import (
     get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 

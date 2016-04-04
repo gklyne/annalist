@@ -360,7 +360,7 @@ class EntityTypeInfo(object):
             #
             # Also used in entityedit for getting @type URI/CURIE values.
             #
-            # Used in render_utils to get link to type record
+            # Used in bound_field to get link to type record
 
             #@@@@@@@
             # if ( (type_id not in get_built_in_type_ids()) and

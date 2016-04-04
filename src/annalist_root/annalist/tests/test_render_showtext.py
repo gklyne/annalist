@@ -15,7 +15,7 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.views.fields.render_utils     import get_field_base_renderer
+from annalist.views.fields.find_renderers   import get_field_base_renderer
 
 from annalist.tests.field_rendering_support import FieldRendererTestSupport
 
