@@ -83,7 +83,7 @@ def get_ref_audio_renderer():
     """
     Return field renderer object for token list values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("ref_audio",
         view_renderer=ref_audio_view_renderer(), 
         edit_renderer=ref_audio_edit_renderer(),
         )

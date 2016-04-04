@@ -178,7 +178,7 @@ def get_field_placement_renderer():
     """
     Return field renderer object for field placement values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("placement",
         view_renderer=placement_view_renderer(), 
         edit_renderer=placement_edit_renderer()
         )

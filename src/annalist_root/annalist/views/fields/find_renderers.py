@@ -134,6 +134,7 @@ def get_field_base_renderer(field_render_type):
             viewfile = _field_view_files.get(field_render_type, None)
             editfile = _field_edit_files.get(field_render_type, None)
             _field_renderers[field_render_type] = RenderFieldValue(
+                field_render_type,
                 view_file=viewfile, edit_file=editfile
                 )
         elif field_render_type in _field_get_renderer_functions:

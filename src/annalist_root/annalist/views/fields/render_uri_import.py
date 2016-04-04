@@ -130,7 +130,7 @@ def get_uri_import_renderer():
     """
     Return field renderer object for uri import value
     """
-    return RenderFieldValue(
+    return RenderFieldValue("uri_import",
         view_renderer=uri_import_view_renderer(), 
         edit_renderer=uri_import_edit_renderer(),
         )

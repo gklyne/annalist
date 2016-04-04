@@ -257,7 +257,7 @@ def get_ref_multifield_renderer():
     """
     Return multi-field renderer object
     """
-    r = RenderFieldValue(
+    r = RenderFieldValue("ref_multifields",
         col_head_view_renderer=RenderMultiFields_label(col_head_view),
         view_renderer=RenderMultiFields_value(view_multifield),
         edit_renderer=Select_edit_renderer(edit_select)

@@ -225,7 +225,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                     , 'repeat_prefix':      context['repeat_prefix']
                     })
 
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_int",
             view_renderer=render_int_view(), 
             edit_renderer=render_int_edit()
             )
@@ -249,7 +249,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             "field/annalist_edit_text.html",
             "Can't load edit template"
             )
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_compiled_template",
             view_template=view_template, 
             edit_template=edit_template
             )
@@ -267,7 +267,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
 
     # Rendering using template file name supplied
     def test_RenderFieldValue_files(self):
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_template",
             view_file="field/annalist_view_text.html", 
             edit_file="field/annalist_edit_text.html"
             )

@@ -443,7 +443,7 @@ class RenderGroupFieldValue(RenderFieldValue):
     Return field render factory for a repeated group based on 
     the supplied render value objects.
     """
-    def __init__(self, view_renderer=None, edit_renderer=None):
+    def __init__(self, render_type, view_renderer=None, edit_renderer=None):
         """
         Creates a renderer factory for a repeating value field.
 
@@ -452,42 +452,54 @@ class RenderGroupFieldValue(RenderFieldValue):
 
         Methods provided return composed renderers for a variety of contexts.
         """
-        super(RenderGroupFieldValue, self).__init__(
+        super(RenderGroupFieldValue, self).__init__(render_type,
             view_renderer=view_renderer, 
             edit_renderer=edit_renderer
             )
         # Override view/edit renderers to not use wrapper.
-        self._render_view = ModeWrapValueRenderer("view", self._view_renderer)
-        self._render_edit = ModeWrapValueRenderer("edit", self._edit_renderer)
+        self._render_view       = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_edit       = ModeWrapValueRenderer("edit", self._edit_renderer)
+        #@@TODO: remove labelling from templates instead?
+        self._render_label_view = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_label_edit = ModeWrapValueRenderer("edit", self._edit_renderer)
+        self._render_col_view   = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_col_edit   = ModeWrapValueRenderer("edit", self._edit_renderer)
         return
 
-        def label_view(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no label_view method")
+    # def label_view(self):
+    #     log.warning("RepeatGroup renderer has no label_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no label_view method")
 
-        def label_edit(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no label_edit method")
+    # def label_edit(self):
+    #     log.warning("RepeatGroup renderer has no label_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no label_edit method")
 
-        def col_head(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no col_head method")
+    # def col_head(self):
+    #     log.warning("RepeatGroup renderer has no col_head method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head method")
 
-        def col_head_view(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no col_head_view method")
+    # def col_head_view(self):
+    #     log.warning("RepeatGroup renderer has no col_head_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head_view method")
 
-        def col_head_edit(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no col_head_edit method")
+    # def col_head_edit(self):
+    #     log.warning("RepeatGroup renderer has no col_head_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head_edit method")
 
-        def col_view(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no col_view method")
+    # def col_view(self):
+    #     log.warning("RepeatGroup renderer has no col_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_view method")
 
-        def col_edit(self, context):
-            raise Annalist_Error("RepeatGroup renderer has no col_edit method")
+    # def col_edit(self):
+    #     log.warning("RepeatGroup renderer has no col_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_edit method")
 
 
 def get_repeatgroup_renderer():
     """
     Return field renderer object for RepeatGroup (labeled fields)
     """
-    return RenderGroupFieldValue(
+    return RenderGroupFieldValue("repeatgroup",
         view_renderer=RenderRepeatGroup(view_group),
         edit_renderer=RenderRepeatGroup(edit_group)
         )
@@ -496,7 +508,7 @@ def get_repeatgrouprow_renderer():
     """
     Return field renderer object for RepeatGroup as row (col headier labels)
     """
-    return RenderGroupFieldValue(
+    return RenderGroupFieldValue("repeatgrouprow",
         view_renderer=RenderRepeatGroup(view_grouprow),
         edit_renderer=RenderRepeatGroup(edit_grouprow)
         )
@@ -505,9 +517,9 @@ def get_repeatlistrow_renderer():
     """
     Return field renderer object for RepeatGroup as list (col header labels)
     """
-    return RenderGroupFieldValue(
+    return RenderGroupFieldValue("repeatlistrow",
         view_renderer=RenderRepeatGroup(view_listrow),
-        edit_renderer=Template("@@repeatgrouplist_renderer cannot be used for editing@@")
+        edit_renderer=Template("@@repeatlistrow_renderer cannot be used for editing@@")
         )
 
 # End.

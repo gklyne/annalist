@@ -136,7 +136,7 @@ def get_file_upload_renderer():
     """
     Return field renderer object for uri import value
     """
-    return RenderFieldValue(
+    return RenderFieldValue("file_upload",
         view_renderer=File_upload_view_renderer(), 
         edit_renderer=File_upload_edit_renderer(),
         )

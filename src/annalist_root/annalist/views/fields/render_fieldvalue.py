@@ -57,7 +57,8 @@ with_tooltip = "{{field.field_tooltip|safe}}"
 #         save renderer for label in class init, based on (reduced) label_template (above)
 
 # Wrap field label
-label_wrapper_template = ( "<!-- label_wrapper_template -->"+
+label_wrapper_template = ( 
+    # """<!-- label_wrapper_template ({{field.field_render_type}}) -->"""+
     """<div class="view-label {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     "</div>"""
@@ -65,7 +66,8 @@ label_wrapper_template = ( "<!-- label_wrapper_template -->"+
 
 # Wrap bare value (e.g. column value)
 def value_wrapper_template(tooltip):
-    return ( # "<!-- value_wrapper_template -->"+
+    return ( 
+        # """<!-- value_wrapper_template ({{field.field_render_type}}) -->"""+
         """<div class="view-value {{field.field_placement.field}}"%s>\n"""+
         """  {%% include value_renderer %%}\n"""+
         """</div>"""
@@ -76,7 +78,8 @@ edit_value_wrapper_template = value_wrapper_template(with_tooltip)
 
 # Wrap value and include label
 def label_value_wrapper_template(tooltip):
-    return ( # "<!-- label_value_wrapper_template -->"+
+    return (
+        # """<!-- label_value_wrapper_template ({{field.field_render_type}}) -->"""+
         """<div class="{{field.field_placement.field}}"%s>\n"""+
         """  <div class="row view-value-row">\n"""+
         """    <div class="view-label {{field.field_placement.label}}">\n"""+
@@ -93,7 +96,8 @@ label_view_value_wrapper_template = label_value_wrapper_template(no_tooltip)
 label_edit_value_wrapper_template = label_value_wrapper_template(with_tooltip)
 
 # Wrap field label with column heading styling
-col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
+col_head_wrapper_template = ( 
+    # """<!-- col_head_wrapper_template ({{field.field_render_type}}) -->"""+
     """<div class="view-label col-head {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
@@ -101,7 +105,8 @@ col_head_wrapper_template = ( # "<!-- col_head_wrapper_template -->"+
 
 # Wrap value with column value styling; include label on small displays only
 def col_label_value_wrapper_template(tooltip):
-    return ( # "<!-- col_label_value_wrapper_template -->"+
+    return ( 
+        # """<!-- col_label_value_wrapper_template ({{field.field_render_type}}) -->"""+
         """<div class="{{field.field_placement.field}}"%s>\n"""+
         """  <div class="row show-for-small-only">\n"""+
         """    <div class="view-label small-12 columns">\n"""+
@@ -202,7 +207,7 @@ class RenderFieldValue(object):
     (In the case of the `label` renderer, the field description is enough.)
     """
 
-    def __init__(self, 
+    def __init__(self, render_type,
         view_renderer=None, edit_renderer=None, 
         col_head_view_renderer=None, col_head_edit_renderer=None, 
         view_template=None, edit_template=None,
@@ -232,6 +237,7 @@ class RenderFieldValue(object):
         """
         # log.info("RenderFieldValue: viewrender %s, editrender %s"%(viewrender, edit_file))
         super(RenderFieldValue, self).__init__()
+        self._render_type = render_type
         # Save label renderer
         self._label_renderer = Template(label_template)
         # Save view renderer
@@ -279,8 +285,8 @@ class RenderFieldValue(object):
   
     def __repr__(self):
         return (
-            "RenderFieldValue(view_renderer=%r, edit_renderer=%r)"%
-            (self._view_renderer, self._edit_renderer)
+            "RenderFieldValue(render_type=%s, view_renderer=%r, edit_renderer=%r)"%
+            (self._render_type, self._view_renderer, self._edit_renderer)
             )
 
     # Helpers

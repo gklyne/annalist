@@ -79,7 +79,7 @@ def get_text_markdown_renderer():
     """
     Return field renderer object for Markdown text
     """
-    return RenderFieldValue(
+    return RenderFieldValue("markdown",
         view_renderer=text_markdown_view_renderer(), 
         edit_renderer=text_markdown_edit_renderer(),
         )
@@ -88,7 +88,7 @@ def get_show_markdown_renderer():
     """
     Return field renderer object for display-only (no input) of Markdown text
     """
-    return RenderFieldValue(
+    return RenderFieldValue("show_markdown",
         view_renderer=text_markdown_view_renderer(), 
         edit_renderer=text_markdown_view_renderer(),
         )

@@ -89,7 +89,7 @@ def get_uri_link_renderer():
     """
     Return field renderer object for URI link values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("uri_link",
         view_renderer=uri_link_view_renderer(), 
         edit_renderer=uri_link_edit_renderer(),
         )

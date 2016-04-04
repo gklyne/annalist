@@ -273,7 +273,7 @@ def get_select_renderer():
     """
     Return field renderer object for value selector (with '+' button)
     """
-    return RenderFieldValue(
+    return RenderFieldValue("select",
         view_renderer=Select_view_renderer(view_select),
         edit_renderer=Select_edit_renderer(edit_select),
         )
@@ -282,7 +282,7 @@ def get_choice_renderer():
     """
     Return field renderer object for value selector (without '+' button)
     """
-    return RenderFieldValue(
+    return RenderFieldValue("choice",
         view_renderer=Select_view_renderer(view_choice),
         edit_renderer=Select_edit_renderer(edit_choice),
         )
@@ -291,7 +291,7 @@ def get_entitytype_renderer():
     """
     Return field renderer object for entitytype
     """
-    return RenderFieldValue(
+    return RenderFieldValue("entitytype",
         view_renderer=Select_view_renderer(view_entitytype),
         edit_renderer=Select_edit_renderer(edit_entitytype),
         )
@@ -300,7 +300,7 @@ def get_view_choice_renderer():
     """
     Return field renderer object for entitytype
     """
-    return RenderFieldValue(
+    return RenderFieldValue("view_choice",
         view_renderer=Select_view_renderer(view_view_choice),
         edit_renderer=Select_edit_renderer(edit_view_choice),
         )
