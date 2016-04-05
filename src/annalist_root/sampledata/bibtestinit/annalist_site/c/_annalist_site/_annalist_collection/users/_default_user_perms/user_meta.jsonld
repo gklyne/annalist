@@ -6,5 +6,5 @@
 , "rdfs:label":             "Default permissions"
 , "rdfs:comment":           "# Default permissions\r\n\r\nDefault permissions for authenticated user."
 , "annal:user_uri":         "annal:User/_default_user_perms"
-, "annal:user_permissions": ["VIEW"]
+, "annal:user_permission":  ["VIEW"]
 }

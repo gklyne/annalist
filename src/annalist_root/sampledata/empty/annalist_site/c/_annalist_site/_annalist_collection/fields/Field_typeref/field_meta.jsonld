@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_typeref"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Refer to type"
-, "rdfs:comment":               "Type whose id values are candidates for a field value.  Used with enumerated value fields as the basis fort selecting candidatevalues to include in a dropdown list.  (See also field 'Value restriction'.)"
+, "rdfs:comment":               "Type whose id values are candidates for a field value.  Used with enumerated value fields as the basis for selecting candidate values to include in a dropdown list.  (See also field 'Value restriction'.)"
 , "annal:field_name":           "Field_typeref"
 , "annal:field_render_type":    "Enum_optional"
 , "annal:field_value_mode":     "Value_direct"
