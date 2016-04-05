@@ -87,7 +87,7 @@
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to Vx.y.z"`
+    - `git commit -m "Master branch updated to V0.1.30"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
