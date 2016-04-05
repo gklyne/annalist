@@ -99,7 +99,7 @@
     - On GitHub, create a new release
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
-    - The DOI in the badge should diaplay the new release
+    - The DOI in the badge should display the new release
     - It may take a few minutes for the new DOI to resolve.
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
