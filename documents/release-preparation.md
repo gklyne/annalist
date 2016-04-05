@@ -4,7 +4,8 @@
 
 - [ ] Feature freeze
 - [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (remove old files) - python setup.py clean --all
+- [ ] Delete contents of build directory (remove old files) 
+    - python setup.py clean --all
 - [ ] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
@@ -138,6 +139,7 @@ The following sequence must be run on any system with docker installed (cf. ssh-
 Use a well-connected Linux system for the following steps, and set the python virtual environment.
 
     # On dev.annalist.net:
+    . anenv/bin/activate
     ANNALIST=~/github/gklyne/annalist
     cd ${ANNALIST}/src
     git checkout master

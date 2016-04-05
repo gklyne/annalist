@@ -6,7 +6,7 @@ A summary of issues to be resolved for product release can be seen in the [issue
 
 ## Current release: 0.1.30
 
-(See "History" below for morte details about this and previous releases)
+(See "History" below for more details about this and previous releases)
 
 This release provides improvements to data evolution, collection management, user interface changes to facilitate navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collections.
 
