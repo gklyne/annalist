@@ -1,0 +1,18 @@
+{ "@id":                "./"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Entity_see_also_r"
+, "annal:type_id":      "_group"
+, "annal:type":         "annal:Field_group"
+, "annal:record_type":  "annal:Entity_see_also_group"
+, "annal:uri":          "annal:group/_initial_values"
+, "rdfs:label":         "Links to further information"
+, "rdfs:comment":       "Repeat field 'Further information'"
+, "annal:add_field":    false
+, "annal:group_fields":
+    [ { "annal:field_id":         "_field/Entity_see_also"
+      , "annal:property_uri":     "@id"
+      , "annal:field_placement":  "small:0,12"
+      }
+    ]
+}

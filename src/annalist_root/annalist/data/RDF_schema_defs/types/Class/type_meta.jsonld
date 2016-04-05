@@ -1,0 +1,23 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Class",
+  "annal:supertype_uri": [
+    {
+      "@id": "rdfs:Resource"
+    }
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Classes",
+  "annal:type_view": "_view/Class",
+  "annal:uri": "rdfs:Class",
+  "rdfs:comment": "# Class of resources\r\n\r\nClass entities describe a class of resources, which may be associated with the `rdf:type` of an entity, or the `rdfs:domain` or `rdfs:range` of a property.\r\n",
+  "rdfs:label": "Class"
+}

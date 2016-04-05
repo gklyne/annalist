@@ -87,6 +87,7 @@ _old_*
 /pyenv
 /anenv
 /setupenv
+/attic
 # /spike
 /spike/jsonld_context/rdflibenv
 /src/annalist_root/devel

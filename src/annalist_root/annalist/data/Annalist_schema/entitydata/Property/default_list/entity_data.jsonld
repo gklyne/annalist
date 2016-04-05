@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "default_list",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:default_list",
+  "rdfs:comment": "# Collection default list\r\n\r\nUsed in collection metadata to referenced the default list that is displayed for the collection.\r\n\r\n(See also `annal:default_view_id`, `annal:default_view_type`, and `annal:default_view_entity`.)\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Collection"
+    }
+  ],
+  "rdfs:label": "Collection default list",
+  "rdfs:range": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

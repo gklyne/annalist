@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "default_view",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:default_view",
+  "rdfs:comment": "# List default view\r\n\r\nUsed in a list definition to indicate the default view that is displayed by the **New**, **Copy** anbd **Edit** buttons.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:label": "List default view",
+  "rdfs:range": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

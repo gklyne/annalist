@@ -1,4 +1,3 @@
-
 # Annalist TODO
 
 NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
@@ -15,81 +14,90 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] New demo screencasts
 
 
-# Version 0.1.27, towards 0.1.28
+# Version 0.1.29, towards 0.1.30
 
-- [x] BUG: 500: Server error: add_inferred_values_to_entity called with no type information available.
-    - Changed calling enumeration logic to log a warning rather than error when referenced type is absent.
-    - May want to revisit to enumerate values without implied values if type is missing.
-    - rename "inferred_values" to "implied values".
-- [x] Provide option to remove type constraint when listing entities.
-- [x] Set default from list view: clear default view details so that default reverts to list
-- [x] Update menu bar to indicate explicit/default type id.  Also list id.
-- [x] Tweak CSS so that links in display columns wrap rather than overlap the next column
-- [x] Re-work entity enumeration to avoid use of predefined built-in types. Fix some enumeration scope bugs.
-- [x] Support references to uploaded OR linked images via subtyping.
-- [x] When referencing fields of a target entity, include implied fields.
-- [x] Adjust use of logging level settings in entity list view.
-- [x] In FieldDescription, setup for value 'field_entity_subtypes' (~L150) - use `scope="all"`.
-- [x] Place entity/view labels at start of page title for entity view, edit and list pages
-    - Refactored entityedit for greater symmetry across GET/POST handling
-    - displayinfo.context_data is used to supply additional context needed
-- [x] Place list label at start of page title for lists
-- [x] If no label specified, default to ID with '_' replaced by space
-- [x] If no comment specified, default to label
-
-- [x] Use site comment field to populate help panes on site; use Markdown.
-- [x] Use collection comment field to populate help panes on collection edit display; use Markdown.
-- [x] Use list comment to populate the help pane for a list display.
-- [x] Use view description comment as help text on forms
-- [x] Add/update online help documentation to site data definitions
-    - [x] types
-    - [x] views
-    - [x] lists
-    - [x] field groups
-    - [x] enumerations (add label as header)
-    - [x] user permissions
-    - [x] vocabulary namespaces
-- [x] Top menu bar vertical alignment: menu text should use common baseline
-    - A bit hacky - had to pixel-tweak the height - is there a better way?
-    - Converted pixels to REMs - maybe this will be slightly more consistent
-- [x] Use field comment text as tooltip on forms, to tell user how a field value is used
-    - [x] Update renderer logic to include tool tips based on field help text
-    - [x] Update test cases to avoid help-text sensitivity
-    - [x] Field `Coll_parent` needs option fopr optional reference without button
-    - [x] Update field help text to match
-    - [x] Update test cases
-    - [x] Check field names in help text for type/view/list/etc views (see above for list to check)
-- [x] Add title attributes to all buttons - used as tooltip
-- [x] Create new field type for namespace/vocab id - label 'Prefix'
+- [x] Add data migration logic for vocabs
+- [x] Think further about how data migration can be handled.  
+    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
+    - For now, using supertypes and proprty aliases, with migration report option in annalist-manager.
+- [x] annalist-manager option for migrating collection data
+    - [x] `annalist-manager migratecollection`: needs to load and save every entity in a collection and force rewriting of context data.  
+    - [x] test
+    - [x] also regenerate collection context data
+- [x] annalist-manager options to install/copy collection data
+    - [x] `annalist-manager copycollection from to` (copy existing)
+    - [x] `annalist-manager installcollection name` (predefined)
+- [x] When supertypes are changed, need to regenerate @type fields of instances?
+    - [x] refactor methods used for initialization, copy and migration
+    - [x] add migration option on customize page
+- [x] Add "Customize" button on entity edit and view pages, enabled with config permissions
+- [x] List view: reorganize scope/type selection: 
+    - [x] use "List <type>" and "List" buttons, with checkbox for "Scope all".
+    - [x] Suppress "List <type>" if no type id is defined by the URI.
+- [x] Add "Collection metadata" button to collection edit (customize) view.
+- [x] Drop tooltips from fields in view-only mode (they weren't very helpful).
+- [x] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
+- [x] Site vocabulary changes
+    - [x] `Entity_see_also_repeat` -> `Entity_see_also_r`
+    - [x] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
+    - [x] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
+    - NOTE: only references found are in site data, so should be superseded by software update.
+    - Check when software updates are applied to various deployments
+- [x] When copying entity, generate new ID using id of opriginal entity
+    - (entity.allocate_new_id, called by displayinfo.get_entity_info, called by entityedit.view_setup)
+- [x] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+    - Add migration entry in models.recordfield
+- [x] Canonicalize JSON generation to minimize arbitrary version differences
+- [x] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
+    - [x] When creating repeat field for field, display the created field.
+    - [x] Create definitions for schema entities: classes and properties
+    - [x] Create records for classes
+    - [x] Create records for properties
+    - [x] Separate collection into `RDF_schema_defs` and `Annalist_schema`
+    - [x] Add `RDF_schema_defs` and `Annalist_schema` as predefined collection data
+        - NOTE: current limitations of Annalist mean that the exported JSON-LD for RDF schema does not directly use standard RDF terms for everything.  For example, subclasses are referenced using a local URI reference rather than the global absolute URI, which can be obtained by defererencing the given reference and extracting the `annal:uri` value from there.
+- [x] Refactor and review label/comment creation for entities generated by task buttons.
+- [x] Add journal and note entry definitions (with image and audio resource fields) as installable collection.
+- [x] Check layout/field alignment, adjust CSS: check with tutorial data (photo example)
+- [x] Refactored handling of field rendering dispatch: hand off to individual render modules to eliminate special case logioc in find_renderers module.
+- [x] Provide overview description and resource links at annalist.net.
 
 (release?)
 
-- [ ] Edit collection metadata button on collection edit (customize) view.
-- [ ] Collection edit (customize) option from view?
-- [ ] Need to establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
-    - relative references are unreliable, and collection name 
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
+- [ ] Entity types list (and List list?) - provide link field to display list
+- [ ] Field option to display item(s) from list (e.g. domain).
+    - Generalize to path in list objects?
+    - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
+- [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
+- [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
+- [ ] Keyboard shortcuts on forms - C-S to save, ...?
+- [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
+    - relative references are unreliable 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 - [ ] Implement at least one other identify provider (ORCID?)
+    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+        - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+    - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
+        - hard to find actual provider service other than Google
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
-- [ ] Task button option to copy type+view+list and update names and URIs
-- [ ] Create schema definitions in Annalist for ANNAL namespace
 
-- [ ] When supertypes are changed, need to regenerate @type fields of instances
-    - Or be smarter about how entries for listing are selected.  
-    - Link to migration?
-- [ ] Think further about how data migration can be handled.  
-    - E.g. several properties used in the Carolan Guitar data look inappropriate when viewed as JSON-LD: there should be a way to rename the properties *and* migrate the data. (Combine existing migration and alias logic?)
-- [ ] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
-- [ ] Add image and audio resource fields to site data
-- [ ] Add journal and note entry definitions to site data
+- [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
-    - [x] avoid explicit reference to `_annalist_collection`?
+    - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
+        - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
+        - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
     - [ ] review base URI designation in JSON-LD:
         - note `@base` ignored if used in external contexts;
         - can specified value be relative? YES:
@@ -101,30 +109,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
         - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
             - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
-    - [ ] collections and repeated properties:
-        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>.
-        - could use `@id`?
+    - [x] avoid explicit reference to `_annalist_collection`?
+    - [x] collections and repeated properties:
+        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions
     - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
-- [ ] annalist-manager option for migrating collection data
-    - needs to load and save every entity in a collection and force rewriting of context data.  
-    - or option on customize page?
-    - also regenerate collection context data
-- [ ] annalist-manager options to copy Bibliographic and maybe other built-in collection data
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
 
-- [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
-    - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-- [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
-    - hard to find actual provider service other than Google
 
 (feature freeze for V0.9alpha?)
 (0.5?)
@@ -213,6 +212,7 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Absorb groups into field defs?
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
@@ -255,6 +255,9 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Generate default value type for field based on render type + value mode (to help with consistency)
+    - See notes.
+- [ ] It would be nice if link field tooltips describe what they link to.
 - [ ] Rethink collection overview that allows users to see what is present
     - original thoughts, but review in light of default-view approach adopted:
         - initially, just provide a "What's here" list that displays default list label for all types + link to display list.
@@ -290,23 +293,13 @@ Notes for Future TODOs:
     - see EntityTypeInfo.__init__
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
-- [ ] consider option for repeat group rows without headings? (simple repeat group doesn't hack it).
+- [ ] consider render type option for repeat group rows without headings? (simple repeat group doesn't hack it).
     - Should be easy to add.  Just need a name.
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
 - [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
 - [ ] field renderer for unified import or upload resource?
-- [ ] `annal:member` - used to "lift" repeated values to the property that references a repeat group?
-    - e.g. see /annalist/c/Carolan_Guitar/d/_field/Event_r/
-    - DOES NOT WORK:  if used to reference group, can only have one repeat group; if used to reference item, cannot use item field in isolation.
-    - Options (#1 looking favourite):
-        1. use same property for group and field; recognize and elide when generating/reading RDF?
-        2. use auto-generated unique property for group ref.  Can recognize for RDF?
-        3. group description to use 'annal:member' property override
-    - IMPLEMENTING: use `owl:sameAs` for singleton dictionaries in a JSON list.
-        - equivalent to `[ owl:sameAs <some_resource> ]`
-        - (could use `@id` as key ?)
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.

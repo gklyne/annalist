@@ -232,7 +232,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[0]['field_property_uri'], "annal:id")
         self.assertEqual(head_fields[0]['field_render_type'],  "EntityId")
         self.assertEqual(head_fields[0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(head_fields[0]['field_value_type'],  "annal:Slug")
         self.assertEqual(head_fields[0]['field_placement'].field, "small-4 medium-3 columns")
         self.assertEqual(head_fields[0]['field_value'],        "")
         # 2nd field
@@ -243,7 +243,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[1]['field_property_uri'], "annal:field_render_type")
         self.assertEqual(head_fields[1]['field_render_type'],  "Enum_choice")
         self.assertEqual(head_fields[1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[1]['field_target_type'],  "annal:Slug")
+        self.assertEqual(head_fields[1]['field_value_type'],  "annal:Slug")
         self.assertEqual(head_fields[1]['field_placement'].field, "small-4 medium-3 columns")
         # 3rd field
         self.assertEqual(head_fields[2]['field_id'],           'Field_type')
@@ -253,7 +253,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[2]['field_property_uri'], "annal:field_value_type")
         self.assertEqual(head_fields[2]['field_render_type'],  "Identifier")
         self.assertEqual(head_fields[2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[2]['field_target_type'],  "annal:Identifier")
+        self.assertEqual(head_fields[2]['field_value_type'],  "annal:Identifier")
         self.assertEqual(head_fields[2]['field_placement'].field, "small-12 medium-3 columns show-for-medium-up")
         # 3th field
         self.assertEqual(head_fields[3]['field_id'],           'Entity_label')
@@ -263,7 +263,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(head_fields[3]['field_property_uri'], "rdfs:label")
         self.assertEqual(head_fields[3]['field_render_type'],  "Text")
         self.assertEqual(head_fields[3]['field_value_mode'],   "Value_direct")
-        self.assertEqual(head_fields[3]['field_target_type'],  "annal:Text")
+        self.assertEqual(head_fields[3]['field_value_type'],  "annal:Text")
         self.assertEqual(head_fields[3]['field_placement'].field, "small-4 medium-3 columns")
         # Entities
         entities = context_list_entities(r.context)
@@ -289,7 +289,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('List_target_type',  "Identifier",    "annal:Identifier",    "List entity type")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
-            , ('Type_uri',          "Identifier",    "annal:Identifier",    "URI")
+            , ('Type_uri',          "Identifier",    "annal:Identifier",    "Type URI")
             , ('List_choice',       "Enum_choice",   "annal:Slug",          "List view")
             , ('View_choice',       "View_choice",   "annal:Slug",          "Choose view")
             , ('Group_field_sel',   "Enum_optional", "annal:Slug",          "Field id")
@@ -304,7 +304,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_target_type'):
+                                'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
                     break
@@ -324,10 +324,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         curi     = continuation_params_url(u)
         cont     = uri_params({"continuation_url": curi})
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
-        tooltip3 = r.context['fields'][2]['field_help']
-        tooltip4 = r.context['fields'][3]['field_help']
+        tooltip1 = "" # 'title="%s"%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"%r.context['fields'][1]['field_help']
+        tooltip3 = "" # 'title="%s"%r.context['fields'][2]['field_help']
+        tooltip4 = "" # 'title="%s"%r.context['fields'][3]['field_help']
         rowdata1 = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -336,16 +336,16 @@ class EntityInheritListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
                   </div>
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip2)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
-                  <div class="view-value small-12 medium-3 columns show-for-medium-up" title="%(tooltip3)s">
+                  <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:Text</span>
                   </div>
-                  <div class="view-value small-4 medium-3 columns" title="%(tooltip4)s">
+                  <div class="view-value small-4 medium-3 columns" %(tooltip4)s>
                     <span>Address</span>
                   </div>
                 </div>
@@ -436,7 +436,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_target_type'):
+                                'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
                         self.assertEqual(item_field['field_value'], f[fid])
                     break

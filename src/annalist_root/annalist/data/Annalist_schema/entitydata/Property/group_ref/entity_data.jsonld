@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "group_ref",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:group_ref",
+  "rdfs:comment": "# Field group reference\r\n\r\nUsed in a field definition that itself contains or references one or more fields (e.g., repeat groups, fields of referenced entity).  The value indicates a field group entity, which in turn indicates the contained of referenced fields.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field group",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field_group"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

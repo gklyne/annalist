@@ -52,6 +52,30 @@ class RecordType(EntityData):
         # log.debug("RecordType %s: uri %s"%(type_id, self._entityurl))
         return
 
+    def _migrate_values(self, entitydata):
+        """
+        Type definition entity format migration method.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with format migrations applied.
+
+        NOTE:  implementations are free to apply migrations in-place.  The resulting 
+        entitydata should be exctly as the supplied data *should* appear in storage
+        to conform to the current format of the data.  The migration function should 
+        be idempotent; i.e.
+            x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        # Convert format of supertype URIs to use '@id' in list
+        if ANNAL.CURIE.supertype_uris in entitydata:
+            if isinstance(entitydata[ANNAL.CURIE.supertype_uris], list):
+                entitydata[ANNAL.CURIE.supertype_uri] = (
+                    [ {'@id': st[ANNAL.CURIE.supertype_uri] } 
+                      for st in entitydata[ANNAL.CURIE.supertype_uris]
+                    ])
+                del entitydata[ANNAL.CURIE.supertype_uris]
+        # Return result
+        return entitydata
+
     def _migrate_filenames(self):
         """
         Override EntityData method

@@ -24,6 +24,7 @@ from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist                       import message
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.annalistuser   import AnnalistUser
@@ -69,6 +70,9 @@ from entity_testsitedata    import (
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
+    )
+from entity_testcolldata    import (
+    collectiondata_view_url
     )
 
 #   -----------------------------------------------------------------------------
@@ -151,7 +155,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[RDFS.CURIE.label],               "Test User")
         self.assertEqual(ugp[RDFS.CURIE.comment],             "User user1: permissions for Test User in collection testcoll")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "mailto:testuser@example.org")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"])
         return
 
     def test_get_local_user_not_defined(self):
@@ -168,7 +172,7 @@ class CollectionTest(AnnalistTestCase):
     def test_get_local_user_missing_fields(self):
         # E.g. what happens if user record is created through default view?  Don't return value.
         d = annalistuser_create_values(user_id="user1")
-        d.pop(ANNAL.CURIE.user_permissions)
+        d.pop(ANNAL.CURIE.user_permission)
         usr = AnnalistUser.create(self.testcoll, "user1", d)
         ugp = self.testcoll.get_user_permissions("user1", "mailto:testuser@example.org")
         self.assertIsNone(ugp)
@@ -180,7 +184,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(ugp[ANNAL.CURIE.type_id],            "_user")
         self.assertEqual(ugp[RDFS.CURIE.label],               "Unknown user")
         self.assertEqual(ugp[ANNAL.CURIE.user_uri],           "annal:User/_unknown_user_perms")
-        self.assertEqual(ugp[ANNAL.CURIE.user_permissions],   ["VIEW"])
+        self.assertEqual(ugp[ANNAL.CURIE.user_permission],    ["VIEW"])
         return
 
     def test_get_site_user_uri_mismatch(self):
@@ -444,7 +448,10 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection coll1</title>")
-        self.assertContains(r, "<h3>Customize collection coll1</h3>")
+        self.assertContains(r, 
+            '<h2 class="page-heading">Customize collection: Collection coll1</h2>', 
+            html=True
+            )
         return
 
     def test_get_edit_no_collection(self):
@@ -557,6 +564,30 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], TestHostUri+erroruri)
+        return
+
+    def test_post_migrate(self):
+        form_data = (
+            { "migrate":  "Migrate data"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        completeduri = self.edit_url+r"\?info_head=.*\&info_message=.*"
+        self.assertMatch(r['location'], TestHostUri+completeduri)
+        return
+
+    def test_post_metadata(self):
+        form_data = (
+            { "metadata":  "Collection metadata"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        metadataurl = collectiondata_view_url(coll_id="coll1", action="edit")
+        self.assertEqual(r['location'], TestHostUri+metadataurl+self.continuation)
         return
 
     def test_post_close(self):

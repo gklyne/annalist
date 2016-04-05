@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_id",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_id",
+  "rdfs:comment": "# Referenced field id\r\n\r\nUsed in view, list and field group definitions to reference a field definition that appears in the defined display.\r\n\r\nAppears as a property of an internal resource, possibly along with `annal:property_uri` and `annal:field_placement`, which describes a displayed field.\r\n\r\nSee also `annal:view_fields`, `annal:list_fields` and `annal:group_fields`.\r\n",
+  "rdfs:domain": [],
+  "rdfs:label": "Referenced field id",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

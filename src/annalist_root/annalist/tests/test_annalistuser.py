@@ -151,7 +151,7 @@ class AnnalistUserTest(AnnalistTestCase):
         uev.update(
             { 'rdfs:label':             'Unknown user'
             , 'annal:user_uri':         'annal:User/_unknown_user_perms'
-            , 'annal:user_permissions': ['VIEW']
+            , 'annal:user_permission':  ['VIEW']
             })
         uev.pop('rdfs:comment', None)
         self.assertDictionaryMatch(uld, uev)
@@ -351,7 +351,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip4)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        <span>URI</span>
+                        <span>User URI</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="User_uri" 

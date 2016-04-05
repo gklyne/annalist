@@ -25,7 +25,7 @@ The main visible change is in the addition of customizable help and tooltip text
 This supports key documentation in the user interface itself, as well as in separate documentation files.  Other changes include usability and presentation improvements, and some bug fixes.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/....
+https://groups.google.com/d/msg/annalist-discuss/XhLX3BRVQ2w/sYCw9MPPAgAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

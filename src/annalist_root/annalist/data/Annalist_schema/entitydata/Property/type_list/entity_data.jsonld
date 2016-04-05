@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "type_list",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:type_list",
+  "rdfs:comment": "# Type default list\r\n\r\nDefault list definition used when listing instances of a type.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "rdfs:label": "Type default list",
+  "rdfs:range": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "User",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:User",
+  "rdfs:comment": "# User permissions definition\r\n\r\nThe class of entities that define user permissions.  A user permissions instance is associated with an Annalist collection or site, and associates a user id + URI (typically based on an authenticated email address) with a set of permissions applicable for that user in the associated collection, or across the Annaist site.  Collection permissions override site-wide permissions.\r\n\r\nTwo special user URIs are recognized:\r\n\r\n1. `annal:User/_default_user_perms`: permissions applied to any authenticated user for whom explicit permissions are not definbed\r\n2. `annal:User/_unknown_user_perms`: permissions applied to access requests by unauthenticated users.\r\n",
+  "rdfs:label": "User permissions",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/Entity"
+    }
+  ]
+}

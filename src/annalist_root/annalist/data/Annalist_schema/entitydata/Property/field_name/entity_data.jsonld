@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_name",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_name",
+  "rdfs:comment": "# Field name\r\n\r\nUsed in a field definition to specify a name other than the field definition entity id to be used as the field value identifier in the generated HTML form.  For most purposes, the default form value name (the field id) should be used;  this option exists to resolve some internal Annalist requirements, and is will probably be deprecated in a future release.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field name",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -6,5 +6,5 @@
 , "rdfs:label":             "Unknown user"
 , "rdfs:comment":           "# Unknown user permissions\r\n\r\nPermissions for unauthenticated user."
 , "annal:user_uri":         "annal:User/_unknown_user_perms"
-, "annal:user_permissions": ["VIEW"]
+, "annal:user_permission":  ["VIEW"]
 }

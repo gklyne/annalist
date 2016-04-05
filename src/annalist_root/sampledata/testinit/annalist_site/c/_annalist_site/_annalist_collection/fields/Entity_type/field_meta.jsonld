@@ -4,7 +4,7 @@
 , "annal:id":                   "Entity_type"
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Type"
-, "rdfs:comment":               "An identifier that identifies the corresponding entity type. Presents as a drop-down list of entity types for editing, andf as a hyperlink for viewing."
+, "rdfs:comment":               "An identifier that identifies the corresponding entity type. Presents as a drop-down list of entity types for editing, and as a hyperlink for viewing."
 , "annal:field_name":           "entity_type"
 , "annal:field_render_type":    "EntityTypeId"
 , "annal:field_value_mode":     "Value_direct"

@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "open_view",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:open_view",
+  "rdfs:comment": "# View/edit view definition?\r\n\r\nBy default, when viewing or editing an entity, a button is provided that switches to a view of the view definition being used.  In edit mode, this allows addition of new fields, or changes to existing ones. In view mode, it allows navigation of the view definition structure to discover details of how the form is constructed from entity data.\r\n\r\nView that are intended to be fixed (including most built-in views) may specify a value of `false` for this field, in which case the option to view or edit the view definition is not offered.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:label": "Open view flag",
+  "rdfs:range": [
+    {
+      "@id": "annal:Boolean"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

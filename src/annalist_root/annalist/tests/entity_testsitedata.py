@@ -212,12 +212,12 @@ def get_site_bib_views():
 
 site_field_groups = (
     [ FieldChoice("_group/_initial_values")
-    , FieldChoice("_group/Entity_see_also_repeat",     label="Links to further information")
-    , FieldChoice("_group/Group_field_group",          label="Group field fields"         )
-    , FieldChoice("_group/List_field_group",           label="List field fields"          )
-    , FieldChoice("_group/Type_alias_group",           label="Field alias fields"         )
-    , FieldChoice("_group/Type_supertype_uri_group",   label="Supertype URIs"             )
-    , FieldChoice("_group/View_field_group",           label="View field fields"          )
+    , FieldChoice("_group/Entity_see_also_r",       label="Links to further information" )
+    , FieldChoice("_group/Group_field_group",       label="Group field fields"           )
+    , FieldChoice("_group/List_field_group",        label="List field fields"            )
+    , FieldChoice("_group/Type_alias_group",        label="Field alias fields"           )
+    , FieldChoice("_group/Type_supertype_uri_r",    label="Supertype URIs"               )
+    , FieldChoice("_group/View_field_group",        label="View field fields"            )
     ]) 
 
 def get_site_field_groups_sorted():
@@ -239,7 +239,7 @@ site_default_entity_fields = (
     , FieldChoice("_field/Entity_comment",             label="Comment"          )
     , FieldChoice("_field/Entity_id",                  label="Id"               )
     , FieldChoice("_field/Entity_label",               label="Label"            )
-    , FieldChoice("_field/Entity_see_also_repeat",     label="See also"         )
+    , FieldChoice("_field/Entity_see_also_r",          label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )
     ])
 
@@ -295,7 +295,7 @@ site_field_fields = (
     , FieldChoice("_field/Field_missing",              label="Missing"             )
     , FieldChoice("_field/Field_placeholder",          label="Placeholder"         )
     , FieldChoice("_field/Field_placement",            label="Position/size"       )
-    , FieldChoice("_field/Field_property",             label="Property"            )
+    , FieldChoice("_field/Field_property",             label="Property URI"        )
     , FieldChoice("_field/Field_render",               label="Field render type"   )
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
@@ -317,7 +317,7 @@ site_group_fields = (
 site_group_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Group_field_placement",      label="Position/size"       )
-    , FieldChoice("_field/Group_field_property",       label="Property"            )
+    , FieldChoice("_field/Group_field_property",       label="Property URI"        )
     , FieldChoice("_field/Group_field_sel",            label="Field id"            )
     ])
 
@@ -338,7 +338,7 @@ site_list_fields = (
 site_list_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/List_field_placement",       label="Position/size"       )
-    , FieldChoice("_field/List_field_property",        label="Property"            )
+    , FieldChoice("_field/List_field_property",        label="Property URI"        )
     , FieldChoice("_field/List_field_sel",             label="Field id"            )
     ])
 
@@ -350,7 +350,7 @@ site_type_fields = (
     , FieldChoice("_field/Type_label",                 label="Label"               )
     , FieldChoice("_field/Type_list",                  label="Default list"        )
     , FieldChoice("_field/Type_supertype_uris",        label="Supertype URIs"      )
-    , FieldChoice("_field/Type_uri",                   label="URI"                 )
+    , FieldChoice("_field/Type_uri",                   label="Type URI"            )
     , FieldChoice("_field/Type_view",                  label="Default view"        )
     ])
 
@@ -371,7 +371,7 @@ site_user_fields = (
     , FieldChoice("_field/User_id",                    label="User Id"             )
     , FieldChoice("_field/User_name",                  label="User name"           )
     , FieldChoice("_field/User_permissions",           label="Permissions"         )
-    , FieldChoice("_field/User_uri",                   label="URI"                 )
+    , FieldChoice("_field/User_uri",                   label="User URI"            )
     ])
 
 site_view_fields = (
@@ -388,7 +388,7 @@ site_view_fields = (
 site_view_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/View_field_placement",       label="Position/size"       )
-    , FieldChoice("_field/View_field_property",        label="Property"            )
+    , FieldChoice("_field/View_field_property",        label="Property URI"        )
     , FieldChoice("_field/View_field_sel",             label="Field id"            )
     ])
 

@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "default_view_id",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "default_view_id",
+  "rdfs:comment": "# Collection default view id\r\n\r\nUsed on collection metadata, together with `annal:default_view_type` and `annal:default_view_entity`, to define a default view for the collection.\r\n\r\nIf defined, these values override `annal:default_list` to define the \"front page\" for a collection.  This option allows a custom page to be created that describes the collection and defines links to its important resources.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Collection"
+    }
+  ],
+  "rdfs:label": "Collection default view id",
+  "rdfs:range": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -89,7 +89,7 @@ def get_field_tokenset_renderer():
     """
     Return field renderer object for token list values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("tokenset",
         view_renderer=tokenset_view_renderer(), 
         edit_renderer=tokenset_edit_renderer(),
         )

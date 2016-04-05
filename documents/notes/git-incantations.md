@@ -120,9 +120,16 @@ See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
 
 ## Others
 
-List all commits on branch b1 that are not also on branch b2:
+### List files changed by a commit
+
+    git diff-tree --no-commit-id --name-only -r <commit-id>
+
+(Hat tip: http://stackoverflow.com/a/424142/324122)
+
+### List all commits on branch b1 that are not also on branch b2:
 
     git log b1 ^b2 --no-merges
+
 
 
 ## More incantations

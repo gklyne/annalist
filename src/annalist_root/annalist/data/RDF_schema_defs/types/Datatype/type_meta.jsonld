@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Datatype",
+  "annal:supertype_uri": [
+    {
+      "@id": "rdfs:Resource"
+    },
+    {
+      "@id": "rdfs:Class"
+    }
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Classes",
+  "annal:type_view": "_view/Class",
+  "annal:uri": "rdfs:Datatype",
+  "rdfs:comment": "# Literal data type\r\n\r\nDatatype entities describe a class of literals, which may be associated with the  `rdfs:range` of a property.\r\n",
+  "rdfs:label": "Data type"
+}

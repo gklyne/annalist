@@ -285,11 +285,11 @@ class EntityTypeInfo(object):
         Type-dependent messages
     """
 
-    def __init__(self, site, coll, type_id, create_typedata=False):
+    def __init__(self, coll, type_id, create_typedata=False):
         """
         Set up type attribute values.
 
-        site            current site object
+        site            current site object @@unused@@
         coll            collection object in which type is used
         type_id         entity type id, which is a collection-defined value,
                         or one of a number of special site-wide built-in types.
@@ -312,8 +312,6 @@ class EntityTypeInfo(object):
 
         and other values as initialized here.
         """
-        #@@TODO: remove site param and access through coll
-        self.entitysite      = site
         self.entitycoll      = coll
         self.recordtype      = None
         self.entityparent    = None
@@ -329,8 +327,8 @@ class EntityTypeInfo(object):
             #
             # (See use of attribute DisplayInfo.coll_perms.)
             #
-            self.recordtype      = site.site_data_collection().get_type(type_id)
-            self.entityparent    = site
+            self.recordtype      = coll.get_site().site_data_collection().get_type(type_id)
+            self.entityparent    = coll.get_site()
             self.entityaltparent = None
             self.entityclass     = Collection
             self.entitymessages  = COLL_MESSAGES
@@ -338,7 +336,7 @@ class EntityTypeInfo(object):
         elif type_id in TYPE_CLASS_MAP:
             self.recordtype      = coll.get_type(type_id)
             self.entityparent    = coll
-            self.entityaltparent = site
+            self.entityaltparent = coll.get_site()
             self.entityclass     = TYPE_CLASS_MAP[type_id]
             self.entitymessages  = TYPE_MESSAGE_MAP[type_id]
             if self.coll_id == layout.SITEDATA_ID:
@@ -362,7 +360,7 @@ class EntityTypeInfo(object):
             #
             # Also used in entityedit for getting @type URI/CURIE values.
             #
-            # Used in render_utils to get link to type record
+            # Used in bound_field to get link to type record
 
             #@@@@@@@
             # if ( (type_id not in get_built_in_type_ids()) and
@@ -401,11 +399,11 @@ class EntityTypeInfo(object):
         """
         types = [self.get_type_uri()]
         if self.recordtype:
-            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uris, None)
+            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uri, None)
             if supertypes:
                 for st in supertypes:
                     # supertype_uris is list of objects { 'annal:supertype_uri': uri }
-                    t = st.get(ANNAL.CURIE.supertype_uri, None)
+                    t = st.get('@id', None)
                     if t:
                         types.append(t)
         return types
@@ -499,10 +497,10 @@ class EntityTypeInfo(object):
 
     def get_entity_implied_values(self, entity):
         """
-        Adds inferrable values to the supplied entity value (e.g. aliases),
+        Adds implied values to the supplied entity value (e.g. aliases),
         and returns a new value with the additional values
 
-        Inferred values are determined by the type of the entity, and if type
+        Implied values are determined by the type of the entity, and if type
         information is not present this function generates a failure.
         """
         if not self.recordtype: 
@@ -510,43 +508,15 @@ class EntityTypeInfo(object):
                 "EntityTypeInfo.get_entity_implied_values called with no type information available.  "+
                 "entity_id %s/%s, type_id %s"%(entity.get_type_id(), entity.get_id(), self.type_id)
                 )
-        inferred_entity = entity
-        if inferred_entity and ANNAL.CURIE.field_aliases in self.recordtype:
-            inferred_entity = copy.deepcopy(entity)
+        implied_entity = entity
+        if implied_entity and ANNAL.CURIE.field_aliases in self.recordtype:
+            implied_entity = copy.deepcopy(entity)
             for alias in self.recordtype[ANNAL.CURIE.field_aliases]:
                 tgt = alias[ANNAL.CURIE.alias_target]
                 src = alias[ANNAL.CURIE.alias_source]
-                if inferred_entity.get(tgt, None) in [None, ""]:
-                    inferred_entity[tgt] = inferred_entity.get(src, "")
-        return inferred_entity
-
-    def copy_data_files(self, new_entity_id, old_typeinfo, old_entity_id):
-        """
-        Copy associated data files from specified entity to new.
-        """
-        if self.entity_exists(new_entity_id):
-            if old_typeinfo.entity_exists(old_entity_id):
-                new_entity = self._new_entity(new_entity_id)
-                old_entity = old_typeinfo._new_entity(old_entity_id)
-                for p, f in old_entity._entity_files():
-                    if not new_entity._exists_file(f):
-                        p_new = new_entity._copy_file(p, f)
-                        if not p_new:
-                            log.warning(
-                                "EntityTypeInfo.copy_data_files: error copying file %s from %s to %s"%
-                                (f, old_entity_id, new_entity_id)
-                                )
-            else:
-                log.warning(
-                    "EntityTypeInfo.copy_data_files: source entity not found %s/%s"%
-                    (old_typeinfo.type_id, old_entity_id)
-                    )
-        else:
-            log.warning(
-                "EntityTypeInfo.copy_data_files: target entity not found %s/%s"
-                %(self.type_id, entity_id)
-                )
-        return
+                if implied_entity.get(tgt, None) in [None, ""]:
+                    implied_entity[tgt] = implied_entity.get(src, "")
+        return implied_entity
 
     def rename_entity(self, new_entity_id, old_typeinfo, old_entity_id):
         """
@@ -589,7 +559,7 @@ class EntityTypeInfo(object):
         Iterate over entities in collection with current type.
         """
         if (not user_perms or 
-            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permission]):
             if not self.entityparent:
                 log.warning("EntityTypeInfo.enum_entities: missing entityparent; type_id %s"%(self.type_id))
             else:
@@ -615,7 +585,7 @@ class EntityTypeInfo(object):
         #     )
         #@@
         if (not user_perms or 
-            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permissions]):
+            self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permission]):
             if not self.entityparent:
                 log.warning(
                     "EntityTypeInfo.enum_entities_with_inferred_values: missing entityparent; type_id %s"%
@@ -626,21 +596,16 @@ class EntityTypeInfo(object):
                     "EntityTypeInfo.enum_entities_with_inferred_values: missing recordtype; type_id %s"%
                     (self.type_id)
                     )
+                # No record type info: return base entity without implied values
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
                     yield self.get_entity(eid)
             else:
-                #@@
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
                     yield self.get_entity_implied_values(self.get_entity(eid))
-                #@@
-                # for eid in self.entityparent._children(self.entityclass, altscope=altscope):
-                #     if self.entityclass.exists(self.entityparent, eid, altscope=altscope):
-                #         yield self.get_entity_implied_values(self.get_entity(eid))
-                #@@
         return
 
     def get_initial_entity_values(self, entity_id):

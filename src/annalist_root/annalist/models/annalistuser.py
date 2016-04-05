@@ -34,6 +34,12 @@ from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
 
+default_user_id  = "_default_user_perms"
+default_user_uri = "annal:User/_default_user_perms"
+
+unknown_user_id  = "_unknown_user_perms"
+unknown_user_uri = "annal:User/_unknown_user_perms"
+
 class AnnalistUser(EntityData):
 
     _entitytype     = ANNAL.CURIE.User
@@ -57,5 +63,15 @@ class AnnalistUser(EntityData):
         # log.debug("AnnalistUser %s: dir %s"%(type_id, self._entitydir))
         # log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
         return
+
+    def _migrate_values(self, userpermissions):
+        """
+        User permission data format migration method.
+        """
+        migration_map = (
+            [ (ANNAL.CURIE.user_permissions, ANNAL.CURIE.user_permission)
+            ])
+        userpermissions = self._migrate_values_map_field_names(migration_map, userpermissions)
+        return userpermissions
 
 # End.

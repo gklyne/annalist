@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "Resource",
+  "annal:field_entity_type": "rdfs:Class",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "_type/Class",
+  "annal:field_render_type": "Enum_render_type/Enum",
+  "annal:field_value_mode": "Enum_value_mode/Value_entity",
+  "annal:field_value_type": "annal:Identifier",
+  "annal:group_ref": "",
+  "annal:id": "subclassOf",
+  "annal:placeholder": "(select superclass)",
+  "annal:property_uri": "rdfs:subClassOf",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "Refers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
+  "rdfs:label": "Subclass of"
+}

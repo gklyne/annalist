@@ -6,7 +6,7 @@
 , "annal:type":                 "annal:Field"
 , "rdfs:label":                 "Field alias value"
 , "rdfs:comment": 
-    "An entity field property that may be returned as the value of some other field property (see field 'Field alias name')"
+    "A property URI whose value is returned when an associated alias property URI is accessed (see field 'Field alias name')"
 , "annal:field_render_type":    "Identifier"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "annal:Identifier"

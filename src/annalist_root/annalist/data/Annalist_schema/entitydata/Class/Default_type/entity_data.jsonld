@@ -1,0 +1,23 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Default_type",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Default_type",
+  "rdfs:comment": "# Default type\r\n\r\nDefault entity type initially associated with a record type when created from listing of multiple entity types, or when no specific type is specified.",
+  "rdfs:label": "Default type",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

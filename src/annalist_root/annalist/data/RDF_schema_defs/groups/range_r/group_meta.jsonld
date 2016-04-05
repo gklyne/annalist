@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:add_field": true,
+  "annal:group_fields": [
+    {
+      "annal:field_id": "_field/range",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "@id"
+    }
+  ],
+  "annal:id": "range_r",
+  "annal:record_type": "rdf:Property",
+  "annal:type": "annal:Field_group",
+  "annal:type_id": "_group",
+  "annal:uri": "annal:group/_initial_values",
+  "rdfs:comment": "# Range group\r\n\r\nGroup used for repeated range of a property.\r\n",
+  "rdfs:label": "Range group"
+}

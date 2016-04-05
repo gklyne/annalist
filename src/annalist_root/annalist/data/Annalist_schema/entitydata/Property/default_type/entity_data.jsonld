@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "default_type",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:default_type",
+  "rdfs:comment": "# List default type\r\n\r\nUsed in a list definition to indicate the default initial type that is assigned to new entities created by the **New** button.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:List"
+    }
+  ],
+  "rdfs:label": "List default type",
+  "rdfs:range": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -1,16 +1,16 @@
 {
-  "rdfs:label": "Annalist data notebook test site",
-  "rdfs:comment": "Annalist test site metadata and site-wide values.",
-  "annal:software_version": "0.1.23",
-  "annal:comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-02-29 10:05:31",
-  "annal:type_id": "_coll",
   "@context": [
     "coll_context.jsonld"
   ],
-  "annal:id": "_annalist_site",
   "@id": "../",
   "@type": [
     "annal:SiteData"
   ],
-  "annal:type": "annal:SiteData"
+  "annal:id": "_annalist_site",
+  "annal:meta_comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-04-05 12:40:08",
+  "annal:software_version": "0.1.29",
+  "annal:type": "annal:SiteData",
+  "annal:type_id": "_coll",
+  "rdfs:comment": "Annalist test site metadata and site-wide values.",
+  "rdfs:label": "Annalist data notebook test site"
 }

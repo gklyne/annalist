@@ -1,10 +1,10 @@
-/usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
+/Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
 
 This directory contains Annalist site data for http://test.example.com/testsite/.
 
 Directory layout:
 
-    /usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
+    /Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
       c/
         _annalist_site/
           _annalist_collection/         (site-wide definitions)
@@ -76,6 +76,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.28 at 2016-02-29 10:05:46
+for Annalist 0.1.30 at 2016-04-05 12:40:31
 
 

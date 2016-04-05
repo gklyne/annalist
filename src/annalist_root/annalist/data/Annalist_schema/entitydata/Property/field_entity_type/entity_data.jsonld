@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_entity_type",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_entity_type",
+  "rdfs:comment": "# Field entity type URI or CURIE\r\n\r\nUsed in a field definition, indicates the type of entity the field may be used with.\r\n\r\nThe main purpose of this value is to allow a selection of relevant fields to be offered when defining an entity view; without this restriction, the field type drop-down lists could get very long and cumbersome to use.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Field entity type",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

@@ -24,7 +24,7 @@
     <h1 id="title">
       <a href="#">annalist.net</a> - 
       <a htref="//demo.annalist.net/">Annalist</a> demonstration system
-      <span>0.1.28</span>
+      <span>0.1.30</span>
     </h1>
   </div>
   <!-- navigation -->
@@ -44,16 +44,77 @@
   <h1>Welcome to annalist.net</h1>
 
   <p>
-    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.28).
+    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.30).
+  </p>
+
+  <h2>Overview</h2>
+
+  <p>
+    Annalist is a <em>Linked Data Notebook</em>, supporting collection, organization and sharing of structured and semi-structured data.  The name "Annalist" derives from <a href="http://www.oxforddictionaries.com/definition/english/annalist">"a person who writes annals"</a>.
   </p>
 
   <p>
-    There is a draft <a href="//annalist.net/documents/tutorial/annalist-tutorial.html">Annalist tutorial</a> that describes basic Annalist operation.
+    Annalist can be used for diverse purposes, and in particular has been motivated by the needs of small academic research groups, and personal information management.  It is a self-hostable, web-based tool that will, "out-of-the-box", allow collection of web accessible, linked data without prior design of its structure.  As such, it is designed to enable:
+    <ul class="green">
+      <li>Easy data creation and management: data entry, modification and organization of small data records.</li>
+      <li>Flexible data: new record types and fields can be added as required.</li>
+      <li>Sharable data: uses JSON, a textual, easy to read and easy to process file format that can be shared by web, email, file transfer, version management system, memory stick, etc.</li>
+      <li>Remixable data: uses entity records that can be first class participants in a wider ecosystem of linked data, with links in and links out.</li>
+    </ul>
   </p>
 
-  <a href="https://zenodo.org/badge/latestdoi/19858/gklyne/annalist">
-    <img src="https://zenodo.org/badge/19858/gklyne/annalist.svg" alt="10.5281/zenodo.44381">
-  </a>
+  <h2>Links</h2>
+
+  <ul class="green">
+    <li>
+      <a href="https://github.com/gklyne/annalist">Software repository</a>: 
+      Annalist software and documentation on GitHub.
+    </li>
+    <li>
+      <a href="https://github.com/gklyne/annalist/blob/master/documents/getting-started.md">
+        Getting started</a>:
+      summary instructions for installing and setting up Annalist.
+    </li>
+    <li>
+      <a href="http://annalist.net/documents/tutorial/annalist-tutorial.html">
+        Tutorial</a>: 
+      describes basic Annalist operations.
+    </li>
+    <li>
+      <a href="http://demo.annalist.net/annalist/c/Photo_collection/d/">
+        Tutorial data in Annalist</a>.
+    </li>
+    <li>
+      <a href="https://github.com/gklyne/annalist/blob/master/documents/installing-annalist.md">
+        Installing and setting up Annalist</a>:
+        a more detailed guide to installing and setting up Annalist.
+    </li>
+    <li>
+      <a href="https://github.com/gklyne/annalist/blob/master/documents/using-annalist.adoc">
+        Guide to using Annalist</a>.
+    </li>
+    <li>
+      <a href="https://github.com/gklyne/annalist/blob/develop/documents/publications/LDOW2016-paper/Annalist-paper-ACMSIG.pdf">LDoW 2016 workshop paper</a>.
+      @@TODO: fix up link following software release.
+    </li>
+    <li>
+      <a href="https://github.com/gklyne/annalist/blob/develop/documents/publications/LDOW2016-paper/annalist-presentation-ldow2016.pdf">LDoW 2016 workshop presentation</a>.
+      @@TODO: fix up link following software release.
+    </li>
+  </ul>
+
+  <p>
+    <a href="https://zenodo.org/badge/latestdoi/19858/gklyne/annalist">
+      <img src="https://zenodo.org/badge/19858/gklyne/annalist.svg" 
+           alt="latest DOI">
+    </a>
+    <!--
+    <a href="http://dx.doi.org/10.5281/zenodo.46714">
+      <img src="https://zenodo.org/badge/doi/10.5281/zenodo.46714.svg" 
+           alt="10.5281/zenodo.46714">
+    </a>
+    -->
+  </p>
 
   <h2>Feedback</h2>
 
@@ -84,7 +145,7 @@
       <a href="http://annalist.net/annalist_sitedata/"><img src="img/get_the_data_125x50.png"/></a>
     </p>
     <p style="width: 100%;">
-      The raw data that underlies the Annalist site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  Subdirectory <a href="http://annalist.net/annalist_sitedata/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions; and subdirectory <a href="http://annalist.net/annalist_sitedata/c/">c</a> contains user collection data.
+      The raw data that underlies the Annalist demo site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  Subdirectory <a href="http://annalist.net/annalist_sitedata/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions; and subdirectory <a href="http://annalist.net/annalist_sitedata/c/">c</a> contains user collection data.
     </p>
     <div style="clear:left;"/>
   </div>
@@ -144,9 +205,14 @@
 
   <ul class="green">
     <li>
-      <a href="software/Annalist-0.1.28.tar.gz">Annalist-0.1.28</a>: 
+      <a href="software/Annalist-0.1.30.tar.gz">Annalist-0.1.30</a>: 
       Downloadable software installation kit.  Needs Python 2.7, <code>virtualenv</code> and <code>pip</code>.  Install using <code>pip</code> into a newly created Python virtual environment.
     </li>
+    <!-- overwritten in testing:
+    <li>
+      <a href="software/Annalist-0.1.28.tar.gz">Annalist-0.1.28</a>  (older release).
+    </li>
+    -->
     <li>
       <a href="software/Annalist-0.1.26.tar.gz">Annalist-0.1.26</a>  (older release).
     </li>

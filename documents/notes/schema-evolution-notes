@@ -1,0 +1,85 @@
+# Notes for handling schema evolution
+
+The notion of evolution originally evisaged by Annalist was addition and 
+refinement of structure through the addition of new types and properties.
+
+A related but different issue is schema evolution that resulkts in changes to
+type- and property- URIs already in use.  A problem with this latter type is 
+that it is often not possible to determine the intent of a change, so fully
+automated data migration is not a practical option.
+
+These notes are thoughts about Annalist features that might be introduced
+to support evolution of properties used in existing Annalist data.
+
+
+# Plan for schema evolution support
+
+Assume that evolution is initially handled by creating a new collection 
+that is a copy or inherits from the original.  Also assume that internal 
+identifiers used by Annalist remain constant in their overall intent, and 
+are not subject to arbitrary renaming.
+
+The general plan is to start by providing reports of changes between 
+collections, and possible knock-on effects in their definitions.  
+From here, identify mechanisms that can be used to apply data 
+migrations that adapt old data for use with updated schemas.
+
+1. Provide report of references to type URIs that have been changed.
+
+2. Provide reporting for references to property URIs that have been changed.
+
+3. Provide reporting of references to types for which subtypes have been defined.
+
+4. Provide reporting of references to property URIs for which superproperties have been defined.
+
+5. Introduce type- and property-URI migration options that cause data to be 
+updated when read and written.  All migrations are defined and applied per type,
+so that they can be easily performed on-access.
+
+    - property migrations are handled through alias fields.
+    - some type migrations can be handled as supertypes, others may need updates.
+
+7. Provide collection migration option in annalist-mananager that reads and 
+writes every entity data record, thereby applying all migrations.
+
+8. Think about more complex migrations (as they arise?)
+
+
+# Patterns of schema evolution
+
+## Subdivide type into more detailed options
+
+Create a new Annalist type for each subtype.
+
+Declare the orignal type URI as supertype of each refined type.
+These are picked up by entity selectors that refer to the original type URI.
+
+The main type URI and all supertype URIs are included when 
+entities are created or updated, according to their Annalist type.
+
+
+## Change type URI
+
+Update URI in Annalist type declaration.
+
+Update references to original URI in View, List, Field and Group definitions.
+
+Old URI coud be declared as supertype.
+
+The main type URI and all supertype URIs are included when 
+entities are created or updated, according to their Annalist type.
+
+
+## Change property URI
+
+Primary URI definition comes from a Field definition, but this can be
+overridden by Views, Lists and Groups, which should be updated as 
+appropriate.
+
+Property URIs may be referenced by selectors (value restrictions) in 
+Field and List definitions.
+
+Property aliases, defined on a recordtype, can be used to let the old URI be 
+recognized in place of the new one.  When editing a form that uses the new 
+property URIs, thenew URIs are added when the form is saved,and the old ones 
+remain as they were.

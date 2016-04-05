@@ -22,7 +22,11 @@ from annalist.util                  import replacetree, removetree
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
+from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
+from annalist.models.recordview     import RecordView
+from annalist.models.recordlist     import RecordList
+from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
@@ -95,6 +99,13 @@ def init_annalist_test_site():
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)
     testsite.generate_site_jsonld_context()
+    # Reset id generator counters
+    EntityData._last_id   = 0
+    RecordType._last_id   = 0
+    RecordView._last_id   = 0
+    RecordList._last_id   = 0
+    RecordField._last_id  = 0
+    AnnalistUser._last_id = 0
     return testsite
 
 def init_annalist_bib_site():
@@ -127,6 +138,13 @@ def init_annalist_test_coll(coll_id="testcoll", type_id="testtype"):
         entitydata_create_values(testcoll,testtype,"entity1")
         )
     testcoll.generate_coll_jsonld_context()
+    # Reset id generator counters
+    EntityData._last_id   = 0
+    RecordType._last_id   = 0
+    RecordView._last_id   = 0
+    RecordList._last_id   = 0
+    RecordField._last_id  = 0
+    AnnalistUser._last_id = 0
     return testcoll
 
 def init_annalist_bib_coll(coll_id="testcoll", type_id="testtype"):

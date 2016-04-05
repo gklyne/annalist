@@ -160,7 +160,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_label'],        "Test repeat field label")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "RepeatGroupRow")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],    "testrepeatgroup")
         self.assertEqual(r.context['fields'][1]['group_label'],        "Test repeat field label")
         self.assertEqual(r.context['fields'][1]['group_add_label'],    "Add group")
@@ -259,7 +259,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_label'],        "Test repeat field label")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "RepeatGroupRow")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Field_group")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Field_group")
         self.assertEqual(r.context['fields'][1]['field_group_ref'],    "testrepeatgroup")
         self.assertEqual(r.context['fields'][1]['group_label'],        "Test repeat field label")
         self.assertEqual(r.context['fields'][1]['group_add_label'],    "Add testrepeatfield")
@@ -290,11 +290,11 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
             view_url=v, cont_uri_param=cont_uri_param,
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
+            tooltip1="", # 'title="%s"'%r.context['fields'][0]['field_help'],
+            tooltip2="", # 'title="%s"'%r.context['fields'][1]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
+            <div class="small-12 medium-6 columns" %(tooltip1)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Id</span>

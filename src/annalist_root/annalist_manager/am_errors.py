@@ -30,16 +30,22 @@ class Annalist_Manager_Error(Exception):
 
 # Status return codes
 
-AM_SUCCESS         = 0      # Success
-AM_BADCMD          = 2      # Command error
-AM_EXISTS          = 5      # directory already exists
-AM_NOTEXISTS       = 6      # Directory does not exist
-AM_NOSETTINGS      = 7      # No configuration settings found (e.g. personal, shared, devel, etc.)
-AM_UNEXPECTEDARGS  = 8      # Unexpected arguments supplied
-AM_NOUSERPASS      = 9      # No username or password for createuser or creaeadminuser
-AM_MISSINGEMAIL    = 10     # No email address for createuser or creaeadminuser
-AM_UNKNOWNCMD      = 11     # Unknown command name for help
-AM_USEREXISTS      = 12     # Username for creation already exists
-AM_USERNOTEXISTS   = 13     # Username for deletion does not exist
+AM_SUCCESS          = 0         # Success
+AM_BADCMD           = 2         # Command error
+AM_EXISTS           = 5         # directory already exists
+AM_NOTEXISTS        = 6         # Directory does not exist
+AM_NOSETTINGS       = 7         # No configuration settings found (e.g. personal, shared, devel, etc.)
+AM_UNEXPECTEDARGS   = 8         # Unexpected arguments supplied
+AM_NOUSERPASS       = 9         # No username or password for createuser or creaeadminuser
+AM_MISSINGEMAIL     = 10        # No email address for createuser or creaeadminuser
+AM_UNKNOWNCMD       = 11        # Unknown command name for help
+AM_USEREXISTS       = 12        # Username for creation already exists
+AM_USERNOTEXISTS    = 13        # Username for deletion does not exist
+AM_NOCOLLECTION     = 14        # Identified collection not found
+AM_COLLECTIONEXISTS = 14        # Identified collection already exists
+AM_INSTALLCOLLFAIL  = 15        # Failed to install collection
+AM_COPYCOLLFAIL     = 16        # Failed to copy collection
+AM_MIGRATECOLLFAIL  = 17        # Failed to migrate collection
+AM_COPYENTITYFAIL   = 18        # Failed to copy entity
 
 # End.

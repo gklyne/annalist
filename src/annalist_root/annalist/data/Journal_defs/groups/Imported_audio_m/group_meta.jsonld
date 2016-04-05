@@ -1,0 +1,27 @@
+{
+  "rdfs:label": "Imported audio Id+label",
+  "rdfs:comment": "Show id and label fields of imported audio clip",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Imported_audio",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,4",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:4,8",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Imported_audio_m",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

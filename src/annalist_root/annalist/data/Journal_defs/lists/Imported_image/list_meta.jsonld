@@ -1,0 +1,33 @@
+{
+  "annal:display_type": "Enum_list_type/List",
+  "rdfs:label": "Imported images",
+  "rdfs:comment": "# List of imported images\r\n\r\nPresents a list of entities that contain images imported from the web.\r\n",
+  "annal:id": "Imported_image",
+  "annal:default_type": "_type/Imported_image",
+  "annal:type_id": "_list",
+  "annal:list_entity_selector": "'coll:Imported_image' in [@type]",
+  "annal:record_type": "coll:Imported_image",
+  "annal:list_fields": [
+    {
+      "annal:field_placement": "small:0,3",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:field_placement": "small:3,3",
+      "annal:field_id": "_field/Entity_type"
+    },
+    {
+      "annal:field_placement": "small:6,6",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:default_view": "_view/Imported_image",
+  "@id": "./",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:type": "annal:List"
+}

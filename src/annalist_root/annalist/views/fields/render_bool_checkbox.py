@@ -100,7 +100,7 @@ def get_bool_checkbox_renderer():
     """
     Return field renderer object for Boolean as checkbox
     """
-    return RenderFieldValue(
+    return RenderFieldValue("checkbox",
         view_renderer=bool_checkbox_view_renderer(), 
         edit_renderer=bool_checkbox_edit_renderer(),
         )

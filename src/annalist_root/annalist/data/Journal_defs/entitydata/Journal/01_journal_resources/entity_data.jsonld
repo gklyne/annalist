@@ -1,0 +1,22 @@
+{
+  "rdfs:label": "Journal resources",
+  "rdfs:comment": "The **Journal_defs** collection defines the following entity types, along with view and list definitions, for creating journal and other entities that reference media and web resources.\r\n\r\n* [Imported audio clip](/annalist/c/Journal_defs/d/_type/Imported_audio/): Contains a copy of an audio clip, which is obtained by importing from a web URL. May also contain a short identifying label and a longer description of the audio.\r\n* [Imported image](/annalist/c/Journal_defs/d/_type/Imported_image/): Contains a copy of an image, which is obtained by importing from a web URL. May also contain a short identifying label and a longer description of the image.\r\n* [Journal entry](/annalist/c/Journal_defs/d/_type/Journal/): Contains a description or narrative that relates to an entity being documented.  Use these to capture informal descriptive information, which may later be used as a basis for creating more structured data.\r\n* [Linked audio](/annalist/c/Journal_defs/d/_type/Linked_audio/): Entity containing a link to an audio clip on the web, along with a label and description.\r\n* [Linked image](/annalist/c/Journal_defs/d/_type/Linked_image/): Entity containing a link to an image on the web, along with a label and description.\r\n* [Uploaded audio](/annalist/c/Journal_defs/d/_type/Uploaded_audio/): Entity containing a copy of an audio clip, which is obtained by uploading using a browser. May also contain a short identifying label and a longer description of the audio.\r\n* [Uploaded image](/annalist/c/Journal_defs/d/_type/Uploaded_image/):  Entity containing a copy of an image, which is obtained by uploading using a browser. May also contain a short identifying label and a longer description of image.\r\n* [Web resource](/annalist/c/Journal_defs/d/_type/Web_resource/): Entity containing a link to an arbitrary resource on the web, along with a label and description.\r\n\r\nThe following types may be referenced in view definitions (using the indicated field definitions) to present a combination of resources that may be linked, uploaded or imported:\r\n\r\n* [Included audio clip](/annalist/c/Journal_defs/d/_type/Included_audio/), using field type [\r\nIncluded audio clips](/annalist/c/Journal_defs/d/_field/Included_audio_r/).\r\n* [Included image](/annalist/c/Journal_defs/d/_type/Included_image/), using field type [\r\nIncluded images](/annalist/c/Journal_defs/d/_field/Included_image_r/).\r\n\r\nNew journal entries can be created by clicking the **New** button on the [Journal entries](/annalist/c/Journal_defs/d/Journal/) page.\r\n",
+  "coll:location": "Oxford",
+  "annal:type_id": "Journal",
+  "@id": "./",
+  "coll:date": "2016-03-01",
+  "coll:resources": [],
+  "coll:audio_clips": [],
+  "coll:included_audio_r": [],
+  "coll:included_image_r": [],
+  "coll:images": [],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "01_journal_resources",
+  "@type": [
+    "coll:Journal",
+    "annal:EntityData"
+  ],
+  "annal:type": "coll:Journal"
+}

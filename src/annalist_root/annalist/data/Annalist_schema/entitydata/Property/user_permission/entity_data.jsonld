@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "user_permission",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:user_permission",
+  "rdfs:comment": "# User permission\r\n\r\nA token that specifies a permission associated with an identified user.\r\n\r\nThe token value is a simple string; the currently defined values are:\r\n\r\n* CREATE_COLLECTION\r\n* DELETE_COLLECTION\r\n* ADMIN\r\n* CONFIG\r\n* CREATE\r\n* UPDATE\r\n* DELETE\r\n* VIEW\r\n\r\nPermissions may be applied across an Annalist site if they are defined in the site data collection (`_annalist_site`), or to a particular collection in which they are defined.  Permissions defined in a collection override any corresponding site-wide permissions for the purposes of accessing that collection.\r\n\r\nNote that the Annalist context definition for `annal:user_permission` includes the declaration `\"@container\": \"@set\"`, so that a list of permission tokens in JSON-LD corresponds to multiple `annal:user_permission` properties in the equivalent RDF representation.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:User"
+    }
+  ],
+  "rdfs:label": "User permission",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

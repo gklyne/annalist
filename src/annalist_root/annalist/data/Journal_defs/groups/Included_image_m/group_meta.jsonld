@@ -1,0 +1,32 @@
+{
+  "rdfs:label": "Included image Id+label+image",
+  "rdfs:comment": "Show id and label fields of included image",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Included_image",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,4",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:4,4",
+      "annal:field_id": "_field/Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:8,4",
+      "annal:field_id": "_field/Included_image"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_image_m",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

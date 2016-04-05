@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "property_uri",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:property_uri",
+  "rdfs:comment": "# Property URI or CURIE\r\n\r\nURI or CURIE associated with a field definition.  The specified value is used in entity data as the JSON key used to reference the field value.  The given URI is used exactly as given as the JSON key; interpretation as an RDF property URI may depend on there being an appropriate vocabulary namespace declared.\r\n\r\nThis property may also appear in field references in view, list and field group definitions, locally overriding the value defined in the field definition.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Property URI",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

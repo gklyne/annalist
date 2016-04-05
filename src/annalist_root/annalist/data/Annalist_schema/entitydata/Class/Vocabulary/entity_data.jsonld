@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Vocabulary",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Vocabulary",
+  "rdfs:comment": "# Vocabulary namespace definition\r\n\r\nClass of vocabulary namespace definitions.  Each definition corresponds to a space of identifiers (a \"namespace\"), and defines a prefix string (used in JSON data), and a corresponding namespace URI (used when interpreting JSON data as RDF to derive absolute URIs for the terms used).\r\n",
+  "rdfs:label": "Vocabulary namespace definition",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/Entity"
+    }
+  ]
+}

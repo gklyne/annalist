@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 # from annalist                   import util
 
 # Render type classification, used for generating appropriate JSON-LD context values
-# Separated from annalist.views.fields.render_utils to avoid model dependency on views
+# Separated from annalist.views.fields.find_renderers to avoid model dependency on views
 
 _render_type_literal = set(
     [ "Text", "Textarea", "Codearea", "Showtext"

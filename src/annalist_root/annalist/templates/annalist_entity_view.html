@@ -33,31 +33,32 @@
         <div class="small-12 medium-4 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
-              <input type="submit" name="edit"             value="Edit" />
-              <input type="submit" name="copy"             value="Copy" />
-              <input type="submit" name="close"            value="Close" />
+              <input type="submit" name="edit"  value="Edit" 
+                     title="Edit entity data."/>
+              <input type="submit" name="copy"  value="Copy" 
+                     title="Copy, then edit entity data as new entity." />
+              <input type="submit" name="close" value="Close" 
+                     title="Return to previous page." />
             </div>
           </div>
         </div>
         <div class="small-12 medium-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns medium-up-text-right">
-              {% if auth_config %}
-              <input type="submit" name="default_view"     value="Set default view" {{default_view_enable}} 
-                     title="Select this display as the default view for collection '{{coll_id}}'."/>
               {% if edit_view_button and edit_view_button != "no" %}
               <input type="submit" name="open_view"        value="View description" 
                      title="Open view definition for the current display."/>
               {% endif %}
-              {% else %}
-              &nbsp;
-              {% endif %}
+              <input type="submit" name="default_view" value="Set default view"
+                     title="Select this display as the default view for collection '{{coll_id}}'."
+                     {{default_view_enable}} />
+              <input type="submit" name="customize"    value="Customize"
+                     title="Open 'Customize' view for collection '{{coll_id}}'."
+                     {{customize_view_enable}} />
             </div>
           </div>
         </div>
       </div>
-
-      <hr />
 
       <!-- View options -->
       <div class="row">
@@ -70,8 +71,8 @@
           <div class="row view-value-row">
             <div class="view-value small-12 columns">
               <!-- Cf. https://github.com/BetaNYC/getDataButton -->
-              <a href="{{entity_data_ref}}">JSON-LD</a>
-              <a href="{{entity_data_ref}}">
+              <a href="{{entity_data_ref}}" title="Retrieve underlying data as JSON-LD">JSON-LD</a>
+              <a href="{{entity_data_ref_json}}" title="Retrieve underlying JSON data">
                 <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
               </a>
             </div>

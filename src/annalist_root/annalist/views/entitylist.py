@@ -59,6 +59,7 @@ listentityvaluemap  = (
         , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
         , SimpleValueMap(c='default_view_enable',   e=None,                  f=None                  )
+        , SimpleValueMap(c='customize_view_enable', e=None,                  f=None                  )
         , SimpleValueMap(c='search_for',            e=None,                  f='search_for'          )
         , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url'    )
         # Field data is handled separately during processing of the form description
@@ -115,7 +116,7 @@ class EntityGenericListView(AnnalistGenericView):
         # 1. 'fields':  (context receives list of field descriptions used to generate row headers)
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
-        # NOTE - supplied entity has single field 'annal:list_entities' (see 'get')
+        # NOTE - supplied entity has single field '_list_entities_' (see 'get' below)
         #        entitylist template uses 'fields' from context to display headings
 
         fieldlistmap = FieldListValueMap('fields',
@@ -154,7 +155,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Create a form for listing entities.
         """
-        scope      = request.GET.get('scope', None)
+        scope      = request.GET.get('scope',  None)
         search_for = request.GET.get('search', "")
         log.info(
             "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s, search %s"%
@@ -169,11 +170,13 @@ class EntityGenericListView(AnnalistGenericView):
         try:
             selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
             user_perms  = self.get_permissions(listinfo.collection)
+            # @@TODO: is this context value even usable??
             entity_list = (
                 EntityFinder(listinfo.collection, selector=selector)
                     .get_entities_sorted(
                         user_perms, type_id=type_id, altscope=scope,
-                        context=listinfo.recordlist, search=search_for
+                        context={'list': listinfo.recordlist}, 
+                        search=search_for
                         )
                 )
             typeinfo      = listinfo.entitytypeinfo
@@ -192,8 +195,13 @@ class EntityGenericListView(AnnalistGenericView):
                 , 'list_choices':           self.get_list_choices_field(listinfo)
                 , 'collection_view':        self.collection_view_url
                 , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
-                , 'default_view_enable':    ("" if list_id else 'disabled="disabled"')
+                , 'default_view_enable':    'disabled="disabled"'
+                , 'customize_view_enable':  'disabled="disabled"'
                 })
+            if listinfo.authorizations['auth_config']:
+                context_extra_values['customize_view_enable'] = ""
+                if list_id:
+                    context_extra_values['default_view_enable']   = ""
             entityvaluemap = self.get_list_entityvaluemap(listinfo, context_extra_values)
             listcontext = entityvaluemap.map_value_to_context(
                 entityvallist,
@@ -319,7 +327,7 @@ class EntityGenericListView(AnnalistGenericView):
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
                     typeinfo = listinfo.entitytypeinfo
                     if typeinfo is None:
-                        typeinfo = EntityTypeInfo(listinfo.site, listinfo.collection, entity_type)
+                        typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
                     return (
                         self.form_action_auth(
                             "delete", listinfo.collection, typeinfo.permissions_map
@@ -350,13 +358,12 @@ class EntityGenericListView(AnnalistGenericView):
                         listinfo.get_continuation_url_dict()
                         )
                     )
-            if ( ("view" in request.POST) or ("view_all"  in request.POST) ):
+            if ( ("list_type" in request.POST) or ("list_all"  in request.POST) ):
                 action       = "list"
-                list_type_id = None if "view_all_types" in request.POST else type_id
                 redirect_uri = self.get_list_url(
                     coll_id, extract_entity_id(request.POST['list_choice']),
-                    type_id=list_type_id,
-                    scope="all" if "view_all" in request.POST else None,
+                    type_id=None if "list_all" in request.POST else type_id,
+                    scope="all" if "list_scope_all" in request.POST else None,
                     search=request.POST['search_for'],
                     query_params=listinfo.get_continuation_url_dict()
                     )
@@ -410,7 +417,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         if entity_type == "_type":
             typeinfo = EntityTypeInfo(
-                listinfo.site, listinfo.collection, entity_id
+                listinfo.collection, entity_id
                 )
             if next(typeinfo.enum_entity_ids(), None) is not None:
                 return (

@@ -252,8 +252,8 @@ class Entity(EntityRoot):
                 return (e, v)
         # Failed: log details
         log.debug(
-            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s"%
-            (cls._entitytypeid, entityid, parent.get_id())
+            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
+            (cls._entitytypeid, entityid, parent.get_id(), altscope)
             )
         for ap in alt_parents:
             log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
@@ -262,15 +262,29 @@ class Entity(EntityRoot):
     # Class helper methods
 
     @classmethod
-    def allocate_new_id(cls, parent):
-        if cls._last_id is None:
-            cls._last_id = 1
+    def allocate_new_id(cls, parent, base_id=None):
+        """
+        Allocate and return an as-yet-unused entity id for a member of the 
+        indicated entity class as an offsprintof the indicated parent.  
+
+        If "base_id" is specified, it is used as part of the new Id allocated 
+        (used when copying an entity).
+        """
+        if base_id and util.valid_id(base_id):
+            last_id     = 0
+            name_format = base_id+"_%02d"
+        else:
+            last_id     = cls._last_id or 0
+            name_format = "%08d"
         while True:
-            newid = "%08d"%cls._last_id
-            if not cls.exists(parent, newid):
+            last_id += 1
+            new_id   = name_format%last_id
+            if not cls.exists(parent, new_id):
                 break
-            cls._last_id += 1
-        return newid
+        if not base_id:
+            cls._last_id = last_id
+        # print "base_id %s, new_id %s, last_id %d"%(base_id, new_id, last_id)
+        return new_id
 
     @classmethod
     def relpath(cls, entityid):

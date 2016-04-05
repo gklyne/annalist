@@ -94,7 +94,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                 # ----- Field description -----
                 , 'field_id':                   'View_fields'
                 , 'field_name':                 'View_fields'
-                , 'field_target_type':          'annal:Field_group'
+                , 'field_value_type':          'annal:Field_group'
                 , 'field_label':                'Fields'
                 , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
                 , 'field_render_type':          'RepeatGroup'
@@ -146,17 +146,17 @@ class FieldRenderingTest(FieldRendererTestSupport):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         field_choices = (
                   [ FieldChoice(id="")
-                  , FieldChoice(id="_field/Entity_comment",         label="Comment")
-                  , FieldChoice(id="_field/Entity_id",              label="Id")
-                  , FieldChoice(id="_field/Entity_label",           label="Label")
-                  , FieldChoice(id="_field/Entity_see_also_repeat", label="See also")
-                  , FieldChoice(id="_field/Entity_type",            label="Type")
+                  , FieldChoice(id="_field/Entity_comment",     label="Comment")
+                  , FieldChoice(id="_field/Entity_id",          label="Id")
+                  , FieldChoice(id="_field/Entity_label",       label="Label")
+                  , FieldChoice(id="_field/Entity_see_also_r",  label="See also")
+                  , FieldChoice(id="_field/Entity_type",        label="Type")
                   ])
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
-            , '''<div class="view-label small-12 medium-4 columns"> <span>Property</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Property URI</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Position/size</span> </div>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
@@ -225,7 +225,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                     , 'repeat_prefix':      context['repeat_prefix']
                     })
 
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_int",
             view_renderer=render_int_view(), 
             edit_renderer=render_int_edit()
             )
@@ -249,7 +249,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
             "field/annalist_edit_text.html",
             "Can't load edit template"
             )
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_compiled_template",
             view_template=view_template, 
             edit_template=edit_template
             )
@@ -267,7 +267,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
 
     # Rendering using template file name supplied
     def test_RenderFieldValue_files(self):
-        fieldrender = RenderFieldValue(
+        fieldrender = RenderFieldValue("render_template",
             view_file="field/annalist_view_text.html", 
             edit_file="field/annalist_edit_text.html"
             )

@@ -23,6 +23,7 @@ from annalist.models.collection         import Collection
 from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 
 from annalist.views.form_utils.fieldchoice      import FieldChoice
+from annalist.views.fields.render_fieldvalue    import TemplateWrapValueRenderer, ModeWrapValueRenderer
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_placement     import (
     Placement, make_field_width, make_field_offset, make_field_display
@@ -94,7 +95,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':                   '_initial_values'
             , 'field_name':                 '_initial_values'
-            , 'field_target_type':          ANNAL.CURIE.Text
+            , 'field_value_type':          ANNAL.CURIE.Text
             , 'field_label':                ''
             , 'field_help':                 '(tooltip text here)'
             , 'field_render_type':          'Text'
@@ -129,7 +130,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':                   'Field_id'
             , 'field_name':                 'entity_id'
-            , 'field_target_type':          ANNAL.CURIE.Slug
+            , 'field_value_type':          ANNAL.CURIE.Slug
             , 'field_label':                'Field Id'
             , 'field_render_type':          'EntityId'
             , 'field_value_mode':           'Value_direct'
@@ -174,7 +175,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':                   'Group_field_sel'
             , 'field_name':                 'Field_id'
-            , 'field_target_type':           ANNAL.CURIE.Slug
+            , 'field_value_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
             , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
@@ -208,7 +209,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':                   'View_fields'
             , 'field_name':                 'View_fields'
-            , 'field_target_type':          ANNAL.CURIE.Field_group
+            , 'field_value_type':          ANNAL.CURIE.Field_group
             , 'field_label':                'Fields'
             , 'field_render_type':          'RepeatGroupRow'
             , 'field_value_mode':           'Value_direct'
@@ -223,10 +224,12 @@ class FieldDescriptionTest(AnnalistTestCase):
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "RepeatGroupRow")
-        self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
-        self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
-        self.assertIsInstance(fd['field_render_view'], RenderRepeatGroup)
-        self.assertIsInstance(fd['field_render_edit'], RenderRepeatGroup)
+        # self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
+        # self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
+        self.assertIsInstance(fd['field_render_colhead'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_colview'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_view'], ModeWrapValueRenderer)
+        self.assertIsInstance(fd['field_render_edit'], ModeWrapValueRenderer)
         expect_group_details = (
             { 'group_id':           "View_fields"
             , 'group_label':        "Fields"
@@ -247,7 +250,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field0_desc = (
             { 'field_id':                   'View_field_sel'
             , 'field_name':                 'Field_id'
-            , 'field_target_type':           ANNAL.CURIE.Slug
+            , 'field_value_type':           ANNAL.CURIE.Slug
             , 'field_label':                'Field id'
             , 'field_render_type':          'Enum_optional'
             , 'field_value_mode':           'Value_direct'
@@ -267,8 +270,8 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field1_desc = (
             { 'field_id':                   'View_field_property'
             , 'field_name':                 'Field_property'
-            , 'field_target_type':          ANNAL.CURIE.Identifier
-            , 'field_label':                'Property'
+            , 'field_value_type':          ANNAL.CURIE.Identifier
+            , 'field_label':                'Property URI'
             , 'field_render_type':          'Identifier'
             , 'field_value_mode':           'Value_direct'
             , 'field_property_uri':         ANNAL.CURIE.property_uri
@@ -287,7 +290,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field2_desc = (
             { 'field_id':                   'View_field_placement'
             , 'field_name':                 'Field_placement'
-            , 'field_target_type':          ANNAL.CURIE.Placement
+            , 'field_value_type':          ANNAL.CURIE.Placement
             , 'field_label':                'Position/size'
             , 'field_render_type':          'Placement'
             , 'field_value_mode':           'Value_direct'

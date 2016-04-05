@@ -76,7 +76,7 @@ def get_text_renderer():
     """
     Return field renderer object for text values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("text",
         view_renderer=text_view_renderer(), 
         edit_renderer=text_edit_renderer(),
         )

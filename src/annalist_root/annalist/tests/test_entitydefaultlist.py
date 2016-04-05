@@ -146,9 +146,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         # print "@@ "+repr(r.context['fields'][0]['field_help'])
         # print "@@ "+repr(r.context['fields'][1]['field_help'])
         # print "@@ "+repr(r.context['fields'][2]['field_help'])
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
-        tooltip3 = r.context['fields'][2]['field_help']
+        tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
+        tooltip3 = "" # 'title="%s"'%r.context['fields'][2]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -157,13 +157,13 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-2 columns" title="%(tooltip2)s">
+                  <div class="view-value small-2 columns" %(tooltip2)s>
                     <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
                   </div>
-                  <div class="view-value small-7 columns" title="%(tooltip3)s">
+                  <div class="view-value small-7 columns" %(tooltip3)s>
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value'],        "")
         self.assertEqual(r.context['fields'][0]['entity_type_id'],     "")
@@ -211,7 +211,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "EntityTypeId")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-2 columns")
         self.assertEqual(r.context['fields'][1]['field_value'],        "")
         self.assertEqual(r.context['fields'][1]['entity_type_id'],     "")
@@ -223,7 +223,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][2]['field_render_type'],  "Text")
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][2]['field_value_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-7 columns")
         self.assertEqual(r.context['fields'][2]['field_value'],        "")
         self.assertEqual(r.context['fields'][2]['entity_type_id'],     "")
@@ -249,7 +249,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_type',
-                        'field_placement', 'field_target_type'):
+                        'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 # Check row field values
                 fkey = field_keys[fid]
@@ -267,8 +267,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         cont = uri_params({"continuation_url": u})
         # cont = ""
         # log.info(r.content)
-        tooltip1 = r.context['fields'][0]['field_help']
-        tooltip2 = r.context['fields'][1]['field_help']
+        tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
+        tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
         rowdata = """
             <div class="tbody row select-row">
               <div class="small-1 columns">
@@ -277,10 +277,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
-                  <div class="view-value small-3 columns" title="%(tooltip1)s">
+                  <div class="view-value small-3 columns" %(tooltip1)s>
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
-                  <div class="view-value small-9 columns" title="%(tooltip2)s">
+                  <div class="view-value small-9 columns" %(tooltip2)s>
                     <span>Entity testcoll/testtype/entity1</span>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-3 columns")
         self.assertEqual(r.context['fields'][0]['field_value'],        "")
         # 2nd field
@@ -324,7 +324,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][1]['field_render_type'],  "Text")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-9 columns")
         self.assertEqual(r.context['fields'][1]['field_value'],        "")
         # Entities
@@ -338,7 +338,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 for fkey in (
                         'field_id', 'field_name', 'field_label', 
                         'field_property_uri', 'field_render_type',
-                        'field_placement', 'field_target_type'):
+                        'field_placement', 'field_value_type'):
                     self.assertEqual(item_field[fkey], head_field[fkey])
                 self.assertEqual(item_field['field_value'], field_val[fid]%(eid+1))
         return

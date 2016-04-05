@@ -131,9 +131,12 @@ class EntityGenericListJsonView(EntityGenericListView):
             # , ANNAL.CURIE.type_id:      "_list"
             , ANNAL.CURIE.entity_list:  entityvallist
             })
+        return_type = "application/ld+json"
+        if "type" in listinfo.request_dict:
+            return_type = listinfo.request_dict["type"]
         response = HttpResponse(
             json.dumps(jsondata, indent=2, separators=(',', ': ')),
-            content_type="application/ld+json"
+            content_type=return_type
             )
         response = self.add_link_header(response, [{"rel": "canonical", "ref": list_url}] )
         return response

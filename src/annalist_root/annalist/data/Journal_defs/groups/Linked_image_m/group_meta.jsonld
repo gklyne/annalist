@@ -1,0 +1,27 @@
+{
+  "rdfs:label": "Linked image Id+label",
+  "rdfs:comment": "Reference Id and label fields of linked image",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Linked_image",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,4",
+      "annal:field_id": "_field/Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:4,8",
+      "annal:field_id": "_field/Entity_label"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Linked_image_m",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

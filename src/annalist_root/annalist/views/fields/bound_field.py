@@ -106,7 +106,7 @@ class bound_field(object):
         self._targetvals        = None
         self._key               = self._field_description['field_property_uri']
         self._extras            = context_extra_values
-        eid = entityvals.get('entity_id', "@@render_utils.__init__@@")
+        eid = entityvals.get('entity_id', "@@bound_field.__init__@@")
         # log.log(settings.TRACE_FIELD_VALUE,
         #     "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
         #     (field_description['field_id'], eid, self._key, self['field_value'])
@@ -280,7 +280,7 @@ class bound_field(object):
                 # Get entity type info
                 #@@TODO: eliminate site param...
                 coll     = self._field_description._collection
-                typeinfo = EntityTypeInfo(coll.get_site(), coll, type_id)
+                typeinfo = EntityTypeInfo(coll, type_id)
                 # Check access permission, assuming user has "VIEW" permission in current collection
                 # This is primarily to prevent a loophole for accessing user account details
                 #@@TODO: pass actual user permissions in to bound_field or field description or extra params
@@ -438,9 +438,9 @@ def get_entity_values(typeinfo=None, entity=None, entity_id=None, action="view")
     if action == "copy":
         # Allocate new entity Id and lose values based on original Id 
         # when performing a copy operation.
-        entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
-        log.info("@@ copy new entity_id %s"%entity_id)
-        entityvals['entity_id'] = entity_id
+        # entity_id = typeinfo.entityclass.allocate_new_id(typeinfo.entityparent)
+        # log.info("@@ copy new entity_id %s"%entity_id)
+        # entityvals['entity_id'] = entity_id
         entityvals.pop('entity_link', None)
         entityvals[ANNAL.CURIE.id] = entity_id
         entityvals.pop(ANNAL.CURIE.uri, None)

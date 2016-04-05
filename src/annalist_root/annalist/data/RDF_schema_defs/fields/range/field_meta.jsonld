@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_placement": "small:0,12;medium:6,6",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "Enum_render_type/Identifier",
+  "annal:field_value_mode": "Enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Identifier",
+  "annal:group_ref": "",
+  "annal:id": "range",
+  "annal:placeholder": "(URI or CURIE of range of property)",
+  "annal:property_uri": "rdfs:range",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "URI or CURIE of class that is a range of the current property.",
+  "rdfs:label": "Range"
+}

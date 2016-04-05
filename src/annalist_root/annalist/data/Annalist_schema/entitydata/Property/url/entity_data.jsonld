@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "url",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:url",
+  "rdfs:comment": "# Entity URL\r\n\r\nMainly used internally by Annalist to track the location from which an entity was loaded.\r\n\r\nPrevious versions of Annalist would store this value in a saved entity, but later versions don't do this as the URL is invalidated when data is copied or moved to a new location.\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:EntityRoot"
+    }
+  ],
+  "rdfs:label": "Entity URL",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

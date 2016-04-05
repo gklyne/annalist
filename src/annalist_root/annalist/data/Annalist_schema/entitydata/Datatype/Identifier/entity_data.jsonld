@@ -1,0 +1,27 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Datatype",
+    "rdfs:Resource",
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Identifier",
+  "annal:type": "rdfs:Datatype",
+  "annal:type_id": "Datatype",
+  "annal:uri": "annal:Identifier",
+  "rdfs:comment": "# Identifier: URI or CURIE\r\n\r\nClass of values that denote resources on the web.  URIs reference resources directly. CURIEs reference through combination with vocabulary namespace URIs accessible to the current collection. Relative references are resolved using a base URI that is the root of data for the current collection.\r\n",
+  "rdfs:label": "Identifier",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Datatype/Text"
+    }
+  ]
+}

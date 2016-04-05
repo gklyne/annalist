@@ -266,7 +266,7 @@ def entitydata_context_data(
             , 'field_render_type':  'EntityId'
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  "annal:Slug"
+            , 'field_value_type':  "annal:Slug"
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
@@ -274,7 +274,7 @@ def entitydata_context_data(
             , 'field_id':           'Entity_type'
             , 'field_name':         'entity_type'
             , 'field_render_type':  'EntityTypeId'
-            , 'field_target_type':  "annal:Slug"
+            , 'field_value_type':  "annal:Slug"
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_value_mode':   'Value_direct'
             # , 'field_value':      (Supplied separately)
@@ -286,7 +286,7 @@ def entitydata_context_data(
             , 'field_render_type':  'Text'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  "annal:Text"
+            , 'field_value_type':  "annal:Text"
             , 'field_value':        entity_label
             , 'options':            []
             }
@@ -296,7 +296,7 @@ def entitydata_context_data(
             , 'field_render_type':  'Markdown'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  "annal:Richtext"
+            , 'field_value_type':  "annal:Richtext"
             , 'field_value':        entity_descr
             , 'options':            []
             }
@@ -344,7 +344,7 @@ def entitydata_context_add_field(
         , 'field_label':        field_label
         , 'field_render_type':  field_render_type
         , 'field_value_mode':   field_value_mode
-        , 'field_target_type':  field_value_type
+        , 'field_value_type':  field_value_type
         , 'field_placement':    get_placement_classes(field_placement)
         , 'options':            field_options
         })
@@ -446,7 +446,7 @@ def entitydata_default_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Entity_id'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Slug'
+            , 'field_value_type':  'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
@@ -455,7 +455,7 @@ def entitydata_default_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
             , 'field_id':           'Entity_type'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Text'
+            , 'field_value_type':  'annal:Text'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
@@ -464,7 +464,7 @@ def entitydata_default_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_label'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Text'
+            , 'field_value_type':  'annal:Text'
             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
             , 'options':            []
             }
@@ -473,7 +473,7 @@ def entitydata_default_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Entity_comment'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Richtext'
+            , 'field_value_type':  'annal:Richtext'
             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
             , 'options':            []
             }
@@ -584,7 +584,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
             , 'field_id':           'Type_id'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Slug'
+            , 'field_value_type':  'annal:Slug'
             # , 'field_value':      (Supplied separately)
             , 'options':            []
             }
@@ -593,7 +593,7 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_label'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Text'
+            , 'field_value_type':  'annal:Text'
             , 'field_value':        entity_label
             , 'options':            []
             }
@@ -602,16 +602,16 @@ def entitydata_recordtype_view_context_data(
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_comment'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Richtext'
+            , 'field_value_type':  'annal:Richtext'
             , 'field_value':        entity_descr
             , 'options':            []
             }
-          , { 'field_label':        'URI'
+          , { 'field_label':        'Type URI'
             , 'field_name':         'Type_uri'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_id':           'Type_uri'
             , 'field_value_mode':   'Value_direct'
-            , 'field_target_type':  'annal:Identifier'
+            , 'field_value_type':  'annal:Identifier'
             , 'field_value':        ""
             , 'options':            []
             }
@@ -638,7 +638,7 @@ def entitydata_recordtype_view_form_data(
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id="", orig_id=None, 
         action=None, cancel=None, update="Entity",
-        add_view_field=None, open_view=None):
+        add_view_field=None, open_view=None, customize=None):
     # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
@@ -675,6 +675,8 @@ def entitydata_recordtype_view_form_data(
         form_data_dict['add_view_field']  = add_view_field
     elif open_view:
         form_data_dict['open_view']       = open_view
+    elif customize:
+        form_data_dict['customize']       = customize
     else:
         form_data_dict['save']            = 'Save'
     return form_data_dict
@@ -685,7 +687,10 @@ def entitydata_recordtype_view_form_data(
 #
 #   -----------------------------------------------------------------------------
 
-def entitylist_form_data(action, search="", list_id="Default_list", entities=None, continuation_url=None):
+def entitylist_form_data(
+        action, list_scope_all=None, search="", 
+        list_id="Default_list", entities=None, 
+        continuation_url=None):
     """
     Form data from entity list form submission
 
@@ -722,6 +727,8 @@ def entitylist_form_data(action, search="", list_id="Default_list", entities=Non
         , 'list_choice':        "_list/"+list_id
         , 'continuation_url':   continuation_url
         })
+    if list_scope_all is not None:
+        form_data['list_scope_all'] = list_scope_all
     if entities is not None:
         form_data['entity_select'] = entities
     if action in form_actions:
@@ -805,8 +812,6 @@ def layout_classes(width=12):
             , 'col_head_classes':       "view-label col-head small-12 medium-4 columns"
             , 'col_item_classes':       "view-value col-???? small-12 medium-4 columns"
             , 'button_wide_classes':    "small-12 medium-4 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 6:
         class_dict = (
@@ -815,8 +820,6 @@ def layout_classes(width=12):
             , 'col_head_classes':       "view-label col-head small-12 medium-6 columns"
             , 'col_item_classes':       "small-12 medium-6 columns"
             , 'button_wide_classes':    "small-12 medium-6 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     elif width == 10:
         class_dict = (
@@ -837,11 +840,14 @@ def layout_classes(width=12):
             , 'space_classes':          "medium-2 columns show-for-medium-up"
             , 'button_wide_classes':    "small-12 medium-10 columns"
             , 'button_half_classes':    "form-buttons small-12 medium-5 columns"
-            , 'button_left_classes':    "form-buttons small-12 columns"
-            , 'button_right_classes':   "form-buttons small-12 columns text-right"
             })
     else:
         assert False, "Unexpected width %r"%width
+    class_dict.update(
+        { 'button_left_classes':        "form-buttons small-12 columns"
+        , 'button_right_classes':       "form-buttons small-12 columns text-right"
+        , 'button_r_med_up_classes':    "form-buttons small-12 columns medium-up-text-right"        
+        })
     return class_dict
 
 # End.

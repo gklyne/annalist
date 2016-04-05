@@ -74,7 +74,7 @@ def collectiondata_resource_url(coll_id="testcoll", resource_ref=layout.COLL_MET
 
 def collectiondata_view_url(coll_id="testcoll", action=None):
     """
-    Return URL for edit view of entity
+    Return URL for edit view of collection metadata
 
     e.g. 
       http://example.com/site/c/_annalist_site/v/Collection_view/_coll/testcoll/!view
@@ -117,8 +117,8 @@ def collectiondata_value_keys():
         [ 'annal:id', 'annal:type_id', 'annal:type'
         , 'rdfs:label', 'rdfs:comment'
         , 'annal:software_version'
-        , 'annal:comment'
-        ])
+        , 'annal:meta_comment'
+        ])    
     return keys
 
 def collectiondata_load_keys():
@@ -141,7 +141,7 @@ def collectiondata_create_values(
         , 'rdfs:label':             coll_label
         , 'rdfs:comment':           coll_descr
         , 'annal:software_version': annalist.__version_data__
-        , 'annal:comment':          "Created by Annalist test suite"
+        , 'annal:meta_comment':     "Created by Annalist test suite"
         })
     return d
 

@@ -30,6 +30,10 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_view_value
     )
 
+#   ------------------------------------------------------------
+#   Local data values
+#   ------------------------------------------------------------
+
 col_head_view = (
     { 'head':
         """\n"""+
@@ -82,9 +86,7 @@ target_blank = """<span class="value-blank">%s</span>"""
 target_missing = """<span class="value-missing">%s</span>"""
 
 #   ----------------------------------------------------------------------------
-#
-#   Multi-field reference field label renderer for viewing
-#
+#   Multi-field reference field label renderer for column label display
 #   ----------------------------------------------------------------------------
 
 class RenderMultiFields_label(object):
@@ -157,9 +159,7 @@ class RenderMultiFields_label(object):
     return "".join(response_parts)
 
 #   ----------------------------------------------------------------------------
-#
-#   Multi-field reference field value renderer for viewing
-#
+#   Multi-field reference field: value renderer for viewing or editing
 #   ----------------------------------------------------------------------------
 
 class RenderMultiFields_value(object):
@@ -238,9 +238,7 @@ class RenderMultiFields_value(object):
     return "".join(response_parts)
 
 #   ----------------------------------------------------------------------------
-#
 #   Multi-field reference value mapping
-#
 #   ----------------------------------------------------------------------------
 
 class RefMultifieldValueMapper(SelectValueMapper):
@@ -252,16 +250,14 @@ class RefMultifieldValueMapper(SelectValueMapper):
     pass
 
 #   ----------------------------------------------------------------------------
-#
-#   Return render objects for multiple field reference fields
-#
+#   Render object factory functions
 #   ----------------------------------------------------------------------------
 
 def get_ref_multifield_renderer():
     """
-    Return field renderer object for value selector (with '+' button)
+    Return multi-field renderer object
     """
-    r = RenderFieldValue(
+    r = RenderFieldValue("ref_multifields",
         col_head_view_renderer=RenderMultiFields_label(col_head_view),
         view_renderer=RenderMultiFields_value(view_multifield),
         edit_renderer=Select_edit_renderer(edit_select)

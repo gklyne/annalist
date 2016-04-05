@@ -44,6 +44,7 @@ from entity_testutils       import (
     collection_create_values,
     site_dir, collection_dir, 
     continuation_url_param,
+    collection_view_url,
     collection_edit_url,
     collection_entity_view_url,
     site_title,
@@ -129,7 +130,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
     def _check_entity_data_values(self, entity_id, type_id="testtype", update="Entity", update_dict=None):
         "Helper function checks content of form-updated record type entry with supplied entity_id"
         # log.info("_check_entity_data_values: type_id %s, entity_id %s"%(type_id, entity_id))
-        typeinfo = EntityTypeInfo(self.testsite, self.testcoll, type_id)
+        typeinfo = EntityTypeInfo(self.testcoll, type_id)
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
         self.assertEqual(e.get_id(), entity_id)
@@ -145,7 +146,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return e
 
     #   -----------------------------------------------------------------------------
-    #   Form rendering tests
+    #   Form rendering and response tests
     #   -----------------------------------------------------------------------------
 
     def test_get_default_form_no_login(self):
@@ -154,6 +155,68 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_post_default_form_use_view(self):
+        self._create_entity_data("entityuseview")
+        self.assertTrue(EntityData.exists(self.testdata, "entityuseview"))
+        f = entitydata_default_view_form_data(
+                entity_id="entityuseview", action="view",
+                use_view="_view/Type_view", 
+                )
+        f.pop('entity_id', None)
+        u = entitydata_edit_url(
+            "view", "testcoll", "testtype", "entityuseview", view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + entitydata_edit_url(
+            "view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view"
+            )
+        c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
+        self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
+        self._check_entity_data_values("entityuseview")
+        return
+
+    def test_post_default_form_default_view(self):
+        # Set default entity view, then ensure collection view redirects to it
+        self._create_entity_data("entitydefaultview")
+        f = entitydata_default_view_form_data(
+                entity_id="entitydefaultview", action="view",
+                default_view="default_view", 
+                )
+        f.pop('entity_id', None)
+        u = entitydata_edit_url(
+            action="view", view_id="Default_view",
+            coll_id="testcoll", type_id="testtype", entity_id="entitydefaultview"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = TestHostUri + u
+        self.assertIn(v, r['location'])
+        ih = "info_head=Action%20completed"
+        im = (
+            "info_message="+
+            "Default%20view%20for%20collection%20testcoll%20changed%20to%20"+
+            "Default_view/testtype/entitydefaultview"
+            )
+        self.assertIn(ih, r['location'])
+        self.assertIn(im, r['location'])
+        # Get collection root and check redirect to entity view
+        u2 = collection_view_url(coll_id="testcoll")
+        r2 = self.client.get(u2)
+        self.assertEqual(r2.status_code,   302)
+        self.assertEqual(r2.reason_phrase, "FOUND")
+        self.assertEqual(r2.content,       "")
+        v2 = TestHostUri + entitydata_edit_url(
+            coll_id="testcoll", view_id="Default_view", type_id="testtype", entity_id="entitydefaultview"
+            )
+        self.assertEqual(v2, r2['location'])
         return
 
     def test_post_default_form_use_view_no_login(self):
@@ -193,16 +256,16 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
             default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
             default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri,
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
-            tooltip5=r.context['fields'][4]['field_help'],
-            tooltip6=r.context['fields'][5]['field_help'],
-            tooltip7=r.context['fields'][6]['field_help'],
+            tooltip1="", # 'title="%s"'%r.context['fields'][0]['field_help'],
+            tooltip2="", # 'title="%s"'%r.context['fields'][1]['field_help'],
+            tooltip3="", # 'title="%s"'%r.context['fields'][2]['field_help'],
+            tooltip4="", # 'title="%s"'%r.context['fields'][3]['field_help'],
+            tooltip5="", # 'title="%s"'%r.context['fields'][4]['field_help'],
+            tooltip6="", # 'title="%s"'%r.context['fields'][5]['field_help'],
+            tooltip7="", # 'title="%s"'%r.context['fields'][6]['field_help'],
             )
         formrow1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip1)s">
+            <div class="small-12 medium-6 columns" %(tooltip1)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Type Id</span>
@@ -214,7 +277,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="small-12 columns" title="%(tooltip2)s">
+            <div class="small-12 columns" %(tooltip2)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Label</span>
@@ -226,7 +289,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow3 = """
-            <div class="small-12 columns" title="%(tooltip3)s">
+            <div class="small-12 columns" %(tooltip3)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Comment</span>
@@ -240,10 +303,10 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow4 = """
-            <div class="small-12 columns" title="%(tooltip4)s">
+            <div class="small-12 columns" %(tooltip4)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>URI</span>
+                  <span>Type URI</span>
                 </div>
                 <div class="%(input_classes)s">
                   <span>&nbsp;</span>
@@ -252,7 +315,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow5 = """
-            <div class="small-12 columns" title="%(tooltip5)s">
+            <div class="small-12 columns" %(tooltip5)s>
               <div class="row">
                 <div class="%(group_label_classes)s">
                   <span>Supertype URIs</span>
@@ -264,7 +327,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         formrow6 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip6)s">
+            <div class="small-12 medium-6 columns" %(tooltip6)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default view</span>
@@ -276,7 +339,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow7 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip7)s">
+            <div class="small-12 medium-6 columns" %(tooltip7)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default list</span>
@@ -300,9 +363,12 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
-                  <input type="submit" name="edit"  value="Edit" />
-                  <input type="submit" name="copy"  value="Copy" />
-                  <input type="submit" name="close" value="Close" />
+                  <input type="submit" name="edit"  value="Edit"
+                         title="Edit entity data." />
+                  <input type="submit" name="copy"  value="Copy"
+                         title="Copy, then edit entity data as new entity." />
+                  <input type="submit" name="close" value="Close"
+                         title="Return to previous page." />
                 </div>
               </div>
             </div>
@@ -310,12 +376,16 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         formrow8c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
-                <div class="%(button_right_classes)s">
-                  <input type="submit" name="open_view"     value="View description" />
+                <div class="%(button_r_med_up_classes)s">
+                  <!-- <input type="submit" name="open_view"    value="View description" /> -->
+                  <input type="submit" name="default_view" value="Set default view"
+                         title="Select this display as the default view for collection 'testcoll'." />
+                  <input type="submit" name="customize"    value="Customize"
+                         title="Open 'Customize' view for collection 'testcoll'." />
                 </div>
               </div>
             </div>
-            """%field_vals(width=4)
+            """%field_vals(width=6)
         formrow9 = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
@@ -360,7 +430,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow7,  html=True)
         self.assertContains(r, formrow8a, html=True)
         self.assertContains(r, formrow8b, html=True)
-        # self.assertContains(r, formrow7c, html=True)
+        self.assertContains(r, formrow8c, html=True)
         self.assertContains(r, formrow9,  html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow10, html=True)
@@ -388,7 +458,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(type id)")
         self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
         self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_target_type'],  "annal:Slug")
+        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
         self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][0]['field_value'],        "entity1")
         self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
@@ -401,7 +471,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][1]['field_label'],        'Label')
         self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
         self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_target_type'],  "annal:Text")
+        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Text")
         self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][1]['field_value'],        type_label_value)
         self.assertEqual(r.context['fields'][1]['options'],            self.no_options)
@@ -414,7 +484,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][2]['field_label'],        'Comment')
         self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
         self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_target_type'],  "annal:Richtext")
+        self.assertEqual(r.context['fields'][2]['field_value_type'],  "annal:Richtext")
         self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][2]['field_value'],        type_comment_value)
         self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
@@ -422,10 +492,10 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         # (NOTE: blank unless explcicit value specified)
         self.assertEqual(r.context['fields'][3]['field_id'],           'Type_uri')
         self.assertEqual(r.context['fields'][3]['field_name'],         'Type_uri')
-        self.assertEqual(r.context['fields'][3]['field_label'],        'URI')
+        self.assertEqual(r.context['fields'][3]['field_label'],        'Type URI')
         self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:uri")
         self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][3]['field_target_type'],  "annal:Identifier")
+        self.assertEqual(r.context['fields'][3]['field_value_type'],  "annal:Identifier")
         self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][3]['field_value'],        "")
         self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
@@ -434,9 +504,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][4]['field_name'],        'Type_supertype_uris')
         self.assertEqual(r.context['fields'][4]['field_label'],       'Supertype URIs')
         self.assertEqual(r.context['fields'][4]['field_placeholder'], "(Supertype URIs or CURIEs)")
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uris")
+        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:supertype_uri")
         self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][4]['field_target_type'],  "annal:Type_supertype_uri")
+        self.assertEqual(r.context['fields'][4]['field_value_type'],  "annal:Type_supertype_uri")
         self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
         self.assertEqual(r.context['fields'][4]['field_value'],        "") #@@
         self.assertEqual(r.context['fields'][4]['options'],            self.no_options)
@@ -446,7 +516,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_label'],        'Default view')
         self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:type_view")
         self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][5]['field_target_type'],  "annal:View")
+        self.assertEqual(r.context['fields'][5]['field_value_type'],  "annal:View")
         self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][5]['field_value'],        "Default_view")
         self.assertEqual(r.context['fields'][5]['options'],            self.no_view_id + self.view_options)
@@ -456,7 +526,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][6]['field_label'],        'Default list')
         self.assertEqual(r.context['fields'][6]['field_property_uri'], "annal:type_list")
         self.assertEqual(r.context['fields'][6]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][6]['field_target_type'],  "annal:List")
+        self.assertEqual(r.context['fields'][6]['field_value_type'],  "annal:List")
         self.assertEqual(r.context['fields'][6]['field_placement'].field, "small-12 medium-6 columns")
         self.assertEqual(r.context['fields'][6]['field_value'],        "Default_list")
         self.assertEqual(r.context['fields'][6]['options'],            self.no_list_id + self.list_options)

@@ -153,7 +153,6 @@ def am_updatesite(annroot, userhome, options):
         Site.update_site_data_dir(sitedata, sdir, site_data_src)
     print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
     sitedata.generate_coll_jsonld_context()
-
     return status
 
 # End.

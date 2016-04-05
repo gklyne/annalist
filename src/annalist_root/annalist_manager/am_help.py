@@ -23,7 +23,7 @@ command_summary_help = ("\n"+
     "  %(prog)s help [command]\n"+
     "  %(prog)s runtests\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
-    # "  %(prog)s idprovider ...\n"+  #@@ TODO
+    #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s defaultadminuser [ CONFIG ]\n"+
     "  %(prog)s updateadminuser [ username ] [ CONFIG ]\n"+
@@ -32,6 +32,10 @@ command_summary_help = ("\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
+    "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
+    "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
+    "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
+    "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
@@ -230,6 +234,67 @@ def am_help(options, progname):
             "\nExisting collection data is left untouched.\n"+
             "\n"+
             "If the site does not exist, the command fails.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("copyc"):
+        help_text = ("\n"+
+            "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
+            "\n"+
+            "Copy collection 'old_coll_id' to a new collection called 'new_coll_id'\n"+
+            "\n"+
+            "Existing collection data in 'old_coll_id' is left untouched.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("installc"):
+        help_text = ("\n"+
+            "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
+            "\n"+
+            "Install collection 'coll_id' from site data included in software distribution.\n"+
+            "\n"+
+            "Annalist software ships with a number of predefined collections that are part of\n"+
+            "the annalist software installation.  These collections can be used as starting\n"+
+            "points for defining a new collection.\n"+
+            "\n"+
+            "Available collections include:\n"+
+            "  bibdata: BiblioGraphic data definitions, creating structures similar to BibJSON.\n"+
+            "  namedata: defines some additional vocabulary namespaces beyond those that are part\n"+
+            "      of a standard Annalistr installation.\n"+
+            "  RDF_Schema_defs: for creating RDF schema in an Annalist collection.\n"+
+            "  Journal_defs: definitions for creating a journal with web and media resources.\n"+
+            "  Provenance_defs: @@to be added@@\n"+
+            "  Annalist_schema: defines RDF schema for terms in Annalist namespace.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migrationr"):
+        help_text = ("\n"+
+            "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
+            "\n"+
+            "This data migration helper generates report of changes needed to move data\n"+
+            "from collection 'old_coll_id' to 'new_coll_id', based on the type, view and\n"+
+            "field definitions in those collections.\n"+
+            "\n"+
+            "Existing collection data in 'old_coll_id' is left untouched.\n"+
+            "\n"+
+            "@@NOTE: this is exploratoty code.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migratec"):
+        help_text = ("\n"+
+            "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
+            "\n"+
+            "This command applies migrations to data for all entities in\n"+
+            "collection 'coll_id', by reading and rewriting data for each entity.\n"+
+            "The migrations applied are defined by supertypes and fiekld aliases\n"+
+            "defined for types used by the collection, along with any software version\mn"+
+            "migrations that may be applicable.\n"+
             "\n"+
             config_options_help+
             "\n"+

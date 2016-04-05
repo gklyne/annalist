@@ -1,0 +1,17 @@
+{ "@id":                "./"
+, "@type":              ["annal:Field_group"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:type_id":      "_group"
+, "annal:type":         "annal:Field_group"
+, "annal:id":           "Type_supertype_uri_r"
+, "annal:uri":          "annal:group/Type_supertype_uri_r"
+, "rdfs:label":         "Supertype URIs"
+, "rdfs:comment":       "Fields containing supertype URIs/CURIEs associated with a type."
+, "annal:record_type":  "annal:Type_supertype_uri"
+, "annal:group_fields": 
+    [ { "annal:field_id":         "_field/Type_supertype_uri"
+      , "annal:property_uri":     "@id"
+      , "annal:field_placement":  "small:0,12"
+      }
+    ]
+}

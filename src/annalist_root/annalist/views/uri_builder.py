@@ -79,9 +79,44 @@ def uri_params(*param_dicts, **param_dict):
 def uri_with_params(base_uri, *param_dicts, **param_dict):
     """
     Construct a URI from the supplied base URI (with any parameters and/or fragment removed)
-    and URI paramneters created using the supplied dictionary values.
+    and URI parameters created using the supplied dictionary values.
     """
     return uri_base(base_uri) + uri_params(*param_dicts, **param_dict)
+
+def scope_params(*param_dicts, **param_dict):
+    """
+    Return URI parameters from the supplied dictionary specifically used for entity selection,
+    ignoring all others.  These are the parameters which, in conjunction with a base URI, 
+    represent a resource or set of resources to be returned.
+
+    Preserves the following query params from original request:
+        scope
+        search
+
+    Query parameters not preserved (among others):
+        continuation_url
+        info_head
+        info_message
+        error_head
+        error_message
+        add_field
+        type
+    """
+    uri_param_dict = build_dict(*param_dicts, **param_dict)
+    return (
+        { 'search':           uri_param_dict.get('search_for')       or 
+                              uri_param_dict.get('search')           or None
+        , 'scope':            uri_param_dict.get('scope')            or None
+        })
+
+def _unused_scope_params_url(base_url, type=None):
+    """
+    Takes a supplied URL and returns a corresponding continuation URL with all
+    but scope parameters removed (c.f. scope_params above).
+    """
+    url_params = uri_param_dict(base_url)
+    scope_url  = uri_with_params(base_url, scope_params(url_params))
+    return scope_url
 
 def continuation_params(*param_dicts, **param_dict):
     """

@@ -1,0 +1,22 @@
+{
+  "rdfs:label": "See also",
+  "rdfs:comment": "Link to further information",
+  "annal:type_id": "_group",
+  "annal:record_type": "",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "",
+      "annal:field_id": "See_also"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "See_also_r",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

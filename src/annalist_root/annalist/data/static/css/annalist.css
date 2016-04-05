@@ -294,6 +294,12 @@ div.row div.columns.view-label
     /* height: 1rem; */
 }
 
+div.row.view-grouprow > div.column  > div.row.view-value-row > div.column.view-label ,
+div.row.view-grouprow > div.columns > div.row.view-value-row > div.columns.view-label
+{   /* Referenced fields within field */
+    padding-top:    0rem;
+}
+
 div.column.view-label  > span ,
 div.columns.view-label > span
 {

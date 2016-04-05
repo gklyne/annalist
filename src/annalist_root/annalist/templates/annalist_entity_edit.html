@@ -46,19 +46,19 @@
               {% for b in task_buttons %}
               <input type="submit" name="{{b.button_name}}" value="{{b.button_label}}" title="{{b.button_help}}"/>
               {% endfor %}
-              {% if auth_config and edit_view_button and edit_view_button != "no" %}
-              <input type="submit" name="open_view" value="Edit view" title="Edit definition for this entity view."/>
-              {% else %}
-              {%if not task_buttons %}
-              &nbsp;
+              {% if edit_view_button and edit_view_button != "no" %}
+              <input type="submit" name="open_view" value="Edit view"
+                     title="Edit definition for this entity view."
+                     {{edit_view_enable}} />
               {% endif %}
-              {% endif %}
+              <input type="submit" name="customize" value="Customize"
+                     title="Open 'Customize' view for collection '{{coll_id}}'."
+                     {{customize_view_enable}} />
             </div>
           </div>
         </div>
       </div>
 
-      <hr />
       <div class="row">
  
         {% with field=view_choices %}

@@ -112,42 +112,50 @@ OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
 Annalist namespace terms
 """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
-    [ "EntityRoot", "Entity"
-    , "Site", "SiteData", "Collection", "Entity", "EntityRoot"
-    , "Collection_Types", "Collection_Views", "Collection_Lists"
-    , "Type_Data", "EntityData", "Metadata"
+    [ "EntityRoot", "Entity", "EntityData"
+    , "Site", "SiteData", "Collection"
+    # Internal IDs for MIME types (see resourcetypes.py)
+    , "Metadata", "Type_Data"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
+    # Value types
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"
-    , "Placement", "Image", "Audio", "User", "Vocabulary"
-    , "Import", "Upload"
-    , "Default_type", "unknown_type"
+    , "Placement", "Image", "Audio", "Vocabulary"
+    , "Resource"
+    , "Default_type", "Unknown_type"
     # Properties in list JSON
     , "entity_list"
-    # Properties in entities
-    , "software_version", "comment", "inherit_from"
+    # Properties in internal entities
     , "id", "type_id", "type"
-    , "label", "help", "url", "uri", "record_type"
-    , "supertype_uris", "supertype_uri"
+    , "url", "uri", "record_type"
+    # Types, Views, lists and field groups
+    , "default_type", "default_view"
+    , "supertype_uri"
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
-    , "user_uri", "user_permissions"
-    , "group_fields"
-    , "view_fields"
-    , "list_entity_selector", "open_view"
-    , "list_entities", "list_fields"
-    , "placeholder", "default_value", "property_uri", "options_valkey"
-    , "field_ref_type", "field_ref_restriction", "field_ref_field"
-    , "repeat", "repeat_id", "repeat_label", "repeat_label_add", "repeat_label_delete"
-    , "default_type", "default_view" , "default_list"
-    , "default_view_id", "default_view_type", "default_view_entity"
-    , "field_id", "field_name", "field_placement"
-    , "field_render_type", "field_value_mode", "field_entity_type"
-    , "field_value_type", "field_target_type"
-    , "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "open_view", "view_fields"
     , "task_buttons", "button_id", "button_label", "button_help"
-    # Deprecated properties - in migration tables
+    , "list_entity_selector", "list_fields"
+    , "group_fields"
+    , "field_id"
+    # User permissions
+    , "user_uri", "user_permission"
+    # Field definitions
+    , "field_render_type", "field_value_type", "field_value_mode"
+    , "field_entity_type"
+    , "placeholder", "default_value", "property_uri"
+    , "field_ref_type", "field_ref_restriction", "field_ref_field"
+    , "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "field_name", "field_placement"
+    # Collection metadata
+    , "software_version", "meta_comment", "inherit_from"
+    , "default_list"
+    , "default_view_id", "default_view_type", "default_view_entity"
+    # Deprecated properties - used in entity migration tables
     , "options_typeref", "restrict_values", "target_field"
+    , "field_target_type", "comment"
+    , "supertype_uris"
+    , "user_permissions"
     ])
 
 # End.

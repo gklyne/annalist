@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_ref_type",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_ref_type",
+  "rdfs:comment": "# Referenced type\r\n\r\nUsed in field definitions that contain a reference to another entity.  The value is a local reference to the type of entity referenced.  For editing, the field presents as a drop-down list with a list of available types, which can be viewed/edited by clicking the \"+\"/\"<span style=\"font-size:150%;\">\u270d</span>\" (writing hand) icon beside the drop-down list.\r\n\r\nThe type selected in the field definition affects the entities that are displayed when editing an entity using a view that contains this field.  Selectable entities may be further constrained by the field [annal:field_ref_restriction](/annalist/c/Annalist_schema/v/Property/Property/field_ref_restriction/).\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Referenced type",
+  "rdfs:range": [
+    {
+      "@id": "annal:Slug"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

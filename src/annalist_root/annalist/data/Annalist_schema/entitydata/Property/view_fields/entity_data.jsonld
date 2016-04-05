@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "view_fields",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:view_fields",
+  "rdfs:comment": "# View fields\r\n\r\nList of fields in a view definition.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:label": "View fields",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field_group"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

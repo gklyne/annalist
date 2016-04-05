@@ -55,6 +55,18 @@
           <div class="small-12 medium-4 columns text-right">
             <div class="view-value-row row">
               <div class="view-value small-12 columns">
+                {% if url_type_id %}
+                <input type="submit" name="list_type" value="List '{{url_type_id}}'" 
+                       title="List entities of type {{url_type_id}}" />
+                {% endif %}
+                <input type="submit" name="list_all" value="List" 
+                       title="List entities of all types" />
+                <span class="checkbox" 
+                      title="If checked, list entries inherited from other collections; otherwise, list only entities defined inthe current collection.">
+                  Scope all
+                  <input type="checkbox" name="list_scope_all" value="list_scope_all" />
+                </span>               
+                <!--
                 <input type="submit" name="view" value="View" 
                        title="View entities from current collection" />
                 <input type="submit" name="view_all" value="View all" 
@@ -66,6 +78,7 @@
                   All types
                 </span>               
                 {% endif %}
+                -->
                 <!--
                 <button type="submit" name="search" value="Search">
                 <img src="{% static 'images/icons/search_32.png' %}"/>
@@ -86,16 +99,18 @@
 
         <div class="row">
           <div class="form-buttons small-12 medium-6 columns">
-            <input type="submit" name="new"             value="New"    title="Create new entity."/>
-            <input type="submit" name="copy"            value="Copy"   title="Copy selected entity."/>
-            <input type="submit" name="edit"            value="Edit"   title="Edit selected entity."/>
-            <input type="submit" name="delete"          value="Delete" title="Delete selected entity."/>
+            <input type="submit" name="new"       value="New"    title="Create new entity."/>
+            <input type="submit" name="copy"      value="Copy"   title="Copy selected entity."/>
+            <input type="submit" name="edit"      value="Edit"   title="Edit selected entity."/>
+            <input type="submit" name="delete"    value="Delete" title="Delete selected entity."/>
           </div>
           <div class="form-buttons small-12 medium-6 columns text-right medium-up-text-right">
-            <input type="submit" name="default_view"    value="Set default" {{default_view_enable}} 
-                   title="Select this list as the default view for collection '{{coll_id}}'."/>
-            <input type="submit" name="customize"       value="Customize" 
-                   title="Open 'Customize' view for collection '{{coll_id}}'." />
+            <input type="submit" name="default_view" value="Set default" 
+                   title="Select this list as the default view for collection '{{coll_id}}'."
+                   {{default_view_enable}} />
+            <input type="submit" name="customize"    value="Customize"
+                   title="Open 'Customize' view for collection '{{coll_id}}'."
+                   {{customize_view_enable}} />
           </div>
         </div>
 
@@ -108,8 +123,8 @@
             <div class="row view-value-row">
               <div class="small-12 columns">
                 <!-- Cf. https://github.com/BetaNYC/getDataButton -->
-                <a href="{{entity_list_ref}}">JSON-LD</a>
-                <a href="{{entity_list_ref}}">
+                <a href="{{entity_list_ref}}" title="Retrieve underlying data as JSON-LD">JSON-LD</a>
+                <a href="{{entity_list_ref_json}}"  title="Retrieve underlying JSON data">
                   <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
                 </a>
               </div>

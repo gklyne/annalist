@@ -565,11 +565,11 @@ class EntityTest(AnnalistTestCase):
         self.assertEqual(eid, "00000001")
         self.assertFalse(TestEntityType.exists(r, eid))
         eid = TestEntityType.allocate_new_id(r)
-        self.assertEqual(eid, "00000001")
+        self.assertEqual(eid, "00000002")
         e = TestEntityType.create(r, eid, test_values)
         self.assertTrue(TestEntityType.exists(r, eid))
         eid = TestEntityType.allocate_new_id(r)
-        self.assertEqual(eid, "00000002")
+        self.assertEqual(eid, "00000003")
         return
 
 # End.

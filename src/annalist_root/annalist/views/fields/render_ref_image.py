@@ -83,7 +83,7 @@ def get_ref_image_renderer():
     """
     Return field renderer object for token list values
     """
-    return RenderFieldValue(
+    return RenderFieldValue("ref_image",
         view_renderer=ref_image_view_renderer(), 
         edit_renderer=ref_image_edit_renderer(),
         )

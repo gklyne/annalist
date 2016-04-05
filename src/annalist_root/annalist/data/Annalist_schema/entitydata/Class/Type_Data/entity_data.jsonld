@@ -1,0 +1,26 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Type_Data",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Type_Data",
+  "rdfs:comment": "# Type data\r\n\r\nThis is an internal data type used by Annalist as a container to collect instances of a single user-defined data type.\r\n\r\nA Single `Type_Data` instance is associated with each defined user-defined data type.\r\n\r\nNote: `EntityData` appears similar, but is a superclass of all user-defined types, where `Type_Data` is a container type.",
+  "rdfs:label": "Type data",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    },
+    {
+      "@id": "Class/Entity"
+    }
+  ]
+}

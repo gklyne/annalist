@@ -141,7 +141,7 @@ test_image_ref_field_create_values = (
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "RefImage"
     , 'annal:field_value_mode':         "Value_direct"
-    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:field_value_type':        "annal:Identifier"
     , 'annal:placeholder':              "(Image reference)"
     , 'annal:default_value':            ""
     })
@@ -534,7 +534,7 @@ class JsonldContextTest(AnnalistTestCase):
         subj              = b #@@ user_default.get_url()
         user_default_data = user_default.get_values()
         user_uri          = ANNAL.to_uri(user_default_data[ANNAL.CURIE.user_uri])
-        user_perms        = user_default_data[ANNAL.CURIE.user_permissions]
+        user_perms        = user_default_data[ANNAL.CURIE.user_permission]
         for (s, p, o) in (
             [ (subj, RDF.type,          URIRef(ANNAL.User)                              )
             , (subj, RDFS.label,        Literal(user_default_data[RDFS.CURIE.label])    )
@@ -542,7 +542,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.id,          Literal(user_default_data[ANNAL.CURIE.id])      )
             , (subj, ANNAL.type_id,     Literal(user_default_data[ANNAL.CURIE.type_id]) )
             , (subj, ANNAL.user_uri,    URIRef(user_uri)                                )
-            , (subj, ANNAL.user_permissions, Literal(user_perms[0])                     )
+            , (subj, ANNAL.user_permission, Literal(user_perms[0])                      )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
 
@@ -572,7 +572,7 @@ class JsonldContextTest(AnnalistTestCase):
             )
         # Create data records for testing image references:
         test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         test_ref_type_info.create_entity("refentity", test_ref_entity_create_values(imageuri))
         # Generate collection JSON-LD context data

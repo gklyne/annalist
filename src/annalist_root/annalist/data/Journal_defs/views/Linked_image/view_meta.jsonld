@@ -1,0 +1,43 @@
+{
+  "annal:view_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:0,6",
+      "annal:field_id": "Entity_id"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12;medium:6,6",
+      "annal:field_id": "Entity_type"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "Entity_comment"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "Linked_image"
+    }
+  ],
+  "rdfs:label": "Linked image view",
+  "rdfs:comment": "Linked image view",
+  "annal:id": "Linked_image",
+  "annal:type_id": "_view",
+  "annal:record_type": "coll:Linked_image",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:open_view": true,
+  "@id": "./",
+  "@type": [
+    "annal:View"
+  ],
+  "annal:type": "annal:View"
+}

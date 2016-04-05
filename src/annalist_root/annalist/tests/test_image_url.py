@@ -94,7 +94,7 @@ test_image_ref_field_create_values = (
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "RefImage"
     , 'annal:field_value_mode':         "Value_direct"
-    , 'annal:field_target_type':        "annal:Identifier"
+    , 'annal:field_value_type':        "annal:Identifier"
     , 'annal:placeholder':              "(Image reference)"
     , 'annal:default_value':            ""
     })
@@ -138,7 +138,7 @@ class ImageReferenceTest(AnnalistTestCase):
             )
         # Create data records for testing image references:
         self.test_ref_type_info = EntityTypeInfo(
-            self.testsite, self.testcoll, "testreftype", create_typedata=True
+            self.testcoll, "testreftype", create_typedata=True
             )
         self.test_ref_type_info.create_entity("test1", test_ref_entity_create_values(self.imageuri))
         # Login and permissions
@@ -196,10 +196,10 @@ class ImageReferenceTest(AnnalistTestCase):
             , "entity_id":  "test1"
             , "image_uri":  self.imageuri
             , "field_id":   "ref_image"
-            , "tooltip":    r.context['fields'][i].field_help
+            , "tooltip":    "" # 'title="%s"'%r.context['fields'][i].field_help
             })
         img_element = """
-            <div class="small-12 columns" title="%(tooltip)s">
+            <div class="small-12 columns" %(tooltip)s>
               <div class="row view-value-row">
                 <div class="view-label small-12 medium-2 columns">
                   <span>test_image_ref_field label</span>

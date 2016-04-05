@@ -14,13 +14,25 @@ log = logging.getLogger(__name__)
 from django.http        import HttpResponse
 from django.template    import Template, Context
 
+from annalist.exceptions                import Annalist_Error
+
 from annalist.views.fields.bound_field  import bound_field
+
+from render_fieldvalue  import (
+    RenderFieldValue,
+    TemplateWrapValueRenderer, 
+    ModeWrapValueRenderer
+    )
+
+#   ------------------------------------------------------------
+#   Local data values
+#   ------------------------------------------------------------
 
 view_group = (
     { 'head':
         """
         <!-- views.fields.render_repeatgroup.view_group -->
-        <div class="small-12 columns"{{field.field_tooltip|safe}}>
+        <div class="small-12 columns">
           <div class="row">
             <div class="group-label small-2 columns">
               <span>{{field.field_label}}</span>
@@ -108,7 +120,7 @@ view_grouprow = (
     { 'head':
         """
         <!-- views.fields.render_repeatgroup.view_grouprow -->
-        <div class="small-12 columns"{{field.field_tooltip|safe}}>
+        <div class="small-12 columns">
           <div class="row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
@@ -130,7 +142,7 @@ view_grouprow = (
     , 'head_empty':
         """
         <!-- views.fields.render_repeatgroup.view_grouprow (empty list) -->
-        <div class="small-12 columns"{{field.field_tooltip|safe}}>
+        <div class="small-12 columns">
           <div class="row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
@@ -283,63 +295,27 @@ view_listrow = (
         """
     })
 
-edit_listrow_unused = (
+view_group_col = (
     { 'head':
         """
-        <!-- views.fields.render_repeatgroup.edit_listrow -->
-        <div class="thead row">
-          <div class="small-12 columns">
-            <div class="row">
-              <div class="group-label small-12 columns">
-                <span>{{field.field_label}}</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="small-1 columns">
-                &nbsp;
-              </div>
-              <div class="small-11 columns">
-                <div class="edit-listrow col-head row">
-                  {% for f in field.group_field_descs %}
-                  {% include f.field_render_colhead with field=f %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {% for f in field.group_field_descs %}
+        {% include f.field_render_label with field=f %}
+        {% endfor %}
         """
     , 'body':
         """
-        <div class="tbody row select-row">
-          <div class="small-1 columns checkbox-in-edit-padding">
-            <input type="checkbox" class="select-box right" name="entity_select" 
-                   value="{{repeat_entity.entity_type_id}}/{{repeat_entity.entity_id}}" />
-          </div>
-          <div class="small-11 columns">
-            <div class="edit-listbody row">
-              {% for f in repeat_bound_fields %}
-              {% include f.field_render_coledit with field=f %}
-              {% endfor %}
-            </div>
-          </div>
-        </div>"""
-    , 'tail':
+        {% for f in repeat_bound_fields %}
+        {% include f.field_render_view with field=f %}
+        {% endfor %}
         """
-        <div class="row">
-          <div class="small-12 columns">
-            <input type="submit" name="{{field.group_id}}__remove" 
-                   value="{{field.group_delete_label}}" />
-            <input type="submit" name="{{field.group_id}}__add"    
-                   value="{{field.group_add_label}}" />
-            <input type="submit" name="{{field.group_id}}__up"
-                   value="Move up" />
-            <input type="submit" name="{{field.group_id}}__down"
-                   value="Move down" />
-          </div>
-        </div>"""
+    # , 'tail':
+    #     """
+    #     """
     })
 
+#   ------------------------------------------------------------
+#   Repeat group render class
+#   ------------------------------------------------------------
 
 class RenderRepeatGroup(object):
     """
@@ -347,10 +323,10 @@ class RenderRepeatGroup(object):
     """
 
     def __init__(self, templates=None):
+        """
+        Creates a renderer object for a repeating group field
+        """
         # Later, may introduce a template_file= option to read from templates directory
-        """
-        Creates a renderer object for a simple text field
-        """
         # log.info("RenderRepeatGroup: __init__ %r"%(templates))
         super(RenderRepeatGroup, self).__init__()
         assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
@@ -429,9 +405,121 @@ class RenderRepeatGroup(object):
         """
         Returns a renderer object that renders whatever is required for the 
         current value of "render_mode" in the view context.
-
-        In the case of a repeat group, invokes the repeat render object.
         """
         return self
+        # return RenderRepeatGroup(view_group_col)
+
+    #@@
+    # class RenderModeRepeatGroup(object):
+    #     """
+    #     Render class for a repeated field group that renders according to the "render_mode"
+    #     value inthe supplied context.
+    #     """
+    #     def __init__(self, baserenderer):
+    #         self._baserenderer = baserenderer
+    #         return
+    #     def render(self, context):
+    #         """
+    #         Renders a repeat group according to render_mode.
+    #         """
+    #         value_list = context['field']['field_value']
+    #         mode       = context['render_mode']
+    #         if mode in ["col_head", "col_head_view", "col_head_edit"]:
+    #             # Render row headings
+    #         elif mode in ["col_view", "col_edit"]:
+    #             # render row value
+    #         else
+    #             response = self._baserenderer.render(context)
+    #         return response
+    #@@
+
+
+#   ------------------------------------------------------------
+#   Repeat group renderer factory class and functions
+#   ------------------------------------------------------------
+
+class RenderGroupFieldValue(RenderFieldValue):
+    """
+    Return field render factory for a repeated group based on 
+    the supplied render value objects.
+    """
+    def __init__(self, render_type, view_renderer=None, edit_renderer=None):
+        """
+        Creates a renderer factory for a repeating value field.
+
+        view_renderer   is a render object that formats values for viewing
+        edit_renderer   is a render object that formats value editing widgets
+
+        Methods provided return composed renderers for a variety of contexts.
+        """
+        super(RenderGroupFieldValue, self).__init__(render_type,
+            view_renderer=view_renderer, 
+            edit_renderer=edit_renderer
+            )
+        # Override view/edit renderers to not use wrapper.
+        self._render_view       = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_edit       = ModeWrapValueRenderer("edit", self._edit_renderer)
+        #@@TODO: remove labelling from templates instead?
+        self._render_label_view = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_label_edit = ModeWrapValueRenderer("edit", self._edit_renderer)
+        self._render_col_view   = ModeWrapValueRenderer("view", self._view_renderer)
+        self._render_col_edit   = ModeWrapValueRenderer("edit", self._edit_renderer)
+        return
+
+    # def label_view(self):
+    #     log.warning("RepeatGroup renderer has no label_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no label_view method")
+
+    # def label_edit(self):
+    #     log.warning("RepeatGroup renderer has no label_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no label_edit method")
+
+    # def col_head(self):
+    #     log.warning("RepeatGroup renderer has no col_head method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head method")
+
+    # def col_head_view(self):
+    #     log.warning("RepeatGroup renderer has no col_head_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head_view method")
+
+    # def col_head_edit(self):
+    #     log.warning("RepeatGroup renderer has no col_head_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_head_edit method")
+
+    # def col_view(self):
+    #     log.warning("RepeatGroup renderer has no col_view method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_view method")
+
+    # def col_edit(self):
+    #     log.warning("RepeatGroup renderer has no col_edit method")
+    #     raise Annalist_Error("RepeatGroup renderer has no col_edit method")
+
+
+def get_repeatgroup_renderer():
+    """
+    Return field renderer object for RepeatGroup (labeled fields)
+    """
+    return RenderGroupFieldValue("repeatgroup",
+        view_renderer=RenderRepeatGroup(view_group),
+        edit_renderer=RenderRepeatGroup(edit_group)
+        )
+
+def get_repeatgrouprow_renderer():
+    """
+    Return field renderer object for RepeatGroup as row (col headier labels)
+    """
+    return RenderGroupFieldValue("repeatgrouprow",
+        view_renderer=RenderRepeatGroup(view_grouprow),
+        edit_renderer=RenderRepeatGroup(edit_grouprow)
+        )
+
+def get_repeatlistrow_renderer():
+    """
+    Return field renderer object for RepeatGroup as list (col header labels)
+    """
+    return RenderGroupFieldValue("repeatlistrow",
+        view_renderer=RenderRepeatGroup(view_listrow),
+        edit_renderer=Template("@@repeatlistrow_renderer cannot be used for editing@@")
+        )
 
 # End.

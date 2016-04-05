@@ -8,7 +8,7 @@
 , "rdfs:comment":   "# Namespace: `xsd`\r\n\r\nVocabulary namespace for XML Schema datatypes"
 , "annal:uri":      "http://www.w3.org/2001/XMLSchema#"
 , "rdfs:seeAlso":
-    [ { "owl:sameAs":   "http://www.w3.org/TR/xmlschema11-2/" }
-    , { "owl:sameAs":   "http://www.w3.org/TR/xmlschema-2/" }
+    [ { "@id":   "http://www.w3.org/TR/xmlschema11-2/" }
+    , { "@id":   "http://www.w3.org/TR/xmlschema-2/" }
     ]
 }

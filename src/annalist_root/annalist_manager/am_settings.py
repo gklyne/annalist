@@ -27,7 +27,7 @@ class AnnalistSettings(object):
     """
     Access Annalist settings indicated by command line options.
 
-    annroot     is the root directory for theannalist software installation.
+    annroot     is the root directory for the annalist software installation.
     userhome    is the home directory for the current user.
     options     contains options parsed from the command line.
 

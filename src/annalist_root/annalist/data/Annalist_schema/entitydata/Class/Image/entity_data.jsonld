@@ -1,0 +1,23 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "Image",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Image",
+  "rdfs:comment": "# Image\r\n\r\nRendered value is an image.  Usually, the field value is a reference to a local image file, or an image resource on the web.  Supported image formats are those that can be displayed by a web browser.  Currently recognized are:\r\n\r\n* `.image`: image/*\r\n* `.png`:   image/png\r\n* `.jpg`:   image/jpeg\r\n* `.jpeg`:  image/jpeg\r\n* `.gif`:   image/gif\r\n* `.tiff`:  image/tiff\r\n* `.svg`:   image/svg\r\n* `.pdf`:   application/pdf\r\n",
+  "rdfs:label": "Image",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

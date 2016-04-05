@@ -22,7 +22,8 @@ from annalist.models.recordfield            import RecordField
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
-from annalist.views.fields.render_utils     import (
+from annalist.views.fields.find_renderers   import (
+    get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 
     get_label_view_renderer,
@@ -88,7 +89,6 @@ class FieldDescription(object):
         field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
         field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
         field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
-        field_val_type      = recordfield.get(ANNAL.CURIE.field_value_type, "")
         field_entity_type   = recordfield.get(ANNAL.CURIE.field_entity_type, None)
         field_group_ref     = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
         self._field_desc    = (
@@ -97,14 +97,11 @@ class FieldDescription(object):
             , 'field_instance_name':        field_name
             , 'field_render_type':          field_render_type
             , 'field_value_mode':           field_value_mode
+            , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
             , 'field_label':                field_label
             , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
             , 'field_property_uri':         field_property
             , 'field_placement':            field_placement_c
-            #@@ , 'field_value_type':           field_val_type
-            #@@TODO: LATER: rename 'field_target_type' to 'field_value_type' when old references are flushed out
-            #@@      See also references to 'field_target_type' in entityedit.py
-            , 'field_target_type':          recordfield.get(ANNAL.CURIE.field_target_type, field_val_type)
             , 'field_placeholder':          field_placeholder
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_ref_type':             field_ref_type
@@ -120,6 +117,7 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_view':                 None
             , 'group_field_descs':          None
+            , 'field_render_label':         get_label_renderer(        field_render_type, field_value_mode)
             , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
             , 'field_render_edit':          get_edit_renderer(         field_render_type, field_value_mode)
             , 'field_render_label_view':    get_label_view_renderer(   field_render_type, field_value_mode)

@@ -1,0 +1,28 @@
+{
+  "annal:view_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_label"
+    },
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Entity_comment"
+    }
+  ],
+  "rdfs:label": "Journal entry note view",
+  "rdfs:comment": "View of project journal entry that displays just the title and comment as a documentation page.",
+  "annal:id": "Journal_note_view",
+  "annal:type_id": "_view",
+  "annal:record_type": "coll:Journal",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:open_view": true,
+  "@id": "./",
+  "@type": [
+    "annal:View"
+  ],
+  "annal:type": "annal:View"
+}

@@ -1,0 +1,22 @@
+{
+  "rdfs:label": "Uploaded images group",
+  "rdfs:comment": "Reference to fields of uploaded image",
+  "annal:type_id": "_group",
+  "annal:record_type": "coll:Uploaded_image",
+  "annal:group_fields": [
+    {
+      "annal:property_uri": "",
+      "annal:field_placement": "small:0,12",
+      "annal:field_id": "_field/Uploaded_image_m"
+    }
+  ],
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Uploaded_image_r",
+  "@id": "./",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:type": "annal:Field_group"
+}

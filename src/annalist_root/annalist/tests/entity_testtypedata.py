@@ -111,7 +111,7 @@ def recordtype_value_keys(type_uri=False, supertype_uris=False):
     if type_uri:
         ks.add('annal:uri')
     if supertype_uris:
-        ks.add('annal:supertype_uris')
+        ks.add('annal:supertype_uri')
     return ks
 
 def recordtype_load_keys(type_uri=False, supertype_uris=False):
@@ -137,13 +137,13 @@ def recordtype_create_values(
     if type_uri:
         d['annal:uri'] = type_uri
         if supertype_uris is not None:
-            d['annal:supertype_uris'] = (
-                [ { 'annal:supertype_uri': st } for st in supertype_uris ]
+            d['annal:supertype_uri'] = (
+                [ { '@id': st } for st in supertype_uris ]
                 )
         else:
-            d['annal:supertype_uris'] = (
-                [ { 'annal:supertype_uri': type_uri+"/super1" }
-                , { 'annal:supertype_uri': type_uri+"/super2" }
+            d['annal:supertype_uri'] = (
+                [ { '@id': type_uri+"/super1" }
+                , { '@id': type_uri+"/super2" }
                 ])
     return d
 
@@ -202,7 +202,7 @@ def recordtype_entity_view_context_data(
         , 'fields':
           [ { 'field_id':           'Type_id'
             , 'field_name':         'entity_id'
-            , 'field_target_type':  'annal:Slug'
+            , 'field_value_type':  'annal:Slug'
             , 'field_label':        'Type Id'
             , 'field_render_type':  'EntityId'
             , 'field_value_mode':   'Value_direct'
@@ -212,7 +212,7 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_label'
             , 'field_name':         'Type_label'
-            , 'field_target_type':  'annal:Text'
+            , 'field_value_type':  'annal:Text'
             , 'field_label':        'Label'
             , 'field_render_type':  'Text'
             , 'field_value_mode':   'Value_direct'
@@ -223,7 +223,7 @@ def recordtype_entity_view_context_data(
           , { 'field_id':           'Type_comment'
             , 'field_name':         'Type_comment'
             , 'field_label':        'Comment'
-            , 'field_target_type':  'annal:Richtext'
+            , 'field_value_type':  'annal:Richtext'
             , 'field_render_type':  'Markdown'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
@@ -232,8 +232,8 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_uri'
             , 'field_name':         'Type_uri'
-            , 'field_target_type':  'annal:Identifier'
-            , 'field_label':        'URI'
+            , 'field_value_type':  'annal:Identifier'
+            , 'field_label':        'Type URI'
             , 'field_render_type':  'Identifier'
             , 'field_value_mode':   'Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
@@ -242,7 +242,7 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_supertype_uris'
             , 'field_name':         'Type_supertype_uris'
-            , 'field_target_type':  'annal:Type_supertype_uri'
+            , 'field_value_type':  'annal:Type_supertype_uri'
             , 'field_label':        'Supertype URIs'
             , 'field_render_type':  'RepeatGroupRow'
             , 'field_value_mode':   'Value_direct'
@@ -252,7 +252,7 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_view'
             , 'field_name':         'Type_view'
-            , 'field_target_type':  'annal:View'
+            , 'field_value_type':  'annal:View'
             , 'field_label':        'Default view'
             , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'
@@ -262,7 +262,7 @@ def recordtype_entity_view_context_data(
             }
           , { 'field_id':           'Type_list'
             , 'field_name':         'Type_list'
-            , 'field_target_type':  'annal:List'
+            , 'field_value_type':  'annal:List'
             , 'field_label':        'Default list'
             , 'field_render_type':  'Enum_optional'
             , 'field_value_mode':   'Value_direct'

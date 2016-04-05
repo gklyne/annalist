@@ -18,7 +18,7 @@ from django.conf import settings
 
 from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
-from annalist.identifiers       import ANNAL
+from annalist.identifiers       import ANNAL, RDFS, OWL
 from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
@@ -49,6 +49,30 @@ class RecordVocab(EntityData):
         Override EntityData method
         """
         return None
+
+    def _migrate_values(self, entitydata):
+        """
+        Vocabulary namespace definition entity format migration method.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with format migrations applied.
+
+        NOTE:  implementations are free to apply migrations in-place.  The resulting 
+        entitydata should be exctly as the supplied data *should* appear in storage
+        to conform to the current format of the data.  The migration function should 
+        be idempotent; i.e.
+            x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
+        """
+        # Migrate
+        #   rdfs:seeAlso [ { 'owl:sameAs': <foo> }, ... ]
+        # to:
+        #   rdfs:seeAlso [ { '@id': <foo> }, ... ]
+        seeAlso = entitydata.get(RDFS.CURIE.seeAlso, [])
+        for i in range(len(seeAlso)):
+            if OWL.CURIE.sameAs in seeAlso[i]:
+                seeAlso[i]['@id'] = seeAlso[i].pop(OWL.CURIE.sameAs)
+        # Return result
+        return entitydata
 
     def _post_update_processing(self, entitydata):
         """
