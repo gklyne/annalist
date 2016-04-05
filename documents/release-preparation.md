@@ -44,12 +44,12 @@
 - [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
 - [ ] Check for new dependencies; update setup.py as needed.
     - copy kit to dev.annalist.net, install and test
-        . newkit_to_annalist_net.sh
+        . newkit_to_annalist_dev.sh
     - login to dev.annalist.net, then
         rm -rf anenv
         virtualenv anenv
         . anenv/bin/activate
-        pip install software/Annalist-0.1.28.tar.gz
+        pip install software/Annalist-0.1.xx.tar.gz
         annalist-manager runtests
     - Test new site creation:
         annalist-manager createsite
@@ -71,7 +71,7 @@
     - `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
     - `. update-run-annalist.sh`
     - `cat annalist.out`
-- [ ] Update front page link at annalist.net - copy `~annalist/uploads/pages/index.html` to `/var/www`
+- [ ] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
 - [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/

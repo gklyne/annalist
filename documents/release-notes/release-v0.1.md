@@ -4,11 +4,11 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
-## Current release: 0.1.28
+## Current release: 0.1.30
 
 (See "History" below for morte details about this and previous releases)
 
-This release contains substantial cosmetic updates, and some bug fixes.
+This release provides improvements to data evolution, collection management, user interface changes to facilitate navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collections.
 
 ## Status
 
@@ -84,6 +84,103 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+
+## Version 0.1.30
+
+This release provides improvements to data evolution, collection management, user interface changes aimed at facilitating collection navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collection definitions.
+
+### Data evolution support
+
+Data evolution support has been enhanced by the inclusion of support in `annalist-manager`.  The idea is that data evolution can be substantially handled by:
+
+a. Adding new Annalist types and fields.  This does not create any incompatibility withj older data, so no migration of existing data is required.
+b. Changing type URIs:  these will be updated in the normal course of using Annalist to manage the data.  References in views, fields and lists may need updating, or if previous type URIs are declared as supertypes of the new URIs then the old URIs used here can still be recognized.
+c. Changing property URIs:  this will cause previously used URIs to not be recognized, unless the old URIs are declared as aliases for the new ones (in the appropriate type definitions).
+
+The plan is that, when evolving a collection, a new collection can be created that inherits from the original, and changes can be made in the new collection.  When the desired changes present as desired, a migration report can be run to highlight where existing classes (types) and properties (views and fields) are changed, and suggest changes to supertype declarations and property aliases that can facilitate migration of data.  The report is an early experimental feature, and it is intended that it be enhanced with growing experience of actual migration requirements.
+
+The new features added to `annalist-manager` are intended to facilitate use of collection modules in support of separation and sharing of definitions:
+
+* `migrationreport old_coll_id new_coll_id` - produce a migration report of changes from `old_coll_id` to `new_coll_id`
+* `annalist-manager migratecollection coll_id` - apply type and proerty changes to all entities in a collection.  Type URIs and property aliases are re-written for all entities in the collection by reading and re-saving each one.
+
+### Data collection management support
+
+Data collection management features added are:
+
+* `annalist-manager copycollection` - makes a complete copy of collection definitions and data content.
+* `annalist-manager installcollection` - installs a predefined collection from the software distribution into the an Annalist site.  The available collections ids are displayed if none is supplied.
+
+New data collections have been created:
+
+* `RDF_schema_defs` - provides Annalist definitions for Class, Datatype and Property that can be used to define RDF schemas as Annalist collections.
+* `Annalist_schema` - uses `RDF_schema_defs` definitions to define an RDF schema for the Annalist namespace.
+* `Journal_defs` - defines fields for a generic data collection based around journal entries with attached media.  The types and fields defined for media attachment have been arranged to allow linked, imported and uploaded media to be mixed in a list.  In our work, we have found these useful in a number of data collection projects where we start with very loosely structured data, around which more structured information is later crystallized.
+
+### Site navigation changes
+
+* The list display selection buttons are reorganized.  To list inherited definitions, the "scope" checkbox should be selected before clicking one of the **List** or **List <type>** buttons.
+* Add a **Customize** button to entity edit form (enabled if CONFIG permission is available).
+* Add a **Collection metadata** button to the Customize view, to facilitate access to collection metadarta editing.
+* Add a **Migrate data** button to the Customize view to trigger data migration from the Annalist web interface (as an alternative to using `annalist-manager migratecollection`).
+
+### Other changes
+
+* Entity view displays no longer show ttoltips for the various fields, as they were not very helpful and sometimes confusing.  (Tooltips are still displayed in edit mode.)
+* The (get the) *Data* button en entity view displays returns the underlying data with content type `tex/plain`, so that it displays immediately in the browser.  The `JSON-LD` link still returns the data as `application/ld+json`.
+* When copying an enttity, the generated default entity Id incorporates the original entity Id.
+* Various internal changes noted below in the version 0.1.29 change log.
+
+
+## Version 0.1.29, towards 0.1.30
+
+- [x] Add data migration logic for vocabs
+- [x] Review how data migration can be handled. For now, using supertypes and property aliases.
+    - [x] `annalist-manager `
+    - [x] `annalist-manager migratecollection`
+        - load and save every entity in a collection and rewrite context data.  
+- [x] annalist-manager options to install/copy collection data
+    - [x] `annalist-manager copycollection from to` (copy existing)
+    - [x] `annalist-manager installcollection name` (predefined)
+- [x] When supertypes are changed, need to regenerate @type fields of instances?
+    - [x] refactor methods used for initialization, copy and migration
+    - [x] add migration option on customize page
+- [x] Add "Customize" button on entity edit and view pages, enabled with config permissions
+- [x] Add "Collection metadata" button to collection edit (Customize) view.
+- [x] Add "Migrate data" button to the collection edit (Customize) view.
+- [x] List view: reorganize scope/type selection: 
+    - [x] use "List <type>" and "List" buttons, with checkbox for "Scope all".
+    - [x] Suppress "List <type>" if no type id is defined by the URI.
+- [x] Drop tooltips from fields in view-only mode (they weren't very helpful).
+- [x] Retrieve underlying JSON-LD data as text/plain or text/json for viewing in browser
+- [x] Site vocabulary changes
+    - [x] `Entity_see_also_repeat` -> `Entity_see_also_r`
+    - [x] `Entity_see_also_repeat_field` -> `Entity_see_also_group`
+    - [x] `owl:sameAs` -> `@id` (in `_group/Entity_see_also_r` - used by vocabs)
+    - NOTE: only references found are in site data, so should be superseded by software update.
+    - Check when software updates are applied to various deployments
+- [x] When copying entity, generate new ID using id of opriginal entity
+    - (entity.allocate_new_id, called by displayinfo.get_entity_info, called by entityedit.view_setup)
+- [x] Remove all references to `field_target_type` - where needed, use `field_value_type` instead.
+    - [x] Add migration entry in models.recordfield
+- [x] Canonicalize JSON generation (sort keys) to minimize arbitrary version differences
+- [x] Create schema definitions in Annalist for ANNAL namespace, as predefined collection data.
+    - [x] When creating repeat field for field, display the created field.
+    - [x] Create definitions for schema entities: classes and properties
+    - [x] Create records for classes
+    - [x] Create records for properties
+    - [x] Separate collection into `RDF_schema_defs` and `Annalist_schema`
+    - [x] Add `RDF_schema_defs` and `Annalist_schema` as predefined collection data
+        - NOTE: current limitations of Annalist mean that the exported JSON-LD for RDF schema does not directly use standard RDF terms for everything.  For example, subclasses are referenced using a local URI reference rather than the global absolute URI, which can be obtained by defererencing the given reference and extracting the `annal:uri` value from there.
+- [x] Refactor and review label/comment creation for entities generated by task buttons.
+- [x] Add journal and note entry definitions (with image and audio resource fields) as installable collection.
+- [x] Check layout/field alignment, adjust CSS: check with tutorial data (photo example)
+- [x] Refactored handling of field rendering dispatch
+    - hand off to individual render modules
+    - rename `render_utils` module to `find_renderers`
+    - eliminate special case logic in find_renderers module.
+- [x] Provide overview description and resource links at annalist.net.
 
 
 ## Version 0.1.28
