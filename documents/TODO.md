@@ -16,7 +16,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.31, towards 0.1.32
 
-- [ ] annalist-manager configdirectory - display directory where config setting files are located
+- [x] annalist-manager configdirectory - display directory where config setting files are located
     - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
     - (same as SITE_CONFIG_DIR in log)
 - [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test

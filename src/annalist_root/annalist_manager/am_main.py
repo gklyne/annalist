@@ -30,14 +30,18 @@ import annalist
 # from annalist_manager       import am_errors
 import am_errors
 from am_runtests            import am_runtests
-from am_runserver           import am_runserver, am_serverlog, am_sitedirectory, am_version
 from am_initialize          import am_initialize
+from am_createsite          import am_createsite, am_updatesite
+from am_runserver           import (
+    am_runserver, am_serverlog, am_sitedirectory, 
+    am_settingsmodule, am_settingsfile, am_settingsdir, 
+    am_version
+    )
 from am_createuser          import (
     am_createadminuser, am_defaultadminuser, am_updateadminuser, 
     am_setdefaultpermissions, am_setpublicpermissions,
     am_deleteuser
     )
-from am_createsite          import am_createsite, am_updatesite
 from am_managecollections   import (
     am_installcollection, am_copycollection,
     am_migrationreport, am_migratecollection, 
@@ -150,6 +154,12 @@ def run(userhome, userconfig, options, progname):
         return am_serverlog(annroot, userhome, options)
     if options.command.startswith("site"):                  # sitedir
         return am_sitedirectory(annroot, userhome, options)
+    if options.command.startswith("settingsm"):             # settingsmodule
+        return am_settingsmodule(annroot, userhome, options)
+    if options.command.startswith("settingsf"):             # settingsfile
+        return am_settingsfile(annroot, userhome, options)
+    if options.command.startswith("settingsd"):             # settingsdir
+        return am_settingsdir(annroot, userhome, options)
     if options.command.startswith("ver"):                   # version
         return am_version(annroot, userhome, options)
     if options.command.startswith("help"):
