@@ -3,6 +3,7 @@
 ## Summary of release tasks
 
 - [ ] Feature freeze
+- [ ] Ensure default logging level is INFO (in `settings/common.py`)
 - [ ] Uninstall annalist (if installed): `pip uninstall annalist`
 - [ ] Delete contents of build directory (remove old files) 
     - python setup.py clean --all
@@ -163,6 +164,7 @@ See [installing-annalist.md](installing-annalist.md) for details of how to run a
     docker ps
     docker pull gklyne/annalist_site
     docker pull gklyne/annalist
+    docker run --name=annalist_site --detach gklyne/annalist_site
     docker run --detach --publish=8000:8000 --volumes-from=annalist_site     gklyne/annalist     annalist-manager runserver
     docker ps
     curl -v http://localhost:8000/annalist/
@@ -171,4 +173,9 @@ See [installing-annalist.md](installing-annalist.md) for details of how to run a
       # check out admin scripts, etc
     docker stop <container-id>
     docker ps
+
+Clean up old docker containers 
+(ht https://twitter.com/jpetazzo/status/347431091415703552):
+
+    docker ps -a | grep 'weeks ago' | awk '{print $1}' | xargs --no-run-if-empty docker rm
 

@@ -16,6 +16,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.31, towards 0.1.32
 
+- [ ] annalist-manager configdirectory - display directory where config setting files are located
+    - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
+    - (same as SITE_CONFIG_DIR in log)
 - [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
 - [ ] Entity types list (and List list?) - provide link field to display list
 - [ ] Field option to display item(s) from list (e.g. domain).
@@ -207,6 +210,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
 - [ ] It would be nice if link field tooltips describe what they link to.
