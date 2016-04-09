@@ -33,7 +33,7 @@
     , "annal:field_placement":  "small:0,12"
     }
   ]
-, "annal:task_buttons":
+, "annal:edit_task_buttons":
   [ { "annal:button_id":        "_task/Define_view_list" 
     , "annal:button_label":     "Define view+list"
     , "annal:button_help":      "Define initial view and list definitions for the current type.  (View and list type information and URI are taken from the current type; other fields are taken from the corresponding '_initial_values' record, and may be extended or modified later.)"
