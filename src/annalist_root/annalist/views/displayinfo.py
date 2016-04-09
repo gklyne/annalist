@@ -649,8 +649,10 @@ class DisplayInfo(object):
                 , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
             context['title'] = "%(view_label)s - %(coll_label)s"%context
-            task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
-            self.add_task_button_context(task_buttons, context)
+            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, None)
+            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, None)
+            self.add_task_button_context('edit_task_buttons', edit_task_buttons, context)
+            self.add_task_button_context('view_task_buttons', view_task_buttons, context)
         if self.recordlist:
             context.update(
                 { 'heading':                self.recordlist[RDFS.CURIE.label]
@@ -672,7 +674,7 @@ class DisplayInfo(object):
             context['title']   = "%(entity_label)s - %(view_label)s - %(coll_label)s"%context
         return context
 
-    def add_task_button_context(self, task_buttons, context):
+    def add_task_button_context(self, task_buttons_name, task_buttons, context):
         """
         Adds context values to a supplied context dictionary corresponding 
         to the supplied task_buttons value(s) from a view description.
@@ -682,7 +684,7 @@ class DisplayInfo(object):
         """
         if isinstance(task_buttons, list):
             context.update(
-                { 'task_buttons':
+                { task_buttons_name:
                     [ { 'button_id':    b[ANNAL.CURIE.button_id]
                       , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
                       , 'button_label': b.get(ANNAL.CURIE.button_label, "@@annal:button_label@@")

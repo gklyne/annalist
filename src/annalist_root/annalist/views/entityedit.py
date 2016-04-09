@@ -1748,6 +1748,9 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+        elif task_id == entitytypeinfo.TASK_ID+"/Show_list":
+            list_entity_id          = entityformvals[ANNAL.CURIE.id]
+            log.info("Show_list %s"%list_entity_id)
         else:
             log.error("EntityEdit.save_invoketask: Unknown task_id %s"%(task_id,))
             err_values = self.error_params(

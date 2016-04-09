@@ -45,6 +45,10 @@
         <div class="small-12 medium-6 columns">
           <div class="row">
             <div class="form-buttons small-12 columns medium-up-text-right">
+              {% for b in view_task_buttons %}
+              <input type="submit" name="{{b.button_name}}" value="{{b.button_label}}" 
+                     title="{{b.button_help}}"/>
+              {% endfor %}
               {% if edit_view_button and edit_view_button != "no" %}
               <input type="submit" name="open_view"        value="View description" 
                      title="Open view definition for the current display."/>

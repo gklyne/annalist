@@ -19,21 +19,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] annalist-manager configdirectory - display directory where config setting files are located
     - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
     - (same as SITE_CONFIG_DIR in log)
-- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
 - [ ] Entity types list (and List list?) - provide link field to display list
-- [ ] Field option to display item(s) from list (e.g. domain).
-    - Generalize to path in list objects?
-    - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
-- [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
+- [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
+    - relative references are unreliable 
+- [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
       ]
     - annal:display_type values (List/Grid) are another example to consider.
-- [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Keyboard shortcuts on forms - C-S to save, ...?
-- [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
-    - relative references are unreliable 
+
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
@@ -47,6 +43,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
+
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
+- [ ] Field option to display item(s) in list (e.g. domain).
+    - Generalize to path in list objects?
+    - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
+- [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
 
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
