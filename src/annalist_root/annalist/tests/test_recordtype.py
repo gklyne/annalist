@@ -452,7 +452,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         formrow5c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
-                <div class="%(button_right_classes)s">
+                <div class="%(button_r_med_up_classes)s">
                   <input type="submit" name="Define_view_list" value="Define view+list"
                          title="%(button_view_list_tip)s" />
                   <input type="submit" name="customize" value="Customize"
@@ -461,6 +461,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
+        # log.info(r.content)   #@@
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)

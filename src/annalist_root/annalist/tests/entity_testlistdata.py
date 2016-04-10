@@ -306,7 +306,7 @@ def recordlist_view_context_data(
 def recordlist_view_form_data(
         coll_id="testcoll", 
         list_id="", orig_id=None, 
-        action=None, cancel=None,
+        action=None, cancel=None, task=None,
         update="RecordView"):
     form_data_dict = (
         { "List_type":              "Enum_list_type/List"
@@ -340,6 +340,8 @@ def recordlist_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif task:
+        form_data_dict[task]            = task        
     else:
         form_data_dict['save']          = "Save"
     return form_data_dict

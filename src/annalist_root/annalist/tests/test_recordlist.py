@@ -13,6 +13,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import json
 import unittest
+import markdown
 
 import logging
 log = logging.getLogger(__name__)
@@ -56,7 +57,8 @@ from entity_testlistdata    import (
     recordlist_delete_confirm_form_data
     )
 from entity_testentitydata  import (
-    entity_url, entitydata_edit_url, entitydata_list_type_url,
+    entity_url, entitydata_edit_url, 
+    entitydata_list_all_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
@@ -181,8 +183,11 @@ class RecordListEditViewTest(AnnalistTestCase):
         init_annalist_test_site()
         init_annalist_test_coll()
         self.testsite   = Site(TestBaseUri, TestBaseDir)
-        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        self.testcoll   = Collection.create(
+            self.testsite, "testcoll", collection_create_values("testcoll")
+            )
+        self.continuation_path = entitydata_list_type_url(coll_id="testcoll", type_id="_list")
+        self.continuation_url  = TestHostUri + self.continuation_path
         self.no_options = [ FieldChoice('', label="(no options)") ]
         self.type_options   = get_site_types_linked("testcoll")
         self.type_options.append(
@@ -339,7 +344,7 @@ class RecordListEditViewTest(AnnalistTestCase):
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
 
-    def test_get_form_rendering(self):
+    def test_get_new_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "_list", view_id="List_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
@@ -354,6 +359,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             tooltip4=r.context['fields'][4]['field_help'],
             tooltip5=r.context['fields'][5]['field_help'],
             tooltip6=r.context['fields'][6]['field_help'],
+            tooltip7=r.context['fields'][7]['field_help'],
             )
         formrow1a = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -475,14 +481,249 @@ class RecordListEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%dict(field_vals(width=12), selector_text=selector_text)
+        entitytype_text = "(record type URI/CURIE displayed by list)"
+        formrow7 = """
+            <div class="small-12 columns" title="%(tooltip7)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>List entity type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="List_target_type" 
+                         placeholder="%(entitytype_text)s"
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%dict(field_vals(width=12), entitytype_text=entitytype_text)
+        formrow9a = """
+            <div class="small-12 medium-4 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns">
+                  <input type="submit" name="edit" value="Edit" 
+                         title="Edit entity data.">
+                  <input type="submit" name="copy" value="Copy" 
+                         title="Copy, then edit entity data as new entity.">
+                  <input type="submit" name="close" value="Close" 
+                         title="Return to previous page.">
+                </div>
+              </div>
+            </div>
+            """
+        formrow9a = """
+            <div class="small-12 medium-4 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns">
+                  <input type="submit" name="save" value="Save" 
+                         title="Save values and return to previous view.">
+                  <input type="submit" name="view" value="View" 
+                         title="Save values and switch to entity view.">
+                  <input type="submit" name="cancel" value="Cancel" 
+                         title="Discard unsaved changes and return to previous view.">
+                </div>
+              </div>
+            </div>
+            """
+        formrow9b = """
+            <div class="small-12 medium-6 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns medium-up-text-right">
+                  <input type="submit" name="Show_list" value="Show this list" 
+                         title="Show the list of entities described the currently displayed list definition.">
+                  <input type="submit" name="default_view" value="Set default view" 
+                         title="Select this display as the default view for collection 'Carolan_Guitar'.">
+                  <input type="submit" name="customize" value="Customize" 
+                         title="Open 'Customize' view for collection 'Carolan_Guitar'.">
+                </div>
+              </div>
+            </div>
+            """
+        formrow9b = """
+            <div class="small-12 medium-6 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns medium-up-text-right">
+                  <input type="submit" name="customize" value="Customize" 
+                         title="Open 'Customize' view for collection 'testcoll'.">
+                </div>
+              </div>
+            </div>
+            """
         # log.info(r.content)     #@@
         self.assertContains(r, formrow1a, html=True)
         self.assertContains(r, formrow1b, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5, html=True)
-        self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow2,  html=True)
+        self.assertContains(r, formrow3,  html=True)
+        self.assertContains(r, formrow4,  html=True)
+        self.assertContains(r, formrow5,  html=True)
+        self.assertContains(r, formrow6,  html=True)
+        self.assertContains(r, formrow7,  html=True)
+        self.assertContains(r, formrow9a, html=True)
+        self.assertContains(r, formrow9b, html=True)
+        return
+
+    def test_get_view_form_rendering(self):
+        u = entitydata_edit_url(
+            "view", "testcoll", "_list", view_id="List_view", entity_id="List_list"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        default_comment=r.context['fields'][3]['field_value']
+        field_vals = default_fields(
+            coll_id="testcoll", type_id="_list", entity_id="00000001",
+            default_comment=default_comment,
+            rendered_help=markdown.markdown(default_comment),
+            tooltip1a=r.context['fields'][0]['field_help'],
+            tooltip1b=r.context['fields'][1]['field_help'],
+            tooltip2=r.context['fields'][2]['field_help'],
+            tooltip3=r.context['fields'][3]['field_help'],
+            tooltip4=r.context['fields'][4]['field_help'],
+            tooltip5=r.context['fields'][5]['field_help'],
+            tooltip6=r.context['fields'][6]['field_help'],
+            tooltip7=r.context['fields'][7]['field_help'],
+            cont_here=u,
+            )
+        formrow1a = """
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>List Id</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <span>List_list</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow1b = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>List display type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="/testsite/c/testcoll/d/Enum_list_type/List/?continuation_url=%(cont_here)s">
+                    List display
+                  </a>
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow2 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Label</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <span>List definitions</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow3 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Help</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <span class="markdown">%(rendered_help)s</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow4 = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="/testsite/c/testcoll/d/_type/_list/?continuation_url=%(cont_here)s">
+                    List
+                  </a>
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow5 = ("""
+            <div class="small-12 medium-6 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default view</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <a href="/testsite/c/testcoll/d/_view/List_view/?continuation_url=%(cont_here)s">
+                    List definition
+                  </a>
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow6 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Selector</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <span>&#39;annal:List&#39; in [@type]</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow7 = """
+            <div class="small-12 columns">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>List entity type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <span>annal:List</span>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow9a = """
+            <div class="small-12 medium-4 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns">
+                  <input type="submit" name="edit" value="Edit" 
+                         title="Edit entity data.">
+                  <input type="submit" name="copy" value="Copy" 
+                         title="Copy, then edit entity data as new entity.">
+                  <input type="submit" name="close" value="Close" 
+                         title="Return to previous page.">
+                </div>
+              </div>
+            </div>
+            """
+        formrow9b = """
+            <div class="small-12 medium-6 columns">
+              <div class="row">
+                <div class="form-buttons small-12 columns medium-up-text-right">
+                  <input type="submit" name="Show_list" value="Show this list" 
+                         title="Show the list of entities described the currently displayed list definition.">
+                  <input type="submit" name="default_view" value="Set default view" 
+                         title="Select this display as the default view for collection 'testcoll'.">
+                  <input type="submit" name="customize" value="Customize" 
+                         title="Open 'Customize' view for collection 'testcoll'.">
+                </div>
+              </div>
+            </div>
+            """
+        # log.info(r.content)     #@@
+        self.assertContains(r, formrow1a, html=True)
+        self.assertContains(r, formrow1b, html=True)
+        self.assertContains(r, formrow2,  html=True)
+        self.assertContains(r, formrow3,  html=True)
+        self.assertContains(r, formrow4,  html=True)
+        self.assertContains(r, formrow5,  html=True)
+        self.assertContains(r, formrow6,  html=True)
+        self.assertContains(r, formrow7,  html=True)
+        self.assertContains(r, formrow9a, html=True)
+        self.assertContains(r, formrow9b, html=True)
         return
 
     def test_get_new(self):
@@ -855,6 +1096,29 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(r.context, expect_context)
         # Check original data is unchanged
         self._check_list_view_values("editlist")
+        return
+
+    #   -------- Show this list (task button) --------
+
+    def test_define_show_list_task(self):
+        # Post show list to list definition URI
+        f = recordlist_view_form_data(
+            action="view",
+            list_id="List_list",
+            task="Show_list"
+            )
+        u = entitydata_edit_url(
+            "view", "testcoll", "_list", view_id="List_view", entity_id="List_list"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        l = entitydata_list_all_url(
+            "testcoll", list_id="List_list", scope=None,
+            continuation_url=u
+            )
+        self.assertIn(TestHostUri+l, r['location'])
         return
 
 #   -----------------------------------------------------------------------------

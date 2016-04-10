@@ -19,7 +19,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] annalist-manager configdirectory - display directory where config setting files are located
     - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
     - (same as SITE_CONFIG_DIR in log)
-- [ ] Entity types list (and List list?) - provide link field to display list
+- [x] Entity types list (and List list?) - provide link field to display list
+- [ ] Help text for 'Customize' display
 - [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
 - [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.

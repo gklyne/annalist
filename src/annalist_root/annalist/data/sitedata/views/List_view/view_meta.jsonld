@@ -36,4 +36,10 @@
     , "annal:field_placement":  "small:0,12"
     }
   ]
+, "annal:view_task_buttons":
+  [ { "annal:button_id":        "_task/Show_list" 
+    , "annal:button_label":     "Show this list"
+    , "annal:button_help":      "Show the list of entities described the currently displayed list definition."
+    }
+  ]
 }
