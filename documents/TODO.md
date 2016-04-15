@@ -20,9 +20,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
     - (same as SITE_CONFIG_DIR in log)
 - [x] Entity types list (and List list?) - provide link field to display list
-- [ ] Help text for 'Customize' display
+- [x] Help text for 'Customize' display
+    - This is taken from the collection metadata.
+- [ ] Clarify/adjust behaviour of collection inheritance - data not inherited?
 - [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
+    - views/generic.py calls markdowmn.markdown to format view help text from 'help_markdown'
+    - views/fields/render_text_markdown.py calls markdown.markdown using field from context
+    - tests/test_recordlist.py calls markdowmn.markdown
+    - views/displayinfo.py, context_data is key function for assembling context info
+    - use context as basis for substitutions
+    - [ ] add site_base_url, coll_base_url and site_host_name (displayinfo.context_data())
+    - [ ] define substitution function in displayinfo
+    - [ ] apply substitutions when setting help_markdown (displayinfo.context_data())
+    - [ ] apply substitutions in views/fields/render_text_markdown.py text_markdown_view_renderer.render (context is available)
 - [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
@@ -123,6 +134,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
+
+
+Data collection definitions
+
+- [ ] VoID, DCAT
+
+
 
 
 Technical debt:

@@ -151,6 +151,7 @@ The following assumes that software is installed under a directory called $WORKS
     In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
 
         virtualenv -p python2.7 annenv
+        source annenv/bin/activate
 
 3.  Install the software from PyPI:
 
