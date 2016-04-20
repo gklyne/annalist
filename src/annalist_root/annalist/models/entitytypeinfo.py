@@ -345,7 +345,10 @@ class EntityTypeInfo(object):
                 self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, altscope="all"):
+                log.info("@@ EntityTypeInfo: Type %s exists"%type_id)
                 self.recordtype     = coll.get_type(type_id)
+            else:
+                log.info("@@ EntityTypeInfo: Type %s does not exist for collection %s"%(type_id,coll.get_id()))
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
             else:

@@ -123,7 +123,7 @@ class Entity(EntityRoot):
         #     )
         return urlparse.urljoin(baseurl, self._entityviewurl)
 
-    def set_alt_entities(self, altparent):
+    def _old_set_alt_entities(self, altparent):
         """
         Update the alternative parent for the current collection.
 
@@ -132,19 +132,162 @@ class Entity(EntityRoot):
         # Build list of accessible parents, check for recursion
         parents     = [self, altparent]
         moreparents = altparent.get_alt_entities(altscope="all")
+        log.info(
+            "@@ Entity.set_alt_entities: %r altparent %r, moreparents %r"%
+            (self.get_id(), altparent.get_id(), [p.get_id() for p in moreparents])
+            )
         while moreparents:
             nextparent = moreparents.pop(0)
+            log.info("@@ Entity.set_alt_entities: nextparent %r"%(nextparent.get_id()))
+            # @@TODO: this logic is suspect: I think it's OK as long as there is only single 
+            #         inheritance per entity, but may fail if there are multiple inheritance 
+            #         paths.  For multiple inheritance, should maintain a separate list of 
+            #         currently "active" parents to test against.
             if nextparent in parents:
-                msg = "Entity.set_alt_entities makes recursive reference via %r)"%(altparent,)
+                msg = (
+                    "Entity.set_alt_entities %r makes recursive reference to %r via %r)"%
+                    (self.get_id(), nextparent.get_id(), altparent.get_id())
+                    )
                 log.error(msg)
                 raise ValueError(msg)
             parents.append(nextparent)
-            moreparents.extend(nextparent.get_alt_entities(altscope="all"))
+            log.info(
+                "@@ Entity.set_alt_entities: nextparent.get_alt_entities %r"%
+                ([p.get_id() for p in nextparent.get_alt_entities(altscope="all")])
+                )
+            for alt in nextparent.get_alt_entities(altscope="all"):
+                if alt not in moreparents:
+                    moreparents.append(alt)
+            # moreparents.extend(nextparent.get_alt_entities(altscope="all"))
         # Set new alternative parent
         self._altparent = altparent
+        log.info(
+            "@@ Entity.set_alt_entities: %r altparent %r, parents %r"%
+            (self.get_id(), altparent.get_id(), [p.get_id() for p in parents])
+            )
         return parents
 
-    def get_alt_entities(self, altscope=None):
+    def set_alt_entities(self, altparent):
+        """
+        Update the alternative parent for the current collection.
+
+        Returns a list of parents accessible from the supplied altparent (including itself)
+        """
+        # Set new alternative parent
+        self._altparent = altparent
+        # Build list of accessible parents, check for recursion
+        parents = [self] + self._find_alt_parents(altscope="all")
+        log.info(
+            "@@ Entity.set_alt_entities: %r altparent %r, parents %r"%
+            (self.get_id(), altparent.get_id(), [p.get_id() for p in parents])
+            )
+        return parents
+
+    def _find_alt_parents(self, altscope=None, parents_seen=[]):
+        """
+        Local helper function returns a list of entities, not including the current entity,
+        that are potentially in scope for containing entities consiudered to belong to
+        the current entity.
+
+        This function also checks for recursive references and returns an error if
+        recursion is detected.
+
+        See spike/tree_scan/tree_scan.lhs for algorithm.
+
+            > parentlist e@(Entity {altparents=alts}) = e:altpath -- req (a)
+            >     where
+            >         altpath = mergealts e [ parentlist p | p <- alts ]
+            >
+            > mergealts :: Entity -> [[Entity]] -> [Entity]
+            > mergealts _ []            = []
+            > mergealts parent [altpath]
+            >   | parent `elem` altpath = error ("Entity "++(show parent)++" has recursive altparent path")
+            >   | otherwise             = altpath
+            > mergealts parent (alt1:alt2:morealts) = 
+            >     mergealts parent ((mergealtpair alt1 alt2):morealts)
+
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  Currently defined values are:
+                    "none" or None - search current entity only
+                    "all" - search current entity and all alternative parent entities,
+                        including their parents and alternatives.
+                    "select" - same as "all" - used for generating a list of options
+                        for a select/choice field.
+                    "user" - search current entity and site entity if it is on the 
+                        alternatives list; skips intervening entities.  Used to avoid 
+                        inheriting user permissions with other configuration data.
+                    "site" - site-level only: used for listing collections; by default, 
+                        collections are not included in enumerations of entities. 
+                        (See EntityRoot. and Site._children methods)
+        """
+        altparents = [self._altparent]
+        # log.info(
+        #     "@@ Entity._find_alt_parents: self %r, _altparents %r"%
+        #     (self.get_id(), [ p.get_id() for p in altparents if p ])
+        #     )
+        altparent_lists = []
+        if altscope:
+            for p in altparents:
+                altp = []
+                if p:
+                    if p in parents_seen:
+                        msg = (
+                            "Entity._find_alt_parents %r contains recursive altparent reference)"%
+                            (self.get_id(),)
+                            )
+                        log.error(msg)
+                        raise ValueError(msg)
+                    elif ( (altscope == "all") or (altscope == "select") or
+                           (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
+                        altp.append(p)
+                    altp.extend(p._find_alt_parents(altscope=altscope, parents_seen=parents_seen+[p]))
+                    altparent_lists.append(altp)
+        parents = []
+        for alt_list in altparent_lists:
+            if self in alt_list:
+                msg = (
+                    "Entity._find_alt_parents %r generates recursive altparent reference)"%
+                    (self.get_id(),)
+                    )
+                log.error(msg)
+                raise ValueError(msg)
+            parents = self._merge_alt_parent_lists(parents, alt_list)
+        return parents
+
+    def _merge_alt_parent_lists(self, list1, list2):
+        """
+        Merge a pair of allternative parent lists, preserving depth ordering and where 
+        possible placing entries from the first list ahead of entries from the second listr.
+
+        See spike/tree_scan/tree_scan.lhs for algorithm.
+
+            > mergealtpair :: [Entity] -> [Entity] -> [Entity]
+            > mergealtpair [] alt2      = alt2
+            > mergealtpair alt1 []      = alt1
+            > mergealtpair alt1@(h1:t1) alt2@(h2:t2)
+            >   | h1 == h2              = h1:mergealtpair t1 t2     -- req (b) (part)
+            >   | h1 `notElem` t2       = h1:mergealtpair t1 alt2   -- req (d)
+            >   | h2 `notElem` t1       = h2:mergealtpair alt1 t2   -- req (d)
+            >   | otherwise             = error ("Cannot preserve depth ordering of "++(show h1)++" and "++(show h2))
+        """
+        if not list1:
+            return list2
+        if not list2:
+            return list1
+        if list1[0] == list2[0]:
+            return [list1[0]] + self. _merge_alt_parent_lists(list1[1:], list2[1:])
+        if list1[0] not in list2:
+            return [list1[0]] + self. _merge_alt_parent_lists(list1[1:], list2)
+        if list2[0] not in list1:
+            return [list2[0]] + self. _merge_alt_parent_lists(list1, list2[1:])
+        msg = (
+            "Entity._merge_alt_parent_lists: Cannot preserve depth ordering of %r and %r"%
+            (list1[0].get_id(), list2[0].get_id())
+            )
+        log.error(msg)
+        raise ValueError(msg)
+
+    def _old_get_alt_entities(self, altscope=None):
         """
         Returns a list of alternative entities to the current entity to search for possible 
         child entities.  The supplied altscope parameter indicates the scope to be searched.
@@ -184,6 +327,31 @@ class Entity(EntityRoot):
         #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_ancestry ])
         #     )
         return alt_ancestry
+
+    def get_alt_entities(self, altscope=None):
+        """
+        Returns a list of alternative entities to the current entity to search for possible 
+        child entities.  The supplied altscope parameter indicates the scope to be searched.
+
+        Currently, only one alternative may be declared, but a list is returned that
+        includes alternatives to the alternatrives available, and to facilitate future 
+        developments supporting multiple inheritance paths.
+
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `_find_alt_parents` for more details.
+        """
+        if altscope is not None:
+            if not isinstance(altscope, (unicode, str)):
+                log.error("altscope must be string (%r supplied)"%(altscope))
+                log.error("".join(traceback.format_stack()))
+                raise ValueError("altscope must be string (%r supplied)"%(altscope))
+        # log.debug("Entity.get_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
+        alt_parents = [self] + self._find_alt_parents(altscope=altscope)
+        # log.info(
+        #     "@@ Entity.get_alt_entities: %s/%s -> %r"%
+        #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_parents ])
+        #     )
+        return alt_parents
 
     def try_alt_entities(self, func, test=test_is_true, altscope=None):
         """

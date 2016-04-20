@@ -132,7 +132,10 @@ class Collection(Entity):
             raise ValueError(msg)
         parents   = super(Collection, self).set_alt_entities(altparent)
         parentids = [ p.get_id() for p in parents ]
-        # log.info("Collection.set_alt_entities: parentids %r"%parentids)
+        log.info(
+            "@@ Collection.set_alt_entities: coll: %r, parentids %r"%
+            (self.get_id(), parentids)
+            )
         if layout.SITEDATA_ID not in parentids:
             msg = (
                 "Entity.set_alt_entities cannot access site data (%s) via %r)"%
@@ -151,40 +154,68 @@ class Collection(Entity):
         return parents
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None):
+    def create(cls, parent, coll_id, coll_meta):
+        """
+        Overload Entity.create with logic to set alternative parent details for 
+        collection configuration inheritance, if an alternative is specified in 
+        the collection data supplied.
+
+        cls         is the Collection class object.
+        parent      is the parent from which the collection is descended.
+        coll_id     is the local identifier (slug) for the collection.
+        coll_meta   is a dictionary of collection metadata values that are stored
+                    for the created collection.
+
+        Returns the created Collection instance.
+        """
+        # log.debug("Collection.create: %s, altscope %s"%(coll_id, altscope))
+        coll = super(Collection, cls).create(parent, coll_id, coll_meta)
+        if coll is not None:
+            cls._set_alt_parent_coll(parent, coll)
+        return coll
+
+    @classmethod
+    def load(cls, parent, coll_id, altscope=None):
         """
         Overload Entity.load with logic to set alternative parent details for 
         collection configuration inheritance, if an alternative is specified in 
         the collection data loaded.
 
-        cls         is the Collection class of the entity to be loaded
-        parent      is the parent from which the entity is descended.
-        entityid    is the local identifier (slug) for the entity.
-        altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+        cls         is the Collection class object.
+        parent      is the parent from which the collection is descended.
+        coll_id    is the local identifier (slug) for the collection.
+        altscope    if supplied, indicates a scope other than the current collection
+                    to search for children.
 
         Returns an instance of the indicated Collection class with data loaded from 
         the corresponding Annalist storage, or None if there is no such entity.
         """
-        # log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
-        coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
+        log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
+        coll = super(Collection, cls).load(parent, coll_id, altscope=altscope)
         if coll is not None:
-            parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
-            if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
-                parent_coll = super(Collection, cls).load(parent, parent_coll_id)
-                if parent_coll is None:
-                    log.warning(
-                        "Collection.load: coll %s references non-existent parent %s"%
-                        (entityid, parent_coll_id)
-                        )
-                else:
-                    log.debug(
-                        "Collection.load: coll %s references parent %s"%
-                        (entityid, parent_coll_id)
-                        )
-                    coll.set_alt_entities(parent_coll)
-            # else:
-            #     log.debug("Collection.load: coll %s references no parent"%(entityid,))
+            cls._set_alt_parent_coll(parent, coll)
+        return coll
+
+    @classmethod
+    def _set_alt_parent_coll(cls, parent, coll):
+        """
+        Set alternative parent collection - sets up search path for subsequent references.
+        """
+        coll_id        = coll.get_id()
+        parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
+        if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
+            parent_coll = Collection.load(parent, parent_coll_id)
+            if parent_coll is None:
+                log.warning(
+                    "Collection._set_alt_parent_coll: coll %s references non-existent parent %s"%
+                    (coll_id, parent_coll_id)
+                    )
+            else:
+                log.debug(
+                    "Collection._set_alt_parent_coll: coll %s references parent %s"%
+                    (coll_id, parent_coll_id)
+                    )
+                coll.set_alt_entities(parent_coll)
         return coll
 
     # User permissions

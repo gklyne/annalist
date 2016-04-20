@@ -126,11 +126,11 @@ def install_annalist_named_coll(coll_id):
     site         = Site(TestBaseUri, TestBaseDir)
     # Install collection now
     src_dir = os.path.join(settings.SITE_SRC_ROOT, "annalist/data", coll_src_dir)
-    log.info("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
+    log.debug("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
     coll_metadata = installable_collections[coll_id]['coll_meta']
     date_time_now = datetime.datetime.now().replace(microsecond=0)
     coll_metadata[ANNAL.CURIE.comment] = (
-        "Initialized at %s by `annalist-manager installcollection`"%
+        "Initialized at %s by `annalist.tests.init_tests.install_annalist_named_coll`"%
         date_time_now.isoformat()
         )
     coll = site.add_collection(coll_id, coll_metadata)
@@ -161,12 +161,39 @@ def init_annalist_test_coll(coll_id="testcoll", type_id="testtype"):
     AnnalistUser._last_id = 0
     return testcoll
 
+def create_test_coll_inheriting(
+        base_coll_id=None, coll_id="testcoll", type_id="testtype"):
+    """
+    Similar to init_annalist_test_coll, but collection also
+    inherits from named collection.
+    """
+    testsite  = Site(TestBaseUri, TestBaseDir)
+    basecoll  = Collection.load(testsite, base_coll_id)
+    if not basecoll:
+        msg = "Base collection %s not found"%base_coll_id
+        log.warning(msg)
+        assert False, msg
+    testcoll  = Collection.create(testsite, coll_id, collection_create_values(coll_id))
+    testcoll.set_alt_entities(basecoll)
+    testcoll._save()
+    testtype  = RecordType.create(testcoll, type_id, recordtype_create_values(coll_id, type_id))
+    testdata  = RecordTypeData.create(testcoll, type_id, {})
+    teste     = EntityData.create(
+        testdata, "entity1", 
+        entitydata_create_values(testcoll, testtype, "entity1")
+        )
+    testcoll.generate_coll_jsonld_context()
+    return testcoll
+
 def init_annalist_named_test_coll(
         base_coll_id=None, coll_id="testcoll", type_id="testtype"):
     """
     Similar to init_annalist_test_coll, but collection also installs and 
     inherits from named collection definitions.
+
     """
+    # @@TODO: DRY: use create_test_coll_inheriting
+    # @@TODO: rename: install_create_test_coll_inheriting
     log.debug("init_annalist_named_test_coll")
     testsite  = Site(TestBaseUri, TestBaseDir)
     namedcoll = install_annalist_named_coll(base_coll_id)

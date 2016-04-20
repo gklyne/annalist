@@ -39,6 +39,8 @@ from tests                  import TestHost, TestHostUri, TestBasePath, TestBase
 from init_tests             import (
     init_annalist_test_site,
     init_annalist_test_coll,
+    install_annalist_named_coll,
+    create_test_coll_inheriting,
     init_annalist_named_test_coll,
     resetSitedata
     )
@@ -79,6 +81,8 @@ from entity_testsitedata    import (
     # get_site_field_types, get_site_field_types_sorted, 
     get_site_bib_types, get_site_bib_types_sorted, get_site_bib_types_linked,
     get_site_bib_lists, get_site_bib_lists_sorted, get_site_bib_lists_linked,
+    get_site_schema_types, get_site_schema_types_sorted, get_site_schema_types_linked,
+    get_site_schema_lists, get_site_schema_lists_sorted, get_site_schema_lists_linked,
     )
 from entity_testlistdata    import recordlist_url
 
@@ -115,7 +119,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata()
+        resetSitedata()
         return
 
     @classmethod
@@ -458,17 +462,36 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Field_list")
         return
 
+    def test_collection_alt_parents(self):
+        rdf_coll = install_annalist_named_coll("RDF_schema_defs")
+        ann_coll = install_annalist_named_coll("Annalist_schema")
+        testcoll = create_test_coll_inheriting("Annalist_schema")
+        rdf_coll_alts = [ p.get_id() for p in rdf_coll.get_alt_entities(altscope="all") if p ]
+        #@@ self.assertEqual(rdf_coll_alts, ["_annalist_site"])
+        self.assertEqual(rdf_coll_alts, ["RDF_schema_defs", "_annalist_site"])
+        ann_coll_alts = [ p.get_id() for p in ann_coll.get_alt_entities(altscope="all") if p ]
+        #@@ self.assertEqual(ann_coll_alts, ["RDF_schema_defs", "_annalist_site"])
+        self.assertEqual(ann_coll_alts, ["Annalist_schema", "RDF_schema_defs", "_annalist_site"])
+        testcoll_alts = [ p.get_id() for p in testcoll.get_alt_entities(altscope="all") if p ]
+        #@@self.assertEqual(testcoll_alts, ["Annalist_schema", "RDF_schema_defs", "_annalist_site"])
+        self.assertEqual(testcoll_alts, ["testcoll", "Annalist_schema", "RDF_schema_defs", "_annalist_site"])
+        return
+
     def test_get_list_inherited_entities(self):
-        u = entitydata_list_type_url("testcoll", "BibEntry_type", list_id=None)
+        rdf_coll = install_annalist_named_coll("RDF_schema_defs")
+        ann_coll = install_annalist_named_coll("Annalist_schema")
+        testcoll = create_test_coll_inheriting("Annalist_schema")
+        schema_list_ids = get_site_schema_lists_linked("testcoll")
+        u = entitydata_list_type_url("testcoll", "Class", list_id=None, scope="all")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['type_id'],          "Class")
         list_choices = r.context['list_choices']
-        self.assertEqual(set(list_choices.options),     set(self.list_ids))
-        self.assertEqual(list_choices['field_value'],   "Field_list")
+        self.assertEqual(set(list_choices.options),     set(schema_list_ids))
+        self.assertEqual(list_choices['field_value'],   "Classes")
         # Entities
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 36)

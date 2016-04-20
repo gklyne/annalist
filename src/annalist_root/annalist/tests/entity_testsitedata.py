@@ -99,6 +99,27 @@ def get_site_bib_types_linked(coll_id):
 def get_site_bib_types():
     return set( ( id_from_field_choice(fc) for fc in get_site_bib_types_sorted() )  )
 
+site_schema_types = (
+    site_types[0:1]+
+    sorted(site_types[1:] +
+        [ FieldChoice("_type/Class",    label="Class"    )
+        , FieldChoice("_type/Datatype", label="Datatype" )
+        , FieldChoice("_type/Property", label="Property" )
+        ])
+    )
+
+def get_site_schema_types_sorted():
+    return site_schema_types[1:]
+
+def get_site_schema_types_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_type") 
+          for fc in get_site_schema_types_sorted() 
+        ])
+
+def get_site_schema_types():
+    return set( ( id_from_field_choice(fc) for fc in get_site_schema_types_sorted() )  )
+
 #   ----- Lists -----
 
 site_lists = (
@@ -144,6 +165,26 @@ def get_site_bib_lists_linked(coll_id):
 
 def get_site_bib_lists():
     return set( ( id_from_field_choice(fc) for fc in get_site_bib_lists_sorted() )  )
+
+site_schema_lists = (
+    site_lists[0:1] +
+    sorted(site_lists[1:] +
+        [ FieldChoice("_list/Classes",    label="Classes")
+        , FieldChoice("_list/Properties", label="Properties")
+        ])
+    )
+
+def get_site_schema_lists_sorted():
+    return site_schema_lists[1:]
+
+def get_site_schema_lists_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_list") 
+          for fc in get_site_schema_lists_sorted() 
+        ])
+
+def get_site_schema_lists():
+    return set( ( id_from_field_choice(fc) for fc in get_site_schema_lists_sorted() )  )
 
 #   ----- List types -----
 
