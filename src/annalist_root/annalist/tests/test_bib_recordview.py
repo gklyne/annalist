@@ -35,8 +35,9 @@ from annalist.views.form_utils.fieldchoice  import FieldChoice
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import (
-    init_annalist_test_site, init_annalist_bib_site, 
-    init_annalist_test_coll, init_annalist_bib_coll, 
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    init_annalist_named_test_coll,
     resetSitedata
     )
 from entity_testutils       import (
@@ -79,8 +80,8 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
     """
 
     def setUp(self):
-        self.testsite  = init_annalist_bib_site()
-        self.testcoll  = init_annalist_bib_coll()
+        self.testsite  = init_annalist_test_site()
+        self.testcoll  = init_annalist_named_test_coll(layout.BIBDATA_ID)
         self.no_options = [ FieldChoice('', label="(no options)") ]
         def special_field(fid):
             return ( 

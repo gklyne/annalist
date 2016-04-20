@@ -17,6 +17,7 @@ from django.contrib.auth.models     import User
 from django.test                    import TestCase
 from django.test.client             import Client
 
+from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
@@ -29,8 +30,9 @@ from annalist.models.entitydata     import EntityData
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import (
-    init_annalist_test_site, init_annalist_bib_site, 
-    init_annalist_test_coll, init_annalist_bib_coll, 
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    init_annalist_named_test_coll,
     resetSitedata
     )
 from entity_testutils       import (
@@ -57,12 +59,8 @@ class FieldAliasTest(AnnalistTestCase):
     """
 
     def setUp(self):
-        self.testsite  = init_annalist_bib_site()
-        self.testcoll  = init_annalist_bib_coll()
-        # init_annalist_test_site()
-        # self.testsite = Site(TestBaseUri, TestBaseDir)
-        # self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        # self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testsite  = init_annalist_test_site()
+        self.testcoll  = init_annalist_named_test_coll(layout.BIBDATA_ID)
         # Create BibEntry record (BibEntry_type defines field alias)
         self.testdata   = RecordTypeData.create(self.testcoll, "BibEntry_type", {})
         self.bibentity1_data = (
@@ -226,7 +224,7 @@ class FieldAliasTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
-        # Check entity exists,and compare data with expected
+        # Check entity exists, and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "BibEntry_type")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "bibentity1"))
         e = typeinfo.entityclass.load(typeinfo.entityparent, "bibentity1")

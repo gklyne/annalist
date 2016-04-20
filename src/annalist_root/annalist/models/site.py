@@ -452,9 +452,8 @@ class Site(EntityRoot):
         return site
 
     @staticmethod
-    def initialize_bib_data(
-        site, bib_data_src, 
-        label=None, description=None):
+    def initialize_bib_data(site, bib_data_src ):
+        # label=None, description=None
         """
         Initializes bibliography definitions data for a new site for testing.
         """
@@ -471,5 +470,26 @@ class Site(EntityRoot):
             Site.replace_site_data_dir(bibdatacoll, sdir, bib_data_src)
         bibdatacoll.generate_coll_jsonld_context()
         return bibdatacoll
+
+    # @staticmethod
+    # def initialize_named_coll(
+    #     site, coll_id, coll_data_src,
+    #     label=None, description=None):
+    #     """
+    #     Initializes bibliography definitions data for a new site for testing.
+    #     """
+    #     namedcoll = site.create_empty_coll_data(
+    #         site, coll_id, 
+    #         label=label, description=description
+    #         )
+    #     coll_data_tgt, coll_data_file = namedcoll._dir_path()
+    #     log.info("Copy Annalist %s definitions data from %s to %s"%(coll_id, coll_data_src, coll_data_tgt))
+
+    #     for sdir in ("types", "lists", "views", "groups", "fields", "enums"):
+    #         log.info("- %s -> %s"%(sdir, coll_data_tgt))
+    #         Site.replace_site_data_dir(namedcoll, sdir, coll_data_src)
+
+    #     namedcoll.generate_coll_jsonld_context()
+    #     return namedcoll
 
 # End.

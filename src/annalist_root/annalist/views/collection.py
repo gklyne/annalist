@@ -122,7 +122,8 @@ class CollectionEditView(AnnalistGenericView):
             context['heading'] = "Customize collection: %(coll_label)s"%context
             return context
         continuation_url = None
-        # View permission only to display form, as it presents useful information even when not editing.
+        # View permission only to display form, 
+        # as it presents useful information even when not editing.
         viewinfo = self.collection_edit_setup(coll_id, "view", request.GET.dict())
         if viewinfo.http_response:
             return viewinfo.http_response

@@ -1,5 +1,5 @@
 """
-Tests for EntityData list view with additional inherited bbiography data
+Tests for EntityData list view with additional inherited bibliography data
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -37,8 +37,9 @@ from annalist.views.form_utils.fieldchoice  import FieldChoice
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import (
-    init_annalist_test_site, init_annalist_bib_site, 
-    init_annalist_test_coll, init_annalist_bib_coll, 
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    init_annalist_named_test_coll,
     resetSitedata
     )
 from entity_testutils       import (
@@ -93,8 +94,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
     """
 
     def setUp(self):
-        self.testsite  = init_annalist_bib_site()
-        self.testcoll  = init_annalist_bib_coll()
+        self.testsite  = init_annalist_test_site()
+        self.testcoll  = init_annalist_named_test_coll(layout.BIBDATA_ID)
         self.testdata  = RecordTypeData.load(self.testcoll, "testtype")
         self.testtype2 = RecordType.create(
             self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2")
@@ -455,6 +456,36 @@ class EntityInheritListViewTest(AnnalistTestCase):
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
+        return
+
+    def test_get_list_inherited_entities(self):
+        u = entitydata_list_type_url("testcoll", "BibEntry_type", list_id=None)
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "_field")
+        list_choices = r.context['list_choices']
+        self.assertEqual(set(list_choices.options),     set(self.list_ids))
+        self.assertEqual(list_choices['field_value'],   "Field_list")
+        # Entities
+        entities = context_list_entities(r.context)
+        self.assertEqual(len(entities), 36)
+        field_entities = (
+            { ('id1', "label1")
+            , ('id2', "label2")
+            })
+        for f in field_entities:
+            for eid in range(len(entities)):
+                item_fields = context_list_item_fields(r.context, entities[eid])
+                if item_fields[0]['field_value'] == f[0]:
+                    for fid in range(2):
+                        item_field = item_fields[fid]
+                        self.assertEqual(item_field['field_value'], f[fid])
+                    break
+            else:
+                self.fail("Field %s not found in context"%f[0])
         return
 
 # End.

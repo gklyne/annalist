@@ -23,6 +23,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Help text for 'Customize' display
     - This is taken from the collection metadata.
 - [ ] Clarify/adjust behaviour of collection inheritance - data not inherited?
+    - [ ] Create test case
+    - [ ] Implement fix
 - [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
     - views/generic.py calls markdowmn.markdown to format view help text from 'help_markdown'

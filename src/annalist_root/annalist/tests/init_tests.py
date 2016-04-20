@@ -13,12 +13,15 @@ log = logging.getLogger(__name__)
 # import doctest
 import os.path
 import shutil
+import datetime
 
 # from django.test import TestCase
 from django.conf import settings
 
 from annalist                       import layout
 from annalist.util                  import replacetree, removetree
+from annalist.collections           import installable_collections
+from annalist.identifiers           import ANNAL, RDFS
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -29,6 +32,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
 
 from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from tests                          import test_layout
@@ -108,16 +112,6 @@ def init_annalist_test_site():
     AnnalistUser._last_id = 0
     return testsite
 
-def init_annalist_bib_site():
-    log.debug("init_annalist_bib_site")
-    copySitedata(
-        settings.SITE_SRC_ROOT+"/sampledata/bibtestinit/"+test_layout.SITE_DIR, 
-        settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
-        TestBaseDir)
-    testsite = Site(TestBaseUri, TestBaseDir)
-    testsite.generate_site_jsonld_context()
-    return testsite
-
 def entitydata_create_values(coll, etype, entity_id, update="Entity"):
     """
     Data used when creating entity test data
@@ -126,6 +120,26 @@ def entitydata_create_values(coll, etype, entity_id, update="Entity"):
         { 'rdfs:label': '%s %s/%s/%s'%(update, coll._entityid, etype._entityid, entity_id)
         , 'rdfs:comment': '%s coll %s, type %s, entity %s'%(update, coll._entityid, etype._entityid, entity_id)
         })
+
+def install_annalist_named_coll(coll_id):
+    coll_src_dir = installable_collections[coll_id]['data_dir']
+    site         = Site(TestBaseUri, TestBaseDir)
+    # Install collection now
+    src_dir = os.path.join(settings.SITE_SRC_ROOT, "annalist/data", coll_src_dir)
+    log.info("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
+    coll_metadata = installable_collections[coll_id]['coll_meta']
+    date_time_now = datetime.datetime.now().replace(microsecond=0)
+    coll_metadata[ANNAL.CURIE.comment] = (
+        "Initialized at %s by `annalist-manager installcollection`"%
+        date_time_now.isoformat()
+        )
+    coll = site.add_collection(coll_id, coll_metadata)
+    msgs = initialize_coll_data(src_dir, coll)
+    if msgs:
+        for msg in msgs:
+            log.warning(msg)
+        assert False, "\n".join(msgs)
+    return coll
 
 def init_annalist_test_coll(coll_id="testcoll", type_id="testtype"):
     log.debug("init_annalist_test_coll")
@@ -147,21 +161,23 @@ def init_annalist_test_coll(coll_id="testcoll", type_id="testtype"):
     AnnalistUser._last_id = 0
     return testcoll
 
-def init_annalist_bib_coll(coll_id="testcoll", type_id="testtype"):
+def init_annalist_named_test_coll(
+        base_coll_id=None, coll_id="testcoll", type_id="testtype"):
     """
-    Similar to init_annalist_test_coll, but collection also inherits bibliographic structure definitions.
+    Similar to init_annalist_test_coll, but collection also installs and 
+    inherits from named collection definitions.
     """
-    log.debug("init_annalist_bib_coll")
-    testsite = Site(TestBaseUri, TestBaseDir)
-    bib_coll = Collection.load(testsite, layout.BIBDATA_ID)
-    testcoll = Collection.create(testsite, coll_id, collection_create_values(coll_id))
-    testcoll.set_alt_entities(bib_coll)
+    log.debug("init_annalist_named_test_coll")
+    testsite  = Site(TestBaseUri, TestBaseDir)
+    namedcoll = install_annalist_named_coll(base_coll_id)
+    testcoll  = Collection.create(testsite, coll_id, collection_create_values(coll_id))
+    testcoll.set_alt_entities(namedcoll)
     testcoll._save()
-    testtype = RecordType.create(testcoll, type_id, recordtype_create_values(coll_id, type_id))
-    testdata = RecordTypeData.create(testcoll, type_id, {})
-    teste    = EntityData.create(
+    testtype  = RecordType.create(testcoll, type_id, recordtype_create_values(coll_id, type_id))
+    testdata  = RecordTypeData.create(testcoll, type_id, {})
+    teste     = EntityData.create(
         testdata, "entity1", 
-        entitydata_create_values(testcoll,testtype,"entity1")
+        entitydata_create_values(testcoll, testtype, "entity1")
         )
     testcoll.generate_coll_jsonld_context()
     return testcoll
