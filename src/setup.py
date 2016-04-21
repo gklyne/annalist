@@ -87,18 +87,6 @@ setup(
             , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/types/*/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/views/*/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/*.md'
-            , 'sampledata/bibtestinit/annalist_site/*.jpg'
-            , 'sampledata/bibtestinit/annalist_site/_annalist_site/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/enums/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/enums/*/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/fields/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/groups/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/lists/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/types/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/views/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/d/*/*/*.jsonld'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'
@@ -149,9 +137,11 @@ setup(
             , 'data/Journal_defs/types/*/*.jsonld'
             , 'data/Journal_defs/views/*/*.jsonld'
             , 'data/Journal_defs/vocabs/*/*.jsonld'
+            , 'data/Journal_defs/entitydata/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*/*.jsonld'
             # Annalist schema
+            , 'data/Annalist_schema/entitydata/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*/*.jsonld'
             # Test data

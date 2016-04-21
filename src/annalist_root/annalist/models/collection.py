@@ -132,10 +132,10 @@ class Collection(Entity):
             raise ValueError(msg)
         parents   = super(Collection, self).set_alt_entities(altparent)
         parentids = [ p.get_id() for p in parents ]
-        log.info(
-            "@@ Collection.set_alt_entities: coll: %r, parentids %r"%
-            (self.get_id(), parentids)
-            )
+        # log.info(
+        #     "@@ Collection.set_alt_entities: coll: %r, parentids %r"%
+        #     (self.get_id(), parentids)
+        #     )
         if layout.SITEDATA_ID not in parentids:
             msg = (
                 "Entity.set_alt_entities cannot access site data (%s) via %r)"%
@@ -190,7 +190,7 @@ class Collection(Entity):
         Returns an instance of the indicated Collection class with data loaded from 
         the corresponding Annalist storage, or None if there is no such entity.
         """
-        log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
+        # log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
         coll = super(Collection, cls).load(parent, coll_id, altscope=altscope)
         if coll is not None:
             cls._set_alt_parent_coll(parent, coll)
