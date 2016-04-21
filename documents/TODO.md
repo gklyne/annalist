@@ -32,10 +32,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - tests/test_recordlist.py calls markdowmn.markdown
     - views/displayinfo.py, context_data is key function for assembling context info
     - use context as basis for substitutions
-    - [ ] add site_base_url, coll_base_url and site_host_name (displayinfo.context_data())
-    - [ ] define substitution function in displayinfo
-    - [ ] apply substitutions when setting help_markdown (displayinfo.context_data())
-    - [ ] apply substitutions in views/fields/render_text_markdown.py text_markdown_view_renderer.render (context is available)
+    - substitution syntax:  $name, $name:, $[CURIE], $$ -> $, else as-is
+    - Name characters are ALPHA, DIGIT, "_"
+    - CURIE characters for subsitution: name characters and:
+      "@", ".", "~", "-", "+", "*", "=", ":", ";", ",", "/", "?", "#", "!"
+    - [x] add site_base_url (SITE), coll_base_url (COLL) and site_host_name (HOST) to context
+        - (displayinfo.context_data())
+    - [x] add BASE to context: path for relative reference of collection entities (including `/d/`).
+    - [x] define substitution function in displayinfo
+    - [x] apply substitutions when setting help_markdown (displayinfo.context_data())
+    - [x] apply substitutions in views/fields/render_text_markdown.py text_markdown_view_renderer.render
+    - [x] test case (markdown renderer)
+    - [x] documentation (markdown field render type)
+    - [ ] use substitutions in help text
 - [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
@@ -43,7 +52,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
       ]
     - annal:display_type values (List/Grid) are another example to consider.
 - [ ] Keyboard shortcuts on forms - C-S to save, ...?
-
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI

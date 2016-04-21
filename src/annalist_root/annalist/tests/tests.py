@@ -39,6 +39,7 @@ def load_tests(loader, tests, ignore):
         tests.addTests(doctest.DocTestSuite(annalist.util))
         tests.addTests(doctest.DocTestSuite(annalist.identifiers))
         tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
+        tests.addTests(doctest.DocTestSuite(annalist.views.displayinfo))
         tests.addTests(doctest.DocTestSuite(annalist.views.form_utils.fieldchoice))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.find_renderers))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
