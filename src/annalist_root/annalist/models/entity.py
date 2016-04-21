@@ -177,11 +177,22 @@ class Entity(EntityRoot):
         self._altparent = altparent
         # Build list of accessible parents, check for recursion
         parents = [self] + self._find_alt_parents(altscope="all")
-        log.info(
-            "@@ Entity.set_alt_entities: %r altparent %r, parents %r"%
-            (self.get_id(), altparent.get_id(), [p.get_id() for p in parents])
-            )
+        # log.info(
+        #     "@@ Entity.set_alt_entities: %r altparent %r, parents %r"%
+        #     (self.get_id(), altparent.get_id(), [p.get_id() for p in parents])
+        #     )
         return parents
+
+    def _local_find_alt_parents(self):
+        """
+        Returns a list of alternative parents for the current inheritance branch only;
+        i.e. does not attempt to follow altparent chains in referenced trees.
+        (That is handled by `_find_alt_parents` below.)
+
+        This method may be overridden by classes that need to look higher in the 
+        class inheritance tree to find alternative parent branches.
+        """
+        return [self._altparent]
 
     def _find_alt_parents(self, altscope=None, parents_seen=[]):
         """
@@ -220,11 +231,13 @@ class Entity(EntityRoot):
                         collections are not included in enumerations of entities. 
                         (See EntityRoot. and Site._children methods)
         """
-        altparents = [self._altparent]
+        altparents = self._local_find_alt_parents()     # Class-specific local alternative discovery
+        #@@
         # log.info(
         #     "@@ Entity._find_alt_parents: self %r, _altparents %r"%
         #     (self.get_id(), [ p.get_id() for p in altparents if p ])
         #     )
+        #@@
         altparent_lists = []
         if altscope:
             for p in altparents:
@@ -245,6 +258,7 @@ class Entity(EntityRoot):
         parents = []
         for alt_list in altparent_lists:
             if self in alt_list:
+                # Is this test redundant??  Keeping it for safety.
                 msg = (
                     "Entity._find_alt_parents %r generates recursive altparent reference)"%
                     (self.get_id(),)
@@ -322,10 +336,12 @@ class Entity(EntityRoot):
                  (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
                 alt_ancestry.append(self._altparent)
             alt_ancestry.extend(self._altparent.get_alt_entities(altscope=altscope))
+        #@@
         # log.info(
-        #     "Entity.get_alt_entities: %s/%s -> %r"%
+        #     "@@ Entity.get_alt_entities: %s/%s -> %r"%
         #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_ancestry ])
         #     )
+        #@@
         return alt_ancestry
 
     def get_alt_entities(self, altscope=None):
@@ -402,10 +418,6 @@ class Entity(EntityRoot):
         attempting to evaluate alternatives: this function will enumerate the 
         alternatives and make additional calls as needed.
         """
-        # log.debug(
-        #     "Entity.try_alt_parentage: %s/%s with parent %r, altscope %s"%
-        #     (cls._entitytypeid, entityid, parent.get_id(), altscope)
-        #     )
         e  = cls._child_init(parent, entityid)
         uv = e._entityviewurl
         v  = func(e)
@@ -413,7 +425,6 @@ class Entity(EntityRoot):
             return (e, v)
         alt_parents = parent.get_alt_entities(altscope=altscope)
         for altparent in alt_parents:
-            # log.info("Entity.try_alt_parentage: try parent %s"%(altparent.get_id())) #@@@
             e = cls._child_init(altparent, entityid, entityviewurl=uv)
             v = func(e)
             if test(v):
@@ -495,9 +506,11 @@ class Entity(EntityRoot):
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.
         """
+        # log.info("@@ Entity._children: parent %s, altscope %s"%(self.get_id(), altscope))
         coll_entity_ids = list(super(Entity, self)._children(cls, altscope=altscope))
+        alt_parents     = self.get_alt_entities(altscope=altscope)
         site_entity_ids = list(itertools.chain.from_iterable(
             ( super(Entity, alt)._children(cls, altscope=altscope) 
               for alt in self.get_alt_entities(altscope=altscope)

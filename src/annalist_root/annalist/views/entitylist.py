@@ -221,7 +221,6 @@ class EntityGenericListView(AnnalistGenericView):
         return (
             self.render_html(listcontext, self._entityformtemplate) or 
             self.redirect_json(json_redirect_url) or
-            #@@ self.render_json(entityvallist) or
             self.error(self.error406values())
             )
 

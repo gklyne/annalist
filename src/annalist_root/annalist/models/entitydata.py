@@ -36,12 +36,19 @@ class EntityData(Entity):
         """
         Initialize a new Entity Data object, without metadata.
 
-        parent      is the parent collection (RecordType) from which the entity is descended.
+        EntityData objects sit in this entity type hierarchy:
+
+            Site 
+                Collection 
+                    RecordTypeData 
+                        EntityData
+
+        This arrangement allows entities for different record types
+        to be saved into separate directories.
+
+        parent      is the parent collection (RecordTypeData) from 
+                    which the entity is descended.
         entity_id   the local identifier (slug) for the data record
-        altparent   is an alternative parent entity to search for this entity, using 
-                    the alternative path for the entity type: this is used to augment 
-                    explicitly created entities in a collection with site-wide 
-                    installed metadata entites (i.e. types, views, etc.)
         """
         super(EntityData, self).__init__(parent, entity_id)
         self._entitytypeid  = self._entitytypeid or parent.get_id()

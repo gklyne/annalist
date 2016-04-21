@@ -59,4 +59,20 @@ class RecordTypeData(Entity):
         t = EntityData.remove(self, entity_id)
         return t
 
+    def _local_find_alt_parents(self):
+        """
+        Returns a list of alternative parents for the current inheritance branch only;
+        i.e. does not attempt to follow altparent chains in referenced trees.
+        (That is handled by `_find_alt_parents` below.)
+
+        This method overrides the method in Entity to take account of the need to
+        look beyond the immediate RecordTypeData instance to follow links to collections
+        from which data is inherited.
+        """
+        type_id  = self.get_id()
+        altcolls = self._parent._local_find_alt_parents()
+        altdatas = [ alt for alt in [ RecordTypeData.load(c, type_id) for c in altcolls ] if alt ]
+        # log.info("@@ RecordTypeData._local_find_alt_parents %r"%([p.get_id for p in altdatas]))
+        return altdatas
+
 # End.

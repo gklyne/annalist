@@ -345,10 +345,11 @@ class EntityTypeInfo(object):
                 self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
             if RecordType.exists(coll, type_id, altscope="all"):
-                log.info("@@ EntityTypeInfo: Type %s exists"%type_id)
+                # log.info("@@ EntityTypeInfo: Type %s exists"%type_id)
                 self.recordtype     = coll.get_type(type_id)
             else:
-                log.info("@@ EntityTypeInfo: Type %s does not exist for collection %s"%(type_id,coll.get_id()))
+                # log.info("@@ EntityTypeInfo: Type %s does not exist for collection %s"%(type_id,coll.get_id()))
+                pass
             if create_typedata and not RecordTypeData.exists(coll, type_id):
                 self.entityparent   = RecordTypeData.create(coll, type_id, {})
             else:
@@ -360,19 +361,10 @@ class EntityTypeInfo(object):
         if not self.recordtype:
             # .recordtype is used by views.displayinfo to locate the default
             # view and/or list id for examining records of a particular type.
-            #
             # Also used in entityedit for getting @type URI/CURIE values.
-            #
             # Used in bound_field to get link to type record
-
-            #@@@@@@@
-            # if ( (type_id not in get_built_in_type_ids()) and
-            #      (type_id not in ["BibEntry_type"]) ):
-            #     log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
-            #     log.info("".join(traceback.format_stack()))
-            #@@@@@@@
-
             log.warning("EntityTypeInfo.__init__: RecordType %s not found"%type_id)
+            # log.info("".join(traceback.format_stack()))
             # raise ValueError("Trace")
         return
 
@@ -572,8 +564,7 @@ class EntityTypeInfo(object):
                     yield self.get_entity(eid)
         return
 
-    # @@TODO: rename inferred -> implied
-    def enum_entities_with_inferred_values(self, user_perms=None, altscope=None):
+    def enum_entities_with_implied_values(self, user_perms=None, altscope=None):
         """
         Iterate over entities in collection with current type.
         Returns entities with alias and inferred fields instantiated.
@@ -583,7 +574,7 @@ class EntityTypeInfo(object):
         """
         #@@
         # log.info(
-        #     "enum_entities_with_inferred_values: parent %s, altscope %s"%
+        #     "@@ enum_entities_with_implied_values: parent %s, altscope %s"%
         #     (self.entityparent.get_id(), altscope)
         #     )
         #@@
@@ -591,12 +582,12 @@ class EntityTypeInfo(object):
             self.permissions_map['list'] in user_perms[ANNAL.CURIE.user_permission]):
             if not self.entityparent:
                 log.warning(
-                    "EntityTypeInfo.enum_entities_with_inferred_values: missing entityparent; type_id %s"%
+                    "EntityTypeInfo.enum_entities_with_implied_values: missing entityparent; type_id %s"%
                     (self.type_id)
                     )
             elif not self.recordtype:
                 log.warning(
-                    "EntityTypeInfo.enum_entities_with_inferred_values: missing recordtype; type_id %s"%
+                    "EntityTypeInfo.enum_entities_with_implied_values: missing recordtype; type_id %s"%
                     (self.type_id)
                     )
                 # No record type info: return base entity without implied values

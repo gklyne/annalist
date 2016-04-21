@@ -22,9 +22,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Entity types list (and List list?) - provide link field to display list
 - [x] Help text for 'Customize' display
     - This is taken from the collection metadata.
-- [ ] Clarify/adjust behaviour of collection inheritance - data not inherited?
-    - [ ] Create test case
-    - [ ] Implement fix
+- [x] Fix behaviour of collection inheritance - data not inherited?
+    - Note that the search logic has reduced test suite performance by 10-15%
+    - may want to look later for optimizations here (e.g. cache collection data).
 - [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
     - views/generic.py calls markdowmn.markdown to format view help text from 'help_markdown'

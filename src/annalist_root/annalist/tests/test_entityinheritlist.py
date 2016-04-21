@@ -184,7 +184,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content) #@@
         # Test context
         self.assertEqual(r.context['title'],            "Entity types - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -201,7 +200,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
-        #@@ self.assertIn('_initial_values', listed_entities)
         type_entities = get_site_bib_types() | {"testtype", "testtype2"}
         self.assertEqual(set(listed_entities.keys()), type_entities)
         return
@@ -215,8 +213,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # log.info(r.content) #@@
-        #
         # Test context
         self.assertEqual(r.context['title'],            "Field definitions - Collection testcoll")
         self.assertEqual(r.context['heading'],          "Field definitions")
@@ -273,7 +269,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Entities
         entities = context_list_entities(r.context)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
-        #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",      "annal:Slug",          "Id")
             , ('Bib_address',       "Text",          "annal:Text",          "Address")
@@ -467,13 +462,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         ann_coll = install_annalist_named_coll("Annalist_schema")
         testcoll = create_test_coll_inheriting("Annalist_schema")
         rdf_coll_alts = [ p.get_id() for p in rdf_coll.get_alt_entities(altscope="all") if p ]
-        #@@ self.assertEqual(rdf_coll_alts, ["_annalist_site"])
         self.assertEqual(rdf_coll_alts, ["RDF_schema_defs", "_annalist_site"])
         ann_coll_alts = [ p.get_id() for p in ann_coll.get_alt_entities(altscope="all") if p ]
-        #@@ self.assertEqual(ann_coll_alts, ["RDF_schema_defs", "_annalist_site"])
         self.assertEqual(ann_coll_alts, ["Annalist_schema", "RDF_schema_defs", "_annalist_site"])
         testcoll_alts = [ p.get_id() for p in testcoll.get_alt_entities(altscope="all") if p ]
-        #@@self.assertEqual(testcoll_alts, ["Annalist_schema", "RDF_schema_defs", "_annalist_site"])
         self.assertEqual(testcoll_alts, ["testcoll", "Annalist_schema", "RDF_schema_defs", "_annalist_site"])
         return
 
@@ -494,16 +486,41 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Classes")
         # Entities
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 36)
+        self.assertEqual(len(entities), 27)
         field_entities = (
-            { ('id1', "label1")
-            , ('id2', "label2")
+            { ('Audio',         'Class',    'Audio clip'                     )
+            , ('Collection',    'Class',    'Data collection'                )
+            , ('Default_type',  'Class',    'Default type'                   )
+            , ('Entity',        'Class',    'Entity'                         )
+            , ('EntityData',    'Class',    'EntityData'                     )
+            , ('EntityRoot',    'Class',    'Root entity'                    )
+            , ('Enum',          'Class',    'Enumerated type'                )
+            , ('Field',         'Class',    'Field definition'               )
+            , ('Field_group',   'Class',    'Field group'                    )
+            , ('Image',         'Class',    'Image'                          )
+            , ('List',          'Class',    'List definition'                )
+            , ('Resource',      'Class',    'Resource'                       )
+            , ('Site',          'Class',    'Annalist site'                  )
+            , ('SiteData',      'Class',    'Site data'                      )
+            , ('Type',          'Class',    'Type definition'                )
+            , ('Type_Data',     'Class',    'Type data'                      )
+            , ('Unknown_type',  'Class',    'Unknown type'                   )
+            , ('User',          'Class',    'User permissions'               )
+            , ('View',          'Class',    'View definition'                )
+            , ('Vocabulary',    'Class',    'Vocabulary namespace definition')
+            , ('Boolean',       'Datatype', 'Boolean'                        )
+            , ('Identifier',    'Datatype', 'Identifier'                     )
+            , ('Longtext',      'Datatype', 'Multiline text'                 )
+            , ('Placement',     'Datatype', 'Field placement'                )
+            , ('Richtext',      'Datatype', 'Rich text'                      )
+            , ('Slug',          'Datatype', 'Local entity reference'         )
+            , ('Text',          'Datatype', 'Text'                           )
             })
         for f in field_entities:
             for eid in range(len(entities)):
                 item_fields = context_list_item_fields(r.context, entities[eid])
                 if item_fields[0]['field_value'] == f[0]:
-                    for fid in range(2):
+                    for fid in range(3):
                         item_field = item_fields[fid]
                         self.assertEqual(item_field['field_value'], f[fid])
                     break
