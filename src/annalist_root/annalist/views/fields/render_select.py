@@ -298,7 +298,10 @@ def get_entitytype_renderer():
 
 def get_view_choice_renderer():
     """
-    Return field renderer object for entitytype
+    Return field renderer object for "view choice" controlm, which combines
+    a regular selection box with a "Show view" button.  This option is used
+    by the view template/renderer, and is not available as a field choice 
+    within the view.
     """
     return RenderFieldValue("view_choice",
         view_renderer=Select_view_renderer(view_view_choice),
