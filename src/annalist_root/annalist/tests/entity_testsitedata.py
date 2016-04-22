@@ -553,6 +553,8 @@ site_field_types = (
     , FieldChoice("Enum_render_type/TokenSet",          label="Space-separated tokens"       )
     , FieldChoice("Enum_render_type/URIImport",         label="Web import"                   )
     , FieldChoice("Enum_render_type/URILink",           label="Web link"                     )
+    , FieldChoice("Enum_render_type/View_choice",       label="Choose view"                  )
+
     ])
     # , FieldChoice("Enum_render_type/Field",             label="Field Id"             ) #@@deprecated
     # , FieldChoice("Enum_render_type/List",              label="List Id"              ) #@@deprecated
