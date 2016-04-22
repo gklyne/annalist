@@ -28,6 +28,6 @@
   "annal:record_type": "rdfs:Class",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
-  "rdfs:comment": "# List resource classes\r\n\r\nDisplays a list of [Class](/annalist/c/RDF_schema/d/_type/Class/) values.\r\n\r\n",
+  "rdfs:comment": "# List resource classes\r\n\r\nDisplays a list of [Class]($BASE:_type/Class/) values.\r\n\r\n",
   "rdfs:label": "Classes"
 }

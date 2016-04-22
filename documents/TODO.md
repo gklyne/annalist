@@ -25,19 +25,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Fix behaviour of collection inheritance - data not inherited?
     - Note that the search logic has reduced test suite performance by 10-15%
     - may want to look later for optimizations here (e.g. cache collection data).
-- [ ] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
+- [x] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
     - relative references are unreliable 
-    - views/generic.py calls markdowmn.markdown to format view help text from 'help_markdown'
-    - views/fields/render_text_markdown.py calls markdown.markdown using field from context
-    - tests/test_recordlist.py calls markdowmn.markdown
     - views/displayinfo.py, context_data is key function for assembling context info
-    - use context as basis for substitutions
     - substitution syntax:  $name, $name:, $[CURIE], $$ -> $, else as-is
     - Name characters are ALPHA, DIGIT, "_"
-    - CURIE characters for subsitution: name characters and:
+    - CURIE characters for subsitution: name characters, plus:
       "@", ".", "~", "-", "+", "*", "=", ":", ";", ",", "/", "?", "#", "!"
     - [x] add site_base_url (SITE), coll_base_url (COLL) and site_host_name (HOST) to context
-        - (displayinfo.context_data())
     - [x] add BASE to context: path for relative reference of collection entities (including `/d/`).
     - [x] define substitution function in displayinfo
     - [x] apply substitutions when setting help_markdown (displayinfo.context_data())
@@ -47,7 +42,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] use substitutions in help text
     - [x] add link to markdown field render type in help fields using Markdown
     - [x] User view description field - add "markdown" text.
-    - [ ] Use $BASE substitutions in help text for installable collections
+    - [x] Use $BASE substitutions in help text for installable collections
 - [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
