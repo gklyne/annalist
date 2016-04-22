@@ -32,6 +32,7 @@ from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordlist         import RecordList
 
+from annalist.views.displayinfo             import apply_substitutions
 from annalist.views.recordlistdelete        import RecordListDeleteConfirmedView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
@@ -572,7 +573,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         field_vals = default_fields(
             coll_id="testcoll", type_id="_list", entity_id="00000001",
             default_comment=default_comment,
-            rendered_help=markdown.markdown(default_comment),
+            rendered_help=markdown.markdown(apply_substitutions(r.context, default_comment)),
             tooltip1a=r.context['fields'][0]['field_help'],
             tooltip1b=r.context['fields'][1]['field_help'],
             tooltip2=r.context['fields'][2]['field_help'],
