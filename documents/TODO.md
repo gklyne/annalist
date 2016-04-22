@@ -45,6 +45,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] test case (markdown renderer)
     - [x] documentation (markdown field render type)
     - [ ] use substitutions in help text
+    - [ ] add link to markdown field renbder type in help fields using Markdown
 - [ ] Need to rethink field padding model: generate columns explicitly within rows, rather than assuming they will flow naturally to the next line.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
