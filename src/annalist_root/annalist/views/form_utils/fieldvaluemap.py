@@ -93,6 +93,10 @@ class FieldValueMap(object):
 
         Returns None if the prefixed value does not exist, which may be used as a loop
         termination condition.
+
+        @@TODO: bring this in line with other modules (e.g. FieldListValueMap), i.e.
+        Returns the dictionary of repeated field values found using the supplied prefix
+        (which evaluates as False if fields using the supplied prefix are not found).
         """
         if self.e:
             # log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))

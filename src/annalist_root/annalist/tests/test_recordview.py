@@ -45,7 +45,10 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
-    create_test_user
+    create_test_user,
+    context_field_map,
+    context_view_field,
+    context_bind_fields
     )
 from entity_testviewdata    import (
     recordview_dir,
@@ -299,60 +302,63 @@ class RecordViewEditViewTest(AnnalistTestCase):
         #
         self.assertEqual(len(r.context['fields']), 6)
         # 1st field - Id
-        self.assertEqual(r.context['fields'][0]['field_id'],           'View_id')
-        self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'View Id')
-        self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(view id)")
-        self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][0]['field_value'],        view_id)
-        self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0['field_id'],           'View_id')
+        self.assertEqual(f0['field_name'],         'entity_id')
+        self.assertEqual(f0['field_label'],        'View Id')
+        self.assertEqual(f0['field_placeholder'],  "(view id)")
+        self.assertEqual(f0['field_property_uri'], "annal:id")
+        self.assertEqual(f0['field_value_mode'],   "Value_direct")
+        self.assertEqual(f0['field_value_type'],  "annal:Slug")
+        self.assertEqual(f0['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(f0['field_value'],        view_id)
+        self.assertEqual(f0['options'],            self.no_options)
         # 2nd field - Label
-        self.assertEqual(r.context['fields'][1]['field_id'],           'View_label')
-        self.assertEqual(r.context['fields'][1]['field_name'],         'View_label')
-        self.assertEqual(r.context['fields'][1]['field_label'],        'Label')
-        self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(view label)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Text")
-        self.assertEqual(r.context['fields'][1]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][1]['field_value'],         view_label)
-        self.assertEqual(r.context['fields'][1]['options'],             self.no_options)
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1['field_id'],           'View_label')
+        self.assertEqual(f1['field_name'],         'View_label')
+        self.assertEqual(f1['field_label'],        'Label')
+        self.assertEqual(f1['field_placeholder'],  "(view label)")
+        self.assertEqual(f1['field_property_uri'], "rdfs:label")
+        self.assertEqual(f1['field_value_mode'],   "Value_direct")
+        self.assertEqual(f1['field_value_type'],  "annal:Text")
+        self.assertEqual(f1['field_placement'].field, "small-12 columns")
+        self.assertEqual(f1['field_value'],         view_label)
+        self.assertEqual(f1['options'],             self.no_options)
         # 3rd field - comment
-        # log.info("******\n"+repr(r.context['fields'][2]))
-        self.assertEqual(r.context['fields'][2]['field_id'],           'View_comment')
-        self.assertEqual(r.context['fields'][2]['field_name'],         'View_comment')
-        self.assertEqual(r.context['fields'][2]['field_label'],        'Help')
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_value_type'],  "annal:Richtext")
-        self.assertEqual(r.context['fields'][2]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2['field_id'],           'View_comment')
+        self.assertEqual(f2['field_name'],         'View_comment')
+        self.assertEqual(f2['field_label'],        'Help')
+        self.assertEqual(f2['field_property_uri'], "rdfs:comment")
+        self.assertEqual(f2['field_value_mode'],   "Value_direct")
+        self.assertEqual(f2['field_value_type'],  "annal:Richtext")
+        self.assertEqual(f2['field_placement'].field, "small-12 columns")
+        self.assertEqual(f2['options'],            self.no_options)
         # 4th field - type of entity for view
-        # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][3]['field_id'],           'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_name'],         'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_label'],        'View entity type')
-        self.assertEqual(r.context['fields'][3]['field_property_uri'], "annal:record_type")
-        self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][3]['field_value_type'],  "annal:Identifier")
-        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][3]['field_value'],        view_record_type)
-        self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
+        f3 = context_view_field(r.context, 3, 0)
+        self.assertEqual(f3['field_id'],           'View_target_type')
+        self.assertEqual(f3['field_name'],         'View_target_type')
+        self.assertEqual(f3['field_label'],        'View entity type')
+        self.assertEqual(f3['field_property_uri'], "annal:record_type")
+        self.assertEqual(f3['field_value_mode'],   "Value_direct")
+        self.assertEqual(f3['field_value_type'],  "annal:Identifier")
+        self.assertEqual(f3['field_placement'].field, "small-12 columns")
+        self.assertEqual(f3['field_value'],        view_record_type)
+        self.assertEqual(f3['options'],            self.no_options)
         # 5th field - add field
-        # log.info("******\n"+repr(r.context['fields'][4]))
-        self.assertEqual(r.context['fields'][4]['field_id'],           'View_edit_view')
-        self.assertEqual(r.context['fields'][4]['field_name'],         'View_edit_view')
-        self.assertEqual(r.context['fields'][4]['field_label'],        'Editable view?')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "annal:open_view")
-        self.assertEqual(r.context['fields'][4]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][4]['field_value_type'],  "annal:Boolean")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(r.context['fields'][4]['field_value'],        True)
-        self.assertEqual(r.context['fields'][4]['options'],            self.no_options)
+        f4 = context_view_field(r.context, 4, 0)
+        self.assertEqual(f4['field_id'],           'View_edit_view')
+        self.assertEqual(f4['field_name'],         'View_edit_view')
+        self.assertEqual(f4['field_label'],        'Editable view?')
+        self.assertEqual(f4['field_property_uri'], "annal:open_view")
+        self.assertEqual(f4['field_value_mode'],   "Value_direct")
+        self.assertEqual(f4['field_value_type'],  "annal:Boolean")
+        self.assertEqual(f4['field_placement'].field, "small-12 medium-6 columns")
+        self.assertEqual(f4['field_value'],        True)
+        self.assertEqual(f4['options'],            self.no_options)
         # 6th field - field list
+        f5 = context_view_field(r.context, 5, 0)
         expect_field_data = (
             [ { 'annal:field_placement': 'small:0,12;medium:0,6'
               , 'annal:field_id':        '_field/Entity_id'
@@ -367,15 +373,15 @@ class RecordViewEditViewTest(AnnalistTestCase):
               , 'annal:field_id':        '_field/Entity_comment'
               }
             ])
-        self.assertEqual(r.context['fields'][5]['field_id'],           'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_name'],         'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_label'],        'Fields')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:view_fields")
-        self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][5]['field_value_type'],  "annal:Field_group")
-        self.assertEqual(r.context['fields'][5]['field_value'],        expect_field_data)
-        self.assertEqual(len(r.context['fields'][5]['field_value']),   num_fields)
-        self.assertEqual(r.context['fields'][5]['options'],            self.no_options)
+        self.assertEqual(f5['field_id'],           'View_fields')
+        self.assertEqual(f5['field_name'],         'View_fields')
+        self.assertEqual(f5['field_label'],        'Fields')
+        self.assertEqual(f5['field_property_uri'], "annal:view_fields")
+        self.assertEqual(f5['field_value_mode'],   "Value_direct")
+        self.assertEqual(f5['field_value_type'],  "annal:Field_group")
+        self.assertEqual(f5['field_value'],        expect_field_data)
+        self.assertEqual(len(f5['field_value']),   num_fields)
+        self.assertEqual(f5['options'],            self.no_options)
         return
 
     # The View_view test case checks descriptions of repeat-field-groups that are not 
@@ -399,28 +405,32 @@ class RecordViewEditViewTest(AnnalistTestCase):
         #       ids actually coming from the view form.
         self.assertEqual(len(r.context['fields']), 6)        
         # 1st field - Id
-        self.assertEqual(r.context['fields'][0]['field_id'],    'View_id')
-        self.assertEqual(r.context['fields'][0]['field_name'],  'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'], 'View Id')
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0['field_id'],    'View_id')
+        self.assertEqual(f0['field_name'],  'entity_id')
+        self.assertEqual(f0['field_label'], 'View Id')
         # 2nd field - Label
-        self.assertEqual(r.context['fields'][1]['field_id'],    'View_label')
-        self.assertEqual(r.context['fields'][1]['field_name'],  'View_label')
-        self.assertEqual(r.context['fields'][1]['field_label'], 'Label')
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1['field_id'],    'View_label')
+        self.assertEqual(f1['field_name'],  'View_label')
+        self.assertEqual(f1['field_label'], 'Label')
         # 3rd field - comment
-        self.assertEqual(r.context['fields'][2]['field_id'],    'View_comment')
-        self.assertEqual(r.context['fields'][2]['field_name'],  'View_comment')
-        self.assertEqual(r.context['fields'][2]['field_label'], 'Help')
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2['field_id'],    'View_comment')
+        self.assertEqual(f2['field_name'],  'View_comment')
+        self.assertEqual(f2['field_label'], 'Help')
         # 4th field - rview recoird type
-        # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][3]['field_id'],    'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_name'],  'View_target_type')
-        self.assertEqual(r.context['fields'][3]['field_label'], 'View entity type')
+        f3 = context_view_field(r.context, 3, 0)
+        self.assertEqual(f3['field_id'],    'View_target_type')
+        self.assertEqual(f3['field_name'],  'View_target_type')
+        self.assertEqual(f3['field_label'], 'View entity type')
         # 5th field - add field
-        # log.info("******\n"+repr(r.context['fields'][3]))
-        self.assertEqual(r.context['fields'][4]['field_id'],    'View_edit_view')
-        self.assertEqual(r.context['fields'][4]['field_name'],  'View_edit_view')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Editable view?')
+        f4 = context_view_field(r.context, 4, 0)
+        self.assertEqual(f4['field_id'],    'View_edit_view')
+        self.assertEqual(f4['field_name'],  'View_edit_view')
+        self.assertEqual(f4['field_label'], 'Editable view?')
         # 6th field - field list
+        f5 = context_view_field(r.context, 5, 0)
         expect_field_data = (
             [
               { 'annal:field_placement': 'small:0,12;medium:0,6'
@@ -450,15 +460,15 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 , 'annal:field_id': None
                 })
             # log.info(repr(r.context['fields'][5]['field_value']))
-        self.assertEqual(r.context['fields'][5]['field_id'],           'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_name'],         'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_label'],        'Fields')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:view_fields")
-        self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][5]['field_value_type'],  "annal:Field_group")
-        self.assertEqual(len(r.context['fields'][5]['field_value']),   num_fields)
-        self.assertEqual(r.context['fields'][5]['field_value'],        expect_field_data)
-        self.assertEqual(r.context['fields'][5]['options'],            self.no_options)
+        self.assertEqual(f5['field_id'],           'View_fields')
+        self.assertEqual(f5['field_name'],         'View_fields')
+        self.assertEqual(f5['field_label'],        'Fields')
+        self.assertEqual(f5['field_property_uri'], "annal:view_fields")
+        self.assertEqual(f5['field_value_mode'],   "Value_direct")
+        self.assertEqual(f5['field_value_type'],  "annal:Field_group")
+        self.assertEqual(len(f5['field_value']),   num_fields)
+        self.assertEqual(f5['field_value'],        expect_field_data)
+        self.assertEqual(f5['options'],            self.no_options)
         return
 
     #   -----------------------------------------------------------------------------
@@ -472,12 +482,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_view", entity_id="00000001",
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
-            tooltip5=r.context['fields'][4]['field_help'],
-            tooltip6f1=r.context['fields'][5]._field_description['group_field_descs'][0]['field_help']
+            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_help'],
+            tooltip6f1=context_view_field(r.context, 5, 0)._field_description['group_field_descs'][0]['field_help']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -797,8 +807,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="",
             action="new", update="RecordView",
             )
-        # print repr(r.context[-1]['fields'][-1]['field_value'])
-        self.assertDictionaryMatch(r.context, expect_context)
+        # print "@@ "+repr(r.context[-1]['fields'][-1]['field_value'])
+        # print "@@ "+repr(context_bind_fields(r.context)['fields'][5])
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_new_view_invalid_id(self):

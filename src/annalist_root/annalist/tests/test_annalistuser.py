@@ -45,7 +45,8 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     create_user_permissions,
-    create_test_user
+    create_test_user,
+    context_view_field
     )
 from entity_testuserdata    import (
     annalistuser_dir,
@@ -297,11 +298,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_user", entity_id="00000001",
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
-            tooltip5=r.context['fields'][4]['field_help']
+            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -391,7 +392,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_user", entity_id="testuser",
-            tooltip=r.context['fields'][4]['field_help']
+            tooltip=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">
@@ -427,7 +428,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_user", entity_id="baduserperms",
-            tooltip=r.context['fields'][4]['field_help']
+            tooltip=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">

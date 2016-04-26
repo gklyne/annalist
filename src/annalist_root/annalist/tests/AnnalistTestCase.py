@@ -13,9 +13,10 @@ log = logging.getLogger(__name__)
 
 from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
-from annalist.models.entitytypeinfo    import EntityTypeInfo
+from annalist.models.entitytypeinfo             import EntityTypeInfo
 
-from annalist.views.fields.bound_field import bound_field
+from annalist.views.fields.bound_field          import bound_field
+from annalist.views.form_utils.fielddescription import FieldDescription
 
 class AnnalistTestCase(TestCase):
     """
@@ -63,6 +64,9 @@ class AnnalistTestCase(TestCase):
         If a dictionary element contains a list, the listed values are assumed to
         to be dictionaries which are matched recursively. (This logic is used when 
         checking sub-contexts used to render data-defined forms.)
+
+        Similarly, if a dictionary element is itself a dictionary, the 
+        corresponding values are matched recursively.
         """
         # log.info("\n***********\nexpect_dict %r"%(expect_dict))
         # log.info("\n-----------\nactual_dict %r"%(actual_dict))
@@ -83,7 +87,7 @@ class AnnalistTestCase(TestCase):
                             #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
                             #     log.info("\n***********")
                             self.assertTrue(i < len(actual_dict[k]), prefix+"Actual dict key %s has no element %d"%(k,i))
-                            if ( isinstance(actual_dict[k][i], (dict, bound_field)) and 
+                            if ( isinstance(actual_dict[k][i], (dict, bound_field, FieldDescription)) and 
                                  isinstance(expect_dict[k][i], dict)
                                ):
                                 self.assertDictionaryMatch(
@@ -97,6 +101,11 @@ class AnnalistTestCase(TestCase):
                                     )
                 else:
                     self.fail("Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
+            elif isinstance(expect_dict[k],dict):
+                self.assertDictionaryMatch(
+                    actual_dict[k], expect_dict[k], 
+                    prefix=prefix+"Key %s: "%(k,)
+                    )
             else:
                 # if actual_dict[k] != expect_dict[k]:
                 #     log.info("\n***********\nexpect_dict %r"%(expect_dict))

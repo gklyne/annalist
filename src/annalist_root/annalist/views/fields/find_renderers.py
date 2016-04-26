@@ -38,6 +38,7 @@ from render_repeatgroup         import (
     get_repeatgrouprow_renderer,
     get_repeatlistrow_renderer,
     )
+from render_fieldrow            import get_fieldrow_renderer, FieldRowValueMapper
 from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
 
 # Render type mappings to templates and/or renderer access functions
@@ -87,6 +88,7 @@ _field_get_renderer_functions = (
     , "RepeatGroup":        get_repeatgroup_renderer
     , "RepeatGroupRow":     get_repeatgrouprow_renderer
     , "RepeatListRow":      get_repeatlistrow_renderer
+    , "FieldRow":           get_fieldrow_renderer
     # Render types recognized for backward compatibility
     , "URIImage":           get_ref_image_renderer
     , "Type":               get_select_renderer
@@ -114,6 +116,7 @@ _field_value_mappers = (
     , "Enum_choice_opt":    SelectValueMapper
     , "View_choice":        SelectValueMapper
     , "RefMultifield":      RefMultifieldValueMapper
+    , "FieldRow":           FieldRowValueMapper
     # Render types recognized for backward compatibility
     , "URIImage":           RefImageValueMapper
     , "Type":               SelectValueMapper

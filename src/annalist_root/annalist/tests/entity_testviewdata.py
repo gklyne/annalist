@@ -28,7 +28,8 @@ from annalist.views.fields.render_placement import (
 from entity_testutils           import (
     collection_dir, 
     site_title, 
-    collection_entity_view_url
+    collection_entity_view_url,
+    context_field_row
     )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
@@ -262,56 +263,61 @@ def recordview_entity_view_context_data(
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:View'
         , 'fields':
-          [ { 'field_id':           'View_id'               # fields[0]
-            , 'field_name':         'entity_id'
-            , 'field_value_type':  'annal:Slug'
-            , 'field_label':        'View Id'
-            , 'field_render_type':  'EntityId'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_id':           'View_label'            # fields[1]
-            , 'field_name':         'View_label'
-            , 'field_value_type':  'annal:Text'
-            , 'field_label':        'Label'
-            , 'field_render_type':  'Text'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        view_label
-            , 'options':            []
-            }
-          , { 'field_id':           'View_comment'          # fields[2]
-            , 'field_name':         'View_comment'
-            , 'field_label':        'Help'
-            , 'field_value_type':  'annal:Richtext'
-            , 'field_render_type':  'Markdown'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        view_descr
-            , 'options':            []
-            }
-          , { 'field_id':           'View_target_type'      # fields[3]
-            , 'field_name':         'View_target_type'
-            , 'field_value_type':  'annal:Identifier'
-            , 'field_label':        'View entity type'
-            , 'field_render_type':  'Identifier'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        target_record_type
-            , 'options':            []
-            }
-          , { 'field_id':           'View_edit_view'        # fields[4]
-            , 'field_name':         'View_edit_view'
-            , 'field_value_type':  'annal:Boolean'
-            , 'field_label':        'Editable view?'
-            , 'field_render_type':  'CheckBox'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value':        True
-            , 'options':            []
-            }
+          [ context_field_row(
+              { 'field_id':           'View_id'               # fields[0]
+              , 'field_name':         'entity_id'
+              , 'field_value_type':  'annal:Slug'
+              , 'field_label':        'View Id'
+              , 'field_render_type':  'EntityId'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+              # , 'field_value':      (Supplied separately)
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_id':           'View_label'            # fields[1]
+              , 'field_name':         'View_label'
+              , 'field_value_type':  'annal:Text'
+              , 'field_label':        'Label'
+              , 'field_render_type':  'Text'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_value':        view_label
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_id':           'View_comment'          # fields[2]
+              , 'field_name':         'View_comment'
+              , 'field_label':        'Help'
+              , 'field_value_type':  'annal:Richtext'
+              , 'field_render_type':  'Markdown'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_value':        view_descr
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_id':           'View_target_type'      # fields[3]
+              , 'field_name':         'View_target_type'
+              , 'field_value_type':  'annal:Identifier'
+              , 'field_label':        'View entity type'
+              , 'field_render_type':  'Identifier'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_value':        target_record_type
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_id':           'View_edit_view'        # fields[4]
+              , 'field_name':         'View_edit_view'
+              , 'field_value_type':  'annal:Boolean'
+              , 'field_label':        'Editable view?'
+              , 'field_render_type':  'CheckBox'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+              , 'field_value':        True
+              , 'options':            []
+              })
           , { "field_id":           'View_fields'           # fields[5]
             , 'field_render_type':  'RepeatGroupRow'
             , 'field_name':         'View_fields'

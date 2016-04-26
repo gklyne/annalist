@@ -10,7 +10,7 @@ to be processed for display.
 
 When decoding values from a form, different logic is required to extract a
 repeating structure from the flat namespace used for form data.  See method 
-`map_form_to_entity`, along with `FieldListValueMap.map_form_to_entity_repeated_items` 
+`map_form_to_entity`, along with `FieldListValueMap.map_form_to_entity_repeated_item` 
 for more details. 
 """
 
@@ -61,7 +61,7 @@ class RepeatValuesMap(FieldValueMap):
         while prefix_found:
             vals          = {}
             prefix        = prefix_template%prefix_n
-            prefix_found  = self.fieldlist.map_form_to_entity_repeated_items(formvals, vals, prefix)
+            prefix_found  = self.fieldlist.map_form_to_entity_repeated_item(formvals, vals, prefix)
             if prefix_found:
                 repeatvals.append(vals)
             prefix_n += 1

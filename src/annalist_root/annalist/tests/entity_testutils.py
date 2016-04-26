@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import urlparse
+import copy
 
 import logging
 log = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ from django.conf                    import settings
 from django.http                    import QueryDict
 from django.utils.http              import urlquote, urlunquote
 from django.core.urlresolvers       import resolve, reverse
+from django.template                import Context
 from django.contrib.auth.models     import User
 
 import annalist
@@ -25,10 +27,11 @@ from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.uri_builder             import uri_params, uri_with_params
-from annalist.views.fields.bound_field      import bound_field, get_entity_values
-from annalist.views.fields.render_placement import get_placement_classes
-from annalist.views.form_utils.fieldchoice  import FieldChoice, update_choice_labels
+from annalist.views.uri_builder                 import uri_params, uri_with_params
+from annalist.views.fields.bound_field          import bound_field, get_entity_values
+from annalist.views.fields.render_placement     import get_placement_classes
+from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
+from annalist.views.form_utils.fielddescription import FieldDescription
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -401,6 +404,94 @@ def create_test_user(
 #   ----- Context access utilities
 #
 #   -----------------------------------------------------------------------------
+
+def context_field_row(*fields):
+    row = (
+        { 'field_id':           "Row_fields"
+        , 'field_name':         "Row_fields"
+        , 'field_label':        "Fields in row"
+        , 'field_value_mode':   "Value_direct"
+        , 'field_render_type':  "FieldRow"
+        , 'field_placement':    get_placement_classes('small:0,12')
+        , 'row_field_descs':    list(fields)
+        })
+    return row
+
+def context_field_map(context):
+    fields = context['fields']
+    response = ["context_field_map: %d rows"%(len(fields))]
+    for rn in range(len(fields)):
+        row = fields[rn]
+        if 'row_field_descs' in row:
+            # Pick column from row
+            cols = row['row_field_descs']
+        else:
+            # Field is not row-wrapped
+            cols = [row]
+        response.append("  row %d: %d cols"%(rn, len(cols)))
+        for cn in range(len(cols)):
+            field = cols[cn]
+            response.append("    col %d, id %s, pos %s"%(cn, field['field_id'], field['field_placement']))
+    return "\n".join(response)
+
+def context_view_field(context, rownum, colnum):
+    row = context['fields'][rownum]
+    if 'row_field_descs' in row:
+        # Pick column from row
+        field = row['row_field_descs'][colnum]
+    else:
+        # Field is not row-wrapped
+        field = row
+    if isinstance(field, FieldDescription):
+        # fields in row are late-bound, so create a binding now
+        entity_vals = context['fields'][rownum]['entity_value']
+        extras      = context['fields'][rownum]['context_extra_values']
+        field       = bound_field(field, entity_vals, context_extra_values=extras) 
+    return field
+
+def context_bind_fields(context):
+    """
+    Fields in field rows are late bound so entity values do not appear in
+    the actual context used.  This method binds entity values to fields
+    so that all field values can be tested.
+    """
+    # bound_context = Context(context.flatten()) # Doesn't work for ContextList used for tests
+    context_vals  = {}
+    for k in context.keys():
+        context_vals[k] = context[k]
+    bound_context = Context(context_vals)
+    bound_rows    = []
+    for row in context['fields']:
+        if 'row_field_descs' in row:
+            entity_vals = row['entity_value']
+            extras      = row['context_extra_values']
+            bound_cols  = []
+            for field in row['row_field_descs']:
+                if isinstance(field, FieldDescription):
+                    # fields in row are late-bound, so create a binding now
+                    field       = bound_field(field, entity_vals, context_extra_values=extras) 
+                bound_cols.append(field)
+            bound_row = row.copy()
+            bound_row._field_description['row_field_descs'] = bound_cols
+        else:
+            bound_row = row
+        bound_rows.append(bound_row)
+    bound_context['fields'] = bound_rows
+    return bound_context
+
+# def context_view_field(context, fieldnum):
+#     rn = 0
+#     fn = 0
+#     while rn < len(context['fields']):
+#         rowfields  = context['fields'][rn]['row_field_descs']
+#         cn         = 0
+#         while cn < len(rowfields):
+#             if fn == fieldnum:
+#                 return rowfields[cn]
+#             cn += 1
+#             fn += 1
+#         rn += 1
+#     return None
 
 def context_list_entities(context):
     """

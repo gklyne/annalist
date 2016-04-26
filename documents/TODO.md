@@ -51,14 +51,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - field description is parameter to constructor of value map
         - bound_field combines field description with entity values
     - Other value map objects refer to subsidiary value maps for rendering
-    - [ ] Define new FieldRowValueMap - like a simplified FieldListValueMap
+    - [.] Define new FieldRowValueMap - like a simplified FieldListValueMap
         - constructor accepts a list of field descriptions to use
-    - [ ] Define renderer for field row that wraps list of fields as a row
-    - [ ] Re-work FieldListValueMap to break fields into rows and call 
-          FieldRowValueMap with each such group
+    - [.] Define renderer for field row that wraps list of fields as a row
+    - [.] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
           - insert padding as needed when creating FieldRowValueMap.
           - return a list of FieldRowValueMap's to drive rendering.
-    - [ ] Check and fix test cases
+          - each row of bound fields returned is assigned in turn to context field `row_bound_fields`
+    - [.] Check and fix test cases
+          @@ currently working on "test_recordview".  test 'test_post_new_view_missing_id' mopdified to pass 
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
@@ -120,6 +121,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode) - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] update Django version used to latest version designated for long term support (1.8?)

@@ -20,6 +20,7 @@ from django.conf                        import settings
 from annalist.identifiers               import RDFS, ANNAL
 
 from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
+from annalist.views.form_utils.fieldrowvaluemap import FieldRowValueMap
 from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
 from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap
 from annalist.views.fields.render_placement     import (
@@ -87,49 +88,97 @@ def next_field(pos_prev, offset, width, display):
     """
     Local helper calculates padding required for a given previous position,
     field offset and field width.
+
+    pos_prev    Position following previous field
+    offset      Offset of next field
+    width       Width of next field 
+    display     True if next field is to be displayed, otherwise False.
+
+    Returns a tuple containing::
+    [0] True if next field is to be placed on next row
+    [1] Amount of padding (0..11) to be added from end of last field or start of row
+    [2] Position of next free space after new element
     """
     if not display:
-        return (0, 0, pos_prev)
-    if offset < pos_prev:
+        # Field not to be displayed
+        return (False, 0, pos_prev)
+    if (offset < pos_prev) or (offset+width > 12):
         # Force to next row
-        pad1     = 12 - pos_prev
-        pad2     = offset
-        if offset == 0 and width > pad1:
-            pad1 = 0
+        next_row = True
+        padding  = offset
     else:
         # Same row
-        pad1 = offset - pos_prev
-        pad2 = 0
+        next_row = False
+        padding  = offset - pos_prev
     pos_next = offset + width
-    if pos_next == 12:
-        pos_next = 0
-    elif pos_next > 12:     # Overlength field is forced to next row
-        pad2     = 0
-        pos_next = width
-    return (pad1, pad2, pos_next)
+    return (next_row, padding, pos_next)
 
 def get_padding_desc(position, field_desc):
     """
     Calculate padding required to position field where requested, and return:
-    [0] updated position vector
-    [1] 1st padding field descriptor, or None
-    [2] 2nd padding field descriptor, or None
+    [0] next row indicator: True if the field and padding are to be placed 
+        on a new row.
+    [1] padding field descriptor, or None
+    [2] updated position vector
 
-    Note: 2 padding fields may be required in some circumstances:
-    (a) to force a field to start on the next row, and 
-    (b) to offset the field from the start of next row.
+    NOTE: the field is forced onto a new row if it does not fit on the same row 
+    for a large display.  For smaller displays, fields that run off the end of 
+    a row are positioned by the browser.  Position information is maintained
+    separately for all display sizes so that size-dependent padding can be 
+    calculated.
 
     position    is the position immediately following the preceeding field.
-    field_desc  is the next field descriptor.
+    field_desc  is the next field descriptor to be addedc to the display.
     """
     placement = field_desc['field_placement']
-    pad1_s, pad2_s, next_s  = next_field(position.s, placement.offset.s, placement.width.s, placement.display.s)
-    pad1_m, pad2_m, next_m  = next_field(position.m, placement.offset.m, placement.width.m, placement.display.m)
-    pad1_l, pad2_l, next_l  = next_field(position.l, placement.offset.l, placement.width.l, placement.display.l)
-    pos_next  = LayoutOptions(s=next_s, m=next_m, l=next_l)
-    pad1_desc = get_padding_field_desc(pad1_s, pad1_m, pad1_l)
-    pad2_desc = get_padding_field_desc(pad2_s, pad2_m, pad2_l)
-    return (pos_next, pad1_desc, pad2_desc)
+    # log.info(
+    #     "@@ get_padding_desc: prev %r, next %r, width %r"%
+    #     (position, placement.offset, placement.width)
+    #     )
+    next_rows, pad_s, next_s = next_field(position.s, placement.offset.s, placement.width.s, placement.display.s)
+    next_rowm, pad_m, next_m = next_field(position.m, placement.offset.m, placement.width.m, placement.display.m)
+    next_rowl, pad_l, next_l = next_field(position.l, placement.offset.l, placement.width.l, placement.display.l)
+    pos_next = LayoutOptions(s=next_s, m=next_m, l=next_l)
+    pad_desc = get_padding_field_desc(pad_s, pad_m, pad_l)
+    # log.info(
+    #     "@@ get_padding_desc: next_row %r, pad_desc %r, pos_next %r"%
+    #     (next_rowl, LayoutOptions(s=pad_s, m=pad_m, l=pad_l), pos_next)
+    #     )
+    return (next_rowl, pad_desc, pos_next)
+
+#   ----------------------------------------------------------------------------
+#
+#   Support class for generating row data
+#
+#   ----------------------------------------------------------------------------
+
+class RowData(object):
+
+    def __init__(self, coll, view_context):
+        self._coll   = coll
+        self._view   = view_context
+        self._pos    = LayoutOptions(s=0, m=0, l=0)
+        self._fields = []
+        return
+
+    def next_field(self, field_desc, map_field_row):
+        next_row, pad_desc, pos_next = get_padding_desc(self._pos, field_desc)
+        if next_row:
+            self.flush(map_field_row)
+        if pad_desc:
+            self._fields.append(pad_desc)
+        self._fields.append(field_desc)
+        self._pos = pos_next
+        return
+
+    def flush(self, map_field_row):
+        if self._fields:
+            # Context name: cf. FieldListValueMap.map_entity_to_context
+            row_values_map  = FieldRowValueMap("_fieldlistvaluemap_", self._coll, self._fields, self._view)
+            map_field_row.append(row_values_map)
+        self._pos    = LayoutOptions(s=0, m=0, l=0)
+        self._fields = []
+        return
 
 #   ----------------------------------------------------------------------------
 #
@@ -173,30 +222,32 @@ class FieldListValueMap(object):
         self.fd     = []        # List of field descriptions
         self.fm     = []        # List of field value maps
         properties  = None      # Used to detect and disambiguate duplicate properties
-        position    = LayoutOptions(s=0, m=0, l=0)
+        rowdata     = RowData(coll, view_context)
         for f in fields:
             # Add field descriptor for field presentation
             # log.debug("FieldListValueMap: field %r"%(f,))
             field_desc = field_description_from_view_field(coll, f, view_context)
             properties = field_desc.resolve_duplicates(properties)
             self.fd.append(field_desc)
-            # Add padding to field value map list
-            position, pad1_desc, pad2_desc = get_padding_desc(position, field_desc)
-            if pad1_desc:
-                self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=pad1_desc))
-            if pad2_desc:
-                self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=pad2_desc))
+
             # Add field value mapper to field value map list
             if field_desc.is_repeat_group():
-                repeatfieldsmap = FieldListValueMap('_unused_fieldlistvaluemap_', 
+                log.info("@@ repeat group")
+                # Repeat group occupies new row
+                rowdata.flush(self.fm)
+                repeatfieldsmap = FieldListValueMap('_repeatfieldsmap_', 
                     coll, field_desc.group_view_fields(), view_context
                     )
+                # Context name: cf. FieldListValueMap.map_entity_to_context
                 repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',
                     f=field_desc, fieldlist=repeatfieldsmap
                     )
                 self.fm.append(repeatvaluesmap)
             else:
-                self.fm.append(FieldValueMap(c='_fieldlistvaluemap_', f=field_desc))
+                # Single field: try to fit on current row
+                rowdata.next_field(field_desc, self.fm)
+        # Flush out any remaining fields
+        rowdata.flush(self.fm)
         return
 
     def __repr__(self):
@@ -219,7 +270,7 @@ class FieldListValueMap(object):
             f.map_form_to_entity(formvals, entityvals)
         return entityvals
 
-    def map_form_to_entity_repeated_items(self, formvals, entityvals, prefix):
+    def map_form_to_entity_repeated_item(self, formvals, entityvals, prefix):
         """
         Extra helper method used when mapping a repeated list of fields items to 
         repeated entity values.  Returns values corresponding to a single repeated 
@@ -227,6 +278,7 @@ class FieldListValueMap(object):
         prefix string.
 
         Returns a dictionary of repeated field values found using the supplied prefix.
+        (which evaluates as False if fields using the supplied prefix are not found)
         """
         for f in self.fm:
             f.map_form_to_entity_repeated_item(formvals, entityvals, prefix)

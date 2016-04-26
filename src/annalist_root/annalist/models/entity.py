@@ -296,7 +296,7 @@ class Entity(EntityRoot):
         attempting to evaluate alternatives: this function will enumerate the 
         alternatives and make additional calls as needed.
         """
-        log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
+        # log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
         # if altscope is not None:
         #     if not isinstance(altscope, (unicode, str)):
         #         log.error("altscope must be string (%r supplied)"%(altscope))
@@ -307,7 +307,7 @@ class Entity(EntityRoot):
             return v
         alt_parents = self._parent.get_alt_entities(altscope=altscope)
         for altparent in alt_parents:
-            log.debug("Entity.try_alt_entities: alt %s/%s"%(altparent.get_type_id(), altparent.get_id()))
+            # log.debug("Entity.try_alt_entities: alt %s/%s"%(altparent.get_type_id(), altparent.get_id()))
             v = func(altparent)
             if test(v):
                 return v
@@ -343,12 +343,14 @@ class Entity(EntityRoot):
             if test(v):
                 return (e, v)
         # Failed: log details
-        log.debug(
-            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
-            (cls._entitytypeid, entityid, parent.get_id(), altscope)
-            )
-        for ap in alt_parents:
-            log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
+        #@@
+        # log.debug(
+        #     "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
+        #     (cls._entitytypeid, entityid, parent.get_id(), altscope)
+        #     )
+        # for ap in alt_parents:
+        #     log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
+        #@@
         return (None, v)
 
     # Class helper methods

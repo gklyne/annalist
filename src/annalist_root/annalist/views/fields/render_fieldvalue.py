@@ -33,7 +33,7 @@ from annalist.exceptions import Annalist_Error
 #   Local data values
 #   ------------------------------------------------------------
 
-#   These templatres all expect the value renderer to be provided in the
+#   These templates all expect the value renderer to be provided in the
 #   view context as `value_renderer`
 
 # Render-type-independent templates
@@ -216,6 +216,7 @@ class RenderFieldValue(object):
         """
         Creates a renderer factory for a value field.
 
+        render_type     render type string (for diagnostics)
         view_renderer   is a render object that formats a field value
         edit_renderer   is a render object that formats a field value in a
                         form control that allows the value to be edited
@@ -271,9 +272,6 @@ class RenderFieldValue(object):
         self._render_col_head_edit   = None
         self._render_col_view        = None
         self._render_col_edit        = None
-        self._render_label           = None
-        self._render_view            = None
-        self._render_edit            = None
         self._renderers              = None
         return
   
