@@ -39,7 +39,9 @@ from entity_testutils       import (
     collection_create_values,
     site_title,
     render_select_options, render_choice_options,
-    create_test_user
+    create_test_user,
+    context_view_field,
+    context_bind_fields
     )
 from entity_testtypedata    import (
     recordtype_url,
@@ -154,10 +156,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "Collection testcoll")
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
+            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip2=context_view_field(r.context, 0, 1)['field_help'],
+            tooltip3=context_view_field(r.context, 1, 0)['field_help'],
+            tooltip4=context_view_field(r.context, 2, 0)['field_help'],
             )
         formrow1 = """
               <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -242,59 +244,63 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)
+        self.assertEqual(len(r.context['fields']), 3)
+        f0  = context_view_field(r.context, 0, 0)
+        f1  = context_view_field(r.context, 0, 1)
+        f2  = context_view_field(r.context, 1, 0)
+        f3  = context_view_field(r.context, 2, 0)
         # 1st field
-        self.assertEqual(r.context['fields'][0]['field_id'],            'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'],          'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],         'Id')
-        self.assertEqual(r.context['fields'][0]['field_placeholder'],   "(entity id)")
-        self.assertEqual(r.context['fields'][0]['field_property_uri'],  "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_type'],   "EntityId")
-        self.assertEqual(r.context['fields'][0]['field_value_mode'],    "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_value_type'],   "annal:Slug")
-        self.assertEqual(r.context['fields'][0].field_value,            "00000001")
-        self.assertEqual(r.context['fields'][0]['field_value'],         "00000001")
-        self.assertEqual(r.context['fields'][0]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][0]['options'],             self.no_options)
+        self.assertEqual(f0['field_id'],            'Entity_id')
+        self.assertEqual(f0['field_name'],          'entity_id')
+        self.assertEqual(f0['field_label'],         'Id')
+        self.assertEqual(f0['field_placeholder'],   "(entity id)")
+        self.assertEqual(f0['field_property_uri'],  "annal:id")
+        self.assertEqual(f0['field_render_type'],   "EntityId")
+        self.assertEqual(f0['field_value_mode'],    "Value_direct")
+        self.assertEqual(f0['field_value_type'],   "annal:Slug")
+        self.assertEqual(f0.field_value,            "00000001")
+        self.assertEqual(f0['field_value'],         "00000001")
+        self.assertEqual(f0['entity_type_id'],      "testtype")
+        self.assertEqual(f0['options'],             self.no_options)
         # 2nd field
-        self.assertEqual(r.context['fields'][1]['field_id'],            'Entity_type')
-        self.assertEqual(r.context['fields'][1]['field_name'],          'entity_type')
-        self.assertEqual(r.context['fields'][1]['field_label'],         'Type')
-        self.assertEqual(r.context['fields'][1]['field_placeholder'],   "(type id)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'],  "annal:type_id")
-        self.assertEqual(r.context['fields'][1]['field_render_type'],   "EntityTypeId")
-        self.assertEqual(r.context['fields'][1]['field_value_mode'],    "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],   "annal:Slug")
-        self.assertEqual(r.context['fields'][1].field_value,            "testtype")
-        self.assertEqual(r.context['fields'][1]['field_value'],         "testtype")
-        self.assertEqual(r.context['fields'][1]['entity_type_id'],      "testtype")
-        self.assertEqual(set(r.context['fields'][1]['options']),        set(self.type_ids))
+        self.assertEqual(f1['field_id'],            'Entity_type')
+        self.assertEqual(f1['field_name'],          'entity_type')
+        self.assertEqual(f1['field_label'],         'Type')
+        self.assertEqual(f1['field_placeholder'],   "(type id)")
+        self.assertEqual(f1['field_property_uri'],  "annal:type_id")
+        self.assertEqual(f1['field_render_type'],   "EntityTypeId")
+        self.assertEqual(f1['field_value_mode'],    "Value_direct")
+        self.assertEqual(f1['field_value_type'],   "annal:Slug")
+        self.assertEqual(f1.field_value,            "testtype")
+        self.assertEqual(f1['field_value'],         "testtype")
+        self.assertEqual(f1['entity_type_id'],      "testtype")
+        self.assertEqual(set(f1['options']),        set(self.type_ids))
         # 3rd field
         field_label_value = default_label("testcoll", "testtype", "00000001")
-        self.assertEqual(r.context['fields'][2]['field_id'],            'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_name'],          'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_label'],         'Label')
-        self.assertEqual(r.context['fields'][2]['field_placeholder'],   "(label)")
-        self.assertEqual(r.context['fields'][2]['field_property_uri'],  "rdfs:label")
-        self.assertEqual(r.context['fields'][2]['field_render_type'],   "Text")
-        self.assertEqual(r.context['fields'][2]['field_value_mode'],    "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_value_type'],   "annal:Text")
-        self.assertEqual(r.context['fields'][2]['field_value'],         field_label_value)
-        self.assertEqual(r.context['fields'][2]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][2]['options'],             self.no_options)
+        self.assertEqual(f2['field_id'],            'Entity_label')
+        self.assertEqual(f2['field_name'],          'Entity_label')
+        self.assertEqual(f2['field_label'],         'Label')
+        self.assertEqual(f2['field_placeholder'],   "(label)")
+        self.assertEqual(f2['field_property_uri'],  "rdfs:label")
+        self.assertEqual(f2['field_render_type'],   "Text")
+        self.assertEqual(f2['field_value_mode'],    "Value_direct")
+        self.assertEqual(f2['field_value_type'],   "annal:Text")
+        self.assertEqual(f2['field_value'],         field_label_value)
+        self.assertEqual(f2['entity_type_id'],      "testtype")
+        self.assertEqual(f2['options'],             self.no_options)
         # 4th field
         field_comment_value = default_comment("testcoll", "testtype", "00000001")
-        self.assertEqual(r.context['fields'][3]['field_id'],            'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_name'],          'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_label'],         'Comment')
-        self.assertEqual(r.context['fields'][3]['field_placeholder'],   "(description)")
-        self.assertEqual(r.context['fields'][3]['field_property_uri'],  "rdfs:comment")
-        self.assertEqual(r.context['fields'][3]['field_render_type'],   "Markdown")
-        self.assertEqual(r.context['fields'][3]['field_value_mode'],    "Value_direct")
-        self.assertEqual(r.context['fields'][3]['field_value_type'],   "annal:Richtext")
-        self.assertEqual(r.context['fields'][3]['field_value'],         field_comment_value)
-        self.assertEqual(r.context['fields'][3]['entity_type_id'],      "testtype")
-        self.assertEqual(r.context['fields'][3]['options'],             self.no_options)
+        self.assertEqual(f3['field_id'],            'Entity_comment')
+        self.assertEqual(f3['field_name'],          'Entity_comment')
+        self.assertEqual(f3['field_label'],         'Comment')
+        self.assertEqual(f3['field_placeholder'],   "(description)")
+        self.assertEqual(f3['field_property_uri'],  "rdfs:comment")
+        self.assertEqual(f3['field_render_type'],   "Markdown")
+        self.assertEqual(f3['field_value_mode'],    "Value_direct")
+        self.assertEqual(f3['field_value_type'],   "annal:Richtext")
+        self.assertEqual(f3['field_value'],         field_comment_value)
+        self.assertEqual(f3['entity_type_id'],      "testtype")
+        self.assertEqual(f3['options'],             self.no_options)
         return
 
     def test_get_edit(self):
@@ -313,57 +319,61 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)        
+        self.assertEqual(len(r.context['fields']), 3)
+        f0  = context_view_field(r.context, 0, 0)
+        f1  = context_view_field(r.context, 0, 1)
+        f2  = context_view_field(r.context, 1, 0)
+        f3  = context_view_field(r.context, 2, 0)
         # 1st field
-        self.assertEqual(r.context['fields'][0]['field_id'],           'Entity_id')
-        self.assertEqual(r.context['fields'][0]['field_name'],         'entity_id')
-        self.assertEqual(r.context['fields'][0]['field_label'],        'Id')
-        self.assertEqual(r.context['fields'][0]['field_placeholder'],  "(entity id)")
-        self.assertEqual(r.context['fields'][0]['field_property_uri'], "annal:id")
-        self.assertEqual(r.context['fields'][0]['field_render_type'],  "EntityId")
-        self.assertEqual(r.context['fields'][0]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][0]['field_value_type'],  "annal:Slug")
-        self.assertEqual(r.context['fields'][0]['field_value'],        "entity1")
-        self.assertEqual(r.context['fields'][0]['options'],            self.no_options)
+        self.assertEqual(f0['field_id'],           'Entity_id')
+        self.assertEqual(f0['field_name'],         'entity_id')
+        self.assertEqual(f0['field_label'],        'Id')
+        self.assertEqual(f0['field_placeholder'],  "(entity id)")
+        self.assertEqual(f0['field_property_uri'], "annal:id")
+        self.assertEqual(f0['field_render_type'],  "EntityId")
+        self.assertEqual(f0['field_value_mode'],   "Value_direct")
+        self.assertEqual(f0['field_value_type'],  "annal:Slug")
+        self.assertEqual(f0['field_value'],        "entity1")
+        self.assertEqual(f0['options'],            self.no_options)
         # 2nd field
-        self.assertEqual(r.context['fields'][1]['field_id'],           'Entity_type')
-        self.assertEqual(r.context['fields'][1]['field_name'],         'entity_type')
-        self.assertEqual(r.context['fields'][1]['field_label'],        'Type')
-        self.assertEqual(r.context['fields'][1]['field_placeholder'],  "(type id)")
-        self.assertEqual(r.context['fields'][1]['field_property_uri'], "annal:type_id")
-        self.assertEqual(r.context['fields'][1]['field_render_type'],  "EntityTypeId")
-        self.assertEqual(r.context['fields'][1]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][1]['field_value_type'],  "annal:Slug")
-        self.assertEqual(r.context['fields'][1]['field_value'],        "testtype")
-        self.assertEqual(set(r.context['fields'][1]['options']),       set(self.type_ids))
+        self.assertEqual(f1['field_id'],           'Entity_type')
+        self.assertEqual(f1['field_name'],         'entity_type')
+        self.assertEqual(f1['field_label'],        'Type')
+        self.assertEqual(f1['field_placeholder'],  "(type id)")
+        self.assertEqual(f1['field_property_uri'], "annal:type_id")
+        self.assertEqual(f1['field_render_type'],  "EntityTypeId")
+        self.assertEqual(f1['field_value_mode'],   "Value_direct")
+        self.assertEqual(f1['field_value_type'],  "annal:Slug")
+        self.assertEqual(f1['field_value'],        "testtype")
+        self.assertEqual(set(f1['options']),       set(self.type_ids))
         # 3rd field
         field_label_value = (
             "Entity testcoll/testtype/entity1"
             )
-        self.assertEqual(r.context['fields'][2]['field_id'],           'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_name'],         'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_label'],        'Label')
-        self.assertEqual(r.context['fields'][2]['field_placeholder'],  "(label)")
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], "rdfs:label")
-        self.assertEqual(r.context['fields'][2]['field_render_type'],  "Text")
-        self.assertEqual(r.context['fields'][2]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][2]['field_value_type'],  "annal:Text")
-        self.assertEqual(r.context['fields'][2]['field_value'],        field_label_value)
-        self.assertEqual(r.context['fields'][2]['options'],            self.no_options)
+        self.assertEqual(f2['field_id'],           'Entity_label')
+        self.assertEqual(f2['field_name'],         'Entity_label')
+        self.assertEqual(f2['field_label'],        'Label')
+        self.assertEqual(f2['field_placeholder'],  "(label)")
+        self.assertEqual(f2['field_property_uri'], "rdfs:label")
+        self.assertEqual(f2['field_render_type'],  "Text")
+        self.assertEqual(f2['field_value_mode'],   "Value_direct")
+        self.assertEqual(f2['field_value_type'],  "annal:Text")
+        self.assertEqual(f2['field_value'],        field_label_value)
+        self.assertEqual(f2['options'],            self.no_options)
         # 4th field
         field_comment_value = (
             "Entity coll testcoll, type testtype, entity entity1"
             )
-        self.assertEqual(r.context['fields'][3]['field_id'],           'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_name'],         'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_label'],        'Comment')
-        self.assertEqual(r.context['fields'][3]['field_placeholder'],  "(description)")
-        self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][3]['field_render_type'],  "Markdown")
-        self.assertEqual(r.context['fields'][3]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][3]['field_value_type'],  "annal:Richtext")
-        self.assertEqual(r.context['fields'][3]['field_value'],        field_comment_value)
-        self.assertEqual(r.context['fields'][3]['options'],            self.no_options)
+        self.assertEqual(f3['field_id'],           'Entity_comment')
+        self.assertEqual(f3['field_name'],         'Entity_comment')
+        self.assertEqual(f3['field_label'],        'Comment')
+        self.assertEqual(f3['field_placeholder'],  "(description)")
+        self.assertEqual(f3['field_property_uri'], "rdfs:comment")
+        self.assertEqual(f3['field_render_type'],  "Markdown")
+        self.assertEqual(f3['field_value_mode'],   "Value_direct")
+        self.assertEqual(f3['field_value_type'],  "annal:Richtext")
+        self.assertEqual(f3['field_value'],        field_comment_value)
+        self.assertEqual(f3['options'],            self.no_options)
         return
 
     def test_get_edit_not_exists(self):
@@ -419,7 +429,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context
         expect_context = entitydata_context_data(action="new")
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_new_entity_invalid_id(self):
@@ -434,8 +444,8 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             entity_id="!badentity", orig_id="orig_entity_id", action="new"
             )
         # log.info(repr(f))
-        # log.info(repr(r.context['fields'][1]))
-        self.assertDictionaryMatch(r.context, expect_context)
+        # log.info(repr(context_bind_fields(r.context)['fields'][1]))
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_new_entity_default_type(self):
@@ -521,7 +531,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         expect_context = entitydata_context_data(action="copy")
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_copy_entity_invalid_id(self):
@@ -534,7 +544,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         expect_context = entitydata_context_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="copy"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -------- edit type --------
@@ -622,7 +632,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context for re-rendered form
         expect_context = entitydata_context_data(action="edit", update="Updated entity")
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged
         self._check_entity_data_values("edittype")
         return
@@ -643,7 +653,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         expect_context = entitydata_context_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="edit"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged
         self._check_entity_data_values("edittype")
         return

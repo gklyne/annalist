@@ -31,7 +31,9 @@ from AnnalistTestCase       import AnnalistTestCase
 from entity_testutils       import (
     collection_create_values,
     create_test_user,
+    context_view_field,
     context_list_entities,
+    context_list_head_fields
     )
 from entity_testtypedata    import (
     recordtype_create_values
@@ -223,16 +225,20 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "ref_type")
         # Fields
-        self.assertEqual(len(r.context['fields']), 2)
-        self.assertEqual(r.context['fields'][0]['field_id'], "Entity_id")
-        self.assertEqual(r.context['fields'][1]['field_id'], "Test_ref_type_field")
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        f0 = context_view_field(r.context, 0, 0)
+        f1 = context_view_field(r.context, 0, 1)
+        self.assertEqual(f0['field_id'], "Entity_id")
+        self.assertEqual(f1['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (
             [ FieldChoice(opt, label=baselabel+opt, link=baseuri%opt)
               for opt in ['testtype1/entity1', 'testtype2/entity2', 'testtypes/entitys']
             ])
-        self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        self.assertEqual(f1['options'], ref_options)
         return
 
     def test_select_notype_fields(self):
@@ -248,13 +254,17 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "ref_type")
         # Fields
-        self.assertEqual(len(r.context['fields']), 2)
-        self.assertEqual(r.context['fields'][0]['field_id'], "Entity_id")
-        self.assertEqual(r.context['fields'][1]['field_id'], "Test_ref_type_field")
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        f0 = context_view_field(r.context, 0, 0)
+        f1 = context_view_field(r.context, 0, 1)
+        self.assertEqual(f0['field_id'], "Entity_id")
+        self.assertEqual(f1['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = []
-        self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        self.assertEqual(f1['options'], ref_options)
         return
 
     def test_select_subtype1_fields(self):
@@ -270,16 +280,20 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "ref_type")
         # Fields
-        self.assertEqual(len(r.context['fields']), 2)
-        self.assertEqual(r.context['fields'][0]['field_id'], "Entity_id")
-        self.assertEqual(r.context['fields'][1]['field_id'], "Test_ref_type_field")
+        head_fields = context_list_head_fields(r.context)
+        self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        f0 = context_view_field(r.context, 0, 0)
+        f1 = context_view_field(r.context, 0, 1)
+        self.assertEqual(f0['field_id'], "Entity_id")
+        self.assertEqual(f1['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (
             [ FieldChoice(opt, label=baselabel+opt, link=baseuri%opt)
               for opt in ['testtype1/entity1']
             ])
-        self.assertEqual(r.context['fields'][1]['options'], ref_options)
+        self.assertEqual(f1['options'], ref_options)
         return
 
     def _no_test_test_select_view_subtype_fields(self):

@@ -40,13 +40,13 @@ from init_tests             import init_annalist_test_site, init_annalist_test_c
 from entity_testutils       import (
     create_test_user,
     create_user_permissions,
+    context_view_field,
     context_list_entities,
     context_list_head_fields,
     context_list_item_fields
     )
 from entity_testentitydata  import (
-    entity_url, entitydata_edit_url, 
-    entitydata_default_view_context_data, entitydata_default_view_form_data,
+    entity_url, entitydata_edit_url
     )
 
 #   -----------------------------------------------------------------------------
@@ -170,23 +170,23 @@ class ImageReferenceTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Check display context
         self.assertEqual(len(r.context['fields']), 4)
-        i = 0
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
-        self.assertEqual(r.context['fields'][i].field_value,  "test1")
-        i = 1
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
-        self.assertEqual(r.context['fields'][i].field_value,  "test_ref_image label")
-        i = 2
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
-        self.assertEqual(r.context['fields'][i].field_value,  "test_ref_image comment")
-        i = 3
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0.field_id,     "Entity_id")
+        self.assertEqual(f0.field_value,  "test1")
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1.field_id,     "Entity_label")
+        self.assertEqual(f1.field_value,  "test_ref_image label")
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2.field_id,     "Entity_comment")
+        self.assertEqual(f2.field_value,  "test_ref_image comment")
+        f3 = context_view_field(r.context, 3, 0)
         basepath = TestBasePath + "/c/testcoll/d/testreftype/"
-        # print "\n*****\n"+repr(r.context['fields'][i])+"\n*****\n"
-        self.assertEqual(r.context['fields'][i].field_id,           "Test_image_ref")
-        self.assertEqual(r.context['fields'][i].field_value,        self.imageuri)
-        self.assertEqual(r.context['fields'][i].field_value_link,   None)
-        self.assertEqual(r.context['fields'][i].target_value,       self.imageuri)
-        self.assertEqual(r.context['fields'][i].target_value_link,  self.imageuri)
+        # print "\n*****\n"+repr(f3)+"\n*****\n"
+        self.assertEqual(f3.field_id,           "Test_image_ref")
+        self.assertEqual(f3.field_value,        self.imageuri)
+        self.assertEqual(f3.field_value_link,   None)
+        self.assertEqual(f3.target_value,       self.imageuri)
+        self.assertEqual(f3.target_value_link,  self.imageuri)
         # Check for rendered image link
         # log.info(r.content)
         field_details = (

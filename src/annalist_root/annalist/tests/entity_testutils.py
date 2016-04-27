@@ -479,20 +479,6 @@ def context_bind_fields(context):
     bound_context['fields'] = bound_rows
     return bound_context
 
-# def context_view_field(context, fieldnum):
-#     rn = 0
-#     fn = 0
-#     while rn < len(context['fields']):
-#         rowfields  = context['fields'][rn]['row_field_descs']
-#         cn         = 0
-#         while cn < len(rowfields):
-#             if fn == fieldnum:
-#                 return rowfields[cn]
-#             cn += 1
-#             fn += 1
-#         rn += 1
-#     return None
-
 def context_list_entities(context):
     """
     Returns list of entities to be displayed in list view

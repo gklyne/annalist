@@ -46,7 +46,8 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
-    create_test_user
+    create_test_user,
+    context_view_field
     )
 from entity_testviewdata    import (
     recordview_dir,
@@ -141,11 +142,11 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id="_view", entity_id="BibEntry_view",
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][4]['field_help'],
-            tooltip5=r.context['fields'][5]._field_description['group_field_descs'][0]['field_help']
+            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
+            tooltip4=context_view_field(r.context, 4, 0)['field_help'],
+            tooltip5=context_view_field(r.context, 5, 0)._field_description['group_field_descs'][0]['field_help']
           )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">

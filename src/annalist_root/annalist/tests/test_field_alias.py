@@ -38,6 +38,7 @@ from init_tests             import (
 from entity_testutils       import (
     collection_create_values,
     create_test_user, create_user_permissions,
+    context_view_field,
     context_list_entities,
     context_list_head_fields, context_list_item_fields,
     context_list_item_field, context_list_item_field_value
@@ -124,11 +125,12 @@ class FieldAliasTest(AnnalistTestCase):
         self.assertEqual(r.context['orig_id'],          "bibentity1")
         self.assertEqual(r.context['action'],           "edit")
         # Fields
-        self.assertEqual(len(r.context['fields']), 4)        
+        self.assertEqual(len(r.context['fields']), 3)
         # Check aliased label field
-        self.assertEqual(r.context['fields'][2]['field_id'], 'Entity_label')
-        self.assertEqual(r.context['fields'][2]['field_property_uri'], RDFS.CURIE.label)
-        self.assertEqual(r.context['fields'][2]['field_value'], self.bibentity1_data['bib:title'])
+        f2 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f2['field_id'], 'Entity_label')
+        self.assertEqual(f2['field_property_uri'], RDFS.CURIE.label)
+        self.assertEqual(f2['field_value'], self.bibentity1_data['bib:title'])
         return
 
     def test_list_field_alias(self):
@@ -144,15 +146,18 @@ class FieldAliasTest(AnnalistTestCase):
         self.assertEqual(r.context['list_choices']['field_value'], "Default_list")
         # Fields
         head_fields = context_list_head_fields(r.context)
-        self.assertEqual(len(head_fields), 2)
+        self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        f0 = context_view_field(r.context, 0, 0)
+        f1 = context_view_field(r.context, 0, 1)
         # 1st field
-        self.assertEqual(head_fields[0]['field_id'], 'Entity_id')
-        self.assertEqual(head_fields[0]['field_property_uri'], "annal:id")
-        self.assertEqual(head_fields[0]['field_value'], "")
+        self.assertEqual(f0['field_id'], 'Entity_id')
+        self.assertEqual(f0['field_property_uri'], "annal:id")
+        self.assertEqual(f0['field_value'], "")
         # 2nd field
-        self.assertEqual(head_fields[1]['field_id'], 'Entity_label')
-        self.assertEqual(head_fields[1]['field_property_uri'], "rdfs:label")
-        self.assertEqual(head_fields[1]['field_value'], "")
+        self.assertEqual(f1['field_id'], 'Entity_label')
+        self.assertEqual(f1['field_property_uri'], "rdfs:label")
+        self.assertEqual(f1['field_value'], "")
         # List entities (actually, just the one)
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 1)

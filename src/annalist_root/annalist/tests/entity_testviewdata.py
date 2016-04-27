@@ -333,9 +333,9 @@ def recordview_entity_view_context_data(
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         })
     if view_id:
-        context_dict['fields'][0]['field_value'] = view_id
-        context_dict['fields'][1]['field_value'] = view_label
-        context_dict['fields'][2]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
+        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = view_id
+        context_dict['fields'][1]['row_field_descs'][0]['field_value'] = view_label
+        context_dict['fields'][2]['row_field_descs'][0]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
         context_dict['orig_id']     = view_id
     if orig_id:
         context_dict['orig_id']     = orig_id

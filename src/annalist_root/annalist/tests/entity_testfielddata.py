@@ -33,7 +33,8 @@ from tests import (
 from entity_testutils               import (
     collection_dir, 
     site_title,
-    collection_entity_view_url
+    collection_entity_view_url,
+    context_field_row
     )
 from entity_testentitydata          import (
     entitydata_list_type_url
@@ -207,282 +208,279 @@ def recordfield_entity_view_context_data(
         , 'type_id':            "_field"
         , 'orig_id':            "orig_field_id"
         , 'fields':
-          [ { 'field_id':               "Field_id"                  # 0
-            , 'field_name':             "entity_id"
-            , 'field_label':            "Field Id"
-            , 'field_value_type':      "annal:Slug"
-            , 'field_render_type':      "EntityId"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:..."
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_property_uri':     'annal:id'
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field id)"
-            , 'field_default_value':    None
-            # , 'field_value':          (Supplied separately)
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_render"              # 1
-            , 'field_name':             "Field_render"
-            , 'field_label':            "Field render type"
-            , 'field_value_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_render_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         "Enum_render_type"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field render type)"
-            , 'field_default_value':    "Text"
-            , 'field_value':            "Text"
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_type"                # 2
-            , 'field_name':             "Field_type"
-            , 'field_label':            "Field value type"
-            , 'field_value_type':       "annal:Identifier"
-            , 'field_render_type':      "Identifier"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_value_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field value type)"
-            , 'field_default_value':    "annal:Text"
-            , 'field_value':            "annal:Text"
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_value_mode"          # 3
-            , 'field_name':             "Field_value_mode"
-            , 'field_label':            "Value mode"
-            , 'field_value_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_choice"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_value_mode"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         "Enum_value_mode"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field value mode)"
-            , 'field_default_value':    "Value_direct"
-            , 'field_value':            "Value_direct"
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_label"               # 4
-            , 'field_name':             "Field_label"
-            , 'field_label':            "Label"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "rdfs:label"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field label)"
-            , 'field_default_value':    ""
-            , 'field_value':            field_label
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_comment"             # 5
-            , 'field_name':             "Field_comment"
-            , 'field_label':            "Help"
-            , 'field_value_type':      "annal:Longtext"
-            , 'field_render_type':      "Textarea"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "rdfs:comment"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field usage commentary or help text)"
-            , 'field_default_value':    ""
-            , 'field_value':            field_descr
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_property"            # 6
-            , 'field_name':             "Field_property"
-            , 'field_label':            "Property URI"
-            , 'field_value_type':      "annal:Identifier"
-            , 'field_render_type':      "Identifier"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:property_uri"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field URI or CURIE)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_placement"           # 7
-            , 'field_name':             "Field_placement"
-            , 'field_label':            "Position/size"
-            , 'field_value_type':      "annal:Placement"
-            , 'field_render_type':      "Placement"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_placement"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field position and size)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_typeref"             # 8
-            , 'field_name':             "Field_typeref"
-            , 'field_label':            "Refer to type"
-            , 'field_value_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_optional"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_ref_type"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         "_type"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(no type selected)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_fieldref"            # 9
-            , 'field_name':             "Field_fieldref"
-            , 'field_label':            "Refer to field"
-            , 'field_value_type':      "annal:Identifier"
-            , 'field_render_type':      "Identifier"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_ref_field"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field URI or CURIE)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_placeholder"         # 10
-            , 'field_name':             "Field_placeholder"
-            , 'field_label':            "Placeholder"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:placeholder"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(placeholder text)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_default"             # 11
-            , 'field_name':             "Field_default"
-            , 'field_label':            "Default"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:default_value"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(field default value)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_groupref"            # 12
-            , 'field_name':             "Field_groupref"
-            , 'field_label':            "Field group"
-            , 'field_value_type':      "annal:Slug"
-            , 'field_render_type':      "Enum_optional"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:group_ref"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         "_group"
-            , 'field_ref_field':        None
-            , 'field_placeholder':      "(no field group selected)"
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_padding"             # 13
-            , 'field_name':             "Field_padding"
-            , 'field_label':            ""
-            , 'field_render_type':      "Padding"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     ""
-            , 'field_placement':        padding_placement
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            , 'field_default_value':    None
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_repeat_label_add"    # 14
-            , 'field_name':             "Field_repeat_label_add"
-            , 'field_label':            "Add value label"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:repeat_label_add"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            # , 'field_placeholder':      "..."
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_repeat_label_delete" # 15
-            , 'field_name':             "Field_repeat_label_delete"
-            , 'field_label':            "Delete value label"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:repeat_label_delete"
-            , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            # , 'field_placeholder':      "..."
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_entity_type"         # 16
-            , 'field_name':             "Field_entity_type"
-            , 'field_label':            "Entity type"
-            , 'field_value_type':      "annal:Identifier"
-            , 'field_render_type':      "Identifier"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_entity_type"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            # , 'field_placeholder':      "..."
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
-          , { 'field_id':               "Field_restrict"            # 17
-            , 'field_name':             "Field_restrict"
-            , 'field_label':            "Value restriction"
-            , 'field_value_type':      "annal:Text"
-            , 'field_render_type':      "Text"
-            , 'field_value_mode':       "Value_direct"
-            , 'field_property_uri':     "annal:field_ref_restriction"
-            , 'field_placement':        get_placement_classes('small:0,12')
-            , 'field_ref_type':         None
-            , 'field_ref_field':        None
-            # , 'field_placeholder':      "..."
-            , 'field_default_value':    ""
-            , 'field_value':            ""
-            , 'options':                []
-            }
+          [ context_field_row(
+              { 'field_id':               "Field_id"                  # 0 (0,0)
+              , 'field_name':             "entity_id"
+              , 'field_label':            "Field Id"
+              , 'field_value_type':       "annal:Slug"
+              , 'field_render_type':      "EntityId"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:..."
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_property_uri':     'annal:id'
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field id)"
+              , 'field_default_value':    None
+              # , 'field_value':          (Supplied separately)
+              , 'options':                []
+              },
+              { 'field_id':               "Field_render"              # 1 (0,1)
+              , 'field_name':             "Field_render"
+              , 'field_label':            "Field render type"
+              , 'field_value_type':      "annal:Slug"
+              , 'field_render_type':      "Enum_choice"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_render_type"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         "Enum_render_type"
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field render type)"
+              , 'field_default_value':    "Text"
+              , 'field_value':            "Text"
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_type"                # 2 (1,0)
+              , 'field_name':             "Field_type"
+              , 'field_label':            "Field value type"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_value_type"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field value type)"
+              , 'field_default_value':    "annal:Text"
+              , 'field_value':            "annal:Text"
+              , 'options':                []
+              },
+              { 'field_id':               "Field_value_mode"          # 3 (1,1)
+              , 'field_name':             "Field_value_mode"
+              , 'field_label':            "Value mode"
+              , 'field_value_type':       "annal:Slug"
+              , 'field_render_type':      "Enum_choice"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_value_mode"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         "Enum_value_mode"
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field value mode)"
+              , 'field_default_value':    "Value_direct"
+              , 'field_value':            "Value_direct"
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_label"               # 4 (2,0)
+              , 'field_name':             "Field_label"
+              , 'field_label':            "Label"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "rdfs:label"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field label)"
+              , 'field_default_value':    ""
+              , 'field_value':            field_label
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_comment"             # 5 (3,0)
+              , 'field_name':             "Field_comment"
+              , 'field_label':            "Help"
+              , 'field_value_type':       "annal:Longtext"
+              , 'field_render_type':      "Textarea"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "rdfs:comment"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field usage commentary or help text)"
+              , 'field_default_value':    ""
+              , 'field_value':            field_descr
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_property"            # 6 (4,0)
+              , 'field_name':             "Field_property"
+              , 'field_label':            "Property URI"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:property_uri"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field URI or CURIE)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              },
+              { 'field_id':               "Field_placement"           # 7 (4,1)
+              , 'field_name':             "Field_placement"
+              , 'field_label':            "Position/size"
+              , 'field_value_type':       "annal:Placement"
+              , 'field_render_type':      "Placement"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_placement"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field position and size)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_typeref"             # 8 (5,0)
+              , 'field_name':             "Field_typeref"
+              , 'field_label':            "Refer to type"
+              , 'field_value_type':       "annal:Slug"
+              , 'field_render_type':      "Enum_optional"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_ref_type"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         "_type"
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(no type selected)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              },
+              { 'field_id':               "Field_fieldref"            # 9 (5,1)
+              , 'field_name':             "Field_fieldref"
+              , 'field_label':            "Refer to field"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_ref_field"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field URI or CURIE)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_placeholder"         # 10 (6,0)
+              , 'field_name':             "Field_placeholder"
+              , 'field_label':            "Placeholder"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:placeholder"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(placeholder text)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_default"             # 11 (7,0)
+              , 'field_name':             "Field_default"
+              , 'field_label':            "Default"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:default_value"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field default value)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_groupref"            # 12 (8,0)
+              , 'field_name':             "Field_groupref"
+              , 'field_label':            "Field group"
+              , 'field_value_type':       "annal:Slug"
+              , 'field_render_type':      "Enum_optional"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:group_ref"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         "_group"
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(no field group selected)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':                "Field_repeat_label_add"    # 13 (9,0)
+              , 'field_name':             "Field_repeat_label_add"
+              , 'field_label':            "Add value label"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:repeat_label_add"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              # , 'field_placeholder':      "..."
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              },
+              { 'field_id':               "Field_repeat_label_delete" # 14 (9,1)
+              , 'field_name':             "Field_repeat_label_delete"
+              , 'field_label':            "Delete value label"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:repeat_label_delete"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              # , 'field_placeholder':      "..."
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_entity_type"         # 15 (10,0)
+              , 'field_name':             "Field_entity_type" 
+              , 'field_label':            "Entity type"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_entity_type"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              # , 'field_placeholder':      "..."
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_restrict"            # 16 (11,0)
+              , 'field_name':             "Field_restrict"
+              , 'field_label':            "Value restriction"
+              , 'field_value_type':      "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_ref_restriction"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              # , 'field_placeholder':      "..."
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
           ]
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id:
-        context_dict['fields'][0]['field_value'] = field_id
-        # context_dict['fields'][2]['field_value'] = '%s testcoll/_field/%s'%(update,field_id)
-        # context_dict['fields'][3]['field_value'] = '%s help for %s in collection testcoll'%(update,field_id)
+        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = field_id
         context_dict['orig_id']     = field_id
     if orig_id:
         context_dict['orig_id']     = orig_id

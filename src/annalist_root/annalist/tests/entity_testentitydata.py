@@ -34,7 +34,8 @@ from entity_testutils import (
     site_view_url,
     collection_edit_url,
     collection_entity_view_url,
-    site_title
+    site_title,
+    context_field_row
     )
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -260,54 +261,55 @@ def entitydata_context_data(
         , 'type_id':            'testtype'
         , 'orig_id':            'orig_entity_id'
         , 'fields':
-          [ { 'field_label':        'Id'
-            , 'field_id':           'Entity_id'
-            , 'field_name':         'entity_id'
-            , 'field_render_type':  'EntityId'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  "annal:Slug"
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_label':        'Type'
-            , 'field_id':           'Entity_type'
-            , 'field_name':         'entity_type'
-            , 'field_render_type':  'EntityTypeId'
-            , 'field_value_type':  "annal:Slug"
-            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-            , 'field_value_mode':   'Value_direct'
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_label':        'Label'
-            , 'field_id':           'Entity_label'
-            , 'field_name':         'Entity_label'
-            , 'field_render_type':  'Text'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  "annal:Text"
-            , 'field_value':        entity_label
-            , 'options':            []
-            }
-          , { 'field_label':        'Comment'
-            , 'field_id':           'Entity_comment'
-            , 'field_name':         'Entity_comment'
-            , 'field_render_type':  'Markdown'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  "annal:Richtext"
-            , 'field_value':        entity_descr
-            , 'options':            []
-            }
+          [ context_field_row(
+              { 'field_label':        'Id'
+              , 'field_id':           'Entity_id'
+              , 'field_name':         'entity_id'
+              , 'field_render_type':  'EntityId'
+              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  "annal:Slug"
+              # , 'field_value':      (Supplied separately)
+              , 'options':            []
+              },
+              { 'field_label':        'Type'
+              , 'field_id':           'Entity_type'
+              , 'field_name':         'entity_type'
+              , 'field_render_type':  'EntityTypeId'
+              , 'field_value_type':  "annal:Slug"
+              , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+              , 'field_value_mode':   'Value_direct'
+              # , 'field_value':      (Supplied separately)
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_label':        'Label'
+              , 'field_id':           'Entity_label'
+              , 'field_name':         'Entity_label'
+              , 'field_render_type':  'Text'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  "annal:Text"
+              , 'field_value':        entity_label
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_label':        'Comment'
+              , 'field_id':           'Entity_comment'
+              , 'field_name':         'Entity_comment'
+              , 'field_render_type':  'Markdown'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  "annal:Richtext"
+              , 'field_value':        entity_descr
+              , 'options':            []
+              })
           ]
         , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
         })
     if entity_id:
-        context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][1]['field_value'] = "_type/"+type_id if valid_id(type_id) else None
-        # context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
-        # context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = entity_id
+        context_dict['fields'][0]['row_field_descs'][1]['field_value'] = "_type/"+type_id if valid_id(type_id) else None
         context_dict['orig_id']     = entity_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -431,67 +433,67 @@ def entitydata_delete_confirm_form_data(entity_id=None, search=None):
 #
 #   -----------------------------------------------------------------------------
 
-def entitydata_default_view_context_data(
-        entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
-        action=None, update="Entity"
-    ):
-    context_dict = (
-        { 'title':              site_title()
-        , 'coll_id':            'testcoll'
-        , 'type_id':            'testtype'
-        , 'orig_id':            'orig_entity_id'
-        , 'fields':
-          [ { 'field_label':        'Id'
-            , 'field_name':         'entity_id'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_id':           'Entity_id'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Slug'
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_label':        'Type'
-            , 'field_name':         'entity_type'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-            , 'field_id':           'Entity_type'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Text'
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_label':        'Label'
-            , 'field_name':         'Entity_label'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Entity_label'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Text'
-            , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
-            , 'options':            []
-            }
-          , { 'field_label':        'Comment'
-            , 'field_name':         'Entity_comment'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Entity_comment'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Richtext'
-            , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
-            , 'options':            []
-            }
-          ]
-        , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
-        })
-    if entity_id:
-        context_dict['fields'][0]['field_value'] = entity_id
-        context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
-        context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
-        context_dict['orig_id']     = entity_id
-    if type_id:
-        context_dict['fields'][1]['field_value'] = type_id       
-    if orig_id:
-        context_dict['orig_id']     = orig_id
-    if action:  
-        context_dict['action']      = action
-    return context_dict
+# def entitydata_default_view_context_data(
+#         entity_id=None, orig_id=None, type_id="testtype", type_ids=[],
+#         action=None, update="Entity"
+#     ):
+#     context_dict = (
+#         { 'title':              site_title()
+#         , 'coll_id':            'testcoll'
+#         , 'type_id':            'testtype'
+#         , 'orig_id':            'orig_entity_id'
+#         , 'fields':
+#           [ { 'field_label':        'Id'
+#             , 'field_name':         'entity_id'
+#             , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+#             , 'field_id':           'Entity_id'
+#             , 'field_value_mode':   'Value_direct'
+#             , 'field_value_type':  'annal:Slug'
+#             # , 'field_value':      (Supplied separately)
+#             , 'options':            []
+#             }
+#           , { 'field_label':        'Type'
+#             , 'field_name':         'entity_type'
+#             , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+#             , 'field_id':           'Entity_type'
+#             , 'field_value_mode':   'Value_direct'
+#             , 'field_value_type':  'annal:Text'
+#             # , 'field_value':      (Supplied separately)
+#             , 'options':            []
+#             }
+#           , { 'field_label':        'Label'
+#             , 'field_name':         'Entity_label'
+#             , 'field_placement':    get_placement_classes('small:0,12')
+#             , 'field_id':           'Entity_label'
+#             , 'field_value_mode':   'Value_direct'
+#             , 'field_value_type':  'annal:Text'
+#             , 'field_value':        '%s data ... (testcoll/testtype)'%(update)
+#             , 'options':            []
+#             }
+#           , { 'field_label':        'Comment'
+#             , 'field_name':         'Entity_comment'
+#             , 'field_placement':    get_placement_classes('small:0,12')
+#             , 'field_id':           'Entity_comment'
+#             , 'field_value_mode':   'Value_direct'
+#             , 'field_value_type':  'annal:Richtext'
+#             , 'field_value':        '%s description ... (testcoll/testtype)'%(update)
+#             , 'options':            []
+#             }
+#           ]
+#         , 'continuation_url':   entitydata_list_type_url("testcoll", type_id)
+#         })
+#     if entity_id:
+#         context_dict['fields'][0]['field_value'] = entity_id
+#         context_dict['fields'][2]['field_value'] = '%s testcoll/testtype/%s'%(update,entity_id)
+#         context_dict['fields'][3]['field_value'] = '%s coll testcoll, type testtype, entity %s'%(update,entity_id)
+#         context_dict['orig_id']     = entity_id
+#     if type_id:
+#         context_dict['fields'][1]['field_value'] = type_id       
+#     if orig_id:
+#         context_dict['orig_id']     = orig_id
+#     if action:  
+#         context_dict['action']      = action
+#     return context_dict
 
 def entitydata_default_view_form_data(
         coll_id="testcoll", 
@@ -579,54 +581,54 @@ def entitydata_recordtype_view_context_data(
         , 'type_id':            type_id
         , 'orig_id':            'orig_entity_id'
         , 'fields':
-          [ { 'field_label':        'Type Id'
-            , 'field_name':         'entity_id'
-            , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-            , 'field_id':           'Type_id'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Slug'
-            # , 'field_value':      (Supplied separately)
-            , 'options':            []
-            }
-          , { 'field_label':        'Label'
-            , 'field_name':         'Type_label'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Type_label'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Text'
-            , 'field_value':        entity_label
-            , 'options':            []
-            }
-          , { 'field_label':        'Comment'
-            , 'field_name':         'Type_comment'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Type_comment'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Richtext'
-            , 'field_value':        entity_descr
-            , 'options':            []
-            }
-          , { 'field_label':        'Type URI'
-            , 'field_name':         'Type_uri'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_id':           'Type_uri'
-            , 'field_value_mode':   'Value_direct'
-            , 'field_value_type':  'annal:Identifier'
-            , 'field_value':        ""
-            , 'options':            []
-            }
+          [ context_field_row(
+              { 'field_label':        'Type Id'
+              , 'field_name':         'entity_id'
+              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+              , 'field_id':           'Type_id'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  'annal:Slug'
+              # , 'field_value':      (Supplied separately)
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_label':        'Label'
+              , 'field_name':         'Type_label'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_id':           'Type_label'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  'annal:Text'
+              , 'field_value':        entity_label
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_label':        'Comment'
+              , 'field_name':         'Type_comment'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_id':           'Type_comment'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  'annal:Richtext'
+              , 'field_value':        entity_descr
+              , 'options':            []
+              })
+          , context_field_row(
+              { 'field_label':        'Type URI'
+              , 'field_name':         'Type_uri'
+              , 'field_placement':    get_placement_classes('small:0,12')
+              , 'field_id':           'Type_uri'
+              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':  'annal:Identifier'
+              , 'field_value':        ""
+              , 'options':            []
+              })
           ]
         , 'continuation_url':   entitydata_list_type_url(coll_id, type_id)
         })
     if entity_id:
-        # label   = "%s %s/%s/%s"%(update, coll_id, type_id, entity_id)
-        # comment = "%s coll %s, type %s, entity %s"%(update, coll_id, type_id, entity_id)
-        context_dict['fields'][0]['field_value'] = entity_id
-        # context_dict['fields'][1]['field_value'] = label
-        # context_dict['fields'][2]['field_value'] = comment
+        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = entity_id
         context_dict['orig_id']                  = entity_id
     if type_uri:
-        context_dict['fields'][3]['field_value'] = type_uri
+        context_dict['fields'][3]['row_field_descs'][0]['field_value'] = type_uri
     if orig_id:
         context_dict['orig_id']     = orig_id
     if action:  

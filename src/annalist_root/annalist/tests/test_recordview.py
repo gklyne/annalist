@@ -828,7 +828,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="!badview", orig_id="orig_view_id", 
             action="new", update="RecordView"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        # print "@@ actual: "+repr(context_bind_fields(r.context)['fields'][0])
+        # print "@@ expect: "+repr(expect_context['fields'][0])
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -------- copy view --------
@@ -878,7 +880,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="", orig_id="Default_view", 
             action="copy", update="Updated RecordView"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_copy_view_invalid_id(self):
@@ -898,7 +900,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="copy", 
             update="Updated RecordView"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -------- edit view --------
@@ -989,7 +991,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             target_record_type="annal:View",
             update="Updated RecordView"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check original data is unchanged
         self._check_recordview_values("editview")
         return
@@ -1013,7 +1015,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="edit",
             update="Updated RecordView"
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check original data is unchanged
         self._check_recordview_values("editview")
         return
@@ -1069,7 +1071,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             target_record_type="annal:View",
             add_field=True
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_remove_field(self):
@@ -1099,7 +1101,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="edit",
             remove_field=True
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_remove_no_field_selected(self):
@@ -1126,7 +1128,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             )
         # log.info("r.context: %r"%(r.context))
         # log.info("expect_context: %r"%(expect_context))
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_move_up_fields(self):
@@ -1158,7 +1160,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             target_record_type="annal:View",
             move_up=[2,3]
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_move_down_fields(self):
@@ -1190,7 +1192,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             target_record_type="annal:View",
             move_down=[1]
             )
-        self.assertDictionaryMatch(r.context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
 

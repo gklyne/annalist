@@ -383,7 +383,7 @@ class FieldDescription(object):
             )
 
     def __repr__(self):
-        return self.__repr1__()
+        return self.__repr3__()
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

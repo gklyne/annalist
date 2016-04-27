@@ -43,7 +43,7 @@ from entity_testutils       import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_default_view_context_data, entitydata_default_view_form_data,
+    entitydata_default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
