@@ -218,7 +218,6 @@ class AnnalistGenericView(ContentNegotiationView):
 
         self.credential is set to credential that can be used to access resource
         """
-        # @@TODO: move logic to oauth2 app
         # Cache copy of URIs to use with OAuth2 login
         global LOGIN_URIS
         if LOGIN_URIS is None:
@@ -227,7 +226,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 , "login_post_uri": self.view_uri('LoginPostView')
                 , "login_done_uri": self.view_uri('LoginDoneView')
                 })
-        # Initiate OAuth2 login sequence, if neded
+        # Initiate OAuth2 login sequence, if needed
         return oauth2.views.confirm_authentication(self, 
             continuation_url=self.get_request_uri(),
             **LOGIN_URIS

@@ -420,6 +420,7 @@ div.columns.view-value
 div.columns.view-value > input[type="input"] , 
 div.columns.view-value > input[type="textarea"] , 
 div.columns.view-value > input[type="text"] , 
+div.columns.view-value > input[type="password"] , 
 div.columns.view-value > textarea , 
 div.columns.view-value > select ,
 div.columns.view-value > div.row > div.columns > select

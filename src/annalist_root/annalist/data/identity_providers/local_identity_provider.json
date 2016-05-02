@@ -1,0 +1,7 @@
+{
+  "web": {
+    "provider": "Local",
+    "mechanism": "django",
+    "redirect_uris": ["https://localhost:8000/annalist/login_done/"],
+  }
+}

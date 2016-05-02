@@ -51,13 +51,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Define renderer for field row that wraps list of fields as a row
     - [x] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
     - [x] Check and fix test cases
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
-    "rdfs:subClassOf": [
-      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
-      ]
-    - annal:display_type values (List/Grid) are another example to consider.
-- [ ] Keyboard shortcuts on forms - C-S to save, ...?
+
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
+    - the role of the user Id field is not clear; Iris tried password there
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+    - site data initialization: copy local id provider to providers directory
 - [ ] Instead of separate link on the login page, have "Local" as a login service option.
 - [ ] Login: support continuation URI
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
@@ -69,7 +67,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
-- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15)
+
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
+- [ ] Keyboard shortcuts on forms - C-S to save, ...?
 
 - [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
 - [ ] Field option to display item(s) in list (e.g. domain).
