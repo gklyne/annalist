@@ -6,104 +6,148 @@
 
 {% block content %}
 
-  {% if message %}
-  <div class="alert-box warning radius">
-    <h3>Login failed</h3>
-    <p>
-      {{message}}
-    </p>
-  </div>
-  {% endif %}
+{% load static %}
 
 <!--
-  <div class="row">
-    <div class="large-12 columns">
-      <h3>Enter login options</h3>
-    </div>
-  </div>
+{% if message %}
+<div class="alert-box warning radius">
+  <h3>Login failed</h3>
+  <p>
+    {{message}}
+  </p>
+</div>
+{% endif %}
 -->
 
-  <div class="row">
-    <div class="large-12 columns">
-      <form method="POST" action="{{login_post}}">
-        {% csrf_token %}
-
-        <div class="view-fieldrow row">
-          <div class="small-12 columns">
-            <div class="row view-value-row"
-                 title="Enter a short Id by which you will be known in this system.">
-              <div class="view-label small-12 medium-2 columns">
-                <span>User ID</span>
-              </div>
-              <div class="view-value small-12 medium-4 columns">
-                <input type="text" name="userid" />
-              </div>
-              <div class="small-6 columns">
-                &nbsp;
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="view-fieldrow row">
-          <div class="small-12 columns">
-            <div class="row view-value-row"
-                 title="Select the login service you will use to authenticate yourself.">
-              <div class="view-label small-12 medium-2 columns">
-                <span>Login service</span>
-              </div>
-              <div class="view-value small-12 medium-4 columns">
-                <select name="provider">
-                  {% for p in providers %}
-                  <option>{{p}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="small-6 columns">
-                &nbsp;
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="medium-2 columns show-for-medium-up">
-            <div class="row">
-              <div class="small-12 columns">
-                &nbsp;
-              </div>
-            </div>
-          </div>
-          <div class="small-12 medium-4 columns">
-            <div class="row">
-              <div class="form-buttons small-12 columns">
-                <input type="submit" value="Login"  name="login" />
-                <input type="submit" value="Cancel" name="cancel" />
-              </div>
-            </div>
-          </div>
-          <div class="small-12 medium-6 columns">
-            &nbsp;
-          </div>
-        </div>
-
-        <input type="hidden" name="scope"         value="{{scope}}"/>
-        <input type="hidden" name="login_done"    value="{{login_done}}"/>
-        <input type="hidden" name="continuation"  value="{{continuation}}"/>
-      </form>
-    </div>
+<!--
+<div class="row">
+  <div class="large-12 columns">
+    <h3>Enter login options</h3>
   </div>
+</div>
+-->
 
-  <hr/>
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="{{login_post_url}}">
+      {% csrf_token %}
 
-  <div class="row">
-    <div class="large-12 columns">
-      <p class="djangolinks">
-        Local user credentials:
-        &nbsp;
-        <a href="/admin/login/?next={{continuation}}">login</a>
-      </p>
-    </div>
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row"
+               title="Enter a short Id by which you will be known in this system.">
+            <div class="view-label small-12 medium-2 columns">
+              <span>User ID</span>
+            </div>
+            <div class="view-value small-12 medium-4 columns">
+              <input type="text" name="userid" value="{{userid}}" />
+            </div>
+            <div class="small-6 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row"
+               title="Select the login service you will use to authenticate yourself.">
+            <div class="view-label small-12 medium-2 columns">
+              <span>Login service</span>
+            </div>
+            <div class="view-value small-12 medium-4 columns">
+              <select name="provider">
+                {% for p in providers %}
+                    {% if p == provider %}
+                      <option selected="selected">{{p}}</option>
+                    {% else %}
+                      <option>{{p}}</option>
+                    {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <div class="small-6 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+      -->
+
+      <div class="form-buttons row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="form-buttons view-label small-12 columns">
+              <span>Login using:</span>
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-10 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <!--
+              <button type="submit" name="Local">
+                Local registry
+              </button>
+              <button type="submit" name="Google">
+                Google
+              </button>
+              -->
+              <!--
+              <input type="submit" name="Local"  value="Local registry" />
+              <input type="submit" name="Google" value="Google" />
+              -->
+              {% for p in providers %}
+              <input type="submit" name="login" value="{{p}}" />
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-buttons row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-4 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <!-- <input type="submit" value="Login"  name="login" /> -->
+              <input type="submit" value="Cancel" name="cancel" />
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-6 columns">
+          &nbsp;
+        </div>
+      </div>
+
+      <input type="hidden" name="scope"             value="{{scope}}"/>
+      <input type="hidden" name="login_done_url"    value="{{login_done_url}}"/>
+      <input type="hidden" name="user_profile_url"  value="{{user_profile_url}}"/>
+      <input type="hidden" name="continuation_url"  value="{{continuation_url}}"/>
+    </form>
   </div>
+</div>
+
+<!--
+<hr/>
+
+<div class="row">
+  <div class="large-12 columns">
+    <p class="djangolinks">
+      Local user credentials:
+      &nbsp;
+      <a href="/admin/login/?next={{continuation}}">login</a>
+    </p>
+  </div>
+</div>
+-->
 
 {% endblock %}

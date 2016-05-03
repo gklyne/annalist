@@ -518,6 +518,52 @@ div.columns > input[type=submit]
     */
 }
 
+div.row.form-buttons
+{
+    margin-top:         0.25rem ;
+    margin-bottom:      0rem ;    
+}
+
+div.row.form-buttons div.columns.view-label
+{
+    margin-top:         0rem ;
+    margin-bottom:      0rem ;
+    padding-top:        0.25rem;
+    padding-left:       0.5rem;
+    padding-right:      0.5rem;
+    font-size:          0.75rem;
+}
+
+div.row.form-buttons div.columns > button 
+{
+    margin-top:         0rem ;
+    margin-bottom:      0rem ;
+    padding:            0;
+    /*
+    border-style:       revert;
+    border-width:       revert;
+    border:             revert;
+    */
+    /* height:             1.4rem; */
+    /*
+    height:             auto;
+    font-size:          0.75rem;
+    color:              #AA6688;
+    border-color:       #DDDDDD;
+    background-color:   #DDDDDD;
+    */
+
+
+    border:             unset;
+    border-style:       unset;
+    border-width:       unset;
+    background-color:   unset;
+    border-color:       unset;
+    color:              unset;
+
+
+}
+
 div.columns > select[size] ,
 div.columns > textarea[rows]
 {

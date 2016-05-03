@@ -52,13 +52,25 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
     - [x] Check and fix test cases
 
-- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
-    - the role of the user Id field is not clear; Iris tried password there
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-    - site data initialization: copy local id provider to providers directory
-- [ ] Instead of separate link on the login page, have "Local" as a login service option.
+    - [ ] site data initialization: copy local id provider to providers directory
+    - [x] Make "Google" default provider (gereralize default mechanism?)
+    - [x] Local login: use userid from login front page, if defined
+    - [x] Local login redirects to login form - should display profile
+    - [x] Retain userid on login front page after login failure
+    - [x] Use buttons on login form instead of (or as well as) dropdown
+    - [x] Profile display accept POST and redirect to continuation
+    - [ ] Save recent user id in session to facilitate login
+    - [ ] Allow blank user id and construct value from authenticated email
+    - [ ] Login/Logout/profile buttons to include continuation
+    - [ ] Modularize and clean up duplicate code 
+    - [ ] Clean up separation of logic (and URL selection) between generic and auth applications
 - [ ] Login: support continuation URI
+- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
+    - [.] the role of the user Id field is not clear; Iris tried password there
+    - [ ] if id is left blank, use email local part (with substitutions)
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
+
 - [ ] Implement at least one other identify provider (ORCID?)
     - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
         - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
@@ -80,7 +92,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Generalize to path in list objects?
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
 - [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
-
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
@@ -110,7 +121,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
-    - include migration logic
+ m    - include migration logic
 
 
 (feature freeze for V0.9alpha?)

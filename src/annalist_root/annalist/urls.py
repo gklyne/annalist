@@ -67,7 +67,6 @@ urlpatterns = patterns('',
     url(r'^$',              AnnalistHomeView.as_view(),     name='AnnalistHomeView'),
     url(r'^site/$',         SiteView.as_view(),             name='AnnalistSiteView'),
     url(r'^site/!action$',  SiteActionView.as_view(),       name='AnnalistSiteActionView'),
-    url(r'^profile/$',      ProfileView.as_view(),          name='AnnalistProfileView'),
     url(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
 
     # Special forms
@@ -188,8 +187,9 @@ urlpatterns = patterns('',
 urlpatterns += patterns('',
     url(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
     url(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
-    url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
     url(r'^login_done/',    LoginDoneView.as_view(),            name='LoginDoneView'),
+    url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
+    url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
     url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
     )
 

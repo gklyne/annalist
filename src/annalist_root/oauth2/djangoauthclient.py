@@ -11,6 +11,7 @@ __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os.path
+import urllib
 import logging
 log = logging.getLogger(__name__)
 
@@ -23,15 +24,25 @@ from django.contrib.auth.models import User
 
 from utils.uri_builder import uri_with_params
 
+def HttpResponseRedirectWithQuery(redirect_uri, query_params):
+    nq = "?"
+    for pname in query_params.keys():
+        redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+        nq = "&"
+    # log.info("redirect_uri: "+redirect_uri)
+    return HttpResponseRedirect(redirect_uri)
+
 def HttpResponseRedirectLoginWithMessage(request, message):
-    login_form_uri = request.session['login_form_uri']
-    log.info("login_form_uri: "+login_form_uri)
+    user_profile_url = request.session['user_profile_url']
+    log.info("user_profile_url: "+user_profile_url)
     query_params = (
         { "continuation_url": request.session['continuation_url']
         , "scope":            request.session['oauth2_scope']
-        , "message":          message
+        , "error_head":       "Login failed"
+        , "error_message":    message
+        , "userid":           request.POST.get("userid", request.GET.get("userid", ""))
         })
-    return HttpResponseRedirectWithQuery(login_form_uri, query_params)
+    return HttpResponseRedirectWithQuery(user_profile_url, query_params)
 
 class LocalUserPasswordView(generic.View):
     """
@@ -52,22 +63,27 @@ class LocalUserPasswordView(generic.View):
         Display the local user password page with values as supplied.
         """
         userid           = request.GET.get("userid",            "")
-        continuation_url = request.GET.get("continuation_url",  "/no-login-continuation/")
-        message          = request.GET.get("message",           "")
-        login_post_uri   = request.session.get('login_post_uri', None)
-        login_done_uri   = request.session.get('login_done_uri', None)
-        help_dir         = request.session.get('help_dir', None)
-        if (login_post_uri is None) or (login_done_uri is None) or (help_dir is None):
+        user_profile_url = request.GET.get("user_profile_url",  "/no-login-user_profile_url/")
+        continuation_url = request.GET.get("continuation_url",  "/no-login-continuation_url/")
+        login_post_url   = request.session.get("login_post_url", None)
+        user_profile_url = request.session.get("user_profile_url", None)
+        help_dir         = request.session.get("help_dir", None)
+        if (login_post_url is None) or (user_profile_url is None) or (help_dir is None):
             log.warning(
                 "@@ redirect post_uri %s, done_uri %s, help_dir %s"%
-                (login_post_uri, login_done_uri, help_dir)
+                (login_post_url, user_profile_url, help_dir)
                 )
             return HttpResponseRedirect(continuation_url)
         # Display login form
         localdata = (
-            { "userid":         userid
-            , "message":        message
-            , 'help_filename':  'local-help'
+            { "userid":             userid
+            , "help_filename":      "local-help"
+            , "user_profile_url":   user_profile_url
+            , "continuation_url":   continuation_url
+            , "info_head":          request.GET.get("info_head", None)
+            , "info_message":       request.GET.get("info_message", None)
+            , "error_head":         request.GET.get("error_head", None)
+            , "error_message":      request.GET.get("error_message", None)
             })
         # Load help text if available
         if 'help_filename' in localdata:
@@ -83,15 +99,16 @@ class LocalUserPasswordView(generic.View):
         return HttpResponse(template.render(context))
 
     def post(self, request):
-        userid           = request.POST.get("userid",           "")
-        password         = request.POST.get("password",         "")
-        login_done       = request.POST.get("login_done",       "/no_login_done_in_form_response/")
-        continuation_url = request.POST.get("continuation_url", "/no_continuation_in_form_response/")
+        userid           = request.POST.get("userid",             "")
+        password         = request.POST.get("password",           "")
+        user_profile_url = request.POST.get("user_profile_url", "/no_user_profile_url_in_form/")
+        continuation_url = request.POST.get("continuation_url",   "/no_continuation_url_in_form/")
         if request.POST.get("login", None) == "Login":
             if not userid:
                 log.info("No User ID specified")
                 return HttpResponseRedirectLoginWithMessage(request, "No User ID specified")
             log.info("djangoauthclient: userid %s"%userid)
+            request.session['recent_userid'] = userid
             authuser = authenticate(username=userid, password=password)
             if authuser is None:
                 return HttpResponseRedirectLoginWithMessage(request, 
@@ -108,11 +125,10 @@ class LocalUserPasswordView(generic.View):
             log.info("LocalUserPasswordView: user.first_name: "+authuser.first_name)
             log.info("LocalUserPasswordView: user.last_name:  "+authuser.last_name)
             log.info("LocalUserPasswordView: user.email:      "+authuser.email)
-            return HttpResponseRedirect(login_done)
+            return HttpResponseRedirect(user_profile_url)
         # Login cancelled: redirect to continuation
         # (which may just redisplay the login page)
         return HttpResponseRedirect(continuation_url)
-
 
 class DjangoWebServerFlow(object):
     """

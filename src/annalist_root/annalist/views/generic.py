@@ -222,11 +222,11 @@ class AnnalistGenericView(ContentNegotiationView):
         global LOGIN_URIS
         if LOGIN_URIS is None:
             LOGIN_URIS = (
-                { "login_form_uri": self.view_uri('LoginUserView')
-                , "login_post_uri": self.view_uri('LoginPostView')
-                , "login_done_uri": self.view_uri('LoginDoneView')
+                { "login_form_url":     self.view_uri('LoginUserView')
+                , "login_post_url":     self.view_uri('LoginPostView')
+                , "login_done_url":     self.view_uri('LoginDoneView')
+                , "user_profile_url":   self.view_uri('AnnalistProfileView')
                 })
-        # Initiate OAuth2 login sequence, if needed
         return oauth2.views.confirm_authentication(self, 
             continuation_url=self.get_request_uri(),
             **LOGIN_URIS
@@ -291,6 +291,25 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         user_id, user_uri = self.get_user_identity()
         return self.get_user_permissions(collection, user_id, user_uri)
+
+    def get_message_data(self):
+        """
+        Returns a dictionary of message data that can be passed inthe request parameters
+        to be displayed on a different page.
+        """
+        messagedata = {}
+        def uri_param_val(msg_name, hdr_name, hdr_default):
+            """
+            Incorporate values from the incoming URI into the message data.
+            """
+            message = self.request.GET.get(msg_name, None)
+            if message:
+                messagedata[msg_name] = message
+                messagedata[hdr_name] = self.request.GET.get(hdr_name, hdr_default)
+            return
+        uri_param_val("info_message",  "info_head",  message.ACTION_COMPLETED)
+        uri_param_val("error_message", "error_head", message.INPUT_ERROR) 
+        return messagedata
 
     def authorize(self, scope, collection):
         """

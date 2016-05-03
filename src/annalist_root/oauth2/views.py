@@ -128,7 +128,7 @@ def oauth2_dict_to_flow(d):
     return flow
 
 def _untested_authentication_required(
-        login_form_uri=None, login_post_uri=None, login_done_uri=None, 
+        login_form_url=None, login_post_url=None, login_done_url=None, 
         continuation_url=None, scope=SCOPE_DEFAULT):
     """
     Decorator for view handler function that activates OAuth2 authentication flow
@@ -140,7 +140,7 @@ def _untested_authentication_required(
         def guard(view, values):
             return (
                 confirm_authentication(view, 
-                    login_form_uri, login_post_uri, login_done_uri, 
+                    login_form_url, login_post_url, login_done_url, 
                     continuation_url, scope)
             or
                 func(view, values)
@@ -151,24 +151,27 @@ def _untested_authentication_required(
 def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     nq = "?"
     for pname in query_params.keys():
-        redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
-        nq = "&"
+        if query_params[pname]:
+            redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+            nq = "&"
     # log.info("redirect_uri: "+redirect_uri)
     return HttpResponseRedirect(redirect_uri)
 
-def HttpResponseRedirectLoginWithMessage(request, message):
-    login_form_uri = request.session['login_form_uri']
-    log.info("login_form_uri: "+login_form_uri)
+def HttpResponseRedirectLoginWithMessage(request, message, userid=None):
+    login_form_url = request.session['login_form_url']
+    log.info("login_form_url: "+login_form_url)
     query_params = (
-        { "continuation": request.session['continuation_url']
-        , "scope":        request.session['oauth2_scope']
-        , "message":      message
+        { "continuation_url": request.session['continuation_url']
+        , "scope":            request.session['oauth2_scope']
+        , "error_head":       "Login failed"
+        , "error_message":    message
+        , "userid":           userid
         })
-    return HttpResponseRedirectWithQuery(login_form_uri, query_params)
+    return HttpResponseRedirectWithQuery(login_form_url, query_params)
 
 def confirm_authentication(view, 
-        login_form_uri=None, login_post_uri=None, login_done_uri=None, 
-        continuation_url=None, 
+        login_form_url=None, login_post_url=None, login_done_url=None, 
+        user_profile_url=None, continuation_url=None, 
         scope=SCOPE_DEFAULT, 
         help_path="annalist/views/help/"):
     """
@@ -176,6 +179,17 @@ def confirm_authentication(view,
     a login redirection response to the supplied URI
 
     view.credential is set to credential that can be used to access resource
+
+    Five URL parameters are passed in from the calling application:
+
+    login_form_url      Page to gather information to initiate login process
+    login_post_url      URL to which login information is posted
+    login_done_url      URL retrieved with additional parameters when authentication
+                        is complete (maybe failed). In the OAuth2 flow, this triggers
+                        retrieval of user profile information.  Not used for local
+                        authentication.
+    user_profile_url    URL retrieved when user profile details have been set up.
+    continuation_url    URL from which the login process was initiated.
     """
     if view.request.user.is_authenticated():
         storage         = Storage(CredentialsModel, 'id', view.request.user, 'credential')
@@ -202,27 +216,34 @@ def confirm_authentication(view,
                 return None        # Assume valid login: proceed...
             else:
                 return error400values(view, "Local user has no email address")
-    if not login_form_uri:
+    if not login_form_url:
         return error400values(view, "No login form URI specified")
-    if not login_done_uri:
+    if not login_done_url:
         return error400values(view, "No login completion URI specified")
-    if not login_post_uri:
-        login_post_uri = login_form_uri
+    if not login_post_url:
+        login_post_url = login_form_url
     if not continuation_url:
         continuation_url = view.request.path
     # Redirect to initiate login sequence 
-    view.request.session['login_form_uri']   = login_form_uri
-    view.request.session['login_post_uri']   = login_post_uri
-    view.request.session['login_done_uri']   = login_done_uri
+    view.request.session['login_form_url']   = login_form_url
+    view.request.session['login_post_url']   = login_post_url
+    view.request.session['login_done_url']   = login_done_url
+    view.request.session['user_profile_url'] = user_profile_url
     view.request.session['continuation_url'] = continuation_url
     view.request.session['oauth2_scope']     = scope
     view.request.session['help_dir']         = os.path.join(settings.SITE_SRC_ROOT, help_path)
+    userid = view.request.POST.get("userid", 
+        view.request.GET.get("userid",
+            view.request.session.get('recent_userid', "")
+            )
+        ) 
     query_params = (
-        { "continuation": continuation_url
-        , "scope":        scope
-        , "message":      ""
+        { "userid":           userid
+        , "continuation_url": continuation_url
+        , "scope":            scope
         })
-    return HttpResponseRedirectWithQuery(login_form_uri, query_params)
+    query_params.update(view.get_message_data())
+    return HttpResponseRedirectWithQuery(login_form_url, query_params)
 
 class LoginUserView(generic.View):
     """
@@ -232,9 +253,8 @@ class LoginUserView(generic.View):
 
     The login page supports the following request parameters:
 
-    continuation={uri}
-    - a URI that is retrieved, with a suitable authorization grant as a parameter, 
-      when appropriate permission has been confirmed by an authenticated user.
+    continuation_url={uri}
+    - a URL for a page that is displayed when the login process is complete.
     scope={string}
     - requested or required access scope
     """
@@ -243,47 +263,57 @@ class LoginUserView(generic.View):
         collect_client_secrets()
         # @@TODO: check PROVIDER_FILES, report error if none here
         # Retrieve request parameters
-        continuation = request.GET.get("continuation", "/no-login-continuation/")
-        scope        = request.GET.get("scope",        SCOPE_DEFAULT)
-        message      = request.GET.get("message",      "")
+        continuation_url  = request.GET.get("continuation_url", "/no-login-continuation/")
+        scope             = request.GET.get("scope",                SCOPE_DEFAULT)
         # Check required values in session - if missing, restart sequence from original URI
         # This is intended to avoid problems if this view is invoked out of sequence
-        login_post_uri = request.session.get('login_post_uri', None)
-        login_done_uri = request.session.get('login_done_uri', None)
-        help_dir       = request.session.get('help_dir', None)
-        if (login_post_uri is None) or (login_done_uri is None) or (help_dir is None):
+        login_post_url    = request.session.get("login_post_url",   None)
+        login_done_url    = request.session.get("login_done_url",   None)
+        user_profile_url  = request.session.get("user_profile_url", None)
+        help_dir          = request.session.get("help_dir",         None)
+        recent_userid     = request.session.get("recent_userid",    "")
+        if ( (login_post_url is None) or 
+             (login_done_url is None) or 
+             (user_profile_url is None) or 
+             (help_dir is None) ):
             log.info(
                 "@@ redirect post_uri %s, done_uri %s, help_dir %s"%
-                (login_post_uri, login_done_uri, help_dir)
+                (login_post_url, login_done_url, help_dir)
                 )
-            return HttpResponseRedirect(continuation)
+            return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
         if len(PROVIDER_FILES.keys()) > 0:
             default_provider = PROVIDER_FILES.keys()[0]
+        for p in PROVIDER_DETAILS:
+            if "default" in PROVIDER_DETAILS[p]:            
+                default_provider = PROVIDER_DETAILS[p]["default"]
         logindata = (
-            { "login_post":     request.session['login_post_uri']
-            , "login_done":     request.session['login_done_uri']
-            , "continuation":   continuation
-            , "userid":         request.GET.get("userid", "")
-            , "providers":      PROVIDER_FILES.keys()
-            , "scope":          scope
-            , "message":        message
-            , "suppress_user":  True
-            # Default provider
-            , "provider":       default_provider
-            , 'help_filename':  'login-help'
+            { "login_post_url":     login_post_url
+            , "login_done_url":     login_done_url
+            , "user_profile_url":   user_profile_url
+            , "continuation_url":   continuation_url
+            , "providers":          PROVIDER_FILES.keys()
+            , "scope":              scope
+            , "suppress_user":      True
+            , "provider":           default_provider
+            , "help_filename":      "login-help"
+            , "userid":             request.GET.get("userid", recent_userid)
+            , "info_head":          request.GET.get("info_head", None)
+            , "info_message":       request.GET.get("info_message", None)
+            , "error_head":         request.GET.get("error_head", None)
+            , "error_message":      request.GET.get("error_message", None)
             })
         # Load help text if available
-        if 'help_filename' in logindata:
+        if "help_filename" in logindata:
             help_filepath = help_dir + "%(help_filename)s.md"%(logindata)
             if os.path.isfile(help_filepath):
                 with open(help_filepath, "r") as helpfile:
-                    logindata['help_markdown'] = helpfile.read()
-        if 'help_markdown' in logindata:
-            logindata['help_text'] = markdown.markdown(logindata['help_markdown'])
+                    logindata["help_markdown"] = helpfile.read()
+        if "help_markdown" in logindata:
+            logindata["help_text"] = markdown.markdown(logindata["help_markdown"])
         # Render form & return control to browser
-        template = loader.get_template('login.html')
+        template = loader.get_template("login.html")
         context  = RequestContext(self.request, logindata)
         return HttpResponse(template.render(context))
 
@@ -302,47 +332,59 @@ class LoginPostView(generic.View):
     - a user identifying string that will be associated with the external service
       login credentials.
     provider={string}
-    - a string that identifiues a provioder selectred to proviode authentication/
-      authorization for the indicated user.  This string is an index to PROVIDER_FILES,
-      which in turn contains filenames for client secrets to user when using the 
-      indicated identity provider.
+    - a string that identifies a provider selectred to perform authentication
+      of the indicated user.  This string is an index to PROVIDER_FILES,
+      which in turn contains filenames for client secrets to user when accessing
+      the indicated identity provider.
     login_done={uri}
     - a URI that is retrieved, with a suitable authorization grant as a parameter, 
       when appropriate permission has been confirmed by an authenticated user.
+      Used to obtain user information following completion of authentication.
       Communicated via a hidden form value.
-    continuation={uri}
-    - a URI that is retrieved, with a suitable authorization grant as a parameter, 
-      when appropriate permission has been confirmed by an authenticated user.
-      Communicated via a hidden form value.
+    user_profile_url={uri}
+    - a URI that is retrieved, when user information has been obtained.  Expected use
+      is to display user information, thenm continue tyo the page from which the
+      login sequence was invoked.  Communicated via a hidden form value.
+    continuation_url={uri}
+    - URL of page from which logon sequence was invoked, and to which control is
+      eventually returned.  Communicated via a hidden form value.
     scope={string}
     - Requested or required access scope, communicated via a hidden form value.
     """
 
     def post(self, request):
         # Retrieve request parameters
-        userid        = request.POST.get("userid",        "")
-        provider      = request.POST.get("provider",      "Google")
-        login_done    = request.POST.get("login_done",    "/no_login_done_in_form_response/")
-        continuation  = request.POST.get("continuation",  "/no_continuation_in_form_response/")
-        scope         = request.POST.get("scope",         SCOPE_DEFAULT) 
+        userid            = request.POST.get("userid",            "")
+        provider          = request.POST.get("provider",          "No_provider")
+        provider          = request.POST.get("login",             provider)
+        login_done_url    = request.POST.get("login_done_url",    "/no_login_done_url_in_form/")
+        user_profile_url  = request.POST.get("user_profile_url",  "/no_user_profile_url_in_form/")
+        continuation_url  = request.POST.get("continuation_url",  "/no_continuation_url_in_form/")
+        scope             = request.POST.get("scope",             SCOPE_DEFAULT) 
         # Access or create flow object for this session
-        if request.POST.get("login", None) == "Login":
+        if request.POST.get("login", None):
             collect_client_secrets()
             provider_details      = PROVIDER_DETAILS[provider]
             provider_details_file = PROVIDER_FILES[provider]
             provider_mechanism    = provider_details.get("mechanism", "OIDC")
+            if userid and not re.match(r"\w+$", userid):
+                return HttpResponseRedirectLoginWithMessage(
+                    request, 
+                    "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid), 
+                    userid=userid
+                    )
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
                 flow = flow_from_clientsecrets(
                     provider_details_file,
                     scope=scope,
-                    redirect_uri=request.build_absolute_uri(login_done)
+                    redirect_uri=request.build_absolute_uri(login_done_url)
                     )
                 flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
                 flow.params['provider']     = provider
                 flow.params['userid']       = userid
                 # flow.params['scope']        = scope
-                flow.params['continuation'] = continuation
+                flow.params['continuation'] = continuation_url
                 # Save flow object in Django session
                 request.session['oauth2flow'] = oauth2_flow_to_dict(flow)
                 # Initiate OAuth2 dance
@@ -351,24 +393,25 @@ class LoginPostView(generic.View):
             if provider_mechanism == "django":
                 flow = django_flow_from_user_id(
                     provider_details,
-                    redirect_uri=request.build_absolute_uri(login_done)
+                    redirect_uri=request.build_absolute_uri(user_profile_url)
                     )
-                flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
-                flow.params['provider']     = provider
+                # flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
+                # flow.params['provider']     = provider
                 flow.params['userid']       = userid
-                flow.params['continuation'] = continuation
+                flow.params['continuation'] = continuation_url
                 flow.params['auth_uri']     = reverse("LocalUserPasswordView")
                 # Initiate django authentication
                 auth_uri = flow.step1_get_authorize_url()
                 return HttpResponseRedirect(auth_uri)
             return HttpResponseRedirectLoginWithMessage(
-                request, 
+                request,
                 "Unrecognized provider mechanism `%s` in %s"%
-                (provider_mechanism, provider_details_file)
+                (provider_mechanism, provider_details_file), 
+                userid=userid
                 )
         # Login cancelled: redirect to continuation
         # (which may just redisplay the login page)
-        return HttpResponseRedirect(continuation)
+        return HttpResponseRedirect(continuation_url)
 
 class LoginDoneView(generic.View):
     """
@@ -380,17 +423,6 @@ class LoginDoneView(generic.View):
         # Look for authorization grant
         flow   = oauth2_dict_to_flow(request.session['oauth2flow'])
         userid = flow.params['userid']
-        if not userid:
-            log.info("No User ID specified")
-            return HttpResponseRedirectLoginWithMessage(request, "No User ID specified")
-        if not re.match(r"\w+$", userid):
-            return HttpResponseRedirectLoginWithMessage(request, 
-                "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid))
-        # Save copy of current user details, if defined
-        try:
-            olduser = User.objects.get(username=userid)
-        except User.DoesNotExist:
-            olduser = None
         # Get authenticated user details
         try:
             credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
@@ -400,7 +432,7 @@ class LoginDoneView(generic.View):
                 )
         except FlowExchangeError, e:
             log.error("PROVIDER_DETAILS %r"%(PROVIDER_DETAILS[flow.params['provider']],))
-            return HttpResponseRedirectLoginWithMessage(request, str(e))
+            return HttpResponseRedirectLoginWithMessage(request, str(e), userid=userid)
         # Check authenticated details for user id match any previous values.
         #
         # The user id is entered by the user on the login form, and is used as a key to
@@ -413,17 +445,36 @@ class LoginDoneView(generic.View):
         # currently saved email address for the user id used..  This aims to  prevent a 
         # new set of OAuth2 credentials being used for a previously created Django user id.
         #
-        if not authuser.email:
+        if authuser and not authuser.email:
             return HttpResponseRedirectLoginWithMessage(request, 
-                "No email address associated with authenticated user %s"%(userid))
+                "No email address associated with authenticated user %s"%(userid), 
+                userid=userid
+                )
+        if not userid:
+            # Get generated username
+            userid = authuser.username
+        if not re.match(r"\w+$", userid):
+            return HttpResponseRedirectLoginWithMessage(
+                request, 
+                "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid), 
+                userid=userid
+                )
+        try:
+            olduser = User.objects.get(username=userid)
+        except User.DoesNotExist:
+            olduser = None
         if olduser:
+            print "@@ authuser.email %s, olduser.email %s"%(authuser.email, olduser.email)
             if authuser.email != olduser.email:
                 return HttpResponseRedirectLoginWithMessage(request, 
                     "Authenticated user %s email address mismatch (%s, %s)"%
-                        (userid, authuser.email, olduser.email))
+                    (userid, authuser.email, olduser.email), 
+                    userid=userid
+                    )
         # Complete the login and save details
         authuser.save()
         login(request, authuser)
+        request.session['recent_userid'] = userid
         storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
         # Don't normally log the credential/token as they might represent a security leakage:
@@ -441,8 +492,12 @@ class LogoutUserView(generic.View):
     """
 
     def get(self, request):
+        recent_userid = request.session.get('recent_userid', "")
         logout(request)
-        continuation = request.GET.get("continuation", urljoin(urlparse(request.path).path, "../"))
-        return HttpResponseRedirect(continuation)
+        request.session['recent_userid'] = recent_userid
+        continuation_url = request.GET.get("continuation_url", 
+            urljoin(urlparse(request.path).path, "../")
+            )
+        return HttpResponseRedirect(continuation_url)
 
 # End.
