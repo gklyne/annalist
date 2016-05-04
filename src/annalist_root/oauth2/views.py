@@ -421,14 +421,15 @@ class LoginDoneView(generic.View):
 
     def get(self, request):
         # Look for authorization grant
-        flow   = oauth2_dict_to_flow(request.session['oauth2flow'])
-        userid = flow.params['userid']
+        flow     = oauth2_dict_to_flow(request.session['oauth2flow'])
+        userid   = flow.params['userid']
+        provider = flow.params['provider']
         # Get authenticated user details
         try:
             credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
             authuser = authenticate(
                 username=userid, password=credential, 
-                profile_uri=PROVIDER_DETAILS[flow.params['provider']]['profile_uri']
+                profile_uri=PROVIDER_DETAILS[provider]['profile_uri']
                 )
         except FlowExchangeError, e:
             log.error("PROVIDER_DETAILS %r"%(PROVIDER_DETAILS[flow.params['provider']],))
@@ -445,9 +446,9 @@ class LoginDoneView(generic.View):
         # currently saved email address for the user id used..  This aims to  prevent a 
         # new set of OAuth2 credentials being used for a previously created Django user id.
         #
-        if authuser and not authuser.email:
+        if not authuser:
             return HttpResponseRedirectLoginWithMessage(request, 
-                "No email address associated with authenticated user %s"%(userid), 
+                "Login service %s cannot authenticate user %s"%(provider, userid), 
                 userid=userid
                 )
         if not userid:
@@ -457,6 +458,11 @@ class LoginDoneView(generic.View):
             return HttpResponseRedirectLoginWithMessage(
                 request, 
                 "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid), 
+                userid=userid
+                )
+        if not authuser.email:
+            return HttpResponseRedirectLoginWithMessage(request, 
+                "No email address associated with authenticated user %s"%(userid), 
                 userid=userid
                 )
         try:
