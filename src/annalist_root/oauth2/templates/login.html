@@ -99,8 +99,9 @@
               <input type="submit" name="Local"  value="Local registry" />
               <input type="submit" name="Google" value="Google" />
               -->
-              {% for p in providers %}
-              <input type="submit" name="login" value="{{p}}" />
+              {% for p, l in provider_labels %}
+              <!-- <input type="submit" name="login" value="{{p}}" /> -->
+              <button type="submit" name="login" value="{{p}}">{{l}}</button>
               {% endfor %}
             </div>
           </div>

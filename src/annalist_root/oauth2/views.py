@@ -63,7 +63,7 @@ OAuth2WebServerFlow_strip = (
     "step2_exchange"
     )
 
-def collect_client_secrets():
+def collect_provider_details():
     global PROVIDER_FILES, PROVIDER_DETAILS
     if PROVIDER_DETAILS is None:
         PROVIDER_DETAILS = {}
@@ -75,8 +75,10 @@ def collect_client_secrets():
                 p = os.path.join(clientsecrets_dirname,f)
                 j = json.load(open(p, "r"))
                 n = j['web']['provider']
-                PROVIDER_DETAILS[n] = j['web']
                 PROVIDER_FILES[n]   = p
+                PROVIDER_DETAILS[n] = j['web']
+                if 'provider_label' not in PROVIDER_DETAILS[n]:
+                    PROVIDER_DETAILS[n]['provider_label'] = n
     return
 
 def object_to_dict(obj, strip):
@@ -95,7 +97,7 @@ def object_to_dict(obj, strip):
     for member in strip:
       if member in d:
         del d[member]
-    d['_class'] = t.__name__
+    d['_class']  = t.__name__
     d['_module'] = t.__module__
     return d
 
@@ -260,7 +262,7 @@ class LoginUserView(generic.View):
     """
 
     def get(self, request):
-        collect_client_secrets()
+        collect_provider_details()
         # @@TODO: check PROVIDER_FILES, report error if none here
         # Retrieve request parameters
         continuation_url  = request.GET.get("continuation_url", "/no-login-continuation/")
@@ -293,10 +295,13 @@ class LoginUserView(generic.View):
             , "login_done_url":     login_done_url
             , "user_profile_url":   user_profile_url
             , "continuation_url":   continuation_url
-            , "providers":          PROVIDER_FILES.keys()
+            , "provider_keys":      PROVIDER_DETAILS.keys()
+            , "provider_labels":    [ (k, p['provider_label']) 
+                                      for k, p in PROVIDER_DETAILS.items()
+                                    ]
+            , "provider":           default_provider
             , "scope":              scope
             , "suppress_user":      True
-            , "provider":           default_provider
             , "help_filename":      "login-help"
             , "userid":             request.GET.get("userid", recent_userid)
             , "info_head":          request.GET.get("info_head", None)
@@ -363,7 +368,7 @@ class LoginPostView(generic.View):
         scope             = request.POST.get("scope",             SCOPE_DEFAULT) 
         # Access or create flow object for this session
         if request.POST.get("login", None):
-            collect_client_secrets()
+            collect_provider_details()
             provider_details      = PROVIDER_DETAILS[provider]
             provider_details_file = PROVIDER_FILES[provider]
             provider_mechanism    = provider_details.get("mechanism", "OIDC")
@@ -448,7 +453,7 @@ class LoginDoneView(generic.View):
         #
         if not authuser:
             return HttpResponseRedirectLoginWithMessage(request, 
-                "Login service %s cannot authenticate user %s"%(provider, userid), 
+                "User '%s' was not authenticated by %s login service"%(userid, provider),
                 userid=userid
                 )
         if not userid:

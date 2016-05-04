@@ -60,10 +60,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Retain userid on login front page after login failure
     - [x] Use buttons on login form instead of (or as well as) dropdown
     - [x] Profile display accept POST and redirect to continuation
-    - [ ] Save recent user id in session to facilitate login
-    - [ ] Allow blank user id and construct value from authenticated email
+    - [x] Save recent user id in session to facilitate login
+    - [x] Allow blank user id and construct value from authenticated email
+    - [x] Use button label from provider details (else provider name)
     - [ ] Login/Logout/profile buttons to include continuation
     - [ ] Modularize and clean up duplicate code 
+    - [ ] Login messages to separate module for ease of translation
     - [ ] Clean up separation of logic (and URL selection) between generic and auth applications
 - [ ] Login: support continuation URI
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 

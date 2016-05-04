@@ -552,16 +552,6 @@ div.row.form-buttons div.columns > button
     border-color:       #DDDDDD;
     background-color:   #DDDDDD;
     */
-
-
-    border:             unset;
-    border-style:       unset;
-    border-width:       unset;
-    background-color:   unset;
-    border-color:       unset;
-    color:              unset;
-
-
 }
 
 div.columns > select[size] ,
