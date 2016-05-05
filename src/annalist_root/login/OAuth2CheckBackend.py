@@ -38,7 +38,7 @@ class OAuth2CheckBackend(object):
         auth_email      = None
         return_user     = None
         create_username = None
-        if profile_uri is not None and password and not password.invalid:
+        if profile_uri and password and not password.invalid:
             # Use access token to retrieve profile information
             http = httplib2.Http()
             http = password.authorize(http)

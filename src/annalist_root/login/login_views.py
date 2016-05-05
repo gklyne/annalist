@@ -302,6 +302,9 @@ class LoginPostView(generic.View):
                     redirect_uri=request.build_absolute_uri(login_done_url)
                     )
                 flow.params['state']            = oauth2_get_state_token(request.user)
+
+                # @@@@@@@@ don't use params here: save details in request.session  @@@@@@@@@
+
                 flow.params['provider']         = provider
                 flow.params['provider_details'] = provider_details
                 flow.params['userid']           = userid
@@ -316,6 +319,9 @@ class LoginPostView(generic.View):
                     provider_details,
                     redirect_uri=request.build_absolute_uri(user_profile_url)
                     )
+
+                # @@@@@@@@ don't use params here: save details in request.session  @@@@@@@@@
+
                 flow.params['userid']       = userid
                 flow.params['continuation'] = continuation_url
                 flow.params['auth_uri']     = reverse("LocalUserPasswordView")

@@ -69,6 +69,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Fix tests
     - [x] Modularize and clean up duplicate code 
     - [x] Login messages to separate module for ease of translation
+- [ ] Rationalize login provider details handling
+    - [ ] Provider details: save URL parameters only in ["web"]
+    - [ ] Other values at top level
+    - [ ] Save entire provioder detail in request.session - access values from there
+    - [ ] Obtain scope from provider details
+- [ ] annalist-manager option to create provider-details
 - [ ] site data initialization: copy local id provider to providers directory
 - [x] Login/logout: support continuation URI
 - [x] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
@@ -76,11 +82,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] if id is left blank, use email local part (with substitutions)
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 
-- [ ] Implement at least one other identify provider (ORCID?)
-    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
-        - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
-    - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
-        - hard to find actual provider service other than Google
 - [ ] profile_uri now not included in Google JSON file of client secrets
     - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
     - cf. oauth2/views.py:364
@@ -267,6 +268,11 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Implement at least one other identify provider (ORCID?)
+    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+        - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+    - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
+        - hard to find actual provider service other than Google
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
