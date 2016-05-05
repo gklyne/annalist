@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'annalist',
-    'oauth2',
+    'login',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'annalist_site.wsgi.application'
 # Customize authentication backends
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',    # default
-    'oauth2.OAuth2CheckBackend.OAuth2CheckBackend'
+    'login.OAuth2CheckBackend.OAuth2CheckBackend'
     )
 
 # Database

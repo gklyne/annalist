@@ -3,7 +3,7 @@
 # NOTE: when testing, use "pip install ... --upgrade"
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2011-2013, University of Oxford"
+__copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 # Setup.py based on https://github.com/paltman/python-setup-template/blob/master/setup.py,
@@ -62,16 +62,11 @@ setup(
             , 'annalist_root.annalist_site.settings'
           , 'annalist_root.annalist_manager'
           , 'annalist_root.utils'
-          , 'annalist_root.oauth2'
+          , 'annalist_root.login'
           , 'annalist_root.miscutils'
         ],
     package_dir = 
         { 'annalist_root':  'annalist_root'
-        # , 'annalist':       'annalist_root/annalist'
-        # , 'annalist_site':  'annalist_root/annalist_site'
-        # , 'utils':          'annalist_root/annalist'
-        # , 'oauth2':         'annalist_root/utils'
-        # , 'miscutils':      'annalist_root/miscutils'
         },
     # >>>> REMEMBER to also update MANIFEST.in ... <<<<
     package_data = 
@@ -152,7 +147,7 @@ setup(
             [ 'help/*.md'
             , 'help/*.html'
             ]
-        , 'annalist_root.oauth2':
+        , 'annalist_root.login':
             [ 'templates/*.html'
             ]
         },

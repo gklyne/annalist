@@ -87,7 +87,7 @@ LOGGING = {
             'level': TRACE_FIELD_VALUE, # Or maybe INFO or DEBUG
             'propagate': False
         },
-        'oauth2': {
+        'login': {
             'handlers': ['logfile'],
             'level': 'INFO', # Or maybe INFO or DEBUG
             'propagate': False

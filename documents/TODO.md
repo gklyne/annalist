@@ -53,7 +53,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
     - [x] Check and fix test cases
 
-- [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+- [x] Login window: implement "Local" as a provider, authenticated against the local Django user base.
     - [x] Gereralize default proider mechanism, make "Google" default provider
     - [x] Local login: use userid from login front page, if defined
     - [x] Local login redirects to login form - should display profile
@@ -67,13 +67,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Login form cancel button: return to continuation URL
     - [x] Local login continuation not applied (cancel is OK)
     - [x] Fix tests
-    - [ ] Modularize and clean up duplicate code 
-    - [ ] Login messages to separate module for ease of translation
-    - [ ] Clean up separation of logic (and URL selection) between generic and auth applications
+    - [x] Modularize and clean up duplicate code 
+    - [x] Login messages to separate module for ease of translation
 - [ ] site data initialization: copy local id provider to providers directory
 - [x] Login/logout: support continuation URI
-- [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
-    - [.] the role of the user Id field is not clear; Iris tried password there
+- [x] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
+    - [x] the role of the user Id field is not clear; Iris tried password there
     - [x] if id is left blank, use email local part (with substitutions)
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 

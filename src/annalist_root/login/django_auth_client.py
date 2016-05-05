@@ -1,6 +1,6 @@
 """
 This module handles authentication by the local Django user database,
-using an interface following that used by Google's oauth2client.
+using an interface roughly following the style of Google's oauth2client.
 
 In due course, we may be able to use the same flow API to handle
 diverse forms of third party authentication.
@@ -22,29 +22,10 @@ from django.views import generic
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from utils.uri_builder import uri_with_params
+from utils.uri_builder  import uri_with_params
 
-def HttpResponseRedirectWithQuery(redirect_uri, query_params):
-    nq = "?"
-    for pname in query_params.keys():
-        redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
-        nq = "&"
-    # log.info("redirect_uri: "+redirect_uri)
-    return HttpResponseRedirect(redirect_uri)
-
-def HttpResponseRedirectLogin(request, message=None):
-    user_profile_url = request.session['user_profile_url']
-    query_params = (
-        { "continuation_url": request.session['continuation_url']
-        # , "scope":            request.session['oauth2_scope']
-        , "userid":           request.POST.get("userid", request.GET.get("userid", ""))
-        })
-    if message:
-        query_params.update(
-            { "error_head":       "Login failed"
-            , "error_message":    message
-            })
-    return HttpResponseRedirectWithQuery(user_profile_url, query_params)
+from login_utils        import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
+import login_message
 
 class LocalUserPasswordView(generic.View):
     """
@@ -65,14 +46,14 @@ class LocalUserPasswordView(generic.View):
         Display the local user password page with values as supplied.
         """
         userid           = request.GET.get("userid",            "")
-        user_profile_url = request.GET.get("user_profile_url",  "/no-login-user_profile_url/")
         continuation_url = request.GET.get("continuation_url",  "/no-login-continuation_url/")
         login_post_url   = request.session.get("login_post_url", None)
         user_profile_url = request.session.get("user_profile_url", None)
         help_dir         = request.session.get("help_dir", None)
         if (login_post_url is None) or (user_profile_url is None) or (help_dir is None):
             log.warning(
-                "@@ redirect post_uri %s, done_uri %s, help_dir %s"%
+                "LocalUserPasswordView: missing session details "+
+                "login_post_url %s, user_profile_url %s, help_dir %s"%
                 (login_post_url, user_profile_url, help_dir)
                 )
             return HttpResponseRedirect(continuation_url)
@@ -114,13 +95,13 @@ class LocalUserPasswordView(generic.View):
             authuser = authenticate(username=userid, password=password)
             if authuser is None:
                 return HttpResponseRedirectLogin(request, 
-                    "Login as %s: no such user or incorrect password"%(userid))
+                    login_message.USER_WRONG_PASSWORD%(userid))
             if not authuser.is_active:
                 return HttpResponseRedirectLogin(request, 
-                    "Account %s has been disabled"%(userid))
+                    login_message.USER_ACCOUNT_DISABLED%(userid))
             if not authuser.email:
                 return HttpResponseRedirectLogin(request, 
-                    "No email address associated with authenticated user %s"%(userid))
+                    login_message.USER_NO_EMAIL%(userid))
             # Complete the login
             login(request, authuser)
             log.info("LocalUserPasswordView: user.username:   "+authuser.username)

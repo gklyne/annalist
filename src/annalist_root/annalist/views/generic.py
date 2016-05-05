@@ -23,7 +23,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from django.conf import settings
 
-import oauth2.views
+import login.login_views
 
 from utils.ContentNegotiationView   import ContentNegotiationView
 
@@ -222,16 +222,16 @@ class AnnalistGenericView(ContentNegotiationView):
 
         self.credential is set to credential that can be used to access resource
         """
-        # Cache copy of URIs to use with OAuth2 login
+        # Cache copy of URIs to use with login
         global LOGIN_URIS
         if LOGIN_URIS is None:
             LOGIN_URIS = (
                 { "login_form_url":     self.view_uri('LoginUserView')
                 , "login_post_url":     self.view_uri('LoginPostView')
-                , "login_done_url":     self.view_uri('LoginDoneView')
+                , "login_done_url":     self.view_uri('OIDC_AuthDoneView')
                 , "user_profile_url":   self.view_uri('AnnalistProfileView')
                 })
-        return oauth2.views.confirm_authentication(self, 
+        return login.login_views.confirm_authentication(self, 
             continuation_url=continuation_url,
             **LOGIN_URIS
             )

@@ -19,8 +19,9 @@ from annalist.views.annalistuserdelete  import AnnalistUserDeleteConfirmedView
 from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
-from oauth2.views                       import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
-from oauth2.djangoauthclient            import LocalUserPasswordView
+from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
+from login.openid_connect_client        import OIDC_AuthDoneView
+from login.django_auth_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
@@ -187,8 +188,8 @@ urlpatterns = patterns('',
 urlpatterns += patterns('',
     url(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
     url(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
-    url(r'^login_done/',    LoginDoneView.as_view(),            name='LoginDoneView'),
     url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
+    url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
     url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
     url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
     )
