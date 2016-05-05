@@ -44,7 +44,7 @@ from annalist.models.recordvocab    import RecordVocab
 from annalist.views.uri_builder     import (
     uri_param_dict,
     scope_params,
-    uri_with_params, 
+    uri_params, uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
     )
@@ -581,6 +581,13 @@ class DisplayInfo(object):
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
+
+    def get_continuation_param(self):
+        """
+        Return continuation URL specified for the current request, or None.
+        """
+        cont_here = self.view.continuation_here(self.request_dict, self.default_continue)
+        return uri_params({"continuation_url": cont_here})
 
     def get_continuation_url(self):
         """

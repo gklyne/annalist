@@ -16,10 +16,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.31, towards 0.1.32
 
-- [x] annalist-manager configdirectory - display directory where config setting files are located
+- [x] annalist-manager config directory - display directory where config setting files are located
     - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
     - (same as SITE_CONFIG_DIR in log)
 - [x] Entity types list (and List list?) - provide link field to display list
+- [x] Entity lists - set state of scope all checkbox to reflect scope parameter
 - [x] Help text for 'Customize' display
     - This is taken from the collection metadata.
 - [x] Fix behaviour of collection inheritance - data not inherited?
@@ -53,8 +54,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Check and fix test cases
 
 - [ ] Login window: implement "Local" as a provider, authenticated against the local Django user base.
-    - [ ] site data initialization: copy local id provider to providers directory
-    - [x] Make "Google" default provider (gereralize default mechanism?)
+    - [x] Gereralize default proider mechanism, make "Google" default provider
     - [x] Local login: use userid from login front page, if defined
     - [x] Local login redirects to login form - should display profile
     - [x] Retain userid on login front page after login failure
@@ -63,14 +63,18 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Save recent user id in session to facilitate login
     - [x] Allow blank user id and construct value from authenticated email
     - [x] Use button label from provider details (else provider name)
-    - [ ] Login/Logout/profile buttons to include continuation
+    - [x] Login/Logout/profile buttons to include continuation
+    - [x] Login form cancel button: return to continuation URL
+    - [x] Local login continuation not applied (cancel is OK)
+    - [x] Fix tests
     - [ ] Modularize and clean up duplicate code 
     - [ ] Login messages to separate module for ease of translation
     - [ ] Clean up separation of logic (and URL selection) between generic and auth applications
-- [ ] Login: support continuation URI
+- [ ] site data initialization: copy local id provider to providers directory
+- [x] Login/logout: support continuation URI
 - [ ] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
     - [.] the role of the user Id field is not clear; Iris tried password there
-    - [ ] if id is left blank, use email local part (with substitutions)
+    - [x] if id is left blank, use email local part (with substitutions)
 - [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
 
 - [ ] Implement at least one other identify provider (ORCID?)
@@ -114,6 +118,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
+- [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
@@ -123,13 +128,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
- m    - include migration logic
+    - include migration logic
 
 
 (feature freeze for V0.9alpha?)
 (0.5?)
 
 - [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode) - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [ ] *delete views: rationalize into single view?
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] update Django version used to latest version designated for long term support (1.8?)
@@ -168,11 +174,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
-
 Data collection definitions
 
 - [ ] VoID, DCAT
-
 
 
 

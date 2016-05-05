@@ -113,6 +113,7 @@ class CollectionEditView(AnnalistGenericView):
             coll = viewinfo.collection
             context = (
                 { 'continuation_url':   viewinfo.get_continuation_url() or ""
+                , 'continuation_param': viewinfo.get_continuation_param()
                 , 'types':              sorted(coll.types(altscope=None), key=get_id)
                 , 'lists':              sorted(coll.lists(altscope=None), key=get_id)
                 , 'views':              sorted(coll.views(altscope=None), key=get_id)

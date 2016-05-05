@@ -32,16 +32,18 @@ def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     # log.info("redirect_uri: "+redirect_uri)
     return HttpResponseRedirect(redirect_uri)
 
-def HttpResponseRedirectLoginWithMessage(request, message):
+def HttpResponseRedirectLogin(request, message=None):
     user_profile_url = request.session['user_profile_url']
-    log.info("user_profile_url: "+user_profile_url)
     query_params = (
         { "continuation_url": request.session['continuation_url']
-        , "scope":            request.session['oauth2_scope']
-        , "error_head":       "Login failed"
-        , "error_message":    message
+        # , "scope":            request.session['oauth2_scope']
         , "userid":           request.POST.get("userid", request.GET.get("userid", ""))
         })
+    if message:
+        query_params.update(
+            { "error_head":       "Login failed"
+            , "error_message":    message
+            })
     return HttpResponseRedirectWithQuery(user_profile_url, query_params)
 
 class LocalUserPasswordView(generic.View):
@@ -106,18 +108,18 @@ class LocalUserPasswordView(generic.View):
         if request.POST.get("login", None) == "Login":
             if not userid:
                 log.info("No User ID specified")
-                return HttpResponseRedirectLoginWithMessage(request, "No User ID specified")
+                return HttpResponseRedirectLogin(request, "No User ID specified")
             log.info("djangoauthclient: userid %s"%userid)
             request.session['recent_userid'] = userid
             authuser = authenticate(username=userid, password=password)
             if authuser is None:
-                return HttpResponseRedirectLoginWithMessage(request, 
+                return HttpResponseRedirectLogin(request, 
                     "Login as %s: no such user or incorrect password"%(userid))
             if not authuser.is_active:
-                return HttpResponseRedirectLoginWithMessage(request, 
+                return HttpResponseRedirectLogin(request, 
                     "Account %s has been disabled"%(userid))
             if not authuser.email:
-                return HttpResponseRedirectLoginWithMessage(request, 
+                return HttpResponseRedirectLogin(request, 
                     "No email address associated with authenticated user %s"%(userid))
             # Complete the login
             login(request, authuser)
@@ -125,7 +127,7 @@ class LocalUserPasswordView(generic.View):
             log.info("LocalUserPasswordView: user.first_name: "+authuser.first_name)
             log.info("LocalUserPasswordView: user.last_name:  "+authuser.last_name)
             log.info("LocalUserPasswordView: user.email:      "+authuser.email)
-            return HttpResponseRedirect(user_profile_url)
+            return HttpResponseRedirectLogin(request)
         # Login cancelled: redirect to continuation
         # (which may just redisplay the login page)
         return HttpResponseRedirect(continuation_url)
@@ -147,7 +149,10 @@ class DjangoWebServerFlow(object):
 
         """
         super(DjangoWebServerFlow, self).__init__()
-        self.params = { 'redirect_uri': redirect_uri }
+        self.params = (
+            { 'redirect_uri': redirect_uri 
+            , 'continuation': redirect_uri 
+            })
         self.params.update(kwargs)
         return
 

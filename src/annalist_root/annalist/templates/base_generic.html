@@ -65,11 +65,21 @@
       {% if not suppress_user %}
         {% if user.is_authenticated %}
           <li class="active">
-            <a href="{% url 'AnnalistProfileView' %}">User {{ user.username }}</a>
+            <a href="{% url 'AnnalistProfileView' %}{{ continuation_param }}">
+              User {{ user.username }}
+            </a>
           </li>
-          <li class="active"><a href="{% url 'LogoutUserView' %}">Logout</a></li>
+          <li class="active">
+            <a href="{% url 'LogoutUserView' %}{{ continuation_param }}">
+              Logout
+            </a>
+          </li>
         {% else %}
-          <li class="active"><a href="{% url 'AnnalistProfileView' %}">Login</a></li>
+          <li class="active">
+            <a href="{% url 'AnnalistProfileView' %}{{ continuation_param }}">
+              Login
+            </a>
+          </li>
         {% endif %}
       {% endif %}
     </ul>

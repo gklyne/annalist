@@ -94,35 +94,36 @@ class UserProfileViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         row1 = """
-            <div class="row">
-              <div class="small-2 columns">
-                <p>User</p>
+            <div class="row view-value-row">
+              <div class="view-label small-12 medium-2 columns">
+                <span>User</span>
               </div>
-              <div class="small-10 columns">
-                <p>testuser</p>
+              <div class="view-value small-12 medium-10 columns">
+                <span>testuser</span>
               </div>
             </div>
             """
         row2 = """
-            <div class="row">
-              <div class="small-2 columns">
-                <p>Name</p>
+            <div class="row view-value-row">
+              <div class="view-label small-12 medium-2 columns">
+                <span>Name</span>
               </div>
-              <div class="small-10 columns">
-                <p>Test User</p>
+              <div class="view-value small-12 medium-10 columns">
+                <span>Test User</span>
               </div>
             </div>
             """
         row3 = """
-            <div class="row">
-              <div class="small-2 columns">
-                <p>Email</p>
+            <div class="row view-value-row">
+              <div class="view-label small-12 medium-2 columns">
+                <span>Email</span>
               </div>
-              <div class="small-10 columns">
-                <p><a href="mailto:user@test.example.com">user@test.example.com</a></p>
+              <div class="view-value small-12 medium-10 columns">
+                <span><a href="mailto:user@test.example.com">user@test.example.com</a></span>
               </div>
             </div>
             """
+
         # log.info(r.content)
         self.assertContains(r, site_title("<title>%s</title>"))
         self.assertContains(r, row1, html=True)
@@ -136,8 +137,8 @@ class UserProfileViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # @@TODO: clean up continuation URI
-        self.assertEqual(r['location'], TestHostUri+"/testsite/login/?continuation=http%3A//test.example.com/testsite/profile/&message=&scope=openid%20profile%20email")
+        self.assertIn(TestHostUri+"/testsite/login/", r['location'])
+        self.assertIn("continuation_url=/testsite/", r['location'])
         return
 
 # End.

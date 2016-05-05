@@ -8,25 +8,6 @@
 
 {% load static %}
 
-<!--
-{% if message %}
-<div class="alert-box warning radius">
-  <h3>Login failed</h3>
-  <p>
-    {{message}}
-  </p>
-</div>
-{% endif %}
--->
-
-<!--
-<div class="row">
-  <div class="large-12 columns">
-    <h3>Enter login options</h3>
-  </div>
-</div>
--->
-
 <div class="row">
   <div class="large-12 columns">
     <form method="POST" action="{{login_post_url}}">
@@ -35,49 +16,25 @@
       <div class="view-fieldrow row">
         <div class="small-12 columns">
           <div class="row view-value-row"
-               title="Enter a short Id by which you will be known in this system.">
+               title="An optional short name by which you will be known in this system.">
             <div class="view-label small-12 medium-2 columns">
               <span>User ID</span>
             </div>
             <div class="view-value small-12 medium-4 columns">
               <input type="text" name="userid" value="{{userid}}" />
             </div>
-            <div class="small-6 columns">
-              &nbsp;
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!--
-      <div class="view-fieldrow row">
-        <div class="small-12 columns">
-          <div class="row view-value-row"
-               title="Select the login service you will use to authenticate yourself.">
             <div class="view-label small-12 medium-2 columns">
-              <span>Login service</span>
+              <span>(optional)</span>
             </div>
-            <div class="view-value small-12 medium-4 columns">
-              <select name="provider">
-                {% for p in providers %}
-                    {% if p == provider %}
-                      <option selected="selected">{{p}}</option>
-                    {% else %}
-                      <option>{{p}}</option>
-                    {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-            <div class="small-6 columns">
+            <div class="small-4 columns show-for-medium-up">
               &nbsp;
             </div>
           </div>
         </div>
       </div>
-      -->
 
       <div class="form-buttons row">
-        <div class="medium-2 columns show-for-medium-up">
+        <div class="small-12 medium-2 columns">
           <div class="row">
             <div class="form-buttons view-label small-12 columns">
               <span>Login using:</span>
@@ -87,21 +44,8 @@
         <div class="small-12 medium-10 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
-              <!--
-              <button type="submit" name="Local">
-                Local registry
-              </button>
-              <button type="submit" name="Google">
-                Google
-              </button>
-              -->
-              <!--
-              <input type="submit" name="Local"  value="Local registry" />
-              <input type="submit" name="Google" value="Google" />
-              -->
               {% for p, l in provider_labels %}
-              <!-- <input type="submit" name="login" value="{{p}}" /> -->
-              <button type="submit" name="login" value="{{p}}">{{l}}</button>
+                <button type="submit" name="login" value="{{p}}">{{l}}</button>
               {% endfor %}
             </div>
           </div>
@@ -124,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="small-12 medium-6 columns">
+        <div class="medium-6 columns show-for-medium-up">
           &nbsp;
         </div>
       </div>

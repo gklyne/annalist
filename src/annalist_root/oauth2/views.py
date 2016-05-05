@@ -63,6 +63,40 @@ OAuth2WebServerFlow_strip = (
     "step2_exchange"
     )
 
+def HttpResponseRedirectWithQuery(redirect_uri, query_params):
+    nq = "?"
+    for pname in query_params.keys():
+        if query_params[pname]:
+            redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+            nq = "&"
+    return HttpResponseRedirect(redirect_uri)
+
+# def HttpResponseRedirectLoginWithMessage(request, message, userid=None):
+#     login_form_url = request.session['login_form_url']
+#     log.info("login_form_url: "+login_form_url)
+#     query_params = (
+#         { "continuation_url": request.session['continuation_url']
+#         , "scope":            request.session['oauth2_scope']
+#         , "error_head":       "Login failed"
+#         , "error_message":    message
+#         , "userid":           userid
+#         })
+#     return HttpResponseRedirectWithQuery(login_form_url, query_params)
+
+def HttpResponseRedirectLogin(request, message=None):
+    user_profile_url = request.session['user_profile_url']
+    query_params = (
+        { "continuation_url": request.session['continuation_url']
+        # , "scope":            request.session['oauth2_scope']
+        , "userid":           request.POST.get("userid", request.GET.get("userid", ""))
+        })
+    if message:
+        query_params.update(
+            { "error_head":       "Login failed"
+            , "error_message":    message
+            })
+    return HttpResponseRedirectWithQuery(user_profile_url, query_params)
+
 def collect_provider_details():
     global PROVIDER_FILES, PROVIDER_DETAILS
     if PROVIDER_DETAILS is None:
@@ -72,13 +106,14 @@ def collect_provider_details():
         if os.path.isdir(clientsecrets_dirname):
             clientsecrets_files   = os.listdir(clientsecrets_dirname)
             for f in clientsecrets_files:
-                p = os.path.join(clientsecrets_dirname,f)
-                j = json.load(open(p, "r"))
-                n = j['web']['provider']
-                PROVIDER_FILES[n]   = p
-                PROVIDER_DETAILS[n] = j['web']
-                if 'provider_label' not in PROVIDER_DETAILS[n]:
-                    PROVIDER_DETAILS[n]['provider_label'] = n
+                if f.endswith(".json"):
+                    p = os.path.join(clientsecrets_dirname,f)
+                    j = json.load(open(p, "r"))
+                    n = j['web']['provider']
+                    PROVIDER_FILES[n]   = p
+                    PROVIDER_DETAILS[n] = j['web']
+                    if 'provider_label' not in PROVIDER_DETAILS[n]:
+                        PROVIDER_DETAILS[n]['provider_label'] = n
     return
 
 def object_to_dict(obj, strip):
@@ -149,27 +184,6 @@ def _untested_authentication_required(
             )
         return guard
     return decorator
-
-def HttpResponseRedirectWithQuery(redirect_uri, query_params):
-    nq = "?"
-    for pname in query_params.keys():
-        if query_params[pname]:
-            redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
-            nq = "&"
-    # log.info("redirect_uri: "+redirect_uri)
-    return HttpResponseRedirect(redirect_uri)
-
-def HttpResponseRedirectLoginWithMessage(request, message, userid=None):
-    login_form_url = request.session['login_form_url']
-    log.info("login_form_url: "+login_form_url)
-    query_params = (
-        { "continuation_url": request.session['continuation_url']
-        , "scope":            request.session['oauth2_scope']
-        , "error_head":       "Login failed"
-        , "error_message":    message
-        , "userid":           userid
-        })
-    return HttpResponseRedirectWithQuery(login_form_url, query_params)
 
 def confirm_authentication(view, 
         login_form_url=None, login_post_url=None, login_done_url=None, 
@@ -242,7 +256,7 @@ def confirm_authentication(view,
     query_params = (
         { "userid":           userid
         , "continuation_url": continuation_url
-        , "scope":            scope
+        # , "scope":            scope
         })
     query_params.update(view.get_message_data())
     return HttpResponseRedirectWithQuery(login_form_url, query_params)
@@ -257,16 +271,16 @@ class LoginUserView(generic.View):
 
     continuation_url={uri}
     - a URL for a page that is displayed when the login process is complete.
-    scope={string}
-    - requested or required access scope
+    # scope={string}
+    # - requested or required access scope
     """
 
     def get(self, request):
         collect_provider_details()
         # @@TODO: check PROVIDER_FILES, report error if none here
         # Retrieve request parameters
-        continuation_url  = request.GET.get("continuation_url", "/no-login-continuation/")
-        scope             = request.GET.get("scope",                SCOPE_DEFAULT)
+        continuation_url  = request.GET.get("continuation_url",     "/no-login-continuation/")
+        # scope             = request.GET.get("scope",                SCOPE_DEFAULT)
         # Check required values in session - if missing, restart sequence from original URI
         # This is intended to avoid problems if this view is invoked out of sequence
         login_post_url    = request.session.get("login_post_url",   None)
@@ -285,8 +299,6 @@ class LoginUserView(generic.View):
             return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
-        if len(PROVIDER_FILES.keys()) > 0:
-            default_provider = PROVIDER_FILES.keys()[0]
         for p in PROVIDER_DETAILS:
             if "default" in PROVIDER_DETAILS[p]:            
                 default_provider = PROVIDER_DETAILS[p]["default"]
@@ -300,7 +312,7 @@ class LoginUserView(generic.View):
                                       for k, p in PROVIDER_DETAILS.items()
                                     ]
             , "provider":           default_provider
-            , "scope":              scope
+            # , "scope":              scope
             , "suppress_user":      True
             , "help_filename":      "login-help"
             , "userid":             request.GET.get("userid", recent_userid)
@@ -353,8 +365,8 @@ class LoginPostView(generic.View):
     continuation_url={uri}
     - URL of page from which logon sequence was invoked, and to which control is
       eventually returned.  Communicated via a hidden form value.
-    scope={string}
-    - Requested or required access scope, communicated via a hidden form value.
+    # scope={string}
+    # - Requested or required access scope, communicated via a hidden form value.
     """
 
     def post(self, request):
@@ -365,7 +377,7 @@ class LoginPostView(generic.View):
         login_done_url    = request.POST.get("login_done_url",    "/no_login_done_url_in_form/")
         user_profile_url  = request.POST.get("user_profile_url",  "/no_user_profile_url_in_form/")
         continuation_url  = request.POST.get("continuation_url",  "/no_continuation_url_in_form/")
-        scope             = request.POST.get("scope",             SCOPE_DEFAULT) 
+        # scope             = request.POST.get("scope",             SCOPE_DEFAULT) 
         # Access or create flow object for this session
         if request.POST.get("login", None):
             collect_provider_details()
@@ -373,22 +385,21 @@ class LoginPostView(generic.View):
             provider_details_file = PROVIDER_FILES[provider]
             provider_mechanism    = provider_details.get("mechanism", "OIDC")
             if userid and not re.match(r"\w+$", userid):
-                return HttpResponseRedirectLoginWithMessage(
+                return HttpResponseRedirectLogin(
                     request, 
-                    "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid), 
-                    userid=userid
+                    "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid)
                     )
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
                 flow = flow_from_clientsecrets(
                     provider_details_file,
-                    scope=scope,
+                    scope=request.session['oauth2_scope'],
                     redirect_uri=request.build_absolute_uri(login_done_url)
                     )
                 flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
                 flow.params['provider']     = provider
                 flow.params['userid']       = userid
-                # flow.params['scope']        = scope
+                flow.params['scope']        = scope
                 flow.params['continuation'] = continuation_url
                 # Save flow object in Django session
                 request.session['oauth2flow'] = oauth2_flow_to_dict(flow)
@@ -400,19 +411,16 @@ class LoginPostView(generic.View):
                     provider_details,
                     redirect_uri=request.build_absolute_uri(user_profile_url)
                     )
-                # flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
-                # flow.params['provider']     = provider
                 flow.params['userid']       = userid
                 flow.params['continuation'] = continuation_url
                 flow.params['auth_uri']     = reverse("LocalUserPasswordView")
                 # Initiate django authentication
                 auth_uri = flow.step1_get_authorize_url()
                 return HttpResponseRedirect(auth_uri)
-            return HttpResponseRedirectLoginWithMessage(
+            return HttpResponseRedirectLogin(
                 request,
                 "Unrecognized provider mechanism `%s` in %s"%
-                (provider_mechanism, provider_details_file), 
-                userid=userid
+                (provider_mechanism, provider_details_file)
                 )
         # Login cancelled: redirect to continuation
         # (which may just redisplay the login page)
@@ -438,7 +446,7 @@ class LoginDoneView(generic.View):
                 )
         except FlowExchangeError, e:
             log.error("PROVIDER_DETAILS %r"%(PROVIDER_DETAILS[flow.params['provider']],))
-            return HttpResponseRedirectLoginWithMessage(request, str(e), userid=userid)
+            return HttpResponseRedirectLogin(request, str(e))
         # Check authenticated details for user id match any previous values.
         #
         # The user id is entered by the user on the login form, and is used as a key to
@@ -452,35 +460,30 @@ class LoginDoneView(generic.View):
         # new set of OAuth2 credentials being used for a previously created Django user id.
         #
         if not authuser:
-            return HttpResponseRedirectLoginWithMessage(request, 
-                "User '%s' was not authenticated by %s login service"%(userid, provider),
-                userid=userid
+            return HttpResponseRedirectLogin(request, 
+                "User '%s' was not authenticated by %s login service"%(userid, provider)
                 )
         if not userid:
             # Get generated username
             userid = authuser.username
         if not re.match(r"\w+$", userid):
-            return HttpResponseRedirectLoginWithMessage(
+            return HttpResponseRedirectLogin(
                 request, 
-                "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid), 
-                userid=userid
+                "User ID must consist of letters, digits and '_' chacacters (%s)"%(userid)
                 )
         if not authuser.email:
-            return HttpResponseRedirectLoginWithMessage(request, 
-                "No email address associated with authenticated user %s"%(userid), 
-                userid=userid
+            return HttpResponseRedirectLogin(request, 
+                "No email address associated with authenticated user %s"%(userid)
                 )
         try:
             olduser = User.objects.get(username=userid)
         except User.DoesNotExist:
             olduser = None
         if olduser:
-            print "@@ authuser.email %s, olduser.email %s"%(authuser.email, olduser.email)
             if authuser.email != olduser.email:
-                return HttpResponseRedirectLoginWithMessage(request, 
+                return HttpResponseRedirectLogin(request, 
                     "Authenticated user %s email address mismatch (%s, %s)"%
-                    (userid, authuser.email, olduser.email), 
-                    userid=userid
+                    (userid, authuser.email, olduser.email)
                     )
         # Complete the login and save details
         authuser.save()
@@ -495,7 +498,8 @@ class LoginDoneView(generic.View):
         log.info("LoginDoneView: user.first_name: "+authuser.first_name)
         log.info("LoginDoneView: user.last_name:  "+authuser.last_name)
         log.info("LoginDoneView: user.email:      "+authuser.email)
-        return HttpResponseRedirect(flow.params['continuation'])
+        return HttpResponseRedirectLogin(request)
+        #@@ return HttpResponseRedirect(flow.params['continuation'])
 
 class LogoutUserView(generic.View):
     """

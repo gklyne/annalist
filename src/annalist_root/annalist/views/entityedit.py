@@ -68,6 +68,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )
         , SimpleValueMap(c='action',                e=None,                    f='action'           )
         , SimpleValueMap(c='continuation_url',      e=None,                    f='continuation_url' )
+        , SimpleValueMap(c='continuation_param',    e=None,                    f=None               )
         # + Field data: added separately during processing of the form description
         # + Form and interaction control (hidden fields)
         ])
@@ -167,6 +168,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'edit_view_enable':       'disabled="disabled"'
             , 'default_view_enable':    'disabled="disabled"'
             , 'customize_view_enable':  'disabled="disabled"'
+            , 'continuation_param':     viewinfo.get_continuation_param()
             })
         if viewinfo.authorizations['auth_config']:
             context_extra_values['edit_view_enable']      = ""
@@ -241,10 +243,11 @@ class GenericEntityEditView(AnnalistGenericView):
         #     )
         typeinfo        = viewinfo.entitytypeinfo
         context_extra_values = (
-            { 'request_url':      self.get_request_path()
-            , 'url_type_id':      type_id
-            , 'orig_id':          orig_entity_id
-            , 'orig_type':        orig_entity_type_id
+            { 'request_url':        self.get_request_path()
+            , 'url_type_id':        type_id
+            , 'orig_id':            orig_entity_id
+            , 'orig_type':          orig_entity_type_id
+            , 'continuation_param': viewinfo.get_continuation_param()
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages = (

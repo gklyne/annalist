@@ -42,9 +42,6 @@ class ProfileView(AnnalistGenericView):
     def get(self, request):
         def resultdata():
             username, useruri = self.get_user_identity()
-            continuation_url  = self.continuation_next(
-                request.GET, self.view_uri("AnnalistHomeView")
-                )
             recent_userid = request.session.get('recent_userid', username)
             return (
                 { 'title':              self.site_data()["title"]
@@ -54,8 +51,11 @@ class ProfileView(AnnalistGenericView):
                 , 'userid':             recent_userid
                 , 'continuation_url':   continuation_url
                 })
+        continuation_url  = self.continuation_next(
+            request.GET, self.view_uri("AnnalistHomeView")
+            )
         return (
-            self.authenticate() or 
+            self.authenticate(continuation_url) or 
             self.render_html(resultdata(), 'annalist_profile.html') or 
             self.error(self.error406values())
             )
