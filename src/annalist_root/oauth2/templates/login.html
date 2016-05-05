@@ -44,8 +44,16 @@
         <div class="small-12 medium-10 columns">
           <div class="row">
             <div class="form-buttons small-12 columns">
-              {% for p, l in provider_labels %}
-                <button type="submit" name="login" value="{{p}}">{{l}}</button>
+              {% for p, lbl, img in provider_labels %}
+                {% if img %}
+                  <button type="submit" name="login" value="{{p}}" class="image-button">
+                    <img src="{% static img %}" alt="{{lbl}}" />
+                  </button>
+                {% else %}
+                  <button type="submit" name="login" value="{{p}}" class="login-button">
+                    {{lbl}}
+                  </button>
+                {% endif %}
               {% endfor %}
             </div>
           </div>

@@ -299,6 +299,15 @@ class LoginUserView(generic.View):
             return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
+        provider_labels  = map( 
+            lambda pair: pair[1], 
+            sorted(
+                [ ( p.get('provider_order', 5),
+                    (k, p.get('provider_label', k), p.get('provider_image', None))
+                  )
+                    for k, p in PROVIDER_DETAILS.items()
+                ])
+            )
         for p in PROVIDER_DETAILS:
             if "default" in PROVIDER_DETAILS[p]:            
                 default_provider = PROVIDER_DETAILS[p]["default"]
@@ -308,9 +317,7 @@ class LoginUserView(generic.View):
             , "user_profile_url":   user_profile_url
             , "continuation_url":   continuation_url
             , "provider_keys":      PROVIDER_DETAILS.keys()
-            , "provider_labels":    [ (k, p['provider_label']) 
-                                      for k, p in PROVIDER_DETAILS.items()
-                                    ]
+            , "provider_labels":    provider_labels
             , "provider":           default_provider
             # , "scope":              scope
             , "suppress_user":      True
@@ -399,7 +406,7 @@ class LoginPostView(generic.View):
                 flow.params['state']        = xsrfutil.generate_token(FLOW_SECRET_KEY, request.user)
                 flow.params['provider']     = provider
                 flow.params['userid']       = userid
-                flow.params['scope']        = scope
+                # flow.params['scope']        = scope
                 flow.params['continuation'] = continuation_url
                 # Save flow object in Django session
                 request.session['oauth2flow'] = oauth2_flow_to_dict(flow)

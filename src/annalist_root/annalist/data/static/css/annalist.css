@@ -554,6 +554,18 @@ div.row.form-buttons div.columns > button
     */
 }
 
+div.row.form-buttons div.columns > button.login-button
+{
+    height:             26px;
+}
+
+div.row.form-buttons div.columns > button.image-button
+{
+    border-style:       none;
+    border-width:       0;
+    background-color:   transparent;
+}
+
 div.columns > select[size] ,
 div.columns > textarea[rows]
 {
