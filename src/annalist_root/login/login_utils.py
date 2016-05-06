@@ -40,7 +40,7 @@ def HttpResponseRedirectLogin(request, message=None):
     user_profile_url = request.session['user_profile_url']
     query_params = (
         { "continuation_url": request.session['continuation_url']
-        , "userid":           request.POST.get("userid", request.GET.get("userid", ""))
+        , "userid":           request.session['recent_userid']
         })
     if message:
         query_params.update(

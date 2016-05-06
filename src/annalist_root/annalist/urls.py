@@ -20,8 +20,8 @@ from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
 from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
-from login.openid_connect_client        import OIDC_AuthDoneView
-from login.django_auth_client           import LocalUserPasswordView
+from login.auth_oidc_client             import OIDC_AuthDoneView
+from login.auth_django_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView

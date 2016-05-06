@@ -105,8 +105,8 @@ class OIDC_AuthDoneView(generic.View):
         # Look for authorization grant
         flow             = oauth2_dict_to_flow(request.session['oauth2flow'])
         userid           = flow.params['userid']
-        provider         = flow.params['provider']
-        provider_details = flow.params['provider_details']
+        provider_details = request.session['provider_details']
+        provider         = provider_details['provider']
         # Get authenticated user details
         try:
             credential = flow.step2_exchange(request.REQUEST) # Raises FlowExchangeError if a problem occurs
@@ -115,7 +115,7 @@ class OIDC_AuthDoneView(generic.View):
                 profile_uri=provider_details['profile_uri']
                 )
         except FlowExchangeError, e:
-            log.error("provider_details %r"%(flow.params['provider_details'],))
+            log.error("provider_details %r"%(provider_details,))
             return HttpResponseRedirectLogin(request, str(e))
         # Check authenticated details for user id match any previous values.
         #
@@ -158,7 +158,7 @@ class OIDC_AuthDoneView(generic.View):
         authuser.save()
         login(request, authuser)
         request.session['recent_userid'] = userid
-        storage    = Storage(CredentialsModel, 'id', request.user, 'credential')
+        storage = Storage(CredentialsModel, 'id', request.user, 'credential')
         storage.put(credential)
         # Don't normally log the credential/token as they might represent a security leakage:
         # log.debug("OIDC_AuthDoneView: credential:      "+repr(credential.to_json()))

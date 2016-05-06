@@ -69,11 +69,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Fix tests
     - [x] Modularize and clean up duplicate code 
     - [x] Login messages to separate module for ease of translation
-- [ ] Rationalize login provider details handling
-    - [ ] Provider details: save URL parameters only in ["web"]
-    - [ ] Other values at top level
-    - [ ] Save entire provioder detail in request.session - access values from there
-    - [ ] Obtain scope from provider details
+- [x] Rationalize login provider details handling
+    - [x] Obtain scope from provider details
+    - [x] Save entire provider detail in request.session - access values from there
 - [ ] annalist-manager option to create provider-details
 - [ ] site data initialization: copy local id provider to providers directory
 - [x] Login/logout: support continuation URI

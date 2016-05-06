@@ -31,11 +31,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from login.django_auth_client import django_flow_from_user_id
-
 from utils.http_errors import error400values
 
-from openid_connect_client      import (
+from login.auth_django_client   import django_flow_from_user_id
+from auth_oidc_client           import (
     oauth2_flow_from_provider_details, oauth2_flow_to_dict, oauth2_get_state_token, 
     SCOPE_DEFAULT
     )
@@ -73,7 +72,7 @@ def collect_provider_details():
 
 def _untested_authentication_required(
         login_form_url=None, login_post_url=None, login_done_url=None, 
-        continuation_url=None, scope=SCOPE_DEFAULT):
+        continuation_url=None):
     """
     Decorator for view handler function that activates authentication flow
     if the current request is not already associated with an authenticated user.
@@ -85,7 +84,7 @@ def _untested_authentication_required(
             return (
                 confirm_authentication(view, 
                     login_form_url, login_post_url, login_done_url, 
-                    continuation_url, scope)
+                    continuation_url)
             or
                 func(view, values)
             )
@@ -95,7 +94,6 @@ def _untested_authentication_required(
 def confirm_authentication(view, 
         login_form_url=None, login_post_url=None, login_done_url=None, 
         user_profile_url=None, continuation_url=None, 
-        scope=SCOPE_DEFAULT, 
         help_path="annalist/views/help/"):
     """
     Return None if required authentication is present, otherwise
@@ -152,7 +150,6 @@ def confirm_authentication(view,
     view.request.session['login_done_url']   = login_done_url
     view.request.session['user_profile_url'] = user_profile_url
     view.request.session['continuation_url'] = continuation_url
-    view.request.session['oauth2_scope']     = scope
     view.request.session['help_dir']         = os.path.join(settings.SITE_SRC_ROOT, help_path)
     userid = view.request.POST.get("userid", 
         view.request.GET.get("userid",
@@ -289,26 +286,24 @@ class LoginPostView(generic.View):
             provider_details      = PROVIDER_DETAILS[provider]
             provider_details_file = PROVIDER_FILES[provider]
             provider_mechanism    = provider_details.get("mechanism", "OIDC")
+            provider_scope        = provider_details.get("scope", SCOPE_DEFAULT)
             if userid and not re.match(r"\w+$", userid):
                 return HttpResponseRedirectLogin(
                     request, 
                     login_message.USER_ID_SYNTAX%(userid)
                     )
+            request.session['recent_userid']    = userid
+            request.session['provider_details'] = provider_details
+            request.session['continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
                 flow = oauth2_flow_from_provider_details(
                     provider_details_file,
-                    scope=request.session['oauth2_scope'],
+                    scope=provider_scope,
                     redirect_uri=request.build_absolute_uri(login_done_url)
                     )
                 flow.params['state']            = oauth2_get_state_token(request.user)
-
-                # @@@@@@@@ don't use params here: save details in request.session  @@@@@@@@@
-
-                flow.params['provider']         = provider
-                flow.params['provider_details'] = provider_details
                 flow.params['userid']           = userid
-                flow.params['continuation']     = continuation_url
                 # Save flow object in Django session
                 request.session['oauth2flow']   = oauth2_flow_to_dict(flow)
                 # Initiate OAuth2 dance
@@ -317,14 +312,10 @@ class LoginPostView(generic.View):
             if provider_mechanism == "django":
                 flow = django_flow_from_user_id(
                     provider_details,
+                    userid=userid,
+                    auth_uri=reverse("LocalUserPasswordView"),
                     redirect_uri=request.build_absolute_uri(user_profile_url)
                     )
-
-                # @@@@@@@@ don't use params here: save details in request.session  @@@@@@@@@
-
-                flow.params['userid']       = userid
-                flow.params['continuation'] = continuation_url
-                flow.params['auth_uri']     = reverse("LocalUserPasswordView")
                 # Initiate django authentication
                 auth_uri = flow.step1_get_authorize_url()
                 return HttpResponseRedirect(auth_uri)

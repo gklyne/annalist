@@ -45,11 +45,11 @@ class LocalUserPasswordView(generic.View):
         """
         Display the local user password page with values as supplied.
         """
-        userid           = request.GET.get("userid",            "")
-        continuation_url = request.GET.get("continuation_url",  "/no-login-continuation_url/")
-        login_post_url   = request.session.get("login_post_url", None)
+        userid           = request.GET.get("userid",               "")
+        continuation_url = request.GET.get("continuation_url",     "/no-login-continuation_url/")
+        login_post_url   = request.session.get("login_post_url",   None)
         user_profile_url = request.session.get("user_profile_url", None)
-        help_dir         = request.session.get("help_dir", None)
+        help_dir         = request.session.get("help_dir",         None)
         if (login_post_url is None) or (user_profile_url is None) or (help_dir is None):
             log.warning(
                 "LocalUserPasswordView: missing session details "+
@@ -91,7 +91,6 @@ class LocalUserPasswordView(generic.View):
                 log.info("No User ID specified")
                 return HttpResponseRedirectLogin(request, "No User ID specified")
             log.info("djangoauthclient: userid %s"%userid)
-            request.session['recent_userid'] = userid
             authuser = authenticate(username=userid, password=password)
             if authuser is None:
                 return HttpResponseRedirectLogin(request, 
@@ -104,6 +103,7 @@ class LocalUserPasswordView(generic.View):
                     login_message.USER_NO_EMAIL%(userid))
             # Complete the login
             login(request, authuser)
+            request.session['recent_userid'] = userid
             log.info("LocalUserPasswordView: user.username:   "+authuser.username)
             log.info("LocalUserPasswordView: user.first_name: "+authuser.first_name)
             log.info("LocalUserPasswordView: user.last_name:  "+authuser.last_name)
@@ -119,20 +119,20 @@ class DjangoWebServerFlow(object):
     a login using local Django user id and password.
     """
 
-    def __init__(self, provider_details, redirect_uri=None, **kwargs):
+    def __init__(self, userid="", auth_uri=None, redirect_uri=None, **kwargs):
         """
         Initialize a new authentication flow object.
 
-        provider_details    is a dictionary of values and parameters
-                            that control the authentication flow.
+        userid              is the (default) user id for which login is being performed
         redirect_uri        is the URI to which control is redirected
                             when authentication is complete.
-
         """
         super(DjangoWebServerFlow, self).__init__()
         self.params = (
-            { 'redirect_uri': redirect_uri 
-            , 'continuation': redirect_uri 
+            { 'userid':           userid
+            , 'auth_uri':         auth_uri
+            , 'redirect_uri':     redirect_uri 
+            , 'continuation_url': redirect_uri 
             })
         self.params.update(kwargs)
         return
@@ -144,11 +144,11 @@ class DjangoWebServerFlow(object):
         uri_base   = self.params['auth_uri']
         uri_params = (
             { 'userid':           self.params['userid']
-            , 'continuation_url': self.params['continuation'] 
+            , 'continuation_url': self.params['continuation_url'] 
             })
         return uri_with_params(uri_base, uri_params)
 
-def django_flow_from_user_id(provider_details, redirect_uri=None):
+def django_flow_from_user_id(provider_details, userid="", auth_uri=None, redirect_uri=None):
     """
     Initialize and returns a new authentication flow object.
 
@@ -157,7 +157,7 @@ def django_flow_from_user_id(provider_details, redirect_uri=None):
     redirect_uri        is the URI to which control is redirected
                         when authentication is complete.
     """
-    return DjangoWebServerFlow(provider_details, redirect_uri=redirect_uri)
+    return DjangoWebServerFlow(userid=userid, auth_uri=auth_uri, redirect_uri=redirect_uri)
 
 # End.
 
