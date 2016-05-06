@@ -94,6 +94,10 @@ setup(
             , 'data/static/foundation/css/*.css'
             , 'data/static/foundation/js/foundation/*.js'
             , 'data/static/foundation/js/vendor/*.js'
+            # Indentity provider data
+            , 'data/identity_providers/*.md'
+            , 'data/identity_providers/*.json'
+            , 'data/identity_providers/*.example'
             # Site-wide data definitions
             , 'data/sitedata/enums/*/*/*.jsonld'
             , 'data/sitedata/fields/*/*.jsonld'

@@ -153,6 +153,13 @@ def am_updatesite(annroot, userhome, options):
         Site.update_site_data_dir(sitedata, sdir, site_data_src)
     print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
     sitedata.generate_coll_jsonld_context()
+    # --- Copy provider data to site config provider directory
+    provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
+    provider_dir_src = os.path.join(annroot, "annalist/data/identity_providers")
+    print("Copy identity provider data:")
+    print("- from: %s"%(provider_dir_src,))
+    print("-   to: %s"%(provider_dir_tgt,))
+    updatetree(provider_dir_src, provider_dir_tgt)
     return status
 
 # End.

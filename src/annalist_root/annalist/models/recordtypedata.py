@@ -71,6 +71,7 @@ class RecordTypeData(Entity):
         """
         type_id  = self.get_id()
         altcolls = self._parent._local_find_alt_parents()
+        # log.info("@@ RecordTypeData._local_find_alt_parents altcolls %r"%(altcolls))
         altdatas = [ alt for alt in [ RecordTypeData.load(c, type_id) for c in altcolls ] if alt ]
         # log.info("@@ RecordTypeData._local_find_alt_parents %r"%([p.get_id for p in altdatas]))
         return altdatas

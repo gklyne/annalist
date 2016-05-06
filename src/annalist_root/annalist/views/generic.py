@@ -257,7 +257,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         This function returns default permissions if the user details supplied cannot be matched.
 
-        Permissions are cached in the view object so that tghe prmissions ecord is read at 
+        Permissions are cached in the view object so that the prmissions record is read at 
         most once for any HTTP request. 
 
         collection      the collection for which permissions are required.

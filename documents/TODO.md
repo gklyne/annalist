@@ -72,30 +72,26 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Rationalize login provider details handling
     - [x] Obtain scope from provider details
     - [x] Save entire provider detail in request.session - access values from there
-- [ ] annalist-manager option to create provider-details
-- [ ] site data initialization: copy local id provider to providers directory
+- [x] annalist-manager site data initialization: 
+    - copy local id provider and examples to site config
 - [x] Login/logout: support continuation URI
 - [x] Make login screen clearer (cf. email from Iris 06/10/2015 16:15) 
     - [x] the role of the user Id field is not clear; Iris tried password there
     - [x] if id is left blank, use email local part (with substitutions)
-- [ ] New logins: automatically create new user record with default permissions.  Or: provide a "register" button on the login confirmation page?  How to determine scope (site or collection) or registration?  Provide "register" button on site and/or collection view pages, with restricted view to enter details?  Default site registration with default permissions, which can be edited by collection admin to add collection permnissions?
+- [x] New logins: automatically create new user record with default permissions.
+- [x] Fix bug in display of entity lists from `_annalist_site` collection
 
-- [ ] profile_uri now not included in Google JSON file of client secrets
-    - use profile_uri="https://www.googleapis.com/plus/v1/people/me/openIdConnect" directly?
-    - cf. oauth2/views.py:364
-
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
       ]
     - annal:display_type values (List/Grid) are another example to consider.
-- [ ] Keyboard shortcuts on forms - C-S to save, ...?
-
-- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
+- [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
 - [ ] Field option to display item(s) in list (e.g. domain).
     - Generalize to path in list objects?
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
-- [ ] Field render type that allows entity selection & field extraction, or direct entry of value.
+
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
@@ -116,7 +112,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
-- [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
@@ -127,7 +122,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
-
 
 (feature freeze for V0.9alpha?)
 (0.5?)
@@ -172,10 +166,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
-Data collection definitions
+Data collection definitions:
 
 - [ ] VoID, DCAT
-
 
 
 Technical debt:
@@ -266,11 +259,13 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Keyboard shortcuts on forms - C-S to save, ...?
 - [ ] Implement at least one other identify provider (ORCID?)
     - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
         - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
     - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
         - hard to find actual provider service other than Google
+- [ ] Think about facility to make it easier to create identity provider details.  (?)
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.

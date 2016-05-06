@@ -148,7 +148,7 @@ class Entity(EntityRoot):
         This method may be overridden by classes that need to look higher in the 
         class inheritance tree to find alternative parent branches.
         """
-        return [self._altparent]
+        return [self._altparent] if self._altparent else []
 
     def _find_alt_parents(self, altscope=None, parents_seen=[]):
         """
