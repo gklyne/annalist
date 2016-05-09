@@ -765,6 +765,60 @@ class JsonldContextTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
 
+    # @@@ test case for set/list conflicts
+    #     create data with multiple rdfs:seeAlso values
+    #     annal:user_permission declared as set (how?)
+    #     rdfs:seeAlso declared as list, should be set
+
+    def test_http_jsonld_vocab_annal(self):
+        """
+        Read annal: vocabulary data as JSON-LD using HTTP, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+
+        # Create object to access vocabulary data 
+        vocabtypeinfo = EntityTypeInfo(self.testcoll, "_vocab")
+        annalvocab    = vocabtypeinfo.get_entity("annal")
+
+        # Read vocabulary data as JSON-LD
+        v = entity_url(coll_id="testcoll", type_id="_vocab", entity_id="annal")
+        u = TestHostUri + entity_resource_url(
+            coll_id="testcoll", type_id="_vocab", entity_id="annal",
+            resource_ref=layout.VOCAB_META_FILE
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        g = Graph()
+        # print("***** u: (_vocab/annal)")
+        # print(repr(u))
+        # print("***** c: (_vocab/annal)")
+        # print r.content
+        with MockHttpDictResources(u, self.get_context_mock_dict(v)):
+            result = g.parse(data=r.content, publicID=u, base=u, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (_vocab/annal)")
+        # print(g.serialize(format='turtle', indent=4))
+
+        # Check the resulting graph contents
+        subj       = TestHostUri + v
+        annal_data = annalvocab.get_values()
+        seeAlso_1  = "https://github.com/gklyne/annalist/blob/master/src/annalist_root/annalist/identifiers.py"
+        for (s, p, o) in (
+            [ (subj, RDF.type,      URIRef(ANNAL.EntityData)                 )
+            , (subj, RDF.type,      URIRef(ANNAL.Vocabulary)                 )
+            , (subj, RDFS.label,    Literal(annal_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,  Literal(annal_data[RDFS.CURIE.comment])  )
+            , (subj, RDFS.seeAlso,  URIRef(seeAlso_1)                        )            
+            , (subj, ANNAL.id,      Literal(annal_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id, Literal(annal_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.type,    URIRef(ANNAL.Vocabulary)                 )
+            , (subj, ANNAL.uri,     URIRef(ANNAL._baseUri)                   )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
+
     #   -----------------------------------------------------------------------------
     #   Entity content negotiation tests
     #   -----------------------------------------------------------------------------

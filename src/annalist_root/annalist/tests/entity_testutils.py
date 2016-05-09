@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.http                    import QueryDict
 from django.utils.http              import urlquote, urlunquote
+from django.utils.html              import escape
 from django.core.urlresolvers       import resolve, reverse
 from django.template                import Context
 from django.contrib.auth.models     import User
@@ -314,7 +315,8 @@ def render_select_options(name, label, opts, sel, placeholder=None):
             [ select_option(o) for o in update_options(opts) ])
         })
 
-def render_choice_options(name, opts, sel, placeholder=None, select_class=None, _unused_value_dict={}):
+def render_choice_options(
+        name, opts, sel, placeholder=None, select_class=None, escape_label=False):
     """
     Cf. `templates.field.annalist_edit_choice.html`.
     Like select, but without the "New" button.
@@ -339,6 +341,8 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice()
+        if escape_label:
+            label = escape(label)
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     def _unused_select_option(o):

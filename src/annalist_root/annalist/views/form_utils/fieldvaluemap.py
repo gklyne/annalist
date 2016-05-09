@@ -82,6 +82,7 @@ class FieldValueMap(object):
         """
         if self.e:
             # log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
+            # log.info("@@ FieldValueMap.map_form_to_entity e:%s, i:%s"%(self.e, self.i))
             v = formvals.get(self.i, None)
             self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
         return entityvals

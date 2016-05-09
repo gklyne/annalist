@@ -39,11 +39,11 @@ _render_type_id = set(
     ])
 
 _render_type_set = set(
-    [ "TokenSet"
+    [ "TokenSet", "Group_Set", "Group_Set_Row"
     ])
 
 _render_type_list = set(
-    [ "RepeatGroup", "RepeatGroupRow"
+    [ "RepeatGroup", "RepeatGroupRow", "Group_Seq", "Group_Seq_Row"
     ])
 
 _render_type_object = set(

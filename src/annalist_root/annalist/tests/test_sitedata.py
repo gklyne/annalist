@@ -974,7 +974,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:Slug"            ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"            ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "annal:Identifier"      ] ]
-            , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Repeating fields as table", 
+            , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
                                                                                             "annal:Field_group"     ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"        ] ]
@@ -1046,6 +1046,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Vocab_uri",                 ["Vocab_uri"                 ] ]
             ])
         self.check_list_row_data(s, trows_expected)
+        return
 
     # Create/edit field using field view
     def test_field_edit_new(self):

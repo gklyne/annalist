@@ -232,7 +232,6 @@ class FieldListValueMap(object):
 
             # Add field value mapper to field value map list
             if field_desc.is_repeat_group():
-                log.info("@@ repeat group")
                 # Repeat group occupies new row
                 rowdata.flush(self.fm)
                 repeatfieldsmap = FieldListValueMap('_repeatfieldsmap_', 

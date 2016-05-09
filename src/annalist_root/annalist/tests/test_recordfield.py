@@ -521,7 +521,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "Field_render",
                     get_site_field_types_sorted(),
-                    "Enum_render_type/Text")+
+                    "Enum_render_type/Text",
+                    escape_label=True)+
                 """
                 </div>
               </div>

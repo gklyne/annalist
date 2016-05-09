@@ -641,16 +641,15 @@ class Collection(Entity):
         """
         if puri:
             uri_parts = puri.split(":")
-            if len(uri_parts) > 1:
-                # Ignore URIs without ':'
+            if len(uri_parts) > 1:    # Ignore URIs without ':'
                 if puri in property_contexts:
                     pcontext = property_contexts[puri]
                     if ( ( not fcontext ) or
                          ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
                          ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
-                        log.warning(
-                            "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
-                            )
+                        msg = "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
+                        log.warning(msg)
+                        print "@@ "+msg
                 elif ( fcontext and
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?

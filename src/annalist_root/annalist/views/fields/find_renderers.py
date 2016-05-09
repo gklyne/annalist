@@ -86,7 +86,11 @@ _field_get_renderer_functions = (
     , "View_choice":        get_view_choice_renderer
     , "RefMultifield":      get_ref_multifield_renderer
     , "RepeatGroup":        get_repeatgroup_renderer
+    , "Group_Seq":          get_repeatgroup_renderer
+    , "Group_Set":          get_repeatgroup_renderer
     , "RepeatGroupRow":     get_repeatgrouprow_renderer
+    , "Group_Seq_Row":      get_repeatgrouprow_renderer
+    , "Group_Set_Row":      get_repeatgrouprow_renderer
     , "RepeatListRow":      get_repeatlistrow_renderer
     , "FieldRow":           get_fieldrow_renderer
     # Render types recognized for backward compatibility

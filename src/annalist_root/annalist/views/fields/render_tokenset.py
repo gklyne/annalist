@@ -8,6 +8,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ class TokenSetValueMapper(RenderBase):
         if isinstance(field_value,(str,unicode)):
             return field_value.split()
         log.warning("TokenSetValueMapper.decode: %r"%(field_value,))
+        # log.info("\n".join(traceback.format_stack()))
         return [field_value]
 
 #   ----------------------------------------------------------------------------

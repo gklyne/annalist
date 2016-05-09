@@ -80,17 +80,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] if id is left blank, use email local part (with substitutions)
 - [x] New logins: automatically create new user record with default permissions.
 - [x] Fix bug in display of entity lists from `_annalist_site` collection
-
-- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso) - check logs for context creation test
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
-    "rdfs:subClassOf": [
-      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
-      ]
-    - annal:display_type values (List/Grid) are another example to consider.
+- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso)
+    - [x] Add test case for vocabulary view
+    - [x] Add logic to generate set context for seeAlso
+    - [ ] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
+    - [ ] Add migration logic for field definitions to use new render type names.
 - [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
-- [ ] Field option to display item(s) in list (e.g. domain).
-    - Generalize to path in list objects?
-    - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
 
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
@@ -135,7 +130,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Review nomenclature, especially labels, for all site data
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and foce use of HTTPS.
@@ -259,6 +254,14 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
+- [ ] Field option to display item(s) in list (e.g. domain).
+    - Generalize to path in list objects?
+    - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
 - [ ] Keyboard shortcuts on forms - C-S to save, ...?
 - [ ] Implement at least one other identify provider (ORCID?)
     - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
