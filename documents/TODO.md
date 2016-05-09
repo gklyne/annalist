@@ -107,6 +107,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
+- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
@@ -117,6 +118,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
+
+(Release?  Resolve rdflib-jsonld distribution issue before new release)
 
 (feature freeze for V0.9alpha?)
 (0.5?)
