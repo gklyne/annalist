@@ -4,7 +4,7 @@
 , "annal:id":                   "View_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "View definitions"
-, "rdfs:comment":               "# View definitions\r\n\r\nThis display lists [view definitions](/annalist/c/_annalist_site/d/_type/_view/).\r\n\r\nA view definition defines the content and presentation for display and editing a single entity.  A view contains references to several [Fields](   /annalist/c/_annalist_site/d/_type/_field/), which in turn define access to some element of an entity record, and how that element is presented for display and editing."
+, "rdfs:comment":               "# View definitions\r\n\r\nThis display lists [view definitions]($BASE:_type/_view/).\r\n\r\nA view definition defines the content and presentation for display and editing a single entity.  A view contains references to several [Fields](   $BASE:_type/_field/), which in turn define access to some element of an entity record, and how that element is presented for display and editing."
 , "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/View_view"
 , "annal:default_type":         "_type/_view"

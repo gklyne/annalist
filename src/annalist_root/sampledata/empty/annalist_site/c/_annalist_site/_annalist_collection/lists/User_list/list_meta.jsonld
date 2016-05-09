@@ -4,7 +4,7 @@
 , "annal:id":                   "User_list"
 , "annal:type_id":              "_list"
 , "rdfs:label":                 "User permissions"
-, "rdfs:comment":               "# User permissions\r\n\r\nThis display lists [user permissions](/annalist/c/_annalist_site/d/_type/_user/) for the current collection, and is accessible to users with `ADMIN` permission.\r\n\r\nEach user permission record associates a set of access permissions with a specified *User Id* and authenticated *URI*.  The URI is generally in the form of a `mailto:` URI indicating an email address authenticated by some separate service."
+, "rdfs:comment":               "# User permissions\r\n\r\nThis display lists [user permissions]($BASE:_type/_user/) for the current collection, and is accessible to users with `ADMIN` permission.\r\n\r\nEach user permission record associates a set of access permissions with a specified *User Id* and authenticated *URI*.  The URI is generally in the form of a `mailto:` URI indicating an email address authenticated by some separate service."
 , "annal:display_type":         "Enum_list_type/List"
 , "annal:default_view":         "_view/User_view"
 , "annal:default_type":         "_type/_user"
