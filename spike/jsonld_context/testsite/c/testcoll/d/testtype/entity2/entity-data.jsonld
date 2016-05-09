@@ -1,7 +1,7 @@
 {
   "@context": [
     { "@base": "/testsite/c/testcoll/d/" },
-    "file:///usr/workspace/github/gklyne/annalist/spike/jsonld_context/testsite/c/testcoll/d/coll_context.jsonld"
+    "file:///Users/graham/workspace/github/gklyne/annalist/spike/jsonld_context/testsite/c/testcoll/d/coll_context.jsonld"
   ],
   "@id": "testtype/entity2/",
   "@type": [ "annal:EntityData" ],
