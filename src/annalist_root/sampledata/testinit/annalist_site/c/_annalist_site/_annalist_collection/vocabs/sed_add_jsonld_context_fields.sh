@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This is a one-off script used to update vocabuklary definitions in sitedata
+# This is a one-off script used to update vocabulary definitions in sitedata
 # with context attributes.  The file is left here as an example 
 # of how to do this kind of processing with bash, find and sed.
 #
