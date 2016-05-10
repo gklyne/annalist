@@ -197,6 +197,12 @@ site_list_types = (
 def get_site_list_types_sorted():
     return site_list_types[1:]
 
+def get_site_list_types_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "Enum_list_type") 
+          for fc in get_site_list_types_sorted() 
+        ])
+
 def get_site_list_types():
     return set( ( fc.id for fc in get_site_list_types_sorted() )  )
 

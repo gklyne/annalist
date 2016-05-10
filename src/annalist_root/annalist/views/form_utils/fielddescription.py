@@ -309,7 +309,11 @@ class FieldDescription(object):
         value is assumed to be a list of values to be rendered, and to
         have buttons for adding and removing values.
         """
-        repeat_render_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
+        repeat_render_types = (
+            [ "RepeatGroup", "RepeatGroupRow", "RepeatListRow"
+            , "Group_Seq", "Group_Seq_Row"
+            , "Group_Set", "Group_Set_Row"
+            ])
         return self._field_desc['field_render_type'] in repeat_render_types
 
     def is_enum_field(self):
@@ -357,7 +361,11 @@ class FieldDescription(object):
 
         @@ test for:  group_ref, group_field_descs, and group_id
         """
-        field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
+        field_group_types = (
+            ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"
+            , "Group_Seq", "Group_Seq_Row"
+            , "Group_Set", "Group_Set_Row"
+            ])
         return self._field_desc['field_render_type'] in field_group_types
 
     def __repr1__(self):

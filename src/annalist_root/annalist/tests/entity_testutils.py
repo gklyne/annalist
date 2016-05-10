@@ -538,16 +538,23 @@ def check_context_field_value(test, context_field,
         field_value=None
         ):
     """
-    Check fiekld value in context field against supplied parameters.
+    Check field value in context field against supplied parameters.
 
     This function allows certain variations for robustness of tests.
     """
     context_field_value = context_field['field_value']
-    if field_value == None:
+    if field_value is None:
         context_field_value = None
-    elif field_value_type == "annal:Slug":
+    elif field_value_type in ["annal:Slug", "annal:Type", "annal:View", "annal:List"]:
         context_field_value = extract_entity_id(context_field_value)
-    test.assertEqual(context_field_value, field_value)
+    if isinstance(field_value, (list, tuple)):
+        for i in range(len(field_value)):
+            log.debug("check_context_field_value (list): [%d] %r"%(i, field_value[i]))
+            test.assertDictionaryMatch(context_field_value[i], field_value[i], prefix="[%d]"%i)
+    elif isinstance(field_value, dict):
+        test.assertDictionaryMatch(context_field_value, field_value[i], prefix="")
+    else:
+        test.assertEqual(context_field_value, field_value)
     return
 
 def check_context_field(test, context_field,

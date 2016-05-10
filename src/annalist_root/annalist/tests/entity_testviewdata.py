@@ -266,10 +266,10 @@ def recordview_entity_view_context_data(
           [ context_field_row(
               { 'field_id':           'View_id'               # fields[0]
               , 'field_name':         'entity_id'
-              , 'field_value_type':  'annal:Slug'
+              , 'field_value_type':   'annal:Slug'
               , 'field_label':        'View Id'
-              , 'field_render_type':  'EntityId'
-              , 'field_value_mode':   'Value_direct'
+              , 'field_render_type':  'Enum_render_type/EntityId'
+              , 'field_value_mode':   'Enum_value_mode/Value_direct'
               , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
               # , 'field_value':      (Supplied separately)
               , 'options':            []
@@ -277,10 +277,10 @@ def recordview_entity_view_context_data(
           , context_field_row(
               { 'field_id':           'View_label'            # fields[1]
               , 'field_name':         'View_label'
-              , 'field_value_type':  'annal:Text'
+              , 'field_value_type':   'annal:Text'
               , 'field_label':        'Label'
-              , 'field_render_type':  'Text'
-              , 'field_value_mode':   'Value_direct'
+              , 'field_render_type':  'Enum_render_type/Text'
+              , 'field_value_mode':   'Enum_value_mode/Value_direct'
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_value':        view_label
               , 'options':            []
@@ -289,9 +289,9 @@ def recordview_entity_view_context_data(
               { 'field_id':           'View_comment'          # fields[2]
               , 'field_name':         'View_comment'
               , 'field_label':        'Help'
-              , 'field_value_type':  'annal:Richtext'
-              , 'field_render_type':  'Markdown'
-              , 'field_value_mode':   'Value_direct'
+              , 'field_value_type':   'annal:Richtext'
+              , 'field_render_type':  'Enum_render_type/Markdown'
+              , 'field_value_mode':   'Enum_value_mode/Value_direct'
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_value':        view_descr
               , 'options':            []
@@ -299,10 +299,10 @@ def recordview_entity_view_context_data(
           , context_field_row(
               { 'field_id':           'View_target_type'      # fields[3]
               , 'field_name':         'View_target_type'
-              , 'field_value_type':  'annal:Identifier'
+              , 'field_value_type':   'annal:Identifier'
               , 'field_label':        'View entity type'
-              , 'field_render_type':  'Identifier'
-              , 'field_value_mode':   'Value_direct'
+              , 'field_render_type':  'Enum_render_type/Identifier'
+              , 'field_value_mode':   'Enum_value_mode/Value_direct'
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_value':        target_record_type
               , 'options':            []
@@ -310,21 +310,20 @@ def recordview_entity_view_context_data(
           , context_field_row(
               { 'field_id':           'View_edit_view'        # fields[4]
               , 'field_name':         'View_edit_view'
-              , 'field_value_type':  'annal:Boolean'
+              , 'field_value_type':   'annal:Boolean'
               , 'field_label':        'Editable view?'
-              , 'field_render_type':  'CheckBox'
-              , 'field_value_mode':   'Value_direct'
+              , 'field_render_type':  'Enum_render_type/CheckBox'
+              , 'field_value_mode':   'Enum_value_mode/Value_direct'
               , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
               , 'field_value':        True
               , 'options':            []
               })
           , { "field_id":           'View_fields'           # fields[5]
-            , 'field_render_type':  'RepeatGroupRow'
             , 'field_name':         'View_fields'
-            , 'field_value_type':  'annal:Field_group'
+            , 'field_value_type':   'annal:Field_group'
             , 'field_label':        'Fields'
-            , 'field_render_type':  'RepeatGroupRow'
-            , 'field_value_mode':   'Value_direct'
+            , 'field_render_type':  'Enum_render_type/Group_Seq_Row'
+            , 'field_value_mode':   'Enum_value_mode/Value_direct'
             , 'field_placement':    get_placement_classes('small:0,12')
             , 'field_value':        view_fields
             , 'options':            []

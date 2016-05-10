@@ -59,7 +59,7 @@ class AnnalistTestCase(TestCase):
 
     def assertDictionaryMatch(self, actual_dict, expect_dict, prefix=""):
         """
-        Check that the expect_dictr values are all present in actual_dict.
+        Check that the expect_dict values are all present in actual_dict.
 
         If a dictionary element contains a list, the listed values are assumed to
         to be dictionaries which are matched recursively. (This logic is used when 

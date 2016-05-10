@@ -48,7 +48,8 @@ from entity_testutils       import (
     render_choice_options,
     create_test_user,
     context_view_field,
-    context_bind_fields
+    context_bind_fields,
+    check_context_field, check_context_field_value,
     )
 from entity_testlistdata    import (
     recordlist_dir,
@@ -70,7 +71,7 @@ from entity_testsitedata    import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
-    get_site_list_types, get_site_list_types_sorted,
+    get_site_list_types, get_site_list_types_sorted, get_site_list_types_linked,
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
@@ -201,6 +202,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.view_options   = get_site_views_linked("testcoll")
         self.list_options   = get_site_lists_linked("testcoll")
         self.list_type_opts = get_site_list_types_sorted()
+        #@@ self.list_type_opts = get_site_list_types_linked("testcoll")
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -243,13 +245,13 @@ class RecordListEditViewTest(AnnalistTestCase):
     def _check_list_view_context_fields(self, response, 
             action="",
             num_fields=0,
-            list_id="(?list_id)", 
-            list_label="(?list_label)",
-            list_url="(?list_url)",
-            list_uri="(?list_uri)",
+            list_id="(?list_id)", orig_list_id=None,
+            list_label=None,
+            list_url=None,
+            list_uri=None,
             list_type="Enum_list_type/List",
-            list_default_type="_type/Default_type",
-            list_default_view="_view/Default_view",
+            list_default_type="Default_type",
+            list_default_view="Default_view",
             list_selector="ALL",
             list_target_type=""
             ):
@@ -257,7 +259,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
         self.assertEqual(r.context['entity_id'],        list_id)
-        self.assertEqual(r.context['orig_id'],          list_id)
+        self.assertEqual(r.context['orig_id'],          orig_list_id or list_id)
         self.assertEqual(r.context['type_id'],          '_list')
         self.assertEqual(r.context['orig_type'],        '_list')
         self.assertEqual(r.context['coll_id'],          'testcoll')
@@ -266,53 +268,120 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['view_id'],          'List_view')
         # View fields
         self.assertEqual(len(r.context['fields']), 7)
-        # 1
         f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0['field_id'], 'List_id')
-        self.assertEqual(f0['field_name'], 'entity_id')
-        self.assertEqual(f0['field_label'], 'List Id')
-        self.assertEqual(f0['field_value'], list_id)
-        # 2
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f1['field_id'], 'List_type')
-        self.assertEqual(f1['field_name'], 'List_type')
-        self.assertEqual(f1['field_label'], 'List display type')
-        self.assertEqual(f1['field_value'], list_type)
-        # 3
         f2 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f2['field_id'], 'List_label')
-        self.assertEqual(f2['field_name'], 'List_label')
-        self.assertEqual(f2['field_label'], 'Label')
-        self.assertEqual(f2['field_value'], list_label)
-        # 4
         f3 = context_view_field(r.context, 2, 0)
-        self.assertEqual(f3['field_id'], 'List_comment')
-        self.assertEqual(f3['field_name'], 'List_comment')
-        self.assertEqual(f3['field_label'], 'Help')
-        # 5
         f4 = context_view_field(r.context, 3, 0)
-        self.assertEqual(f4['field_id'], 'List_default_type')
-        self.assertEqual(f4['field_name'], 'List_default_type')
-        self.assertEqual(f4['field_label'], 'Default type')
-        self.assertEqual(f4['field_value'], list_default_type)
-        # 6
         f5 = context_view_field(r.context, 3, 1)
-        self.assertEqual(f5['field_id'], 'List_default_view')
-        self.assertEqual(f5['field_name'], 'List_default_view')
-        self.assertEqual(f5['field_label'], 'Default view')
-        self.assertEqual(f5['field_value'], list_default_view)
-        # 7
         f6 = context_view_field(r.context, 4, 0)
-        self.assertEqual(f6['field_id'], 'List_entity_selector')
-        self.assertEqual(f6['field_name'], 'List_entity_selector')
-        self.assertEqual(f6['field_label'], 'Selector')
-        self.assertEqual(f6['field_value'], list_selector)
-        # 8
         f7 = context_view_field(r.context, 5, 0)
-        self.assertEqual(f7['field_id'], 'List_target_type')
-        self.assertEqual(f7['field_name'], 'List_target_type')
-        self.assertEqual(f7['field_label'], 'List entity type')
-        self.assertEqual(f7['field_value'], list_target_type)
+        f8 = context_view_field(r.context, 6, 0)
+        # 1
+        check_context_field(self, f0,
+            field_id=           "List_id",
+            field_name=         "entity_id",
+            field_label=        "List Id",
+            field_placeholder=  "(list id)",
+            field_property_uri= "annal:id",
+            field_render_type=  "Slug",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        list_id,
+            options=            self.no_options
+            )
+        # 2
+        check_context_field(self, f1,
+            field_id=           "List_type",
+            field_name=         "List_type",
+            field_label=        "List display type",
+            field_placeholder=  "(list type)",
+            field_property_uri= "annal:display_type",
+            field_render_type=  "Enum_choice",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:List_type",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        list_type,
+            options=            get_site_list_types_linked("testcoll")
+            )
+        # 3
+        check_context_field(self, f2,
+            field_id=           "List_label",
+            field_name=         "List_label",
+            field_label=        "Label",
+            field_property_uri= "rdfs:label",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_placement=    "small-12 columns",
+            field_value=        list_label,
+            options=            self.no_options
+            )
+        # 4
+        check_context_field(self, f3,
+            field_id=           "List_comment",
+            field_name=         "List_comment",
+            field_label=        "Help",
+            field_property_uri= "rdfs:comment",
+            field_render_type=  "Markdown",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Richtext",
+            field_placement=    "small-12 columns",
+            options=            self.no_options
+            )
+        # 5
+        check_context_field(self, f4,
+            field_id=           "List_default_type",
+            field_name=         "List_default_type",
+            field_label=        "Default type",
+            field_property_uri= "annal:default_type",
+            field_render_type=  "Enum_optional",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Type",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        list_default_type,
+            options=            no_selection("(default record type)") + self.type_options
+            )
+        # 6
+        check_context_field(self, f5,
+            field_id=           "List_default_view",
+            field_name=         "List_default_view",
+            field_label=        "Default view",
+            field_property_uri= "annal:default_view",
+            field_render_type=  "Enum_optional",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:View",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        list_default_view,
+            options=            no_selection("(view id)") + self.view_options
+            )
+        # 7
+        check_context_field(self, f6,
+            field_id=           "List_entity_selector",
+            field_name=         "List_entity_selector",
+            field_label=        "Selector",
+            field_property_uri= "annal:list_entity_selector",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_placement=    "small-12 columns",
+            field_value=        list_selector,
+            options=            self.no_options
+            )
+        # 8
+        check_context_field(self, f7,
+            field_id=           "List_target_type",
+            field_name=         "List_target_type",
+            field_label=        "List entity type",
+            field_property_uri= "annal:record_type",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_placement=    "small-12 columns",
+            field_value=        list_target_type,
+            options=            self.no_options
+            )
         # 9th field - list of fields from target entity for each list entry
         if num_fields == 2:
             expect_field_data = (
@@ -340,16 +409,17 @@ class RecordListEditViewTest(AnnalistTestCase):
                 "_check_list_view_context_fields expect num_fields 2 or 3, got %d"
                 %(num_fields,)
                 )
-        f8 = context_view_field(r.context, 6, 0)
-        self.assertEqual(f8['field_id'],           'List_fields')
-        self.assertEqual(f8['field_name'],         'List_fields')
-        self.assertEqual(f8['field_label'],        'Fields')
-        self.assertEqual(f8['field_property_uri'], "annal:list_fields")
-        self.assertEqual(f8['field_value_mode'],   "Value_direct")
-        self.assertEqual(f8['field_value_type'],  "annal:Field_group")
-        self.assertEqual(len(f8['field_value']),   num_fields)
-        self.assertEqual(f8['field_value'],        expect_field_data)
-        self.assertEqual(f8['options'],            self.no_options)
+        self.assertEqual(len(expect_field_data), len(f8['field_value']))
+        check_context_field(self, f8,
+            field_id=           "List_fields",
+            field_name=         "List_fields",
+            field_property_uri= "annal:list_fields",
+            field_render_type=  "Group_Seq_Row",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Field_group",
+            field_value=        expect_field_data,
+            options=            self.no_options
+            )
         return
 
     #   -----------------------------------------------------------------------------
@@ -920,13 +990,19 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
         # Test context
-        expect_context = recordlist_view_context_data(action="new", update="RecordList")
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
+        self._check_list_view_context_fields(r, 
+            action="new",
+            num_fields=2,
+            list_id="", orig_list_id="orig_list_id",
+            list_type="Enum_list_type/List",
+            list_selector="ALL",
+            list_target_type=""
+            )
         return
 
     def test_post_new_list_invalid_id(self):
         f = recordlist_view_form_data(
-            list_id="!badlist", orig_id="orig_view_id", action="new", update="RecordList"
+            list_id="!badlist", orig_id="orig_list_id", action="new", update="RecordList"
             )
         u = entitydata_edit_url("new", "testcoll", "_list", view_id="List_view")
         # log.info("u %s, f %r"%(u,f))
@@ -935,10 +1011,14 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
         # Test context
-        expect_context = recordlist_view_context_data(
-            list_id="!badlist", orig_id="orig_view_id", action="new", update="RecordList"
+        self._check_list_view_context_fields(r, 
+            action="new",
+            num_fields=2,
+            list_id="!badlist", orig_list_id="orig_list_id",
+            list_type="Enum_list_type/List",
+            list_selector="ALL",
+            list_target_type=""
             )
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -------- copy list --------
@@ -984,11 +1064,16 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
-        expect_context = recordlist_view_context_data(
-            action="copy", 
-            update="Updated RecordList"
+
+        # Test context
+        self._check_list_view_context_fields(r, 
+            action="copy",
+            num_fields=2,
+            list_id="", orig_list_id="orig_list_id",
+            list_type="Enum_list_type/List",
+            list_selector="ALL",
+            list_target_type=""
             )
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_copy_view_invalid_id(self):
@@ -1003,11 +1088,17 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
-        expect_context = recordlist_view_context_data(
-            list_id="!badlist", orig_id="Default_list", 
-            action="copy", update="Updated RecordList"
+        # Test context
+        self._check_list_view_context_fields(r, 
+            action="copy",
+            num_fields=2,
+            list_id="!badlist", orig_list_id="Default_list",
+            list_type="Enum_list_type/List",
+            list_url=None,
+            list_uri="annal:display/Default_list",
+            list_selector="ALL",
+            list_target_type=""
             )
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -------- edit list --------
@@ -1078,12 +1169,17 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
-        # Test context for re-rendered form
-        expect_context = recordlist_view_context_data(
-            action="edit", 
-            update="Updated RecordList"
+        # Test context
+        self._check_list_view_context_fields(r, 
+            action="edit",
+            num_fields=2,
+            list_id="", orig_list_id="orig_list_id",
+            list_type="Enum_list_type/List",
+            list_url=None,
+            list_uri=None,
+            list_selector="ALL",
+            list_target_type=""
             )
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check original data is unchanged
         self._check_list_view_values("editlist")
         return
@@ -1101,11 +1197,16 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with record list identifier</h3>")
         # Test context
-        expect_context = recordlist_view_context_data(
-            list_id="!badlist", orig_id="editlist", 
-            action="edit", update="Updated RecordList"
+        self._check_list_view_context_fields(r, 
+            action="edit",
+            num_fields=2,
+            list_id="!badlist", orig_list_id="editlist",
+            list_type="Enum_list_type/List",
+            list_url=None,
+            list_uri=None,
+            list_selector="ALL",
+            list_target_type=""
             )
-        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check original data is unchanged
         self._check_list_view_values("editlist")
         return

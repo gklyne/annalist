@@ -83,7 +83,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Check out context definition conflict for list (cf. rdfs:seeAlso)
     - [x] Add test case for vocabulary view
     - [x] Add logic to generate set context for seeAlso
-    - [.] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
+    - [x] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
     - [ ] Add migration logic for field definitions to use new render type names.
     - [x] Update site data and tests to use type-qualified render type and value mode values.
 - [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
