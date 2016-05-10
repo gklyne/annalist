@@ -12,7 +12,7 @@
   "annal:field_ref_field": "",
   "annal:field_ref_restriction": "",
   "annal:field_ref_type": "",
-  "annal:field_render_type": "Enum_render_type/RepeatGroupRow",
+  "annal:field_render_type": "Enum_render_type/Group_Seq_Row",
   "annal:field_value_mode": "Enum_value_mode/Value_direct",
   "annal:field_value_type": "annal:Field_group",
   "annal:group_ref": "_group/range_r",

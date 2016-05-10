@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Identifiers"
 , "rdfs:comment":               "BibJSON(ish) field for identifiers (DOI, crossref, URL, etc)"
-, "annal:field_render_type":    "RepeatGroup"
+, "annal:field_render_type":    "Group_Seq"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Identifiers"
 , "annal:placeholder":          "Identifiers for the published article (URI, DOI, etc.)"

@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "rdfs:label":                 "Editor(s)"
 , "rdfs:comment":               "BibJSON(ish) field for editors"
-, "annal:field_render_type":    "RepeatGroup"
+, "annal:field_render_type":    "Group_Seq"
 , "annal:field_value_mode":     "Value_direct"
 , "annal:field_value_type":     "bib:Editors"
 , "annal:placeholder":          "Editor(s) of article or compilation"

@@ -15,7 +15,7 @@
   "annal:default_value": "",
   "annal:field_value_type": "coll:Uploaded_image",
   "annal:field_value_mode": "Enum_value_mode/Value_direct",
-  "annal:field_render_type": "Enum_render_type/RepeatGroupRow",
+  "annal:field_render_type": "Enum_render_type/Group_Seq_Row",
   "annal:field_ref_field": "",
   "@context": [
     "../../coll_context.jsonld"
