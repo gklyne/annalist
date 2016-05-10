@@ -92,7 +92,6 @@ _old_*
 /spike/jsonld_context/rdflibenv
 /src/annalist_root/devel
 /src/annalist_root/sampledata/data
-/src/annalist_root/sampledata/init_old
 /src/annalist_root/annalist/data/attic
 /src/annalist_root/annalist/data/old-*
 /src/build

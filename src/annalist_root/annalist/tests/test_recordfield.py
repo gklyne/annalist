@@ -25,6 +25,7 @@ from django.test                            import TestCase # cf. https://docs.d
 from django.test.client                     import Client
         
 from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.util                          import extract_entity_id
 from annalist                               import layout
 from annalist                               import message
 
@@ -55,7 +56,9 @@ from entity_testutils       import (
     render_choice_options,
     create_test_user,
     context_view_field,
-    context_bind_fields
+    context_bind_fields,
+    check_context_field, check_context_field_value,
+    check_field_record,
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
@@ -161,20 +164,26 @@ class RecordFieldTest(AnnalistTestCase):
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
         field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Field_type")
-        v = recordfield_read_values(field_id="Field_type")
-        v.update(
-            { '@id':                        "annal:fields/Field_type"
-            , 'rdfs:label':                 "Field value type"
-            , 'annal:type':                 "annal:Field"
-            , 'annal:url':                  field_url
-            , 'annal:field_value_type':     "annal:Identifier"
-            , 'annal:field_render_type':    "Identifier"
-            , 'annal:placeholder':          "(field value type)"
-            , 'annal:property_uri':         "annal:field_value_type"
-            , 'annal:default_value':        "annal:Text"
-            })
-        v.pop('rdfs:comment', None)
-        self.assertDictionaryMatch(td, v)
+        check_field_record(self, td,
+            field_id=           "Field_type",
+            field_ref=          "annal:fields/Field_type",
+            field_types=        ["annal:Field"],
+            field_type_id=      "_field",
+            field_type=         "annal:Field",
+            field_uri=          None,
+            field_url=          field_url,
+            field_label=        "Field value type",
+            field_comment=      None,
+            field_name=         None,
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_property_uri= "annal:field_value_type",
+            field_placement=    None,
+            field_entity_type=  None,
+            field_value_type=   "annal:Identifier",
+            field_placeholder=  "(field value type)",
+            field_default=      "annal:Text",
+            )
         return
 
     def test_recordfield_create_migrate(self):
@@ -269,7 +278,26 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_url(), u)
         self.assertEqual(e.get_view_url_path(), recordfield_url("testcoll", field_id))
         v = recordfield_values(field_id=field_id, update=update)
-        self.assertDictionaryMatch(e.get_values(), v)
+        check_field_record(self, e,
+            field_id=           field_id,
+            field_ref=          "./",
+            field_types=        ["annal:Field"],
+            field_type_id=      "_field",
+            field_type=         "annal:Field",
+            field_uri=          None,
+            field_url=          v['annal:url'],
+            field_label=        v['rdfs:label'],
+            field_comment=      v['rdfs:comment'],
+            field_name=         None,
+            field_render_type=  extract_entity_id(v['annal:field_render_type']),
+            field_value_mode=   extract_entity_id(v['annal:field_value_mode']),
+            field_property_uri= v.get('annal:property_uri',      None),
+            field_placement=    v.get('annal:field_placement',   None),
+            field_entity_type=  v.get('annal:field_entity_type', None),
+            field_value_type=   v.get('annal:field_value_type',  None),
+            field_placeholder=  v.get('annal:placeholder',       None),
+            field_default=      v.get('annal:default_value',     None),
+            )
         return e
 
     def _check_context_fields(self, response, 
@@ -310,158 +338,192 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f15 = context_view_field(r.context, 10, 0)
         f16 = context_view_field(r.context, 11, 0)
         # Field 0: Id
-        self.assertEqual(f0['field_id'],           'Field_id')
-        self.assertEqual(f0['field_name'],         'entity_id')
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_render_type'],  "EntityId")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],  "annal:Slug")
-        self.assertEqual(f0['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f0['field_value'],        field_id)
-        self.assertEqual(f0['options'],            self.no_options)
-        # Field 1: Render type
-        self.assertEqual(f1['field_id'],           'Field_render')
-        self.assertEqual(f1['field_name'],         'Field_render')
-        self.assertEqual(f1['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(f1['field_render_type'],  "Enum_choice")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Slug")
-        self.assertEqual(f1['field_value'],        field_render)
-        self.assertEqual(set(f1['options']),       set(self.render_options))
+        check_context_field(self, f0,
+            field_id=           "Field_id",
+            field_name=         "entity_id",
+            field_property_uri= "annal:id",
+            field_render_type=  "EntityId",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        field_id,
+            options=            self.no_options
+            )
+        check_context_field(self, f1,
+            field_id=           "Field_render",
+            field_name=         "Field_render",
+            field_property_uri= "annal:field_render_type",
+            field_render_type=  "Enum_choice",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_placement=    "small-12 medium-6 columns",
+            field_value=        field_render,
+            options=            self.render_options
+            )
         # Field 2: Value type
-        self.assertEqual(f2['field_id'],           'Field_type')
-        self.assertEqual(f2['field_name'],         'Field_type')
-        self.assertEqual(f2['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(f2['field_render_type'],  "Identifier")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f2['field_value'],        field_type)
-        self.assertEqual(f2['options'],            self.no_options)
+        check_context_field(self, f2,
+            field_id=           "Field_type",
+            field_name=         "Field_type",
+            field_property_uri= "annal:field_value_type",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_type,
+            options=            self.no_options
+            )
         # Field 3: Value mode
-        self.assertEqual(f3['field_id'],           'Field_value_mode')
-        self.assertEqual(f3['field_name'],         'Field_value_mode')
-        self.assertEqual(f3['field_property_uri'], "annal:field_value_mode")
-        self.assertEqual(f3['field_render_type'],  "Enum_choice")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],  "annal:Slug")
-        self.assertEqual(f3['field_value'],        field_value_mode)
-        self.assertEqual(set(f3['options']),       set(self.value_mode_options))
+        check_context_field(self, f3,
+            field_id=           "Field_value_mode",
+            field_name=         "Field_value_mode",
+            field_property_uri= "annal:field_value_mode",
+            field_render_type=  "Enum_choice",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_value=        field_value_mode,
+            options=            self.value_mode_options
+            )
         # Field 4: Label
-        self.assertEqual(f4['field_id'],           'Field_label')
-        self.assertEqual(f4['field_name'],         'Field_label')
-        self.assertEqual(f4['field_property_uri'], "rdfs:label")
-        self.assertEqual(f4['field_render_type'],  "Text")
-        self.assertEqual(f4['field_value_mode'],   "Value_direct")
-        self.assertEqual(f4['field_value_type'],  "annal:Text")
-        self.assertEqual(f4['field_value'],        field_label)
-        self.assertEqual(f4['options'],            self.no_options)
+        check_context_field(self, f4,
+            field_id=           "Field_label",
+            field_name=         "Field_label",
+            field_property_uri= "rdfs:label",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_label,
+            options=            self.no_options
+            )
         # Field 5: comment
-        self.assertEqual(f5['field_id'],           'Field_comment')
-        self.assertEqual(f5['field_name'],         'Field_comment')
-        self.assertEqual(f5['field_property_uri'], "rdfs:comment")
-        self.assertEqual(f5['field_render_type'],  "Textarea")
-        self.assertEqual(f5['field_value_mode'],   "Value_direct")
-        self.assertEqual(f5['field_value_type'],  "annal:Longtext")
-        self.assertEqual(f5['options'],            self.no_options)
+        check_context_field(self, f5,
+            field_id=           "Field_comment",
+            field_name=         "Field_comment",
+            field_property_uri= "rdfs:comment",
+            field_render_type=  "Textarea",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Longtext",
+            options=            self.no_options
+            )
         # Field 6: Field_property URI
-        self.assertEqual(f6['field_id'],           'Field_property')
-        self.assertEqual(f6['field_name'],         'Field_property')
-        self.assertEqual(f6['field_property_uri'], "annal:property_uri")
-        self.assertEqual(f6['field_render_type'],  "Identifier")
-        self.assertEqual(f6['field_value_mode'],   "Value_direct")
-        self.assertEqual(f6['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f6['field_value'],        field_property)
-        self.assertEqual(f6['options'],            self.no_options)
+        check_context_field(self, f6,
+            field_id=           "Field_property",
+            field_name=         "Field_property",
+            field_property_uri= "annal:property_uri",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_property,
+            options=            self.no_options
+            )
         # Field 7: placement
-        self.assertEqual(f7['field_id'],           'Field_placement')
-        self.assertEqual(f7['field_name'],         'Field_placement')
-        self.assertEqual(f7['field_property_uri'], "annal:field_placement")
-        self.assertEqual(f7['field_render_type'],  "Placement")
-        self.assertEqual(f7['field_value_mode'],   "Value_direct")
-        self.assertEqual(f7['field_value_type'],  "annal:Placement")
-        self.assertEqual(f7['field_value'],        field_placement)
-        self.assertEqual(f7['options'],            self.no_options)
+        check_context_field(self, f7,
+            field_id=           "Field_placement",
+            field_name=         "Field_placement",
+            field_property_uri= "annal:field_placement",
+            field_render_type=  "Placement",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Placement",
+            field_value=        field_placement,
+            options=            self.no_options
+            )
         # Field 8: type of referenced entity
-        self.assertEqual(f8['field_id'],           'Field_typeref')
-        self.assertEqual(f8['field_name'],         'Field_typeref')
-        self.assertEqual(f8['field_property_uri'], "annal:field_ref_type")
-        self.assertEqual(f8['field_render_type'],  "Enum_optional")
-        self.assertEqual(f8['field_value_mode'],   "Value_direct")
-        self.assertEqual(f8['field_value_type'],  "annal:Slug")
-        self.assertEqual(f8['field_value'],        field_typeref)
-        self.assertEqual(f8['options'],            self.ref_type_options)
+        check_context_field(self, f8,
+            field_id=           "Field_typeref",
+            field_name=         "Field_typeref",
+            field_property_uri= "annal:field_ref_type",
+            field_render_type=  "Enum_optional",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_value=        field_typeref,
+            options=            self.ref_type_options
+            )
         # Field 9: field of referenced entity
-        self.assertEqual(f9['field_id'],           'Field_fieldref')
-        self.assertEqual(f9['field_name'],         'Field_fieldref')
-        self.assertEqual(f9['field_property_uri'], "annal:field_ref_field")
-        self.assertEqual(f9['field_render_type'],  "Identifier")
-        self.assertEqual(f9['field_value_mode'],   "Value_direct")
-        self.assertEqual(f9['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f9['field_value'],        field_fieldref)
-        self.assertEqual(f9['options'],            self.no_options)
+        check_context_field(self, f9,
+            field_id=           "Field_fieldref",
+            field_name=         "Field_fieldref",
+            field_property_uri= "annal:field_ref_field",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_fieldref,
+            options=            self.no_options
+            )
         # Field 10: Placeholder
-        self.assertEqual(f10['field_id'],           'Field_placeholder')
-        self.assertEqual(f10['field_name'],         'Field_placeholder')
-        self.assertEqual(f10['field_property_uri'], "annal:placeholder")
-        self.assertEqual(f10['field_render_type'],  "Text")
-        self.assertEqual(f10['field_value_mode'],   "Value_direct")
-        self.assertEqual(f10['field_value_type'],  "annal:Text")
-        self.assertEqual(f10['field_value'],        field_placeholder)
-        self.assertEqual(f10['options'],            self.no_options)
+        check_context_field(self, f10,
+            field_id=           "Field_placeholder",
+            field_name=         "Field_placeholder",
+            field_property_uri= "annal:placeholder",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_placeholder,
+            options=            self.no_options
+            )
         # Field 11: default value
-        self.assertEqual(f11['field_id'],           'Field_default')
-        self.assertEqual(f11['field_name'],         'Field_default')
-        self.assertEqual(f11['field_property_uri'], "annal:default_value")
-        self.assertEqual(f11['field_render_type'],  "Text")
-        self.assertEqual(f11['field_value_mode'],   "Value_direct")
-        self.assertEqual(f11['field_value_type'],  "annal:Text")
-        self.assertEqual(f11['field_value'],        field_default)
-        self.assertEqual(f11['options'],            self.no_options)
+        check_context_field(self, f11,
+            field_id=           "Field_default",
+            field_name=         "Field_default",
+            field_property_uri= "annal:default_value",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_default,
+            options=            self.no_options
+            )
         # Field 12: enumeration restriction (for select rendering)
-        self.assertEqual(f12['field_id'],           'Field_groupref')
-        self.assertEqual(f12['field_name'],         'Field_groupref')
-        self.assertEqual(f12['field_property_uri'], "annal:group_ref")
-        self.assertEqual(f12['field_render_type'],  "Enum_optional")
-        self.assertEqual(f12['field_value_mode'],   "Value_direct")
-        self.assertEqual(f12['field_value_type'],  "annal:Slug")
-        self.assertEqual(f12['field_value'],        field_viewref)
-        self.assertEqual(f12['options'],            self.group_options)
+        check_context_field(self, f12,
+            field_id=           "Field_groupref",
+            field_name=         "Field_groupref",
+            field_property_uri= "annal:group_ref",
+            field_render_type=  "Enum_optional",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_value=        field_viewref,
+            options=            self.group_options
+            )
         # Field 13: enumeration restriction (for select rendering)
-        self.assertEqual(f13['field_id'],           'Field_repeat_label_add')
-        self.assertEqual(f13['field_name'],         'Field_repeat_label_add')
-        self.assertEqual(f13['field_property_uri'], "annal:repeat_label_add")
-        self.assertEqual(f13['field_render_type'],  "Text")
-        self.assertEqual(f13['field_value_mode'],   "Value_direct")
-        self.assertEqual(f13['field_value_type'],  "annal:Text")
-        self.assertEqual(f13['field_value'],        field_repeat_label_add)
-        self.assertEqual(f13['options'],            self.no_options)
+        check_context_field(self, f13,
+            field_id=           "Field_repeat_label_add",
+            field_name=         "Field_repeat_label_add",
+            field_property_uri= "annal:repeat_label_add",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_repeat_label_add,
+            options=            self.no_options
+            )
         # Field 14: enumeration restriction (for select rendering)
-        self.assertEqual(f14['field_id'],           'Field_repeat_label_delete')
-        self.assertEqual(f14['field_name'],         'Field_repeat_label_delete')
-        self.assertEqual(f14['field_property_uri'], "annal:repeat_label_delete")
-        self.assertEqual(f14['field_render_type'],  "Text")
-        self.assertEqual(f14['field_value_mode'],   "Value_direct")
-        self.assertEqual(f14['field_value_type'],  "annal:Text")
-        self.assertEqual(f14['field_value'],        field_repeat_label_delete)
-        self.assertEqual(f14['options'],            self.no_options)
+        check_context_field(self, f14,
+            field_id=           "Field_repeat_label_delete",
+            field_name=         "Field_repeat_label_delete",
+            field_property_uri= "annal:repeat_label_delete",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_repeat_label_delete,
+            options=            self.no_options
+            )
         # Field 15: enumeration type (for select rendering)
-        self.assertEqual(f15['field_id'],           'Field_entity_type')
-        self.assertEqual(f15['field_name'],         'Field_entity_type')
-        self.assertEqual(f15['field_property_uri'], "annal:field_entity_type")
-        self.assertEqual(f15['field_render_type'],  "Identifier")
-        self.assertEqual(f15['field_value_mode'],   "Value_direct")
-        self.assertEqual(f15['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f15['field_value'],        field_entity_type)
-        self.assertEqual(f15['options'],            self.no_options)
+        check_context_field(self, f15,
+            field_id=           "Field_entity_type",
+            field_name=         "Field_entity_type",
+            field_property_uri= "annal:field_entity_type",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_entity_type,
+            options=            self.no_options
+            )
         # Field 16: enumeration restriction (for select rendering)
-        self.assertEqual(f16['field_id'],           'Field_restrict')
-        self.assertEqual(f16['field_name'],         'Field_restrict')
-        self.assertEqual(f16['field_property_uri'], "annal:field_ref_restriction")
-        self.assertEqual(f16['field_render_type'],  "Text")
-        self.assertEqual(f16['field_value_mode'],   "Value_direct")
-        self.assertEqual(f16['field_value_type'],  "annal:Text")
-        self.assertEqual(f16['field_value'],        field_restrict)
-        self.assertEqual(f16['options'],            self.no_options)
+        check_context_field(self, f16,
+            field_id=           "Field_restrict",
+            field_name=         "Field_restrict",
+            field_property_uri= "annal:field_ref_restriction",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_restrict,
+            options=            self.no_options
+            )
         return
 
     #   -----------------------------------------------------------------------------

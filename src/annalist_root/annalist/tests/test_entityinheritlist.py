@@ -56,7 +56,8 @@ from entity_testutils       import (
     context_view_field,
     context_list_entities,
     context_list_head_fields, context_list_item_fields,
-    context_list_item_field, context_list_item_field_value
+    context_list_item_field, context_list_item_field_value,
+    check_context_field, check_context_field_value, check_context_list_field_value
     )
 from entity_testtypedata    import (
     recordtype_dir, 
@@ -232,46 +233,54 @@ class EntityInheritListViewTest(AnnalistTestCase):
         f2 = context_view_field(r.context, 0, 2)
         f3 = context_view_field(r.context, 0, 3)
         # 1st field
-        self.assertEqual(f0['field_id'],           'Entity_id')
-        self.assertEqual(f0['field_name'],         'entity_id')
-        self.assertEqual(f0['field_label'],        'Id')
-        self.assertEqual(f0['field_placeholder'],  "(entity id)")
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_render_type'],  "EntityId")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],  "annal:Slug")
-        self.assertEqual(f0['field_placement'].field, "small-4 medium-3 columns")
-        self.assertEqual(f0['field_value'],        "")
+        check_context_field(self, f0,
+            field_id=           "Entity_id",
+            field_name=         "entity_id",
+            field_label=        "Id",
+            field_placeholder=  "(entity id)",
+            field_property_uri= "annal:id",
+            field_render_type=  "EntityId",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_placement=    "small-4 medium-3 columns",
+            field_value=        ""
+            )
         # 2nd field
-        self.assertEqual(f1['field_id'],           'Field_render')
-        self.assertEqual(f1['field_name'],         'Field_render')
-        self.assertEqual(f1['field_label'],        'Field render type')
-        self.assertEqual(f1['field_placeholder'],  "(field render type)")
-        self.assertEqual(f1['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(f1['field_render_type'],  "Enum_choice")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Slug")
-        self.assertEqual(f1['field_placement'].field, "small-4 medium-3 columns")
+        check_context_field(self, f1,
+            field_id=           "Field_render",
+            field_name=         "Field_render",
+            field_label=        "Field render type",
+            field_placeholder=  "(field render type)",
+            field_property_uri= "annal:field_render_type",
+            field_render_type=  "Enum_choice",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Slug",
+            field_placement=    "small-4 medium-3 columns"
+            )
         # 3rd field
-        self.assertEqual(f2['field_id'],           'Field_type')
-        self.assertEqual(f2['field_name'],         'Field_type')
-        self.assertEqual(f2['field_label'],        'Field value type')
-        self.assertEqual(f2['field_placeholder'],  "(field value type)")
-        self.assertEqual(f2['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(f2['field_render_type'],  "Identifier")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f2['field_placement'].field, "small-12 medium-3 columns show-for-medium-up")
-        # 3th field
-        self.assertEqual(f3['field_id'],           'Entity_label')
-        self.assertEqual(f3['field_name'],         'Entity_label')
-        self.assertEqual(f3['field_label'],        'Label')
-        self.assertEqual(f3['field_placeholder'],  "(label)")
-        self.assertEqual(f3['field_property_uri'], "rdfs:label")
-        self.assertEqual(f3['field_render_type'],  "Text")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],  "annal:Text")
-        self.assertEqual(f3['field_placement'].field, "small-4 medium-3 columns")
+        check_context_field(self, f2,
+            field_id=           "Field_type",
+            field_name=         "Field_type",
+            field_label=        "Field value type",
+            field_placeholder=  "(field value type)",
+            field_property_uri= "annal:field_value_type",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_placement=    "small-12 medium-3 columns show-for-medium-up"
+            )
+        # 4th field
+        check_context_field(self, f3,
+            field_id=           "Entity_label",
+            field_name=         "Entity_label",
+            field_label=        "Label",
+            field_placeholder=  "(label)",
+            field_property_uri= "rdfs:label",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_placement=    "small-4 medium-3 columns"
+            )
         # Entities
         entities = context_list_entities(r.context)
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
@@ -312,7 +321,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
                                 'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
-                        self.assertEqual(item_field['field_value'], f[fid])
+                        # Check listed field values
+                        check_context_list_field_value(self, item_field, f[fid])
                     break
             else:
                 self.fail("Field %s not found in context"%f[0])
@@ -450,7 +460,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
                                 'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
-                        self.assertEqual(item_field['field_value'], f[fid])
+                        check_context_list_field_value(self, item_field, f[fid])
                     break
             else:
                 self.fail("Field %s not found in context"%f[0])
@@ -534,7 +544,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
                 if item_fields[0]['field_value'] == f[0]:
                     for fid in range(3):
                         item_field = item_fields[fid]
-                        self.assertEqual(item_field['field_value'], f[fid])
+                        check_context_list_field_value(self, item_field, f[fid])
                     break
             else:
                 self.fail("Field %s not found in context"%f[0])

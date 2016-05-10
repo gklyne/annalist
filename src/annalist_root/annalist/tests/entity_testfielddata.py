@@ -134,7 +134,8 @@ def recordfield_load_keys(field_uri=False):
     return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type', '@context'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", 
-        render_type="Text", value_mode="Value_direct",
+        render_type="Enum_render_type/Text", 
+        value_mode="Enum_value_mode/Value_direct",
         update="Field"):
     """
     Entity values used when creating a record field entity
@@ -148,7 +149,8 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
 
 def recordfield_values(
         coll_id="testcoll", field_id="testfield", field_uri=None,
-        render_type="Text", value_mode="Value_direct",
+        render_type="Enum_render_type/Text", 
+        value_mode="Enum_value_mode/Value_direct",
         update="Field", hosturi=TestHostUri):
     d = recordfield_create_values(
         coll_id, field_id, 

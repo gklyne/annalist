@@ -83,8 +83,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Check out context definition conflict for list (cf. rdfs:seeAlso)
     - [x] Add test case for vocabulary view
     - [x] Add logic to generate set context for seeAlso
-    - [ ] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
+    - [.] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
     - [ ] Add migration logic for field definitions to use new render type names.
+    - [x] Update site data and tests to use type-qualified render type and value mode values.
 - [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
 
 - [ ] Task button option to copy type+view+list and update names and URIs
@@ -92,20 +93,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
         - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
         - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
-    - [ ] review base URI designation in JSON-LD:
-        - note `@base` ignored if used in external contexts;
-        - can specified value be relative? YES:
-            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
-            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
-        - Add `@base` to generated entity data:
-            - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
-            - Also `type_id` to retreive a list of entities of that type.
-            - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
-        - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
-            - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
     - [x] avoid explicit reference to `_annalist_collection`?
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
+- [ ] review base URI designation in JSON-LD:
+    - note `@base` ignored if used in external contexts;
+    - can specified value be relative? YES:
+        - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+        - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+    - Add `@base` to generated entity data:
+        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
+        - Also `type_id` to retreive a list of entities of that type.
+        - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+    - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
+        - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 - [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
@@ -133,7 +134,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] Review nomenclature, especially labels, for all site data
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".  Also "Slug"?
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and foce use of HTTPS.

@@ -22,7 +22,7 @@ from django.template                import Context
 from django.contrib.auth.models     import User
 
 import annalist
-from annalist.util                  import valid_id
+from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 
@@ -532,6 +532,139 @@ def context_list_item_field_value(context, entity, fid):
     Returns value of indicated field
     """
     return context_list_item_field(context, entity, fid)['field_value']
+
+def check_context_field_value(test, context_field,
+        field_value_type=None,
+        field_value=None
+        ):
+    """
+    Check fiekld value in context field against supplied parameters.
+
+    This function allows certain variations for robustness of tests.
+    """
+    context_field_value = context_field['field_value']
+    if field_value == None:
+        context_field_value = None
+    elif field_value_type == "annal:Slug":
+        context_field_value = extract_entity_id(context_field_value)
+    test.assertEqual(context_field_value, field_value)
+    return
+
+def check_context_field(test, context_field,
+        field_id=None,
+        field_name=None,
+        field_label=None,
+        field_placeholder=None,
+        field_property_uri=None,
+        field_render_type=None,
+        field_value_mode=None,
+        field_value_type=None,
+        field_placement=None,
+        field_value=None,
+        options=None,
+        ):
+    """
+    Check values in context field against supplied parameters.
+
+    This function allows certain variations for robustness of tests.
+    """
+    test.assertEqual(context_field['field_id'],   field_id)
+    test.assertEqual(context_field['field_name'], field_name)
+    if field_label:
+        test.assertEqual(context_field['field_label'], field_label)
+    if field_placeholder:
+        test.assertEqual(context_field['field_placeholder'], field_placeholder)
+    if field_property_uri:
+        test.assertEqual(context_field['field_property_uri'], field_property_uri)
+    test.assertEqual(extract_entity_id(context_field['field_render_type']), field_render_type)
+    test.assertEqual(extract_entity_id(context_field['field_value_mode']),  field_value_mode)
+    test.assertEqual(context_field['field_value_type'],                     field_value_type)
+    if options:
+        test.assertEqual(set(context_field['options']), set(options))
+    if field_placement:
+        test.assertEqual(context_field['field_placement'].field, field_placement)
+    check_context_field_value(test, context_field, 
+        field_value_type=field_value_type, 
+        field_value=field_value
+        )
+    return
+
+def check_context_list_field_value(test, context_field,
+        field_value=None
+        ):
+    """
+    Check field value according to type in context
+    """
+    check_context_field_value(test, context_field,
+        field_value_type=context_field['field_value_type'],
+        field_value=field_value
+        )
+    return
+
+def check_field_record(test, field_record,
+        field_id=None,
+        field_ref=None,
+        field_types=None,
+        field_name=None,
+        field_type_id=None,
+        field_type=None,
+        field_uri=None,
+        field_url=None,
+        field_label=None,
+        field_comment=None,
+        field_render_type=None,
+        field_value_mode=None,
+        field_property_uri=None,
+        field_placement=None,
+        field_entity_type=None,
+        field_value_type=None,
+        field_placeholder=None,
+        field_default=None,
+        ):
+        if field_id:
+            test.assertEqual(field_id,           field_record['annal:id'])
+        if field_ref:
+            test.assertEqual(field_ref,          field_record['@id'])
+        if field_types:
+            test.assertEqual(field_types,        field_record['@type'])
+        if field_type_id:
+            test.assertEqual(field_type_id,      field_record['annal:type_id'])
+        if field_type:
+            test.assertEqual(field_type,         field_record['annal:type'])
+        if field_uri:
+            test.assertEqual(field_uri,          field_record['annal:uri'])
+        if field_url:
+            test.assertEqual(field_url,          field_record['annal:url'])
+        if field_label:
+            test.assertEqual(field_label,        field_record['rdfs:label'])
+        if field_comment:
+            test.assertEqual(field_comment,      field_record['rdfs:comment'])
+
+        if field_name:
+            test.assertEqual(field_name,         field_record['annal:field_name'])
+        if field_render_type:
+            test.assertEqual(
+                field_render_type,  
+                extract_entity_id(field_record['annal:field_render_type'])
+                )
+        if field_value_mode:
+            test.assertEqual(
+                field_value_mode,   
+                extract_entity_id(field_record['annal:field_value_mode'])
+                )
+        if field_property_uri:
+            test.assertEqual(field_property_uri, field_record['annal:property_uri'])
+        if field_placement:
+            test.assertEqual(field_placement,    field_record['annal:field_placement'])
+        if field_entity_type:
+            test.assertEqual(field_entity_type,  field_record['annal:field_entity_type'])
+        if field_value_type:
+            test.assertEqual(field_value_type,   field_record['annal:field_value_type'])
+        if field_placeholder:
+            test.assertEqual(field_placeholder,  field_record['annal:placeholder'])
+        if field_default:
+            test.assertEqual(field_default,      field_record['annal:default_value'])
+        return
 
 #   -----------------------------------------------------------------------------
 

@@ -30,6 +30,7 @@ from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.util                  import extract_entity_id
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -437,28 +438,28 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
         #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
-            { ('Entity_id',         "EntityId",         "annal:Slug",          "Id")
-            , ( "Coll_comment",     "Markdown",         "annal:Richtext",      "Collection metadata")
-            , ( "Coll_parent",      "Enum_choice_opt",  "annal:Slug",          "Parent")
-            , ( "Coll_software_version", "Showtext",    "annal:Text",          "S/W version")
-            , ('Entity_type',       "EntityTypeId",     "annal:Slug",          "Type")
-            , ('Entity_label',      "Text",             "annal:Text",          "Label")
-            , ('Field_comment',     "Textarea",         "annal:Longtext",      "Help")
-            , ('Field_placement',   "Placement",        "annal:Placement",     "Position/size")
-            , ('Field_type',        "Identifier",       "annal:Identifier",    "Field value type")
-            , ('Field_render',      "Enum_choice",      "annal:Slug",          "Field render type")
-            , ('Field_default',     "Text",             "annal:Text",          "Default")
-            , ('Field_typeref',     "Enum_optional",    "annal:Slug",          "Refer to type")
-            , ('Field_restrict',    "Text",             "annal:Text",          "Value restriction")
-            , ('List_comment',      "Markdown",         "annal:Richtext",      "Help")
-            , ('List_default_type', "Enum_optional",    "annal:Type",          "Default type")
-            , ('List_default_view', "Enum_optional",    "annal:View",          "Default view")
-            , ('Type_label',        "Text",             "annal:Text",          "Label")
-            , ('Type_comment',      "Markdown",         "annal:Richtext",      "Comment")
-            , ('Type_uri',          "Identifier",       "annal:Identifier",    "Type URI")
-            , ('List_choice',       "Enum_choice",      "annal:Slug",          "List view")
-            , ('View_choice',       "View_choice",      "annal:Slug",          "Choose view")
-            , ('Group_field_sel',   "Enum_optional",    "annal:Slug",          "Field id")
+            { ('Entity_id',         "EntityId",        "annal:Slug",       "Id")
+            , ('Coll_comment',      "Markdown",        "annal:Richtext",   "Collection metadata")
+            , ('Coll_parent',       "Enum_choice_opt", "annal:Slug",       "Parent")
+            , ('Coll_software_version', "Showtext",    "annal:Text",       "S/W version")
+            , ('Entity_type',       "EntityTypeId",    "annal:Slug",       "Type")
+            , ('Entity_label',      "Text",            "annal:Text",       "Label")
+            , ('Field_comment',     "Textarea",        "annal:Longtext",   "Help")
+            , ('Field_placement',   "Placement",       "annal:Placement",  "Position/size")
+            , ('Field_type',        "Identifier",      "annal:Identifier", "Field value type")
+            , ('Field_render',      "Enum_choice",     "annal:Slug",       "Field render type")
+            , ('Field_default',     "Text",            "annal:Text",       "Default")
+            , ('Field_typeref',     "Enum_optional",   "annal:Slug",       "Refer to type")
+            , ('Field_restrict',    "Text",            "annal:Text",       "Value restriction")
+            , ('List_comment',      "Markdown",        "annal:Richtext",   "Help")
+            , ('List_default_type', "Enum_optional",   "annal:Type",       "Default type")
+            , ('List_default_view', "Enum_optional",   "annal:View",       "Default view")
+            , ('Type_label',        "Text",            "annal:Text",       "Label")
+            , ('Type_comment',      "Markdown",        "annal:Richtext",   "Comment")
+            , ('Type_uri',          "Identifier",      "annal:Identifier", "Type URI")
+            , ('List_choice',       "Enum_choice",     "annal:Slug",       "List view")
+            , ('View_choice',       "View_choice",     "annal:Slug",       "Choose view")
+            , ('Group_field_sel',   "Enum_optional",   "annal:Slug",       "Field id")
             })
         for f in field_entities:
             for eid in range(len(entities)):
@@ -472,7 +473,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
                                 'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
-                        self.assertEqual(item_field['field_value'], f[fid])
+                        item_field_value = item_field['field_value']
+                        if fid == 1:
+                            item_field_value = extract_entity_id(item_field_value)
+                        self.assertEqual(item_field_value, f[fid])
                     break
             else:
                 self.fail("Field %s not found in context"%f[0])
@@ -647,7 +651,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
                                 'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
                             self.assertEqual(item_field[fkey], head_field[fkey])
-                        self.assertEqual(item_field['field_value'], f[fid])
+                        item_field_value = item_field['field_value']
+                        if fid == 1:
+                            item_field_value = extract_entity_id(item_field_value)
+                        self.assertEqual(item_field_value, f[fid])
                     break
             else:
                 self.fail("Field %s not found in context"%f[0])
