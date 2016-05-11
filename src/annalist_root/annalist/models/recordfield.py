@@ -72,6 +72,10 @@ class RecordField(EntityData):
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
             entitydata[ANNAL.CURIE.field_render_type] = "Text"
+        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroup":
+            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq"
+        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroupRow":
+            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
         # Calculate mode from other fields if not defined
         val_render = entitydata[ANNAL.CURIE.field_render_type]
         val_type  = entitydata.get(ANNAL.CURIE.field_value_type, None)
@@ -85,10 +89,8 @@ class RecordField(EntityData):
                 val_mode = "Value_field"
             elif val_render == "RefMultifield":
                 val_mode = "Value_entity"
-            #@@ elif val_type == ANNAL.CURIE.Import or val_render == "URIImport":
             elif val_render == "URIImport":
                 val_mode = "Value_import"
-            #@@ elif val_type == ANNAL.CURIE.Upload or val_render == "FileUpload":
             elif val_render == "FileUpload":
                 val_mode = "Value_upload"
             entitydata[ANNAL.CURIE.field_value_mode] = val_mode

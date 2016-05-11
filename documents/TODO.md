@@ -52,7 +52,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Define renderer for field row that wraps list of fields as a row
     - [x] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
     - [x] Check and fix test cases
-
 - [x] Login window: implement "Local" as a provider, authenticated against the local Django user base.
     - [x] Gereralize default proider mechanism, make "Google" default provider
     - [x] Local login: use userid from login front page, if defined
@@ -80,15 +79,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] if id is left blank, use email local part (with substitutions)
 - [x] New logins: automatically create new user record with default permissions.
 - [x] Fix bug in display of entity lists from `_annalist_site` collection
-- [ ] Check out context definition conflict for list (cf. rdfs:seeAlso)
+- [x] Check out context definition conflict for list (cf. rdfs:seeAlso)
     - [x] Add test case for vocabulary view
     - [x] Add logic to generate set context for seeAlso
     - [x] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
     - [x] Update site data and tests to use type-qualified render type and value mode values.
-    - [ ] Add migration logic for field definitions to use new render type names.
+    - [x] Add migration logic for field definitions to use new render type names.
 - [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
-
 - [ ] Task button option to copy type+view+list and update names and URIs
+
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
         - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
@@ -108,7 +107,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
         - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
-- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
@@ -119,6 +117,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
+- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
 (Release?  Resolve rdflib-jsonld distribution issue before new release)
 

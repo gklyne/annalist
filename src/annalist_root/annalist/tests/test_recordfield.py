@@ -1166,7 +1166,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     #   -------- define repeat field and group --------
 
     def test_define_repeat_field_task(self):
-        # Create new type
+        # Create new field entity
         self._create_view_data("taskrepeatfield")
         self._check_view_data_values("taskrepeatfield")
         # Post define repeat field
@@ -1224,7 +1224,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 message.REPEAT_FIELD_LABEL%common_vals['field_label']
-            , "annal:field_render_type":    "RepeatGroupRow"
+            , "annal:field_render_type":    "Group_Seq_Row"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:property_uri":         rpt_field_uri

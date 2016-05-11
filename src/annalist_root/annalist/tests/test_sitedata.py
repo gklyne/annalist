@@ -46,6 +46,7 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 
+from annalist.views.fields.find_renderers   import is_repeat_field_render_type
 from annalist.views.fields.render_placement import get_placement_options
 from annalist.views.form_utils.fieldchoice  import FieldChoice, get_choice_labels
 
@@ -315,7 +316,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                         self.assertEqual(
                             view_field[ANNAL.CURIE.field_entity_type], type_uri
                             )
-                if field_type in ["RepeatGroup", "RepeatGroupRow"]:
+                if is_repeat_field_render_type(field_type):
                     # Check extra fields
                     group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)

@@ -130,6 +130,14 @@ _field_value_mappers = (
     , "List_sel":           SelectValueMapper
     })
 
+def is_repeat_field_render_type(render_type):
+    repeat_field_render_types = (
+        [ "RepeatGroup", "RepeatGroupRow"
+        , "Group_Seq", "Group_Seq_Row"
+        , "Group_Set", "Group_Set_Row"
+        ])
+    return render_type in repeat_field_render_types
+
 def get_field_base_renderer(field_render_type):
     """
     Lookup and return base renderer for given field type.

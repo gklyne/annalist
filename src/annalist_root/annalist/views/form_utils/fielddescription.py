@@ -23,6 +23,7 @@ from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
 from annalist.views.fields.find_renderers   import (
+    is_repeat_field_render_type,
     get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 
@@ -309,12 +310,7 @@ class FieldDescription(object):
         value is assumed to be a list of values to be rendered, and to
         have buttons for adding and removing values.
         """
-        repeat_render_types = (
-            [ "RepeatGroup", "RepeatGroupRow", "RepeatListRow"
-            , "Group_Seq", "Group_Seq_Row"
-            , "Group_Set", "Group_Set_Row"
-            ])
-        return self._field_desc['field_render_type'] in repeat_render_types
+        return is_repeat_field_render_type(self._field_desc['field_render_type'])
 
     def is_enum_field(self):
         """
@@ -361,12 +357,7 @@ class FieldDescription(object):
 
         @@ test for:  group_ref, group_field_descs, and group_id
         """
-        field_group_types = (
-            ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"
-            , "Group_Seq", "Group_Seq_Row"
-            , "Group_Set", "Group_Set_Row"
-            ])
-        return self._field_desc['field_render_type'] in field_group_types
+        return is_repeat_field_render_type(self._field_desc['field_render_type'])
 
     def __repr1__(self):
         return (

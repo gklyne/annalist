@@ -1657,7 +1657,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
             field_entity   = field_typeinfo.get_create_entity(repeat_field_id)
-            field_entity[ANNAL.CURIE.field_render_type] = "RepeatGroupRow"
+            field_entity[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
             field_entity[ANNAL.CURIE.field_value_mode]  = "Value_direct"
             field_entity[ANNAL.CURIE.field_value_type]  = "annal:Field_group"
             field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+repeat_group_id
