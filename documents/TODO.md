@@ -88,14 +88,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
     - rename "Field_render" on field view form, to "Field_render_type" (cf. fields/Field_render)
     - drop "Field" from labels for Field_render_type, value mode, entity type
-- [x] refactor context checking for:
-    - TestEntityGenericList
-    - test_entitygenericlist
-    - test_entityinheritlist - has logic for testing field list context that could be extracted
-    - (test_recordfield has method for checking field view context)
-    - ... etc. Note check_field_context is already defined.
-
+- [x] Refactor context checking for field lists (`test_entitugenericlist`, `test_entityinheritlist`)
+- [ ] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
 - [ ] Task button option to copy type+view+list and update names and URIs
+- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
 (Release?  Resolve rdflib-jsonld distribution issue before new release)
 

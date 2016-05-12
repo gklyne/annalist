@@ -59,7 +59,8 @@ from entity_testutils       import (
     # context_bind_fields
     context_list_entities,
     context_list_head_fields, context_list_item_fields,
-    context_list_item_field, context_list_item_field_value
+    context_list_item_field, context_list_item_field_value,
+    check_field_list_context_fields,
     )
 from entity_testtypedata    import (
     recordtype_dir, 
@@ -385,58 +386,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
-        head_fields = context_list_head_fields(r.context)
-        self.assertEqual(len(head_fields), 1)       # One row of 4 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 4)
-        f0 = context_view_field(r.context, 0, 0)
-        f1 = context_view_field(r.context, 0, 1)
-        f2 = context_view_field(r.context, 0, 2)
-        f3 = context_view_field(r.context, 0, 3)
-        # 1st field
-        self.assertEqual(f0['field_id'],           'Entity_id')
-        self.assertEqual(f0['field_name'],         'entity_id')
-        self.assertEqual(f0['field_label'],        'Id')
-        self.assertEqual(f0['field_placeholder'],  "(entity id)")
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_render_type'],  "EntityId")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],   "annal:Slug")
-        self.assertEqual(f0['field_placement'].field, "small-4 medium-3 columns")
-        self.assertEqual(f0['field_value'],        "")
-        # 2nd field
-        self.assertEqual(f1['field_id'],           'Field_render_type')
-        self.assertEqual(f1['field_name'],         'Field_render_type')
-        self.assertEqual(f1['field_label'],        'Render type')
-        self.assertEqual(f1['field_placeholder'],  "(field render type)")
-        self.assertEqual(f1['field_property_uri'], "annal:field_render_type")
-        self.assertEqual(f1['field_render_type'],  "Enum_choice")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],   "annal:Slug")
-        self.assertEqual(f1['field_placement'].field, "small-4 medium-3 columns")
-        # 3rd field
-        self.assertEqual(f2['field_id'],           'Field_value_type')
-        self.assertEqual(f2['field_name'],         'Field_value_type')
-        self.assertEqual(f2['field_label'],        'Value type')
-        self.assertEqual(f2['field_placeholder'],  "(field value type)")
-        self.assertEqual(f2['field_property_uri'], "annal:field_value_type")
-        self.assertEqual(f2['field_render_type'],  "Identifier")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],   "annal:Identifier")
-        self.assertEqual(f2['field_placement'].field, "small-12 medium-3 columns show-for-medium-up")
-        # 3th field
-        self.assertEqual(f3['field_id'],           'Entity_label')
-        self.assertEqual(f3['field_name'],         'Entity_label')
-        self.assertEqual(f3['field_label'],        'Label')
-        self.assertEqual(f3['field_placeholder'],  "(label)")
-        self.assertEqual(f3['field_property_uri'], "rdfs:label")
-        self.assertEqual(f3['field_render_type'],  "Text")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],   "annal:Text")
-        self.assertEqual(f3['field_placement'].field, "small-4 medium-3 columns")
-        # Entities
-        entities = context_list_entities(r.context)
-        entity_ids = [ context_list_item_field_value(r.context, e, 0) for e in entities ]
-        #@@ self.assertIn('_initial_values', entity_ids)
         field_entities = (
             { ('Entity_id',         "EntityId",        "annal:Slug",       "Id")
             , ('Coll_comment',      "Markdown",        "annal:Richtext",   "Collection metadata")
@@ -463,25 +412,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('View_choice',       "View_choice",     "annal:Slug",       "Choose view")
             , ('Group_field_sel',   "Enum_optional",   "annal:Slug",       "Field id")
             })
-        for f in field_entities:
-            for eid in range(len(entities)):
-                item_fields = context_list_item_fields(r.context, entities[eid])
-                if item_fields[0]['field_value'] == f[0]:
-                    for fid in range(4):
-                        item_field = item_fields[fid]
-                        head_field = head_fields[0]['row_field_descs'][fid]
-                        for fkey in (
-                                'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_value_type'):
-                            self.assertEqual(item_field[fkey], head_field[fkey])
-                        item_field_value = item_field['field_value']
-                        if fid == 1:
-                            item_field_value = extract_entity_id(item_field_value)
-                        self.assertEqual(item_field_value, f[fid])
-                    break
-            else:
-                self.fail("Field %s not found in context"%f[0])
+        check_field_list_context_fields(self, r, field_entities)
         return
 
     def test_get_fields_list_no_continuation(self):
@@ -641,25 +572,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ( "Coll_parent",              "Enum_choice_opt",  "annal:Slug",     "Parent"              )
             , ( "Coll_software_version",    "Showtext",         "annal:Text",     "S/W version"         )
             })
-        for f in field_entities:
-            for eid in range(len(entities)):
-                item_fields = context_list_item_fields(r.context, entities[eid])
-                if item_fields[0]['field_value'] == f[0]:
-                    for fid in range(4):
-                        item_field = item_fields[fid]
-                        head_field = head_fields[0]['row_field_descs'][fid]
-                        for fkey in (
-                                'field_id', 'field_name', 'field_label', 
-                                'field_property_uri', 'field_render_type',
-                                'field_placement', 'field_value_type'):
-                            self.assertEqual(item_field[fkey], head_field[fkey])
-                        item_field_value = item_field['field_value']
-                        if fid == 1:
-                            item_field_value = extract_entity_id(item_field_value)
-                        self.assertEqual(item_field_value, f[fid])
-                    break
-            else:
-                self.fail("Field %s not found in context"%f[0])
+        check_field_list_context_fields(self, r, field_entities)
         return
 
     def test_get_list_select_by_type(self):

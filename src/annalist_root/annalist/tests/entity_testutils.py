@@ -38,16 +38,6 @@ from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
-# from entity_testsitedata import (
-#     get_site_types, get_site_types_sorted, get_site_types_linked,
-#     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
-#     get_site_views, get_site_views_sorted, get_site_views_linked,
-#     get_site_list_types, get_site_list_types_sorted,
-#     get_site_field_groups, get_site_field_groups_sorted, 
-#     get_site_fields, get_site_fields_sorted, 
-#     get_site_field_types, get_site_field_types_sorted
-#     )
-
 #   -----------------------------------------------------------------------------
 #
 #   Directory generating functions
@@ -616,6 +606,88 @@ def check_context_list_field_value(test, context_field,
         field_value_type=context_field['field_value_type'],
         field_value=field_value
         )
+    return
+
+def check_field_list_context_fields(test, response, field_entities):
+    """
+    Check field list values in supplied context
+    """
+    head_fields = context_list_head_fields(response.context)
+    test.assertEqual(len(head_fields), 1)       # One row of 4 cols..
+    test.assertEqual(len(head_fields[0]['row_field_descs']), 4)
+    f0 = context_view_field(response.context, 0, 0)
+    f1 = context_view_field(response.context, 0, 1)
+    f2 = context_view_field(response.context, 0, 2)
+    f3 = context_view_field(response.context, 0, 3)
+    # 1st field
+    check_context_field(test, f0,
+        field_id=           "Entity_id",
+        field_name=         "entity_id",
+        field_label=        "Id",
+        field_placeholder=  "(entity id)",
+        field_property_uri= "annal:id",
+        field_render_type=  "EntityId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # 2nd field
+    check_context_field(test, f1,
+        field_id=           "Field_render_type",
+        field_name=         "Field_render_type",
+        field_label=        "Render type",
+        field_placeholder=  "(field render type)",
+        field_property_uri= "annal:field_render_type",
+        field_render_type=  "Enum_choice",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # 3rd field
+    check_context_field(test, f2,
+        field_id=           "Field_value_type",
+        field_name=         "Field_value_type",
+        field_label=        "Value type",
+        field_placeholder=  "(field value type)",
+        field_property_uri= "annal:field_value_type",
+        field_render_type=  "Identifier",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Identifier",
+        field_placement=    "small-12 medium-3 columns show-for-medium-up"
+        )
+    # 4th field
+    check_context_field(test, f3,
+        field_id=           "Entity_label",
+        field_name=         "Entity_label",
+        field_label=        "Label",
+        field_placeholder=  "(label)",
+        field_property_uri= "rdfs:label",
+        field_render_type=  "Text",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Text",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # Selection of field entities from list
+    entities = context_list_entities(response.context)
+    entity_ids = [ context_list_item_field_value(response.context, e, 0) for e in entities ]
+    for f in field_entities:
+        for eid in range(len(entities)):
+            item_fields = context_list_item_fields(response.context, entities[eid])
+            if item_fields[0]['field_value'] == f[0]:
+                # Expected field entity found in context data, check details...
+                for fid in range(4):
+                    item_field = item_fields[fid]
+                    head_field = head_fields[0]['row_field_descs'][fid]
+                    for fkey in (
+                            'field_id', 'field_name', 'field_label', 
+                            'field_property_uri', 'field_render_type',
+                            'field_placement', 'field_value_type'):
+                        test.assertEqual(item_field[fkey], head_field[fkey])
+                    # Check listed field values
+                    check_context_list_field_value(test, item_field, f[fid])
+                break
+        else:
+            test.fail("Field %s not found in context"%f[0])
     return
 
 type_no_options   = [ FieldChoice('', label="(no options)") ]
