@@ -85,11 +85,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
     - [x] Update site data and tests to use type-qualified render type and value mode values.
     - [x] Add migration logic for field definitions to use new render type names.
-- [x] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
-    - rename "Field_render" on field view form, to "Field_render_type" (cf. fields/Field_render)
-    - drop "Field" from labels for Field_render_type, value mode, entity type
+- [x] Changed "field value type" in field description for repeat/multifield reference fields to indicate
+    the type of the referenced group, or if it contains a singleton the referenced target value type.
+    These changes affect data rather than fundamental workings of Annalist; the tasks for creating
+    repeat fields and multifield references have been updated.
 - [x] Refactor context checking for field lists (`test_entitugenericlist`, `test_entityinheritlist`)
-- [ ] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
+- [x] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 

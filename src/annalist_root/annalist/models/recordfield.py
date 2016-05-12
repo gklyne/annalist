@@ -57,7 +57,7 @@ class RecordField(EntityData):
         which is a copy of the supplied entitydata with format migrations applied.
 
         NOTE:  implementations are free to apply migrations in-place.  The resulting 
-        entitydata should be exctly as the supplied data *should* appear in storage
+        entitydata should be exactly as the supplied data *should* appear in storage
         to conform to the current format of the data.  The migration function should 
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
