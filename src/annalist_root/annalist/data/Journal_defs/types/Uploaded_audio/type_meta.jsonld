@@ -13,7 +13,7 @@
       "annal:supertype_uri": "coll:Included_audio"
     }
   ],
-  "annal:uri": "coll:Uploaded_audio_test",
+  "annal:uri": "coll:Uploaded_audio",
   "annal:type_list": "_list/Uploaded_audio",
   "@context": [
     "../../coll_context.jsonld"

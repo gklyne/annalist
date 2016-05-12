@@ -78,7 +78,6 @@ class RecordField(EntityData):
             entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
         # Calculate mode from other fields if not defined
         val_render = entitydata[ANNAL.CURIE.field_render_type]
-        val_type  = entitydata.get(ANNAL.CURIE.field_value_type, None)
         ref_type  = entitydata.get(ANNAL.CURIE.field_ref_type, None)
         ref_field = entitydata.get(ANNAL.CURIE.field_ref_field, None)
         if ANNAL.CURIE.field_value_mode in entitydata:

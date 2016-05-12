@@ -15,9 +15,6 @@ Results (reorganized and "attic" values removed)
     annal:View
     annal:List
     annal:Field
-    annal:Field_type
     annal:List_type
-    (annal:Value_type)
-
 
 @@TODO: flesh this out when required.

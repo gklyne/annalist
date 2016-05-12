@@ -156,23 +156,23 @@ class RecordFieldTest(AnnalistTestCase):
         return
 
     def test_recordfield_default_data(self):
-        t = RecordField.load(self.testcoll, "Field_type", altscope="all")
-        self.assertEqual(t.get_id(), "Field_type")
-        self.assertIn("/c/_annalist_site/_annalist_collection/fields/Field_type", t.get_url())
-        self.assertIn("/c/testcoll/d/_field/Field_type", t.get_view_url())
+        t = RecordField.load(self.testcoll, "Field_value_type", altscope="all")
+        self.assertEqual(t.get_id(), "Field_value_type")
+        self.assertIn("/c/_annalist_site/_annalist_collection/fields/Field_value_type", t.get_url())
+        self.assertIn("/c/testcoll/d/_field/Field_value_type", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_field")
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
-        field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Field_type")
+        field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Field_value_type")
         check_field_record(self, td,
-            field_id=           "Field_type",
-            field_ref=          "annal:fields/Field_type",
+            field_id=           "Field_value_type",
+            field_ref=          "annal:fields/Field_value_type",
             field_types=        ["annal:Field"],
             field_type_id=      "_field",
             field_type=         "annal:Field",
             field_uri=          None,
             field_url=          field_url,
-            field_label=        "Field value type",
+            field_label=        "Value type",
             field_comment=      None,
             field_name=         None,
             field_render_type=  "Identifier",
@@ -350,8 +350,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             options=            self.no_options
             )
         check_context_field(self, f1,
-            field_id=           "Field_render",
-            field_name=         "Field_render",
+            field_id=           "Field_render_type",
+            field_name=         "Field_render_type",
             field_property_uri= "annal:field_render_type",
             field_render_type=  "Enum_choice",
             field_value_mode=   "Value_direct",
@@ -362,8 +362,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         # Field 2: Value type
         check_context_field(self, f2,
-            field_id=           "Field_type",
-            field_name=         "Field_type",
+            field_id=           "Field_value_type",
+            field_name=         "Field_value_type",
             field_property_uri= "annal:field_value_type",
             field_render_type=  "Identifier",
             field_value_mode=   "Value_direct",
@@ -576,12 +576,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Field render type</span>
+                  <span>Render type</span>
                 </div>
                 <div class="%(input_classes)s">
                 """+
                   render_choice_options(
-                    "Field_render",
+                    "Field_render_type",
                     get_site_field_types_sorted(),
                     "Enum_render_type/Text",
                     escape_label=True)+
@@ -594,10 +594,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip2a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Field value type</span>
+              <span>Value type</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_type" 
+                  <input type="text" size="64" name="Field_value_type" 
                          placeholder="(field value type)" 
                          value="annal:Text"/>
                 </div>
@@ -1173,8 +1173,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id="taskrepeatfield",
             field_label="Test repeat field",
-            type_uri="test:repeat_field",
+            entity_type="test:repeat_field",
             property_uri="test:repeat_prop",
+            value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_repeat_field"
             )
@@ -1204,6 +1205,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "rdfs:label":                 "%(field_label)s"%common_vals
             , "annal:field_render_type":    "Text"
             , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_value_type":     "annal:Text"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
@@ -1227,6 +1229,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "Group_Seq_Row"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
+            , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
@@ -1254,8 +1257,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = recordfield_entity_view_form_data(
             field_id=common_vals["field_id"],
             field_label=common_vals["field_label"],
-            type_uri=common_vals["type_uri"],
+            entity_type=common_vals["type_uri"],
             property_uri=common_vals["property_uri"],
+            value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_field_ref"
             )
@@ -1286,6 +1290,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "Text"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
+            , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
@@ -1307,6 +1312,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_mode":     "Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
+            , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']

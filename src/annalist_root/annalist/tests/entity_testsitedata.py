@@ -343,13 +343,13 @@ site_field_fields = (
     , FieldChoice("_field/Field_placeholder",          label="Placeholder"         )
     , FieldChoice("_field/Field_placement",            label="Position/size"       )
     , FieldChoice("_field/Field_property",             label="Property URI"        )
-    , FieldChoice("_field/Field_render",               label="Field render type"   )
+    , FieldChoice("_field/Field_render_type",          label="Render type"   )
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
-    , FieldChoice("_field/Field_type",                 label="Field value type"    )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
+    , FieldChoice("_field/Field_value_type",           label="Value type"          )
     ])  
 
 site_group_fields = (

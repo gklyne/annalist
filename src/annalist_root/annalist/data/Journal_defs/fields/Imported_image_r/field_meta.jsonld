@@ -13,7 +13,7 @@
   "annal:field_placement": "small:0,12",
   "annal:repeat_label_add": "Add Imported image",
   "annal:default_value": "",
-  "annal:field_value_type": "annal:Field_group",
+  "annal:field_value_type": "coll:Imported_image",
   "annal:field_value_mode": "Enum_value_mode/Value_direct",
   "annal:field_render_type": "Enum_render_type/Group_Seq_Row",
   "annal:field_ref_field": "",

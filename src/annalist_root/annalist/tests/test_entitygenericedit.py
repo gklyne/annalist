@@ -52,7 +52,8 @@ from entity_testutils       import (
     render_choice_options,
     create_test_user,
     context_view_field,
-    context_bind_fields
+    context_bind_fields,
+    check_type_view_context_fields
     )
 from entity_testtypedata    import (
     recordtype_dir, 
@@ -365,113 +366,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # Test context
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
-        self.assertEqual(r.context['action'],           "new")
-        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 7)
-        f0 = context_view_field(r.context, 0, 0)
-        f1 = context_view_field(r.context, 1, 0)
-        f2 = context_view_field(r.context, 2, 0)
-        f3 = context_view_field(r.context, 3, 0)
-        f4 = context_view_field(r.context, 4, 0)
-        f5 = context_view_field(r.context, 5, 0)
-        f6 = context_view_field(r.context, 5, 1)
-        f7 = context_view_field(r.context, 6, 0)
-        # 1st field - Id
-        self.assertEqual(f0['field_id'], 'Type_id')
-        self.assertEqual(f0['field_name'], 'entity_id')
-        self.assertEqual(f0['field_label'], 'Type Id')
-        self.assertEqual(f0['field_placeholder'], "(type id)")
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],  "annal:Slug")
-        self.assertEqual(f0['field_value'], "00000001")
-        self.assertEqual(f0['options'], self.no_options)
-        # 2nd field - Label
-        label_value = default_label("testcoll", "testtype", "00000001")
-        self.assertEqual(f1['field_id'], 'Type_label')
-        self.assertEqual(f1['field_name'], 'Type_label')
-        self.assertEqual(f1['field_label'], 'Label')
-        self.assertEqual(f1['field_placeholder'], "(label)")
-        self.assertEqual(f1['field_property_uri'], "rdfs:label")
-        self.assertEqual(f1['field_placement'].field, "small-12 columns")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Text")
-        self.assertEqual(f1['field_value'], label_value)
-        self.assertEqual(f1['options'], self.no_options)
-        # 3rd field - comment
-        comment_value = default_comment("testcoll", "testtype", "00000001")
-        self.assertEqual(f2['field_id'], 'Type_comment')
-        self.assertEqual(f2['field_name'], 'Type_comment')
-        self.assertEqual(f2['field_label'], 'Comment')
-        self.assertEqual(f2['field_placeholder'], "(type description)")
-        self.assertEqual(f2['field_property_uri'], "rdfs:comment")
-        self.assertEqual(f2['field_placement'].field, "small-12 columns")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],  "annal:Richtext")
-        self.assertEqual(f2['field_value'], comment_value)
-        self.assertEqual(f2['options'], self.no_options)
-        # 4th field - URI
-        self.assertEqual(f3['field_id'], 'Type_uri')
-        self.assertEqual(f3['field_name'], 'Type_uri')
-        self.assertEqual(f3['field_label'], 'Type URI')
-        self.assertEqual(f3['field_placeholder'], "(Type URI)")
-        self.assertEqual(f3['field_property_uri'], "annal:uri")
-        self.assertEqual(f3['field_placement'].field, "small-12 columns")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f3['field_value'], "")
-        self.assertEqual(f3['options'], self.no_options)
-        # 5th field - Supertype URIs
-        self.assertEqual(f4['field_id'],          'Type_supertype_uris')
-        self.assertEqual(f4['field_name'],        'Type_supertype_uris')
-        self.assertEqual(f4['field_label'],       'Supertype URIs')
-        self.assertEqual(f4['field_placeholder'], "(Supertype URIs or CURIEs)")
-        self.assertEqual(f4['field_property_uri'], "annal:supertype_uri")
-        self.assertEqual(f4['field_value_mode'],   "Value_direct")
-        self.assertEqual(f4['field_value_type'],  "annal:Type_supertype_uri")
-        self.assertEqual(f4['field_placement'].field, "small-12 columns")
-        self.assertEqual(f4['field_value'],        "") #@@
-        self.assertEqual(f4['options'],            self.no_options)
-        # 6th field - view id
-        self.assertEqual(f5['field_id'], 'Type_view')
-        self.assertEqual(f5['field_name'], 'Type_view')
-        self.assertEqual(f5['field_label'], 'Default view')
-        self.assertEqual(f5['field_placeholder'], "(view id)")
-        self.assertEqual(f5['field_property_uri'], "annal:type_view")
-        self.assertEqual(f5['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f5['field_value_mode'],   "Value_direct")
-        self.assertEqual(f5['field_value_type'],  "annal:View")
-        self.assertEqual(f5['field_value'], "Default_view")
-        self.assertEqual(f5['options'], self.no_view_id + self.view_options)
-        # 7th field - list id
-        self.assertEqual(f6['field_id'], 'Type_list')
-        self.assertEqual(f6['field_name'], 'Type_list')
-        self.assertEqual(f6['field_label'], 'Default list')
-        self.assertEqual(f6['field_placeholder'], "(list id)")
-        self.assertEqual(f6['field_property_uri'], "annal:type_list")
-        self.assertEqual(f6['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f6['field_value_mode'],   "Value_direct")
-        self.assertEqual(f6['field_value_type'],  "annal:List")
-        self.assertEqual(f6['field_value'], "Default_list")
-        self.assertEqual(f6['options'], self.no_list_id + self.list_options)
-        # 8th field - field aliases
-        self.assertEqual(f7['field_id'],           'Type_aliases')
-        self.assertEqual(f7['field_name'],         'Type_aliases')
-        self.assertEqual(f7['field_label'],        'Field aliases')
-        self.assertEqual(f7['field_property_uri'], "annal:field_aliases")
-        self.assertEqual(f7['field_value_mode'],   "Value_direct")
-        self.assertEqual(f7['field_value_type'],   "annal:Type_aliases")
-        self.assertEqual(f7['field_placement'].field, "small-12 columns")
-        self.assertEqual(f7['field_value'],        "")
-        self.assertEqual(f7['options'],            self.no_options)
+        check_type_view_context_fields(self, r, 
+            action="new",
+            entity_id="00000001", orig_entity_id=None,
+            type_id="testtype",
+            type_label=default_label("testcoll", "testtype", "00000001"),
+            type_comment=default_comment("testcoll", "testtype", "00000001"),
+            type_uri="",
+            type_supertype_uris=[],
+            type_view="Default_view", type_view_options=self.no_view_id + self.view_options,
+            type_list="Default_list", type_list_options=self.no_list_id + self.list_options,
+            type_aliases=[],
+            )
         return
 
     def test_get_new_no_continuation(self):
@@ -495,113 +401,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # Test context
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['entity_id'],        "entity1")
-        self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 7)
-        f0 = context_view_field(r.context, 0, 0)
-        f1 = context_view_field(r.context, 1, 0)
-        f2 = context_view_field(r.context, 2, 0)
-        f3 = context_view_field(r.context, 3, 0)
-        f4 = context_view_field(r.context, 4, 0)
-        f5 = context_view_field(r.context, 5, 0)
-        f6 = context_view_field(r.context, 5, 1)
-        f7 = context_view_field(r.context, 6, 0)
-        # 1st field - Id
-        self.assertEqual(f0['field_id'],           'Type_id')
-        self.assertEqual(f0['field_name'],         'entity_id')
-        self.assertEqual(f0['field_label'],        'Type Id')
-        self.assertEqual(f0['field_placeholder'],  "(type id)")
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],  "annal:Slug")
-        self.assertEqual(f0['field_value'],        "entity1")
-        self.assertEqual(f0['options'],            self.no_options)
-        # 2nd field - Label
-        type_label_value = (
-            "Entity testcoll/testtype/entity1"
+        check_type_view_context_fields(self, r, 
+            action="edit",
+            entity_id="entity1", orig_entity_id=None,
+            type_id="testtype",
+            type_label="Entity testcoll/testtype/entity1",
+            type_comment="Entity coll testcoll, type testtype, entity entity1",
+            type_uri="",
+            type_supertype_uris=[],
+            type_view="Default_view", type_view_options=self.no_view_id + self.view_options,
+            type_list="Default_list", type_list_options=self.no_list_id + self.list_options,
+            type_aliases=[],
             )
-        self.assertEqual(f1['field_id'],           'Type_label')
-        self.assertEqual(f1['field_name'],         'Type_label')
-        self.assertEqual(f1['field_label'],        'Label')
-        self.assertEqual(f1['field_property_uri'], "rdfs:label")
-        self.assertEqual(f1['field_placement'].field, "small-12 columns")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Text")
-        self.assertEqual(f1['field_value'],        type_label_value)
-        self.assertEqual(f1['options'],            self.no_options)
-        # 3rd field - comment
-        type_comment_value = (
-            "Entity coll testcoll, type testtype, entity entity1"
-            )
-        self.assertEqual(f2['field_id'],           'Type_comment')
-        self.assertEqual(f2['field_name'],         'Type_comment')
-        self.assertEqual(f2['field_label'],        'Comment')
-        self.assertEqual(f2['field_property_uri'], "rdfs:comment")
-        self.assertEqual(f2['field_placement'].field, "small-12 columns")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],  "annal:Richtext")
-        self.assertEqual(f2['field_value'],        type_comment_value)
-        self.assertEqual(f2['options'],            self.no_options)
-        # 4th field - URI
-        # (NOTE: blank unless explcicit value specified)
-        self.assertEqual(f3['field_id'],           'Type_uri')
-        self.assertEqual(f3['field_name'],         'Type_uri')
-        self.assertEqual(f3['field_label'],        'Type URI')
-        self.assertEqual(f3['field_property_uri'], "annal:uri")
-        self.assertEqual(f3['field_placement'].field, "small-12 columns")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f3['field_value'],        "")
-        self.assertEqual(f3['options'],            self.no_options)
-        # 5th field - Supertype URIs
-        self.assertEqual(f4['field_id'],          'Type_supertype_uris')
-        self.assertEqual(f4['field_name'],        'Type_supertype_uris')
-        self.assertEqual(f4['field_label'],       'Supertype URIs')
-        self.assertEqual(f4['field_placeholder'], "(Supertype URIs or CURIEs)")
-        self.assertEqual(f4['field_property_uri'], "annal:supertype_uri")
-        self.assertEqual(f4['field_value_mode'],   "Value_direct")
-        self.assertEqual(f4['field_value_type'],  "annal:Type_supertype_uri")
-        self.assertEqual(f4['field_placement'].field, "small-12 columns")
-        self.assertEqual(f4['field_value'],        "") #@@
-        self.assertEqual(f4['options'],            self.no_options)
-        # 6th field - view id
-        self.assertEqual(f5['field_id'],           'Type_view')
-        self.assertEqual(f5['field_name'],         'Type_view')
-        self.assertEqual(f5['field_label'],        'Default view')
-        self.assertEqual(f5['field_property_uri'], "annal:type_view")
-        self.assertEqual(f5['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f5['field_value_mode'],   "Value_direct")
-        self.assertEqual(f5['field_value_type'],  "annal:View")
-        self.assertEqual(f5['field_value'],        "Default_view")
-        self.assertEqual(f5['options'],            self.no_view_id + self.view_options)
-        # 7th field - list id
-        self.assertEqual(f6['field_id'],           'Type_list')
-        self.assertEqual(f6['field_name'],         'Type_list')
-        self.assertEqual(f6['field_label'],        'Default list')
-        self.assertEqual(f6['field_property_uri'], "annal:type_list")
-        self.assertEqual(f6['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f6['field_value_mode'],   "Value_direct")
-        self.assertEqual(f6['field_value_type'],  "annal:List")
-        self.assertEqual(f6['field_value'],        "Default_list")
-        self.assertEqual(f6['options'],            self.no_list_id + self.list_options)
-        # 8th field - field aliases
-        self.assertEqual(f7['field_id'],           'Type_aliases')
-        self.assertEqual(f7['field_name'],         'Type_aliases')
-        self.assertEqual(f7['field_label'],        'Field aliases')
-        self.assertEqual(f7['field_property_uri'], "annal:field_aliases")
-        self.assertEqual(f7['field_value_mode'],   "Value_direct")
-        self.assertEqual(f7['field_value_type'],   "annal:Type_aliases")
-        self.assertEqual(f7['field_placement'].field, "small-12 columns")
-        self.assertEqual(f7['field_value'],        "")
-        self.assertEqual(f7['options'],            self.no_options)
         return
 
     def test_get_copy(self):
@@ -610,113 +421,18 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # Test context
-        view_url = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['entity_id'],        "entity1_01")
-        self.assertEqual(r.context['orig_id'],          "entity1_01")
-        self.assertEqual(r.context['action'],           "copy")
-        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 7)
-        f0 = context_view_field(r.context, 0, 0)
-        f1 = context_view_field(r.context, 1, 0)
-        f2 = context_view_field(r.context, 2, 0)
-        f3 = context_view_field(r.context, 3, 0)
-        f4 = context_view_field(r.context, 4, 0)
-        f5 = context_view_field(r.context, 5, 0)
-        f6 = context_view_field(r.context, 5, 1)
-        f7 = context_view_field(r.context, 6, 0)
-        # 1st field - Id
-        self.assertEqual(f0['field_id'],           'Type_id')
-        self.assertEqual(f0['field_name'],         'entity_id')
-        self.assertEqual(f0['field_label'],        'Type Id')
-        self.assertEqual(f0['field_placeholder'],  "(type id)")
-        self.assertEqual(f0['field_property_uri'], "annal:id")
-        self.assertEqual(f0['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f0['field_value_mode'],   "Value_direct")
-        self.assertEqual(f0['field_value_type'],  "annal:Slug")
-        self.assertEqual(f0['field_value'],        "entity1_01")
-        self.assertEqual(f0['options'],            self.no_options)
-        # 2nd field - Label
-        type_label_value = (
-            "Entity testcoll/testtype/entity1"
+        check_type_view_context_fields(self, r, 
+            action="copy",
+            entity_id="entity1_01", orig_entity_id=None,
+            type_id="testtype",
+            type_label="Entity testcoll/testtype/entity1",
+            type_comment="Entity coll testcoll, type testtype, entity entity1",
+            type_uri="",
+            type_supertype_uris=[],
+            type_view="Default_view", type_view_options=self.no_view_id + self.view_options,
+            type_list="Default_list", type_list_options=self.no_list_id + self.list_options,
+            type_aliases=[],
             )
-        self.assertEqual(f1['field_id'],           'Type_label')
-        self.assertEqual(f1['field_name'],         'Type_label')
-        self.assertEqual(f1['field_label'],        'Label')
-        self.assertEqual(f1['field_property_uri'], "rdfs:label")
-        self.assertEqual(f1['field_placement'].field, "small-12 columns")
-        self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Text")
-        self.assertEqual(f1['field_value'],        type_label_value)
-        self.assertEqual(f1['options'],            self.no_options)
-        # 3rd field - comment
-        type_comment_value = (
-            "Entity coll testcoll, type testtype, entity entity1"
-            )
-        self.assertEqual(f2['field_id'],           'Type_comment')
-        self.assertEqual(f2['field_name'],         'Type_comment')
-        self.assertEqual(f2['field_label'],        'Comment')
-        self.assertEqual(f2['field_property_uri'], "rdfs:comment")
-        self.assertEqual(f2['field_placement'].field, "small-12 columns")
-        self.assertEqual(f2['field_value_mode'],   "Value_direct")
-        self.assertEqual(f2['field_value_type'],  "annal:Richtext")
-        self.assertEqual(f2['field_value'],        type_comment_value)
-        self.assertEqual(f2['options'],            self.no_options)
-        # 4th field - URI
-        # (NOTE: blank unless explcicit value specified)
-        self.assertEqual(f3['field_id'],           'Type_uri')
-        self.assertEqual(f3['field_name'],         'Type_uri')
-        self.assertEqual(f3['field_label'],        'Type URI')
-        self.assertEqual(f3['field_property_uri'], "annal:uri")
-        self.assertEqual(f3['field_placement'].field, "small-12 columns")
-        self.assertEqual(f3['field_value_mode'],   "Value_direct")
-        self.assertEqual(f3['field_value_type'],  "annal:Identifier")
-        self.assertEqual(f3['field_value'],        "")
-        self.assertEqual(f3['options'],            self.no_options)
-        # 5th field - Supertype URIs
-        self.assertEqual(f4['field_id'],          'Type_supertype_uris')
-        self.assertEqual(f4['field_name'],        'Type_supertype_uris')
-        self.assertEqual(f4['field_label'],       'Supertype URIs')
-        self.assertEqual(f4['field_placeholder'], "(Supertype URIs or CURIEs)")
-        self.assertEqual(f4['field_property_uri'], "annal:supertype_uri")
-        self.assertEqual(f4['field_value_mode'],   "Value_direct")
-        self.assertEqual(f4['field_value_type'],  "annal:Type_supertype_uri")
-        self.assertEqual(f4['field_placement'].field, "small-12 columns")
-        self.assertEqual(f4['field_value'],        "") #@@
-        self.assertEqual(f4['options'],            self.no_options)
-        # 6th field - view id
-        self.assertEqual(f5['field_id'],           'Type_view')
-        self.assertEqual(f5['field_name'],         'Type_view')
-        self.assertEqual(f5['field_label'],        'Default view')
-        self.assertEqual(f5['field_property_uri'], "annal:type_view")
-        self.assertEqual(f5['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f5['field_value_mode'],   "Value_direct")
-        self.assertEqual(f5['field_value_type'],  "annal:View")
-        self.assertEqual(f5['field_value'],        "Default_view")
-        self.assertEqual(f5['options'],            self.no_view_id + self.view_options)
-        # 7th field - list id
-        self.assertEqual(f6['field_id'],           'Type_list')
-        self.assertEqual(f6['field_name'],         'Type_list')
-        self.assertEqual(f6['field_label'],        'Default list')
-        self.assertEqual(f6['field_property_uri'], "annal:type_list")
-        self.assertEqual(f6['field_placement'].field, "small-12 medium-6 columns")
-        self.assertEqual(f6['field_value_mode'],   "Value_direct")
-        self.assertEqual(f6['field_value_type'],  "annal:List")
-        self.assertEqual(f6['field_value'],        "Default_list")
-        self.assertEqual(f6['options'],            self.no_list_id + self.list_options)
-        # 8th field - field aliases
-        self.assertEqual(f7['field_id'],           'Type_aliases')
-        self.assertEqual(f7['field_name'],         'Type_aliases')
-        self.assertEqual(f7['field_label'],        'Field aliases')
-        self.assertEqual(f7['field_property_uri'], "annal:field_aliases")
-        self.assertEqual(f7['field_value_mode'],   "Value_direct")
-        self.assertEqual(f7['field_value_type'],   "annal:Type_aliases")
-        self.assertEqual(f7['field_placement'].field, "small-12 columns")
-        self.assertEqual(f7['field_value'],        "")
-        self.assertEqual(f7['options'],            self.no_options)
         return
 
     def test_get_view_no_collection(self):

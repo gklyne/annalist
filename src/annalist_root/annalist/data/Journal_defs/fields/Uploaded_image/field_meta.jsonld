@@ -1,6 +1,6 @@
 {
   "rdfs:label": "Uploaded image",
-  "rdfs:comment": "Uploaded image",
+  "rdfs:comment": "Field referring to an image resource in an "Uploaded image" (coll:Uploaded_image) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(Select image to upload)",

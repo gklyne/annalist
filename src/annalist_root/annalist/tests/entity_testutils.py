@@ -38,6 +38,16 @@ from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
+# from entity_testsitedata import (
+#     get_site_types, get_site_types_sorted, get_site_types_linked,
+#     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
+#     get_site_views, get_site_views_sorted, get_site_views_linked,
+#     get_site_list_types, get_site_list_types_sorted,
+#     get_site_field_groups, get_site_field_groups_sorted, 
+#     get_site_fields, get_site_fields_sorted, 
+#     get_site_field_types, get_site_field_types_sorted
+#     )
+
 #   -----------------------------------------------------------------------------
 #
 #   Directory generating functions
@@ -605,6 +615,167 @@ def check_context_list_field_value(test, context_field,
     check_context_field_value(test, context_field,
         field_value_type=context_field['field_value_type'],
         field_value=field_value
+        )
+    return
+
+type_no_options   = [ FieldChoice('', label="(no options)") ]
+def check_type_view_context_fields(test, response, 
+        action="",
+        entity_id="", orig_entity_id=None,
+        type_id="_type",
+        type_label="(?type_label)",
+        type_comment="(?type_comment)",
+        type_uri="(?type_uri)",
+        type_supertype_uris="",
+        type_view="Default_view", type_view_options=None,
+        type_list="Default_list", type_list_options=None,
+        type_aliases=[]
+        ):
+    # Common entity attributes
+    test.assertEqual(response.context['entity_id'],        entity_id)
+    test.assertEqual(response.context['orig_id'],          orig_entity_id or entity_id)
+    test.assertEqual(response.context['type_id'],          type_id)
+    test.assertEqual(response.context['orig_type'],        type_id)
+    test.assertEqual(response.context['coll_id'],          'testcoll')
+    test.assertEqual(response.context['action'],           action)
+    test.assertEqual(response.context['view_id'],          'Type_view')
+    # View fields
+    test.assertEqual(len(response.context['fields']), 7)
+    f0 = context_view_field(response.context, 0, 0)
+    f1 = context_view_field(response.context, 1, 0)
+    f2 = context_view_field(response.context, 2, 0)
+    f3 = context_view_field(response.context, 3, 0)
+    f4 = context_view_field(response.context, 4, 0)
+    f5 = context_view_field(response.context, 5, 0)
+    f6 = context_view_field(response.context, 5, 1)
+    f7 = context_view_field(response.context, 6, 0)
+    # 1st field - Id
+    check_context_field(test, f0,
+        field_id=           "Type_id",
+        field_name=         "entity_id",
+        field_label=        "Type Id",
+        field_placeholder=  "(type id)",
+        field_property_uri= "annal:id",
+        field_render_type=  "EntityId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        entity_id,
+        options=            type_no_options
+        )
+    # 2nd field - Label
+    check_context_field(test, f1,
+        field_id=           "Type_label",
+        field_name=         "Type_label",
+        field_label=        "Label",
+        field_placeholder=  "(label)",
+        field_property_uri= "rdfs:label",
+        field_render_type=  "Text",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Text",
+        field_placement=    "small-12 columns",
+        field_value=        type_label,
+        options=            type_no_options
+        )
+    # 3rd field - comment
+    type_comment_placeholder = (
+        "(type description)"
+        )
+    check_context_field(test, f2,
+        field_id=           "Type_comment",
+        field_name=         "Type_comment",
+        field_label=        "Comment",
+        field_placeholder=  type_comment_placeholder,
+        field_property_uri= "rdfs:comment",
+        field_render_type=  "Markdown",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Richtext",
+        field_placement=    "small-12 columns",
+        field_value=        type_comment,
+        options=            type_no_options
+        )
+    # 4th field - URI
+    type_uri_placeholder = (
+        "(Type URI)"
+        )
+    check_context_field(test, f3,
+        field_id=           "Type_uri",
+        field_name=         "Type_uri",
+        field_label=        "Type URI",
+        field_placeholder=  type_uri_placeholder,
+        field_property_uri= "annal:uri",
+        field_render_type=  "Identifier",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Identifier",
+        field_value=        type_uri,
+        options=            type_no_options
+        )
+    # 5th field - Supertype URIs
+    type_supertype_uris_placeholder = (
+        "(Supertype URIs or CURIEs)"
+        )
+    check_context_field(test, f4,
+        field_id=           "Type_supertype_uris",
+        field_name=         "Type_supertype_uris",
+        field_label=        "Supertype URIs",
+        field_placeholder=  type_supertype_uris_placeholder,
+        field_property_uri= "annal:supertype_uri",
+        field_render_type=  "Group_Seq_Row",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Type_supertype_uri",
+        field_value=        type_supertype_uris,
+        options=            type_no_options
+        )
+    # 6th field - view id
+    type_view_id_placeholder = (
+        "(view id)"
+        )
+    check_context_field(test, f5,
+        field_id=           "Type_view",
+        field_name=         "Type_view",
+        field_label=        "Default view",
+        field_placeholder=  type_view_id_placeholder,
+        field_property_uri= "annal:type_view",
+        field_render_type=  "Enum_optional",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:View",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        type_view,
+        options=            type_view_options
+        )
+    # 7th field - list id
+    type_list_id_placeholder = (
+        "(list id)"
+        )
+    check_context_field(test, f6,
+        field_id=           "Type_list",
+        field_name=         "Type_list",
+        field_label=        "Default list",
+        field_placeholder=  type_list_id_placeholder,
+        field_property_uri= "annal:type_list",
+        field_render_type=  "Enum_optional",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:List",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        type_list,
+        options=            type_list_options
+        )
+    # 8th field - field aliases
+    type_aliases_placeholder = (
+        "(field aliases)"
+        )
+    check_context_field(test, f7,
+        field_id=           "Type_aliases",
+        field_name=         "Type_aliases",
+        field_label=        "Field aliases",
+        field_placeholder=  type_aliases_placeholder,
+        field_property_uri= "annal:field_aliases",
+        field_render_type=  "Group_Seq_Row",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Type_alias",
+        field_placement=    "small-12 columns",
+        field_value=        type_aliases,
+        options=            type_no_options
         )
     return
 

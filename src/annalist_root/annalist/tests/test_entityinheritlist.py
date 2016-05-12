@@ -247,9 +247,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
             )
         # 2nd field
         check_context_field(self, f1,
-            field_id=           "Field_render",
-            field_name=         "Field_render",
-            field_label=        "Field render type",
+            field_id=           "Field_render_type",
+            field_name=         "Field_render_type",
+            field_label=        "Render type",
             field_placeholder=  "(field render type)",
             field_property_uri= "annal:field_render_type",
             field_render_type=  "Enum_choice",
@@ -259,9 +259,9 @@ class EntityInheritListViewTest(AnnalistTestCase):
             )
         # 3rd field
         check_context_field(self, f2,
-            field_id=           "Field_type",
-            field_name=         "Field_type",
-            field_label=        "Field value type",
+            field_id=           "Field_value_type",
+            field_name=         "Field_value_type",
+            field_label=        "Value type",
             field_placeholder=  "(field value type)",
             field_property_uri= "annal:field_value_type",
             field_render_type=  "Identifier",
@@ -293,8 +293,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
             , ('Field_comment',     "Textarea",      "annal:Longtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
-            , ('Field_type',        "Identifier",    "annal:Identifier",    "Field value type")
-            , ('Field_render',      "Enum_choice",   "annal:Slug",          "Field render type")
+            , ('Field_render_type', "Enum_choice",   "annal:Slug",          "Render type")
+            , ('Field_value_mode',  "Enum_choice",   "annal:Slug",          "Value mode")
+            , ('Field_value_type',  "Identifier",    "annal:Identifier",    "Value type")
+            , ('Field_entity_type', "Identifier",    "annal:Identifier",    "Entity type")
             , ('Field_default',     "Text",          "annal:Text",          "Default")
             , ('Field_typeref',     "Enum_optional", "annal:Slug",          "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
@@ -419,8 +421,8 @@ class EntityInheritListViewTest(AnnalistTestCase):
         f2 = context_view_field(r.context, 0, 2)
         f3 = context_view_field(r.context, 0, 3)
         self.assertEqual(f0['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_id'], 'Field_render')
-        self.assertEqual(f2['field_id'], 'Field_type')
+        self.assertEqual(f1['field_id'], 'Field_render_type')
+        self.assertEqual(f2['field_id'], 'Field_value_type')
         self.assertEqual(f3['field_id'], 'Entity_label')
         # Entities
         entities = context_list_entities(r.context)

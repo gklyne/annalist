@@ -13,7 +13,7 @@
   "annal:field_placement": "small:0,12;medium:6,6",
   "annal:repeat_label_add": "",
   "annal:default_value": "",
-  "annal:field_value_type": "annal:Text",
+  "annal:field_value_type": "coll:Location",
   "annal:field_value_mode": "Enum_value_mode/Value_direct",
   "annal:field_render_type": "Enum_render_type/Text",
   "annal:field_ref_field": "",

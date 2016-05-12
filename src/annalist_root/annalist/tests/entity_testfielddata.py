@@ -227,10 +227,10 @@ def recordfield_entity_view_context_data(
               # , 'field_value':          (Supplied separately)
               , 'options':                []
               },
-              { 'field_id':               "Field_render"              # 1 (0,1)
-              , 'field_name':             "Field_render"
-              , 'field_label':            "Field render type"
-              , 'field_value_type':      "annal:Slug"
+              { 'field_id':               "Field_render_type"              # 1 (0,1)
+              , 'field_name':             "Field_render_type"
+              , 'field_label':            "Render type"
+              , 'field_value_type':       "annal:Slug"
               , 'field_render_type':      "Enum_choice"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_render_type"
@@ -243,9 +243,9 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_type"                # 2 (1,0)
-              , 'field_name':             "Field_type"
-              , 'field_label':            "Field value type"
+              { 'field_id':               "Field_value_type"                # 2 (1,0)
+              , 'field_name':             "Field_value_type"
+              , 'field_label':            "Value type"
               , 'field_value_type':       "annal:Identifier"
               , 'field_render_type':      "Identifier"
               , 'field_value_mode':       "Value_direct"
@@ -495,14 +495,15 @@ def recordfield_entity_view_form_data(
         coll_id="testcoll", 
         field_label=None,
         render_type="Text", value_mode="Value_direct",
-        type_uri=None, property_uri=None, field_placement="",
+        entity_type=None, property_uri=None, value_type=None,
+        field_placement="",
         action=None, cancel=None, task=None,
         update="Field"):
     # log.info("recordfield_entity_view_form_data: field_id %s"%(field_id))
     form_data_dict = (
         { 'Field_label':        '%s data ... (%s/%s)'%(update, coll_id, "_field")
         , 'Field_comment':      '%s description ... (%s/%s)'%(update, coll_id, "_field")
-        , 'Field_render':       render_type
+        , 'Field_render_type':  render_type
         , 'Field_value_mode':   value_mode
         , 'orig_id':            'orig_field_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
@@ -523,10 +524,12 @@ def recordfield_entity_view_form_data(
     if field_label:
         form_data_dict['Field_label']       = field_label
         form_data_dict['Field_comment']     = "Help for "+field_label
-    if type_uri:
-        form_data_dict['Field_entity_type'] = type_uri
+    if entity_type:
+        form_data_dict['Field_entity_type'] = entity_type
     if property_uri:
         form_data_dict['Field_property']    = property_uri
+    if value_type:
+        form_data_dict['Field_value_type']  = value_type
     if action:
         form_data_dict['action']            = action
     if cancel:

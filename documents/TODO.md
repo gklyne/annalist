@@ -85,8 +85,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
     - [x] Update site data and tests to use type-qualified render type and value mode values.
     - [x] Add migration logic for field definitions to use new render type names.
-- [ ] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
+- [x] "Field value type" - when referencing a "Field group", maybe more useful to include a URI that indicates what the field group describes.
+    - rename "Field_render" on field view form, to "Field_render_type" (cf. fields/Field_render)
+    - drop "Field" from labels for Field_render_type, value mode, entity type
+- [x] refactor context checking for:
+    - TestEntityGenericList
+    - test_entitygenericlist
+    - test_entityinheritlist - has logic for testing field list context that could be extracted
+    - (test_recordfield has method for checking field view context)
+    - ... etc. Note check_field_context is already defined.
+
 - [ ] Task button option to copy type+view+list and update names and URIs
+
+(Release?  Resolve rdflib-jsonld distribution issue before new release)
 
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
@@ -118,8 +129,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
 - [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
-
-(Release?  Resolve rdflib-jsonld distribution issue before new release)
 
 (feature freeze for V0.9alpha?)
 (0.5?)

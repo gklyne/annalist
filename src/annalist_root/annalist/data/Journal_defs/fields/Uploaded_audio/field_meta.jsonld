@@ -1,6 +1,6 @@
 {
   "rdfs:label": "Uploaded audio clip",
-  "rdfs:comment": "Uploaded audio clip",
+  "rdfs:comment": "Field referring to an audio resource in an "Uploaded audio clip" (coll:Uploaded_audio) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(Select audio clip to upload)",

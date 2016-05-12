@@ -1624,8 +1624,9 @@ class GenericEntityEditView(AnnalistGenericView):
             # Extract info from entityformvals (form is a field description)
             field_entity_id          = entityformvals[ANNAL.CURIE.id]
             field_label              = entityformvals[RDFS.CURIE.label]
-            field_entity_type        = entityformvals[ANNAL.CURIE.field_entity_type]
+            field_entity_type        = entityformvals[ANNAL.CURIE.field_entity_type] # domain
             field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
+            field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
             repeat_field_id          = field_entity_id    + layout.SUFFIX_REPEAT
             repeat_group_id          = field_entity_id    + layout.SUFFIX_REPEAT_G
             repeat_property_uri      = field_property_uri + layout.SUFFIX_REPEAT_P
@@ -1644,6 +1645,9 @@ class GenericEntityEditView(AnnalistGenericView):
             group_entity.setdefault(RDFS.CURIE.label,         repeat_group_label)
             group_entity.setdefault(RDFS.CURIE.comment,       repeat_group_comment)
             group_entity.setdefault(ANNAL.CURIE.record_type,  field_entity_type)
+            # print "@@ field_entity_type: "+repr(field_entity_type)
+            # print "@@ field_property_uri: "+repr(field_property_uri)
+            # print "@@ field_value_type: "+repr(field_value_type)
             if not group_entity.get(ANNAL.CURIE.group_fields, None):
                 group_entity[ANNAL.CURIE.group_fields] = (
                     [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
@@ -1659,9 +1663,9 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity   = field_typeinfo.get_create_entity(repeat_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
             field_entity[ANNAL.CURIE.field_value_mode]  = "Value_direct"
-            field_entity[ANNAL.CURIE.field_value_type]  = "annal:Field_group"
             field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+repeat_group_id
             field_entity[ANNAL.CURIE.field_entity_type] = field_entity_type
+            field_entity[ANNAL.CURIE.field_value_type]  = field_value_type
             field_entity.setdefault(RDFS.CURIE.label,                 repeat_field_label)
             field_entity.setdefault(RDFS.CURIE.comment,               repeat_field_comment)
             field_entity.setdefault(ANNAL.CURIE.placeholder,          repeat_field_placeholder)
@@ -1695,8 +1699,9 @@ class GenericEntityEditView(AnnalistGenericView):
             # Extract info from entityformvals (form is a field description)
             field_entity_id       = entityformvals[ANNAL.CURIE.id]
             field_label           = entityformvals[RDFS.CURIE.label]
-            field_property_uri    = entityformvals[ANNAL.CURIE.property_uri]
             field_entity_type     = entityformvals[ANNAL.CURIE.field_entity_type]
+            field_property_uri    = entityformvals[ANNAL.CURIE.property_uri]
+            field_value_type      = entityformvals[ANNAL.CURIE.field_value_type]
             ref_field_id          = field_entity_id    + layout.SUFFIX_MULTI
             ref_group_id          = field_entity_id    + layout.SUFFIX_MULTI_G
             ref_property_uri      = field_property_uri + layout.SUFFIX_MULTI_P
@@ -1725,9 +1730,9 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity   = field_typeinfo.get_create_entity(ref_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"
             field_entity[ANNAL.CURIE.field_value_mode]  = "Value_entity"
-            field_entity[ANNAL.CURIE.field_value_type]  = "annal:Slug"
             field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+ref_group_id
             field_entity[ANNAL.CURIE.field_entity_type] = field_entity_type
+            field_entity[ANNAL.CURIE.field_value_type]  = field_value_type
             field_entity.setdefault(RDFS.CURIE.label,             ref_field_label)
             field_entity.setdefault(RDFS.CURIE.comment,           ref_field_comment)
             field_entity.setdefault(ANNAL.CURIE.placeholder,      ref_field_placeholder)

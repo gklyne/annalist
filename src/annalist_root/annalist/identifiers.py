@@ -118,6 +118,8 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "Metadata", "Type_Data"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
+    # Group value types
+    , "View_field", "List_field", "Group_field"
     # Value types
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"
     , "Placement", "Image", "Audio", "Vocabulary"

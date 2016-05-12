@@ -416,7 +416,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:list_fields",
             field_render_type=  "Group_Seq_Row",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Field_group",
+            field_value_type=   "annal:List_field",
             field_value=        expect_field_data,
             options=            self.no_options
             )

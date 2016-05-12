@@ -1,6 +1,6 @@
 {
   "rdfs:label": "Included audio",
-  "rdfs:comment": "Included audio clip (linked, imported or uploaded)",
+  "rdfs:comment": "Field referring to an audio resource in a linked, imported or uploaded audio clip entity (coll:Linked_audio, coll:Imported_audio, coll:Uploaded_audio) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(Audio reference - edit via linked, imported or uploaded audio view)",

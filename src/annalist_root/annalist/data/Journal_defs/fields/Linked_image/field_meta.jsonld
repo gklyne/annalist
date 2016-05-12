@@ -1,6 +1,6 @@
 {
   "rdfs:label": "Linked image",
-  "rdfs:comment": "Linked image",
+  "rdfs:comment": "Field referring to an image resource in an "Linked image" (coll:Linked_image) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(Enter image URL)",

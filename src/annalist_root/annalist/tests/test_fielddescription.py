@@ -209,7 +209,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':               'View_fields'
             , 'field_name':             'View_fields'
-            , 'field_value_type':       ANNAL.CURIE.Field_group
+            , 'field_value_type':       ANNAL.CURIE.View_field
             , 'field_label':            'Fields'
             , 'field_render_type':      'Group_Seq_Row'
             , 'field_value_mode':       'Value_direct'
