@@ -8,7 +8,7 @@
 , "rdfs:comment":               "Link (URL) for accessing additional information, presented for viewing as a hyperlink."
 , "annal:field_render_type":    "Enum_render_type/URILink"
 , "annal:field_value_mode":     "Enum_value_mode/Value_direct"
-, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_value_type":     "rdfs:Resource"
 , "annal:field_entity_type":    "annal:Entity_see_also_group"
 , "annal:placeholder":          "(URL for to further information)"
 , "annal:property_uri":         "rdfs:seeAlso"
