@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum", "annal:Field_placement"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           ["../../../coll_context.jsonld"]
 , "annal:id":           "_placement_id"
 , "annal:type_id":      "Enum_field_placement"
 , "rdfs:label":         "annal:field_placement/_placement_id"

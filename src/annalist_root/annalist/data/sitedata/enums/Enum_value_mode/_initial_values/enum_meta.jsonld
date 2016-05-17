@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_value_mode", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           ["../../../coll_context.jsonld"]
 , "annal:id":           "_initial_values"
 , "annal:type_id":      "Enum_value_mode"
 , "annal:uri":          "annal:Enum_value_mode/ZZZZ"

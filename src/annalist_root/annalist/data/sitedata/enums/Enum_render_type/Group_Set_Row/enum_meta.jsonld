@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_render_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           ["../../../coll_context.jsonld"]
 , "annal:id":           "Group_Set_Row"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Field group set as table"

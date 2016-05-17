@@ -1,6 +1,6 @@
 { "@id":                "./"
 , "@type":              ["annal:Enum_list_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           ["../../../coll_context.jsonld"]
 , "annal:id":           "Grid"
 , "annal:type_id":      "Enum_list_type"
 , "rdfs:label":         "Grid display"

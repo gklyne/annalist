@@ -149,8 +149,6 @@ SITE_USER_PATH          = COLL_USER_PATH
 USER_META_FILE          = "user_meta.jsonld"
 USER_PROV_FILE          = "user_prov.jsonld"
 META_USER_REF           = "./"
-# USER_BASE_REF           = "../.."
-# USER_CONTEXT_FILE       = USER_BASE_REF + "/" + COLL_CONTEXT_FILE
 
 COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"
 COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"
@@ -165,15 +163,15 @@ SITE_ENUM_PATH          = COLL_ENUM_PATH
 ENUM_META_FILE          = "enum_meta.jsonld"
 ENUM_PROV_FILE          = "enum_prov.jsonld"
 META_ENUM_REF           = "./"
-ENUM_BASE_REF           = "../../.."
-ENUM_CONTEXT_FILE       = ENUM_BASE_REF + "/" + COLL_CONTEXT_FILE
+ENUM_BASE_REF           = "../../../"
+ENUM_CONTEXT_FILE       = ENUM_BASE_REF + COLL_CONTEXT_FILE
 
 COLL_TYPEDATA_VIEW      = "d/%(id)s/"
 COLL_TYPEDATA_PATH      = "d/%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"
 META_TYPEDATA_REF       = "./"
 TYPEDATA_BASE_REF       = "../"
-TYPEDATA_CONTEXT_FILE   = TYPEDATA_BASE_REF + "/" + COLL_CONTEXT_FILE
+TYPEDATA_CONTEXT_FILE   = TYPEDATA_BASE_REF + COLL_CONTEXT_FILE
 
 COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
@@ -187,8 +185,8 @@ ENTITY_PROV_FILE        = "entity_prov.jsonld"
 ENTITY_LIST_FILE        = "entity_list.jsonld"  # Entity list as JSON resource
 DATA_ENTITY_REF         = "./"
 CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
-ENTITY_BASE_REF         = "../.."
-ENTITY_CONTEXT_FILE     = ENTITY_BASE_REF + "/" + COLL_CONTEXT_FILE
+ENTITY_BASE_REF         = "../../"
+ENTITY_CONTEXT_FILE     = ENTITY_BASE_REF + COLL_CONTEXT_FILE
 ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # and more...

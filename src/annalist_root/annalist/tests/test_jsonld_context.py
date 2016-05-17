@@ -33,6 +33,7 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.entitydata     import EntityData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
@@ -545,7 +546,49 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.user_permission, Literal(user_perms[0])                      )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
+        return
 
+    def test_jsonld_enum_list_type_list(self):
+        """
+        Read enumeration data as JSON-LD, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        Enum_list_type = RecordEnumFactory('Enum_list_type', 'Enum_list_type')
+        list_type_list = Enum_list_type.load(
+            self.testcoll, "Grid", altscope="all"
+            )
+        # Read user data as JSON-LD
+        g = Graph()
+        s = list_type_list._read_stream()
+        b = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITEDATA_DIR,
+                layout.COLL_ENUM_PATH%{ 'type_id': "Enum_list_type", 'id': list_type_list.get_id() }
+                ) + 
+              "/"
+            )
+        # print("***** b: (list_type_list)")
+        # print(repr(b))
+        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "*****"+repr(result)
+        # print("***** g: (list_type_list)")
+        # print(g.serialize(format='turtle', indent=4))
+        # Check the resulting graph contents
+        subj                = b #@@ list_type_list.get_url()
+        list_type_list_data = list_type_list.get_values()
+        list_type_uri       = ANNAL.to_uri(list_type_list_data[ANNAL.CURIE.uri])
+        for (s, p, o) in (
+            [ (subj, RDF.type,          URIRef(ANNAL.Enum)                                )
+            , (subj, RDF.type,          URIRef(ANNAL.Enum_list_type)                      )
+            , (subj, RDFS.label,        Literal(list_type_list_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.comment,      Literal(list_type_list_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.id,          Literal(list_type_list_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.type_id,     Literal(list_type_list_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.uri,         URIRef(list_type_uri)                             )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
 
     def test_jsonld_image_ref(self):

@@ -92,10 +92,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Refactor context checking for field lists (`test_entitygenericlist`, `test_entityinheritlist`)
 - [x] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
 - [ ] Use "@base" declaration in entities
-    - Each entity/record type to declare a reference to base container URI
-    - Context file in base container
-    - Replace `_contextref` with `_baseref`
-- [ ] For RecordEnum, use different reference to base directory so '_annalist_collection/' or 'd/' is accessed as context directory.  Don't generate enums/coll_context.lsonld.
+    - [x] Each entity/record type to declare a reference to base container URI
+    - [x] Context file in base container
+    - [x] Replace `_contextref` with `_baseref`
+    - [x] For RecordEnum, use different reference to base directory so '_annalist_collection/' or 'd/' is accessed as context directory.  
+    - [x] Don't generate enums/coll_context.lsonld.  Update context references in Enum values.
+    - [ ] Add base declaration to entity files, etc.
 - [ ] BUG: JSON URI wrong? e.g. 
       "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
       shoud be:
