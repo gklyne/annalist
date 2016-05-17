@@ -30,6 +30,7 @@ class EntityData(Entity):
     _entitypath     = layout.TYPEDATA_ENTITY_PATH
     _entityfile     = layout.ENTITY_DATA_FILE
     _entityref      = layout.DATA_ENTITY_REF
+    _baseref        = layout.ENTITY_BASE_REF
     _contextref     = layout.ENTITY_CONTEXT_FILE
 
     def __init__(self, parent, entity_id):

@@ -185,7 +185,7 @@ setup(
           , 'html5lib==1.0b8'
         , 'rdflib==4.2.1'
         # , 'rdflib-jsonld==0.3'
-        , 'rdflib-jsonld==0.4.0.dev0'
+        , 'rdflib-jsonld==0.4.0'
           , 'SPARQLWrapper==1.6.4'
           , 'isodate==0.5.1'
           , 'wsgiref==0.1.2'

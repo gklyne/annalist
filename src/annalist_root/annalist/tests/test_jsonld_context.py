@@ -323,7 +323,7 @@ class JsonldContextTest(AnnalistTestCase):
         s = self.testcoll._read_stream()
         b = "file://" + os.path.join(
             TestBaseDir,
-            layout.SITE_COLL_CONTEXT_PATH%{'id': self.testcoll.get_id()}
+            layout.SITE_COLL_BASE_REF%{'id': self.testcoll.get_id()}
             )
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)

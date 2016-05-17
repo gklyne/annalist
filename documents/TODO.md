@@ -89,13 +89,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     the type of the referenced group, or if it contains a singleton the referenced target value type.
     These changes affect data rather than fundamental workings of Annalist; the tasks for creating
     repeat fields and multifield references have been updated.
-- [x] Refactor context checking for field lists (`test_entitugenericlist`, `test_entityinheritlist`)
+- [x] Refactor context checking for field lists (`test_entitygenericlist`, `test_entityinheritlist`)
 - [x] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
+- [ ] Use "@base" declaration in entities
+    - Each entity/record type to declare a reference to base container URI
+    - Context file in base container
+    - Replace `_contextref` with `_baseref`
+- [ ] For RecordEnum, use different reference to base directory so '_annalist_collection/' or 'd/' is accessed as context directory.  Don't generate enums/coll_context.lsonld.
+- [ ] BUG: JSON URI wrong? e.g. 
+      "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
+      shoud be:
+      "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
+
+(Release?)
+
 - [ ] Task button option to copy type+view+list and update names and URIs
-- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
-
-(Release?  Resolve rdflib-jsonld distribution issue before new release)
-
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
         - note extra logic in models.collectiondata and models.entitytypeinfo, etc.

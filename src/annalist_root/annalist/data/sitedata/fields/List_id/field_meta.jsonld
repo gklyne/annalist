@@ -6,7 +6,7 @@
 , "rdfs:label":                 "List Id"
 , "rdfs:comment":               "A short identifier that distinguishes this list from all other lists in the same collection."
 , "annal:field_name":           "entity_id"
-, "annal:field_render_type":    "Enum_render_type/Slug"
+, "annal:field_render_type":    "Enum_render_type/EntityId"
 , "annal:field_value_mode":     "Enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Slug"
 , "annal:field_entity_type":    "annal:List"

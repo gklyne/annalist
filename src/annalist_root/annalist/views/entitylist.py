@@ -458,6 +458,6 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Return URL used as base for relative references within a collection.
         """
-        return urlparse.urljoin(self.collection_view_url, layout.COLL_CONTEXT_PATH)
+        return urlparse.urljoin(self.collection_view_url, layout.COLL_BASE_REF)
 
 # End.

@@ -57,6 +57,7 @@ class Collection(Entity):
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_REF
     _entityref      = layout.META_COLL_REF
+    _baseref        = layout.COLL_BASE_REF
     _contextref     = layout.COLL_CONTEXT_FILE
 
     def __init__(self, parentsite, coll_id, altparent=None):
@@ -561,7 +562,7 @@ class Collection(Entity):
         #           include @base in context.
         #
         # context           = OrderedDict(
-        #     { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
+        #     { "@base":          self.get_url() + layout.COLL_BASE_REF
         #     , ANNAL.CURIE.type: { "@type": "@id" }
         #     })
         #
@@ -605,18 +606,20 @@ class Collection(Entity):
                 fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
                 vuri = fref.get(ANNAL.CURIE.property_uri, None)
                 furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
-                # fcontext['vid'] = v.get_id()
-                # fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
+                if fcontext is not None:
+                    fcontext['vid'] = v.get_id()
+                    fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
         # Scan group fields and generate context data for property URIs used
         for g in self.child_entities(RecordGroup, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
                 fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
                 guri = gref.get(ANNAL.CURIE.property_uri, None)
                 furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
-                # fcontext['gid'] = g.get_id()
-                # fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
+                if fcontext is not None:
+                    fcontext['gid'] = g.get_id()
+                    fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(guri or furi, fid, fcontext, context)
         return context
 
     def get_field_uri_jsonld_context(self, fid, get_field_context):
@@ -633,7 +636,7 @@ class Collection(Entity):
             return (None, None)
         return (f[ANNAL.CURIE.property_uri], get_field_context(f))
 
-    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+    def set_field_uri_jsonld_context(self, puri, field_id, fcontext, property_contexts):
         """
         Save property context description into supplied property_contexts dictionary.  
         If the context is already defined, generate warning if there is a compatibility 
@@ -642,12 +645,15 @@ class Collection(Entity):
         if puri:
             uri_parts = puri.split(":")
             if len(uri_parts) > 1:    # Ignore URIs without ':'
+                if not fcontext:
+                    # For diagnostics to locate incompatible use...
+                    fcontext = {'fid': field_id}
                 if puri in property_contexts:
                     pcontext = property_contexts[puri]
                     if ( ( not fcontext ) or
                          ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
                          ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
-                        msg = "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
+                        msg = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
                         log.warning(msg)
                         print "@@ "+msg
                 elif ( fcontext and
@@ -673,18 +679,21 @@ class Collection(Entity):
             rtype = "URIImport"
         elif vmode == "Value_upload":
             rtype = "FileUpload"
+
         if is_render_type_literal(rtype):
-            fcontext = None # { "@type": "xsd:string" }
+            fcontext = {} # { "@type": "xsd:string" }
         elif is_render_type_id(rtype):
             fcontext = { "@type": "@id" }   # Add type from field descr?
-        elif is_render_type_set(rtype):
-            fcontext = { "@container": "@set"}
-        elif is_render_type_list(rtype):
-            fcontext = { "@container": "@list"}
         elif is_render_type_object(rtype):
-            fcontext = None
+            fcontext = {}
         else:
             raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+
+        if is_render_type_set(rtype):
+            fcontext["@container"] = "@set"
+        elif is_render_type_list(rtype):
+            fcontext["@container"] = "@list"
+
         return fcontext
 
 # End.

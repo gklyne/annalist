@@ -156,7 +156,7 @@ def annalistuser_read_values(
     d.update(
         { '@id':            layout.META_USER_REF%{'id': user_id}
         , '@type':          ["annal:User"]
-        , '@context':       [layout.USER_CONTEXT_FILE]
+        , '@context':       [layout.ENTITY_CONTEXT_FILE]
         })
     return d
 

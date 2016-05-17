@@ -284,7 +284,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             field_label=        "List Id",
             field_placeholder=  "(list id)",
             field_property_uri= "annal:id",
-            field_render_type=  "Slug",
+            field_render_type=  "EntityId",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Slug",
             field_placement=    "small-12 medium-6 columns",
@@ -672,7 +672,10 @@ class RecordListEditViewTest(AnnalistTestCase):
                   <span>List Id</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <span>List_list</span>
+                  <!-- <span>List_list</span> -->
+                  <a href="/testsite/c/testcoll/d/_list/List_list/?continuation_url=%(cont_here)s">
+                    List_list
+                  </a>
                 </div>
               </div>
             </div>

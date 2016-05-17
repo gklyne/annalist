@@ -100,7 +100,7 @@ def recordenum_read_values(
     d.update(
         { '@id':            "./"
         # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       ["../../../coll_context.jsonld"]
         })
     return d
 

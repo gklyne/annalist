@@ -124,7 +124,7 @@ class CollectionResourceAccess(AnnalistGenericView):
         if resource_ref == layout.COLL_CONTEXT_FILE:
             return (
                 { 'resource_type': "application/ld+json"
-                , 'resource_name': layout.COLL_CONTEXT_PATH + resource_ref
+                , 'resource_name': layout.COLL_BASE_REF + resource_ref
                 })
         return None
 

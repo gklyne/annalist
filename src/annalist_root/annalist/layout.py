@@ -84,7 +84,7 @@ SITE_META_FILE          = "@@unused@@site_meta.jsonld"
 META_SITE_REF           = "@@unused@@./"
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
-SITE_COLL_CONTEXT_PATH  = "c/%(id)s/d/"    # Used for testing
+SITE_COLL_BASE_REF      = "c/%(id)s/d/"    # Used for testing
 
 COLL_META_DIR           = "_annalist_collection"
 COLL_META_FILE          = "coll_meta.jsonld"
@@ -92,9 +92,9 @@ COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_META_REF           = COLL_META_DIR + "/" + COLL_META_FILE
 META_COLL_REF           = "../"
 COLL_PROV_REF           = COLL_META_DIR + "/" + COLL_PROV_FILE
-COLL_CONTEXT_PATH       = "d/"
-COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_CONTEXT_PATH           # used in models
+COLL_BASE_REF           = "d/"      # was COLL_CONTEXT_PATH
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
+COLL_META_CONTEXT_PATH  = META_COLL_REF+COLL_BASE_REF               # used in collection.generate_coll_jsonld_context
 
 SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
@@ -149,8 +149,8 @@ SITE_USER_PATH          = COLL_USER_PATH
 USER_META_FILE          = "user_meta.jsonld"
 USER_PROV_FILE          = "user_prov.jsonld"
 META_USER_REF           = "./"
-USER_CONTEXT_REF        = "../.."
-USER_CONTEXT_FILE       = USER_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
+# USER_BASE_REF           = "../.."
+# USER_CONTEXT_FILE       = USER_BASE_REF + "/" + COLL_CONTEXT_FILE
 
 COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"
 COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"
@@ -165,11 +165,15 @@ SITE_ENUM_PATH          = COLL_ENUM_PATH
 ENUM_META_FILE          = "enum_meta.jsonld"
 ENUM_PROV_FILE          = "enum_prov.jsonld"
 META_ENUM_REF           = "./"
+ENUM_BASE_REF           = "../../.."
+ENUM_CONTEXT_FILE       = ENUM_BASE_REF + "/" + COLL_CONTEXT_FILE
 
 COLL_TYPEDATA_VIEW      = "d/%(id)s/"
 COLL_TYPEDATA_PATH      = "d/%(id)s"
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"
 META_TYPEDATA_REF       = "./"
+TYPEDATA_BASE_REF       = "../"
+TYPEDATA_CONTEXT_FILE   = TYPEDATA_BASE_REF + "/" + COLL_CONTEXT_FILE
 
 COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
@@ -183,8 +187,8 @@ ENTITY_PROV_FILE        = "entity_prov.jsonld"
 ENTITY_LIST_FILE        = "entity_list.jsonld"  # Entity list as JSON resource
 DATA_ENTITY_REF         = "./"
 CONTEXT_ENTITY_REF      = "%(type_id)s/%(id)s/"
-ENTITY_CONTEXT_REF      = "../.."
-ENTITY_CONTEXT_FILE     = ENTITY_CONTEXT_REF + "/" + COLL_CONTEXT_FILE
+ENTITY_BASE_REF         = "../.."
+ENTITY_CONTEXT_FILE     = ENTITY_BASE_REF + "/" + COLL_CONTEXT_FILE
 ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # and more...

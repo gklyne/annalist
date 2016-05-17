@@ -48,7 +48,7 @@ class AnnalistUser(EntityData):
     _entitypath     = layout.COLL_USER_PATH
     _entityfile     = layout.USER_META_FILE
     _entityref      = layout.META_USER_REF
-    _contextref     = layout.USER_CONTEXT_FILE
+    # _contextref     = layout.USER_CONTEXT_FILE
 
     def __init__(self, parent, type_id):
         """
