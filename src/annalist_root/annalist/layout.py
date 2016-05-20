@@ -3,7 +3,7 @@ Annalist directory/site layout
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2014, G. Klyne"
+__copyright__   = "Copyright 2014-2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os.path
@@ -111,6 +111,7 @@ SITEDATA_CONTEXT_PATH   = "./"                                      # used in mo
 #       representations.
 #
 
+# Type records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 TYPE_TYPEID             = "_type"                           # type id, used in URL
 TYPE_COLL_DIR           = "types"                           # collection directory in file system
@@ -120,6 +121,7 @@ COLL_BASE_TYPE_REF      = "_type/%(id)s"                    # ref type relative 
 COLL_TYPE_VIEW          = "d/_type/%(id)s/"                 # ref type view relative to collection entity
 COLL_TYPE_PATH          = COLL_META_DIR + "/types/%(id)s"   # dir type relative to collection root dir
 
+# List description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 LIST_TYPEID             = "_list"                           # list id, used in URL
 LIST_COLL_DIR           = "lists"                           # collection directory in file system
@@ -129,6 +131,7 @@ COLL_BASE_LIST_REF      = "_list/%(id)s"                    # ref list relative 
 COLL_LIST_VIEW          = "d/_list/%(id)s/"                 # ref list view relative to collection entity
 COLL_LIST_PATH          = COLL_META_DIR + "/lists/%(id)s"   # dir list relative to collection root dir
 
+# View description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 VIEW_TYPEID             = "_view"                           # type id, used in URL
 VIEW_COLL_DIR           = "views"                           # collection directory in file system
@@ -138,6 +141,7 @@ COLL_BASE_VIEW_REF      = "_view/%(id)s"                    # ref view relative 
 COLL_VIEW_VIEW          = "d/_view/%(id)s/"                 # ref view relative to collection entity
 COLL_VIEW_PATH          = COLL_META_DIR + "/views/%(id)s"   # dir view relative to collection root dir
 
+# Field-group description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 GROUP_TYPEID            = "_group"                          # group id, used in URL
 GROUP_COLL_DIR          = "groups"                          # collection directory in file system
@@ -147,15 +151,7 @@ COLL_BASE_GROUP_REF     = "_group/%(id)s"                   # ref group relative
 COLL_GROUP_VIEW         = "d/_group/%(id)s/"                # ref group view relative to collection entity
 COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"  # dir group relative to collection root dir
 
-#@@
-# COLL_GROUP_VIEW         = "d/_group/%(id)s/"
-# COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"
-# SITE_GROUP_PATH         = COLL_GROUP_PATH
-# GROUP_META_FILE         = "group_meta.jsonld"
-# GROUP_PROV_FILE         = "group_prov.jsonld"
-# META_GROUP_REF          = "./"
-#@@
-
+# Field description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 FIELD_TYPEID            = "_field"                          # field id, used in URL
 FIELD_COLL_DIR          = "fields"                          # collection directory in file system
@@ -165,6 +161,7 @@ COLL_BASE_FIELD_REF     = "_field/%(id)s"                   # ref field relative
 COLL_FIELD_VIEW         = "d/_field/%(id)s/"                # ref field view relative to collection entity
 COLL_FIELD_PATH         = COLL_META_DIR + "/fields/%(id)s"  # dir field relative to collection root dir
 
+# User permission records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 USER_TYPEID             = "_user"                           # type id, used in URL
 USER_COLL_DIR           = "users"                           # collection directory in file system
@@ -174,6 +171,7 @@ COLL_BASE_USER_REF      = "_user/%(id)s"                    # ref user relative 
 COLL_USER_VIEW          = "d/_user/%(id)s/"                 # ref user relative to collection entity
 COLL_USER_PATH          = COLL_META_DIR + "/users/%(id)s"   # dir user relative to collection root dir
 
+# Vocabulary namespace records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 VOCAB_TYPEID            = "_vocab"                          # vocab id, used in URL
 VOCAB_COLL_DIR          = "vocabs"                          # collection directory in file system
@@ -183,6 +181,7 @@ COLL_BASE_VOCAB_REF     = "_vocab/%(id)s"                   # ref vocab relative
 COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"                # ref vocab view relative to collection entity
 COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"  # dir vocab relative to collection root dir
 
+# Enumerated value description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 ENUM_TYPEID             = "_enum"                           # enum id, used in URL
 ENUM_COLL_DIR           = "enums"                           # collection directory in file system
@@ -194,6 +193,7 @@ COLL_BASE_ENUM_REF      = "%(type_id)s/%(id)s"              # ref enum relative 
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"           # ref enum view relative to collection entity
 COLL_ENUM_PATH          = COLL_META_DIR + "/enums/%(type_id)s/%(id)s"
 
+# Record type data records (these act as parents for Entity data records)
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 TYPEDATA_META_FILE      = "type_data_meta.jsonld"           # type data metadata file name
 TYPEDATA_PROV_FILE      = "type_data_prov.jsonld"           # type data provenance file name
@@ -203,14 +203,8 @@ TYPEDATA_CONTEXT_FILE   = TYPEDATA_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref coll
 COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
 COLL_TYPEDATA_PATH      = "d/%(id)s"                        # dir type data relative to collection root dir
 
-#@@
-# COLL_TYPEDATA_VIEW      = "d/%(id)s/"
-# COLL_TYPEDATA_PATH      = "d/%(id)s"
-# TYPEDATA_META_FILE      = "type_data_meta.jsonld"
-# META_TYPEDATA_REF       = "./"
-# TYPEDATA_BASE_REF       = "../"
-#@@
-
+# Entity data records (these contain user data, organized by record type)
+# Entity data layout information...
 COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
 TYPEDATA_ENTITY_PATH    = "%(id)s"
