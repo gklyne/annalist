@@ -39,7 +39,6 @@ class RecordList(EntityData):
     _entityview     = layout.COLL_LIST_VIEW
     _entitypath     = layout.COLL_LIST_PATH
     _entityfile     = layout.LIST_META_FILE
-    _entityref      = layout.META_LIST_REF
 
     def __init__(self, parent, list_id):
         """

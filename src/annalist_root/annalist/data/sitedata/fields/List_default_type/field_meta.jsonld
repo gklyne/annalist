@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_record_type"
+{ "@id":                        "_field/List_record_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_default_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_default_type"
 , "rdfs:label":                 "Default type"
 , "rdfs:comment":               "Default record type associated with this list.  This is used for constructing a default record selector (i.e. all records of specified type), and also when creating a new record from the list view."
 , "annal:field_render_type":    "Enum_render_type/Enum_optional"

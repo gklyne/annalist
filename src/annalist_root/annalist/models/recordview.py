@@ -32,7 +32,6 @@ class RecordView(EntityData):
     _entityview     = layout.COLL_VIEW_VIEW
     _entitypath     = layout.COLL_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
-    _entityref      = layout.META_VIEW_REF
 
     def __init__(self, parent, view_id):
         """

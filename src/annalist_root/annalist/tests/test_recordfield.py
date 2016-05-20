@@ -116,7 +116,7 @@ class RecordFieldTest(AnnalistTestCase):
         u = recordfield_coll_url(self.testsite, coll_id="testcoll", field_id="testfield")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.Field)
         self.assertEqual(t._entityfile,     layout.FIELD_META_FILE)
-        self.assertEqual(t._entityref,      layout.META_FIELD_REF)
+        self.assertEqual(t._entityref,      layout.COLL_BASE_FIELD_REF%{'id': "testfield"})
         self.assertEqual(t._entityid,       "testfield")
         self.assertEqual(t._entityurl,      u)
         self.assertEqual(t._entitydir,      recordfield_dir(field_id="testfield"))
@@ -162,11 +162,11 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertIn("/c/testcoll/d/_field/Field_value_type", t.get_view_url())
         self.assertEqual(t.get_type_id(), "_field")
         td = t.get_values()
-        self.assertEqual(set(td.keys()), set(recordfield_load_keys()))
+        self.assertEqual(set(td.keys()), set(recordfield_load_keys(field_uri=True)))
         field_url = collection_entity_view_url(coll_id="testcoll", type_id="_field", entity_id="Field_value_type")
         check_field_record(self, td,
             field_id=           "Field_value_type",
-            field_ref=          "annal:fields/Field_value_type",
+            field_ref=          "_field/Field_value_type",
             field_types=        ["annal:Field"],
             field_type_id=      "_field",
             field_type=         "annal:Field",
@@ -280,7 +280,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         v = recordfield_values(field_id=field_id, update=update)
         check_field_record(self, e,
             field_id=           field_id,
-            field_ref=          "./",
+            field_ref=          layout.COLL_BASE_FIELD_REF%{'id': field_id},
             field_types=        ["annal:Field"],
             field_type_id=      "_field",
             field_type=         "annal:Field",

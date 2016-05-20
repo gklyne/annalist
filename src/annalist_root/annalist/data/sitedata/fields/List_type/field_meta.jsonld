@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_type"
+{ "@id":                        "_field/List_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_type"
 , "rdfs:label":                 "List display type"
 , "rdfs:comment":               "Type of list display ('List' or 'Grid')"
 , "annal:field_render_type":    "Enum_render_type/Enum_choice"

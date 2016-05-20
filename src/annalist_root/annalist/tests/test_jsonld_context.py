@@ -247,15 +247,14 @@ class JsonldContextTest(AnnalistTestCase):
         """
         mock_refs = (
             [ context_path+"coll_context.jsonld"
-            # , "../../site_context.jsonld" 
             ])
         mock_dict = {}
         for mock_ref in mock_refs:
             mu = urlparse.urljoin(base_path, mock_ref)
-            # log.debug(
-            #     "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
-            #     (base_path, mock_ref, mu)
-            #     )
+            log.debug(
+                "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
+                (base_path, mock_ref, mu)
+                )
             mr = self.client.get(mu)
             if mr.status_code != 200:
                 log.error(
@@ -264,7 +263,7 @@ class JsonldContextTest(AnnalistTestCase):
                     )
             self.assertEqual(mr.status_code,   200)
             mock_dict[mock_ref] = mr.content
-        # print "***** mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
+        # print "***** get_context_mock_dict: mu: %s, mock_dict: %r"%(mu, mock_dict.keys())
         return mock_dict
 
     #   -----------------------------------------------------------------------------
@@ -283,9 +282,8 @@ class JsonldContextTest(AnnalistTestCase):
         s = self.testsite.site_data_stream()
         # b = self.testsite.get_url()
         b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
-        # print "*****"+repr(b)
-        # print "*****"+repr(s)
-        # print "*****"+repr(b)
+        # print "***** b: "+repr(b)
+        # print "***** s: "+repr(s)
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
         # print "***** site:"
@@ -324,8 +322,11 @@ class JsonldContextTest(AnnalistTestCase):
         s = self.testcoll._read_stream()
         b = "file://" + os.path.join(
             TestBaseDir,
-            layout.SITE_COLL_BASE_REF%{'id': self.testcoll.get_id()}
+            layout.SITE_COLL_META_REF%{'id': self.testcoll.get_id()}
             )
+        # print "***** b: "+repr(b)
+        # print "***** s: "+s.read()
+        # s.seek(0)
         result = g.parse(source=s, publicID=b, format="json-ld")
         # print "*****"+repr(result)
         # print "***** coll:"
@@ -367,12 +368,12 @@ class JsonldContextTest(AnnalistTestCase):
                   , 'type_id': testdata.get_id()
                   , 'id':      entity1.get_id()
                   }
-                ) + 
-              "/"
+                )
             )
-        # print("***** b: (entity1)")
-        # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print "***** b: "+repr(b)
+        # print "***** s: "+s.read()
+        # s.seek(0)
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (entity1)")
         # print(g.serialize(format='turtle', indent=4))
@@ -404,14 +405,14 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
-                layout.SITEDATA_DIR,
-                layout.SITE_TYPE_PATH%{ 'id': type_vocab.get_id() }
-                ) + 
-              "/"
+                layout.SITEDATA_DIR,        # site-wide data collection
+                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_TYPE_REF%{ 'id': type_vocab.get_id() }
+                )
             )
         # print("***** b: (type_vocab)")
         # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (type_vocab)")
         # print(g.serialize(format='turtle', indent=4))
@@ -446,20 +447,20 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
-                layout.SITEDATA_DIR,
-                layout.SITE_TYPE_PATH%{ 'id': view_user.get_id() }
-                ) + 
-              "/"
+                layout.SITEDATA_DIR,        # site-wide data collection
+                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_VIEW_REF%{ 'id': view_user.get_id() }
+                )
             )
         # print("***** b: (view_user)")
         # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (view_user)")
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj           = b #@@ view_user.get_url()
+        subj           = b    # b #@@ view_user.get_url()
         view_user_data = view_user.get_values()
         view_uri       = ANNAL.to_uri(view_user_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
@@ -520,14 +521,14 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
-                layout.SITEDATA_DIR,
-                layout.SITE_TYPE_PATH%{ 'id': user_default.get_id() }
-                ) + 
-              "/"
+                layout.SITEDATA_DIR,        # site-wide data collection
+                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_USER_REF%{ 'id': user_default.get_id() }
+                )
             )
         # print("***** b: (user_default)")
         # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (user_default)")
         # print(g.serialize(format='turtle', indent=4))
@@ -564,19 +565,31 @@ class JsonldContextTest(AnnalistTestCase):
         b = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
-                layout.SITEDATA_DIR,
-                layout.COLL_ENUM_PATH%{ 'type_id': "Enum_list_type", 'id': list_type_list.get_id() }
-                ) + 
-              "/"
+                layout.SITEDATA_DIR,        # site-wide data collection
+                layout.COLL_META_DIR,       # collection metadata directory
+                "enums",
+                layout.COLL_BASE_ENUM_REF%{ 'type_id': list_type_list.get_type_id(), 'id': list_type_list.get_id() }
+                )
             )
         # print("***** b: (list_type_list)")
         # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        # print("***** s.read()"+s.read())
+        # s.seek(0)
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (list_type_list)")
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
+        # @@TODO: currently have to deal here with inconsistency between file and URL layouts
         subj                = b #@@ list_type_list.get_url()
+        subj                = ( "file://" + 
+              os.path.join(
+                TestBaseDir, 
+                layout.SITEDATA_DIR,        # site-wide data collection
+                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_ENUM_REF%{ 'type_id': list_type_list.get_type_id(), 'id': list_type_list.get_id() }
+                )
+            )
         list_type_list_data = list_type_list.get_values()
         list_type_uri       = ANNAL.to_uri(list_type_list_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
@@ -634,12 +647,11 @@ class JsonldContextTest(AnnalistTestCase):
                   , 'type_id': testdata.get_id()
                   , 'id':      ref_image.get_id()
                   }
-                ) + 
-              "/"
+                )
             )
         # print("***** b: (ref_image)")
         # print(repr(b))
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(source=s, publicID=b+"/", format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (ref_image)")
         # print(g.serialize(format='turtle', indent=4))
@@ -694,7 +706,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj        = entity1.get_url()
+        subj        = TestHostUri + v.rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
@@ -735,7 +747,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj            = TestHostUri + v
+        subj            = TestHostUri + v.rstrip("/")
         type_vocab_data = type_vocab.get_values()
         for (s, p, o) in (
             [ (subj, RDF.type,        URIRef(ANNAL.Type)                              )
@@ -793,7 +805,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj            = TestHostUri + v
+        subj          = TestHostUri + v.rstrip("/")
         type_new_data = type_new.get_values()
         for (s, p, o) in (
             [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
@@ -845,7 +857,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj       = TestHostUri + v
+        subj       = TestHostUri + v.rstrip("/")
         annal_data = annalvocab.get_values()
         seeAlso_1  = "https://github.com/gklyne/annalist/blob/master/src/annalist_root/annalist/identifiers.py"
         for (s, p, o) in (
@@ -897,7 +909,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print("***** g: (entity1)")
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
-        subj        = entity1.get_url()
+        subj        = entity1.get_url().rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
@@ -934,12 +946,13 @@ class JsonldContextTest(AnnalistTestCase):
         # print("***** c: (entity1)")
         # print r.content
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
-            result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
+            result = g.parse(data=r.content, base=v, format="json-ld")
+            # result = g.parse(data=r.content, publicID=v, base=v, format="json-ld")
         # print "*****"+repr(result)
         # print("***** g: (entity1)")
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
-        subj        = entity1.get_url()
+        subj        = entity1.get_url().rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
             [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
@@ -980,7 +993,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print("***** g: (type_vocab)")
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
-        subj            = TestHostUri + u
+        subj            = TestHostUri + u.rstrip("/")
         type_vocab_data = type_vocab.get_values()
         for (s, p, o) in (
             [ (subj, RDF.type,        URIRef(ANNAL.Type)                              )

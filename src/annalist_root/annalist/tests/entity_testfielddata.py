@@ -58,9 +58,6 @@ def recordfield_dir(coll_id="testcoll", field_id="testfield"):
 #   These use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordfield_site_url(site, field_id="testfield"):
-    return site._entityurl + layout.SITE_FIELD_PATH%{'id': field_id} + "/"
-
 def recordfield_coll_url(site, coll_id="testcoll", field_id="testfield"):
     return urlparse.urljoin(
         site._entityurl,
@@ -172,10 +169,9 @@ def recordfield_read_values(
         update="Field", hosturi=TestHostUri):
     d = recordfield_values(coll_id, field_id, update=update, hosturi=hosturi).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.COLL_BASE_FIELD_REF%{'id': field_id}
         , '@type':          ["annal:Field"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 

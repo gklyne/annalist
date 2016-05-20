@@ -51,12 +51,6 @@ def recordlist_dir(coll_id="testcoll", list_id="testlist"):
 #
 #   -----------------------------------------------------------------------------
 
-#   These all use the Django `reverse` function so they correspond to
-#   the declared URI patterns.
-
-def recordlist_site_url(site, list_id="testlist"):
-    return site._entityurl + layout.SITE_LIST_PATH%{'id': list_id} + "/"
-
 def recordlist_coll_url(site, coll_id="testcoll", list_id="testlist"):
     return urlparse.urljoin(
         site._entityurl,
@@ -162,10 +156,9 @@ def recordlist_read_values(
         update="RecordList", hosturi=TestHostUri):
     d = recordlist_values(coll_id, list_id, update=update, hosturi=hosturi).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.COLL_BASE_LIST_REF%{'id': list_id}
         , '@type':          ["annal:List"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 

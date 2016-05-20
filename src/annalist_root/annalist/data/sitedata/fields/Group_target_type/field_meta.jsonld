@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Group_target_type"
+{ "@id":                        "_field/Group_target_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Group_target_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_target_type"
 , "rdfs:label":                 "Group entity type"
 , "rdfs:comment":               "Type (URI or CURIE) of entity to which this field group applies. Used to determine field choices appropriate to this group.  (See also field 'Entity type' in field definition.)"
 , "annal:field_name":           "Group_target_type"

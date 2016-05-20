@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/View_edit_view"
+{ "@id":                        "_field/View_edit_view"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "View_edit_view"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_edit_view"
 , "rdfs:label":                 "Editable view?"
 , "rdfs:comment":               "Selects whether an 'View description' button is provided when viewing an entity, and an 'Edit view' button while editing an entity.  If present, these buttons provides access to the view (and maybe other) edit forms to view and/or define new field details while editing an entity.  (This option is view-specific: built-in views are not intended to be edited and do not present these buttons.  Subject to permisions, any view description can be edited directly.)"
 , "annal:field_name":           "View_edit_view"

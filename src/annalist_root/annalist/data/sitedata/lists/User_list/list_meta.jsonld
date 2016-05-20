@@ -1,8 +1,9 @@
-{ "@id":                        "annal:display/User_list"
+{ "@id":                        "_list/User_list"
 , "@type":                      ["annal:List"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "User_list"
 , "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/User_list"
 , "rdfs:label":                 "User permissions"
 , "rdfs:comment":               "# User permissions\r\n\r\nThis display lists [user permissions]($BASE:_type/_user/) for the current collection, and is accessible to users with `ADMIN` permission.\r\n\r\nEach user permission record associates a set of access permissions with a specified *User Id* and authenticated *URI*.  The URI is generally in the form of a `mailto:` URI indicating an email address authenticated by some separate service."
 , "annal:display_type":         "Enum_list_type/List"

@@ -30,7 +30,6 @@ class RecordVocab(EntityData):
     _entityview     = layout.COLL_VOCAB_VIEW
     _entitypath     = layout.COLL_VOCAB_PATH
     _entityfile     = layout.VOCAB_META_FILE
-    _entityref      = layout.META_VOCAB_REF
 
     def __init__(self, parent, vocab_id):
         """

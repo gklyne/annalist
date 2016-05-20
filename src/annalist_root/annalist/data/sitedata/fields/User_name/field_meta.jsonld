@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/User_name"
+{ "@id":                        "_field/User_name"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "User_name"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_name"
 , "rdfs:label":                 "User name"
 , "rdfs:comment":               "User name consisting of a first_name and a last_name, separated by whitespace.  (@@TODO: review this; the format is used to integrate with the underlying Django mechanisms, but some more flexible mapping shoul;d be used (e.g. per BibTex?)@@)"
 , "annal:placeholder":          "(user name)"

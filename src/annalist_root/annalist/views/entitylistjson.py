@@ -72,7 +72,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         if listinfo.http_response:
             return listinfo.http_response
         base_url = self.get_collection_base_url()
-        # log.debug("listinfo.list_id %s"%listinfo.list_id)
+        # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
         # Prepare list and entity IDs for rendering form
         try:
             selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
@@ -100,14 +100,16 @@ class EntityGenericListJsonView(EntityGenericListView):
             scope=scope,
             search=search_for
             )
-        #@@ NOTE: temporary code with absolute URIs until newer JSON-LD parser is released
+        log.info(
+            "EntityGenericListJsonView.get: list_url %s, base_url %s, context_url %s"%
+            (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
+            )
         jsondata = (
             { '@id':            list_url
             , '@context': [
-                { "@base":  request.build_absolute_uri(base_url) },
+                { "@base":  base_url },
                 base_url+layout.COLL_CONTEXT_FILE
                 ]
-            # , ANNAL.CURIE.type_id:      "_list"
             , ANNAL.CURIE.entity_list:  entityvallist
             })
         return_type = "application/ld+json"

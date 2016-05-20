@@ -51,12 +51,6 @@ def recordview_dir(coll_id="testcoll", view_id="testview"):
 #
 #   -----------------------------------------------------------------------------
 
-#   These all use the Django `reverse` function so they correspond to
-#   the declared URI patterns.
-
-def recordview_site_url(site, view_id="testview"):
-    return site._entityurl + layout.SITE_VIEW_PATH%{'id': view_id} + "/"
-
 def recordview_coll_url(site, coll_id="testcoll", view_id="testview"):
     return urlparse.urljoin(
         site._entityurl,
@@ -111,7 +105,7 @@ def recordview_value_keys(view_uri=False, target_record_type=True):
         ])
     if view_uri:
         keys.add('annal:uri')
-    if target_record_type:
+    if target_record_type or (target_record_type == ""):
         keys.add('annal:record_type')
     return keys
 
@@ -197,10 +191,9 @@ def recordview_read_values(
         update=update, hosturi=hosturi
         ).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.COLL_BASE_VIEW_REF%{'id': view_id}
         , '@type':          ["annal:View"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 

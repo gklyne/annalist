@@ -50,7 +50,7 @@ from entity_testutils       import (
     )
 from entity_testuserdata    import (
     annalistuser_dir,
-    annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
+    annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
     annalistuser_view_form_data,
@@ -93,7 +93,7 @@ class AnnalistUserTest(AnnalistTestCase):
         url = annalistuser_coll_url(self.testsite, coll_id="testcoll", user_id="testuser")
         self.assertEqual(usr._entitytype,   ANNAL.CURIE.User)
         self.assertEqual(usr._entityfile,   layout.USER_META_FILE)
-        self.assertEqual(usr._entityref,    layout.META_USER_REF%{'id': "testuser"})
+        self.assertEqual(usr._entityref,    layout.COLL_BASE_USER_REF%{'id': "testuser"})
         self.assertEqual(usr._entityid,     "testuser")
         self.assertEqual(usr._entityurl,    url)
         self.assertEqual(usr._entitydir,    annalistuser_dir(user_id="testuser"))

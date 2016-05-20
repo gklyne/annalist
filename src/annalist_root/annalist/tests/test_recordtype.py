@@ -55,7 +55,7 @@ from entity_testutils       import (
     )
 from entity_testtypedata    import (
     recordtype_dir,
-    recordtype_coll_url, recordtype_site_url, recordtype_url, recordtype_edit_url,
+    recordtype_coll_url, recordtype_url, recordtype_edit_url,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
     recordtype_entity_view_context_data, 
@@ -113,7 +113,7 @@ class RecordTypeTest(AnnalistTestCase):
         u = recordtype_coll_url(self.testsite, coll_id="testcoll", type_id="testtype")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.Type)
         self.assertEqual(t._entityfile,     layout.TYPE_META_FILE)
-        self.assertEqual(t._entityref,      layout.META_TYPE_REF)
+        self.assertEqual(t._entityref,      layout.COLL_BASE_TYPE_REF%{'id': "testtype"})
         self.assertEqual(t._entityid,       "testtype")
         self.assertEqual(t._entityurl,      u)
         self.assertEqual(t._entitydir,      recordtype_dir(type_id="testtype"))
@@ -166,7 +166,6 @@ class RecordTypeTest(AnnalistTestCase):
         v.update(
             { 'rdfs:label':     'Default record'
             , 'annal:uri':      'annal:Default_type'
-            , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
         v.pop('rdfs:comment', None)
         self.assertDictionaryMatch(td, v)

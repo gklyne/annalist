@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Vocab_id"
+{ "@id":                        "_field/Vocab_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Vocab_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Vocab_id"
 , "rdfs:label":                 "Prefix"
 , "rdfs:comment":               "A short identifier that is used as a prefix in CURIEs, and distinguishes this namespace from all others in the same collection."
 , "annal:field_name":           "entity_id"

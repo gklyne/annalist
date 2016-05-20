@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/View_field_sel"
+{ "@id":                        "_field/View_field_sel"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "View_field_sel"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_sel"
 , "rdfs:label":                 "Field id"
 , "rdfs:comment":               "The 'Field Id' of a field definition to be used in a viewed display.  The containing view definition may combine this with property URI (field 'Property') and display placement (field 'Position/size') values to define a field to be displayed."
 , "annal:placeholder":          "(field sel)"

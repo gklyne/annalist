@@ -1,6 +1,6 @@
-{ "@id":                "./"
+{ "@id":                "Enum_render_type/RefAudio"
 , "@type":              ["annal:Enum_render_type", "annal:Enum"]
-, "@context":           ["../../../coll_context.jsonld"]
+, "@context":           [{"@base": "../../../"}, "../../../coll_context.jsonld"]
 , "annal:id":           "RefAudio"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Audio clip reference"

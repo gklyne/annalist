@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Group_comment"
+{ "@id":                        "_field/Group_comment"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Group_comment"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_comment"
 , "rdfs:label":                 "Help"
 , "rdfs:comment":               "Description of the field group. This is used as help or tooltip text."
 , "annal:field_render_type":    "Enum_render_type/Markdown"

@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Type_view"
+{ "@id":                        "_field/Type_view"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Type_view"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_view"
 , "rdfs:label":                 "Default view"
 , "rdfs:comment":               "Default view definition used when displaying or editing instances of this type"
 , "annal:field_render_type":    "Enum_render_type/Enum_optional"

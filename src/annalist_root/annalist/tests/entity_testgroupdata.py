@@ -159,10 +159,9 @@ def _todo_recordgroup_read_values(
         update="Field", hosturi=TestHostUri):
     d = recordgroup_values(coll_id, group_id, update=update, hosturi=hosturi).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            "_group/%s/"%(group_id)
         , '@type':          ["annal:Field"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 

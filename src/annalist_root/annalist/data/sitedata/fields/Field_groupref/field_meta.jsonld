@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_groupref"
+{ "@id":                        "_field/Field_groupref"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_groupref"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_groupref"
 , "rdfs:label":                 "Field group"
 , "rdfs:comment":               "Field group that defines fields used for a repeat group or multifield reference display."
 , "annal:field_name":           "Field_groupref"

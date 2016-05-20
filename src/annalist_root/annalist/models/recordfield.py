@@ -28,7 +28,6 @@ class RecordField(EntityData):
     _entityview     = layout.COLL_FIELD_VIEW
     _entitypath     = layout.COLL_FIELD_PATH
     _entityfile     = layout.FIELD_META_FILE
-    _entityref      = layout.META_FIELD_REF
 
     def __init__(self, parent, field_id):
         """

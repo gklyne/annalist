@@ -51,7 +51,7 @@ from entity_testutils       import (
     )
 from entity_testviewdata    import (
     recordview_dir,
-    recordview_coll_url, recordview_site_url, recordview_url, recordview_edit_url,
+    recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
     recordview_entity_view_context_data, recordview_entity_view_form_data, 

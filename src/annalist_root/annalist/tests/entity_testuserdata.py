@@ -47,9 +47,6 @@ def annalistuser_dir(coll_id="testcoll", user_id="testuser"):
 #
 #   -----------------------------------------------------------------------------
 
-def annalistuser_site_url(site, user_id="testuser"):
-    return site._entityurl + layout.SITE_USER_PATH%{'id': user_id} + "/"
-
 def annalistuser_coll_url(site, coll_id="testcoll", user_id="testuser"):
     return urlparse.urljoin(
         site._entityurl,
@@ -154,9 +151,9 @@ def annalistuser_read_values(
             hosturi=hosturi
             )
     d.update(
-        { '@id':            layout.META_USER_REF%{'id': user_id}
+        { '@id':            layout.COLL_BASE_USER_REF%{'id': user_id}
         , '@type':          ["annal:User"]
-        , '@context':       [layout.ENTITY_CONTEXT_FILE]
+        , '@context':       [ {'@base': '../../'}, layout.ENTITY_CONTEXT_FILE ]
         })
     return d
 

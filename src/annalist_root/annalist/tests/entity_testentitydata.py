@@ -234,9 +234,8 @@ def entitydata_values(
         entity_uri=entity_uri, type_uri=type_uri, hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
-        { '@id':            './'
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        { '@id':            "%s/%s"%(type_id, entity_id)
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         , 'annal:id':       entity_id
         , 'annal:type_id':  type_id
         , 'annal:url':      dataurl

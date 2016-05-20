@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Coll_parent"
+{ "@id":                        "_field/Coll_parent"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Coll_parent"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_parent"
 , "rdfs:label":                 "Parent"
 , "rdfs:comment":               "Parent collection from which type, view and other definitions are inherited.   This allows new collections to be created using predefined types, views, fields, etc. These inherited definitions may be edited, resulting in new instances being created in the current collection."
 , "annal:field_render_type":    "Enum_render_type/Enum_choice_opt"

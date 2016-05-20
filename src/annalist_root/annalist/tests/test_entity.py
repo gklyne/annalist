@@ -36,6 +36,7 @@ class TestEntityRootType(EntityRoot):
     _entitypath = None
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _baseref    = "testrootbase/"
     _contextref = "../../coll_context.jsonld"
 
 
@@ -175,13 +176,11 @@ class EntityRootTest(TestCase):
         test_values = (
             { 'type':   'annal:EntityRoot'
             , 'title':  'Name collection coll1'
-            # , 'uri':    '/annalist/coll1'
             })
         test_values_returned = (
             { '@id':            '../'
             , '@type':          ['test:EntityRootType']
-            # , '@base':          "../.."
-            , '@context':       ["../../coll_context.jsonld"]
+            , '@context':       [{"@base": "testrootbase/"}, "../../coll_context.jsonld"]
             , 'annal:id':       'testId'
             , 'annal:type_id':  None
             , 'annal:type':     'test:EntityRootType'
@@ -278,6 +277,7 @@ class TestEntityType(Entity):
     _entityview = "%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _baseref    = "testtypebase/"
     _contextref = "../../coll_context.jsonld"
 
 class TestEntityTypeSub(Entity):
@@ -287,6 +287,7 @@ class TestEntityTypeSub(Entity):
     _entityview = "sub/%(id)s/"
     _entityfile = ".sub/manifest.jsonld"
     _entityref  = "../"
+    _baseref    = "testtypesubbase/"
     _contextref = "../../coll_context.jsonld"
 
 class EntityTest(AnnalistTestCase):
@@ -340,7 +341,8 @@ class EntityTest(AnnalistTestCase):
     def values_reloaded(self, 
             entity_id='testid', entity_type='test:EntityType', 
             entity_title=None, 
-            entity_parent_path=""
+            entity_parent_path="",
+            entity_base_url="testtypebase/"
             ):
         vals = self.values_returned(
             entity_id=entity_id, entity_type=entity_type, 
@@ -350,8 +352,7 @@ class EntityTest(AnnalistTestCase):
         vals.update(
             { '@id':        '../'   # Local testing only: see `TestEntityType`
             , '@type':      [entity_type]
-            # , '@base':      "../.."
-            , '@context':   ["../../coll_context.jsonld"]
+            , '@context':   [{"@base": entity_base_url}, "../../coll_context.jsonld"]
             })
         return vals
 
@@ -537,7 +538,8 @@ class EntityTest(AnnalistTestCase):
         test_values = self.values_created(entity_type='test:EntityTypeSub', entity_title='Name entity test2')
         test_values_returned = self.values_reloaded(
             entity_id='testid2', entity_type='test:EntityTypeSub', entity_title='Name entity test2',
-            entity_parent_path="/sub"
+            entity_parent_path="/sub",
+            entity_base_url="testtypesubbase/"
             )
 
         r = EntityRoot(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)

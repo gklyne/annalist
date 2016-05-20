@@ -55,9 +55,6 @@ def recordtype_dir(coll_id="testcoll", type_id="testtype"):
 #   These use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
-def recordtype_site_url(site, type_id="testtype"):
-    return site._entityurl + layout.SITE_TYPE_PATH%{'id': type_id} + "/"
-
 def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
     return urlparse.urljoin(
         site._entityurl,
@@ -170,10 +167,9 @@ def recordtype_read_values(
         hosturi=hosturi
         ).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.COLL_BASE_TYPE_REF%{'id': type_id}
         , '@type':          ["annal:Type"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 

@@ -161,7 +161,7 @@ def collectiondata_read_values(coll_id="testcoll", coll_label=None, coll_descr=N
     d.update(
         { '@id':            layout.META_COLL_REF
         , '@type':          ["annal:Collection"]
-        , '@context':       [layout.COLL_CONTEXT_FILE]
+        , '@context':       [{"@base": "../d/"}, layout.COLL_CONTEXT_FILE]
         })
     return d
 

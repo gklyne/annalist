@@ -59,8 +59,9 @@ class EntityRoot(object):
     _entitytype     = ANNAL.CURIE.EntityRoot
     _entitytypeid   = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
-    _entityref      = None          # Relative reference to entity from body file
-    _contextref     = None          # Relative reference to context file from body file
+    _entityref      = None          # Relative ref to entity from body file
+    _baseref        = None          # Relative ref to collection base URI from body file
+    _contextref     = None          # Relative ref to context file from body file
 
     def __init__(self, entityurl, entityviewurl, entitydir, entitybasedir):
         """
@@ -355,10 +356,10 @@ class EntityRoot(object):
         values['@id']      = self._entityref
         values['@type']    = self._get_types(values.get('@type', None))
         values['@context'] = (
-            [ self._contextref
+            [ { '@base': self._baseref }
+            , self._contextref
             # layout.COLL_CONTEXT_FILE
             # layout.ENTITY_CONTEXT_PATH + "/" + layout.COLL_CONTEXT_FILE
-            # , { '@base': layout.ENTITY_CONTEXT_PATH }
             ])
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:

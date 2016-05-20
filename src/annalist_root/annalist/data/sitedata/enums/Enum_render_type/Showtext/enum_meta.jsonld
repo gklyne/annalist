@@ -1,6 +1,6 @@
-{ "@id":                "./"
+{ "@id":                "Enum_render_type/Showtext"
 , "@type":              ["annal:Enum_render_type", "annal:Enum"]
-, "@context":           ["../../../coll_context.jsonld"]
+, "@context":           [{"@base": "../../../"}, "../../../coll_context.jsonld"]
 , "annal:id":           "Showtext"
 , "annal:type_id":      "Enum_render_type"
 , "rdfs:label":         "Display text"

@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_target_type"
+{ "@id":                        "_field/List_target_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_target_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_target_type"
 , "rdfs:label":                 "List entity type"
 , "rdfs:comment":               "Type (URI or CURIE) of entity displayed by this list. Used to determine field choices appropriate to this list.  (See also field 'Entity type' in field definition.)"
 , "annal:field_name":           "List_target_type"

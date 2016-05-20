@@ -53,7 +53,7 @@ from entity_testutils       import (
     )
 from entity_testviewdata    import (
     recordview_dir,
-    recordview_coll_url, recordview_site_url, recordview_url, recordview_edit_url,
+    recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
     recordview_entity_view_context_data, recordview_entity_view_form_data, 
@@ -103,7 +103,7 @@ class RecordViewTest(AnnalistTestCase):
         u = recordview_coll_url(self.testsite, coll_id="testcoll", view_id="testview")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.View)
         self.assertEqual(t._entityfile,     layout.VIEW_META_FILE)
-        self.assertEqual(t._entityref,      layout.META_VIEW_REF)
+        self.assertEqual(t._entityref,      layout.COLL_BASE_VIEW_REF%{'id': "testview"})
         self.assertEqual(t._entityid,       "testview")
         self.assertEqual(t._entityurl,      u)
         self.assertEqual(t._entitydir,      recordview_dir(view_id="testview"))
@@ -153,17 +153,16 @@ class RecordViewTest(AnnalistTestCase):
         td = t.get_values()
         self.assertEqual(
             set(td.keys()), 
-            set(recordview_load_keys(view_uri=True, target_record_type=False))
+            set(recordview_load_keys(view_uri=True, target_record_type=""))
             )
         v = recordview_read_values(view_id="Default_view")
         v.update(
             { 'rdfs:label':     'Default record view'
             , 'annal:uri':      'annal:display/Default_view'
-            , '@context':       [layout.ENTITY_CONTEXT_FILE]
             })
         v.pop('rdfs:comment', None)
         v.pop('annal:record_type', None)
-        self.assertDictionaryMatch(td, v)
+        self.assertDictionaryMatch(td, v) # actual, expect
         return
 
 #   -----------------------------------------------------------------------------

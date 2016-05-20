@@ -19,35 +19,33 @@ for F in `find . -name "field_meta.jsonld"`; do
 
     cp $F $F.$DATE.bak
 
-    # Use sed to apply changes
-    #  d = delete
-    #  s = substitute
-    #  c = change (whole line?)
-    #  h = copy to hold sace (H = append)
-    #  g = get fromhold space to pattern (G = append)
+    # Use awk to apply changes
+    awk '
+        /"@id":/ {
+            gsub("annal:fields", "_field")
+            print
+            next
+            }
+        /"@context":/ {
+            print ", \"@context\":                   [{\"base\": \"../../\"}, \"../../coll_context.jsonld\"]"
+            next
+            }
+        /"annal:id"/ {
+            id = $3; gsub("\"", "", id)
+            }
+        /"annal:type_id"/ {
+            print
+            printf(", \"annal:uri\":                  \"annal:fields/%s\"\n", id)
+            next
+            }
+        { print }
+        ' $F >$F.awk
 
-    sed -e '/"@id":/ {
-              s/annal:fields/_field/
-            }' \
-        -e '/"@context":/ {
-              c\
-              \, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
-            }' \
-        $F >$F.new
-
-, "annal:id":                   "Coll_comment"
-
-    # sed '/"@base":/d' $F >$F.new
-
-    # sed '/"@context":/ {
-    #           c\
-    #           \, "@context":           ["../../coll_context.jsonld"]
-    #         }
-    #     ' $F >$F.new
+    # , "annal:id":                   "Coll_comment"
 
     # Only do this last command when the script has been debugged and tested:
     # this is the point at which the original data is overwritten.
 
-    # mv $F.new $F
+    # mv $F.awk $F
 
 done

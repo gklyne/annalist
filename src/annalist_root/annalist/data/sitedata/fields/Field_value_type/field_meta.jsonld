@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_value_type"
+{ "@id":                        "_field/Field_value_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_value_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_value_type"
 , "rdfs:label":                 "Value type"
 , "rdfs:comment":               "Type (URI or CURIE) of underlying data that is stored in a field.  (Currently not used, except possibly by enumerated value restriction expressions.)"
 , "annal:field_render_type":    "Enum_render_type/Identifier"

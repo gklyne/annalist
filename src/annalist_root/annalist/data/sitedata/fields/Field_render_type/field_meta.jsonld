@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_render_type"
+{ "@id":                        "_field/Field_render_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_render_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_render_type"
 , "rdfs:label":                 "Render type"
 , "rdfs:comment":               "Field rendering type. This encompasses the actual form of the rendered value, and any defaults or other values that may be applied to the field.  (See 'Field definition' help text for more details.)"
 , "annal:field_render_type":    "Enum_render_type/Enum_choice"

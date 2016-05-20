@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_id"
+{ "@id":                        "_field/List_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_id"
 , "rdfs:label":                 "List Id"
 , "rdfs:comment":               "A short identifier that distinguishes this list from all other lists in the same collection."
 , "annal:field_name":           "entity_id"

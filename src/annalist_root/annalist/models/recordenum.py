@@ -31,8 +31,7 @@ class RecordEnumBase(EntityData):
     _entitypath     = layout.COLL_ENUM_PATH
     _entityfile     = layout.ENUM_META_FILE
     _entityprov     = layout.ENUM_PROV_FILE
-    _entityref      = layout.META_ENUM_REF
-    _baseref        = layout.ENUM_BASE_REF
+    _baseref        = layout.ENUM_COLL_BASE_REF      # Override EntityData..
     _contextref     = layout.ENUM_CONTEXT_FILE
 
     def __init__(self, parent, entity_id, type_id):

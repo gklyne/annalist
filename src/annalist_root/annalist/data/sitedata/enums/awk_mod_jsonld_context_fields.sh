@@ -9,7 +9,7 @@
 
 DATE=`date "+%Y-%m-%dT%H:%M:%S"`
 
-for F in `find . -name "vocab_meta.jsonld"`; do
+for F in `find . -name "enum_meta.jsonld"`; do
 
     echo Processing $F ...
 
@@ -19,26 +19,28 @@ for F in `find . -name "vocab_meta.jsonld"`; do
 
     cp $F $F.$DATE.bak
 
-    # Use sed to apply changes
-
-    sed -e '/"@base":/d' \
-        -e '/"@context":/ {
-              c\
-              \, "@context":       [{"@base": "../../"}, "../../coll_context.jsonld"]
-            }' \
-        $F >$F.new
-
-    # sed '/"@base":/d' $F >$F.new
-
-    # sed '/"@context":/ {
-    #           c\
-    #           \, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
-    #         }
-    #     ' $F >$F.new
+    # Use awk to apply changes
+    awk -v FILE=$F '
+        BEGIN {
+            split(FILE, pathsegs, "/")
+            EnumType = pathsegs[2]
+            EnumVal  = pathsegs[3]
+            }
+        /"@id":/ {
+            gsub("./", EnumType "/" EnumVal)
+            print
+            next
+            }
+        /"@context":/ {
+            print ", \"@context\":           [{\"@base\": \"../../../\"}, \"../../../coll_context.jsonld\"]"
+            next
+            }
+        { print }
+        ' $F >$F.awk
 
     # Only do this last command when the script has been debugged and tested:
     # this is the point at which the original data is overwritten.
 
-    # mv $F.new $F
+    mv $F.awk $F
 
 done

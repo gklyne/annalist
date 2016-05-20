@@ -53,7 +53,7 @@ from entity_testutils       import (
     )
 from entity_testlistdata    import (
     recordlist_dir,
-    recordlist_coll_url, recordlist_site_url, recordlist_url, recordlist_edit_url,
+    recordlist_coll_url, recordlist_url, recordlist_edit_url,
     recordlist_value_keys, recordlist_load_keys, 
     recordlist_create_values, recordlist_values, recordlist_read_values,
     # recordlist_entity_view_context_data, recordlist_entity_view_form_data, 
@@ -113,7 +113,7 @@ class RecordListTest(AnnalistTestCase):
         u = recordlist_coll_url(self.testsite, coll_id="testcoll", list_id="testlist")
         self.assertEqual(t._entitytype,     ANNAL.CURIE.List)
         self.assertEqual(t._entityfile,     layout.LIST_META_FILE)
-        self.assertEqual(t._entityref,      layout.META_LIST_REF)
+        self.assertEqual(t._entityref,      layout.COLL_BASE_LIST_REF%{'id': "testlist"})
         self.assertEqual(t._entityid,       "testlist")
         self.assertEqual(t._entityurl,      u)
         self.assertEqual(t._entitydir,      recordlist_dir(list_id="testlist"))
@@ -164,7 +164,7 @@ class RecordListTest(AnnalistTestCase):
         self.assertEqual(set(td.keys()), set(recordlist_load_keys(list_uri=True)))
         v = recordlist_read_values(list_id="Default_list")
         v.update(
-            { '@id':            "annal:display/Default_list"
+            { '@id':            "_list/Default_list"
             , 'rdfs:label':     "List entities"
             , 'annal:uri':      "annal:display/Default_list"
             })

@@ -50,7 +50,7 @@ from entity_testentitydata  import (
     )
 from entity_testuserdata    import (
     annalistuser_dir,
-    annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
+    annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
     annalistuser_view_form_data,

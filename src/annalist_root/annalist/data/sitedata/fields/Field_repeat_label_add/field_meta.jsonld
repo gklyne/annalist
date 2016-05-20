@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_repoeat_label_add"
+{ "@id":                        "_field/Field_repoeat_label_add"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_repeat_label_add"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_repeat_label_add"
 , "rdfs:label":                 "Add value label"
 , "rdfs:comment":               "Short string used to label 'add' button for repeated field group in form display."
 , "annal:field_render_type":    "Enum_render_type/Text"

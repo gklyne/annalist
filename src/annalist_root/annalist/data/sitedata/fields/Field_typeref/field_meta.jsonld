@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_typeref"
+{ "@id":                        "_field/Field_typeref"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_typeref"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_typeref"
 , "rdfs:label":                 "Refer to type"
 , "rdfs:comment":               "Type whose id values are candidates for a field value.  Used with enumerated value fields as the basis for selecting candidate values to include in a dropdown list.  (See also field 'Value restriction'.)"
 , "annal:field_name":           "Field_typeref"

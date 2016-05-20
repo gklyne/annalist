@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_id"
+{ "@id":                        "_field/Field_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_id"
 , "rdfs:label":                 "Field Id"
 , "rdfs:comment":               "A short identifier that distinguishes this field type from all other field types in the same collection.  (A given field may occur in a number of different record views and/or lists.)"
 , "annal:field_name":           "entity_id"

@@ -97,7 +97,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Replace `_contextref` with `_baseref`
     - [x] For RecordEnum, use different reference to base directory so '_annalist_collection/' or 'd/' is accessed as context directory.  
     - [x] Don't generate enums/coll_context.lsonld.  Update context references in Enum values.
-    - [ ] Add base declaration to entity files, etc.
+    - [x] Add base declaration to entity files, etc.
+    - [x] Generate entity IDs relative to collection base directory
+        - There's still some ad-hocery around handling of references to enumerated values.
+        - See actions below to review URI and directrory usage.
 - [ ] BUG: JSON URI wrong? e.g. 
       "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
       shoud be:
@@ -105,6 +108,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Release?)
 
+- [ ] Review fikle/URL latyout for enums, etc 
+    - (Enums?  For web access or file access?)
+    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
+    - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
+    - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
+    - thus need consistency.  Use d/_enum/Enum-type/value for now?
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?

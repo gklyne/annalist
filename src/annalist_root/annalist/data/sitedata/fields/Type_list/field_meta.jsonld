@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Type_list"
+{ "@id":                        "_field/Type_list"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Type_list"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_list"
 , "rdfs:label":                 "Default list"
 , "rdfs:comment":               "Default list definition used when displaying this type."
 , "annal:field_render_type":    "Enum_render_type/Enum_optional"

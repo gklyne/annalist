@@ -98,9 +98,8 @@ def recordenum_read_values(
         enum_id, coll_id=coll_id, type_id=type_id, update=update, hosturi=hosturi
         ).copy()
     d.update(
-        { '@id':            "./"
-        # , '@base':          "../.."
-        , '@context':       ["../../../coll_context.jsonld"]
+        { '@id':            layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum1"}
+        , '@context':       [{'@base': "../../../"}, "../../../coll_context.jsonld"]
         })
     return d
 
@@ -135,7 +134,7 @@ class RecordEnumTest(AnnalistTestCase):
         e = self.testenum(self.testcoll, "testenum")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
-        self.assertEqual(e._entityref,      layout.META_ENUM_REF)
+        self.assertEqual(e._entityref,      layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum"})
         self.assertEqual(e._entityid,       "testenum")
         self.assertEqual(e._entityurl,      TestHostUri + recordenum_url("testenum", coll_id="testcoll", type_id="Enum_list_type"))
         self.assertEqual(e._entitydir,      recordenum_dir("testenum", coll_id="testcoll", type_id="Enum_list_type"))
@@ -143,12 +142,12 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     def test_recordenum_base_init(self):
-        # Note that if base cloass is used directly, the type_id value isn't recognized 
+        # Note that if base class is used directly, the type_id value isn't recognized 
         # as it needs to be a class property.
         e = RecordEnumBase(self.testcoll, "testenum2", "Enum_list_type")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
-        self.assertEqual(e._entityref,      layout.META_ENUM_REF)
+        self.assertEqual(e._entityref,      layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum2"})
         self.assertEqual(e._entityid,       "testenum2")
         self.assertEqual(e._entityurl,      TestHostUri + recordenum_url("testenum2", coll_id="testcoll", type_id="_enum"))
         self.assertEqual(e._entitydir,      recordenum_dir("testenum2", coll_id="testcoll", type_id="_enum"))
