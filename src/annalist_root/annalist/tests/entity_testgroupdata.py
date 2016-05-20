@@ -44,12 +44,6 @@ def recordgroup_dir(coll_id="testcoll", group_id="testgroup"):
 #
 #   -----------------------------------------------------------------------------
 
-#   These use the Django `reverse` function so they correspond to
-#   the declared URI patterns.
-
-def recordgroup_site_url(site, group_id="testgroup"):
-    return site._entityurl + layout.SITE_GROUP_PATH%{'id': group_id} + "/"
-
 def recordgroup_coll_url(site, coll_id="testcoll", group_id="testgroup"):
     return (
         site._entityurl + 

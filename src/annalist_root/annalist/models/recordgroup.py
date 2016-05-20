@@ -32,7 +32,6 @@ class RecordGroup(EntityData):
     _entityview     = layout.COLL_GROUP_VIEW
     _entitypath     = layout.COLL_GROUP_PATH
     _entityfile     = layout.GROUP_META_FILE
-    # _entityref      = layout.META_GROUP_REF
 
     def __init__(self, parent, group_id):
         """

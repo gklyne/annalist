@@ -30,8 +30,7 @@ class RecordTypeData(Entity):
     _entityview     = layout.COLL_TYPEDATA_VIEW
     _entitypath     = layout.COLL_TYPEDATA_PATH
     _entityfile     = layout.TYPEDATA_META_FILE
-    _entityref      = layout.META_TYPEDATA_REF
-    _baseref        = layout.TYPEDATA_BASE_REF
+    _baseref        = layout.TYPEDATA_COLL_BASE_REF
     _contextref     = layout.TYPEDATA_CONTEXT_FILE
 
     def __init__(self, parent, type_id):
@@ -41,6 +40,7 @@ class RecordTypeData(Entity):
         parent      is the parent collection from which the type data is descended.
         type_id     the local identifier (slug) for the record type
         """
+        self._entityref = layout.COLL_BASE_TYPEDATA_REF%{'id': type_id}
         super(RecordTypeData, self).__init__(parent, type_id)
         return
 

@@ -95,18 +95,11 @@ COLL_BASE_REF           = "d/"
 META_COLL_REF           = "../"
 META_COLL_BASE_REF      = "../d/"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
-#@@ COLL_META_DATA_REF      = META_COLL_REF+COLL_BASE_REF               # used in collection.generate_coll_jsonld_context
 
 SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
 SITEDATA_PROV_FILE      = COLL_PROV_FILE                            # used in views
-#@@ SITEDATA_META_REF       = SITEDATA_META_DIR + "/" + SITEDATA_META_FILE
-#@@ META_SITEDATA_REF       = META_COLL_REF
 SITEDATA_CONTEXT_PATH   = "./"                                      # used in models
-SITEDATA_ENUM_PATH      = "enums/"
-# SITEDATA_PROV_REF       = SITEDATA_META_DIR + "/coll_prov.jsonld"
-# SITEDATA_META_SITE_REF  = "../../../"
-
 
 # -------------------------
 # Entities of various types
@@ -136,15 +129,6 @@ COLL_BASE_LIST_REF      = "_list/%(id)s"                    # ref list relative 
 COLL_LIST_VIEW          = "d/_list/%(id)s/"                 # ref list view relative to collection entity
 COLL_LIST_PATH          = COLL_META_DIR + "/lists/%(id)s"   # dir list relative to collection root dir
 
-#@@
-# COLL_LIST_VIEW          = "d/_list/%(id)s/"
-# COLL_LIST_PATH          = COLL_META_DIR + "/lists/%(id)s"
-# SITE_LIST_PATH          = COLL_LIST_PATH
-# LIST_META_FILE          = "list_meta.jsonld"
-# LIST_PROV_FILE          = "list_prov.jsonld"
-# META_LIST_REF           = "./"
-#@@
-
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 VIEW_TYPEID             = "_view"                           # type id, used in URL
 VIEW_COLL_DIR           = "views"                           # collection directory in file system
@@ -154,12 +138,23 @@ COLL_BASE_VIEW_REF      = "_view/%(id)s"                    # ref view relative 
 COLL_VIEW_VIEW          = "d/_view/%(id)s/"                 # ref view relative to collection entity
 COLL_VIEW_PATH          = COLL_META_DIR + "/views/%(id)s"   # dir view relative to collection root dir
 
-COLL_GROUP_VIEW         = "d/_group/%(id)s/"
-COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"
-SITE_GROUP_PATH         = COLL_GROUP_PATH
-GROUP_META_FILE         = "group_meta.jsonld"
-GROUP_PROV_FILE         = "group_prov.jsonld"
-META_GROUP_REF          = "./"
+# NOTE: this set of definitions should be simplified when URL/file layout is unified
+GROUP_TYPEID            = "_group"                          # group id, used in URL
+GROUP_COLL_DIR          = "groups"                          # collection directory in file system
+GROUP_META_FILE         = "group_meta.jsonld"               # group metadata file name
+GROUP_PROV_FILE         = "group_prov.jsonld"               # group provenance file name
+COLL_BASE_GROUP_REF     = "_group/%(id)s"                   # ref group relative to collection base URL
+COLL_GROUP_VIEW         = "d/_group/%(id)s/"                # ref group view relative to collection entity
+COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"  # dir group relative to collection root dir
+
+#@@
+# COLL_GROUP_VIEW         = "d/_group/%(id)s/"
+# COLL_GROUP_PATH         = COLL_META_DIR + "/groups/%(id)s"
+# SITE_GROUP_PATH         = COLL_GROUP_PATH
+# GROUP_META_FILE         = "group_meta.jsonld"
+# GROUP_PROV_FILE         = "group_prov.jsonld"
+# META_GROUP_REF          = "./"
+#@@
 
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 FIELD_TYPEID            = "_field"                          # field id, used in URL
@@ -169,15 +164,6 @@ FIELD_PROV_FILE         = "field_prov.jsonld"               # field provenance f
 COLL_BASE_FIELD_REF     = "_field/%(id)s"                   # ref field relative to collection base URL
 COLL_FIELD_VIEW         = "d/_field/%(id)s/"                # ref field view relative to collection entity
 COLL_FIELD_PATH         = COLL_META_DIR + "/fields/%(id)s"  # dir field relative to collection root dir
-
-#@@
-# COLL_FIELD_VIEW         = "d/_field/%(id)s/"
-# COLL_FIELD_PATH         = COLL_META_DIR + "/fields/%(id)s"
-# SITE_FIELD_PATH         = COLL_FIELD_PATH
-# FIELD_META_FILE         = "field_meta.jsonld"
-# FIELD_PROV_FILE         = "field_prov.jsonld"
-# META_FIELD_REF          = "./"
-#@@
 
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 USER_TYPEID             = "_user"                           # type id, used in URL
@@ -196,14 +182,6 @@ VOCAB_PROV_FILE         = "vocab_prov.jsonld"               # vocab provenance f
 COLL_BASE_VOCAB_REF     = "_vocab/%(id)s"                   # ref vocab relative to collection base URL
 COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"                # ref vocab view relative to collection entity
 COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"  # dir vocab relative to collection root dir
-#@@
-# COLL_VOCAB_VIEW         = "d/_vocab/%(id)s/"
-# COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"
-# SITE_VOCAB_PATH         = COLL_VOCAB_PATH
-# VOCAB_META_FILE         = "vocab_meta.jsonld"
-# VOCAB_PROV_FILE         = "vocab_prov.jsonld"
-# META_VOCAB_REF          = "_vocab/%(id)s/"
-#@@
 
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 ENUM_TYPEID             = "_enum"                           # enum id, used in URL
@@ -211,26 +189,27 @@ ENUM_COLL_DIR           = "enums"                           # collection directo
 ENUM_META_FILE          = "enum_meta.jsonld"                # enum metadata file name
 ENUM_PROV_FILE          = "enum_prov.jsonld"                # enum provenance file name
 ENUM_COLL_BASE_REF      = "../../../"                       # Ref collection base from enum, overides EntityData
-ENUM_CONTEXT_FILE       = ENUM_COLL_BASE_REF + COLL_CONTEXT_FILE # Ref collection context file
+ENUM_CONTEXT_FILE       = ENUM_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref collection context file
 COLL_BASE_ENUM_REF      = "%(type_id)s/%(id)s"              # ref enum relative to collection base URL
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"           # ref enum view relative to collection entity
 COLL_ENUM_PATH          = COLL_META_DIR + "/enums/%(type_id)s/%(id)s"
-                                                            # dir vocab relative to collection root dir
-#@@
-# COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"
-# COLL_ENUM_PATH          = COLL_META_DIR + "/enums/%(type_id)s/%(id)s"
-# SITE_ENUM_PATH          = COLL_ENUM_PATH
-# ENUM_META_FILE          = "enum_meta.jsonld"
-# ENUM_PROV_FILE          = "enum_prov.jsonld"
-# META_ENUM_REF           = "./"
-#@@
 
-COLL_TYPEDATA_VIEW      = "d/%(id)s/"
-COLL_TYPEDATA_PATH      = "d/%(id)s"
-TYPEDATA_META_FILE      = "type_data_meta.jsonld"
-META_TYPEDATA_REF       = "./"
-TYPEDATA_BASE_REF       = "../"
-TYPEDATA_CONTEXT_FILE   = TYPEDATA_BASE_REF + COLL_CONTEXT_FILE
+# NOTE: this set of definitions should be simplified when URL/file layout is unified
+TYPEDATA_META_FILE      = "type_data_meta.jsonld"           # type data metadata file name
+TYPEDATA_PROV_FILE      = "type_data_prov.jsonld"           # type data provenance file name
+COLL_BASE_TYPEDATA_REF  = "%(id)s"                          # ref type data relative to collection base URL
+TYPEDATA_COLL_BASE_REF  = "../"                             # ref collection base from record type data
+TYPEDATA_CONTEXT_FILE   = TYPEDATA_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref collection context file
+COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
+COLL_TYPEDATA_PATH      = "d/%(id)s"                        # dir type data relative to collection root dir
+
+#@@
+# COLL_TYPEDATA_VIEW      = "d/%(id)s/"
+# COLL_TYPEDATA_PATH      = "d/%(id)s"
+# TYPEDATA_META_FILE      = "type_data_meta.jsonld"
+# META_TYPEDATA_REF       = "./"
+# TYPEDATA_BASE_REF       = "../"
+#@@
 
 COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
@@ -248,8 +227,6 @@ ENTITY_COLL_BASE_REF    = "../../"
 #@@ ENTITY_CONTEXT_FILE     = COLL_CONTEXT_FILE
 ENTITY_CONTEXT_FILE     = ENTITY_COLL_BASE_REF + COLL_CONTEXT_FILE
 ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
-
-# and more...
 
 # Name generation suffixes for tasks that generate new records
 SUFFIX_LIST             = ""
