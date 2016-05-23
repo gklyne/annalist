@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/View_fields"
+{ "@id":                        "_field/View_fields"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "View_fields"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_fields"
 , "rdfs:label":                 "Fields"
 , "rdfs:comment":               "Lists the fields that appear in a view, where each field is specified with a 'Field id' and optional 'Property' and 'Position/size' values.  If the optional values are omitted, corresponding values from the identified field definition are used."
 , "annal:field_render_type":    "Enum_render_type/Group_Seq_Row"

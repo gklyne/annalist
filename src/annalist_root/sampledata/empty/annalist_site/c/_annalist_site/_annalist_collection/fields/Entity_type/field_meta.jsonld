@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Entity_type"
+{ "@id":                        "_field/Entity_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Entity_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_type"
 , "rdfs:label":                 "Type"
 , "rdfs:comment":               "An identifier that identifies the corresponding entity type. Presents as a drop-down list of entity types for editing, and as a hyperlink for viewing."
 , "annal:field_name":           "entity_type"
@@ -11,6 +12,7 @@
 , "annal:field_value_type":     "annal:Slug"
 , "annal:placeholder":          "(type id)"
 , "annal:property_uri":         "annal:type_id"
+, "annal:uri":                  "annal:fields/Entity_type"
 , "annal:field_ref_type":       "_type"
 , "annal:field_placement":      "small:0,12;medium:6,6"
 , "annal:default_value":        ""

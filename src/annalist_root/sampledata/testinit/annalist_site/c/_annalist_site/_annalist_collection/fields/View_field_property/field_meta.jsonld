@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/View_field_property"
+{ "@id":                        "_field/View_field_property"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "View_field_property"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_property"
 , "rdfs:label":                 "Property URI"
 , "rdfs:comment":               "Property URI (or CURIE) used in a view definition to indicate the property URI/CURIE of a field to be displayed in that view.  If specified, overrides the property URI value from the corresponding field definition."
 , "annal:placeholder":          "(field URI or CURIE)"

@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Group_fields"
+{ "@id":                        "_field/Group_fields"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Group_fields"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_fields"
 , "rdfs:label":                 "Fields"
 , "rdfs:comment":               "References the field group definition used when displaying and/or editing a field group definition.  (Yes, it is self-referential.)"
 , "annal:field_render_type":    "Enum_render_type/Group_Seq_Row"

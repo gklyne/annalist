@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_choice"
+{ "@id":                        "_field/List_choice"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_choice"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_choice"
 , "rdfs:label":                 "List view"
 , "rdfs:comment":               "Choose list to display."
 , "annal:field_name":           "list_choice"

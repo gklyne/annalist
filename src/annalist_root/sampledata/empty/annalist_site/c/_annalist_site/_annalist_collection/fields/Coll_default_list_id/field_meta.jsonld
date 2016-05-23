@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Coll_default_list_id"
+{ "@id":                        "_field/Coll_default_list_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Coll_default_list_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_default_list_id"
 , "rdfs:label":                 "Default list"
 , "rdfs:comment":               "Default list for viewing a collection. Overridden by 'Default view' and friends if specified, but even then is accessible using a URL of the form '/annalist/collection/l/'. This value is set by clicking 'Set default' in an explicitly chosen list view."
 , "annal:field_render_type":    "Enum_render_type/Showtext"

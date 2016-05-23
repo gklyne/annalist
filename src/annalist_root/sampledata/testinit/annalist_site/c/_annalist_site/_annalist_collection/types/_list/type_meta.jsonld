@@ -1,6 +1,6 @@
-{ "@id":                "./"
+{ "@id":                "_type/_list"
 , "@type":              ["annal:Type"]
-, "@context":           ["../../coll_context.jsonld"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":           "_list"
 , "annal:type_id":      "_type"
 , "annal:uri":          "annal:List"

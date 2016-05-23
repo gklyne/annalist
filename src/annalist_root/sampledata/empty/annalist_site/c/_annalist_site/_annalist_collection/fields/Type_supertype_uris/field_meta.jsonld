@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Type_supertype_uris"
+{ "@id":                        "_field/Type_supertype_uris"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Type_supertype_uris"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_supertype_uris"
 , "rdfs:label":                 "Supertype URIs"
 , "rdfs:comment":               "References to URIs/CURIEs of supertypes.  There may be zero, one or more such supertypes."
 , "annal:field_render_type":    "Enum_render_type/Group_Seq_Row"

@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/View_id"
+{ "@id":                        "_field/View_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "View_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_id"
 , "rdfs:label":                 "View Id"
 , "rdfs:comment":               "A short identifier that distinguishes this view from all other views in the same collection."
 , "annal:field_name":           "entity_id"

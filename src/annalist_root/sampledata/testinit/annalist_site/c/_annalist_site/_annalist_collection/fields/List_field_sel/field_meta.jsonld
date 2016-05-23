@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_field_sel"
+{ "@id":                        "_field/List_field_sel"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_field_sel"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_field_sel"
 , "rdfs:label":                 "Field Id"
 , "rdfs:comment":               "The 'Field Id' of a field definition to be used in a list display.  The containing list definition may combine this with a property URI (field 'Property') and display placement (field 'Position/size') values to describe a field to be displayed."
 , "annal:placeholder":          "(field sel)"

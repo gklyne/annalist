@@ -20,13 +20,22 @@ for F in `find . -name "field_meta.jsonld"`; do
     cp $F $F.$DATE.bak
 
     # Use sed to apply changes
+    #  d = delete
+    #  s = substitute
+    #  c = change (whole line?)
+    #  h = copy to hold sace (H = append)
+    #  g = get fromhold space to pattern (G = append)
 
-    sed -e '/"@base":/d' \
+    sed -e '/"@id":/ {
+              s/annal:fields/_field/
+            }' \
         -e '/"@context":/ {
               c\
-              \, "@context":                   ["../../coll_context.jsonld"]
+              \, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
             }' \
         $F >$F.new
+
+, "annal:id":                   "Coll_comment"
 
     # sed '/"@base":/d' $F >$F.new
 

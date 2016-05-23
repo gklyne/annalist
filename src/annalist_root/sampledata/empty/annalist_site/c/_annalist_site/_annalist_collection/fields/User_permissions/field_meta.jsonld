@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/User_permissions"
+{ "@id":                        "_field/User_permissions"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "User_permissions"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_permissions"
 , "rdfs:label":                 "Permissions"
 , "rdfs:comment":               "Space-separated list of user permission tokens; e.g  'VIEW CREATE UPDATE DELETE CONFIG'.  Permissions ae typically defined for each collection, but, in some circumstances, may be site-wide.  See 'User permissions' view help for full list of available tokens."
 , "annal:placeholder":          "(user permissions; e.g. 'VIEW CREATE UPDATE DELETE CONFIG')"

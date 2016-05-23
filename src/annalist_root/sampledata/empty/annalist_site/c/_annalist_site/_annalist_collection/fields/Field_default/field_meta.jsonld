@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_default"
+{ "@id":                        "_field/Field_default"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_default"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_default"
 , "rdfs:label":                 "Default"
 , "rdfs:comment":               "Default value (if any) for field."
 , "annal:field_render_type":    "Enum_render_type/Text"

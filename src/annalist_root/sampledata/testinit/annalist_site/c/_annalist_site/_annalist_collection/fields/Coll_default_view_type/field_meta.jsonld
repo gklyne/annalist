@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Coll_default_view_type"
+{ "@id":                        "_field/Coll_default_view_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Coll_default_view_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_default_view_type"
 , "rdfs:label":                 "Default view type"
 , "rdfs:comment":               "Default view entity type - 'see Default view'."
 , "annal:field_render_type":    "Enum_render_type/Showtext"

@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/User_id"
+{ "@id":                        "_field/User_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "User_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_id"
 , "rdfs:label":                 "User Id"
 , "rdfs:comment":               "Username or user identifier, which must be unique among usernames for this site.  This is a local id that is used with an authenticated URI (e.g. mailto:) to determine access permissions."
 , "annal:field_name":           "entity_id"

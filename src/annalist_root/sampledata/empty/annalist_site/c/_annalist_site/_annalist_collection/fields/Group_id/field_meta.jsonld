@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Group_id"
+{ "@id":                        "_field/Group_id"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Group_id"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_id"
 , "rdfs:label":                 "Group Id"
 , "rdfs:comment":               "A short identifier that distinguishes this field group from all other field groups in the same collection."
 , "annal:field_name":           "entity_id"

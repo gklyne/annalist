@@ -1,8 +1,9 @@
 { "@id":                        "./"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Entity_see_also"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_see_also"
 , "annal:type":                 "annal:Field"
 , "rdfs:label":                 "Link to further information"
 , "rdfs:comment":               "Link (URL) for accessing additional information, presented for viewing as a hyperlink."

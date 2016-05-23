@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Field_entity_type"
+{ "@id":                        "_field/Field_entity_type"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Field_entity_type"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_entity_type"
 , "rdfs:label":                 "Entity type"
 , "rdfs:comment":               "Type (URI or CURIE) of entity to which field applies. Used to determine when this field is offered as an option. (See also fields 'View entity type' in view definition, 'List entity type' in list definition, and 'Group entity type' in group definition.)"
 , "annal:field_name":           "Field_entity_type"

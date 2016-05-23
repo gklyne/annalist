@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Coll_software_version"
+{ "@id":                        "_field/Coll_software_version"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Coll_software_version"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_software_version"
 , "rdfs:label":                 "S/W version"
 , "rdfs:comment":               "Software version compatibility for this collection (requires given or later version of Annalist).  Set automatically when a collection is updated."
 , "annal:field_render_type":    "Enum_render_type/Showtext"

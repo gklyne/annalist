@@ -1,5 +1,5 @@
 { "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "_initial_values"
 , "rdfs:label":                 ""
 , "rdfs:comment":               "(tooltip text here)"

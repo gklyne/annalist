@@ -1,5 +1,8 @@
 {
   "@context": [
+    {
+      "@base": "../d/"
+    },
     "coll_context.jsonld"
   ],
   "@id": "../",
@@ -7,7 +10,7 @@
     "annal:SiteData"
   ],
   "annal:id": "_annalist_site",
-  "annal:meta_comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-05-12 16:58:03",
+  "annal:meta_comment": "Initialized by annalist.models.site.create_empty_site_data at 2016-05-23 20:29:28",
   "annal:software_version": "0.1.31",
   "annal:type": "annal:SiteData",
   "annal:type_id": "_coll",

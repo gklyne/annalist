@@ -24,7 +24,7 @@ for F in `find . -name "vocab_meta.jsonld"`; do
     sed -e '/"@base":/d' \
         -e '/"@context":/ {
               c\
-              \, "@context":       ["../../coll_context.jsonld"]
+              \, "@context":       [{"@base": "../../"}, "../../coll_context.jsonld"]
             }' \
         $F >$F.new
 
@@ -32,7 +32,7 @@ for F in `find . -name "vocab_meta.jsonld"`; do
 
     # sed '/"@context":/ {
     #           c\
-    #           \, "@context":           ["../../coll_context.jsonld"]
+    #           \, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
     #         }
     #     ' $F >$F.new
 

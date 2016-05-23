@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Coll_comment"
+{ "@id":                        "_field/Coll_comment"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Coll_comment"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_comment"
 , "rdfs:label":                 "Collection metadata"
 , "rdfs:comment":               "Description of Collection metadata creation details - this is used for maintenance purposes to provide an indication of the provenance of the collection metadata, and can be ignored for most purposes."
 , "annal:field_render_type":    "Enum_render_type/Markdown"

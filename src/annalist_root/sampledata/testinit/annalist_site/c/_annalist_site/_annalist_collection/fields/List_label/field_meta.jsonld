@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/List_label"
+{ "@id":                        "_field/List_label"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "List_label"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_label"
 , "rdfs:label":                 "Label"
 , "rdfs:comment":               "Short string used to describe list when displayed."
 , "annal:field_render_type":    "Enum_render_type/Text"

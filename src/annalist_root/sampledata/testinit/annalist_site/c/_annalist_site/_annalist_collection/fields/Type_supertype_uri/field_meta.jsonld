@@ -1,8 +1,9 @@
-{ "@id":                        "annal:fields/Type_supertype_uri"
+{ "@id":                        "_field/Type_supertype_uri"
 , "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":                   "Type_supertype_uri"
 , "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_supertype_uri"
 , "rdfs:label":                 "Supertype URI"
 , "rdfs:comment":               "URI/CURIE of supertype; i.e., an alternative type to which all instances of this type also belong. (This is included in instances of this type when saving as JSON-LD/RDF.)"
 , "annal:field_render_type":    "Enum_render_type/Identifier"
