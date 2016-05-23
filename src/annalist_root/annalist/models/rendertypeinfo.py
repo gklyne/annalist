@@ -26,10 +26,7 @@ _render_type_literal = set(
     [ "Text", "Textarea", "Codearea", "Showtext"
     , "Placement", "CheckBox", "Markdown", "ShowMarkdown"
     , "EntityId", "EntityTypeId"
-    , "Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt"
-    , "View_choice"
     , "TokenSet"
-    , "Type", "View", "List", "Field"
     # , "RefMultifield"
     ])
 
@@ -39,13 +36,15 @@ _render_type_id = set(
     , "RefAudio", "RefImage", "URILink", "URIImage"
     , "RefMultifield"
     , "Group_Set", "Group_Set_Row"
+    , "Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt"
+    , "View_choice"
+    , "Type", "View", "List", "Field"
     ])
 
 _render_type_object = set(
     [ "URIImport", "FileUpload"
     , "RepeatGroup", "RepeatGroupRow", "Group_Seq", "Group_Seq_Row"
     ])
-
 
 _render_type_set = set(
     [ "TokenSet", "Group_Set", "Group_Set_Row"

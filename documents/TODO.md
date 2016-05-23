@@ -91,7 +91,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     repeat fields and multifield references have been updated.
 - [x] Refactor context checking for field lists (`test_entitygenericlist`, `test_entityinheritlist`)
 - [x] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
-- [ ] Use "@base" declaration in entities
+- [x] Use "@base" declaration in entities
     - [x] Each entity/record type to declare a reference to base container URI
     - [x] Context file in base container
     - [x] Replace `_contextref` with `_baseref`
@@ -101,14 +101,27 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Generate entity IDs relative to collection base directory
         - There's still some ad-hocery around handling of references to enumerated values.
         - See actions below to review URI and directrory usage.
+    - NOTES:
+        - `@base` ignored if used in external contexts;
+        - `@base` can specified value be relative? YES:
+            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - BUT: rdflib-jsonld implementation currently ingnores `@base` when accessing an external context resource.
+        - Use `(site_base)/c/(coll_id)/d/` as base URI so that entity ids (`type_id/entity_id`) work directly as relative references.  
+        - Also `type_id` to retreive a list of entities of that type.
+        - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - previously, there was a problem with rdflib-jsonld base URI handling.
+            - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
 - [ ] BUG: JSON URI wrong? e.g. 
-      "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
-      shoud be:
-      "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
+    "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
+    shoud be: "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
+    - [x] Change entity references (select rendered) to @type @id in context
+        - cf. models.collection.get_coll_jsonld_context, etc.
+    - [ ] Rename directories used for built-in types to match type name
 
 (Release?)
 
-- [ ] Review fikle/URL latyout for enums, etc 
+- [ ] Review file/URL layout for enums, etc 
     - (Enums?  For web access or file access?)
     - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
     - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
@@ -121,18 +134,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
     - [x] avoid explicit reference to `_annalist_collection`?
     - [x] collections and repeated properties:
-        - Using owl:sameAs in form { "owl:sameAs" <some_resource> } as equivalent to just <someresource>: use `@id`.
-- [ ] review base URI designation in JSON-LD:
-    - note `@base` ignored if used in external contexts;
-    - can specified value be relative? YES:
-        - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
-        - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
-    - Add `@base` to generated entity data:
-        - Using `(site_base)/c/(coll_id)/d/` as base URI would mean that entity ids (`type_id/entity_id`) work directly as relative URIs.  
-        - Also `type_id` to retreive a list of entities of that type.
-        - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
-    - at the time of writing, there is a problem with rdflib-jsonld base URI handling; for now, avoid use of @base.  This means that entity references treated as URIs are not handled as expected, hence for now are stored as literals, wghich means these links are not directly visible in RDF.
-        - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+        - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
+        - Use `@id`, thus: { "@id": <some_resource> } .
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
@@ -144,7 +147,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
-- [ ] If no new rdflib-jsonld release on PyPI, create fork and submit under new name; update setup.py accordingly.
 
 (feature freeze for V0.9alpha?)
 (0.5?)

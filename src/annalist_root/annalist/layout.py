@@ -85,6 +85,7 @@ META_SITE_REF           = "@@unused@@./"
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
 SITE_COLL_META_REF      = "c/%(id)s/_annalist_collection/"          # Used for testing
+SITE_CONTEXT_FILE       = "site_context.jsonld"                     # Unused?
 
 COLL_META_DIR           = "_annalist_collection"
 COLL_META_FILE          = "coll_meta.jsonld"
@@ -184,7 +185,7 @@ COLL_VOCAB_PATH         = COLL_META_DIR + "/vocabs/%(id)s"  # dir vocab relative
 # Enumerated value description records
 # NOTE: this set of definitions should be simplified when URL/file layout is unified
 ENUM_TYPEID             = "_enum"                           # enum id, used in URL
-ENUM_COLL_DIR           = "enums"                           # collection directory in file system
+ENUM_DIR                = "enums"                           # collection directory in file system
 ENUM_META_FILE          = "enum_meta.jsonld"                # enum metadata file name
 ENUM_PROV_FILE          = "enum_prov.jsonld"                # enum provenance file name
 ENUM_COLL_BASE_REF      = "../../../"                       # Ref collection base from enum, overides EntityData

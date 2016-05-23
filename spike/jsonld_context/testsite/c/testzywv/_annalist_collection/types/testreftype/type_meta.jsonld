@@ -1,0 +1,20 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/testreftype",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:id": "testreftype",
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "test_reference_list",
+  "annal:type_view": "test_reference_view",
+  "annal:uri": "zywv:type/test_reference_type",
+  "rdfs:comment": "test_reference_type comment",
+  "rdfs:label": "test_reference_type label"
+}

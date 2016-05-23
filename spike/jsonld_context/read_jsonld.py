@@ -272,10 +272,11 @@ def test_jsonld_entity2():
     ann_type         = URIRef(ANNAL.EntityData)
     ann_type_id      = Literal("testtype")
     label            = Literal("Entity testcoll/testtype/entity2")
-    assert (subj, URIRef(ANNAL.id),      ann_id     ) in g
-    assert (subj, URIRef(ANNAL.type),    ann_type   ) in g
-    assert (subj, URIRef(ANNAL.type_id), ann_type_id) in g
-    assert (subj, URIRef(RDFS.label),    label      ) in g
+    testbase         = "http://example.org/test/#"
+    assert (subj, URIRef(ANNAL.id),        ann_id     ) in g
+    assert (subj, URIRef(ANNAL.type),      ann_type   ) in g
+    assert (subj, URIRef(ANNAL.type_id),   ann_type_id) in g
+    assert (subj, URIRef(RDFS.label),      label      ) in g
     print "test_jsonld_entity2: OK"
     return
 
@@ -320,6 +321,87 @@ def test_jsonld_entity3():
     print "test_jsonld_entity3: OK"
     return
 
+def test_jsonld_entity4():
+    """
+    Read entity data as JSON-LD, and check resulting RDF triples
+
+    entity4 is very similar to entity1, but uses a namespace prefix
+    test:, defined as "http://example.org/test/#"
+    """
+    testbasedir = os.path.join(os.getcwd(), "testsite")
+    testpath    = "c/testcoll/d/testtype/entity4/entity-data.jsonld"
+    p = _exists_path(testpath, base=testbasedir)
+    b = "file://" + os.path.dirname(p) + "/"
+    s = _read_stream(p)
+    g = Graph()
+    # print "***** p:"+repr(p)
+    # print "***** b:"+repr(b)
+    # print "***** s:"+s.read()
+    # s.seek(0)
+    result = g.parse(source=s, publicID=b, format="json-ld")
+    # print "*****"+repr(result)
+    # print "***** entity4 metadata:"
+    # print(g.serialize(format='turtle', indent=4))
+    # Check the resulting graph contents
+    subj             = URIRef("file://" + 
+        os.path.dirname(os.path.normpath(os.path.join(testbasedir, testpath))) + 
+        "/"
+        )
+    # print "***** subj:"+repr(subj)
+    ann_id           = Literal("entity4")
+    ann_type         = URIRef(ANNAL.EntityData)
+    ann_type_id      = Literal("testtype")
+    label            = Literal("Entity testcoll/testtype/entity4")
+    testbase         = "http://example.org/test/#"
+    assert (subj, URIRef(ANNAL.id),        ann_id     ) in g
+    assert (subj, URIRef(ANNAL.type),      ann_type   ) in g
+    assert (subj, URIRef(ANNAL.type_id),   ann_type_id) in g
+    assert (subj, URIRef(RDFS.label),      label      ) in g
+    assert (subj, URIRef(testbase+"prop"), URIRef(testbase+"obj")) in g
+    print "test_jsonld_entity4: OK"
+    return
+
+def test_jsonld_testzywv():
+    """
+    Read entity data as JSON-LD, and check resulting RDF triples
+
+    This follows the logic of test entity1, but uses a data collection generated 
+    by the Annalist test suite, which is proving problematic.
+    """
+    testbasedir = os.path.join(os.getcwd(), "testsite")
+    testpath    = "c/testzywv/d/testreftype/refentity/entity_data.jsonld"
+    p = _exists_path(testpath, base=testbasedir)
+    b = "file://" + os.path.dirname(p) + "/"
+    s = _read_stream(p)
+    g = Graph()
+    # print "***** p:"+repr(p)
+    # print "***** b:"+repr(b)
+    # print "***** s:"+s.read()
+    # s.seek(0)
+    result = g.parse(source=s, publicID=b, format="json-ld")
+    # print "*****"+repr(result)
+    # print "***** refentity metadata:"
+    # print(g.serialize(format='turtle', indent=4))
+    # Check the resulting graph contents
+    zywvbase         = "http://example.org/zywv/yyy#"
+    imageref         = "file:///Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/test-image.jpg"
+    subj = URIRef("file://" + os.path.dirname(p))
+    ann_id           = Literal("refentity")
+    ann_type_id      = Literal("testreftype")
+    ann_type         = URIRef(zywvbase+"type/test_reference_type")
+    label            = Literal("test_ref_image label")
+    # print "***** subj: "+repr(subj)
+    # print "***** ann_type: "+repr(ann_type)
+    assert (subj, URIRef(RDF.type),        URIRef(ANNAL.EntityData) ) in g
+    assert (subj, URIRef(RDF.type),        ann_type                 ) in g
+    assert (subj, URIRef(ANNAL.id),        ann_id                   ) in g
+    assert (subj, URIRef(ANNAL.type_id),   ann_type_id              ) in g
+    assert (subj, URIRef(ANNAL.type),      ann_type                 ) in g
+    assert (subj, URIRef(RDFS.label),      label                    ) in g
+    assert (subj, URIRef(zywvbase+"reference"), URIRef(imageref)    ) in g
+    print "test_jsonld_testzywv: OK"
+    return
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # read_jsonld()
@@ -330,4 +412,6 @@ if __name__ == "__main__":
     test_jsonld_coll_type()
     test_jsonld_entity2()     # Non-portable test case
     test_jsonld_entity3()     # Non-portable test case
+    test_jsonld_entity4()     # Test case using additional prefix
+    test_jsonld_testzywv()    # Test case failing in main Annalist test suite
 

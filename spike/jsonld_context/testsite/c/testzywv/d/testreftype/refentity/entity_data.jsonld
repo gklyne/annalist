@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "testreftype/refentity",
+  "@type": [
+    "zywv:type/test_reference_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "refentity",
+  "annal:type": "zywv:type/test_reference_type",
+  "annal:type_id": "testreftype",
+  "rdfs:comment": "test_ref_image comment",
+  "rdfs:label": "test_ref_image label",
+  "zywv:reference": "file:///Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/test-image.jpg"
+}

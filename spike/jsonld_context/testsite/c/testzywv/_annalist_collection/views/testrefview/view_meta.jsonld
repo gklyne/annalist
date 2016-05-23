@@ -1,0 +1,37 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_view/testrefview",
+  "@type": [
+    "annal:View"
+  ],
+  "annal:add_field": "yes",
+  "annal:id": "testrefview",
+  "annal:record_type": "",
+  "annal:type": "annal:View",
+  "annal:type_id": "_view",
+  "annal:view_fields": [
+    {
+      "annal:field_id": "Entity_id",
+      "annal:field_placement": "small:0,12;medium:0,6"
+    },
+    {
+      "annal:field_id": "Entity_label",
+      "annal:field_placement": "small:0,12"
+    },
+    {
+      "annal:field_id": "Entity_comment",
+      "annal:field_placement": "small:0,12"
+    },
+    {
+      "annal:field_id": "Test_image_ref",
+      "annal:field_placement": "small:0,12"
+    }
+  ],
+  "rdfs:comment": "test_image_view comment",
+  "rdfs:label": "test_image_view label"
+}
