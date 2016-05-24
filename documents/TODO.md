@@ -123,11 +123,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - collection object is parameter
         - [x] Add new, old directory names to layout.py
         - [x] Find all references to directory names, use layout symbols
-            - "tests", "lists", "views", "groups", "fields", "vocabs", "users", "enums"
-        - [ ] Add function in collectiondata to rename directories
-        - [ ] Add call to directory migration function in collection migration method
-        - [ ] Add call to directory migration function in collectiondata.migrate_coll_data
-        - [ ] Rename directories in sitedata in source tree
+        - [x] Add function in collectiondata to rename directories
+        - [x] Add call to directory migration function in collection view method from site
+        - [x] Add call to directory migration function in collectiondata.migrate_coll_data
+        - [ ] Rename directories in sitedata in source tree and layout.
+            - test of migration using annalist-manager and custimize page.
 
 (Release?)
 

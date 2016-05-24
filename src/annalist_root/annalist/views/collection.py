@@ -25,7 +25,7 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
-from annalist.models.collectiondata import migrate_coll_data
+from annalist.models.collectiondata import migrate_coll_data, migrate_coll_config_dirs
 
 from annalist.views.uri_builder     import uri_with_params
 from annalist.views.displayinfo     import DisplayInfo
@@ -53,11 +53,15 @@ class CollectionView(AnnalistGenericView):
         viewinfo.get_coll_info(coll_id)
         viewinfo.check_authorization(action)
         self.default_continuation = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+        if not viewinfo.http_response:
+            errs = migrate_coll_config_dirs(viewinfo.collection)
+            if errs:
+                viewinfo.report_error("\n".join(errs))
         return viewinfo
 
     def get(self, request, coll_id):
         """
-        Form for displaying the current collection 
+        Display the specified collection 
         """
         viewinfo = self.collection_view_setup(coll_id, "view", request.GET.dict())
         if viewinfo.http_response:

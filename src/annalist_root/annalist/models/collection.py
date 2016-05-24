@@ -41,6 +41,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
+# from annalist.models.collectiondata import migrate_coll_config_dirs
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
     is_render_type_id,
