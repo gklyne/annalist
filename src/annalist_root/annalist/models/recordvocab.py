@@ -26,7 +26,7 @@ from annalist.models.entitydata import EntityData
 class RecordVocab(EntityData):
 
     _entitytype     = ANNAL.CURIE.Vocabulary
-    _entitytypeid   = "_vocab"
+    _entitytypeid   = layout.VOCAB_TYPEID
     _entityview     = layout.COLL_VOCAB_VIEW
     _entitypath     = layout.COLL_VOCAB_PATH
     _entityfile     = layout.VOCAB_META_FILE

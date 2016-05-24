@@ -106,7 +106,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - `@base` can specified value be relative? YES:
             - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
             - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
-        - BUT: rdflib-jsonld implementation currently ingnores `@base` when accessing an external context resource.
+        - BUT: rdflib-jsonld implementation currently ignores `@base` when accessing an external context resource.
         - Use `(site_base)/c/(coll_id)/d/` as base URI so that entity ids (`type_id/entity_id`) work directly as relative references.  
         - Also `type_id` to retreive a list of entities of that type.
         - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
@@ -118,6 +118,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Change entity references (select rendered) to @type @id in context
         - cf. models.collection.get_coll_jsonld_context, etc.
     - [ ] Rename directories used for built-in types to match type name
+        - views.collection -> annalist.models.collectiondata.migrate_coll_data
+        - am_managecollections -> annalist.models.collectiondata.migrate_coll_data
+        - collection object is parameter
+        - [x] Add new, old directory names to layout.py
+        - [x] Find all references to directory names, use layout symbols
+            - "tests", "lists", "views", "groups", "fields", "vocabs", "users", "enums"
+        - [ ] Add function in collectiondata to rename directories
+        - [ ] Add call to directory migration function in collection migration method
+        - [ ] Add call to directory migration function in collectiondata.migrate_coll_data
+        - [ ] Rename directories in sitedata in source tree
 
 (Release?)
 

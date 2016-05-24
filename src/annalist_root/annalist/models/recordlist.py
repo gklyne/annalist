@@ -35,7 +35,7 @@ from annalist.util              import extract_entity_id
 class RecordList(EntityData):
 
     _entitytype     = ANNAL.CURIE.List
-    _entitytypeid   = "_list"
+    _entitytypeid   = layout.LIST_TYPEID
     _entityview     = layout.COLL_LIST_VIEW
     _entitypath     = layout.COLL_LIST_PATH
     _entityfile     = layout.LIST_META_FILE
@@ -76,9 +76,9 @@ class RecordList(EntityData):
         for f in entitydata[ANNAL.CURIE.list_fields]:
             field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
             if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = "_field/Field_render_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
             if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = "_field/Field_value_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

@@ -28,7 +28,7 @@ from annalist.util              import extract_entity_id
 class RecordGroup(EntityData):
 
     _entitytype     = ANNAL.CURIE.Field_group
-    _entitytypeid   = "_group"
+    _entitytypeid   = layout.GROUP_TYPEID
     _entityview     = layout.COLL_GROUP_VIEW
     _entitypath     = layout.COLL_GROUP_PATH
     _entityfile     = layout.GROUP_META_FILE
@@ -67,9 +67,9 @@ class RecordGroup(EntityData):
         for f in entitydata[ANNAL.CURIE.group_fields]:
             field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
             if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = "_field/Field_render_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
             if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = "_field/Field_value_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

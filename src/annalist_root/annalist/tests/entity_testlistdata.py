@@ -127,10 +127,10 @@ def recordlist_create_values(
         , "annal:default_type":         "_type/Default_type"
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
-          [ { "annal:field_id":             "_field/Entity_id"
+          [ { "annal:field_id":             layout.FIELD_TYPEID+"/Entity_id"
             , "annal:field_placement":      "small:0,3"
             }
-          , { "annal:field_id":             "_field/Entity_label"
+          , { "annal:field_id":             layout.FIELD_TYPEID+"/Entity_label"
             , "annal:field_placement":      "small:3,9"
             }
           ]
@@ -179,10 +179,10 @@ def recordlist_view_context_data(
         list_label = "%s list (%s/@@list_id@@)"%(update, coll_id)
         list_descr = "%s description ... (%s/%s)"%(update, coll_id, list_id)
     list_fields = (
-        [ { "annal:field_id":         "_field/Entity_id"
+        [ { "annal:field_id":         layout.FIELD_TYPEID+"/Entity_id"
           , "annal:field_placement":  "small:0,3"
           }
-        , { "annal:field_id":         "_field/Entity_label"
+        , { "annal:field_id":         layout.FIELD_TYPEID+"/Entity_label"
           , "annal:field_placement":  "small:3,9"
           }
         ])
@@ -316,9 +316,9 @@ def recordlist_view_form_data(
         , "List_default_view":      "_view/Default_view"
         , "List_entity_selector":   "ALL"
         # List repeating fields
-        , "List_fields__0__Field_id":           "_field/Entity_id"
+        , "List_fields__0__Field_id":           layout.FIELD_TYPEID+"/Entity_id"
         , "List_fields__0__Field_placement":    "small:0,3"
-        , "List_fields__1__Field_id":           "_field/Entity_label"
+        , "List_fields__1__Field_id":           layout.FIELD_TYPEID+"/Entity_label"
         , "List_fields__1__Field_placement":    "small:3,9"
         # Hidden fields
         , "action":                 "@@TBD@@"

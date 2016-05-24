@@ -131,16 +131,16 @@ def recordview_create_values(
         , 'annal:record_type':  target_record_type
         , 'annal:open_view':    True
         , 'annal:view_fields':
-          [ { 'annal:field_id':         "_field/Entity_id"
+          [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
-          , { 'annal:field_id':         "_field/Entity_type"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_type"
             , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
-          , { 'annal:field_id':         "_field/Entity_label"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_label"
             , 'annal:field_placement':  "small:0,12"
             }
-          , { 'annal:field_id':         "_field/Entity_comment"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_comment"
             # , 'annal:field_placement':  field3_placement
             }
           ]
@@ -230,17 +230,17 @@ def recordview_entity_view_context_data(
         view_descr = "%s description ... (%s/%s)"%(update, coll_id, view_id)
     # Target record fields listed in the view description
     view_fields = (
-          [ { 'annal:field_id':         "_field/Entity_id"
+          [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
             , 'annal:field_placement':  "small:0,12;medium:0,6"
             }
-          , { 'annal:field_id':         "_field/Entity_type"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_type"
             , 'annal:field_placement':  "small:0,12;medium:6,6"
             }
-          , { 'annal:field_id':         "_field/Entity_label"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_label"
             , 'annal:property_uri':     "rdfs:label"
             , 'annal:field_placement':  "small:0,12"
             }
-          , { 'annal:field_id':         "_field/Entity_comment"
+          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_comment"
             , 'annal:property_uri':     "rdfs:comment"
             # , 'annal:field_placement':  field3_placement
             }
@@ -375,20 +375,20 @@ def recordview_entity_view_form_data(
         , 'record_type':        'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
-        , 'View_fields__0__Field_id':           "_field/Entity_id"
+        , 'View_fields__0__Field_id':           layout.FIELD_TYPEID+"/Entity_id"
         , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
-        , 'View_fields__1__Field_id':           "_field/Entity_type"
+        , 'View_fields__1__Field_id':           layout.FIELD_TYPEID+"/Entity_type"
         , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6"
-        , 'View_fields__2__Field_id':           "_field/Entity_label"
+        , 'View_fields__2__Field_id':           layout.FIELD_TYPEID+"/Entity_label"
         , 'View_fields__2__Field_property':     "rdfs:label"
         , 'View_fields__2__Field_placement':    "small:0,12"
-        , 'View_fields__3__Field_id':           "_field/Entity_comment"
+        , 'View_fields__3__Field_id':           layout.FIELD_TYPEID+"/Entity_comment"
         , 'View_fields__3__Field_property':     "rdfs:comment"
         , 'View_fields__3__Field_placement':    field3_placement
         })
     if extra_field:
         # Insert extra field with supplied Id
-        form_data_dict['View_fields__4__Field_id']        = "_field/"+extra_field
+        form_data_dict['View_fields__4__Field_id']        = layout.FIELD_TYPEID+"/"+extra_field
         form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
         if extra_field_uri:
             form_data_dict['View_fields__4__Field_property'] = extra_field_uri

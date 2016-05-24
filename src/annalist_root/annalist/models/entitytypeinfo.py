@@ -30,15 +30,15 @@ from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-COLL_ID     = '_coll'
-USER_ID     = '_user'
-TYPE_ID     = '_type'
-LIST_ID     = '_list'
-VIEW_ID     = '_view'
-GROUP_ID    = '_group'
-FIELD_ID    = '_field'
-VOCAB_ID    = '_vocab'
-TASK_ID     = '_task'
+COLL_ID     = layout.COLL_TYPEID
+USER_ID     = layout.USER_TYPEID
+TYPE_ID     = layout.TYPE_TYPEID
+LIST_ID     = layout.LIST_TYPEID
+VIEW_ID     = layout.VIEW_TYPEID
+GROUP_ID    = layout.GROUP_TYPEID
+FIELD_ID    = layout.FIELD_TYPEID
+VOCAB_ID    = layout.VOCAB_TYPEID
+TASK_ID     = layout.TASK_TYPEID
 
 COLL_MESSAGES = (
     { 'parent_heading':         "(@@ COLL_MESSAGES.parent_heading - unused message @@)"

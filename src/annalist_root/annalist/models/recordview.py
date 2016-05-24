@@ -28,7 +28,7 @@ from annalist.util              import extract_entity_id
 class RecordView(EntityData):
 
     _entitytype     = ANNAL.CURIE.View
-    _entitytypeid   = "_view"
+    _entitytypeid   = layout.VIEW_TYPEID
     _entityview     = layout.COLL_VIEW_VIEW
     _entitypath     = layout.COLL_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
@@ -67,9 +67,9 @@ class RecordView(EntityData):
         for f in entitydata[ANNAL.CURIE.view_fields]:
             field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
             if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = "_field/Field_render_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
             if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = "_field/Field_value_type"
+                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

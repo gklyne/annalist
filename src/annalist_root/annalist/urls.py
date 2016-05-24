@@ -38,7 +38,7 @@ from annalist.views.entityresource      import EntityResourceAccess
 # l - list
 # d - data/default view
 #
-# Metadata (using built-in type identifiers, otherwise same pattern data data):
+# Metadata (using built-in type identifiers, otherwise same pattern as data):
 #
 # /c/<coll-id>/d/_type/                           list of record types
 # /c/<coll-id>/d/_type/<type-id>                  view of type description

@@ -94,6 +94,24 @@ class RecordTypeTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
+        self.layout = (
+            { 'enum_typeid':    layout.ENUM_TYPEID
+            , 'field_typeid':   layout.FIELD_TYPEID
+            , 'group_typeid':   layout.GROUP_TYPEID
+            , 'list_typeid':    layout.LIST_TYPEID
+            , 'type_typeid':    layout.TYPE_TYPEID
+            , 'user_typeid':    layout.USER_TYPEID
+            , 'view_typeid':    layout.VIEW_TYPEID
+            , 'vocab_typeid':   layout.VOCAB_TYPEID
+            , 'enum_dir':       layout.ENUM_DIR
+            , 'field_dir':      layout.FIELD_DIR
+            , 'group_dir':      layout.GROUP_DIR
+            , 'list_dir':       layout.LIST_DIR
+            , 'type_dir':       layout.TYPE_DIR
+            , 'user_dir':       layout.USER_DIR
+            , 'view_dir':       layout.VIEW_DIR
+            , 'vocab_dir':      layout.VOCAB_DIR
+            })
         return
 
     def tearDown(self):
@@ -123,9 +141,15 @@ class RecordTypeTest(AnnalistTestCase):
     def test_recordtype1_data(self):
         t = RecordType(self.testcoll, "type1")
         self.assertEqual(t.get_id(), "type1")
-        self.assertEqual(t.get_type_id(), "_type")
-        self.assertIn("/c/testcoll/_annalist_collection/types/type1/", t.get_url())
-        self.assertEqual(TestBaseUri + "/c/testcoll/d/_type/type1/", t.get_view_url())
+        self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
+        self.assertIn(
+            "/c/testcoll/_annalist_collection/%(type_dir)s/type1/"%self.layout, 
+            t.get_url()
+            )
+        self.assertEqual(
+            TestBaseUri + "/c/testcoll/d/%(type_typeid)s/type1/"%self.layout, 
+            t.get_view_url()
+            )
         t.set_values(recordtype_create_values(type_id="type1"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
@@ -136,9 +160,15 @@ class RecordTypeTest(AnnalistTestCase):
     def test_recordtype2_data(self):
         t = RecordType(self.testcoll, "type2")
         self.assertEqual(t.get_id(), "type2")
-        self.assertEqual(t.get_type_id(), "_type")
-        self.assertIn("/c/testcoll/_annalist_collection/types/type2/", t.get_url())
-        self.assertEqual(TestBaseUri + "/c/testcoll/d/_type/type2/", t.get_view_url())
+        self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
+        self.assertIn(
+            "/c/testcoll/_annalist_collection/%(type_dir)s/type2/"%self.layout, 
+            t.get_url()
+            )
+        self.assertEqual(
+            TestBaseUri + "/c/testcoll/d/%(type_typeid)s/type2/"%self.layout, 
+            t.get_view_url()
+            )
         t.set_values(recordtype_create_values(type_id="type2"))
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_value_keys()))
@@ -157,9 +187,15 @@ class RecordTypeTest(AnnalistTestCase):
     def test_recordtype_default_data(self):
         t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
-        self.assertIn("/c/_annalist_site/_annalist_collection/types/Default_type", t.get_url())
-        self.assertIn("/c/testcoll/d/_type/Default_type", t.get_view_url())
-        self.assertEqual(t.get_type_id(), "_type")
+        self.assertIn(
+            "/c/_annalist_site/_annalist_collection/%(type_dir)s/Default_type"%self.layout, 
+            t.get_url()
+            )
+        self.assertIn(
+            "/c/testcoll/d/%(type_typeid)s/Default_type"%self.layout, 
+            t.get_view_url()
+            )
+        self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
         td = t.get_values()
         self.assertEqual(set(td.keys()), set(recordtype_load_keys(type_uri=True)))
         v = recordtype_read_values(type_id="Default_type")
@@ -192,7 +228,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.view_options = self.no_view_id + get_site_views_linked("testcoll")
         self.list_options = self.no_list_id + get_site_lists_linked("testcoll")
         # For checking Location: header values...
-        self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_type")
+        self.continuation_url = (
+            TestHostUri + 
+            entitydata_list_type_url(coll_id="testcoll", type_id=layout.TYPE_TYPEID)
+            )
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -254,8 +293,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Common entity attributes
         self.assertEqual(response.context['entity_id'],        type_id)
         self.assertEqual(response.context['orig_id'],          orig_type_id or type_id)
-        self.assertEqual(response.context['type_id'],          '_type')
-        self.assertEqual(response.context['orig_type'],        '_type')
+        self.assertEqual(response.context['type_id'],          layout.TYPE_TYPEID)
+        self.assertEqual(response.context['orig_type'],        layout.TYPE_TYPEID)
         self.assertEqual(response.context['coll_id'],          'testcoll')
         self.assertEqual(response.context['action'],           action)
         self.assertEqual(response.context['view_id'],          'Type_view')
@@ -385,13 +424,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_get_form_rendering(self):
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # log.info(r.content)   #@@
         field_vals = default_fields(
-            coll_id="testcoll", type_id="_type", entity_id="00000001",
+            coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="00000001",
             default_label="(New type initial values - label)",
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
             default_label_esc="(New type initial values - label)",
@@ -510,14 +549,16 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new(self):
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="00000001")
+        type_url = collection_entity_view_url(
+            coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="00000001"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_type")
+        self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
         self.assertEqual(r.context['orig_id'],          "00000001")
         self.assertEqual(r.context['entity_uri'],       None)
@@ -533,14 +574,18 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_copy(self):
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(
+            coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="Default_type"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_type")
+        self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_type_01")
         self.assertEqual(r.context['orig_id'],          "Default_type_01")
         self.assertEqual(r.context['entity_uri'],       None)
@@ -556,26 +601,32 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_copy_not_exists(self):
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="notype", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="notype", view_id="Type_view"
+            )
         r = self.client.get(u)
         # log.info(r.content)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", "_type", "notype")
+        err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
         self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
     def test_get_edit(self):
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        type_url = collection_entity_view_url(coll_id="testcoll", type_id="_type", entity_id="Default_type")
+        type_url = collection_entity_view_url(
+            coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="Default_type"
+            )
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_type")
+        self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_type")
         self.assertEqual(r.context['orig_id'],          "Default_type")
         self.assertEqual(r.context['entity_uri'],       "annal:Default_type")
@@ -591,14 +642,16 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_not_exists(self):
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="notype", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="notype", view_id="Type_view"
+            )
         r = self.client.get(u)
         # log.info(r.content)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", "_type", "notype")
+        err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
         self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
         return
 
@@ -614,7 +667,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="newtype", action="new", update="RecordType",
             type_uri="test:type"
             )
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
@@ -630,7 +683,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="newtype", action="new", cancel="Cancel", update="Updated RecordType"
             )
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -642,7 +695,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_new_type_missing_id(self):
         f = recordtype_entity_view_form_data(action="new", update="RecordType")
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   200)
@@ -662,7 +715,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="!badtype", orig_id="orig_type_id", action="new", update="RecordType"
             )
-        u = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -684,7 +737,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="copytype", orig_id="Default_type", action="copy", update="RecordType"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -699,7 +754,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="copytype", orig_id="Default_type", action="copy", cancel="Cancel", update="RecordType"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -713,7 +770,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             action="copy", update="Updated RecordType"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -732,7 +791,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="!badtype", orig_id="Default_type", action="copy", update="Updated RecordType"
             )
-        u = entitydata_edit_url("copy", "testcoll", "_type", entity_id="Default_type", view_id="Type_view")
+        u = entitydata_edit_url(
+            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -756,7 +817,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="edittype", orig_id="edittype", 
             action="edit", update="Updated RecordType"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="edittype", view_id="Type_view")
+        u = entitydata_edit_url("edit", "testcoll", layout.TYPE_TYPEID, entity_id="edittype", view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -779,7 +840,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="edittype2", orig_id="edittype1", 
             action="edit", update="Updated RecordType"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="edittype1", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="edittype1", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -804,7 +867,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="edittype", orig_id="edittype", 
             action="edit", cancel="Cancel", update="Updated RecordType"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="edittype", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="edittype", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -821,7 +886,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             action="edit", update="Updated RecordType"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="edittype", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="edittype", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -845,7 +912,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="!badtype", orig_id="edittype", action="edit", update="Updated RecordType"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_type", entity_id="edittype", view_id="Type_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="edittype", view_id="Type_view"
+            )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -875,7 +944,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             task="Define_view_list"
             )
         u = entitydata_edit_url(
-            "edit", "testcoll", "_type", entity_id="tasktype", view_id="Type_view"
+            "edit", "testcoll", layout.TYPE_TYPEID, entity_id="tasktype", view_id="Type_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -907,9 +976,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             , 'annal:display_type': "List"
             , 'annal:list_entity_selector': "'test:%(type_id)s' in [@type]"%common_vals
             })
-        self.check_entity_values("_type", "%(type_id)s"%common_vals, expect_type_values)
-        self.check_entity_values("_view", "%(type_id)s"%common_vals, expect_view_values)
-        self.check_entity_values("_list", "%(type_id)s"%common_vals, expect_list_values)
+        self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)
+        self.check_entity_values(layout.VIEW_TYPEID, "%(type_id)s"%common_vals, expect_view_values)
+        self.check_entity_values(layout.LIST_TYPEID, "%(type_id)s"%common_vals, expect_list_values)
         return
 
 #   -----------------------------------------------------------------------------

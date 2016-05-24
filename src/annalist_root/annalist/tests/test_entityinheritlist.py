@@ -210,7 +210,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
     def test_get_fields_list(self):
         # List fields in current collection
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all",
+            "testcoll", layout.FIELD_TYPEID, list_id="Field_list", scope="all",
             continuation_url="/xyzzy/"
             )
         r = self.client.get(u)
@@ -220,7 +220,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['title'],            "Field definitions - Collection testcoll")
         self.assertEqual(r.context['heading'],          "Field definitions")
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
@@ -258,7 +258,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_no_continuation(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all",
+            "testcoll", layout.FIELD_TYPEID, list_id="Field_list", scope="all",
             query_params={"foo": "bar"}
             )
         r = self.client.get(u)
@@ -276,12 +276,12 @@ class EntityInheritListViewTest(AnnalistTestCase):
             <div class="tbody row select-row">
               <div class="small-1 columns">
                 <input type="checkbox" class="select-box right" name="entity_select"
-                       value="_field/Bib_address" />
+                       value="%(field_typeid)s/Bib_address" />
               </div>
               <div class="small-11 columns">
                 <div class="row view-listrow">
                   <div class="view-value small-4 medium-3 columns" %(tooltip1)s>
-                    <a href="%(base)s/c/testcoll/d/_field/Bib_address/%(cont)s">Bib_address</a>
+                    <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Bib_address/%(cont)s">Bib_address</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
                     <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
@@ -296,19 +296,20 @@ class EntityInheritListViewTest(AnnalistTestCase):
               </div>
             </div>
             """%(
-                { 'base':     TestBasePath
-                , 'cont':     cont
-                , 'tooltip1': tooltip1
-                , 'tooltip2': tooltip2
-                , 'tooltip3': tooltip3
-                , 'tooltip4': tooltip4
+                { 'base':           TestBasePath
+                , 'cont':           cont
+                , 'tooltip1':       tooltip1
+                , 'tooltip2':       tooltip2
+                , 'tooltip3':       tooltip3
+                , 'tooltip4':       tooltip4
+                , 'field_typeid':   layout.FIELD_TYPEID
                 }
             )
         # log.info("*** r.content: "+r.content)
         self.assertContains(r, rowdata1, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['continuation_url'], "")
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
@@ -321,7 +322,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
 
     def test_get_fields_list_search(self):
         u = entitydata_list_type_url(
-            "testcoll", "_field", list_id="Field_list", scope="all",
+            "testcoll", layout.FIELD_TYPEID, list_id="Field_list", scope="all",
             continuation_url="/xyzzy/",
             query_params={"search": "Bib_"}
             )
@@ -332,7 +333,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # self.assertContains(r, "<h3>List 'Field_list' of entities in collection 'testcoll'</h3>", html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         self.assertEqual(r.context['search_for'],       "Bib_")
         list_choices = r.context['list_choices']
@@ -395,13 +396,13 @@ class EntityInheritListViewTest(AnnalistTestCase):
         return
 
     def test_get_list_select_by_type(self):
-        u = entitydata_list_type_url("testcoll", "_field", list_id=None)
+        u = entitydata_list_type_url("testcoll", layout.FIELD_TYPEID, list_id=None)
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_field")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         list_choices = r.context['list_choices']
         self.assertEqual(set(list_choices.options),     set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Field_list")

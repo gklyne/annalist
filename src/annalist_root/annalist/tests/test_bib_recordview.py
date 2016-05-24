@@ -217,7 +217,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
                   render_select_options(
                     "View_fields__0__Field_id", "Field id",
                     no_selection("(field sel)") + get_site_bibentry_fields_sorted(),
-                    "_field/Entity_id",
+                    layout.FIELD_TYPEID+"/Entity_id",
                     placeholder="(field sel)"
                     )+
                 """
@@ -266,44 +266,44 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         # log.info("*** fields[5]['field_value']: "+repr(r.context['fields'][5]['field_value']))
         # @@TODO: revise for more useful BibEntry structure
         expect_field_data = (
-            [ { 'annal:field_placement':    'small:0,12;medium:0,6'
-              , 'annal:field_id':           '_field/Entity_id'
+            [ { 'annal:field_placement':    "small:0,12;medium:0,6"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Entity_id"
               }
-            , { 'annal:field_placement':    'small:0,12;medium:6,6'
-              , 'annal:field_id':           '_field/Bib_type'
+            , { 'annal:field_placement':    "small:0,12;medium:6,6"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_type"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_title'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_title"
               }
-            , { 'annal:field_placement':    'small:0,12;medium:0,6'
-              , 'annal:field_id':           '_field/Bib_month'
+            , { 'annal:field_placement':    "small:0,12;medium:0,6"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_month"
               }
-            , { 'annal:field_placement':    'small:0,12;medium:6,6'
-              , 'annal:field_id':           '_field/Bib_year'
+            , { 'annal:field_placement':    "small:0,12;medium:6,6"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_year"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_authors'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_authors"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_editors'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_editors"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_journal'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_journal"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_bookentry'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_bookentry"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_publication_details'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_publication_details"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_identifiers'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_identifiers"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_license'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_license"
               }
-            , { 'annal:field_placement':    'small:0,12'
-              , 'annal:field_id':           '_field/Bib_note'
+            , { 'annal:field_placement':    "small:0,12"
+              , 'annal:field_id':           layout.FIELD_TYPEID+"/Bib_note"
               }
             ])
         # NOTE: context['fields'][i]['field_id'] comes from FieldDescription instance via

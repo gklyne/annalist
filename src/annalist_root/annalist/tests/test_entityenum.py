@@ -37,8 +37,10 @@ from entity_testutils       import collection_dir, site_view_url, site_title
 
 def recordenum_url(enum_id, coll_id="testcoll", type_id="testtype"):
     return (
-        "/testsite/c/%(coll_id)s/_annalist_collection/enums/%(type_id)s/%(enum_id)s/"%
-        {'coll_id': coll_id, 'type_id': type_id, 'enum_id': enum_id}
+        "/testsite/c/%(coll_id)s/_annalist_collection/%(enum_dir)s/%(type_id)s/%(enum_id)s/"%
+            { 'coll_id': coll_id, 'type_id': type_id, 'enum_id': enum_id
+            , 'enum_dir': layout.ENUM_DIR
+            }
         )
 
 def recordenum_view_url(enum_id, coll_id="testcoll", type_id="testtype"):
@@ -147,10 +149,20 @@ class RecordEnumTest(AnnalistTestCase):
         e = RecordEnumBase(self.testcoll, "testenum2", "Enum_list_type")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
-        self.assertEqual(e._entityref,      layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum2"})
+        self.assertEqual(e._entityref,      
+            layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum2"}
+            )
         self.assertEqual(e._entityid,       "testenum2")
-        self.assertEqual(e._entityurl,      TestHostUri + recordenum_url("testenum2", coll_id="testcoll", type_id="_enum"))
-        self.assertEqual(e._entitydir,      recordenum_dir("testenum2", coll_id="testcoll", type_id="_enum"))
+        self.assertEqual(e._entityurl,      
+            TestHostUri + recordenum_url(
+                "testenum2", coll_id="testcoll", type_id=layout.ENUM_TYPEID
+                )
+            )
+        self.assertEqual(e._entitydir,      
+            recordenum_dir(
+                "testenum2", coll_id="testcoll", type_id=layout.ENUM_TYPEID
+                )
+            )
         self.assertEqual(e._values,         None)
         resetSitedata()
         return

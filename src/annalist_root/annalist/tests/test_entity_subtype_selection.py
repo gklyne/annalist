@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 from django.test.client             import Client
 
+from annalist                       import layout
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -156,10 +157,10 @@ class SubtypeSelectionTest(AnnalistTestCase):
             , 'annal:record_type':  record_type
             , 'annal:add_field':    True
             , 'annal:view_fields':
-              [ { 'annal:field_id':         "_field/Entity_id"
+              [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
                 }
-              , { 'annal:field_id':         "_field/Test_ref_type_field"
+              , { 'annal:field_id':         layout.FIELD_TYPEID+"/Test_ref_type_field"
                 , 'annal:field_placement':  "small:0,12;medium:6,6"
                 }
               ]

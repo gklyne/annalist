@@ -35,7 +35,7 @@ def initialize_coll_data(src_data_dir, tgt_coll):
     """
     tgt_data_dir, data_file = tgt_coll._dir_path()
     log.info("Copy Annalist collection data from %s to %s"%(src_data_dir, tgt_data_dir))
-    for sdir in ("enums", "fields", "groups", "lists", "types", "views", "vocabs"):
+    for sdir in layout.DATA_VOCAB_DIRS:
         expand_sdir = os.path.join(src_data_dir, sdir)
         if os.path.isdir(expand_sdir):
             log.info("- %s -> %s"%(sdir, tgt_data_dir))

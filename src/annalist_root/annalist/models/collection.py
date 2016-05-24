@@ -52,7 +52,7 @@ from annalist.models.rendertypeinfo import (
 class Collection(Entity):
 
     _entitytype     = ANNAL.CURIE.Collection
-    _entitytypeid   = "_coll"
+    _entitytypeid   = layout.COLL_TYPEID
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_REF
@@ -151,7 +151,7 @@ class Collection(Entity):
                 )
             log.error(msg)
             raise ValueError(msg)
-        self[ANNAL.CURIE.inherit_from] = make_type_entity_id("_coll", altparent.get_id())
+        self[ANNAL.CURIE.inherit_from] = make_type_entity_id(layout.COLL_TYPEID, altparent.get_id())
         return parents
 
     @classmethod

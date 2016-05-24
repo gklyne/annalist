@@ -23,7 +23,7 @@ from annalist.models.collection import Collection
 class SiteData(Collection):
 
     _entitytype     = ANNAL.CURIE.SiteData
-    # _entitytypeid   = "_sitedata"
+    # _entitytypeid   = layout.SITEDATA_TYPEID
 
     def __init__(self, parentsite, entityid=layout.SITEDATA_ID):
         """

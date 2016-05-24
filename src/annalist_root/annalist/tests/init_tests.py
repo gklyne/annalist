@@ -72,7 +72,7 @@ def copySitedata(src, sitedatasrc, tgt):
     global sitedata_target_reset
     if sitedata_target_reset == "all":
         replacetree(src, tgt)
-        for sdir in ("users", "types", "lists", "views", "groups", "fields", "vocabs", "enums"):
+        for sdir in layout.COLL_DIRS:
             s = os.path.join(sitedatasrc, sdir)
             d = os.path.join(sitedatatgt, sdir)
             replacetree(s, d)

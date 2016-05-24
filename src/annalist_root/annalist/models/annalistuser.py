@@ -43,7 +43,7 @@ unknown_user_uri = "annal:User/_unknown_user_perms"
 class AnnalistUser(EntityData):
 
     _entitytype     = ANNAL.CURIE.User
-    _entitytypeid   = "_user"
+    _entitytypeid   = layout.USER_TYPEID
     _entityview     = layout.COLL_USER_VIEW
     _entitypath     = layout.COLL_USER_PATH
     _entityfile     = layout.USER_META_FILE
