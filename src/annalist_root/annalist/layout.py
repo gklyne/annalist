@@ -98,7 +98,7 @@ SITEDATA_CONTEXT_PATH   = "./"                                      # used in mo
 
 # Type records
 TYPE_TYPEID             = "_type"                           # type id, used in URL
-TYPE_DIR                = "types"                           # collection directory in file system
+TYPE_DIR                = "_type"                           # collection directory in file system
 TYPE_DIR_PREV           = "types"                           # collection directory in file system
 TYPE_META_FILE          = "type_meta.jsonld"                # type metadata file name
 TYPE_PROV_FILE          = "type_prov.jsonld"                # type provenance file name
@@ -109,7 +109,7 @@ COLL_TYPE_PATH          = COLL_META_DIR + "/" + TYPE_DIR + "/%(id)s"
 
 # List description records
 LIST_TYPEID             = "_list"                           # list id, used in URL
-LIST_DIR                = "lists"                           # collection directory in file system
+LIST_DIR                = "_list"                           # collection directory in file system
 LIST_DIR_PREV           = "lists"                           # collection directory in file system
 LIST_META_FILE          = "list_meta.jsonld"                # list metadata file name
 LIST_PROV_FILE          = "list_prov.jsonld"                # list provenance file name
@@ -120,7 +120,7 @@ COLL_LIST_PATH          = COLL_META_DIR + "/" + LIST_DIR + "/%(id)s"
 
 # View description records
 VIEW_TYPEID             = "_view"                           # type id, used in URL
-VIEW_DIR                = "views"                           # collection directory in file system
+VIEW_DIR                = "_view"                           # collection directory in file system
 VIEW_DIR_PREV           = "views"                           # previous collection directory
 VIEW_META_FILE          = "view_meta.jsonld"                # view metadata file name
 VIEW_PROV_FILE          = "view_prov.jsonld"                # view provenance file name
@@ -131,7 +131,7 @@ COLL_VIEW_PATH          = COLL_META_DIR + "/" + VIEW_DIR + "/%(id)s"
 
 # Field-group description records
 GROUP_TYPEID            = "_group"                          # group id, used in URL
-GROUP_DIR               = "groups"                          # collection directory in file system
+GROUP_DIR               = "_group"                          # collection directory in file system
 GROUP_DIR_PREV          = "groups"                          # previous collection directory
 GROUP_META_FILE         = "group_meta.jsonld"               # group metadata file name
 GROUP_PROV_FILE         = "group_prov.jsonld"               # group provenance file name
@@ -142,7 +142,7 @@ COLL_GROUP_PATH         = COLL_META_DIR + "/" + GROUP_DIR + "/%(id)s"
 
 # Field description records
 FIELD_TYPEID            = "_field"                          # field id, used in URL
-FIELD_DIR               = "fields"                          # collection directory in file system
+FIELD_DIR               = "_field"                          # collection directory in file system
 FIELD_DIR_PREV          = "fields"                          # previous collection directory
 FIELD_META_FILE         = "field_meta.jsonld"               # field metadata file name
 FIELD_PROV_FILE         = "field_prov.jsonld"               # field provenance file name
@@ -153,7 +153,7 @@ COLL_FIELD_PATH         = COLL_META_DIR + "/" + FIELD_DIR + "/%(id)s"
 
 # User permission records
 USER_TYPEID             = "_user"                           # type id, used in URL
-USER_DIR                = "users"                           # collection directory in file system
+USER_DIR                = "_user"                           # collection directory in file system
 USER_DIR_PREV           = "users"                           # previous collection directory
 USER_META_FILE          = "user_meta.jsonld"                # user metadata file name
 USER_PROV_FILE          = "user_prov.jsonld"                # user provenance file name
@@ -164,8 +164,8 @@ COLL_USER_PATH          = COLL_META_DIR + "/" + USER_DIR + "/%(id)s"
 
 # Vocabulary namespace records
 VOCAB_TYPEID            = "_vocab"                          # vocab id, used in URL
-VOCAB_DIR               = "vocabs"                          # collection directory in file system
-VOCAB_DIR_PREV          = "vocabs"                          # previous collection directory
+VOCAB_DIR               = "_vocab"                          # collection directory in file system
+VOCAB_DIR_PREV          = "_vocab"                          # previous collection directory
 VOCAB_META_FILE         = "vocab_meta.jsonld"               # vocab metadata file name
 VOCAB_PROV_FILE         = "vocab_prov.jsonld"               # vocab provenance file name
 COLL_BASE_VOCAB_REF     = VOCAB_TYPEID + "/%(id)s"          # ref vocab relative to collection base URL
@@ -175,7 +175,7 @@ COLL_VOCAB_PATH         = COLL_META_DIR + "/" + VOCAB_DIR + "/%(id)s"
 
 # Enumerated value description records
 ENUM_TYPEID             = "_enum"                           # enum id, used in URL
-ENUM_DIR                = "enums"                           # collection directory in file system
+ENUM_DIR                = "_enum"                           # collection directory in file system
 ENUM_DIR_PREV           = "enums"                           # previous collection directory
 ENUM_META_FILE          = "enum_meta.jsonld"                # enum metadata file name
 ENUM_PROV_FILE          = "enum_prov.jsonld"                # enum provenance file name

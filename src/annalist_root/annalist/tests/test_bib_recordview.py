@@ -111,7 +111,9 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             ])
         # log.info(self.field_options_no_bibentry)
         # For checking Location: header values...
-        self.continuation_path = entitydata_list_type_url(coll_id="testcoll", type_id="_view")
+        self.continuation_path = entitydata_list_type_url(
+          coll_id="testcoll", type_id=layout.VIEW_TYPEID
+          )
         self.continuation_url  = TestHostUri + self.continuation_path
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -134,14 +136,14 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
 
     def test_get_form_rendering_view_bibentry(self):
         u = entitydata_edit_url(
-            "edit", "testcoll", "_view", entity_id="BibEntry_view", 
+            "edit", "testcoll", layout.VIEW_TYPEID, entity_id="BibEntry_view", 
             view_id="View_view"
             )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
-            coll_id="testcoll", type_id="_view", entity_id="BibEntry_view",
+            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="BibEntry_view",
             tooltip1=context_view_field(r.context, 0, 0)['field_help'],
             tooltip2=context_view_field(r.context, 1, 0)['field_help'],
             tooltip3=context_view_field(r.context, 2, 0)['field_help'],
@@ -245,21 +247,21 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
     # Test view rendering of BibEntry_view: field selectors should include Bib_* fields
     def test_get_recordview_edit_bibentry(self):
         u = entitydata_edit_url(
-            "edit", "testcoll", "_view", entity_id="BibEntry_view", 
+            "edit", "testcoll", layout.VIEW_TYPEID, entity_id="BibEntry_view", 
             view_id="View_view"
             )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = collection_entity_view_url("testcoll", "_view", "BibEntry_view")
+        view_url = collection_entity_view_url("testcoll", layout.VIEW_TYPEID, "BibEntry_view")
         self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_view")
+        self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "BibEntry_view")
         self.assertEqual(r.context['orig_id'],          "BibEntry_view")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['edit_view_button'],   False)
+        self.assertEqual(r.context['edit_view_button'], False)
         self.assertEqual(r.context['continuation_url'], "")
         # Skip checking fields 0-4 - that's already been covered
         # log.info("*** fields[5]['options']:     "+repr(r.context['fields'][5]['options']))
