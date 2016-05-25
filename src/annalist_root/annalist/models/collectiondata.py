@@ -143,7 +143,8 @@ def migrate_coll_data(coll):
         return errs
     entityfinder = EntityFinder(coll)
     for e in entityfinder.get_entities():
-        e._save()
+        e._save(post_update_flags={"nocontext"})
+    coll.generate_coll_jsonld_context()    
     return []
 
 # End.

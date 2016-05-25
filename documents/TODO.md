@@ -117,7 +117,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     shoud be: "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
     - [x] Change entity references (select rendered) to @type @id in context
         - cf. models.collection.get_coll_jsonld_context, etc.
-    - [ ] Rename directories used for built-in types to match type name
+    - [x] Rename directories used for built-in types to match type name
         - views.collection -> annalist.models.collectiondata.migrate_coll_data
         - am_managecollections -> annalist.models.collectiondata.migrate_coll_data
         - collection object is parameter
@@ -126,24 +126,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Add function in collectiondata to rename directories
         - [x] Add call to directory migration function in collection view method from site
         - [x] Add call to directory migration function in collectiondata.migrate_coll_data
-        - [ ] Rename directories in sitedata in source tree and layout.
-            - ** 'vocabs' not migrated
-            - ** annalist manager site update not using new directories
-            - ** annalist manager site update should remove/save old directories.
-            - test of migration using annalist-manager and customize page.
-            - _annalist_site use _annalist_collection for base directory?
-            - remove extra fields from context (fid, vid, etc)?
+        - [x] Rename directories in sitedata in source tree and layout.
 - [x] Fix bug in list search function: not finding values in repeated groups
-- [ ] If logout results in loss of authorization to view resource, go to collection view
 
 (Release?)
 
+- [ ] If logout results in loss of authorization to view resource, go to collection view
 - [ ] Review file/URL layout for enums, etc 
     - (Enums?  For web access or file access?)
     - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
     - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
     - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
     - thus need consistency.  Use d/_enum/Enum-type/value for now?
+- [ ] Remove surplus fields from context when context generation/migration issues are settled
+    - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?

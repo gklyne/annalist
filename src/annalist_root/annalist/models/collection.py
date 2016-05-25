@@ -509,10 +509,13 @@ class Collection(Entity):
 
     # JSON-LD context data
 
-    def generate_coll_jsonld_context(self):
+    def generate_coll_jsonld_context(self, flags=None):
         """
         (Re)generate JSON-LD context description for the current collection.
         """
+        if flags and ("nocontext" in flags):
+            # Skip processing if "nocontext" flag provided
+            return
         log.info("Generating context for collection %s"%(self.get_id()))
         # Build context data
         context      = self.get_coll_jsonld_context()
@@ -642,6 +645,7 @@ class Collection(Entity):
                         msg = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
                         log.warning(msg)
                         print "@@ "+msg
+                        property_contexts[puri]['err'] = msg
                 elif ( fcontext and
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?

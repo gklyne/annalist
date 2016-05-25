@@ -327,7 +327,7 @@ class EntityRoot(object):
             types.append(self._entitytype)
         return types
 
-    def _save(self):
+    def _save(self, post_update_flags=None):
         """
         Save current entity to Annalist storage
         """
@@ -367,7 +367,7 @@ class EntityRoot(object):
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '), sort_keys=True)
-        self._post_update_processing(values)
+        self._post_update_processing(values, post_update_flags)
         return
 
     def _remove(self, type_uri):
@@ -503,7 +503,7 @@ class EntityRoot(object):
         # Return result
         return entitydata
 
-    def _post_update_processing(self, entitydata):
+    def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default method for post-update processing.
 

@@ -120,7 +120,7 @@ class RecordField(EntityData):
         # Return result
         return entitydata
 
-    def _post_update_processing(self, entitydata):
+    def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default post-update processing.
 
@@ -129,7 +129,7 @@ class RecordField(EntityData):
         It invokes the containing collection method to regenerate the JSON LD context 
         for the collection to which the field belongs.
         """
-        self._parent.generate_coll_jsonld_context()
+        self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
 
 # End.
