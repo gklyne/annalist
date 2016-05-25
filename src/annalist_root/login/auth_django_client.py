@@ -82,10 +82,10 @@ class LocalUserPasswordView(generic.View):
         return HttpResponse(template.render(context))
 
     def post(self, request):
-        userid           = request.POST.get("userid",             "")
-        password         = request.POST.get("password",           "")
+        userid           = request.POST.get("userid",           "")
+        password         = request.POST.get("password",         "")
         user_profile_url = request.POST.get("user_profile_url", "/no_user_profile_url_in_form/")
-        continuation_url = request.POST.get("continuation_url",   "/no_continuation_url_in_form/")
+        continuation_url = request.POST.get("continuation_url", "/no_continuation_url_in_form/")
         if request.POST.get("login", None) == "Login":
             if not userid:
                 log.info("No User ID specified")
@@ -103,7 +103,10 @@ class LocalUserPasswordView(generic.View):
                     login_message.USER_NO_EMAIL%(userid))
             # Complete the login
             login(request, authuser)
-            request.session['recent_userid'] = userid
+            # Copy required values to new session object (cf. HttpResponseRedirectLogin)
+            request.session['recent_userid']    = userid
+            request.session['user_profile_url'] = user_profile_url
+            request.session['continuation_url'] = continuation_url
             log.info("LocalUserPasswordView: user.username:   "+authuser.username)
             log.info("LocalUserPasswordView: user.first_name: "+authuser.first_name)
             log.info("LocalUserPasswordView: user.last_name:  "+authuser.last_name)

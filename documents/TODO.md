@@ -127,7 +127,22 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Add call to directory migration function in collection view method from site
         - [x] Add call to directory migration function in collectiondata.migrate_coll_data
         - [ ] Rename directories in sitedata in source tree and layout.
+            - ** 'vocabs' not migrated
+            - ** annalist manager site update not using new directories
+            - ** annalist manager site update should remove/save old directories.
             - test of migration using annalist-manager and customize page.
+            - _annalist_site use _annalist_collection for base directory?
+            - remove extra fields from context (fid, vid, etc)?
+- [ ] If logout results in loss of authorization to view resource, go to collection view
+
+Errors migrating Container_defs:
+@@ Incompatible use of property annal:member in field Journal_ref 
+   (new {'gid': 'Journal_ref', '@type': '@id', 'fid': u'Journal_ref'}; 
+    was {'fid': u'Event_r', 'vid': 'Artifact', '@container': '@list'})
+@@ Incompatible use of property rdfs:seeAlso in field See_also 
+   (new {'gid': 'See_also_r', '@type': '@id', 'fid': u'See_also'}; 
+    was {'fid': u'Entity_see_also_r', '@type': '@id', 'vid': 'Vocab_view', '@container': '@set'})
+
 
 (Release?)
 

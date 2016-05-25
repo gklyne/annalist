@@ -616,6 +616,10 @@ class Collection(Entity):
         f = RecordField.load(self, fid, altscope="all")
         if f is None:
             return (None, None)
+        # @@debugging@@
+        # if fid in ["Entity_id", "List_id"]:
+        #     print "@@ %s field   %r"%(fid, f)
+        #     print "@@ %s context %r"%(fid, get_field_context(f))
         return (f[ANNAL.CURIE.property_uri], get_field_context(f))
 
     def set_field_uri_jsonld_context(self, puri, field_id, fcontext, property_contexts):
@@ -642,6 +646,8 @@ class Collection(Entity):
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
                     property_contexts[puri] = fcontext
+                    # msg = "Save context info for %s in field %s (new %r)"% (puri, field_id, fcontext)
+                    # print "@@ "+msg
         return
 
     # @@TODO: move this away from model logic, as it represents a dependency on view logic?

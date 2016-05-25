@@ -165,7 +165,7 @@ COLL_USER_PATH          = COLL_META_DIR + "/" + USER_DIR + "/%(id)s"
 # Vocabulary namespace records
 VOCAB_TYPEID            = "_vocab"                          # vocab id, used in URL
 VOCAB_DIR               = "_vocab"                          # collection directory in file system
-VOCAB_DIR_PREV          = "_vocab"                          # previous collection directory
+VOCAB_DIR_PREV          = "vocabs"                          # previous collection directory
 VOCAB_META_FILE         = "vocab_meta.jsonld"               # vocab metadata file name
 VOCAB_PROV_FILE         = "vocab_prov.jsonld"               # vocab provenance file name
 COLL_BASE_VOCAB_REF     = VOCAB_TYPEID + "/%(id)s"          # ref vocab relative to collection base URL
