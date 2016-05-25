@@ -207,22 +207,54 @@ class EntityFinder(object):
         Returns True if entity contains/matches search term, else False.
         Search term None (or blank) matches all entities.
 
-        >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3' }
-        >>> EntityFinder.entity_contains(e, "1")
+        >>> e1  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', 'annal:property_uri': 'annal:member' }
+        >>> EntityFinder.entity_contains(e1, "1")
         True
-        >>> EntityFinder.entity_contains(e, "3")
+        >>> EntityFinder.entity_contains(e1, "3")
         True
-        >>> EntityFinder.entity_contains(e, "nothere")
+        >>> EntityFinder.entity_contains(e1, "nothere")
+        False
+        >>> EntityFinder.entity_contains(e1, "annal:member")
+        True
+        >>> e2 = { 'list': ['l1', 'l2', 'l3'] \
+                 , 'dict': {'p:a': 'd1', 'p:b': 'd2', 'p:c': 'd3'} \
+                 }
+        >>> EntityFinder.entity_contains(e2, "l1")
+        True
+        >>> EntityFinder.entity_contains(e2, "d3")
+        True
+        >>> EntityFinder.entity_contains(e2, "nothere")
         False
         """
         if search:
+            # Entity is not a dict, so scan entity keys for search
             for key in e:
                 val = e[key]
-                if isinstance(val, (str, unicode)):
-                    if search in val:
-                        return True
+                if cls.value_contains(val, search):
+                    return True
+                # if isinstance(val, (str, unicode)):
+                #     if search in val:
+                #         return True
             return False
         return True
+
+    @classmethod
+    def value_contains(cls, val, search):
+        """
+        Helper function tests for search term in dictionary, list or string values.
+        Other values are not searched.
+        """
+        if isinstance(val, dict):
+            for k in val:
+                if cls.value_contains(val[k], search):
+                    return True
+        elif isinstance(val, list):
+            for e in val:
+                if cls.value_contains(e, search):
+                    return True
+        elif isinstance(val, (str, unicode)):
+            return search in val
+        return False
 
 #   -------------------------------------------------------------------
 #   EntitySelector
