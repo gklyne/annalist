@@ -127,8 +127,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Add call to directory migration function in collection view method from site
         - [x] Add call to directory migration function in collectiondata.migrate_coll_data
         - [ ] Rename directories in sitedata in source tree and layout.
-            - test of migration using annalist-manager and custimize page.
-            - update directories for other collections in software kit
+            - test of migration using annalist-manager and customize page.
 
 (Release?)
 

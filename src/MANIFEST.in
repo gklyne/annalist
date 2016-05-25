@@ -25,7 +25,6 @@ recursive-include annalist_root/annalist/data/static/css *.css
 recursive-include annalist_root/annalist/data/static/js *.js
 recursive-include annalist_root/annalist/data/static/images *.png *.jpg
 recursive-include annalist_root/annalist/data/static/foundation *.css *.png *.jpg *.js *.md
-prune annalist_root/annalist/sitedata/attic
 include annalist_root/miscutils/*.py
 include annalist_root/login/*.py
 include annalist_root/login/templates/*.html
