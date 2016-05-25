@@ -112,7 +112,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
         - previously, there was a problem with rdflib-jsonld base URI handling.
             - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
-- [ ] BUG: JSON URI wrong? e.g. 
+- [x] BUG: JSON URI wrong in JSON-LD output? e.g. 
     "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
     shoud be: "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
     - [x] Change entity references (select rendered) to @type @id in context
@@ -140,6 +140,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - thus need consistency.  Use d/_enum/Enum-type/value for now?
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
+- [ ] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
@@ -149,11 +150,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
         - Use `@id`, thus: { "@id": <some_resource> } .
+- [ ] Access to page link without continuation (view only)?
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions
+    - [ ] site link to download log, if admin permissions (could be a data bridge?)
     - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
