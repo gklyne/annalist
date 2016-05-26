@@ -2,23 +2,30 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Ensure default logging level is INFO (in `settings/common.py`)
-- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (remove old files) 
+- [x] Feature freeze
+- [x] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
+- [x] Uninstall annalist (if installed): `pip uninstall annalist`
+- [x] Delete contents of build directory (remove old files) 
     - python setup.py clean --all
-- [ ] Clean old .pyc and temporary files
+- [x] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
-- [ ] Local install
-- [ ] Run test suite - `annalist-manager runtest`
-- [ ] Update site data in local 'personal' installation
+- [x] Local install
+- [x] Run test suite - `annalist-manager runtest`
+- [x] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
-- [ ] Test 'personal' deployment in actual use
+    - `annalist-manager updateadmin ...` (if needed)
+- [x] Test collection installation; e.g.
+    - `annalist-manager installcoll RDF_schema_defs`
+    - `annalist-manager installcoll Annalist_schema`    
+- [x] Test migrations; e.g.
+    - `annalist-manager migratecoll RDF_schema_defs`
+    - `annalist-manager migratecoll Annalist_schema`    
+- [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [ ] Documentation and tutorial updates
-- [ ] Demo screencast update
+- [x] Documentation and tutorial updates
+- [x] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 
 - [ ] Create release preparation branch
