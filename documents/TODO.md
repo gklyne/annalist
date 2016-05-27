@@ -18,6 +18,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] BUG: login button images not copied to new installation.
 - [ ] BUG: Site users removed by software update (confirmed).
+- [ ] BUG: when initializing/updating site data, create providers directory if not already in existence.
 - [ ] README front page and PyPI front page include pointer to annalist.net
 - [ ] If logout results in loss of authorization to view resource, go to collection view
 - [ ] Review file/URL layout for enums, etc 
