@@ -87,7 +87,7 @@
 - [x] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
 - [x] Check out demo system.
-- [ ] Commit changes
+- [x] Commit changes
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
