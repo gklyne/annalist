@@ -52,16 +52,18 @@ from annalist.views.fields.bound_field  import bound_field, get_entity_values
 # Table used as basis, or initial values, for a dynamically generated 
 # entity-value map for list displays
 listentityvaluemap  = (
-        [ SimpleValueMap(c='help_filename',         e=None,                  f=None                  )
-        , SimpleValueMap(c='url_type_id',           e=None,                  f=None                  )
-        , SimpleValueMap(c='url_list_id',           e=None,                  f=None                  )
-        , SimpleValueMap(c='list_choices',          e=None,                  f=None                  )
-        , SimpleValueMap(c='collection_view',       e=None,                  f=None                  )
-        , SimpleValueMap(c='default_view_id',       e=None,                  f=None                  )
-        , SimpleValueMap(c='default_view_enable',   e=None,                  f=None                  )
-        , SimpleValueMap(c='customize_view_enable', e=None,                  f=None                  )
-        , SimpleValueMap(c='search_for',            e=None,                  f='search_for'          )
-        , SimpleValueMap(c='continuation_url',      e=None,                  f='continuation_url'    )
+        [ SimpleValueMap(c='help_filename',         e=None, f=None               )
+        , SimpleValueMap(c='url_type_id',           e=None, f=None               )
+        , SimpleValueMap(c='url_list_id',           e=None, f=None               )
+        , SimpleValueMap(c='list_choices',          e=None, f=None               )
+        , SimpleValueMap(c='collection_view',       e=None, f=None               )
+        , SimpleValueMap(c='default_view_id',       e=None, f=None               )
+        , SimpleValueMap(c='default_view_enable',   e=None, f=None               )
+        , SimpleValueMap(c='customize_view_enable', e=None, f=None               )
+        , SimpleValueMap(c='search_for',            e=None, f='search_for'       )
+        , SimpleValueMap(c='scope',                 e=None, f='scope'            )
+        , SimpleValueMap(c='continuation_url',      e=None, f='continuation_url' )
+        , SimpleValueMap(c='continuation_param',    e=None, f=None               )
         # Field data is handled separately during processing of the form description
         # Form and interaction control (hidden fields)
         ])
@@ -184,6 +186,7 @@ class EntityGenericListView(AnnalistGenericView):
             # Set up initial view context
             context_extra_values = (
                 { 'continuation_url':       listinfo.get_continuation_url() or ""
+                , 'continuation_param':     listinfo.get_continuation_param()
                 , 'request_url':            self.get_request_path()
                 , 'scope':                  scope
                 , 'coll_id':                coll_id
@@ -221,7 +224,6 @@ class EntityGenericListView(AnnalistGenericView):
         return (
             self.render_html(listcontext, self._entityformtemplate) or 
             self.redirect_json(json_redirect_url) or
-            #@@ self.render_json(entityvallist) or
             self.error(self.error406values())
             )
 
@@ -456,6 +458,6 @@ class EntityGenericListView(AnnalistGenericView):
         """
         Return URL used as base for relative references within a collection.
         """
-        return urlparse.urljoin(self.collection_view_url, layout.COLL_CONTEXT_PATH)
+        return urlparse.urljoin(self.collection_view_url, layout.COLL_BASE_REF)
 
 # End.

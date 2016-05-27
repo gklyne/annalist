@@ -40,7 +40,7 @@ TEMPLATE_DEBUG = False
 # for tracing field values displayed in Annalist edit/view forms.
 # Suggested use is to raise level to logging.INFO when running a single named
 # test, when trying to understand how values end up in a form.
-TRACE_FIELD_VALUE   = logging.DEBUG
+TRACE_FIELD_VALUE   = logging.INFO
 
 ALLOWED_HOSTS = []
 
@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'annalist',
-    'oauth2',
+    'login',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -73,7 +73,7 @@ WSGI_APPLICATION = 'annalist_site.wsgi.application'
 # Customize authentication backends
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',    # default
-    'oauth2.OAuth2CheckBackend.OAuth2CheckBackend'
+    'login.OAuth2CheckBackend.OAuth2CheckBackend'
     )
 
 # Database

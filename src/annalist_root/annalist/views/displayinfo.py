@@ -14,6 +14,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 import json
+import re
+import urlparse
 import traceback
 import logging
 log = logging.getLogger(__name__)
@@ -42,7 +44,7 @@ from annalist.models.recordvocab    import RecordVocab
 from annalist.views.uri_builder     import (
     uri_param_dict,
     scope_params,
-    uri_with_params, 
+    uri_params, uri_with_params, 
     continuation_url_chain, continuation_chain_url,
     url_update_type_entity_id
     )
@@ -84,6 +86,69 @@ def make_data_ref(request_url, data_ref, resource_type=None):
     if resource_type:
         params['type'] = resource_type
     return uri_with_params(data_ref, params)
+
+def apply_substitutions(context, text_in):
+    """
+    Apply substitutions from the supplied `context` to the text supplied as `text_in`,
+    returning the resulting string.  This has been introduced to make it easier to 
+    create meaningful links in help pages, with values HOST, SITE, COLL and BASE
+    added to the context to make references to the current host, site, collection
+    and entity base URI respectively.
+
+    Substitutions are made for the following patterns found in `text_in`
+
+    `$name` followed by a non-alphanumeric, non-':' character
+    `$name:`
+    `$[curie]`
+    `$$`
+
+    In the first two, `name` consists of a sequence of alphabetic, numeric or '_' 
+    characters, and the pattern is replaced by the corresponding value from the context.
+
+    In the this pattern, `curie` may contain several additional characters that may occur 
+    in a compact URI (CURIE); the pattern is replaced by the corresponding context value.
+
+    The final pattern is an escape sequence for inserting a single '$' into the output 
+    which might otherwise be treated as a context value substitution.
+
+    If no corresponding context value is found for a substitution pattern, the pattern is
+    copied as-is to the output.
+
+    Any other occurrence of '$' (i.e. not part of any pattern above) is untouched.
+
+    >>> context = { 'aa': '-aa-', 'bb': '-bb-', 'c:c': '-cc-'}
+    >>> apply_substitutions(context, "foo bar")
+    'foo bar'
+    >>> apply_substitutions(context, "foo $aa bar")
+    'foo -aa- bar'
+    >>> apply_substitutions(context, "foo $bb:bar")
+    'foo -bb-bar'
+    >>> apply_substitutions(context, "foo $[c:c] bar")
+    'foo -cc- bar'
+    >>> apply_substitutions(context, "foo $$ bar")
+    'foo $ bar'
+    >>> apply_substitutions(context, "foo $dd bar")
+    'foo $dd bar'
+    >>> apply_substitutions(context, "foo $ee bar")
+    'foo $ee bar'
+    >>> apply_substitutions(context, "foo $[f:f] bar")
+    'foo $[f:f] bar'
+    >>> apply_substitutions(context, "foo $aa $bb: $[c:c] $[f:f] bar")
+    'foo -aa- -bb- -cc- $[f:f] bar'
+    """
+    def sub_fn(matchobj):
+        matched = matchobj.group(1) or matchobj.group(2)
+        if matchobj.group(3):
+            return "$"
+        elif matched in context:
+            return context[matched]
+        return matchobj.group(0)
+    namechars  = "_A-Za-z0-9"
+    curiechars = "-@.~+*=:;,/?#!"+namechars
+    #                          1----)       2----)     3--)
+    sub_re     = re.compile("\$([%s]+):?|\$\[([%s]+)\]|\$(\$)"%(namechars, curiechars))
+    text_out   = sub_re.sub(sub_fn, text_in)
+    return text_out
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -517,6 +582,13 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
+    def get_continuation_param(self):
+        """
+        Return continuation URL specified for the current request, or None.
+        """
+        cont_here = self.view.continuation_here(self.request_dict, self.default_continue)
+        return uri_params({"continuation_url": cont_here})
+
     def get_continuation_url(self):
         """
         Return continuation URL specified for the current request, or None.
@@ -626,20 +698,17 @@ class DisplayInfo(object):
             , 'type_id':            self.type_id
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
+            , "SITE":               self.site._entityurl
+            , "HOST":               self.reqhost
             })
         context.update(self.authorizations)
-        if hasattr(self.view, 'help') and self.view.help:
-            context.update(
-                { 'help_filename':  self.view.help
-                })
-        if hasattr(self.view, 'help_markdown') and self.view.help_markdown:
-            context.update(
-                { 'help_markdown':  self.view.help_markdown
-                })
         if self.collection:
+            coll_url_parts = urlparse.urlsplit(self.collection._entityurl)
             context.update(
                 { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]
+                , "COLL":       self.collection._entityurl
+                , "BASE":       coll_url_parts.path + layout.COLL_ENTITYDATA_PATH
                 })
             context['title'] = "%(coll_label)s"%context
         if self.recordview:
@@ -649,8 +718,10 @@ class DisplayInfo(object):
                 , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
             context['title'] = "%(view_label)s - %(coll_label)s"%context
-            task_buttons = self.recordview.get(ANNAL.CURIE.task_buttons, None)
-            self.add_task_button_context(task_buttons, context)
+            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, None)
+            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, None)
+            self.add_task_button_context('edit_task_buttons', edit_task_buttons, context)
+            self.add_task_button_context('view_task_buttons', view_task_buttons, context)
         if self.recordlist:
             context.update(
                 { 'heading':                self.recordlist[RDFS.CURIE.label]
@@ -670,9 +741,18 @@ class DisplayInfo(object):
                 })
             # context['heading'] = "%(entity_label)s - %(view_label)s"%context
             context['title']   = "%(entity_label)s - %(view_label)s - %(coll_label)s"%context
+        if hasattr(self.view, 'help') and self.view.help:
+            context.update(
+                { 'help_filename':  self.view.help
+                })
+        if hasattr(self.view, 'help_markdown') and self.view.help_markdown:
+            substituted_text = apply_substitutions(context, self.view.help_markdown)
+            context.update(
+                { 'help_markdown':  substituted_text
+                })
         return context
 
-    def add_task_button_context(self, task_buttons, context):
+    def add_task_button_context(self, task_buttons_name, task_buttons, context):
         """
         Adds context values to a supplied context dictionary corresponding 
         to the supplied task_buttons value(s) from a view description.
@@ -682,7 +762,7 @@ class DisplayInfo(object):
         """
         if isinstance(task_buttons, list):
             context.update(
-                { 'task_buttons':
+                { task_buttons_name:
                     [ { 'button_id':    b[ANNAL.CURIE.button_id]
                       , 'button_name':  extract_entity_id(b[ANNAL.CURIE.button_id])
                       , 'button_label': b.get(ANNAL.CURIE.button_label, "@@annal:button_label@@")
@@ -725,5 +805,9 @@ class DisplayInfo(object):
 
     def __repr__(self):
         return str(self)
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
 # End.

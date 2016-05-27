@@ -1,0 +1,25 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_user/testuser",
+  "@type": [
+    "annal:User"
+  ],
+  "annal:id": "testuser",
+  "annal:type": "annal:User",
+  "annal:type_id": "_user",
+  "annal:user_permission": [
+    "VIEW",
+    "CREATE",
+    "UPDATE",
+    "DELETE",
+    "CONFIG"
+  ],
+  "annal:user_uri": "mailto:testuser@test.example.com",
+  "rdfs:comment": "User testuser: permissions for Test User in collection testcoll",
+  "rdfs:label": "Test User"
+}

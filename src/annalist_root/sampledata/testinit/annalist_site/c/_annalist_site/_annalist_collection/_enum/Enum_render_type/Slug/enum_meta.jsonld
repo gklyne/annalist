@@ -1,0 +1,9 @@
+{ "@id":                "Enum_render_type/Slug"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../../"}, "../../../coll_context.jsonld"]
+, "annal:id":           "Slug"
+, "annal:type_id":      "Enum_render_type"
+, "rdfs:label":         "Short name"
+, "rdfs:comment":       "# Short name (slug)\r\n\r\nA short name consisting of letters, digits and underscore ('_') characters only.\r\n\r\nThese are used by Annalist as internal identifiers, e.g. for entity and type names.  The restricted character set allowed means that they can be used as URI path segments, or HTML form field names.\r\n\r\n(Currently, the length of a slug is restricted to 32 characters, but this is under review as it may be unnecessarily restricting.)"
+, "annal:uri":          "annal:Enum_render_type/Slug"
+}

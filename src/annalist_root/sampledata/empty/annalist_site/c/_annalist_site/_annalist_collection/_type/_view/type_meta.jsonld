@@ -1,0 +1,11 @@
+{ "@id":                "_type/_view"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_view"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:View"
+, "rdfs:label":         "View"
+, "rdfs:comment":       "# View definition\r\n\r\nDefines a presentation for viewing and editing entity data.\r\n\r\nA view incorporates a number of fields, which connect stored entity data elements with their presentation as part of an entity view or list."
+, "annal:type_view":    "_view/View_view"
+, "annal:type_list":    "_list/View_list"
+}

@@ -420,6 +420,7 @@ div.columns.view-value
 div.columns.view-value > input[type="input"] , 
 div.columns.view-value > input[type="textarea"] , 
 div.columns.view-value > input[type="text"] , 
+div.columns.view-value > input[type="password"] , 
 div.columns.view-value > textarea , 
 div.columns.view-value > select ,
 div.columns.view-value > div.row > div.columns > select
@@ -515,6 +516,54 @@ div.columns > input[type=submit]
     padding-left: 1rem;
     padding-right: 1rem;
     */
+}
+
+div.row.form-buttons
+{
+    margin-top:         0.25rem ;
+    margin-bottom:      0rem ;    
+}
+
+div.row.form-buttons div.columns.view-label
+{
+    margin-top:         0rem ;
+    margin-bottom:      0rem ;
+    padding-top:        0.25rem;
+    padding-left:       0.5rem;
+    padding-right:      0.5rem;
+    font-size:          0.75rem;
+}
+
+div.row.form-buttons div.columns > button 
+{
+    margin-top:         0rem ;
+    margin-bottom:      0rem ;
+    padding:            0;
+    /*
+    border-style:       revert;
+    border-width:       revert;
+    border:             revert;
+    */
+    /* height:             1.4rem; */
+    /*
+    height:             auto;
+    font-size:          0.75rem;
+    color:              #AA6688;
+    border-color:       #DDDDDD;
+    background-color:   #DDDDDD;
+    */
+}
+
+div.row.form-buttons div.columns > button.login-button
+{
+    height:             26px;
+}
+
+div.row.form-buttons div.columns > button.image-button
+{
+    border-style:       none;
+    border-width:       0;
+    background-color:   transparent;
 }
 
 div.columns > select[size] ,

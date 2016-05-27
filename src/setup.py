@@ -3,7 +3,7 @@
 # NOTE: when testing, use "pip install ... --upgrade"
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2011-2013, University of Oxford"
+__copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 # Setup.py based on https://github.com/paltman/python-setup-template/blob/master/setup.py,
@@ -62,16 +62,11 @@ setup(
             , 'annalist_root.annalist_site.settings'
           , 'annalist_root.annalist_manager'
           , 'annalist_root.utils'
-          , 'annalist_root.oauth2'
+          , 'annalist_root.login'
           , 'annalist_root.miscutils'
         ],
     package_dir = 
         { 'annalist_root':  'annalist_root'
-        # , 'annalist':       'annalist_root/annalist'
-        # , 'annalist_site':  'annalist_root/annalist_site'
-        # , 'utils':          'annalist_root/annalist'
-        # , 'oauth2':         'annalist_root/utils'
-        # , 'miscutils':      'annalist_root/miscutils'
         },
     # >>>> REMEMBER to also update MANIFEST.in ... <<<<
     package_data = 
@@ -83,22 +78,10 @@ setup(
             , 'sampledata/testinit/annalist_site/*.jpg'
             , 'sampledata/testinit/annalist_site/_annalist_site/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/lists/*/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/types/*/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/views/*/*.jsonld'
+            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/_list/*/*.jsonld'
+            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/_type/*/*.jsonld'
+            , 'sampledata/testinit/annalist_site/c/*/_annalist_collection/_view/*/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/*.md'
-            , 'sampledata/bibtestinit/annalist_site/*.jpg'
-            , 'sampledata/bibtestinit/annalist_site/_annalist_site/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/enums/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/enums/*/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/fields/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/groups/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/lists/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/types/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/_annalist_collection/views/*/*.jsonld'
-            , 'sampledata/bibtestinit/annalist_site/c/*/d/*/*/*.jsonld'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'
@@ -111,47 +94,53 @@ setup(
             , 'data/static/foundation/css/*.css'
             , 'data/static/foundation/js/foundation/*.js'
             , 'data/static/foundation/js/vendor/*.js'
+            # Indentity provider data
+            , 'data/identity_providers/*.md'
+            , 'data/identity_providers/*.json'
+            , 'data/identity_providers/*.example'
             # Site-wide data definitions
-            , 'data/sitedata/enums/*/*/*.jsonld'
-            , 'data/sitedata/fields/*/*.jsonld'
-            , 'data/sitedata/groups/*/*.jsonld'
-            , 'data/sitedata/lists/*/*.jsonld'
-            , 'data/sitedata/types/*/*.jsonld'
-            , 'data/sitedata/views/*/*.jsonld'
-            , 'data/sitedata/users/*/*.jsonld'
-            , 'data/sitedata/vocabs/*/*.jsonld'
+            , 'data/sitedata/_enum/*/*/*.jsonld'
+            , 'data/sitedata/_field/*/*.jsonld'
+            , 'data/sitedata/_group/*/*.jsonld'
+            , 'data/sitedata/_list/*/*.jsonld'
+            , 'data/sitedata/_type/*/*.jsonld'
+            , 'data/sitedata/_view/*/*.jsonld'
+            , 'data/sitedata/_user/*/*.jsonld'
+            , 'data/sitedata/_vocab/*/*.jsonld'
             # Bibliographic data definitions
-            , 'data/bibdata/enums/*/*/*.jsonld'
-            , 'data/bibdata/fields/*/*.jsonld'
-            , 'data/bibdata/groups/*/*.jsonld'
-            , 'data/bibdata/lists/*/*.jsonld'
-            , 'data/bibdata/types/*/*.jsonld'
-            , 'data/bibdata/views/*/*.jsonld'
-            , 'data/bibdata/vocabs/*/*.jsonld'
+            , 'data/bibdata/_enum/*/*/*.jsonld'
+            , 'data/bibdata/_field/*/*.jsonld'
+            , 'data/bibdata/_group/*/*.jsonld'
+            , 'data/bibdata/_list/*/*.jsonld'
+            , 'data/bibdata/_type/*/*.jsonld'
+            , 'data/bibdata/_view/*/*.jsonld'
+            , 'data/bibdata/_vocab/*/*.jsonld'
             # Vocabulary namespace definitions
-            , 'data/namedata/enums/*/*/*.jsonld'
-            , 'data/namedata/fields/*/*.jsonld'
-            , 'data/namedata/groups/*/*.jsonld'
-            , 'data/namedata/lists/*/*.jsonld'
-            , 'data/namedata/types/*/*.jsonld'
-            , 'data/namedata/views/*/*.jsonld'
-            , 'data/namedata/vocabs/*/*.jsonld'
+            , 'data/namedata/_enum/*/*/*.jsonld'
+            , 'data/namedata/_field/*/*.jsonld'
+            , 'data/namedata/_group/*/*.jsonld'
+            , 'data/namedata/_list/*/*.jsonld'
+            , 'data/namedata/_type/*/*.jsonld'
+            , 'data/namedata/_view/*/*.jsonld'
+            , 'data/namedata/_vocab/*/*.jsonld'
             # RDF schema definitions
-            , 'data/RDF_schema_defs/fields/*/*.jsonld'
-            , 'data/RDF_schema_defs/groups/*/*.jsonld'
-            , 'data/RDF_schema_defs/lists/*/*.jsonld'
-            , 'data/RDF_schema_defs/types/*/*.jsonld'
-            , 'data/RDF_schema_defs/views/*/*.jsonld'
+            , 'data/RDF_schema_defs/_field/*/*.jsonld'
+            , 'data/RDF_schema_defs/_group/*/*.jsonld'
+            , 'data/RDF_schema_defs/_list/*/*.jsonld'
+            , 'data/RDF_schema_defs/_type/*/*.jsonld'
+            , 'data/RDF_schema_defs/_view/*/*.jsonld'
             # Journal definitions
-            , 'data/Journal_defs/fields/*/*.jsonld'
-            , 'data/Journal_defs/groups/*/*.jsonld'
-            , 'data/Journal_defs/lists/*/*.jsonld'
-            , 'data/Journal_defs/types/*/*.jsonld'
-            , 'data/Journal_defs/views/*/*.jsonld'
-            , 'data/Journal_defs/vocabs/*/*.jsonld'
+            , 'data/Journal_defs/_field/*/*.jsonld'
+            , 'data/Journal_defs/_group/*/*.jsonld'
+            , 'data/Journal_defs/_list/*/*.jsonld'
+            , 'data/Journal_defs/_type/*/*.jsonld'
+            , 'data/Journal_defs/_view/*/*.jsonld'
+            , 'data/Journal_defs/_vocab/*/*.jsonld'
+            , 'data/Journal_defs/entitydata/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*/*.jsonld'
             # Annalist schema
+            , 'data/Annalist_schema/entitydata/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*/*.jsonld'
             # Test data
@@ -162,7 +151,7 @@ setup(
             [ 'help/*.md'
             , 'help/*.html'
             ]
-        , 'annalist_root.oauth2':
+        , 'annalist_root.login':
             [ 'templates/*.html'
             ]
         },
@@ -195,7 +184,8 @@ setup(
         , 'beautifulsoup4==4.4.0'
           , 'html5lib==1.0b8'
         , 'rdflib==4.2.1'
-        , 'rdflib-jsonld==0.3'
+        # , 'rdflib-jsonld==0.3'
+        , 'rdflib-jsonld==0.4.0'
           , 'SPARQLWrapper==1.6.4'
           , 'isodate==0.5.1'
           , 'wsgiref==0.1.2'

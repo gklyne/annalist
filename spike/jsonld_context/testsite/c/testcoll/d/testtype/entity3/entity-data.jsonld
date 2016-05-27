@@ -1,0 +1,14 @@
+{
+  "@context": [
+    { "@base": "../../" },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "testtype/entity3/",
+  "@type": [ "annal:EntityData" ],
+  "rdfs:label": "Entity testcoll/testtype/entity3",
+  "rdfs:comment": "Entity coll testcoll, type testtype, entity entity3",
+  "annal:type_id": "testtype",
+  "annal:id": "entity3",
+  "annal:type": "annal:EntityData",
+  "annal:uri": "http://purl.org/annalist/2014/#"
+}

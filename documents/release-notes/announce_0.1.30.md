@@ -16,12 +16,12 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 ## To research-object, RDS-CREAM and FAST:
 
-### Announcing Annalist release 0.1.30
+== Announcing Annalist release 0.1.30 ==
 
 This release provides improvements to data evolution, collection management, user interface changes aimed at facilitating collection navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collection definitions.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/...
+https://groups.google.com/d/msg/annalist-discuss/eO9L4PYrbGQ/GHzN664_BAAJ
 
 Release notes (see "history" section for details) at:
 https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.1.md

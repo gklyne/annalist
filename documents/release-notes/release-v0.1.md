@@ -1,25 +1,32 @@
 # Annalist v0.1 release notes
 
-Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for the purposes of early evaluation, but there are significant intended capabilities not yet implemented, and many refinements to be applied.
+Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for evaluation purposes, but there may be intended capabilities not yet fully implemented, and many refinements to be applied.
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
-## Current release: 0.1.30
 
-(See "History" below for morte details about this and previous releases)
+## Current release: 0.1.32
 
-This release provides improvements to data evolution, collection management, user interface changes to facilitate navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collections.
+(See "History" below for more details about this and previous releases)
+
+This release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.  Major enhancements include:
+
+* Re-working of the login screens to make the login process easier
+* Improve JSON-LD context and data generation.
+* Internal changes to collection data layout and details and migration support.
+* List definition view option to display the defined list.
+* List display re-organize entity type and scope selection controls.
+* Markdown and help text enhancements.
+
 
 ## Status
 
-The primary goals of Annalist are:
+The Annalist software is approaching the level of functionality that will be the basis for an initial full software release.  The primary goals of Annalist, which are substantially implemented, are:
 
 * Easy data: out-of-box data acquisition, modification and organization of small data records.
 * Flexible data: new record types and fields can be added as-required.
 * Sharable data: use textual, easy to read file formats that can be shared by web, email, file transfer, version management system, memory stick, etc.
 * Remixable data: records that can be first class participants in a wider ecosystem of linked data, with links in and links out.
-
-Of these, the first three are substantially implemented (though there are lots of details to be added), and the fourth is at best only partiallly implemented.
 
 Key features implemented:
 
@@ -33,22 +40,18 @@ Key features implemented:
 * Support for linking to and annotating binary objects such as images.
 * Image rendering
 * Audio clip rendering (via HTML5 capabilities)
-
-Intended core features not yet fully implemented but which are intended for the first full release:
-
-* Support for a range of field and data types to work with commonly used data: numbers, dates, etc.
 * Support for JSON-LD contexts.
+
+Intended core features not yet fully implemented but which are under consideration for future releases:
+
 * Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
 * Serve and access data through a standard HTTP server (current implementation uses direct file access).
 * Grid view (e.g. for photo+metadata galleries).
-
-An intended core feature that will probably not make the first release is data bridges to other data sources, in particular to allow Annalist to work with existing spreadhseet data.
-
-There are also a number of rough edges to rounded off.  Through use of the software with real data, a number of areas have been identified where usability could be significantly improved.
+* Data bridges to other data sources, in particular to allow Annalist to work with existing spreadhseet data.
 
 See the [list of outstanding issues for initial release](https://github.com/gklyne/annalist/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22V0.x+alpha%22) for more details on planned features still to be implemented.
 
-There are many other features noted on the project roadmap that are not yet planned for inclusion as core features in the initial release.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
+There are many other features noted on the project roadmap that are not yet planned for inclusion as core features.  As far as possible, future development will be guided by actual requirements from applications that use the Annalist platform.
 
 
 ## Feedback
@@ -85,6 +88,231 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.32
+
+This release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.  Enhancements include:
+
+* Re-working of the login screens to make the login process easier
+* Improve JSON-LD context and data generation, in partcilar maming use of `@base` declarations so that internal entity references are interpreted correctly as relative URI references.
+* Internal changes to collection data layout and details, and support for migration of existing collections.
+* List definition view: provide button to display the defined list content
+* List display: re-organize entity type and scope selection controls.
+* Markdown and help text enhancements: provide variable substitutions for host, site, collection and base URLs so that help text can contain links that work independently of site location.
+* "Customize" display - use help text from collection configuration file.
+* New annalist-manager command to display location of site settings directory.
+* Fix bug where collecton-defined data were not inherited from a parent collection.
+* Fix form layout anomalies that were causing some fields to appear in unexpected locations.
+* Fix bug in display of site-defined entity lists (defined in `_annalist_site`).
+
+**NOTE**:  see section "Data structure changes and migration" below for information about migrating data collections to use the new format introduced in this release.
+
+### Login enhancements
+
+The login process has been enhanced in a number of ways:
+
+* Local login (using the Django user database) is handled as just another provider.
+* Per-provider login buttons are presented, rather than a drop-down list.
+* A previously used user-id is presented as a default value.
+* If no user-id is provided, a suitable value is constructed from the authenticated email address.  (In rare cases, this may conflict with an existing value, in which case an alternative Id must be specified.)
+* On completion of the login process (and clicking "Continue" on the displayed user profile), the browser returns to the page from which the login sequence was initiated.  Similarly, on logout, the originally displayed page is re-displayed (permissions permitting).
+* On successful completion of a login for a user that has not previously been seen by the system, a new user permissions record is created with the specified user id, authenticated email address and default permissions for logged-in users.  Another user with ADMIN permissions can assign appropriate permissions to this record, which is easier than creating a new user permissions record from scratch.
+
+**NOTE**: On logging out, you may see an error report to the effect that permissions are required: this is not an error, but can be confusing.  It can occur after logging out while displaying a restricted-access page.  The error occurs when attempting to redisplay the same page, but now without appropriate access permissions.  There are plans to adjust this behaviour in a future release.
+
+Internally, the login code has been refactored to make it easier to support alternative authentication mechanisms.
+
+
+### Data structure changes and migration
+
+The internal structure of a data collection has been modified.  Thje main change is that the directory names used for built-in data types (e.g. `_type`, `_view`, `_list`, etc.) have been changed to match the type id.  This is a first step towards making the structure of URLs and filenames more consistently, which in turn should reduce the incompatibilities between accessing data via annalist and accessing it directly.
+
+A number of smaller changes have been made to Annalist-defined data records, particularly field definitions.  Existin g records are upodated to the new structure when they are read and saved, or when the data collection is migrated using migration options (2) or (3) described below.
+
+Old collection structures are migrated automatically when they are accessed through Annalist (but see the note below about migrating inherited collections).
+
+**NOTE**:  when migrating data collections for use with this release, ensure that inherited collections are migrated first.  Before migrating a collection, it is advasable to create a backup copy (e.g. with git).  Once migrated, data is no longer compatible with previous versions of Annalist.  Migrations can be performed in one of the following ways:
+
+1. Viewing a collection from the Annalist site front page: this updates the collection data structure, but does not immediately update the individual data records.
+2. Go to the "customize" view for a collection and click on the `Migrate data` button.
+3. Using `annalist-manager migratecollection (collection)` - updates the collection data structure and also migrates data record contents.
+
+The data migration faclities remain a work-in-progress, and should improve over future releases as we gain more experience using them.
+
+
+### JSON-LD enhancements
+
+With the release of [rdflib-jsonld v0.4.0](https://github.com/RDFLib/rdflib-jsonld/tree/0.4.0), the Annalist JSON-LD generation has been enhanced to make use of `@base` directives.  A consequence of this is that internal entity references, that were previously exported as literals, can be used as relative URI references, and appear as URI nodes when read as JSON-LD into an RDF graph.  Also, entity `@id` values are now exproted as `type-id/entity-id` valuyes that resolve against the declared `@base` URI to the correct entity URL.
+
+For this to work as intended, collection entity data has to be migrated to the new format using the `@base` URI declarationb.  See the above for details about about data migration.
+
+
+### List selection and display
+
+The options for displaying lists have been re-worked.  The following options affect the display of a list of entities:
+
+* the list definition selected, which may constrain the entities that are selected for display,
+* the type of entity selected for display, which sometimes conflict with a restruction in the list definition, and
+* the scope of entities selected for display, which can be limited to the current collection, or may include all collections from which definitions are inherited.
+
+The list definition used is specified in the list URL (using a path of the form `.../l/(list-id)/...`), or by the default collection display.
+
+The type of entity selected for display may be specified in the list URL used (e.g. using a pathy of the form `.../l/(list-id)/(type-id)/`, or `.../d/(type-id)/`).  The displayed list may be empty if the type specified inthe URL does not match any type restruction specified by the list definition used.  If this happens, try clicking on the button labeled "List" (as opposed to the one labeled "List '(type-id)'").
+
+Finally, the scope of a list display is selected by the checkbox labeled "Scope all".  By default, only entities from the current collection are displayed.  To see entities from inherited collecions too, select the checkbox and click again on the "List" (or "List '(type-id)'") button.  (As with previous releases, the menu bar can be used to select display of a list of entities of a specified type, or using a specified list definition.)
+
+Also, a bug has been fixed that meant a search term inside a repeated field would not be discovered, so using the search field should now yield more useful results.
+
+
+### Markdown and help text
+
+When using Markdown fields in type, view, list, and field definitions to document a data collection, it is often useful to include internal links.  Previously, this had to be done with full path names, as relative references did not always work reliably.
+
+This release adds symbol substitutions in markdown text for `$HOST`, `$SITE`, `$COLL` and `$BASE` which makes it easier to write internal links.  The variables are substituted before markdown formatting is applied.
+
+For example, `[View]($BASE:_type/_view)` can be used in Markdown text to create a link to the type definition record for view definitions.
+
+The online help text for the Analist internal definitions has been updated to use these symbol substitutions for internal cross-linking.
+
+
+### Management, internals and bug-fixes
+
+New annalist-manager commands have been added:
+
+    annalist-manager sitedirectory [ CONFIG ]
+    annalist-manager settingsmodule [ CONFIG ]
+    annalist-manager settingsdir [ CONFIG ]
+    annalist-manager settingsfile [ CONFIG ]
+
+These commends respond with information about an Annalist configuration, and are implememnted in a way that can be used easily as part of a management script, if required.
+
+The list view now includes a button that can be used to display the defined list.
+
+The collection customization display now has a button that can be used to invoke migration of collection data: this duplicates the capability of the `annalist-manager migratecollection` command, and can be used without having terminal access to the Annalist host system.
+
+Fix bug where collecton-defined data were not inherited from a parent collection.  This required making some changes to the alternative parent search logic in the entity models, especially the model used for record type data (the parent entity for all user-defined type entities).
+
+Fix form layout anomalies that were causing some fields to appear in unexpected locations.  This has required a re-working of the field layout logic to explicitly wrap rows of fields.  The internal changes for this are quite extensive, and there are many test suite changes also required.
+
+Fix bug in display of site-defined entity lists (defined in `_annalist_site`).
+
+Fix bug in search function in list displays which meant that fields in repeated groups were not being searched, hence 
+the results returned were missing some values that were expected to be included.
+
+
+## Version 0.1.31, towards 0.1.32
+
+- [x] annalist-manager config directory - display directory where config setting files are located
+    - e.g. anenv/lib/python2.7/site-packages/annalist_root/annalist_site/settings/
+    - (same as SITE_CONFIG_DIR in log)
+- [x] Entity types list (and List list?) - provide link field to display list
+- [x] Entity lists - set state of scope all checkbox to reflect scope parameter
+- [x] Help text for 'Customize' display
+    - This is now taken from the collection metadata, and may be edited there.
+- [x] Fix behaviour of collection inheritance - data not inherited?
+    - Modified logic that searches for alternative parents for user-defined data types.
+    - Note that the search logic has reduced test suite performance by 10-15%.
+    - May want to look later for optimizations here (e.g. cache collection data).
+- [x] Establish collection as base URI for Markdown text links, or provide some kind of prefix expansion.
+    - relative references are unreliable 
+    - views/displayinfo.py, context_data is key function for assembling context info
+    - substitution syntax:  $name, $name:, $[CURIE], $$ -> $, else as-is
+    - Name characters are ALPHA, DIGIT, "_"
+    - CURIE characters for subsitution: name characters, plus:
+      "@", ".", "~", "-", "+", "*", "=", ":", ";", ",", "/", "?", "#", "!"
+    - [x] add site_base_url (SITE), coll_base_url (COLL) and site_host_name (HOST) to context
+    - [x] add BASE to context: path for relative reference of collection entities (includes `/d/`).
+    - [x] define substitution function in displayinfo
+    - [x] apply substitutions when setting help_markdown (displayinfo.context_data())
+    - [x] apply substitutions in views/fields/render_text_markdown.py text_markdown_view_renderer.render
+    - [x] test case (markdown renderer)
+    - [x] documentation (markdown field render type)
+    - [x] use substitutions in help text
+    - [x] add link to markdown field render type in help fields using Markdown
+    - [x] User view description field - add "markdown" text.
+    - [x] Use $BASE substitutions in help text for installable collections
+- [x] Rethink field padding model
+    - Generate columns explicitly within rows, not assuming they will just flow.
+    - All field lists are processed through FieldListValueMap
+    - Each field is handled by a referenced FieldValueMap instance
+    - [x] Define new class FieldRowValueMap
+    - [x] Define renderer for field row that wraps list of fields as a row
+    - [x] Re-work FieldListValueMap to break fields into rows and call FieldRowValueMap with each such group
+    - [x] Check and fix test cases
+- [x] Login window: implement "Local" as a provider, authenticated against the local Django user base.
+    - [x] Gereralize default provider mechanism, make "Google" default provider
+    - [x] Local login: use userid from login front page, if defined
+    - [x] Local login redirects to login form - should display profile
+    - [x] Retain userid on login front page after login failure
+    - [x] Use buttons on login form instead of dropdown
+    - [x] Profile display accept POST and redirect to continuation
+    - [x] Save recent user id in session to facilitate login
+    - [x] Allow blank user id and construct value from authenticated email
+    - [x] Use button label from provider details (else provider name)
+    - [x] Login/Logout/profile buttons to include continuation
+    - [x] Login form cancel button: return to continuation URL
+    - [x] Login messages to separate module for ease of translation
+    - [x] Fix tests
+- [x] Make login screen clearer
+    - [x] if id is left blank, use email local part (with substitutions)
+- [x] Rationalize login provider details handling
+    - [x] Obtain scope from provider details file
+    - [x] Save entire provider detail in request.session - access values from there
+- [x] Login/logout: support continuation URI
+- [x] New logins: automatically create new user record with default permissions.
+    - This should make it easier to assign permissions
+- [x] annalist-manager site data initialization: 
+    - copy local id provider and examples to site config
+- [x] Fix bug in display of entity lists from `_annalist_site` collection
+- [x] Check out context definition conflict for list (cf. rdfs:seeAlso)
+    - [x] Add test case for vocabulary view
+    - [x] Add logic to generate set context for seeAlso
+    - [x] Update all existing site data references to "RepeatGroup" and "RepeatGroupRow"
+    - [x] Update site data and tests to use type-qualified render type and value mode values.
+    - [x] Add migration logic for field definitions to use new render type names.
+- [x] Changed "field value type" in field description for repeat/multifield reference fields to indicate
+    the type of the referenced group, or if it contains a singleton the referenced target value type.
+    These changes affect data rather than fundamental workings of Annalist; the tasks for creating
+    repeat fields and multifield references have been updated.
+- [x] Refactor context checking for field lists (`test_entitygenericlist`, `test_entityinheritlist`)
+- [x] Migration options for references to `Field_render` and `Field_type` in views, groups and lists
+- [x] Use "@base" declaration in entities
+    - [x] Each entity/record type to declare a reference to base container URI
+    - [x] Context file in base container
+    - [x] Replace `_contextref` with `_baseref`
+    - [x] For RecordEnum, use different reference to base directory so '_annalist_collection/' or 'd/' is accessed as context directory.  
+    - [x] Don't generate enums/coll_context.lsonld.  Update context references in Enum values.
+    - [x] Add base declaration to entity files, etc.
+    - [x] Generate entity IDs relative to collection base directory
+        - There's still some ad-hocery around handling of references to enumerated values.
+        - See actions below to review URI and directrory usage.
+    - NOTES:
+        - `@base` ignored if used in external contexts;
+        - `@base` can specified value be relative? YES:
+            - [syntax sect 8.7](http://www.w3.org/TR/json-ld/#context-definitions) and 
+            - [API sect 6.1](http://www.w3.org/TR/json-ld-api/#context-processing-algorithm) para 3.4
+        - BUT: rdflib-jsonld implementation currently ignores `@base` when accessing an external context resource.
+        - Use `(site_base)/c/(coll_id)/d/` as base URI so that entity ids (`type_id/entity_id`) work directly as relative references.  
+        - Also `type_id` to retreive a list of entities of that type.
+        - Thus use `{ "@base": "../..", @context": "@context", ... }` in entity data.
+        - previously, there was a problem with rdflib-jsonld base URI handling.
+            - cf. https://github.com/RDFLib/rdflib-jsonld/issues/33
+- [x] BUG: JSON URI wrong in JSON-LD output? e.g. 
+    "http://fast-project.annalist.net/annalist/c/Performances/d/Ensemble/Phil_Langran_band/Musician/Phil_Langran"
+    shoud be: "http://fast-project.annalist.net/annalist/c/Performances/d/Musician/Phil_Langran/
+    - [x] Change entity references (select rendered) to @type @id in context
+        - cf. models.collection.get_coll_jsonld_context, etc.
+    - [x] Rename directories used for built-in types to match type name
+        - views.collection -> annalist.models.collectiondata.migrate_coll_data
+        - am_managecollections -> annalist.models.collectiondata.migrate_coll_data
+        - collection object is parameter
+        - [x] Add new, old directory names to layout.py
+        - [x] Find all references to directory names, use layout symbols
+        - [x] Add function in collectiondata to rename directories
+        - [x] Add call to directory migration function in collection view method from site
+        - [x] Add call to directory migration function in collectiondata.migrate_coll_data
+        - [x] Rename directories in sitedata in source tree and layout.
+- [x] Fix bug in list search function: not finding values in repeated groups
+
 
 ## Version 0.1.30
 
@@ -94,7 +322,7 @@ This release provides improvements to data evolution, collection management, use
 
 Data evolution support has been enhanced by the inclusion of support in `annalist-manager`.  The idea is that data evolution can be substantially handled by:
 
-a. Adding new Annalist types and fields.  This does not create any incompatibility withj older data, so no migration of existing data is required.
+a. Adding new Annalist types and fields.  This does not create any incompatibility with older data, so no migration of existing data is required.
 b. Changing type URIs:  these will be updated in the normal course of using Annalist to manage the data.  References in views, fields and lists may need updating, or if previous type URIs are declared as supertypes of the new URIs then the old URIs used here can still be recognized.
 c. Changing property URIs:  this will cause previously used URIs to not be recognized, unless the old URIs are declared as aliases for the new ones (in the appropriate type definitions).
 
@@ -103,7 +331,7 @@ The plan is that, when evolving a collection, a new collection can be created th
 The new features added to `annalist-manager` are intended to facilitate use of collection modules in support of separation and sharing of definitions:
 
 * `migrationreport old_coll_id new_coll_id` - produce a migration report of changes from `old_coll_id` to `new_coll_id`
-* `annalist-manager migratecollection coll_id` - apply type and proerty changes to all entities in a collection.  Type URIs and property aliases are re-written for all entities in the collection by reading and re-saving each one.
+* `annalist-manager migratecollection coll_id` - apply type and property changes to all entities in a collection.  Type URIs and property aliases are re-written for all entities in the collection by reading and re-saving each one.
 
 ### Data collection management support
 

@@ -67,9 +67,10 @@ class EntityDataTest(AnnalistTestCase):
 
     def test_entitydata_init(self):
         e = EntityData(self.testdata, "testentity")
+        id_dict = {'type_id': "testtype", 'id': "testentity"}
         self.assertEqual(e._entitytype,     ANNAL.CURIE.EntityData)
         self.assertEqual(e._entityfile,     layout.ENTITY_DATA_FILE)
-        self.assertEqual(e._entityref,      layout.DATA_ENTITY_REF)
+        self.assertEqual(e._entityref,      layout.COLL_BASE_ENTITY_REF%id_dict)
         self.assertEqual(e._entityid,       "testentity")
         self.assertEqual(e._entityurl,      TestHostUri + entity_url("testcoll", "testtype", "testentity"))
         self.assertEqual(e._entitydir,      entitydata_dir("testcoll", "testtype", "testentity"))

@@ -24,30 +24,34 @@ log = logging.getLogger(__name__)
 
 _render_type_literal = set(
     [ "Text", "Textarea", "Codearea", "Showtext"
-    , "Slug"
     , "Placement", "CheckBox", "Markdown", "ShowMarkdown"
     , "EntityId", "EntityTypeId"
-    , "Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt"
-    , "View_choice"
-    , "RefMultifield"
-    , "Type", "View", "List", "Field"
+    , "TokenSet"
+    # , "RefMultifield"
     ])
 
 _render_type_id = set(
     [ "Identifier"
+    , "Slug"
     , "RefAudio", "RefImage", "URILink", "URIImage"
-    ])
-
-_render_type_set = set(
-    [ "TokenSet"
-    ])
-
-_render_type_list = set(
-    [ "RepeatGroup", "RepeatGroupRow"
+    , "RefMultifield"
+    , "Group_Set", "Group_Set_Row"
+    , "Enum", "Enum_optional", "Enum_choice", "Enum_choice_opt"
+    , "View_choice"
+    , "Type", "View", "List", "Field"
     ])
 
 _render_type_object = set(
     [ "URIImport", "FileUpload"
+    , "RepeatGroup", "RepeatGroupRow", "Group_Seq", "Group_Seq_Row"
+    ])
+
+_render_type_set = set(
+    [ "TokenSet", "Group_Set", "Group_Set_Row"
+    ])
+
+_render_type_list = set(
+    [ "RepeatGroup", "RepeatGroupRow", "Group_Seq", "Group_Seq_Row"
     ])
 
 def is_render_type_literal(field_render_type):

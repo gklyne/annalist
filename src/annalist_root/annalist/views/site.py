@@ -38,7 +38,6 @@ class SiteView(AnnalistGenericView):
     """
     def __init__(self):
         super(SiteView, self).__init__()
-        # self.help = "site-help"
         self.help_markdown = None
         return
 

@@ -33,11 +33,10 @@ from annalist.models.entitydata import EntityData
 class RecordType(EntityData):
 
     _entitytype     = ANNAL.CURIE.Type
-    _entitytypeid   = "_type"
+    _entitytypeid   = layout.TYPE_TYPEID
     _entityview     = layout.COLL_TYPE_VIEW
     _entitypath     = layout.COLL_TYPE_PATH
     _entityfile     = layout.TYPE_META_FILE
-    _entityref      = layout.META_TYPE_REF
 
     def __init__(self, parent, type_id):
         """

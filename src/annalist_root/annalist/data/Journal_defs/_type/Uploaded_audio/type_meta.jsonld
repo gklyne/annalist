@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Uploaded audio (internal type)",
+  "rdfs:comment": "# Uploaded audio clip\r\n\r\nEntity containing a copy of an audio clip, which is obtained by uploading using a browser. May also contain a short identifying label and a longer description of the audio.",
+  "annal:field_aliases": [
+    {
+      "annal:alias_target": "coll:included_audio",
+      "annal:alias_source": "coll:uploaded_audio"
+    }
+  ],
+  "annal:type_id": "_type",
+  "annal:supertype_uris": [
+    {
+      "annal:supertype_uri": "coll:Included_audio"
+    }
+  ],
+  "annal:uri": "coll:Uploaded_audio",
+  "annal:type_list": "_list/Uploaded_audio",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Uploaded_audio",
+  "@id": "./",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_view": "_view/Uploaded_audio"
+}

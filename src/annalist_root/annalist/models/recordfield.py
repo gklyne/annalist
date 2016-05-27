@@ -24,11 +24,10 @@ from annalist.models.entitydata import EntityData
 class RecordField(EntityData):
 
     _entitytype     = ANNAL.CURIE.Field
-    _entitytypeid   = "_field"
+    _entitytypeid   = layout.FIELD_TYPEID
     _entityview     = layout.COLL_FIELD_VIEW
     _entitypath     = layout.COLL_FIELD_PATH
     _entityfile     = layout.FIELD_META_FILE
-    _entityref      = layout.META_FIELD_REF
 
     def __init__(self, parent, field_id):
         """
@@ -57,7 +56,7 @@ class RecordField(EntityData):
         which is a copy of the supplied entitydata with format migrations applied.
 
         NOTE:  implementations are free to apply migrations in-place.  The resulting 
-        entitydata should be exctly as the supplied data *should* appear in storage
+        entitydata should be exactly as the supplied data *should* appear in storage
         to conform to the current format of the data.  The migration function should 
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
@@ -72,9 +71,12 @@ class RecordField(EntityData):
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
             entitydata[ANNAL.CURIE.field_render_type] = "Text"
+        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroup":
+            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq"
+        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroupRow":
+            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
         # Calculate mode from other fields if not defined
         val_render = entitydata[ANNAL.CURIE.field_render_type]
-        val_type  = entitydata.get(ANNAL.CURIE.field_value_type, None)
         ref_type  = entitydata.get(ANNAL.CURIE.field_ref_type, None)
         ref_field = entitydata.get(ANNAL.CURIE.field_ref_field, None)
         if ANNAL.CURIE.field_value_mode in entitydata:
@@ -85,10 +87,8 @@ class RecordField(EntityData):
                 val_mode = "Value_field"
             elif val_render == "RefMultifield":
                 val_mode = "Value_entity"
-            #@@ elif val_type == ANNAL.CURIE.Import or val_render == "URIImport":
             elif val_render == "URIImport":
                 val_mode = "Value_import"
-            #@@ elif val_type == ANNAL.CURIE.Upload or val_render == "FileUpload":
             elif val_render == "FileUpload":
                 val_mode = "Value_upload"
             entitydata[ANNAL.CURIE.field_value_mode] = val_mode
@@ -120,7 +120,7 @@ class RecordField(EntityData):
         # Return result
         return entitydata
 
-    def _post_update_processing(self, entitydata):
+    def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default post-update processing.
 
@@ -129,7 +129,7 @@ class RecordField(EntityData):
         It invokes the containing collection method to regenerate the JSON LD context 
         for the collection to which the field belongs.
         """
-        self._parent.generate_coll_jsonld_context()
+        self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
 
 # End.

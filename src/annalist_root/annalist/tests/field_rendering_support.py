@@ -19,6 +19,7 @@ from django.template                        import Context, Template, loader
 
 from annalist.views.fields.render_placement import Placement, get_placement_classes
 
+from annalist.tests.tests                   import TestHost, TestHostUri, TestBasePath, TestBaseUri
 from annalist.tests.AnnalistTestCase        import AnnalistTestCase
 
 #   -----------------------------------------------------------------------------
@@ -55,7 +56,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
             field_link=None, 
             target_link=None, 
             field_ref_type=None,
-            options=None
+            options=None,
+            coll_id="testcoll"
         ):
         cd = (
             { 'field':
@@ -70,6 +72,10 @@ class FieldRendererTestSupport(AnnalistTestCase):
               , 'continuation_param':   "?continuation_url=test_cont"
               }
             , 'repeat_prefix':        repeat_prefix
+            , 'HOST':                 TestHostUri
+            , 'SITE':                 TestBaseUri
+            , 'COLL':                 TestBaseUri+"/c/"+coll_id+"/"
+            , 'BASE':                 TestBasePath+"/c/"+coll_id+"/d/"
             })
         if target_value is not None:
             cd['field']['target_value'] = target_value

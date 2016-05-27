@@ -1,0 +1,17 @@
+{ "@id":                        "_field/Field_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_comment"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_comment"
+, "rdfs:label":                 "Help"
+, "rdfs:comment":               "Descriptive text explaining how field is intended to be used.  This text is used to provide content for a tooltip for the field when displayed in a form.  Does not use Markdown formatting."
+, "annal:field_render_type":    "Enum_render_type/Textarea"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Longtext"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:placeholder":          "(field usage commentary or help text)"
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

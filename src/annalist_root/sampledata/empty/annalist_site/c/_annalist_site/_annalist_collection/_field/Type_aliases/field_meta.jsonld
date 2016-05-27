@@ -1,0 +1,21 @@
+{ "@id":                        "./"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Type_aliases"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_aliases"
+, "annal:type":                 "annal:Field"
+, "rdfs:label":                 "Field aliases"
+, "rdfs:comment":
+    "This field lists any field aliases that may be associated with a type.  That is, field values that may be returned based on some property URI other than the one directly associated with the field.  (This allows fields with different property URIs to be used as entity labels ('rdfs:label') by generic views.)"
+, "annal:field_render_type":    "Enum_render_type/Group_Seq_Row"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Type_alias"
+, "annal:field_entity_type":    "annal:Type"
+, "annal:placeholder":          "(field aliases)"
+, "annal:property_uri":         "annal:field_aliases"
+, "annal:field_placement":      "small:0,12"
+, "annal:group_ref":            "_group/Type_alias_group"
+, "annal:repeat_label_add":     "Add alias"
+, "annal:repeat_label_delete":  "Remove alias"
+}

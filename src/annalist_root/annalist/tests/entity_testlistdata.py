@@ -28,7 +28,8 @@ from annalist.views.fields.render_placement import (
 from entity_testutils           import (
     collection_dir, 
     site_title, 
-    collection_entity_view_url
+    collection_entity_view_url,
+    context_field_row
     )
 from entity_testentitydata      import entitydata_list_type_url
 from tests import (
@@ -49,12 +50,6 @@ def recordlist_dir(coll_id="testcoll", list_id="testlist"):
 #   URI generating functions
 #
 #   -----------------------------------------------------------------------------
-
-#   These all use the Django `reverse` function so they correspond to
-#   the declared URI patterns.
-
-def recordlist_site_url(site, list_id="testlist"):
-    return site._entityurl + layout.SITE_LIST_PATH%{'id': list_id} + "/"
 
 def recordlist_coll_url(site, coll_id="testcoll", list_id="testlist"):
     return urlparse.urljoin(
@@ -132,10 +127,10 @@ def recordlist_create_values(
         , "annal:default_type":         "_type/Default_type"
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
-          [ { "annal:field_id":             "_field/Entity_id"
+          [ { "annal:field_id":             layout.FIELD_TYPEID+"/Entity_id"
             , "annal:field_placement":      "small:0,3"
             }
-          , { "annal:field_id":             "_field/Entity_label"
+          , { "annal:field_id":             layout.FIELD_TYPEID+"/Entity_label"
             , "annal:field_placement":      "small:3,9"
             }
           ]
@@ -161,10 +156,9 @@ def recordlist_read_values(
         update="RecordList", hosturi=TestHostUri):
     d = recordlist_values(coll_id, list_id, update=update, hosturi=hosturi).copy()
     d.update(
-        { '@id':            "./"
+        { '@id':            layout.COLL_BASE_LIST_REF%{'id': list_id}
         , '@type':          ["annal:List"]
-        # , '@base':          "../.."
-        , '@context':       ["../../coll_context.jsonld"]
+        , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
         })
     return d
 
@@ -185,10 +179,10 @@ def recordlist_view_context_data(
         list_label = "%s list (%s/@@list_id@@)"%(update, coll_id)
         list_descr = "%s description ... (%s/%s)"%(update, coll_id, list_id)
     list_fields = (
-        [ { "annal:field_id":         "_field/Entity_id"
+        [ { "annal:field_id":         layout.FIELD_TYPEID+"/Entity_id"
           , "annal:field_placement":  "small:0,3"
           }
-        , { "annal:field_id":         "_field/Entity_label"
+        , { "annal:field_id":         layout.FIELD_TYPEID+"/Entity_label"
           , "annal:field_placement":  "small:3,9"
           }
         ])
@@ -200,89 +194,95 @@ def recordlist_view_context_data(
         , "orig_id":            "orig_list_id"
         , "continuation_url":   entitydata_list_type_url(coll_id, "_list")
         , "fields":
-          [ { "field_id":           "List_id"                   # fields[0]
-            , "field_name":         "entity_id"
-            , "field_value_type":  "annal:Slug"
-            , "field_label":        "List Id"
-            , "field_render_type":  "Slug"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
-            # , "field_value":      (Supplied separately, below)
-            , "options":            []
-            }
-          , { "field_id":           "List_type"                 # fields[1]
-            , "field_name":         "List_type"
-            , "field_value_type":  "annal:List_type"
-            , "field_label":        "List display type"
-            , "field_render_type":  "Enum_choice"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
-            , "field_value":        "Enum_list_type/List"
-            , "options":            [] # ["list", "grid"]
-            }
-          , { "field_id":           "List_label"                # fields[2]
-            , "field_name":         "List_label"
-            , "field_value_type":  "annal:Text"
-            , "field_label":        "Label"
-            , "field_render_type":  "Text"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12")
-            # , "field_value":      (Supplied separately, below)
-            , "options":            []
-            }
-          , { "field_id":           "List_comment"              # fields[3]
-            , "field_name":         "List_comment"
-            , "field_label":        "Help"
-            , "field_value_type":  "annal:Richtext"
-            , "field_render_type":  "Markdown"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12")
-            # , "field_value":      (Supplied separately, below)
-            , "options":            []
-            }
-          , { "field_id":           "List_default_type"         # fields[4]
-            , "field_name":         "List_default_type"
-            , "field_value_type":  "annal:Type"
-            , "field_label":        "Default type"
-            , "field_render_type":  "Enum_optional"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
-            , "field_value":        "_type/Default_type"
-            , "options":            []
-            }
-          , { "field_id":           "List_default_view"         # fields[5]
-            , "field_name":         "List_default_view"
-            , "field_value_type":  "annal:View"
-            , "field_label":        "Default view"
-            , "field_render_type":  "Enum_optional"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
-            , "field_value":        "_view/Default_view"
-            , "options":            []
-            }
-          , { "field_id":           "List_entity_selector"      # fields[6]
-            , "field_name":         "List_entity_selector"
-            , "field_value_type":  "annal:Text"
-            , "field_label":        "Selector"
-            , "field_render_type":  "Text"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12")
-            , "field_value":        "ALL"
-            , "options":            []
-            }
-          , { "field_id":           "List_target_type"          # fields[7]
-            , "field_name":         "List_target_type"
-            , "field_value_type":  "annal:Identifier"
-            , "field_label":        "List entity type"
-            , "field_render_type":  "Identifier"
-            , "field_value_mode":   "Value_direct"
-            , "field_placement":    get_placement_classes("small:0,12")
-            , "field_value":        ""
-            , "options":            []
-            }
+          [ context_field_row(
+              { "field_id":           "List_id"                   # fields[0]
+              , "field_name":         "entity_id"
+              , "field_value_type":   "annal:Slug"
+              , "field_label":        "List Id"
+              , "field_render_type":  "Slug"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
+              # , "field_value":      (Supplied separately, below)
+              , "options":            []
+              },
+              { "field_id":           "List_type"                 # fields[1]
+              , "field_name":         "List_type"
+              , "field_value_type":  "annal:List_type"
+              , "field_label":        "List display type"
+              , "field_render_type":  "Enum_choice"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
+              , "field_value":        "Enum_list_type/List"
+              , "options":            [] # ["list", "grid"]
+              })
+          , context_field_row(
+              { "field_id":           "List_label"                # fields[2]
+              , "field_name":         "List_label"
+              , "field_value_type":   "annal:Text"
+              , "field_label":        "Label"
+              , "field_render_type":  "Text"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12")
+              # , "field_value":      (Supplied separately, below)
+              , "options":            []
+              })
+          , context_field_row(
+              { "field_id":           "List_comment"              # fields[3]
+              , "field_name":         "List_comment"
+              , "field_label":        "Help"
+              , "field_value_type":   "annal:Richtext"
+              , "field_render_type":  "Markdown"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12")
+              # , "field_value":      (Supplied separately, below)
+              , "options":            []
+              })
+          , context_field_row(
+              { "field_id":           "List_default_type"         # fields[4]
+              , "field_name":         "List_default_type"
+              , "field_value_type":   "annal:Type"
+              , "field_label":        "Default type"
+              , "field_render_type":  "Enum_optional"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
+              , "field_value":        "_type/Default_type"
+              , "options":            []
+              },
+              { "field_id":           "List_default_view"         # fields[5]
+              , "field_name":         "List_default_view"
+              , "field_value_type":   "annal:View"
+              , "field_label":        "Default view"
+              , "field_render_type":  "Enum_optional"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
+              , "field_value":        "_view/Default_view"
+              , "options":            []
+              })
+          , context_field_row(
+              { "field_id":           "List_entity_selector"      # fields[6]
+              , "field_name":         "List_entity_selector"
+              , "field_value_type":   "annal:Text"
+              , "field_label":        "Selector"
+              , "field_render_type":  "Text"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12")
+              , "field_value":        "ALL"
+              , "options":            []
+              })
+          , context_field_row(
+              { "field_id":           "List_target_type"          # fields[7]
+              , "field_name":         "List_target_type"
+              , "field_value_type":   "annal:Identifier"
+              , "field_label":        "List entity type"
+              , "field_render_type":  "Identifier"
+              , "field_value_mode":   "Value_direct"
+              , "field_placement":    get_placement_classes("small:0,12")
+              , "field_value":        ""
+              , "options":            []
+              })
           , { "field_id":           "List_fields"           # fields[8]
             , "field_name":         "List_fields"
-            , "field_value_type":  "annal:Field_group"
+            , "field_value_type":   "annal:Field_group"
             , "field_label":        "Fields"
             , "field_render_type":  "RepeatGroupRow"
             , "field_value_mode":   "Value_direct"
@@ -293,9 +293,9 @@ def recordlist_view_context_data(
           ]
         })
     if list_id:
-        context_dict['fields'][0]['field_value'] = list_id
-        context_dict['fields'][2]['field_value'] = list_label
-        context_dict['fields'][3]['field_value'] = list_descr
+        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = list_id
+        context_dict['fields'][1]['row_field_descs'][0]['field_value'] = list_label
+        context_dict['fields'][2]['row_field_descs'][0]['field_value'] = list_descr
         context_dict['orig_id']     = list_id
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -306,7 +306,7 @@ def recordlist_view_context_data(
 def recordlist_view_form_data(
         coll_id="testcoll", 
         list_id="", orig_id=None, 
-        action=None, cancel=None,
+        action=None, cancel=None, task=None,
         update="RecordView"):
     form_data_dict = (
         { "List_type":              "Enum_list_type/List"
@@ -316,9 +316,9 @@ def recordlist_view_form_data(
         , "List_default_view":      "_view/Default_view"
         , "List_entity_selector":   "ALL"
         # List repeating fields
-        , "List_fields__0__Field_id":           "_field/Entity_id"
+        , "List_fields__0__Field_id":           layout.FIELD_TYPEID+"/Entity_id"
         , "List_fields__0__Field_placement":    "small:0,3"
-        , "List_fields__1__Field_id":           "_field/Entity_label"
+        , "List_fields__1__Field_id":           layout.FIELD_TYPEID+"/Entity_label"
         , "List_fields__1__Field_placement":    "small:3,9"
         # Hidden fields
         , "action":                 "@@TBD@@"
@@ -340,6 +340,8 @@ def recordlist_view_form_data(
         form_data_dict['action']        = action
     if cancel:
         form_data_dict['cancel']        = "Cancel"
+    elif task:
+        form_data_dict[task]            = task        
     else:
         form_data_dict['save']          = "Save"
     return form_data_dict

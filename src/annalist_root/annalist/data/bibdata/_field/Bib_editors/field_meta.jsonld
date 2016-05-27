@@ -1,0 +1,18 @@
+{ "@id":                        "annal:fields/Bib_editors"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_editors"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Editor(s)"
+, "rdfs:comment":               "BibJSON(ish) field for editors"
+, "annal:field_render_type":    "Group_Seq"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "bib:Editors"
+, "annal:placeholder":          "Editor(s) of article or compilation"
+, "annal:property_uri":         "bib:editor"
+, "annal:field_entity_type":    "bib:BibEntry"
+  // Reference to description of repeated editor field
+, "annal:group_ref":            "_group/Bib_person_group"
+, "annal:repeat_label_add":     "Add editor"
+, "annal:repeat_label_delete":  "Remove selected editor(s)"
+}

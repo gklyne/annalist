@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/type1",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:id": "type1",
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Default_list",
+  "annal:type_view": "_view/Default_view",
+  "rdfs:comment": "RecordType help for type1 in collection coll3",
+  "rdfs:label": "RecordType coll3/type1"
+}

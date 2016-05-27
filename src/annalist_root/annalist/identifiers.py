@@ -118,6 +118,9 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "Metadata", "Type_Data"
     # Entity types
     , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
+    , "Enum_field_placement", "Enum_list_type", "Enum_render_type", "Enum_value_mode", "Enum_value_type"
+    # Group value types
+    , "View_field", "List_field", "Group_field"
     # Value types
     , "Text", "Longtext", "Richtext", "Slug", "Identifier"
     , "Placement", "Image", "Audio", "Vocabulary"
@@ -134,7 +137,8 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
     , "open_view", "view_fields"
-    , "task_buttons", "button_id", "button_label", "button_help"
+    , "edit_task_buttons", "view_task_buttons"
+    , "button_id", "button_label", "button_help"
     , "list_entity_selector", "list_fields"
     , "group_fields"
     , "field_id"

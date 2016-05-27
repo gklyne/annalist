@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_property"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_property"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_property"
+, "rdfs:label":                 "Property URI"
+, "rdfs:comment":               "Property URI (or CURIE) used to access this field data in JSON data for an entity record, and to construct a property URI in exported RDF data.  A value specified in a view description overrides the value from the corresponding field description."
+, "annal:placeholder":          "(field URI or CURIE)"
+, "annal:field_name":           "Field_property"
+, "annal:field_render_type":    "Enum_render_type/Identifier"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:property_uri"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

@@ -1,0 +1,11 @@
+{ "@id":                "_type/_field"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_field"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Field"
+, "rdfs:label":         "Field"
+, "rdfs:comment":       "# Field definition\r\n\r\nDefines a field that may be used in a [View]($BASE:_type/_view), [List]($BASE:_type/_list) or [Field group]($BASE:_type/_group) definition.\r\n\r\nFields are a key element of Annalist mechanisms for presenting and editing entity data, defining the link between stored entity data and its presentation in a web form."
+, "annal:type_view":    "_view/Field_view"
+, "annal:type_list":    "_list/Field_list"
+}

@@ -1,0 +1,23 @@
+{ "@type":              ["annal:View"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_initial_values"
+, "annal:type_id":      "_view"
+, "rdfs:label":         ""
+, "rdfs:comment":       ""
+, "annal:record_type":  ""
+, "annal:open_view":    true
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Entity_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Entity_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Entity_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

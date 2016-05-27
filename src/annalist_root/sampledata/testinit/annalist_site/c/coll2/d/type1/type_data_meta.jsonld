@@ -1,8 +1,11 @@
 {
   "@context": [
-    "coll_context.jsonld"
+    {
+      "@base": "../"
+    },
+    "../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "type1",
   "@type": [
     "annal:Type_Data"
   ],

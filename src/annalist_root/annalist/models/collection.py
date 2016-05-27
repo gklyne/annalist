@@ -41,6 +41,7 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
+# from annalist.models.collectiondata import migrate_coll_config_dirs
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
     is_render_type_id,
@@ -52,11 +53,12 @@ from annalist.models.rendertypeinfo import (
 class Collection(Entity):
 
     _entitytype     = ANNAL.CURIE.Collection
-    _entitytypeid   = "_coll"
+    _entitytypeid   = layout.COLL_TYPEID
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_REF
     _entityref      = layout.META_COLL_REF
+    _baseref        = layout.META_COLL_BASE_REF
     _contextref     = layout.COLL_CONTEXT_FILE
 
     def __init__(self, parentsite, coll_id, altparent=None):
@@ -132,7 +134,10 @@ class Collection(Entity):
             raise ValueError(msg)
         parents   = super(Collection, self).set_alt_entities(altparent)
         parentids = [ p.get_id() for p in parents ]
-        # log.info("Collection.set_alt_entities: parentids %r"%parentids)
+        # log.info(
+        #     "@@ Collection.set_alt_entities: coll: %r, parentids %r"%
+        #     (self.get_id(), parentids)
+        #     )
         if layout.SITEDATA_ID not in parentids:
             msg = (
                 "Entity.set_alt_entities cannot access site data (%s) via %r)"%
@@ -147,44 +152,72 @@ class Collection(Entity):
                 )
             log.error(msg)
             raise ValueError(msg)
-        self[ANNAL.CURIE.inherit_from] = make_type_entity_id("_coll", altparent.get_id())
+        self[ANNAL.CURIE.inherit_from] = make_type_entity_id(layout.COLL_TYPEID, altparent.get_id())
         return parents
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None):
+    def create(cls, parent, coll_id, coll_meta):
+        """
+        Overload Entity.create with logic to set alternative parent details for 
+        collection configuration inheritance, if an alternative is specified in 
+        the collection data supplied.
+
+        cls         is the Collection class object.
+        parent      is the parent from which the collection is descended.
+        coll_id     is the local identifier (slug) for the collection.
+        coll_meta   is a dictionary of collection metadata values that are stored
+                    for the created collection.
+
+        Returns the created Collection instance.
+        """
+        # log.debug("Collection.create: %s, altscope %s"%(coll_id, altscope))
+        coll = super(Collection, cls).create(parent, coll_id, coll_meta)
+        if coll is not None:
+            cls._set_alt_parent_coll(parent, coll)
+        return coll
+
+    @classmethod
+    def load(cls, parent, coll_id, altscope=None):
         """
         Overload Entity.load with logic to set alternative parent details for 
         collection configuration inheritance, if an alternative is specified in 
         the collection data loaded.
 
-        cls         is the Collection class of the entity to be loaded
-        parent      is the parent from which the entity is descended.
-        entityid    is the local identifier (slug) for the entity.
-        altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+        cls         is the Collection class object.
+        parent      is the parent from which the collection is descended.
+        coll_id    is the local identifier (slug) for the collection.
+        altscope    if supplied, indicates a scope other than the current collection
+                    to search for children.
 
         Returns an instance of the indicated Collection class with data loaded from 
         the corresponding Annalist storage, or None if there is no such entity.
         """
-        # log.debug("Collection.load: %s, altscope %s"%(entityid, altscope))
-        coll = super(Collection, cls).load(parent, entityid, altscope=altscope)
+        # log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
+        coll = super(Collection, cls).load(parent, coll_id, altscope=altscope)
         if coll is not None:
-            parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
-            if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
-                parent_coll = super(Collection, cls).load(parent, parent_coll_id)
-                if parent_coll is None:
-                    log.warning(
-                        "Collection.load: coll %s references non-existent parent %s"%
-                        (entityid, parent_coll_id)
-                        )
-                else:
-                    log.debug(
-                        "Collection.load: coll %s references parent %s"%
-                        (entityid, parent_coll_id)
-                        )
-                    coll.set_alt_entities(parent_coll)
-            # else:
-            #     log.debug("Collection.load: coll %s references no parent"%(entityid,))
+            cls._set_alt_parent_coll(parent, coll)
+        return coll
+
+    @classmethod
+    def _set_alt_parent_coll(cls, parent, coll):
+        """
+        Set alternative parent collection - sets up search path for subsequent references.
+        """
+        coll_id        = coll.get_id()
+        parent_coll_id = extract_entity_id(coll.get(ANNAL.CURIE.inherit_from, None))
+        if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
+            parent_coll = Collection.load(parent, parent_coll_id)
+            if parent_coll is None:
+                log.warning(
+                    "Collection._set_alt_parent_coll: coll %s references non-existent parent %s"%
+                    (coll_id, parent_coll_id)
+                    )
+            else:
+                log.debug(
+                    "Collection._set_alt_parent_coll: coll %s references parent %s"%
+                    (coll_id, parent_coll_id)
+                    )
+                coll.set_alt_entities(parent_coll)
         return coll
 
     # User permissions
@@ -476,10 +509,13 @@ class Collection(Entity):
 
     # JSON-LD context data
 
-    def generate_coll_jsonld_context(self):
+    def generate_coll_jsonld_context(self, flags=None):
         """
         (Re)generate JSON-LD context description for the current collection.
         """
+        if flags and ("nocontext" in flags):
+            # Skip processing if "nocontext" flag provided
+            return
         log.info("Generating context for collection %s"%(self.get_id()))
         # Build context data
         context      = self.get_coll_jsonld_context()
@@ -487,7 +523,7 @@ class Collection(Entity):
         datetime_str = datetime_now.isoformat(' ')
         # Assemble and write out context description
         with self._metaobj(
-                layout.COLL_META_CONTEXT_PATH,
+                layout.META_COLL_BASE_REF,
                 layout.COLL_CONTEXT_FILE,
                 "wt"
                 ) as context_io:
@@ -508,36 +544,17 @@ class Collection(Entity):
                 }, 
                 context_io, indent=2, separators=(',', ': '), sort_keys=True
                 )
-        # @@TODO: fix ad-hocery used to ensure enum data can reference context in file system:
-        with self._metaobj(
-                layout.SITEDATA_ENUM_PATH,
-                layout.COLL_CONTEXT_FILE,
-                "wt"
-                ) as context_io:
-            json.dump(
-                { "_comment": "Generated by generate_coll_jsonld_context on %s (for enums)"%datetime_str
-                , "@context": context 
-                }, 
-                context_io, indent=2, separators=(',', ': '), sort_keys=True
-                )
         return
 
     def get_coll_jsonld_context(self):
         """
         Return dictionary containing context structure for collection.
         """
-        # @@REVIEW: as a workaround for a problem with @base handling in rdflib-jsonld, don't
-        #           include @base in context.
-        #
-        # context           = OrderedDict(
-        #     { "@base":          self.get_url() + layout.COLL_CONTEXT_PATH
-        #     , ANNAL.CURIE.type: { "@type": "@id" }
-        #     })
-        #
         # Use OrderedDict to allow some control over ordering of context file contents:
         # this is for humane purposes only, and is not technically important.
         context           = OrderedDict(
-            { ANNAL.CURIE.type:         { "@type":      "@id"   }
+            { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
+            , ANNAL.CURIE.type:         { "@type":      "@id"   }
             , ANNAL.CURIE.entity_list:  { "@container": "@list" }
             })
         # Collection-local URI prefix
@@ -574,18 +591,20 @@ class Collection(Entity):
                 fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
                 vuri = fref.get(ANNAL.CURIE.property_uri, None)
                 furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
-                # fcontext['vid'] = v.get_id()
-                # fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(vuri or furi, fcontext, context)
+                if fcontext is not None:
+                    fcontext['vid'] = v.get_id()
+                    fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
         # Scan group fields and generate context data for property URIs used
         for g in self.child_entities(RecordGroup, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
                 fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
                 guri = gref.get(ANNAL.CURIE.property_uri, None)
                 furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
-                # fcontext['gid'] = g.get_id()
-                # fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(guri or furi, fcontext, context)
+                if fcontext is not None:
+                    fcontext['gid'] = g.get_id()
+                    fcontext['fid'] = fid
+                self.set_field_uri_jsonld_context(guri or furi, fid, fcontext, context)
         return context
 
     def get_field_uri_jsonld_context(self, fid, get_field_context):
@@ -600,9 +619,13 @@ class Collection(Entity):
         f = RecordField.load(self, fid, altscope="all")
         if f is None:
             return (None, None)
+        # @@debugging@@
+        # if fid in ["Entity_id", "List_id"]:
+        #     print "@@ %s field   %r"%(fid, f)
+        #     print "@@ %s context %r"%(fid, get_field_context(f))
         return (f[ANNAL.CURIE.property_uri], get_field_context(f))
 
-    def set_field_uri_jsonld_context(self, puri, fcontext, property_contexts):
+    def set_field_uri_jsonld_context(self, puri, field_id, fcontext, property_contexts):
         """
         Save property context description into supplied property_contexts dictionary.  
         If the context is already defined, generate warning if there is a compatibility 
@@ -610,20 +633,25 @@ class Collection(Entity):
         """
         if puri:
             uri_parts = puri.split(":")
-            if len(uri_parts) > 1:
-                # Ignore URIs without ':'
+            if len(uri_parts) > 1:    # Ignore URIs without ':'
+                if not fcontext:
+                    # For diagnostics to locate incompatible use...
+                    fcontext = {'fid': field_id}
                 if puri in property_contexts:
                     pcontext = property_contexts[puri]
                     if ( ( not fcontext ) or
                          ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
                          ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
-                        log.warning(
-                            "Incompatible use of property %s (%r, %r)"% (puri, fcontext, pcontext)
-                            )
+                        msg = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
+                        log.warning(msg)
+                        print "@@ "+msg
+                        property_contexts[puri]['err'] = msg
                 elif ( fcontext and
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
                     property_contexts[puri] = fcontext
+                    # msg = "Save context info for %s in field %s (new %r)"% (puri, field_id, fcontext)
+                    # print "@@ "+msg
         return
 
     # @@TODO: move this away from model logic, as it represents a dependency on view logic?
@@ -643,18 +671,21 @@ class Collection(Entity):
             rtype = "URIImport"
         elif vmode == "Value_upload":
             rtype = "FileUpload"
+
         if is_render_type_literal(rtype):
-            fcontext = None # { "@type": "xsd:string" }
+            fcontext = {} # { "@type": "xsd:string" }
         elif is_render_type_id(rtype):
             fcontext = { "@type": "@id" }   # Add type from field descr?
-        elif is_render_type_set(rtype):
-            fcontext = { "@container": "@set"}
-        elif is_render_type_list(rtype):
-            fcontext = { "@container": "@list"}
         elif is_render_type_object(rtype):
-            fcontext = None
+            fcontext = {}
         else:
             raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+
+        if is_render_type_set(rtype):
+            fcontext["@container"] = "@set"
+        elif is_render_type_list(rtype):
+            fcontext["@container"] = "@list"
+
         return fcontext
 
 # End.

@@ -41,6 +41,7 @@ from entity_testutils       import (
     collection_entity_view_url,
     create_test_user,
     create_user_permissions,
+    context_view_field,
     context_list_entities,
     context_list_head_fields,
     context_list_item_fields
@@ -246,27 +247,27 @@ class LinkedRecordTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        self.assertEqual(len(r.context['fields']), 4)
-        i = 0
-        self.assertEqual(r.context['fields'][i].field_id,         "Entity_id")
-        self.assertEqual(r.context['fields'][i].field_value,      "testsrc1")
-        self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          self.no_options)
-        i = 1
-        self.assertEqual(r.context['fields'][i].field_id,         "testtgtref_field")
-        self.assertEqual(r.context['fields'][i].field_value,      "testtgt_type/testtgt1")
-        self.assertEqual(r.context['fields'][i].field_value_link, "/testsite/c/testcoll/d/testtgt_type/testtgt1/")
-        self.assertEqual(r.context['fields'][i].options,          self.tgt_options)
-        i = 2
-        self.assertEqual(r.context['fields'][i].field_id,         "Entity_label")
-        self.assertEqual(r.context['fields'][i].field_value,      "testsrc_entity testsrc1 label")
-        self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          self.no_options)
-        i = 3
-        self.assertEqual(r.context['fields'][i].field_id,         "Entity_comment")
-        self.assertEqual(r.context['fields'][i].field_value,      "testsrc_entity testsrc1 comment")
-        self.assertEqual(r.context['fields'][i].field_value_link, None)
-        self.assertEqual(r.context['fields'][i].options,          self.no_options)
+        self.assertEqual(len(r.context['fields']), 3)
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0.field_id,         "Entity_id")
+        self.assertEqual(f0.field_value,      "testsrc1")
+        self.assertEqual(f0.field_value_link, None)
+        self.assertEqual(f0.options,          self.no_options)
+        f1 = context_view_field(r.context, 0, 1)
+        self.assertEqual(f1.field_id,         "testtgtref_field")
+        self.assertEqual(f1.field_value,      "testtgt_type/testtgt1")
+        self.assertEqual(f1.field_value_link, "/testsite/c/testcoll/d/testtgt_type/testtgt1/")
+        self.assertEqual(f1.options,          self.tgt_options)
+        f2 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f2.field_id,         "Entity_label")
+        self.assertEqual(f2.field_value,      "testsrc_entity testsrc1 label")
+        self.assertEqual(f2.field_value_link, None)
+        self.assertEqual(f2.options,          self.no_options)
+        f3 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f3.field_id,         "Entity_comment")
+        self.assertEqual(f3.field_value,      "testsrc_entity testsrc1 comment")
+        self.assertEqual(f3.field_value_link, None)
+        self.assertEqual(f3.options,          self.no_options)
         return
 
     def test_list_entity_references(self):
@@ -278,8 +279,11 @@ class LinkedRecordTest(AnnalistTestCase):
         # Test context
         entities    = context_list_entities(r.context)
         head_fields = context_list_head_fields(r.context)
+        # print "@@ context: "+repr(r.context['List_rows'])
+        # print "@@ head_fields: "+repr(head_fields)
         self.assertEqual(len(entities),    2)
-        self.assertEqual(len(head_fields), 3)
+        self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
         entity_values = (
             (entities[0], "testsrc1", "testtgt1"), 
             (entities[1], "testsrc2", "testtgt2")

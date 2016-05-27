@@ -19,7 +19,9 @@ from annalist.views.annalistuserdelete  import AnnalistUserDeleteConfirmedView
 from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
-from oauth2.views                       import LoginUserView, LoginPostView, LoginDoneView, LogoutUserView
+from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
+from login.auth_oidc_client             import OIDC_AuthDoneView
+from login.auth_django_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
@@ -36,7 +38,7 @@ from annalist.views.entityresource      import EntityResourceAccess
 # l - list
 # d - data/default view
 #
-# Metadata (using built-in type identifiers, otherwise same pattern data data):
+# Metadata (using built-in type identifiers, otherwise same pattern as data):
 #
 # /c/<coll-id>/d/_type/                           list of record types
 # /c/<coll-id>/d/_type/<type-id>                  view of type description
@@ -63,11 +65,10 @@ from annalist.views.entityresource      import EntityResourceAccess
 urlpatterns = patterns('',
 
     # Site pages
-    url(r'^$',              AnnalistHomeView.as_view(), name='AnnalistHomeView'),
-    url(r'^site/$',         SiteView.as_view(),         name='AnnalistSiteView'),
-    url(r'^site/!action$',  SiteActionView.as_view(),   name='AnnalistSiteActionView'),
-    url(r'^profile/$',      ProfileView.as_view(),      name='AnnalistProfileView'),
-    url(r'^confirm/$',      ConfirmView.as_view(),      name='AnnalistConfirmView'),
+    url(r'^$',              AnnalistHomeView.as_view(),     name='AnnalistHomeView'),
+    url(r'^site/$',         SiteView.as_view(),             name='AnnalistSiteView'),
+    url(r'^site/!action$',  SiteActionView.as_view(),       name='AnnalistSiteActionView'),
+    url(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
 
     # Special forms
     url(r'^c/(?P<coll_id>\w{1,32})/$',
@@ -185,10 +186,12 @@ urlpatterns = patterns('',
     ) # End of urlpatterns
 
 urlpatterns += patterns('',
-    url(r'^login/$',      LoginUserView.as_view(),      name='LoginUserView'),
-    url(r'^login_post/$', LoginPostView.as_view(),      name='LoginPostView'),
-    url(r'^login_done/',  LoginDoneView.as_view(),      name='LoginDoneView'),
-    url(r'^logout/$',     LogoutUserView.as_view(),     name='LogoutUserView'),
+    url(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
+    url(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
+    url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
+    url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
+    url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
+    url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
     )
 
 # End.

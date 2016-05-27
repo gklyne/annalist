@@ -102,6 +102,7 @@ COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "(Update Annalist server software to use this collection)")
 COLL_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for collection %(id)s"
 COLL_RESOURCE_NOT_EXIST     = "Resource %(ref)s for collection %(id)s does not exist"
+COLL_MIGRATE_DIR_FAILED     = "Collection %s migration %s -> %s failed. (%s)"
 
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"

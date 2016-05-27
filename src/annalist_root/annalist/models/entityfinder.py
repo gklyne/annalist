@@ -94,15 +94,7 @@ class EntityFinder(object):
         if type_uri is not None:
             for tid in self.get_collection_type_ids(altscope):
                 tinfo = EntityTypeInfo(self._coll, tid)
-                # log.info(
-                #     "@@ EntityFinder.get_collection_uri_subtypes: tid %s, type_uris %r"%
-                #     (tid, tinfo and tinfo.get_all_type_uris())
-                #     )
                 if tinfo and (type_uri in tinfo.get_all_type_uris()):
-                    # log.info(
-                    #     "@@ EntityFinder.get_collection_uri_subtypes: supertype %s, yield %s: %s"%
-                    #     (type_uri, tinfo.get_type_id(), tinfo.get_type_uri())
-                    #     )
                     yield tinfo
         return 
 
@@ -118,7 +110,7 @@ class EntityFinder(object):
         # log.info("get_type_entities: type_id %s"%type_id)
         #@@
         entitytypeinfo = EntityTypeInfo(self._coll, type_id)
-        for e in entitytypeinfo.enum_entities_with_inferred_values(
+        for e in entitytypeinfo.enum_entities_with_implied_values(
                 user_permissions, altscope=altscope
                 ):
             if e.get_id() != "_initial_values":
@@ -134,29 +126,19 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        # log.info(
-        #     "@@ EntityFinder.get_subtype_entities: type_id %s, altscope %s"%(type_id,altscope)
-        #     )
-        #
         # NOTE: consider types from all scopes, then entities from specifiecd scope
         for entitytypeinfo in self.get_collection_subtypes(type_id, "all"):
-            for e in entitytypeinfo.enum_entities_with_inferred_values(
+            for e in entitytypeinfo.enum_entities_with_implied_values(
                     user_permissions, altscope=altscope
                     ):
-                # log.info(
-                #     "@@ EntityFinder.get_subtype_entities type_id %s, yield %s/%s"%
-                #     (type_id, e.get_type_id(), e.get_id())
-                #     )
                 if e.get_id() != "_initial_values":
                     yield e
         return
 
     def get_all_types_entities(self, types, user_permissions, altscope):
         """
-        Iterate mover all entities of all type ids from a supplied type iterator
+        Iterate over all entities of all type ids from a supplied type iterator
         """
-        # types = list(types)
-        # print "@@ get_all_types_entities.types %r"%(types,)
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
                 yield e
@@ -213,20 +195,10 @@ class EntityFinder(object):
         Get sorted list of entities of the specified type, matching search term and 
         visible to supplied user permissions.
         """
-        # log.info(
-        #     "@@ EntityFinder.get_entities_sorted: type_id %s, altscope=%s, search=%s"%
-        #     (type_id, altscope, search)
-        #     )
         entities = self.get_entities(
             user_permissions, type_id=type_id, altscope=altscope, 
             context=context, search=search
             )
-        #@@
-        # entities = list(entities)
-        # log.info("EntityFinder.get_entities_sorted: len %d"%(len(entities,)))
-        # for e in entities:
-        #     log.info("EntityFinder.get_entities_sorted: entity %s"%(e.get_id(),))
-        #@@
         return sorted(entities, key=order_entity_key)
 
     @classmethod
@@ -235,22 +207,54 @@ class EntityFinder(object):
         Returns True if entity contains/matches search term, else False.
         Search term None (or blank) matches all entities.
 
-        >>> e  = { 'p:a': '1', 'p:b': '2', 'p:c': '3' }
-        >>> EntityFinder.entity_contains(e, "1")
+        >>> e1  = { 'p:a': '1', 'p:b': '2', 'p:c': '3', 'annal:property_uri': 'annal:member' }
+        >>> EntityFinder.entity_contains(e1, "1")
         True
-        >>> EntityFinder.entity_contains(e, "3")
+        >>> EntityFinder.entity_contains(e1, "3")
         True
-        >>> EntityFinder.entity_contains(e, "nothere")
+        >>> EntityFinder.entity_contains(e1, "nothere")
+        False
+        >>> EntityFinder.entity_contains(e1, "annal:member")
+        True
+        >>> e2 = { 'list': ['l1', 'l2', 'l3'] \
+                 , 'dict': {'p:a': 'd1', 'p:b': 'd2', 'p:c': 'd3'} \
+                 }
+        >>> EntityFinder.entity_contains(e2, "l1")
+        True
+        >>> EntityFinder.entity_contains(e2, "d3")
+        True
+        >>> EntityFinder.entity_contains(e2, "nothere")
         False
         """
         if search:
+            # Entity is not a dict, so scan entity keys for search
             for key in e:
                 val = e[key]
-                if isinstance(val, (str, unicode)):
-                    if search in val:
-                        return True
+                if cls.value_contains(val, search):
+                    return True
+                # if isinstance(val, (str, unicode)):
+                #     if search in val:
+                #         return True
             return False
         return True
+
+    @classmethod
+    def value_contains(cls, val, search):
+        """
+        Helper function tests for search term in dictionary, list or string values.
+        Other values are not searched.
+        """
+        if isinstance(val, dict):
+            for k in val:
+                if cls.value_contains(val[k], search):
+                    return True
+        elif isinstance(val, list):
+            for e in val:
+                if cls.value_contains(e, search):
+                    return True
+        elif isinstance(val, (str, unicode)):
+            return search in val
+        return False
 
 #   -------------------------------------------------------------------
 #   EntitySelector

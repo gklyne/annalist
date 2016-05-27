@@ -74,6 +74,7 @@ class MockHttpDictResources(object):
         for r in self._dict.keys():
             ru = urlparse.urljoin(self._baseuri, r)
             rt = HttpContentType(r)
+            # print "@@ MockHttpDictResources: registering: %s"%ru
             httpretty.register_uri(httpretty.GET,  ru, status=200, content_type=rt,
                 body=self._dict[r])
             httpretty.register_uri(httpretty.HEAD, ru, status=200, content_type=rt)

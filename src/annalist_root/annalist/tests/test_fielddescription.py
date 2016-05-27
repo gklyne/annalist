@@ -207,23 +207,23 @@ class FieldDescriptionTest(AnnalistTestCase):
             value = 'small-12 medium-10 columns'
             )
         expect_field_desc = (
-            { 'field_id':                   'View_fields'
-            , 'field_name':                 'View_fields'
-            , 'field_value_type':          ANNAL.CURIE.Field_group
-            , 'field_label':                'Fields'
-            , 'field_render_type':          'RepeatGroupRow'
-            , 'field_value_mode':           'Value_direct'
-            , 'field_property_uri':         ANNAL.CURIE.view_fields
-            , 'field_placeholder':          '(repeat field description)'
-            , 'field_default_value':        None
-            , 'field_placement':            expect_placement
-            , 'field_ref_type':             None
-            , 'field_choices':              None
-            , 'field_ref_restriction':      'ALL'
-            , 'field_group_ref':            'View_field_group'
+            { 'field_id':               'View_fields'
+            , 'field_name':             'View_fields'
+            , 'field_value_type':       ANNAL.CURIE.View_field
+            , 'field_label':            'Fields'
+            , 'field_render_type':      'Group_Seq_Row'
+            , 'field_value_mode':       'Value_direct'
+            , 'field_property_uri':     ANNAL.CURIE.view_fields
+            , 'field_placeholder':      '(repeat field description)'
+            , 'field_default_value':    None
+            , 'field_placement':        expect_placement
+            , 'field_ref_type':         None
+            , 'field_choices':          None
+            , 'field_ref_restriction':  'ALL'
+            , 'field_group_ref':        'View_field_group'
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
-        self.assertEqual(fd['field_render_type'], "RepeatGroupRow")
+        self.assertEqual(fd['field_render_type'], "Group_Seq_Row")
         # self.assertEqual(fd['field_render_colhead'], "field/annalist_head_any.html")
         # self.assertEqual(fd['field_render_colview'], "field/annalist_item_none.html")
         self.assertIsInstance(fd['field_render_colhead'], ModeWrapValueRenderer)

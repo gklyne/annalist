@@ -45,11 +45,12 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     create_user_permissions,
-    create_test_user
+    create_test_user,
+    context_view_field
     )
 from entity_testuserdata    import (
     annalistuser_dir,
-    annalistuser_site_url, annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
+    annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
     annalistuser_view_form_data,
@@ -77,6 +78,24 @@ class AnnalistUserTest(AnnalistTestCase):
         self.testsite = Site(TestBaseUri, TestBaseDir)
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
+        self.layout = (
+            { 'enum_typeid':    layout.ENUM_TYPEID
+            , 'field_typeid':   layout.FIELD_TYPEID
+            , 'group_typeid':   layout.GROUP_TYPEID
+            , 'list_typeid':    layout.LIST_TYPEID
+            , 'type_typeid':    layout.TYPE_TYPEID
+            , 'user_typeid':    layout.USER_TYPEID
+            , 'view_typeid':    layout.VIEW_TYPEID
+            , 'vocab_typeid':   layout.VOCAB_TYPEID
+            , 'enum_dir':       layout.ENUM_DIR
+            , 'field_dir':      layout.FIELD_DIR
+            , 'group_dir':      layout.GROUP_DIR
+            , 'list_dir':       layout.LIST_DIR
+            , 'type_dir':       layout.TYPE_DIR
+            , 'user_dir':       layout.USER_DIR
+            , 'view_dir':       layout.VIEW_DIR
+            , 'vocab_dir':      layout.VOCAB_DIR
+            })
         return
 
     def tearDown(self):
@@ -92,7 +111,7 @@ class AnnalistUserTest(AnnalistTestCase):
         url = annalistuser_coll_url(self.testsite, coll_id="testcoll", user_id="testuser")
         self.assertEqual(usr._entitytype,   ANNAL.CURIE.User)
         self.assertEqual(usr._entityfile,   layout.USER_META_FILE)
-        self.assertEqual(usr._entityref,    layout.META_USER_REF%{'id': "testuser"})
+        self.assertEqual(usr._entityref,    layout.COLL_BASE_USER_REF%{'id': "testuser"})
         self.assertEqual(usr._entityid,     "testuser")
         self.assertEqual(usr._entityurl,    url)
         self.assertEqual(usr._entitydir,    annalistuser_dir(user_id="testuser"))
@@ -102,9 +121,15 @@ class AnnalistUserTest(AnnalistTestCase):
     def test_annalistuser1_data(self):
         usr = AnnalistUser(self.testcoll, "user1")
         self.assertEqual(usr.get_id(), "user1")
-        self.assertEqual(usr.get_type_id(), "_user")
-        self.assertIn("/c/testcoll/_annalist_collection/users/user1/", usr.get_url())
-        self.assertEqual(TestBaseUri + "/c/testcoll/d/_user/user1/", usr.get_view_url())
+        self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
+        self.assertIn(
+            "/c/testcoll/_annalist_collection/%(user_dir)s/user1/"%self.layout, 
+            usr.get_url()
+            )
+        self.assertEqual(
+            TestBaseUri + "/c/testcoll/d/%(user_typeid)s/user1/"%self.layout, 
+            usr.get_view_url()
+            )
         usr.set_values(annalistuser_create_values(user_id="user1"))
         td = usr.get_values()
         self.assertEqual(set(td.keys()), set(annalistuser_value_keys()))
@@ -115,9 +140,15 @@ class AnnalistUserTest(AnnalistTestCase):
     def test_annalistuser2_data(self):
         usr = AnnalistUser(self.testcoll, "user2")
         self.assertEqual(usr.get_id(), "user2")
-        self.assertEqual(usr.get_type_id(), "_user")
-        self.assertIn("/c/testcoll/_annalist_collection/users/user2/", usr.get_url())
-        self.assertEqual(TestBaseUri + "/c/testcoll/d/_user/user2/", usr.get_view_url())
+        self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
+        self.assertIn(
+            "/c/testcoll/_annalist_collection/%(user_dir)s/user2/"%self.layout, 
+            usr.get_url()
+            )
+        self.assertEqual(
+            TestBaseUri + "/c/testcoll/d/%(user_typeid)s/user2/"%self.layout, 
+            usr.get_view_url()
+            )
         usr.set_values(annalistuser_create_values(user_id="user2"))
         ugv = usr.get_values()
         self.assertEqual(set(ugv.keys()), set(annalistuser_value_keys()))
@@ -126,7 +157,9 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def test_annalistuser_create_load(self):
-        usr = AnnalistUser.create(self.testcoll, "user1", annalistuser_create_values(user_id="user1"))
+        usr = AnnalistUser.create(
+            self.testcoll, "user1", annalistuser_create_values(user_id="user1")
+            )
         uld = AnnalistUser.load(self.testcoll, "user1").get_values()
         ued = annalistuser_read_values(user_id="user1")
         self.assertKeysMatch(ued, uld)
@@ -137,14 +170,14 @@ class AnnalistUserTest(AnnalistTestCase):
         usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/users/_unknown_user_perms/", 
+            "/c/_annalist_site/_annalist_collection/%(user_dir)s/_unknown_user_perms/"%self.layout, 
             usr.get_url()
             )
         self.assertIn(
-            "/c/testcoll/d/_user/_unknown_user_perms", 
+            "/c/testcoll/d/%(user_typeid)s/_unknown_user_perms"%self.layout, 
             usr.get_view_url()
             )
-        self.assertEqual(usr.get_type_id(), "_user")
+        self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
         uld = usr.get_values()
         self.assertEqual(set(uld.keys()), set(annalistuser_load_keys()))
         uev = annalistuser_read_values(user_id="_unknown_user_perms")
@@ -171,9 +204,13 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.testcoll = Collection.create(
+            self.testsite, "testcoll", collection_create_values("testcoll")
+            )
         # For checking Location: header values...
-        self.continuation_url = TestHostUri + entitydata_list_type_url(coll_id="testcoll", type_id="_user")
+        self.continuation_url = TestHostUri + entitydata_list_type_url(
+            coll_id="testcoll", type_id=layout.USER_TYPEID
+            )
         # Login and permissions
         create_test_user(
             self.testcoll, "testuser", "testpassword",
@@ -291,17 +328,17 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new_user_form_rendering(self):
-        u = entitydata_edit_url("new", "testcoll", "_user", view_id="User_view")
+        u = entitydata_edit_url("new", "testcoll", layout.USER_TYPEID, view_id="User_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
-            coll_id="testcoll", type_id="_user", entity_id="00000001",
-            tooltip1=r.context['fields'][0]['field_help'],
-            tooltip2=r.context['fields'][1]['field_help'],
-            tooltip3=r.context['fields'][2]['field_help'],
-            tooltip4=r.context['fields'][3]['field_help'],
-            tooltip5=r.context['fields'][4]['field_help']
+            coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="00000001",
+            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -385,13 +422,15 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
 
     def test_user_permissions_form_rendering(self):
         # Test rendering of permissions from list in entity
-        u = entitydata_edit_url("edit", "testcoll", "_user", "testuser", view_id="User_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.USER_TYPEID, "testuser", view_id="User_view"
+            )
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
-            coll_id="testcoll", type_id="_user", entity_id="testuser",
-            tooltip=r.context['fields'][4]['field_help']
+            coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="testuser",
+            tooltip=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">
@@ -420,14 +459,16 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             "baduserperms",
             user_permissions="VIEW CREATE UPDATE DELETE"
             )
-        u = entitydata_edit_url("edit", "testcoll", "_user", "baduserperms", view_id="User_view")
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.USER_TYPEID, "baduserperms", view_id="User_view"
+            )
         with SuppressLogging(logging.WARNING):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
-            coll_id="testcoll", type_id="_user", entity_id="baduserperms",
-            tooltip=r.context['fields'][4]['field_help']
+            coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="baduserperms",
+            tooltip=context_view_field(r.context, 4, 0)['field_help']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">
@@ -464,7 +505,9 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             user_permissions="VIEW CREATE UPDATE DELETE"
             )
         u = entitydata_edit_url(
-            "copy", "testcoll", "_user", entity_id="_default_user_perms", view_id="User_view"
+            "copy", "testcoll", 
+            layout.USER_TYPEID, entity_id="_default_user_perms", 
+            view_id="User_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

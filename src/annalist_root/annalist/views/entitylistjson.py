@@ -14,35 +14,14 @@ log = logging.getLogger(__name__)
 from django.conf                        import settings
 from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
-# from django.core.urlresolvers           import resolve, reverse
 
 from annalist                           import layout
-# from annalist                           import message
-# from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.util                      import make_type_entity_id
 
-# import annalist.models.entitytypeinfo as entitytypeinfo
-# from annalist.models.collection         import Collection
-# from annalist.models.recordtype         import RecordType
-# from annalist.models.recordtypedata     import RecordTypeData
-# from annalist.models.entitytypeinfo     import EntityTypeInfo, CONFIG_PERMISSIONS
 from annalist.models.entityfinder       import EntityFinder
 
-# from annalist.views.uri_builder         import uri_with_params
-# from annalist.views.displayinfo         import DisplayInfo
-# from annalist.views.confirm             import ConfirmView, dict_querydict
-# from annalist.views.generic             import AnnalistGenericView
-from annalist.views.entitylist            import EntityGenericListView
-
-# from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
-# from annalist.views.entityvaluemap      import EntityValueMap
-# from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
-# from annalist.views.fieldlistvaluemap   import FieldListValueMap
-# from annalist.views.fieldvaluemap       import FieldValueMap
-# from annalist.views.repeatvaluesmap     import RepeatValuesMap
-
-# from annalist.views.fields.bound_field  import bound_field, get_entity_values
+from annalist.views.entitylist          import EntityGenericListView
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -93,7 +72,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         if listinfo.http_response:
             return listinfo.http_response
         base_url = self.get_collection_base_url()
-        # log.debug("listinfo.list_id %s"%listinfo.list_id)
+        # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
         # Prepare list and entity IDs for rendering form
         try:
             selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
@@ -121,14 +100,16 @@ class EntityGenericListJsonView(EntityGenericListView):
             scope=scope,
             search=search_for
             )
-        #@@ NOTE: temporary code with absolute URIs until newer JSON-LD parser is released
+        log.info(
+            "EntityGenericListJsonView.get: list_url %s, base_url %s, context_url %s"%
+            (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
+            )
         jsondata = (
             { '@id':            list_url
             , '@context': [
-                { "@base":  request.build_absolute_uri(base_url) },
+                { "@base":  base_url },
                 base_url+layout.COLL_CONTEXT_FILE
                 ]
-            # , ANNAL.CURIE.type_id:      "_list"
             , ANNAL.CURIE.entity_list:  entityvallist
             })
         return_type = "application/ld+json"

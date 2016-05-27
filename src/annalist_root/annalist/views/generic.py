@@ -23,7 +23,7 @@ from django.core.urlresolvers       import resolve, reverse
 
 from django.conf import settings
 
-import oauth2.views
+import login.login_views
 
 from utils.ContentNegotiationView   import ContentNegotiationView
 
@@ -58,11 +58,11 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def __init__(self):
         super(AnnalistGenericView, self).__init__()
-        self._sitebaseuri = reverse("AnnalistHomeView")
-        self._sitebasedir = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
-        self._site        = None
-        self._site_data   = None
-        self._user_perms  = {}
+        self._sitebaseuri      = reverse("AnnalistHomeView")
+        self._sitebasedir      = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
+        self._site             = None
+        self._site_data        = None
+        self._user_perms       = {}
         return
 
     # @@TODO: make host parameter required in the following?
@@ -107,12 +107,12 @@ class AnnalistGenericView(ContentNegotiationView):
     def continuation_here(self, request_dict={}, default_cont="", base_here=None):
         """
         Returns a URL that returns control to the current page, to be passed as a
-        contionuation_uri parameter to any subsidiary pages invoked.  Such continuation 
+        continuation_uri parameter to any subsidiary pages invoked.  Such continuation 
         URIs are cascaded, so that the return URI includes a the `continuation_url` 
         for the current page.
 
-        request_dict    is a request dictionary that is expected to contain a 
-                        to continuation_url value to use, and other parameters to 
+        request_dict    is a request dictionary that is expected to contain the 
+                        continuation_url value to use, and other parameters to 
                         be included an any continuation back to the current page.
         default_cont    is a default continuation URI to be used for returning from 
                         the current page if the current POST request does not specify
@@ -211,25 +211,28 @@ class AnnalistGenericView(ContentNegotiationView):
         return redirect_uri
 
     # Authentication and authorization
-    def authenticate(self):
+    def authenticate(self, continuation_url):
         """
         Return None if required authentication is present, otherwise
         an appropriate login redirection response.
 
+        continuation_url    is a URL that to be retrieved and processed 
+                            when the authentication process completes
+                            (or is aborted).
+
         self.credential is set to credential that can be used to access resource
         """
-        # @@TODO: move logic to oauth2 app
-        # Cache copy of URIs to use with OAuth2 login
+        # Cache copy of URIs to use with login
         global LOGIN_URIS
         if LOGIN_URIS is None:
             LOGIN_URIS = (
-                { "login_form_uri": self.view_uri('LoginUserView')
-                , "login_post_uri": self.view_uri('LoginPostView')
-                , "login_done_uri": self.view_uri('LoginDoneView')
+                { "login_form_url":     self.view_uri('LoginUserView')
+                , "login_post_url":     self.view_uri('LoginPostView')
+                , "login_done_url":     self.view_uri('OIDC_AuthDoneView')
+                , "user_profile_url":   self.view_uri('AnnalistProfileView')
                 })
-        # Initiate OAuth2 login sequence, if neded
-        return oauth2.views.confirm_authentication(self, 
-            continuation_url=self.get_request_uri(),
+        return login.login_views.confirm_authentication(self, 
+            continuation_url=continuation_url,
             **LOGIN_URIS
             )
 
@@ -254,7 +257,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
         This function returns default permissions if the user details supplied cannot be matched.
 
-        Permissions are cached in the view object so that tghe prmissions ecord is read at 
+        Permissions are cached in the view object so that the prmissions record is read at 
         most once for any HTTP request. 
 
         collection      the collection for which permissions are required.
@@ -292,6 +295,25 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         user_id, user_uri = self.get_user_identity()
         return self.get_user_permissions(collection, user_id, user_uri)
+
+    def get_message_data(self):
+        """
+        Returns a dictionary of message data that can be passed inthe request parameters
+        to be displayed on a different page.
+        """
+        messagedata = {}
+        def uri_param_val(msg_name, hdr_name, hdr_default):
+            """
+            Incorporate values from the incoming URI into the message data.
+            """
+            message = self.request.GET.get(msg_name, None)
+            if message:
+                messagedata[msg_name] = message
+                messagedata[hdr_name] = self.request.GET.get(hdr_name, hdr_default)
+            return
+        uri_param_val("info_message",  "info_head",  message.ACTION_COMPLETED)
+        uri_param_val("error_message", "error_head", message.INPUT_ERROR) 
+        return messagedata
 
     def authorize(self, scope, collection):
         """

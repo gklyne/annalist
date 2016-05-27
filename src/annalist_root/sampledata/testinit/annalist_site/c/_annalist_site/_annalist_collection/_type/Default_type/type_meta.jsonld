@@ -1,0 +1,11 @@
+{ "@id":                "_type/Default_type"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Default_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Default_type"
+, "rdfs:label":         "Default record"
+, "rdfs:comment":       "# Default record type\r\n\r\nDefault record type, applied when no type is specified when creating a record."
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

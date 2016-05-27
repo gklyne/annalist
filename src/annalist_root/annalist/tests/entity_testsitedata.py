@@ -99,6 +99,27 @@ def get_site_bib_types_linked(coll_id):
 def get_site_bib_types():
     return set( ( id_from_field_choice(fc) for fc in get_site_bib_types_sorted() )  )
 
+site_schema_types = (
+    site_types[0:1]+
+    sorted(site_types[1:] +
+        [ FieldChoice("_type/Class",    label="Class"    )
+        , FieldChoice("_type/Datatype", label="Datatype" )
+        , FieldChoice("_type/Property", label="Property" )
+        ])
+    )
+
+def get_site_schema_types_sorted():
+    return site_schema_types[1:]
+
+def get_site_schema_types_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_type") 
+          for fc in get_site_schema_types_sorted() 
+        ])
+
+def get_site_schema_types():
+    return set( ( id_from_field_choice(fc) for fc in get_site_schema_types_sorted() )  )
+
 #   ----- Lists -----
 
 site_lists = (
@@ -145,6 +166,26 @@ def get_site_bib_lists_linked(coll_id):
 def get_site_bib_lists():
     return set( ( id_from_field_choice(fc) for fc in get_site_bib_lists_sorted() )  )
 
+site_schema_lists = (
+    site_lists[0:1] +
+    sorted(site_lists[1:] +
+        [ FieldChoice("_list/Classes",    label="Classes")
+        , FieldChoice("_list/Properties", label="Properties")
+        ])
+    )
+
+def get_site_schema_lists_sorted():
+    return site_schema_lists[1:]
+
+def get_site_schema_lists_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "_list") 
+          for fc in get_site_schema_lists_sorted() 
+        ])
+
+def get_site_schema_lists():
+    return set( ( id_from_field_choice(fc) for fc in get_site_schema_lists_sorted() )  )
+
 #   ----- List types -----
 
 site_list_types = (
@@ -155,6 +196,12 @@ site_list_types = (
 
 def get_site_list_types_sorted():
     return site_list_types[1:]
+
+def get_site_list_types_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, "Enum_list_type") 
+          for fc in get_site_list_types_sorted() 
+        ])
 
 def get_site_list_types():
     return set( ( fc.id for fc in get_site_list_types_sorted() )  )
@@ -296,13 +343,13 @@ site_field_fields = (
     , FieldChoice("_field/Field_placeholder",          label="Placeholder"         )
     , FieldChoice("_field/Field_placement",            label="Position/size"       )
     , FieldChoice("_field/Field_property",             label="Property URI"        )
-    , FieldChoice("_field/Field_render",               label="Field render type"   )
+    , FieldChoice("_field/Field_render_type",          label="Render type"   )
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
-    , FieldChoice("_field/Field_type",                 label="Field value type"    )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
+    , FieldChoice("_field/Field_value_type",           label="Value type"          )
     ])  
 
 site_group_fields = (
@@ -496,14 +543,20 @@ site_field_types = (
     , FieldChoice("Enum_render_type/Enum_choice_opt",   label="Optional entity choice"       )
     , FieldChoice("Enum_render_type/Enum_optional",     label="Optional entity ref"          )
     , FieldChoice("Enum_render_type/FileUpload",        label="File upload"                  )
+    , FieldChoice("Enum_render_type/Group_Seq",         label="Field group sequence"         )
+    , FieldChoice("Enum_render_type/Group_Seq_Row",     label="Field group sequence as table")
+    , FieldChoice("Enum_render_type/Group_Set",         label="Field group set"              )
+    , FieldChoice("Enum_render_type/Group_Set_Row",     label="Field group set as table"     )
     , FieldChoice("Enum_render_type/Identifier",        label="Identifier"                   )
     , FieldChoice("Enum_render_type/Markdown",          label="Markdown rich text"           )
     , FieldChoice("Enum_render_type/Placement",         label="Position/size"                )
     , FieldChoice("Enum_render_type/RefAudio",          label="Audio clip reference"         )
     , FieldChoice("Enum_render_type/RefImage",          label="Image reference"              )
     , FieldChoice("Enum_render_type/RefMultifield",     label="Fields of referenced entity"  )
-    , FieldChoice("Enum_render_type/RepeatGroup",       label="Repeating field group"        )
-    , FieldChoice("Enum_render_type/RepeatGroupRow",    label="Repeating fields as table"    )
+    , FieldChoice("Enum_render_type/RepeatGroup",       label="Repeating field group "+
+                                                              "(@@use 'Field group sequence')")
+    , FieldChoice("Enum_render_type/RepeatGroupRow",    label="Repeating fields as table "+
+                                                              "(@@use 'Field group sequence as table')")
     , FieldChoice("Enum_render_type/ShowMarkdown",      label="Display Markdown rich text"   )
     , FieldChoice("Enum_render_type/Showtext",          label="Display text"                 )
     , FieldChoice("Enum_render_type/Slug",              label="Short name"                   )
@@ -512,6 +565,8 @@ site_field_types = (
     , FieldChoice("Enum_render_type/TokenSet",          label="Space-separated tokens"       )
     , FieldChoice("Enum_render_type/URIImport",         label="Web import"                   )
     , FieldChoice("Enum_render_type/URILink",           label="Web link"                     )
+    , FieldChoice("Enum_render_type/View_choice",       label="Choose view"                  )
+
     ])
     # , FieldChoice("Enum_render_type/Field",             label="Field Id"             ) #@@deprecated
     # , FieldChoice("Enum_render_type/List",              label="List Id"              ) #@@deprecated

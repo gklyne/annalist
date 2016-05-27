@@ -1,0 +1,11 @@
+{ "@id":                "_type/_type"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Type"
+, "rdfs:label":         "Type"
+, "rdfs:comment":       "# Type definition\r\n\r\nContains information about an Annalist entity type, which is a key Annalist concept.  Entity types provide a high-level distinction between the things described in a collection.\r\n\r\nEach entity type corresponds to a set of stored entity records.  Structurally, entity types form a flat (non-hierarchical) space, but each type may declare one or more supertype URIs so that its members are included in selections of the indicated supertype."
+, "annal:type_view":    "_view/Type_view"
+, "annal:type_list":    "_list/Type_list"
+}

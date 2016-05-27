@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_fieldref"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_fieldref"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_fieldref"
+, "rdfs:label":                 "Refer to field"
+, "rdfs:comment":               "Property URI (or CURIE) of field to use from referenced record.  Used with value mode 'Value_field' to display a particular value from a referenced entity.  Render type 'Fields of referenced entity' is generally preferred, as it subsumes this capability and allows for multiple fields to be displayed using a single entity selection."
+, "annal:placeholder":          "(field URI or CURIE)"
+, "annal:field_name":           "Field_fieldref"
+, "annal:field_render_type":    "Enum_render_type/Identifier"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:field_ref_field"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

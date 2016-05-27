@@ -64,7 +64,11 @@
                 <span class="checkbox" 
                       title="If checked, list entries inherited from other collections; otherwise, list only entities defined inthe current collection.">
                   Scope all
+                  {% if scope == "all" %}
+                  <input type="checkbox" name="list_scope_all" value="list_scope_all" checked="checked" />
+                  {% else %}
                   <input type="checkbox" name="list_scope_all" value="list_scope_all" />
+                  {% endif %}
                 </span>               
                 <!--
                 <input type="submit" name="view" value="View" 

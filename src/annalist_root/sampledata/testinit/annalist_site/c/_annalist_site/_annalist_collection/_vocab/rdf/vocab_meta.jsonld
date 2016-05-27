@@ -1,0 +1,13 @@
+{ "@id":            "_vocab/rdf"
+, "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "@context":       [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":       "rdf"
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "RDF core namespace"
+, "rdfs:comment":   "# Namespace: `rdf`\r\n\r\nNamespace used for built-in RDF classes and properties"
+, "annal:uri":      "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+, "rdfs:seeAlso":
+    [ { "@id":   "http://www.w3.org/TR/rdf11-concepts/" }
+    ]
+}

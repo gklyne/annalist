@@ -1,0 +1,17 @@
+{ "@id":                        "_field/List_entity_selector"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_entity_selector"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_entity_selector"
+, "rdfs:label":                 "Selector"
+, "rdfs:comment":               "An expression that is used to select records to be included in the list view.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type.  @@TODO: add details of selection expression to online help@@"
+, "annal:field_render_type":    "Enum_render_type/Text"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:List"
+, "annal:placeholder":          "(entity selector; e.g. 'ALL', '<type> in [@type]', '[<field>]==<value>', etc.)"
+, "annal:property_uri":         "annal:list_entity_selector"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        "ALL"
+}

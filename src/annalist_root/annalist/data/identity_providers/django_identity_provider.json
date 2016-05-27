@@ -1,0 +1,7 @@
+{
+  "web": {
+    "provider": "Local",
+    "provider_label": "Local username",
+    "mechanism": "django"
+  }
+}

@@ -1,0 +1,11 @@
+{ "@id":                "_type/_vocab"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_vocab"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Vocabulary"
+, "rdfs:label":         "Vocabulary namespace"
+, "rdfs:comment":       "# Vocabulary namespace definition\r\n\r\nA vocabulary namespace is a set of URIs used to identify a group of related concepts, where all the URIs have a common leading URI part. The namespace identifier is also used as a prefix in CURIEs representing terms from the namespace.\r\n"
+, "annal:type_view":    "_view/Vocab_view"
+, "annal:type_list":    "_list/Vocab_list"
+}

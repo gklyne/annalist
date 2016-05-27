@@ -40,7 +40,8 @@ from init_tests             import init_annalist_test_site, init_annalist_test_c
 from entity_testutils       import (
     collection_create_values,
     continuation_url_param,
-    create_test_user
+    create_test_user,
+    context_view_field
     )
 from entity_testtypedata    import (
     recordtype_create_values, 
@@ -173,31 +174,34 @@ class EntityEditDupFieldTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "Collection testcoll")
         # Check display context
-        self.assertEqual(len(r.context['fields']), 6)
+        self.assertEqual(len(r.context['fields']), 5)
+        f3  = context_view_field(r.context, 2, 0)
+        f4  = context_view_field(r.context, 3, 0)
+        f5  = context_view_field(r.context, 4, 0)        
         # 4th field - 1st comment
         comment_value = "Entity coll testcoll, type testtype, entity entitydupfield"
-        self.assertEqual(r.context['fields'][3]['field_id'], 'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_name'], 'Entity_comment')
-        self.assertEqual(r.context['fields'][3]['field_label'], 'Comment')
-        self.assertEqual(r.context['fields'][3]['field_property_uri'], "rdfs:comment")
-        self.assertEqual(r.context['fields'][3]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][3]['field_value'], comment_value)
+        self.assertEqual(f3['field_id'], 'Entity_comment')
+        self.assertEqual(f3['field_name'], 'Entity_comment')
+        self.assertEqual(f3['field_label'], 'Comment')
+        self.assertEqual(f3['field_property_uri'], "rdfs:comment")
+        self.assertEqual(f3['field_placement'].field, "small-12 columns")
+        self.assertEqual(f3['field_value'], comment_value)
         # 5th field - 2nd comment
         comment2_value = "Comment field 2"
-        self.assertEqual(r.context['fields'][4]['field_id'], 'Entity_comment')
-        self.assertEqual(r.context['fields'][4]['field_name'], 'Entity_comment__2')
-        self.assertEqual(r.context['fields'][4]['field_label'], 'Comment')
-        self.assertEqual(r.context['fields'][4]['field_property_uri'], "rdfs:comment__2")
-        self.assertEqual(r.context['fields'][4]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][4]['field_value'], comment2_value)
+        self.assertEqual(f4['field_id'], 'Entity_comment')
+        self.assertEqual(f4['field_name'], 'Entity_comment__2')
+        self.assertEqual(f4['field_label'], 'Comment')
+        self.assertEqual(f4['field_property_uri'], "rdfs:comment__2")
+        self.assertEqual(f4['field_placement'].field, "small-12 columns")
+        self.assertEqual(f4['field_value'], comment2_value)
         # 6th field - 3rd comment
         comment2_value = "Comment field 3"
-        self.assertEqual(r.context['fields'][5]['field_id'], 'Entity_comment')
-        self.assertEqual(r.context['fields'][5]['field_name'], 'Entity_comment__3')
-        self.assertEqual(r.context['fields'][5]['field_label'], 'Comment')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "rdfs:comment_alt")
-        self.assertEqual(r.context['fields'][5]['field_placement'].field, "small-12 columns")
-        self.assertEqual(r.context['fields'][5]['field_value'], comment2_value)
+        self.assertEqual(f5['field_id'], 'Entity_comment')
+        self.assertEqual(f5['field_name'], 'Entity_comment__3')
+        self.assertEqual(f5['field_label'], 'Comment')
+        self.assertEqual(f5['field_property_uri'], "rdfs:comment_alt")
+        self.assertEqual(f5['field_placement'].field, "small-12 columns")
+        self.assertEqual(f5['field_value'], comment2_value)
         return
 
     def test_dup_field_update(self):

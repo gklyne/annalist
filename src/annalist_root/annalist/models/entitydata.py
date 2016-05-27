@@ -29,25 +29,32 @@ class EntityData(Entity):
     _entityview     = layout.TYPEDATA_ENTITY_VIEW
     _entitypath     = layout.TYPEDATA_ENTITY_PATH
     _entityfile     = layout.ENTITY_DATA_FILE
-    _entityref      = layout.DATA_ENTITY_REF
+    _baseref        = layout.ENTITY_COLL_BASE_REF
     _contextref     = layout.ENTITY_CONTEXT_FILE
 
     def __init__(self, parent, entity_id):
         """
         Initialize a new Entity Data object, without metadata.
 
-        parent      is the parent collection (RecordType) from which the entity is descended.
+        EntityData objects sit in this entity type hierarchy:
+
+            Site 
+                Collection 
+                    RecordTypeData 
+                        EntityData
+
+        This arrangement allows entities for different record types
+        to be saved into separate directories.
+
+        parent      is the parent collection (RecordTypeData) from 
+                    which the entity is descended.
         entity_id   the local identifier (slug) for the data record
-        altparent   is an alternative parent entity to search for this entity, using 
-                    the alternative path for the entity type: this is used to augment 
-                    explicitly created entities in a collection with site-wide 
-                    installed metadata entites (i.e. types, views, etc.)
         """
-        super(EntityData, self).__init__(parent, entity_id)
         self._entitytypeid  = self._entitytypeid or parent.get_id()
+        super(EntityData, self).__init__(parent, entity_id)
         self._paramdict     = { 'type_id': self._entitytypeid, 'id': entity_id }
+        self._entityref     = layout.COLL_BASE_ENTITY_REF%self._paramdict
         self._entityviewuri = parent._entityurl+self._entityview%self._paramdict
-        # self._entityref     = layout.CONTEXT_ENTITY_REF%self._paramdict
         # log.debug("EntityData: _entityviewuri %s"%(self._entityviewuri))
         return
 

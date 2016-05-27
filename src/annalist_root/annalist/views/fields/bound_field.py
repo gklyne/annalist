@@ -113,6 +113,21 @@ class bound_field(object):
         #     )
         return
 
+    def __copy__(self):
+        """
+        Shallow(-ish) copy of self.
+
+        (Tried code from http://stackoverflow.com/a/15774013, but hits recursion limit)
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        result._field_description = self._field_description.copy()
+        result._entityvals        = self._entityvals
+        result._targetvals        = self._targetvals
+        result._key               = self._key
+        result._extras            = self._extras
+        return result
+
     def __getattr__(self, name):
         """
         Get a bound field description attribute.  Broadly, if the attribute name is 
@@ -129,6 +144,8 @@ class bound_field(object):
         if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
             return self._entityvals.get(name, "")
 
+        elif name == "entity_value":
+            return self._entityvals
         elif name in ["field_value", "field_edit_value"]:
             return self.get_field_value()
         elif name == "field_value_link":
@@ -163,6 +180,8 @@ class bound_field(object):
             return self._extras
         elif name == "options":
             return self.get_field_options()
+        elif name == "copy":
+            return self.__copy__
         #@@
         # elif name == "field_placeholder":
         #     return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
@@ -294,13 +313,13 @@ class bound_field(object):
                         raise TargetEntityNotFound_Error(value=(target_type, entity_id))
                     targetentity = typeinfo.get_entity_implied_values(targetentity)
                     self._targetvals = get_entity_values(typeinfo, targetentity)
-                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
+                    # log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
                 else:
                     log.warning(
                         "bound_field.get_targetvals: target value type %s requires %r permissions"%
                         (target_type, req_permissions)
                         )
-        log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
+        # log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
     def get_link_continuation(self, link):

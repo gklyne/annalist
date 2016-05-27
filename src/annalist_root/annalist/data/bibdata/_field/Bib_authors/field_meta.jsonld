@@ -1,0 +1,18 @@
+{ "@id":                        "annal:fields/Bib_authors"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_authors"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Author(s)"
+, "rdfs:comment":               "BibJSON(ish) field for authors"
+, "annal:field_render_type":    "Group_Seq"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "bib:Authors"
+, "annal:placeholder":          "Author(s) of article"
+, "annal:property_uri":         "bib:author"
+, "annal:field_entity_type":    "bib:BibEntry"
+  // Reference to description of repeated author field
+, "annal:group_ref":            "_group/Bib_person_group"
+, "annal:repeat_label_add":     "Add author"
+, "annal:repeat_label_delete":  "Remove selected author(s)"
+}

@@ -1,0 +1,24 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Test_image_ref",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_name": "ref_image",
+  "annal:field_render_type": "RefImage",
+  "annal:field_value_mode": "Value_direct",
+  "annal:field_value_type": "annal:Identifier",
+  "annal:id": "Test_image_ref",
+  "annal:placeholder": "(Image reference)",
+  "annal:property_uri": "zywv:reference",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "test_image_ref_field comment",
+  "rdfs:label": "test_image_ref_field label"
+}

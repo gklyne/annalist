@@ -23,6 +23,7 @@ from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
 from annalist.views.fields.find_renderers   import (
+    is_repeat_field_render_type,
     get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 
@@ -46,6 +47,9 @@ class FieldDescription(object):
     Describes an entity view field, and methods to perform 
     manipulations involving the field description.
     """
+
+    __slots__ = ("_collection", "_field_desc", "_field_suffix_index", "_field_suffix")
+
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
@@ -198,6 +202,23 @@ class FieldDescription(object):
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
         return
 
+    def __copy__(self):
+        """
+        Shallow copy of self.
+
+        (Tried code from http://stackoverflow.com/a/15774013, but got type error)
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        result._collection         = self._collection
+        result._field_desc         = self._field_desc
+        result._field_suffix_index = self._field_suffix_index
+        result._field_suffix       = self._field_suffix
+        return result
+
+    def copy(self):
+        return self.__copy__()
+
     def resolve_duplicates(self, properties):
         """
         Resolve duplicate property URIs that appear in a common context corresponding to
@@ -289,8 +310,7 @@ class FieldDescription(object):
         value is assumed to be a list of values to be rendered, and to
         have buttons for adding and removing values.
         """
-        repeat_render_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
-        return self._field_desc['field_render_type'] in repeat_render_types
+        return is_repeat_field_render_type(self._field_desc['field_render_type'])
 
     def is_enum_field(self):
         """
@@ -337,10 +357,9 @@ class FieldDescription(object):
 
         @@ test for:  group_ref, group_field_descs, and group_id
         """
-        field_group_types = ["RepeatGroup", "RepeatGroupRow", "RepeatListRow"]
-        return self._field_desc['field_render_type'] in field_group_types
+        return is_repeat_field_render_type(self._field_desc['field_render_type'])
 
-    def __repr__(self):
+    def __repr1__(self):
         return (
             "FieldDescription("+
             "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
@@ -351,6 +370,19 @@ class FieldDescription(object):
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
             "  })"
             )
+
+    def __repr2__(self):
+        return (
+            "FieldDescription("+repr(self._field_desc)+")"
+            )
+
+    def __repr3__(self):
+        return (
+            "FieldDescription("+repr(self._field_desc['field_id'])+")"
+            )
+
+    def __repr__(self):
+        return self.__repr3__()
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

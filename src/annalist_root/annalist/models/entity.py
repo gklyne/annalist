@@ -68,7 +68,6 @@ class Entity(EntityRoot):
     _entityview     = "%(id)s/"     # Placeholder for testing
     _entitypath     = None          # Relative path from parent to entity (template)
     _entityfile     = None          # Relative reference to body file from entity
-    _entityref      = None          # Relative reference to entity from body file
     _last_id        = None          # Last ID allocated
 
     def __init__(self, parent, entityid, altparent=None):
@@ -129,29 +128,49 @@ class Entity(EntityRoot):
 
         Returns a list of parents accessible from the supplied altparent (including itself)
         """
-        # Build list of accessible parents, check for recursion
-        parents     = [self, altparent]
-        moreparents = altparent.get_alt_entities(altscope="all")
-        while moreparents:
-            nextparent = moreparents.pop(0)
-            if nextparent in parents:
-                msg = "Entity.set_alt_entities makes recursive reference via %r)"%(altparent,)
-                log.error(msg)
-                raise ValueError(msg)
-            parents.append(nextparent)
-            moreparents.extend(nextparent.get_alt_entities(altscope="all"))
         # Set new alternative parent
         self._altparent = altparent
+        # Build list of accessible parents, check for recursion
+        parents = [self] + self._find_alt_parents(altscope="all")
+        # log.info(
+        #     "@@ Entity.set_alt_entities: %r altparent %r, parents %r"%
+        #     (self.get_id(), altparent.get_id(), [p.get_id() for p in parents])
+        #     )
         return parents
 
-    def get_alt_entities(self, altscope=None):
+    def _local_find_alt_parents(self):
         """
-        Returns a list of alternative entities to the current entity to search for possible 
-        child entities.  The supplied altscope parameter indicates the scope to be searched.
+        Returns a list of alternative parents for the current inheritance branch only;
+        i.e. does not attempt to follow altparent chains in referenced trees.
+        (That is handled by `_find_alt_parents` below.)
 
-        Currently, only one alternative may be declared, but a list is returned that
-        includes alternatives to the alternatrives available, and to facilitate future 
-        developments supporting multiple inheritance paths.
+        This method may be overridden by classes that need to look higher in the 
+        class inheritance tree to find alternative parent branches.
+        """
+        return [self._altparent] if self._altparent else []
+
+    def _find_alt_parents(self, altscope=None, parents_seen=[]):
+        """
+        Local helper function returns a list of entities, not including the current entity,
+        that are potentially in scope for containing entities consiudered to belong to
+        the current entity.
+
+        This function also checks for recursive references and returns an error if
+        recursion is detected.
+
+        See spike/tree_scan/tree_scan.lhs for algorithm.
+
+            > parentlist e@(Entity {altparents=alts}) = e:altpath -- req (a)
+            >     where
+            >         altpath = mergealts e [ parentlist p | p <- alts ]
+            >
+            > mergealts :: Entity -> [[Entity]] -> [Entity]
+            > mergealts _ []            = []
+            > mergealts parent [altpath]
+            >   | parent `elem` altpath = error ("Entity "++(show parent)++" has recursive altparent path")
+            >   | otherwise             = altpath
+            > mergealts parent (alt1:alt2:morealts) = 
+            >     mergealts parent ((mergealtpair alt1 alt2):morealts)
 
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  Currently defined values are:
@@ -167,23 +186,100 @@ class Entity(EntityRoot):
                         collections are not included in enumerations of entities. 
                         (See EntityRoot. and Site._children methods)
         """
+        altparents = self._local_find_alt_parents()     # Class-specific local alternative discovery
+        #@@
+        # log.info(
+        #     "@@ Entity._find_alt_parents: self %r, _altparents %r"%
+        #     (self.get_id(), [ p.get_id() for p in altparents if p ])
+        #     )
+        #@@
+        altparent_lists = []
+        if altscope:
+            for p in altparents:
+                altp = []
+                if p:
+                    if p in parents_seen:
+                        msg = (
+                            "Entity._find_alt_parents %r contains recursive altparent reference)"%
+                            (self.get_id(),)
+                            )
+                        log.error(msg)
+                        raise ValueError(msg)
+                    elif ( (altscope == "all") or (altscope == "select") or
+                           (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
+                        altp.append(p)
+                    altp.extend(p._find_alt_parents(altscope=altscope, parents_seen=parents_seen+[p]))
+                    altparent_lists.append(altp)
+        parents = []
+        for alt_list in altparent_lists:
+            if self in alt_list:
+                # Is this test redundant??  Keeping it for safety.
+                msg = (
+                    "Entity._find_alt_parents %r generates recursive altparent reference)"%
+                    (self.get_id(),)
+                    )
+                log.error(msg)
+                raise ValueError(msg)
+            parents = self._merge_alt_parent_lists(parents, alt_list)
+        return parents
+
+    def _merge_alt_parent_lists(self, list1, list2):
+        """
+        Merge a pair of allternative parent lists, preserving depth ordering and where 
+        possible placing entries from the first list ahead of entries from the second listr.
+
+        See spike/tree_scan/tree_scan.lhs for algorithm.
+
+            > mergealtpair :: [Entity] -> [Entity] -> [Entity]
+            > mergealtpair [] alt2      = alt2
+            > mergealtpair alt1 []      = alt1
+            > mergealtpair alt1@(h1:t1) alt2@(h2:t2)
+            >   | h1 == h2              = h1:mergealtpair t1 t2     -- req (b) (part)
+            >   | h1 `notElem` t2       = h1:mergealtpair t1 alt2   -- req (d)
+            >   | h2 `notElem` t1       = h2:mergealtpair alt1 t2   -- req (d)
+            >   | otherwise             = error ("Cannot preserve depth ordering of "++(show h1)++" and "++(show h2))
+        """
+        if not list1:
+            return list2
+        if not list2:
+            return list1
+        if list1[0] == list2[0]:
+            return [list1[0]] + self. _merge_alt_parent_lists(list1[1:], list2[1:])
+        if list1[0] not in list2:
+            return [list1[0]] + self. _merge_alt_parent_lists(list1[1:], list2)
+        if list2[0] not in list1:
+            return [list2[0]] + self. _merge_alt_parent_lists(list1, list2[1:])
+        msg = (
+            "Entity._merge_alt_parent_lists: Cannot preserve depth ordering of %r and %r"%
+            (list1[0].get_id(), list2[0].get_id())
+            )
+        log.error(msg)
+        raise ValueError(msg)
+
+    def get_alt_entities(self, altscope=None):
+        """
+        Returns a list of alternative entities to the current entity to search for possible 
+        child entities.  The supplied altscope parameter indicates the scope to be searched.
+
+        Currently, only one alternative may be declared, but a list is returned that
+        includes alternatives to the alternatrives available, and to facilitate future 
+        developments supporting multiple inheritance paths.
+
+        altscope    if supplied, indicates a scope other than the current entity to
+                    search for children.  See method `_find_alt_parents` for more details.
+        """
         if altscope is not None:
             if not isinstance(altscope, (unicode, str)):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
         # log.debug("Entity.get_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
-        alt_ancestry = []
-        if self._altparent:
-            if ( (altscope == "all") or (altscope == "select") or
-                 (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
-                alt_ancestry.append(self._altparent)
-            alt_ancestry.extend(self._altparent.get_alt_entities(altscope=altscope))
+        alt_parents = [self] + self._find_alt_parents(altscope=altscope)
         # log.info(
-        #     "Entity.get_alt_entities: %s/%s -> %r"%
-        #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_ancestry ])
+        #     "@@ Entity.get_alt_entities: %s/%s -> %r"%
+        #     (self.get_type_id(), self.get_id(), [ p.get_id() for p in alt_parents ])
         #     )
-        return alt_ancestry
+        return alt_parents
 
     def try_alt_entities(self, func, test=test_is_true, altscope=None):
         """
@@ -199,7 +295,7 @@ class Entity(EntityRoot):
         attempting to evaluate alternatives: this function will enumerate the 
         alternatives and make additional calls as needed.
         """
-        log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
+        # log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
         # if altscope is not None:
         #     if not isinstance(altscope, (unicode, str)):
         #         log.error("altscope must be string (%r supplied)"%(altscope))
@@ -210,7 +306,7 @@ class Entity(EntityRoot):
             return v
         alt_parents = self._parent.get_alt_entities(altscope=altscope)
         for altparent in alt_parents:
-            log.debug("Entity.try_alt_entities: alt %s/%s"%(altparent.get_type_id(), altparent.get_id()))
+            # log.debug("Entity.try_alt_entities: alt %s/%s"%(altparent.get_type_id(), altparent.get_id()))
             v = func(altparent)
             if test(v):
                 return v
@@ -234,10 +330,6 @@ class Entity(EntityRoot):
         attempting to evaluate alternatives: this function will enumerate the 
         alternatives and make additional calls as needed.
         """
-        # log.debug(
-        #     "Entity.try_alt_parentage: %s/%s with parent %r, altscope %s"%
-        #     (cls._entitytypeid, entityid, parent.get_id(), altscope)
-        #     )
         e  = cls._child_init(parent, entityid)
         uv = e._entityviewurl
         v  = func(e)
@@ -245,18 +337,19 @@ class Entity(EntityRoot):
             return (e, v)
         alt_parents = parent.get_alt_entities(altscope=altscope)
         for altparent in alt_parents:
-            # log.info("Entity.try_alt_parentage: try parent %s"%(altparent.get_id())) #@@@
             e = cls._child_init(altparent, entityid, entityviewurl=uv)
             v = func(e)
             if test(v):
                 return (e, v)
         # Failed: log details
-        log.debug(
-            "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
-            (cls._entitytypeid, entityid, parent.get_id(), altscope)
-            )
-        for ap in alt_parents:
-            log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
+        #@@
+        # log.debug(
+        #     "Entity.try_alt_parentage: no entity found for %s/%s with parent %s, scope %s"%
+        #     (cls._entitytypeid, entityid, parent.get_id(), altscope)
+        #     )
+        # for ap in alt_parents:
+        #     log.debug(" -- alt parent tried: %r"%(ap.get_id(),))
+        #@@
         return (None, v)
 
     # Class helper methods
@@ -327,9 +420,11 @@ class Entity(EntityRoot):
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.
         """
+        # log.info("@@ Entity._children: parent %s, altscope %s"%(self.get_id(), altscope))
         coll_entity_ids = list(super(Entity, self)._children(cls, altscope=altscope))
+        alt_parents     = self.get_alt_entities(altscope=altscope)
         site_entity_ids = list(itertools.chain.from_iterable(
             ( super(Entity, alt)._children(cls, altscope=altscope) 
               for alt in self.get_alt_entities(altscope=altscope)
@@ -364,7 +459,7 @@ class Entity(EntityRoot):
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.  See `_find_alt_parents` for more details.
         """
         for i in self._children(cls, altscope=altscope):
             e = cls.load(self, i, altscope=altscope)
@@ -445,7 +540,7 @@ class Entity(EntityRoot):
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.  See `_find_alt_parents` for more details.
 
         Returns an instance of the indicated class with data loaded from the
         corresponding Annalist storage, or None if there is no such entity.
@@ -487,7 +582,7 @@ class Entity(EntityRoot):
         parent      is the parent from which the entity is descended.
         entityid    is the local identifier (slug) for the entity.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.  See `_find_alt_parents` for more details.
 
         Returns True if the entity exists, as determined by existence of the 
         entity description metadata file.
@@ -525,7 +620,7 @@ class Entity(EntityRoot):
                     applicable).  E.g. "wb" to create a new resource, and "r" to read 
                     an existing one.
         altscope    if supplied, indicates a scope other than the current entity to
-                    search for children.  See method `get_alt_entities` for more details.
+                    search for children.  See `_find_alt_parents` for more details.
 
         Returns a file object value, or None.
         """

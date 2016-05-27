@@ -47,7 +47,8 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     create_user_permissions,
-    create_test_user
+    create_test_user,
+    context_view_field
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
@@ -123,16 +124,16 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             type_id="_coll", 
             entity_id="00000001", 
             sotware_ver=annalist.__version_data__,
-            tooltip1a=r.context['fields'][0]['field_help'],
-            tooltip1b=r.context['fields'][1]['field_help'],
-            tooltip2 =r.context['fields'][2]['field_help'],
-            tooltip3 =r.context['fields'][3]['field_help'],
-            tooltip4 =r.context['fields'][4]['field_help'],
-            tooltip5a=r.context['fields'][5]['field_help'],
-            tooltip5b=r.context['fields'][6]['field_help'],
-            tooltip6a=r.context['fields'][7]['field_help'],
-            tooltip6b=r.context['fields'][8]['field_help'],
-            tooltip7 =r.context['fields'][9]['field_help'],
+            tooltip1a=context_view_field(r.context, 0, 0)['field_help'],
+            tooltip1b=context_view_field(r.context, 0, 1)['field_help'],
+            tooltip2 =context_view_field(r.context, 1, 0)['field_help'],
+            tooltip3 =context_view_field(r.context, 2, 0)['field_help'],
+            tooltip4 =context_view_field(r.context, 3, 0)['field_help'],
+            tooltip5a=context_view_field(r.context, 4, 0)['field_help'],
+            tooltip5b=context_view_field(r.context, 4, 1)['field_help'],
+            tooltip6a=context_view_field(r.context, 5, 0)['field_help'],
+            tooltip6b=context_view_field(r.context, 5, 1)['field_help'],
+            tooltip7 =context_view_field(r.context, 6, 0)['field_help'],
             )
         formrow1a = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -310,7 +311,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         expected = (
             { "@id":                    "../"
             , "@type":                  [ "annal:Collection" ]
-            , "@context":               [ "coll_context.jsonld" ]
+            , "@context":               [ {"@base": "../d/"}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
             , "annal:type_id":          "_coll"
             , "annal:type":             "annal:Collection"
@@ -372,7 +373,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         expected = (
             { "@id":                    "../"
             , "@type":                  [ "annal:Collection" ]
-            , "@context":               [ "coll_context.jsonld" ]
+            , "@context":               [ {"@base": "../d/"}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
             , "annal:type_id":          "_coll"
             , "annal:type":             "annal:Collection"

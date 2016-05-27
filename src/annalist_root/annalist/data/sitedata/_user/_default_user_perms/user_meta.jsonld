@@ -1,0 +1,10 @@
+{ "@id":                    "_user/_default_user_perms"
+, "@type":                  ["annal:User"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "_default_user_perms"
+, "annal:type_id":          "_user"
+, "rdfs:label":             "Default permissions"
+, "rdfs:comment":           "# Default permissions\r\n\r\nDefault permissions for authenticated user."
+, "annal:user_uri":         "annal:User/_default_user_perms"
+, "annal:user_permission":  ["VIEW"]
+}

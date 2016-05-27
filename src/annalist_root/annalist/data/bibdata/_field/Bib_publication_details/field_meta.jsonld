@@ -1,0 +1,18 @@
+{ "@id":                        "annal:fields/Bib_publication_details"
+, "@type":                      ["annal:Field"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "Bib_publication_details"
+, "annal:type_id":              "_field"
+, "rdfs:label":                 "Publication details"
+, "rdfs:comment":               "BibJSON(ish) field for publisher details"
+, "annal:field_render_type":    "Group_Seq"
+, "annal:field_value_mode":     "Value_direct"
+, "annal:field_value_type":     "bib:Licenses"
+, "annal:placeholder":          "Information about publisher or other organization who published the article"
+, "annal:property_uri":         "bib:publication_details"
+, "annal:field_entity_type":    "bib:BibEntry"
+  // Reference to description of publication details field
+, "annal:group_ref":            "_group/Bib_publication_group"
+, "annal:repeat_label_add":     "Add publication details"
+, "annal:repeat_label_delete":  "Remove selected publication details"
+}

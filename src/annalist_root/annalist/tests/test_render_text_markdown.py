@@ -21,6 +21,7 @@ from annalist.views.fields.render_text_markdown import (
     TextMarkdownValueMapper
     )
 
+from annalist.tests.tests                       import TestHost, TestHostUri, TestBasePath, TestBaseUri
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
 class TextMarkdownRenderingTest(FieldRendererTestSupport):
@@ -46,17 +47,30 @@ class TextMarkdownRenderingTest(FieldRendererTestSupport):
         nl  = "\n"
         nl2 = "\n\n"
         test_values = (
-            [ ( u"markdown", "<p>markdown</p>")
-            , ( u"# heading"+nl2+
-                u"text paragraph"+nl+
-                "", 
-                "<h1>heading</h1>\n<p>text paragraph</p>"
+            [ ( "markdown", "<p>markdown</p>")
+            , ( "# heading"+nl2+
+                "text paragraph"+nl
+              , "<h1>heading</h1>"+nl+
+                "<p>text paragraph</p>"
+              )
+            , ( "# Test substitutions"+nl2+
+                "* `$$HOST`: $HOST"+nl+
+                "* `$$SITE`: $SITE"+nl+
+                "* `$$COLL`: $COLL"+nl+
+                "* `$$BASE`: $BASE"+nl
+              , "<h1>Test substitutions</h1>"+nl+
+                "<ul>"+nl+
+                "<li><code>$HOST</code>: "+TestHostUri+"</li>"+nl+
+                "<li><code>$SITE</code>: "+TestBaseUri+"</li>"+nl+
+                "<li><code>$COLL</code>: "+TestBaseUri+"/c/testcoll/</li>"+nl+
+                "<li><code>$BASE</code>: "+TestBasePath+"/c/testcoll/d/</li>"+nl+
+                "</ul>"
               )
             ])
 
         test_value_context_renders = (
-            [ (self._make_test_context(val), expect_render(val, valtext))
-              for val, valtext in test_values
+            [ (self._make_test_context(valtext), expect_render(valtext, valhtml))
+              for valtext, valhtml in test_values
             ])
         renderer = get_text_markdown_renderer()
 
@@ -82,16 +96,29 @@ class TextMarkdownRenderingTest(FieldRendererTestSupport):
         nl2 = "\n\n"
         test_values = (
             [ ( u"markdown", "<p>markdown</p>")
-            , ( u"# heading"+nl2+
-                u"text paragraph"+nl+
-                "", 
-                "<h1>heading</h1>\n<p>text paragraph</p>"
+            , ( "# heading"+nl2+
+                "text paragraph"+nl
+              , "<h1>heading</h1>"+nl+
+                "<p>text paragraph</p>"
+              )
+            , ( "# Test substitutions"+nl2+
+                "* `$$HOST`: $HOST"+nl+
+                "* `$$SITE`: $SITE"+nl+
+                "* `$$COLL`: $COLL"+nl+
+                "* `$$BASE`: $BASE"+nl
+              , "<h1>Test substitutions</h1>"+nl+
+                "<ul>"+nl+
+                "<li><code>$HOST</code>: "+TestHostUri+"</li>"+nl+
+                "<li><code>$SITE</code>: "+TestBaseUri+"</li>"+nl+
+                "<li><code>$COLL</code>: "+TestBaseUri+"/c/testcoll/</li>"+nl+
+                "<li><code>$BASE</code>: "+TestBasePath+"/c/testcoll/d/</li>"+nl+
+                "</ul>"
               )
             ])
 
         test_value_context_renders = (
-            [ (self._make_test_context(val), expect_render(val, valtext))
-              for val, valtext in test_values
+            [ (self._make_test_context(valtext), expect_render(valtext, valhtml))
+              for valtext, valhtml in test_values
             ])
         renderer = get_show_markdown_renderer()
 

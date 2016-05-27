@@ -1,0 +1,20 @@
+{ "@id":                        "_field/View_field_sel"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_field_sel"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_sel"
+, "rdfs:label":                 "Field id"
+, "rdfs:comment":               "The 'Field Id' of a field definition to be used in a viewed display.  The containing view definition may combine this with property URI (field 'Property') and display placement (field 'Position/size') values to define a field to be displayed."
+, "annal:placeholder":          "(field sel)"
+, "annal:field_name":           "Field_id"
+, "annal:field_render_type":    "Enum_render_type/Enum_optional"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_ref_type":       "_field"
+, "annal:field_ref_restriction":  "entity[annal:record_type] subtype [annal:field_entity_type]"
+, "annal:field_value_type":     "annal:Slug"
+, "annal:field_entity_type":    "annal:View_field"
+, "annal:property_uri":         "annal:field_id"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

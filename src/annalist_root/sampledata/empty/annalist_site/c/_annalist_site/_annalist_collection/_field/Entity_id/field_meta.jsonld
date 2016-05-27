@@ -1,0 +1,17 @@
+{ "@id":                        "_field/Entity_id"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Entity_id"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_id"
+, "rdfs:label":                 "Id"
+, "rdfs:comment":               "A short identifier that distinguishes this entity from all other entities of the same type in the same collection."
+, "annal:field_name":           "entity_id"
+, "annal:field_render_type":    "Enum_render_type/EntityId"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Slug"
+, "annal:placeholder":          "(entity id)"
+, "annal:property_uri":         "annal:id"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

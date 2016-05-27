@@ -1,0 +1,42 @@
+{ "@id":                "_view/Type_view"
+, "@type":              ["annal:View"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "Type_view"
+, "rdfs:label":         "Type definition"
+, "rdfs:comment":       "# Type definition view\r\n\r\nDefine form used for type definition.\r\n\r\nUsed to view instances of type [Type]($BASE:_type/_type), which is a key Annalist concept.  Entity types provide a high-level distinction between the things described in a collection.\r\n\r\nEach entity type corresponds to a set of stored entity records.  Structurally, entity types form a flat (non-hierarchical) space, but each type may declare one or more supertype URIs so that its members are included in selections of the indicated supertype.\r\n\r\n## Fields\r\n\r\n[Type Id]($BASE:_field/Type_id/):\r\ntype identifier.\r\n\r\n[Label]($BASE:_field/Type_label/):\r\nshort label used to describe this type.\r\n\r\n[Comment]($BASE:_field/Type_comment/):\r\nextended text description of this type.\r\nUses Markdown for formatting, with [value substitutions]($BASE:Enum_render_type/Markdown) for links, etc.\r\n\r\n[URI]($BASE:_field/Type_uri/):\r\nentity type URI or CURIE.  This URI is associated with instances of this type when published to the web as linked data.  The string used is also used as a basis for selecting subtypes of this type (see also field **Supertype URIs**)\r\n\r\n[Supertype URIs]($BASE:_field/Type_supertype_uris/):\r\nlist of URIs or CURIEs of supertypes of the current type. These are additional type URIs associated with instances of this type when published to the web as linked data.  The URI/CURIE strings are also used for detecting other types of which the current type is a subtype.\r\n\r\n[Default view]($BASE:_field/Type_view/):\r\nDefault view for presenting instances of this type.\r\n\r\n[Default list]($BASE:_field/Type_list/):\r\nDefault list for instances of this type. \r\n\r\n[Field aliases]($BASE:_field/Type_aliases/):\r\nA list of field aliases that may be associated with a type. That is, field values that may be returned based on some property URI other than the one associated with the field. One motivating case for this is to allow fields associated with different properties to be associated with entity labels (`rdfs:label`), which are used by many generic views.  The alias mechanism has also been used to implement a limited form of \"superproperty URI\", which can be useful for creating a unified view over disparate field types, such as linked and upoaded images.\r\n\r\nEach alias is associated with a pair of *target* and *source* property URIs or CURIEs.  When field definition references the *target* URI, the entity field value at the *source* URI may be returned."
+, "annal:record_type":  "annal:Type"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Type_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Type_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_supertype_uris"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Type_view"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Type_list"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Type_aliases"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+, "annal:edit_task_buttons":
+  [ { "annal:button_id":        "_task/Define_view_list" 
+    , "annal:button_label":     "Define view+list"
+    , "annal:button_help":      "Define initial view and list definitions for the current type.  (View and list type information and URI are taken from the current type; other fields are taken from the corresponding '_initial_values' record, and may be extended or modified later.)"
+    }
+  ]
+}

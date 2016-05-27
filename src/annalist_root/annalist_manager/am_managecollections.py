@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
+from annalist.collections           import installable_collections
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -44,7 +45,9 @@ from am_getargvalue                 import getarg, getargvalue
 #
 # @@TODO: consider ways to discover these details by scanning the file system?
 #
-installable_collections = (
+# @@TODO: delete this when annalist-manager has been fully tested
+#
+_old_installable_collections = (
     { "Namespace_defs":      
         { 'data_dir': "namedata"
         , 'coll_meta':

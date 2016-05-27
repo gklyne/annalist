@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import urlparse
+import copy
 
 import logging
 log = logging.getLogger(__name__)
@@ -15,20 +16,23 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.http                    import QueryDict
 from django.utils.http              import urlquote, urlunquote
+from django.utils.html              import escape
 from django.core.urlresolvers       import resolve, reverse
+from django.template                import Context
 from django.contrib.auth.models     import User
 
 import annalist
-from annalist.util                  import valid_id
+from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.uri_builder             import uri_params, uri_with_params
-from annalist.views.fields.bound_field      import bound_field, get_entity_values
-from annalist.views.fields.render_placement import get_placement_classes
-from annalist.views.form_utils.fieldchoice  import FieldChoice, update_choice_labels
+from annalist.views.uri_builder                 import uri_params, uri_with_params
+from annalist.views.fields.bound_field          import bound_field, get_entity_values
+from annalist.views.fields.render_placement     import get_placement_classes
+from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
+from annalist.views.form_utils.fielddescription import FieldDescription
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -311,7 +315,8 @@ def render_select_options(name, label, opts, sel, placeholder=None):
             [ select_option(o) for o in update_options(opts) ])
         })
 
-def render_choice_options(name, opts, sel, placeholder=None, select_class=None, _unused_value_dict={}):
+def render_choice_options(
+        name, opts, sel, placeholder=None, select_class=None, escape_label=False):
     """
     Cf. `templates.field.annalist_edit_choice.html`.
     Like select, but without the "New" button.
@@ -336,6 +341,8 @@ def render_choice_options(name, opts, sel, placeholder=None, select_class=None, 
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice()
+        if escape_label:
+            label = escape(label)
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     def _unused_select_option(o):
@@ -402,6 +409,80 @@ def create_test_user(
 #
 #   -----------------------------------------------------------------------------
 
+def context_field_row(*fields):
+    row = (
+        { 'field_id':           "Row_fields"
+        , 'field_name':         "Row_fields"
+        , 'field_label':        "Fields in row"
+        , 'field_value_mode':   "Value_direct"
+        , 'field_render_type':  "FieldRow"
+        , 'field_placement':    get_placement_classes('small:0,12')
+        , 'row_field_descs':    list(fields)
+        })
+    return row
+
+def context_field_map(context):
+    fields = context['fields']
+    response = ["context_field_map: %d rows"%(len(fields))]
+    for rn in range(len(fields)):
+        row = fields[rn]
+        if 'row_field_descs' in row:
+            # Pick column from row
+            cols = row['row_field_descs']
+        else:
+            # Field is not row-wrapped
+            cols = [row]
+        response.append("  row %d: %d cols"%(rn, len(cols)))
+        for cn in range(len(cols)):
+            field = cols[cn]
+            response.append("    col %d, id %s, pos %s"%(cn, field['field_id'], field['field_placement']))
+    return "\n".join(response)
+
+def context_view_field(context, rownum, colnum):
+    row = context['fields'][rownum]
+    if 'row_field_descs' in row:
+        # Pick column from row
+        field = row['row_field_descs'][colnum]
+    else:
+        # Field is not row-wrapped
+        field = row
+    if isinstance(field, FieldDescription):
+        # fields in row are late-bound, so create a binding now
+        entity_vals = context['fields'][rownum]['entity_value']
+        extras      = context['fields'][rownum]['context_extra_values']
+        field       = bound_field(field, entity_vals, context_extra_values=extras) 
+    return field
+
+def context_bind_fields(context):
+    """
+    Fields in field rows are late bound so entity values do not appear in
+    the actual context used.  This method binds entity values to fields
+    so that all field values can be tested.
+    """
+    # bound_context = Context(context.flatten()) # Doesn't work for ContextList used for tests
+    context_vals  = {}
+    for k in context.keys():
+        context_vals[k] = context[k]
+    bound_context = Context(context_vals)
+    bound_rows    = []
+    for row in context['fields']:
+        if 'row_field_descs' in row:
+            entity_vals = row['entity_value']
+            extras      = row['context_extra_values']
+            bound_cols  = []
+            for field in row['row_field_descs']:
+                if isinstance(field, FieldDescription):
+                    # fields in row are late-bound, so create a binding now
+                    field       = bound_field(field, entity_vals, context_extra_values=extras) 
+                bound_cols.append(field)
+            bound_row = row.copy()
+            bound_row._field_description['row_field_descs'] = bound_cols
+        else:
+            bound_row = row
+        bound_rows.append(bound_row)
+    bound_context['fields'] = bound_rows
+    return bound_context
+
 def context_list_entities(context):
     """
     Returns list of entities to be displayed in list view
@@ -451,6 +532,389 @@ def context_list_item_field_value(context, entity, fid):
     Returns value of indicated field
     """
     return context_list_item_field(context, entity, fid)['field_value']
+
+def check_context_field_value(test, context_field,
+        field_value_type=None,
+        field_value=None
+        ):
+    """
+    Check field value in context field against supplied parameters.
+
+    This function allows certain variations for robustness of tests.
+    """
+    context_field_value = context_field['field_value']
+    if field_value is None:
+        context_field_value = None
+    elif field_value_type in ["annal:Slug", "annal:Type", "annal:View", "annal:List"]:
+        context_field_value = extract_entity_id(context_field_value)
+    if isinstance(field_value, (list, tuple)):
+        for i in range(len(field_value)):
+            log.debug("check_context_field_value (list): [%d] %r"%(i, field_value[i]))
+            test.assertDictionaryMatch(context_field_value[i], field_value[i], prefix="[%d]"%i)
+    elif isinstance(field_value, dict):
+        test.assertDictionaryMatch(context_field_value, field_value[i], prefix="")
+    else:
+        test.assertEqual(context_field_value, field_value)
+    return
+
+def check_context_field(test, context_field,
+        field_id=None,
+        field_name=None,
+        field_label=None,
+        field_placeholder=None,
+        field_property_uri=None,
+        field_render_type=None,
+        field_value_mode=None,
+        field_value_type=None,
+        field_placement=None,
+        field_value=None,
+        options=None,
+        ):
+    """
+    Check values in context field against supplied parameters.
+
+    This function allows certain variations for robustness of tests.
+    """
+    test.assertEqual(context_field['field_id'],   field_id)
+    test.assertEqual(context_field['field_name'], field_name)
+    if field_label:
+        test.assertEqual(context_field['field_label'], field_label)
+    if field_placeholder:
+        test.assertEqual(context_field['field_placeholder'], field_placeholder)
+    if field_property_uri:
+        test.assertEqual(context_field['field_property_uri'], field_property_uri)
+    test.assertEqual(extract_entity_id(context_field['field_render_type']), field_render_type)
+    test.assertEqual(extract_entity_id(context_field['field_value_mode']),  field_value_mode)
+    test.assertEqual(context_field['field_value_type'],                     field_value_type)
+    if options:
+        test.assertEqual(set(context_field['options']), set(options))
+    if field_placement:
+        test.assertEqual(context_field['field_placement'].field, field_placement)
+    check_context_field_value(test, context_field, 
+        field_value_type=field_value_type, 
+        field_value=field_value
+        )
+    return
+
+def check_context_list_field_value(test, context_field,
+        field_value=None
+        ):
+    """
+    Check field value according to type in context
+    """
+    check_context_field_value(test, context_field,
+        field_value_type=context_field['field_value_type'],
+        field_value=field_value
+        )
+    return
+
+def check_field_list_context_fields(test, response, field_entities):
+    """
+    Check field list values in supplied context
+    """
+    head_fields = context_list_head_fields(response.context)
+    test.assertEqual(len(head_fields), 1)       # One row of 4 cols..
+    test.assertEqual(len(head_fields[0]['row_field_descs']), 4)
+    f0 = context_view_field(response.context, 0, 0)
+    f1 = context_view_field(response.context, 0, 1)
+    f2 = context_view_field(response.context, 0, 2)
+    f3 = context_view_field(response.context, 0, 3)
+    # 1st field
+    check_context_field(test, f0,
+        field_id=           "Entity_id",
+        field_name=         "entity_id",
+        field_label=        "Id",
+        field_placeholder=  "(entity id)",
+        field_property_uri= "annal:id",
+        field_render_type=  "EntityId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # 2nd field
+    check_context_field(test, f1,
+        field_id=           "Field_render_type",
+        field_name=         "Field_render_type",
+        field_label=        "Render type",
+        field_placeholder=  "(field render type)",
+        field_property_uri= "annal:field_render_type",
+        field_render_type=  "Enum_choice",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # 3rd field
+    check_context_field(test, f2,
+        field_id=           "Field_value_type",
+        field_name=         "Field_value_type",
+        field_label=        "Value type",
+        field_placeholder=  "(field value type)",
+        field_property_uri= "annal:field_value_type",
+        field_render_type=  "Identifier",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Identifier",
+        field_placement=    "small-12 medium-3 columns show-for-medium-up"
+        )
+    # 4th field
+    check_context_field(test, f3,
+        field_id=           "Entity_label",
+        field_name=         "Entity_label",
+        field_label=        "Label",
+        field_placeholder=  "(label)",
+        field_property_uri= "rdfs:label",
+        field_render_type=  "Text",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Text",
+        field_placement=    "small-4 medium-3 columns"
+        )
+    # Selection of field entities from list
+    entities = context_list_entities(response.context)
+    entity_ids = [ context_list_item_field_value(response.context, e, 0) for e in entities ]
+    for f in field_entities:
+        for eid in range(len(entities)):
+            item_fields = context_list_item_fields(response.context, entities[eid])
+            if item_fields[0]['field_value'] == f[0]:
+                # Expected field entity found in context data, check details...
+                for fid in range(4):
+                    item_field = item_fields[fid]
+                    head_field = head_fields[0]['row_field_descs'][fid]
+                    for fkey in (
+                            'field_id', 'field_name', 'field_label', 
+                            'field_property_uri', 'field_render_type',
+                            'field_placement', 'field_value_type'):
+                        test.assertEqual(item_field[fkey], head_field[fkey])
+                    # Check listed field values
+                    check_context_list_field_value(test, item_field, f[fid])
+                break
+        else:
+            test.fail("Field %s not found in context"%f[0])
+    return
+
+type_no_options   = [ FieldChoice('', label="(no options)") ]
+def check_type_view_context_fields(test, response, 
+        action="",
+        entity_id="", orig_entity_id=None,
+        type_id="_type",
+        type_label="(?type_label)",
+        type_comment="(?type_comment)",
+        type_uri="(?type_uri)",
+        type_supertype_uris="",
+        type_view="Default_view", type_view_options=None,
+        type_list="Default_list", type_list_options=None,
+        type_aliases=[]
+        ):
+    # Common entity attributes
+    test.assertEqual(response.context['entity_id'],        entity_id)
+    test.assertEqual(response.context['orig_id'],          orig_entity_id or entity_id)
+    test.assertEqual(response.context['type_id'],          type_id)
+    test.assertEqual(response.context['orig_type'],        type_id)
+    test.assertEqual(response.context['coll_id'],          'testcoll')
+    test.assertEqual(response.context['action'],           action)
+    test.assertEqual(response.context['view_id'],          'Type_view')
+    # View fields
+    test.assertEqual(len(response.context['fields']), 7)
+    f0 = context_view_field(response.context, 0, 0)
+    f1 = context_view_field(response.context, 1, 0)
+    f2 = context_view_field(response.context, 2, 0)
+    f3 = context_view_field(response.context, 3, 0)
+    f4 = context_view_field(response.context, 4, 0)
+    f5 = context_view_field(response.context, 5, 0)
+    f6 = context_view_field(response.context, 5, 1)
+    f7 = context_view_field(response.context, 6, 0)
+    # 1st field - Id
+    check_context_field(test, f0,
+        field_id=           "Type_id",
+        field_name=         "entity_id",
+        field_label=        "Type Id",
+        field_placeholder=  "(type id)",
+        field_property_uri= "annal:id",
+        field_render_type=  "EntityId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Slug",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        entity_id,
+        options=            type_no_options
+        )
+    # 2nd field - Label
+    check_context_field(test, f1,
+        field_id=           "Type_label",
+        field_name=         "Type_label",
+        field_label=        "Label",
+        field_placeholder=  "(label)",
+        field_property_uri= "rdfs:label",
+        field_render_type=  "Text",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Text",
+        field_placement=    "small-12 columns",
+        field_value=        type_label,
+        options=            type_no_options
+        )
+    # 3rd field - comment
+    type_comment_placeholder = (
+        "(type description)"
+        )
+    check_context_field(test, f2,
+        field_id=           "Type_comment",
+        field_name=         "Type_comment",
+        field_label=        "Comment",
+        field_placeholder=  type_comment_placeholder,
+        field_property_uri= "rdfs:comment",
+        field_render_type=  "Markdown",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Richtext",
+        field_placement=    "small-12 columns",
+        field_value=        type_comment,
+        options=            type_no_options
+        )
+    # 4th field - URI
+    type_uri_placeholder = (
+        "(Type URI)"
+        )
+    check_context_field(test, f3,
+        field_id=           "Type_uri",
+        field_name=         "Type_uri",
+        field_label=        "Type URI",
+        field_placeholder=  type_uri_placeholder,
+        field_property_uri= "annal:uri",
+        field_render_type=  "Identifier",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Identifier",
+        field_value=        type_uri,
+        options=            type_no_options
+        )
+    # 5th field - Supertype URIs
+    type_supertype_uris_placeholder = (
+        "(Supertype URIs or CURIEs)"
+        )
+    check_context_field(test, f4,
+        field_id=           "Type_supertype_uris",
+        field_name=         "Type_supertype_uris",
+        field_label=        "Supertype URIs",
+        field_placeholder=  type_supertype_uris_placeholder,
+        field_property_uri= "annal:supertype_uri",
+        field_render_type=  "Group_Seq_Row",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Type_supertype_uri",
+        field_value=        type_supertype_uris,
+        options=            type_no_options
+        )
+    # 6th field - view id
+    type_view_id_placeholder = (
+        "(view id)"
+        )
+    check_context_field(test, f5,
+        field_id=           "Type_view",
+        field_name=         "Type_view",
+        field_label=        "Default view",
+        field_placeholder=  type_view_id_placeholder,
+        field_property_uri= "annal:type_view",
+        field_render_type=  "Enum_optional",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:View",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        type_view,
+        options=            type_view_options
+        )
+    # 7th field - list id
+    type_list_id_placeholder = (
+        "(list id)"
+        )
+    check_context_field(test, f6,
+        field_id=           "Type_list",
+        field_name=         "Type_list",
+        field_label=        "Default list",
+        field_placeholder=  type_list_id_placeholder,
+        field_property_uri= "annal:type_list",
+        field_render_type=  "Enum_optional",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:List",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        type_list,
+        options=            type_list_options
+        )
+    # 8th field - field aliases
+    type_aliases_placeholder = (
+        "(field aliases)"
+        )
+    check_context_field(test, f7,
+        field_id=           "Type_aliases",
+        field_name=         "Type_aliases",
+        field_label=        "Field aliases",
+        field_placeholder=  type_aliases_placeholder,
+        field_property_uri= "annal:field_aliases",
+        field_render_type=  "Group_Seq_Row",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Type_alias",
+        field_placement=    "small-12 columns",
+        field_value=        type_aliases,
+        options=            type_no_options
+        )
+    return
+
+def check_field_record(test, field_record,
+        field_id=None,
+        field_ref=None,
+        field_types=None,
+        field_name=None,
+        field_type_id=None,
+        field_type=None,
+        field_uri=None,
+        field_url=None,
+        field_label=None,
+        field_comment=None,
+        field_render_type=None,
+        field_value_mode=None,
+        field_property_uri=None,
+        field_placement=None,
+        field_entity_type=None,
+        field_value_type=None,
+        field_placeholder=None,
+        field_default=None,
+        ):
+        if field_id:
+            test.assertEqual(field_id,           field_record['annal:id'])
+        if field_ref:
+            test.assertEqual(field_ref,          field_record['@id'])
+        if field_types:
+            test.assertEqual(field_types,        field_record['@type'])
+        if field_type_id:
+            test.assertEqual(field_type_id,      field_record['annal:type_id'])
+        if field_type:
+            test.assertEqual(field_type,         field_record['annal:type'])
+        if field_uri:
+            test.assertEqual(field_uri,          field_record['annal:uri'])
+        if field_url:
+            test.assertEqual(field_url,          field_record['annal:url'])
+        if field_label:
+            test.assertEqual(field_label,        field_record['rdfs:label'])
+        if field_comment:
+            test.assertEqual(field_comment,      field_record['rdfs:comment'])
+
+        if field_name:
+            test.assertEqual(field_name,         field_record['annal:field_name'])
+        if field_render_type:
+            test.assertEqual(
+                field_render_type,  
+                extract_entity_id(field_record['annal:field_render_type'])
+                )
+        if field_value_mode:
+            test.assertEqual(
+                field_value_mode,   
+                extract_entity_id(field_record['annal:field_value_mode'])
+                )
+        if field_property_uri:
+            test.assertEqual(field_property_uri, field_record['annal:property_uri'])
+        if field_placement:
+            test.assertEqual(field_placement,    field_record['annal:field_placement'])
+        if field_entity_type:
+            test.assertEqual(field_entity_type,  field_record['annal:field_entity_type'])
+        if field_value_type:
+            test.assertEqual(field_value_type,   field_record['annal:field_value_type'])
+        if field_placeholder:
+            test.assertEqual(field_placeholder,  field_record['annal:placeholder'])
+        if field_default:
+            test.assertEqual(field_default,      field_record['annal:default_value'])
+        return
 
 #   -----------------------------------------------------------------------------
 

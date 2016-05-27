@@ -1,0 +1,10 @@
+{ "@id":                    "_user/_unknown_user_perms"
+, "@type":                  ["annal:User"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "_unknown_user_perms"
+, "annal:type_id":          "_user"
+, "rdfs:label":             "Unknown user"
+, "rdfs:comment":           "# Unknown user permissions\r\n\r\nPermissions for unauthenticated user."
+, "annal:user_uri":         "annal:User/_unknown_user_perms"
+, "annal:user_permission":  ["VIEW"]
+}

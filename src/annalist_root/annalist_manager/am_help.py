@@ -38,6 +38,9 @@ command_summary_help = ("\n"+
     "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
+    "  %(prog)s settingsmodule [ CONFIG ]\n"+
+    "  %(prog)s settingsdir [ CONFIG ]\n"+
+    "  %(prog)s settingsfile [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
     "  %(prog)s version\n"+
     "")
@@ -315,6 +318,39 @@ def am_help(options, progname):
             "Sends the name of Annalist site directory to standard output.\n"+
             "\n"+
             "This is a convenience function to locate the site data directory, which\n"+
+            "may be buried deep in the Python virtual environment files.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("settingsm"):
+        help_text = ("\n"+
+            "  %(prog)s settingsmodule [ CONFIG ]\n"+
+            "\n"+
+            "Sends the name of Annalist settings module to standard output.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("settingsd"):
+        help_text = ("\n"+
+            "  %(prog)s settingsdir [ CONFIG ]\n"+
+            "\n"+
+            "Sends the name of Annalist settings directory to standard output.\n"+
+            "\n"+
+            "This is a convenience function to locate the settings data, which\n"+
+            "may be buried deep in the Python virtual environment files.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("settingsf"):
+        help_text = ("\n"+
+            "  %(prog)s settingsfile [ CONFIG ]\n"+
+            "\n"+
+            "Sends the name of Annalist settings file name (without extension) to standard output.\n"+
+            "\n"+
+            "This is a convenience function to locate the settings data, which\n"+
             "may be buried deep in the Python virtual environment files.\n"+
             "\n"+
             config_options_help+

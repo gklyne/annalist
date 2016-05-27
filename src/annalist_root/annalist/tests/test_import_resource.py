@@ -35,13 +35,14 @@ from init_tests             import init_annalist_test_site, init_annalist_test_c
 from entity_testutils       import (
     create_test_user,
     create_user_permissions,
+    context_view_field,
     context_list_entities,
     context_list_head_fields,
     context_list_item_fields
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_default_view_context_data, entitydata_default_view_form_data,
+    entitydata_default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
@@ -288,16 +289,16 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
         self.assertEqual(len(r.context['fields']), 4)
-        i = 0
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
-        self.assertEqual(r.context['fields'][i].field_value,  "test1")
-        i = 1
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
-        i = 2
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
-        i = 3
-        self.assertEqual(r.context['fields'][i].field_id,     "Test_import")
-        self.assertDictionaryMatch(r.context['fields'][i].field_value, test_import_field_value())
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0.field_id,     "Entity_id")
+        self.assertEqual(f0.field_value,  "test1")
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1.field_id,     "Entity_label")
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2.field_id,     "Entity_comment")
+        f3 = context_view_field(r.context, 3, 0)
+        self.assertEqual(f3.field_id,     "Test_import")
+        self.assertDictionaryMatch(f3.field_value, test_import_field_value())
         # Read back and compare entity resource just created
         siteobj = open(TestBaseDir+"/README.md", "rb")
         testobj = self.test_imp_type_info.get_fileobj(
@@ -328,29 +329,24 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # Check display context
         self.assertEqual(len(r.context['fields']), 4)
-        i = 0
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_id")
-        self.assertEqual(r.context['fields'][i].field_value,  "test1")
-        i = 1
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_label")
-        self.assertEqual(r.context['fields'][i].field_value,  "test_ref_entity test1 label")
-        i = 2
-        self.assertEqual(r.context['fields'][i].field_id,     "Entity_comment")
-        self.assertEqual(r.context['fields'][i].field_value,  "test_ref_entity test1 comment")
-        i = 3
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0.field_id,     "Entity_id")
+        self.assertEqual(f0.field_value,  "test1")
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1.field_id,     "Entity_label")
+        self.assertEqual(f1.field_value,  "test_ref_entity test1 label")
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2.field_id,     "Entity_comment")
+        self.assertEqual(f2.field_value,  "test_ref_entity test1 comment")
+        f3 = context_view_field(r.context, 3, 0)
         basepath = TestBasePath + "/c/testcoll/d/testimptype/"
-        self.assertEqual(r.context['fields'][i].field_id,           "Test_reference")
-        self.assertEqual(r.context['fields'][i].field_value,        "testimptype/test1")
-        self.assertEqual(r.context['fields'][i].field_value_link,   basepath+"test1/")
-        # {u'resource_url': u'file:///usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/README.md'
-        # , u'resource_name': u'imp_field.md'
-        # , u'import_name': u'imp_field'
-        # , u'resource_type': u'text/markdown'
-        # , u'import_url': u'file:///usr/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/README.md'}
-        self.assertEqual(r.context['fields'][i].target_value['import_name'],   "imp_field")
-        self.assertEqual(r.context['fields'][i].target_value['resource_name'], "imp_field.md")
-        self.assertEqual(r.context['fields'][i].target_value['resource_type'], "text/markdown")
-        self.assertEqual(r.context['fields'][i].target_value_link,  basepath+"test1/imp_field.md")
+        self.assertEqual(f3.field_id,           "Test_reference")
+        self.assertEqual(f3.field_value,        "testimptype/test1")
+        self.assertEqual(f3.field_value_link,   basepath+"test1/")
+        self.assertEqual(f3.target_value['import_name'],   "imp_field")
+        self.assertEqual(f3.target_value['resource_name'], "imp_field.md")
+        self.assertEqual(f3.target_value['resource_type'], "text/markdown")
+        self.assertEqual(f3.target_value_link,  basepath+"test1/imp_field.md")
         return
 
 # End.

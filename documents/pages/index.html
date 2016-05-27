@@ -24,7 +24,7 @@
     <h1 id="title">
       <a href="#">annalist.net</a> - 
       <a htref="//demo.annalist.net/">Annalist</a> demonstration system
-      <span>0.1.30</span>
+      <span>0.1.32</span>
     </h1>
   </div>
   <!-- navigation -->
@@ -44,17 +44,25 @@
   <h1>Welcome to annalist.net</h1>
 
   <p>
-    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.30).
+    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.32).
   </p>
 
   <h2>Overview</h2>
+
+  <p class="callout">
+    The goal of Annalist is to make it easy for individuals and small teams to create and share linked data on the web, and to experiment with linked information designs.
+  </p>
 
   <p>
     Annalist is a <em>Linked Data Notebook</em>, supporting collection, organization and sharing of structured and semi-structured data.  The name "Annalist" derives from <a href="http://www.oxforddictionaries.com/definition/english/annalist">"a person who writes annals"</a>.
   </p>
 
   <p>
-    Annalist can be used for diverse purposes, and in particular has been motivated by the needs of small academic research groups, and personal information management.  It is a self-hostable, web-based tool that will, "out-of-the-box", allow collection of web accessible, linked data without prior design of its structure.  As such, it is designed to enable:
+    Annalist can be used for diverse purposes, and in particular has been motivated by the needs of small academic research groups, and personal information management.  It is a self-hostable, web-based tool that will, "out-of-the-box", allow creation and management of web accessible, linked data without prior design of its structure and with no programming required.
+  </p>
+
+  <p>
+    As such, it is designed to enable:
     <ul class="green">
       <li>Easy data creation and management: data entry, modification and organization of small data records.</li>
       <li>Flexible data: new record types and fields can be added as required.</li>
@@ -94,12 +102,10 @@
         Guide to using Annalist</a>.
     </li>
     <li>
-      <a href="https://github.com/gklyne/annalist/blob/develop/documents/publications/LDOW2016-paper/Annalist-paper-ACMSIG.pdf">LDoW 2016 workshop paper</a>.
-      @@TODO: fix up link following software release.
+      <a href="https://github.com/gklyne/annalist/blob/master/documents/publications/LDOW2016-paper/Annalist-paper-ACMSIG.pdf">LDoW 2016 workshop paper</a>.
     </li>
     <li>
-      <a href="https://github.com/gklyne/annalist/blob/develop/documents/publications/LDOW2016-paper/annalist-presentation-ldow2016.pdf">LDoW 2016 workshop presentation</a>.
-      @@TODO: fix up link following software release.
+      <a href="https://github.com/gklyne/annalist/blob/master/documents/publications/LDOW2016-paper/annalist-presentation-ldow2016.pdf">LDoW 2016 workshop presentation</a>.
     </li>
   </ul>
 
@@ -145,7 +151,7 @@
       <a href="http://annalist.net/annalist_sitedata/"><img src="img/get_the_data_125x50.png"/></a>
     </p>
     <p style="width: 100%;">
-      The raw data that underlies the Annalist demo site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  Subdirectory <a href="http://annalist.net/annalist_sitedata/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions; and subdirectory <a href="http://annalist.net/annalist_sitedata/c/">c</a> contains user collection data.
+      The raw JSON-LD data that underlies the Annalist demo site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  User data collections are contained in <a href="http://annalist.net/annalist_sitedata/c/">subdirectory c</a>, with a subdirectory for each separate collection.  Within each collection type, view and other configuration definitions are in a subdirectory "_annalist_collection".  A special collection <a href="http://annalist.net/annalist_sitedata/c/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions.
     </p>
     <div style="clear:left;"/>
   </div>
@@ -205,8 +211,11 @@
 
   <ul class="green">
     <li>
-      <a href="software/Annalist-0.1.30.tar.gz">Annalist-0.1.30</a>: 
+      <a href="software/Annalist-0.1.32.tar.gz">Annalist-0.1.32</a>: 
       Downloadable software installation kit.  Needs Python 2.7, <code>virtualenv</code> and <code>pip</code>.  Install using <code>pip</code> into a newly created Python virtual environment.
+    </li>
+    <li>
+      <a href="software/Annalist-0.1.30.tar.gz">Annalist-0.1.30</a>  (older release).
     </li>
     <!-- overwritten in testing:
     <li>

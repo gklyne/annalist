@@ -131,7 +131,6 @@ class RenderMultiFields_label(object):
     try:
         # log.info("RenderMultiFields_label.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
-
         group_fields = [ f for f in group_field_descs ]
         group_dict = (
             { 'group_bound_fields':  group_fields
@@ -206,13 +205,14 @@ class RenderMultiFields_value(object):
         # log.info("RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
         target_vals = context['field']['target_value']
         extras      = context['field']['context_extra_values']
-        log.debug("RenderMultiFields_value.render target_vals: %r"%(target_vals))
+        # log.debug("RenderMultiFields_value.render target_vals: %r"%(target_vals))
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 
             for f in group_field_descs 
             ]
         group_dict = (
             { 'group_bound_fields':  group_fields
+            # @@TODO: is group_entity actually used anywhere??
             , 'group_entity':        target_vals
             })
         # log.info("RenderMultiFields_value.render group_dict: %r"%(group_dict))

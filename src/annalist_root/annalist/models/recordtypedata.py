@@ -26,12 +26,12 @@ from annalist.models.entitydata import EntityData
 class RecordTypeData(Entity):
 
     _entitytype     = ANNAL.CURIE.Type_Data
-    _entitytypeid   = "_entitytypedata"
+    _entitytypeid   = layout.TYPEDATA_TYPEID
     _entityview     = layout.COLL_TYPEDATA_VIEW
     _entitypath     = layout.COLL_TYPEDATA_PATH
     _entityfile     = layout.TYPEDATA_META_FILE
-    _entityref      = layout.META_TYPEDATA_REF
-    _contextref     = layout.COLL_CONTEXT_FILE
+    _baseref        = layout.TYPEDATA_COLL_BASE_REF
+    _contextref     = layout.TYPEDATA_CONTEXT_FILE
 
     def __init__(self, parent, type_id):
         """
@@ -40,6 +40,7 @@ class RecordTypeData(Entity):
         parent      is the parent collection from which the type data is descended.
         type_id     the local identifier (slug) for the record type
         """
+        self._entityref = layout.COLL_BASE_TYPEDATA_REF%{'id': type_id}
         super(RecordTypeData, self).__init__(parent, type_id)
         return
 
@@ -58,5 +59,22 @@ class RecordTypeData(Entity):
     def remove_entity(self, entity_id):
         t = EntityData.remove(self, entity_id)
         return t
+
+    def _local_find_alt_parents(self):
+        """
+        Returns a list of alternative parents for the current inheritance branch only;
+        i.e. does not attempt to follow altparent chains in referenced trees.
+        (That is handled by `_find_alt_parents` below.)
+
+        This method overrides the method in Entity to take account of the need to
+        look beyond the immediate RecordTypeData instance to follow links to collections
+        from which data is inherited.
+        """
+        type_id  = self.get_id()
+        altcolls = self._parent._local_find_alt_parents()
+        # log.info("@@ RecordTypeData._local_find_alt_parents altcolls %r"%(altcolls))
+        altdatas = [ alt for alt in [ RecordTypeData.load(c, type_id) for c in altcolls ] if alt ]
+        # log.info("@@ RecordTypeData._local_find_alt_parents %r"%([p.get_id for p in altdatas]))
+        return altdatas
 
 # End.

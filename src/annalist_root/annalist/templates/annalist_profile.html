@@ -6,38 +6,81 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="large-12 columns">
-      <h3>User profile</h3>
-    </div>
+<div class="row">
+  <div class="large-12 columns">
+    <h3>User profile</h3>
   </div>
-  
-  <div class="row">
-    <div class="small-2 columns">
-      <p>User</p>
-    </div>
-    <div class="small-10 columns">
-      <!-- <p>{{user.username}}</p> -->
-      <p>{{username}}</p>
-    </div>
-  </div>
+</div>
 
-  <div class="row">
-    <div class="small-2 columns">
-      <p>Name</p>
-    </div>
-    <div class="small-10 columns">
-      <p>{{user.first_name}} {{user.last_name}}</p>
-    </div>
-  </div>
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="#">
+      {% csrf_token %}
 
-  <div class="row">
-    <div class="small-2 columns">
-      <p>Email</p>
-    </div>
-    <div class="small-10 columns">
-      <p><a href="{{useruri}}">{{user.email}}</a></p>
-    </div>
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row">
+            <div class="view-label small-12 medium-2 columns">
+              <span>User</span>
+            </div>
+            <div class="view-value small-12 medium-10 columns">
+              <span>{{username}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row">
+            <div class="view-label small-12 medium-2 columns">
+              <span>Name</span>
+            </div>
+            <div class="view-value small-12 medium-10 columns">
+              <span>{{user.first_name}} {{user.last_name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row">
+            <div class="view-label small-12 medium-2 columns">
+              <span>Email</span>
+            </div>
+            <div class="view-value small-12 medium-10 columns">
+              <span><a href="{{useruri}}">{{user.email}}</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-4 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <input type="submit" value="Continue" name="continue" />
+              <input type="submit" value="Cancel"   name="cancel" />
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-6 columns">
+          &nbsp;
+        </div>
+      </div>
+
+      <input type="hidden" name="userid"            value="{{userid}}"/>
+      <input type="hidden" name="continuation_url"  value="{{continuation_url}}"/>
+    </form>
   </div>
+</div>
 
 {% endblock %}

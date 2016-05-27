@@ -26,11 +26,10 @@ from annalist.models.entitydata import EntityData
 class RecordVocab(EntityData):
 
     _entitytype     = ANNAL.CURIE.Vocabulary
-    _entitytypeid   = "_vocab"
+    _entitytypeid   = layout.VOCAB_TYPEID
     _entityview     = layout.COLL_VOCAB_VIEW
     _entitypath     = layout.COLL_VOCAB_PATH
     _entityfile     = layout.VOCAB_META_FILE
-    _entityref      = layout.META_VOCAB_REF
 
     def __init__(self, parent, vocab_id):
         """
@@ -74,7 +73,7 @@ class RecordVocab(EntityData):
         # Return result
         return entitydata
 
-    def _post_update_processing(self, entitydata):
+    def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default post-update processing.
 
@@ -83,7 +82,7 @@ class RecordVocab(EntityData):
         It invokes the containing collection method to regenerate the JSON LD context 
         for the collection to which the entity belongs.
         """
-        self._parent.generate_coll_jsonld_context()
+        self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
 
 # End.

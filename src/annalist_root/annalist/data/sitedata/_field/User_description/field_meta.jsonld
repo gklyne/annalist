@@ -1,0 +1,16 @@
+{ "@id":                        "_field/User_description"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "User_description"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_description"
+, "rdfs:label":                 "Description"
+, "rdfs:comment":               "Optional string describing user and/or role associated with this permissions record."
+, "annal:placeholder":          "(user description)"
+, "annal:field_render_type":    "Enum_render_type/Markdown"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:field_entity_type":    "annal:User"
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+}

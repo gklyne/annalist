@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_restrict"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_restrict"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_restrict"
+, "rdfs:label":                 "Value restriction"
+, "rdfs:comment":               "Selection filter to restrict enumerated values (per 'annal:field_ref_type') that are candidate field values.  This is a textual expression that defines selection criteria; e.g. 'entity[annal:record_type] subtype [annal:field_entity_type]'.  (@@TODO: provide documentation in help text for field definition@@)"
+, "annal:field_name":           "Field_restrict"
+, "annal:field_render_type":    "Enum_render_type/Text"
+, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:placeholder":          "(enumeration value restriction)"
+, "annal:property_uri":         "annal:field_ref_restriction"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

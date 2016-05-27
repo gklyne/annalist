@@ -8,7 +8,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
+import os, os.path
 import sys
 import logging
 import subprocess
@@ -106,6 +106,82 @@ def am_sitedirectory(annroot, userhome, options):
     print(sitedirectory)
     # with open(sitedirectory, "r") as logfile:
     #     shutil.copyfileobj(logfile, sys.stdout)
+    return status
+
+def am_settingsmodule(annroot, userhome, options):
+    """
+    Print name of Annalist settings module to standard output
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    settingsmodule = settings.modulename
+    print(settingsmodule)
+    return status
+
+def am_settingsfile(annroot, userhome, options):
+    """
+    Print name of Annalist settings file to standard output
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
+    settingsfile, ext = os.path.splitext(sitesettings.__file__)
+    print(settingsfile)
+    return status
+
+def am_settingsdir(annroot, userhome, options):
+    """
+    Print name of Annalist settings file to standard output
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
+    settingsdir, file = os.path.split(sitesettings.__file__)
+    print(settingsdir)
     return status
 
 def am_version(annroot, userhome, options):

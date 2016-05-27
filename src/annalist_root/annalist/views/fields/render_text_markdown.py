@@ -11,6 +11,8 @@ log = logging.getLogger(__name__)
 
 import markdown
 
+from annalist.views.displayinfo                 import apply_substitutions
+
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -51,6 +53,7 @@ class text_markdown_view_renderer(object):
         Render Markdown text for viewing.
         """
         textval = TextMarkdownValueMapper.encode(get_field_view_value(context, None))
+        textval = apply_substitutions(context, textval)
         htmlval = markdown.markdown(textval)
         return """<span class="markdown">%s</span>"""%htmlval
 

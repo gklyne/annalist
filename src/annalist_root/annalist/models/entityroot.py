@@ -59,8 +59,9 @@ class EntityRoot(object):
     _entitytype     = ANNAL.CURIE.EntityRoot
     _entitytypeid   = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
-    _entityref      = None          # Relative reference to entity from body file
-    _contextref     = None          # Relative reference to context file from body file
+    _entityref      = None          # Relative ref to entity from body file
+    _baseref        = None          # Relative ref to collection base URI from body file
+    _contextref     = None          # Relative ref to context file from body file
 
     def __init__(self, entityurl, entityviewurl, entitydir, entitybasedir):
         """
@@ -252,6 +253,7 @@ class EntityRoot(object):
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_entities` for more details.
         """
+        # log.info("@@ EntityRoot.child_entity_ids: parent %s, altscope %s"%(self.get_id(), altscope))
         if altscope == "select":
             altscope = "all"
         for i in self._children(cls, altscope=altscope):
@@ -325,7 +327,7 @@ class EntityRoot(object):
             types.append(self._entitytype)
         return types
 
-    def _save(self):
+    def _save(self, post_update_flags=None):
         """
         Save current entity to Annalist storage
         """
@@ -354,10 +356,10 @@ class EntityRoot(object):
         values['@id']      = self._entityref
         values['@type']    = self._get_types(values.get('@type', None))
         values['@context'] = (
-            [ self._contextref
+            [ { '@base': self._baseref }
+            , self._contextref
             # layout.COLL_CONTEXT_FILE
             # layout.ENTITY_CONTEXT_PATH + "/" + layout.COLL_CONTEXT_FILE
-            # , { '@base': layout.ENTITY_CONTEXT_PATH }
             ])
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
@@ -365,7 +367,7 @@ class EntityRoot(object):
         values.pop(ANNAL.CURIE.url, None)
         with open(fullpath, "wt") as entity_io:
             json.dump(values, entity_io, indent=2, separators=(',', ': '), sort_keys=True)
-        self._post_update_processing(values)
+        self._post_update_processing(values, post_update_flags)
         return
 
     def _remove(self, type_uri):
@@ -501,7 +503,7 @@ class EntityRoot(object):
         # Return result
         return entitydata
 
-    def _post_update_processing(self, entitydata):
+    def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default method for post-update processing.
 
@@ -524,6 +526,7 @@ class EntityRoot(object):
         """
         parent_dir = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
         assert "%" not in parent_dir, "_entitypath template variable interpolation may be in filename part only"
+        # log.info("@@ EntityRoot._base_children: parent %s, parent_dir %s"%(self.get_id(),parent_dir))
         child_files = []
         if os.path.isdir(parent_dir):
             child_files = os.listdir(parent_dir)

@@ -91,8 +91,8 @@ def coll123_create_data(site):
 def collbib_create_data(site):
     bibcoll = Site.initialize_bib_data(site, 
         settings.SITE_SRC_ROOT+"/annalist/data/bibdata",
-        label="Bibliographic definitions", 
-        description="Bibliographic definitions for testing"
+        # label="Bibliographic definitions", 
+        # description="Bibliographic definitions for testing"
         )
     return
 
@@ -134,11 +134,13 @@ class CreateSiteData(AnnalistTestCase):
         coll123_create_data(testsite)
         return
 
-    def test_CreateBibTestSiteData(self):
-        testsite = site_create_data(TestBaseUri, "bibtestinit")
-        collbib_create_data(testsite)
-        coll123_create_data(testsite)
-        return
+    #@@
+    # def test_CreateBibTestSiteData(self):
+    #     testsite = site_create_data(TestBaseUri, "bibtestinit")
+    #     collbib_create_data(testsite)
+    #     coll123_create_data(testsite)
+    #     return
+    #@@
 
     def test_CreateEmptySiteData(self):
         emptysite = site_create_data(TestBaseUri, "empty")

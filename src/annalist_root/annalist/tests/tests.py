@@ -15,6 +15,8 @@ import os.path
 
 from django.conf import settings
 
+import utils
+
 from annalist.layout import Layout
 
 import annalist.util
@@ -36,9 +38,11 @@ def load_tests(loader, tests, ignore):
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)
+        tests.addTests(doctest.DocTestSuite(utils.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.util))
         tests.addTests(doctest.DocTestSuite(annalist.identifiers))
         tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
+        tests.addTests(doctest.DocTestSuite(annalist.views.displayinfo))
         tests.addTests(doctest.DocTestSuite(annalist.views.form_utils.fieldchoice))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.find_renderers))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))

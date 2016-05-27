@@ -1,0 +1,106 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block heading %}Login{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="{{login_post_url}}">
+      {% csrf_token %}
+
+      <div class="view-fieldrow row">
+        <div class="small-12 columns">
+          <div class="row view-value-row"
+               title="An optional short name by which you will be known in this system.">
+            <div class="view-label small-12 medium-2 columns">
+              <span>User ID</span>
+            </div>
+            <div class="view-value small-12 medium-4 columns">
+              <input type="text" name="userid" value="{{userid}}" />
+            </div>
+            <div class="view-label small-12 medium-2 columns">
+              <span>(optional)</span>
+            </div>
+            <div class="small-4 columns show-for-medium-up">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-buttons row">
+        <div class="small-12 medium-2 columns">
+          <div class="row">
+            <div class="form-buttons view-label small-12 columns">
+              <span>Login using:</span>
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-10 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              {% for p, lbl, img in provider_labels %}
+                {% if img %}
+                  <button type="submit" name="login" value="{{p}}" class="image-button">
+                    <img src="{% static img %}" alt="{{lbl}}" />
+                  </button>
+                {% else %}
+                  <button type="submit" name="login" value="{{p}}" class="login-button">
+                    {{lbl}}
+                  </button>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-buttons row">
+        <div class="medium-2 columns show-for-medium-up">
+          <div class="row">
+            <div class="small-12 columns">
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-4 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <!-- <input type="submit" value="Login"  name="login" /> -->
+              <input type="submit" value="Cancel" name="cancel" />
+            </div>
+          </div>
+        </div>
+        <div class="medium-6 columns show-for-medium-up">
+          &nbsp;
+        </div>
+      </div>
+
+      <input type="hidden" name="scope"             value="{{scope}}"/>
+      <input type="hidden" name="login_done_url"    value="{{login_done_url}}"/>
+      <input type="hidden" name="user_profile_url"  value="{{user_profile_url}}"/>
+      <input type="hidden" name="continuation_url"  value="{{continuation_url}}"/>
+    </form>
+  </div>
+</div>
+
+<!--
+<hr/>
+
+<div class="row">
+  <div class="large-12 columns">
+    <p class="djangolinks">
+      Local user credentials:
+      &nbsp;
+      <a href="/admin/login/?next={{continuation}}">login</a>
+    </p>
+  </div>
+</div>
+-->
+
+{% endblock %}

@@ -19,7 +19,7 @@ from annalist.views.entitydeletebase    import EntityDeleteConfirmedBaseView
 
 class AnnalistUserDeleteConfirmedView(EntityDeleteConfirmedBaseView):
     """
-    View class to perform completion of confirmed record type deletion, requested
+    View class to perform completion of confirmed user permission deletion, requested
     from collection edit view.
     """
     def __init__(self):

@@ -26,12 +26,13 @@ from annalist.models.entitydata import EntityData
 class RecordEnumBase(EntityData):
 
     _entitytype     = ANNAL.CURIE.Enum
-    _entitytypeid   = "_enum"
+    _entitytypeid   = layout.ENUM_TYPEID
     _entityview     = layout.COLL_ENUM_VIEW
     _entitypath     = layout.COLL_ENUM_PATH
     _entityfile     = layout.ENUM_META_FILE
     _entityprov     = layout.ENUM_PROV_FILE
-    _entityref      = layout.META_ENUM_REF
+    _baseref        = layout.ENUM_COLL_BASE_REF     # Override EntityData..
+    _contextref     = layout.ENUM_CONTEXT_FILE      # ..
 
     def __init__(self, parent, entity_id, type_id):
         self._entitytypeid = type_id

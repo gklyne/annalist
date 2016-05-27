@@ -32,7 +32,7 @@ class TextValueMapper(RenderBase):
         super(TextValueMapper, self).__init__()
         return
 
-    # encode, decoide methods default to RenderBase; i.e. identity mappings
+    # encode, decode methods default to RenderBase; i.e. identity mappings
 
 
 #   ----------------------------------------------------------------------------

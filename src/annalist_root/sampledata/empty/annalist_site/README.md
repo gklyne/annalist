@@ -10,55 +10,55 @@ Directory layout:
           _annalist_collection/         (site-wide definitions)
             coll_meta.jsonld            (site metadata)
             coll_context.jsonld         (JSON-LD context for site definitions)
-            enums/
+            _enum/
               (enumerated type values)
                :
-            fields/
+            _field/
               (view-field definitions)
                :
-            groups/
+            _group/
               (field group definitions)
                :
-            lists/
+            _list/
               (entity list definitions)
                :
-            types/
+            _type/
               (type definitions)
                :
-            users/
+            _user/
               (user permissions)
                :
-            views/
+            _view/
               (entity view definitions)
                :
-            vocabs/
+            _vocab/
               (vocabulary namespace definitions)
                :
         (collection-id)/                (user-created data collection)
           _annalist_collection/         (collection definitions)
             coll_meta.jsonld            (collection metadata)
             coll_context.jsonld         (JSON-LD context for collection definitions)
-            types/                      (collection type definitions
+            _type/                      (collection type definitions)
               (type-id)/
                 type_meta.jsonld
                :
-            lists/                      (collection list definitions
+            _list/                      (collection list definitions)
               (list-id)/
                 list_meta.jsonld
                :
-            views/                      (collection view definitions
+            _view/                      (collection view definitions)
               (view-id)/
                 view_meta.jsonld
                :
-            fields/                     (collection field definitions
+            _field/                     (collection field definitions)
               (field-id)/
                 field_meta.jsonld
                :
-            groups/                     (collection field group definitions
+            _group/                     (collection field group definitions)
               (group-id)/
                 group_meta.jsonld
                :
-            users/                      (collection user permissions
+            _user/                      (collection user permissions)
               (user-id)/
                 user_meta.jsonld
                :
@@ -76,6 +76,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.30 at 2016-04-05 12:40:31
+for Annalist 0.1.32 at 2016-05-26 10:55:40
 
 
