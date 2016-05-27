@@ -1,7 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.30; this release makes incremental improvements to data evolution, collection management, user interface changes aimed at facilitating collection navigation, and bug fixes.  It also advances the support for modular collections in `annalist_manager`, and provides some installable collection definitions.
-
+Current status: public prototype release 0.1.32; this release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.
 
 
 # V1.0 release

@@ -131,6 +131,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Release?)
 
+- [ ] BUG: login button images not copied to new installation.
 - [ ] Site users removed by software update?  Check and fix if so.
 - [ ] If logout results in loss of authorization to view resource, go to collection view
 - [ ] Review file/URL layout for enums, etc 
