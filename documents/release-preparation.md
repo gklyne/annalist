@@ -88,14 +88,14 @@
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
 - [x] Check out demo system.
 - [x] Commit changes
-- [ ] Upload to PyPI (see below)
-- [ ] Tag release on release branch
+- [x] Upload to PyPI (see below)
+- [x] Tag release on release branch
     - `git tag -a release-x.y.z`
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
+- [x] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to V0.1.30"`
