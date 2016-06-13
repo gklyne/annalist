@@ -14,7 +14,7 @@ include annalist_root/annalist_manager*.md
 recursive-include annalist_root/annalist *.py *.sh *.md *.txt
 recursive-include annalist_root/annalist/views/help *.md *.html
 recursive-include annalist_root/annalist/templates *.html
-recursive-include annalist_root/annalist/data/identity_providers *.json *.example *.md
+recursive-include annalist_root/annalist/data/identity_providers *.json *.example *.md *.png
 recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/bibdata *.jsonld *.md
 recursive-include annalist_root/annalist/data/namedata *.jsonld *.md

@@ -109,6 +109,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     # SITE_SRC_ROOT+"/static/",
     SITE_SRC_ROOT+"/annalist/data/static/",
+    SITE_SRC_ROOT+"/annalist/data/identity_providers/",
 )
 
 ANNALIST_VERSION = __version__

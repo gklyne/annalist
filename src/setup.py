@@ -98,6 +98,7 @@ setup(
             , 'data/identity_providers/*.md'
             , 'data/identity_providers/*.json'
             , 'data/identity_providers/*.example'
+            , 'data/identity_providers/images/*.png'
             # Site-wide data definitions
             , 'data/sitedata/_enum/*/*/*.jsonld'
             , 'data/sitedata/_field/*/*.jsonld'

@@ -16,9 +16,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.33, towards 0.1.34
 
-- [ ] BUG: login button images not copied to new installation.
-- [ ] BUG: Site users removed by software update (confirmed).
-- [ ] BUG: when initializing/updating site data, create providers directory if not already in existence.
+- [x] BUG: login button images not copied to new installation.
+    - [x] Added identity_providers/images as static directory
+    - [x] Remove login image from Annalistbstatic data directory
+- [x] BUG: when initializing/updating site data, create providers directory if needed
+    - [x] Added 'ensure_dir' call to logic that copies provider details
+- [x] BUG: Site users removed by software update ...
+    - not 'updatesite', 'initialize', 
+    - normal upgrade options don't see to do it: maybe use of `createsite --force`?
+    - added further comment to createsite --force message
+- [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
 - [ ] README front page and PyPI front page include pointer to annalist.net
 - [ ] If logout results in loss of authorization to view resource, go to collection view
 - [ ] Review file/URL layout for enums, etc 

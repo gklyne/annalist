@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 
 from annalist.identifiers           import ANNAL, RDFS
 from annalist                       import layout
-from annalist.util                  import removetree, replacetree, updatetree
+from annalist.util                  import removetree, replacetree, updatetree, ensure_dir
 
 from annalist.models.site           import Site
 
@@ -63,8 +63,14 @@ def am_createsite(annroot, userhome, options):
             removetree(sitebasedir)
         else:
             print(
-                "Old data already exists at %s (use --force or -f to overwrite)"%
+                "Old data already exists at %s (use '--force' or '-f' to overwrite)."%
                 (sitebasedir), file=sys.stderr
+                )
+            print(
+                "NOTE: using '--force' or '-f' "+
+                "removes old site user permissions and namespace data "+
+                "and requires re-initialization of Django database with local usernames; "+
+                "consider using 'annalist-manager updatesite'."
                 )
             return am_errors.AM_EXISTS
     # --- Initialize empty site data in target directory
@@ -85,45 +91,17 @@ def am_createsite(annroot, userhome, options):
         Site.replace_site_data_dir(sitedata, sdir, site_data_src)
     print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
     sitedata.generate_coll_jsonld_context()
+    # --- Copy provider data to site config provider directory
+    provider_dir_src = os.path.join(annroot, "annalist/data/identity_providers")
+    provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
+    print("Copy identity provider data:")
+    print("- from: %s"%(provider_dir_src,))
+    print("-   to: %s"%(provider_dir_tgt,))
+    ensure_dir(provider_dir_tgt)
+    updatetree(provider_dir_src, provider_dir_tgt)
+    # --- Created
     print("Now run 'annalist-manager initialize' to create site admin database")
     return status
-
-def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):
-    """
-    Migrate data from a single old-site directory to the new site
-    """
-    old_dir        = os.path.join(old_site_dir, old_data_dir)
-    old_dir_backup = os.path.join(old_site_dir, "backup_"+old_data_dir)
-    new_dir        = os.path.join(new_site_dir, new_data_dir)
-    if os.path.isdir(old_dir):
-        print("- %s +> %s (migrating)"%(old_dir, new_dir))
-        updatetree(old_dir, new_dir)
-        archive_old_data(old_site_dir, old_data_dir)
-        # print("- %s >> %s (rename)"%(old_dir, old_dir_backup))
-        # os.rename(old_dir, old_dir_backup)
-    return
-
-def archive_old_data(site_dir, data_dir):
-    """
-    Archive old data no longer required.
-    """
-    old_dir     = os.path.join(site_dir, data_dir)
-    arc_dir     = "old_"+data_dir
-    old_dir_arc = os.path.join(site_dir, arc_dir)
-    if os.path.isdir(old_dir):
-        print("- %s >> %s (rename)"%(old_dir, arc_dir))
-        os.rename(old_dir, old_dir_arc)
-    return
-
-def remove_old_data(site_dir, data_dir):
-    """
-    Remove old data no longer required.
-    """
-    old_dir = os.path.join(site_dir, data_dir)
-    if os.path.isdir(old_dir):
-        print("- %s (remove)"%(old_dir,))
-        removetree(old_dir)
-    return
 
 def am_updatesite(annroot, userhome, options):
     """
@@ -204,7 +182,45 @@ def am_updatesite(annroot, userhome, options):
     print("Copy identity provider data:")
     print("- from: %s"%(provider_dir_src,))
     print("-   to: %s"%(provider_dir_tgt,))
+    ensure_dir(provider_dir_tgt)
     updatetree(provider_dir_src, provider_dir_tgt)
     return status
+
+def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):
+    """
+    Migrate data from a single old-site directory to the new site
+    """
+    old_dir        = os.path.join(old_site_dir, old_data_dir)
+    old_dir_backup = os.path.join(old_site_dir, "backup_"+old_data_dir)
+    new_dir        = os.path.join(new_site_dir, new_data_dir)
+    if os.path.isdir(old_dir):
+        print("- %s +> %s (migrating)"%(old_dir, new_dir))
+        updatetree(old_dir, new_dir)
+        archive_old_data(old_site_dir, old_data_dir)
+        # print("- %s >> %s (rename)"%(old_dir, old_dir_backup))
+        # os.rename(old_dir, old_dir_backup)
+    return
+
+def archive_old_data(site_dir, data_dir):
+    """
+    Archive old data no longer required.
+    """
+    old_dir     = os.path.join(site_dir, data_dir)
+    arc_dir     = "old_"+data_dir
+    old_dir_arc = os.path.join(site_dir, arc_dir)
+    if os.path.isdir(old_dir):
+        print("- %s >> %s (rename)"%(old_dir, arc_dir))
+        os.rename(old_dir, old_dir_arc)
+    return
+
+def remove_old_data(site_dir, data_dir):
+    """
+    Remove old data no longer required.
+    """
+    old_dir = os.path.join(site_dir, data_dir)
+    if os.path.isdir(old_dir):
+        print("- %s (remove)"%(old_dir,))
+        removetree(old_dir)
+    return
 
 # End.
