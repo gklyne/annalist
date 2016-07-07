@@ -38,10 +38,11 @@ def HttpResponseRedirectLogin(request, message=None):
     for the (attempted) authentication as a further query parameter.
     """
     user_profile_url = request.session['user_profile_url']
-    query_params = (
-        { "continuation_url": request.session['continuation_url']
-        , "userid":           request.session['recent_userid']
-        })
+    query_params = {}
+    if 'continuation_url' in request.session:
+        query_params['continuation_url'] = request.session['continuation_url']
+    if 'recent_userid' in request.session:
+        query_params['recent_userid'] = request.session['recent_userid']
     if message:
         query_params.update(
             { "error_head":       "Login failed"
