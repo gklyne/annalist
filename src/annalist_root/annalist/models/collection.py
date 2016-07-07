@@ -512,7 +512,10 @@ class Collection(Entity):
     def generate_coll_jsonld_context(self, flags=None):
         """
         (Re)generate JSON-LD context description for the current collection.
+
+        Returns list of errors, or empty list.
         """
+        errs = []
         if flags and ("nocontext" in flags):
             # Skip processing if "nocontext" flag provided
             return
@@ -544,14 +547,17 @@ class Collection(Entity):
                 }, 
                 context_io, indent=2, separators=(',', ': '), sort_keys=True
                 )
-        return
+        return errs
 
     def get_coll_jsonld_context(self):
         """
         Return dictionary containing context structure for collection.
+
+        Entry '@errs' is set to a list of errors encountered, or an empty list.
         """
         # Use OrderedDict to allow some control over ordering of context file contents:
-        # this is for humane purposes only, and is not technically important.
+        # this is for humane purposes only, and is not technically critical.
+        errs              = []
         context           = OrderedDict(
             { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
             , ANNAL.CURIE.type:         { "@type":      "@id"   }
@@ -594,7 +600,8 @@ class Collection(Entity):
                 if fcontext is not None:
                     fcontext['vid'] = v.get_id()
                     fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
+                e = self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
+                errs.extend(e)
         # Scan group fields and generate context data for property URIs used
         for g in self.child_entities(RecordGroup, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
@@ -604,7 +611,10 @@ class Collection(Entity):
                 if fcontext is not None:
                     fcontext['gid'] = g.get_id()
                     fcontext['fid'] = fid
-                self.set_field_uri_jsonld_context(guri or furi, fid, fcontext, context)
+                e = self.set_field_uri_jsonld_context(guri or furi, fid, fcontext, context)
+                errs.extend(e)
+        if errs:
+            context['@errs'] = errs
         return context
 
     def get_field_uri_jsonld_context(self, fid, get_field_context):
@@ -630,7 +640,10 @@ class Collection(Entity):
         Save property context description into supplied property_contexts dictionary.  
         If the context is already defined, generate warning if there is a compatibility 
         problem.
+
+        Returns list of errors, or empty list.
         """
+        errs = []
         if puri:
             uri_parts = puri.split(":")
             if len(uri_parts) > 1:    # Ignore URIs without ':'
@@ -644,15 +657,16 @@ class Collection(Entity):
                          ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
                         msg = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
                         log.warning(msg)
-                        print "@@ "+msg
+                        # print "@@ "+msg
                         property_contexts[puri]['err'] = msg
+                        errs.append(msg)
                 elif ( fcontext and
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?
                     property_contexts[puri] = fcontext
                     # msg = "Save context info for %s in field %s (new %r)"% (puri, field_id, fcontext)
                     # print "@@ "+msg
-        return
+        return errs
 
     # @@TODO: move this away from model logic, as it represents a dependency on view logic?
     @staticmethod

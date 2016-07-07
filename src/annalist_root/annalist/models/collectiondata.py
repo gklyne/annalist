@@ -90,6 +90,8 @@ def copy_coll_data(src_coll, tgt_coll):
 def migrate_coll_config_dir(coll, prev_dir, curr_dir):
     """
     Migrate a single configuration directory for the indicated collection.
+
+    Returns list of errors or empty list.
     """
     errs = []
     if not prev_dir:
@@ -114,8 +116,8 @@ def migrate_coll_config_dir(coll, prev_dir, curr_dir):
             msg = message.COLL_MIGRATE_DIR_FAILED%(coll.get_id(), prev_dir, curr_dir, e)
             # print "@@ "+msg
             log.error("migrate_coll_config_dir: "+msg)
-            errs .append(msg)
-    return []
+            errs.append(msg)
+    return errs
 
 def migrate_coll_config_dirs(coll):
     """
@@ -135,7 +137,7 @@ def migrate_coll_data(coll):
     """
     Migrate collection data for specified collection
 
-    returns     list of error messages; an empty list indicates success.
+    Returns list of errors or empty list.
     """
     log.info("Migrate Annalist collection data for %s"%(coll.get_id()))
     errs = migrate_coll_config_dirs(coll)
@@ -145,6 +147,6 @@ def migrate_coll_data(coll):
     for e in entityfinder.get_entities():
         e._save(post_update_flags={"nocontext"})
     coll.generate_coll_jsonld_context()    
-    return []
+    return errs
 
 # End.
