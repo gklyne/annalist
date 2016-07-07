@@ -25,18 +25,51 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - not 'updatesite', 'initialize', 
     - normal upgrade options don't see to do it: maybe use of `createsite --force`?
     - added further comment to createsite --force message
-- [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
-- [ ] README front page and PyPI front page include pointer to annalist.net
-- [ ] If logout results in loss of authorization to view resource, go to collection view
-- [ ] Review file/URL layout for enums, etc 
-    - (Enums?  For web access or file access?)
-    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
-    - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
-    - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
-    - thus need consistency.  Use d/_enum/Enum-type/value for now?
-- [ ] Remove surplus fields from context when context generation/migration issues are settled
-    - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
+- [x] BUG: `annalist-manager createsite` does not populate provider data
+    - works in 0.1.33
+- [.] BUG: KeyError: 'recent_userid' when no previous login:
+      FIXED: check in new installation
+        ERROR 2016-07-04 09:12:44,921 Internal Server Error: /annalist/login_post/
+        Traceback (most recent call last):
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 111, in get_response
+            response = wrapped_callback(request, *callback_args, **callback_kwargs)
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/views/generic/base.py", line 69, in view
+            return self.dispatch(request, *args, **kwargs)
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/views/generic/base.py", line 87, in dispatch
+            return handler(request, *args, **kwargs)
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/login/login_views.py", line 293, in post
+            login_message.USER_ID_SYNTAX%(userid)
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/login/login_utils.py", line 43, in HttpResponseRedirectLogin
+            , "userid":           request.session['recent_userid']
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/contrib/sessions/backends/base.py", line 49, in __getitem__
+            return self._session[key]
+- [.] BUG: `annalist-manager installcoll Journal_defs`
+      FIXED: (syntax error in field data) - check in new installation
+        Installing collection 'Journal_defs' from data directory '/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/data/Journal_defs'
+        Traceback (most recent call last):
+          File "/home/graham/anenv/bin/annalist-manager", line 9, in <module>
+            load_entry_point('Annalist==0.1.32', 'console_scripts', 'annalist-manager')()
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 202, in runMain
+            return runCommand(userhome, userconfig, sys.argv)
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 191, in runCommand
+            status   = run(userhome, userconfig, options, progname)
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 144, in run
+            return am_installcollection(annroot, userhome, options)
+          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_managecollections.py", line 597, in am_installcollection
+            msgs = initialize_coll_data(src_dir, coll)
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collectiondata.py", line 62, in initialize_coll_data
+            tgt_coll.generate_coll_jsonld_context()
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 521, in generate_coll_jsonld_context
+            context      = self.get_coll_jsonld_context()
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 593, in get_coll_jsonld_context
+            furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 626, in get_field_uri_jsonld_context
+            return (f[ANNAL.CURIE.property_uri], get_field_context(f))
+          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/entityroot.py", line 783, in __getitem__
+            return self._values[k]
+        KeyError: 'annal:property_uri'
+- [x] README front page and PyPI front page include pointer to annalist.net
+- [x] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
@@ -46,6 +79,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
         - Use `@id`, thus: { "@id": <some_resource> } .
+- [ ] Review file/URL layout for enums, etc 
+    - (Enums?  For web access or file access?)
+    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
+    - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
+    - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
+    - thus need consistency.  Use d/_enum/Enum-type/value for now?
 - [ ] Access to page link without continuation (view only)?
 - [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
@@ -62,6 +101,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] Remove surplus fields from context when context generation/migration issues are settled
+    - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode) - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [ ] *delete views: rationalize into single view?
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
@@ -105,7 +146,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 Data collection definitions:
 
 - [ ] VoID, DCAT
-
 
 Technical debt:
 
@@ -152,6 +192,13 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
+    - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
+    - not seeing the problem here: revisit when problem surefaces again.
+- [ ] If logout results in loss of authorization to view resource, go to collection view?
+    - This could be tricky, as each view doesits own auth checks.
+    - Would need much better structuring of view dispatching to enable pre-flight auth check.
+    - As an edge case, dopn't worry about this immediately.
 - [ ] Absorb groups into field defs?
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
