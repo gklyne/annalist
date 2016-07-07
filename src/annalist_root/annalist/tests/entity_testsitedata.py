@@ -554,9 +554,9 @@ site_field_types = (
     , FieldChoice("Enum_render_type/RefImage",          label="Image reference"              )
     , FieldChoice("Enum_render_type/RefMultifield",     label="Fields of referenced entity"  )
     , FieldChoice("Enum_render_type/RepeatGroup",       label="Repeating field group "+
-                                                              "(@@use 'Field group sequence')")
+                                                              "(@@use Group_Seq 'Field group sequence')")
     , FieldChoice("Enum_render_type/RepeatGroupRow",    label="Repeating fields as table "+
-                                                              "(@@use 'Field group sequence as table')")
+                                                              "(@@use Group_Seq_Row 'Field group sequence as table')")
     , FieldChoice("Enum_render_type/ShowMarkdown",      label="Display Markdown rich text"   )
     , FieldChoice("Enum_render_type/Showtext",          label="Display text"                 )
     , FieldChoice("Enum_render_type/Slug",              label="Short name"                   )
