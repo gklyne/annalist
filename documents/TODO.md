@@ -27,49 +27,55 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - added further comment to createsite --force message
 - [x] BUG: `annalist-manager createsite` does not populate provider data
     - works in 0.1.33
-- [.] BUG: KeyError: 'recent_userid' when no previous login:
+- [x] BUG: KeyError: 'recent_userid' when no previous login:
       FIXED: check in new installation
         ERROR 2016-07-04 09:12:44,921 Internal Server Error: /annalist/login_post/
-        Traceback (most recent call last):
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 111, in get_response
-            response = wrapped_callback(request, *callback_args, **callback_kwargs)
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/views/generic/base.py", line 69, in view
-            return self.dispatch(request, *args, **kwargs)
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/views/generic/base.py", line 87, in dispatch
-            return handler(request, *args, **kwargs)
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/login/login_views.py", line 293, in post
-            login_message.USER_ID_SYNTAX%(userid)
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/login/login_utils.py", line 43, in HttpResponseRedirectLogin
-            , "userid":           request.session['recent_userid']
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/django/contrib/sessions/backends/base.py", line 49, in __getitem__
-            return self._session[key]
-- [.] BUG: `annalist-manager installcoll Journal_defs`
+- [x] BUG: `annalist-manager installcoll Journal_defs`
       FIXED: (syntax error in field data) - check in new installation
-        Installing collection 'Journal_defs' from data directory '/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/data/Journal_defs'
-        Traceback (most recent call last):
-          File "/home/graham/anenv/bin/annalist-manager", line 9, in <module>
-            load_entry_point('Annalist==0.1.32', 'console_scripts', 'annalist-manager')()
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 202, in runMain
-            return runCommand(userhome, userconfig, sys.argv)
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 191, in runCommand
-            status   = run(userhome, userconfig, options, progname)
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_main.py", line 144, in run
-            return am_installcollection(annroot, userhome, options)
-          File "/home/graham/anenv/local/lib/python2.7/site-packages/annalist_root/annalist_manager/am_managecollections.py", line 597, in am_installcollection
-            msgs = initialize_coll_data(src_dir, coll)
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collectiondata.py", line 62, in initialize_coll_data
-            tgt_coll.generate_coll_jsonld_context()
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 521, in generate_coll_jsonld_context
-            context      = self.get_coll_jsonld_context()
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 593, in get_coll_jsonld_context
-            furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/collection.py", line 626, in get_field_uri_jsonld_context
-            return (f[ANNAL.CURIE.property_uri], get_field_context(f))
-          File "/home/graham/anenv/lib/python2.7/site-packages/annalist_root/annalist/models/entityroot.py", line 783, in __getitem__
-            return self._values[k]
-        KeyError: 'annal:property_uri'
 - [x] README front page and PyPI front page include pointer to annalist.net
 - [x] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
+- [ ] BUG: user who creates collection with CONFIG access is unable to edit the collection metadata.  Aargh.  (Workaround: include CONFIG in default user permissions)  NOTE: for view/edit collection metadata, need permissions to come from the referenced collection, not _annalist_site (or some other workaround?)
+      "No CONFIG access permission for resource http://localhost:8000/annalist/c/_annalist_site/v/Collection_view/_coll/test_collection/!edit"
+
+WARNING 2016-09-09 14:26:34,988 @@ Access permission failed for _annalist_site :
+WARNING 2016-09-09 14:26:34,988   File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/threading.py", line 783, in __bootstrap
+    self.__bootstrap_inner()
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/threading.py", line 810, in __bootstrap_inner
+    self.run()
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/threading.py", line 763, in run
+    self.__target(*self.__args, **self.__kwargs)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/SocketServer.py", line 599, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/SocketServer.py", line 334, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django/core/servers/basehttp.py", line 129, in __init__
+    super(WSGIRequestHandler, self).__init__(*args, **kwargs)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/SocketServer.py", line 655, in __init__
+    self.handle()
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/wsgiref/simple_server.py", line 131, in handle
+    handler.run(self.server.get_app())
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/wsgiref/handlers.py", line 85, in run
+    self.result = application(self.environ, self.start_response)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django/core/handlers/wsgi.py", line 187, in __call__
+    response = self.get_response(request)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django/core/handlers/base.py", line 111, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django/views/generic/base.py", line 69, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django/views/generic/base.py", line 87, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.33-py2.7.egg/annalist_root/annalist/views/entityedit.py", line 133, in get
+    action, coll_id, type_id, view_id, entity_id, request.GET.dict()
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.33-py2.7.egg/annalist_root/annalist/views/entityedit.py", line 303, in view_setup
+    viewinfo.check_authorization(action)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.33-py2.7.egg/annalist_root/annalist/views/displayinfo.py", line 443, in check_authorization
+    self.view.form_action_auth(action, self.collection, permissions_map)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.33-py2.7.egg/annalist_root/annalist/views/generic.py", line 389, in form_action_auth
+    return self.authorize(auth_scope, auth_collection)
+  File "/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.33-py2.7.egg/annalist_root/annalist/views/generic.py", line 349, in authorize
+    log.warning("".join(traceback.format_stack()))
+
+
 - [ ] Task button option to copy type+view+list and update names and URIs
 - [ ] Review URI usage
     - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?

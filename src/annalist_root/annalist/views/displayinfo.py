@@ -438,6 +438,7 @@ class DisplayInfo(object):
 
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
+            ### @@@@ use coll_perms here?? @@@@@
             self.http_response = (
                 self.http_response or 
                 self.view.form_action_auth(action, self.collection, permissions_map)
