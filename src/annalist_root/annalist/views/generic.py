@@ -345,8 +345,6 @@ class AnnalistGenericView(ContentNegotiationView):
                 err = self.error401values(scope=scope)
             else:
                 err = self.error403values(scope=scope)
-                # log.warning("@@ Access permission failed for %s :"%(coll_id,))
-                # log.warning("".join(traceback.format_stack()))
             return self.error(err)
         return None
 

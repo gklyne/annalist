@@ -402,7 +402,8 @@ class DisplayInfo(object):
                     )
             else:
                 self.use_entity_id  = entity_id
-            # Special case permissions...
+            # Special case permissions when accessing collection metadata:
+            # use the collection itself rather than the site data collection to which it belongs.
             if self.type_id == "_coll":
                 # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)
                 c = Collection.load(self.site, entity_id, altscope="all")
@@ -438,10 +439,9 @@ class DisplayInfo(object):
 
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
-            ### @@@@ use coll_perms here?? @@@@@
             self.http_response = (
                 self.http_response or 
-                self.view.form_action_auth(action, self.collection, permissions_map)
+                self.view.form_action_auth(action, self.coll_perms, permissions_map)
                 )
         return self.http_response
 

@@ -155,7 +155,7 @@ class AuthorizationTest(AnnalistTestCase):
             self.testsite.site_data_collection(), 
             "user_site_admin", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_admin",
+                coll_id="testsite", user_id="user_site_admin",
                 user_name="Site_admin User",
                 user_uri="mailto:user_site_admin@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -165,7 +165,7 @@ class AuthorizationTest(AnnalistTestCase):
             self.testsite.site_data_collection(), 
             "user_site_create_coll", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_create_coll",
+                coll_id="testsite", user_id="user_site_create_coll",
                 user_name="Site_create User",
                 user_uri="mailto:user_site_create_coll@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE_COLLECTION"]
@@ -175,7 +175,7 @@ class AuthorizationTest(AnnalistTestCase):
             self.testsite.site_data_collection(), 
             "user_site_delete_coll", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_delete_coll_coll",
+                coll_id="testsite", user_id="user_site_delete_coll_coll",
                 user_name="Site_delete User",
                 user_uri="mailto:user_site_delete_coll@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE_COLLECTION", "DELETE_COLLECTION"]
@@ -185,7 +185,7 @@ class AuthorizationTest(AnnalistTestCase):
             self.testsite.site_data_collection(), 
             "user_site_view", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_site_view",
+                coll_id="testsite", user_id="user_site_view",
                 user_name="Site_view User",
                 user_uri="mailto:user_site_view@%s"%TestHost, 
                 user_permissions=["VIEW"]
@@ -669,9 +669,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         self.assertEqual(self.view_coll_get().status_code,          200)
-        self.assertEqual(self.view_coll_post_edit().status_code,    403)
-        self.assertEqual(self.edit_coll_get().status_code,          403)
-        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302) #@@?
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             200)
@@ -712,9 +712,9 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.create_collection().status_code,      403)
         self.assertEqual(self.remove_collection().status_code,      403)
         self.assertEqual(self.view_coll_get().status_code,          200)
-        self.assertEqual(self.view_coll_post_edit().status_code,    403)
-        self.assertEqual(self.edit_coll_get().status_code,          403)
-        self.assertEqual(self.edit_coll_post_edit().status_code,    403)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302) #@@?
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
         self.assertEqual(self.remove_site_data().status_code,       403)
         #
         self.assertEqual(self.list_users().status_code,             403)

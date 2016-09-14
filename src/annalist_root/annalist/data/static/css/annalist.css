@@ -899,9 +899,10 @@ div.row.table div.tbody div.columns
     ------------------------------------------------------------------------- */
 
 div.help {
+    /* display:        block; */
     margin-top:     -0.5rem;
-    padding-left:   1.0rem;
-    padding-right:  1.0rem;
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
 }
 
 div.help > h1 {
