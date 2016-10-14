@@ -47,7 +47,7 @@ def valid_id(id):
         [ "_annalist_collection"
         ])
     # cf. urls.py:
-    if id and re.match(r"\w{1,32}$", id):
+    if id and re.match(r"\w{1,128}$", id):
         return id not in reserved
     # log.warning("util.valid_id: id %s"%(id))
     return False
