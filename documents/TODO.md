@@ -67,7 +67,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - RDF_schema_defs/_view/Class
             - _view/Vocab_view
         - Or can Journal_defs use Entity_see_also_r ?  [Maybe]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
+        - Tried changing Journal_defs See_also_r to use Group_set_row renqqder type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 - [ ] Access to page link without continuation (view only)?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
