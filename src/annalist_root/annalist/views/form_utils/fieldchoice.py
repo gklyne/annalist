@@ -111,11 +111,6 @@ class FieldChoice(_FieldChoice_tuple):
         option presentation from the majority of test cases.
         """
         if self.label:
-            # if ( (self.value == "%(type_id)s/%(entity_id)s") or
-            #      re.match(r"^\w{1,32}/\w{1,32}$", self.value) ):
-            #     return format_html(u"{}{}({})", self.label, mark_safe(sep), self.value)
-            # else:
-            #     return escape(self.label)
             return format_html(u"{}{}({})", self.label, mark_safe(sep), self.value)
         else:
             return escape(self.value)

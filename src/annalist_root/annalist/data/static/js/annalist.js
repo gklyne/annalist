@@ -8,7 +8,7 @@ annalist = {
 
     resize_handler: function (event) {
         /*
-         *  Adjust sizoing of selected controls when window is resized.
+         *  Adjust sizing of selected controls when window is resized.
          */
         if (window.matchMedia(Foundation.media_queries['small']).matches)
         {
