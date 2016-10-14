@@ -1555,7 +1555,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         field descriptions that control hopw values are rendered.  This
                         is used to find form 
         entityformvals  a dictionary of entity values extracted from the submitted form; 
-                        these are used either for redisplayiongthe form if there is an 
+                        these are used either for redisplaying the form if there is an 
                         error, or to update the saved entity data.
         context_extra_values
                         a dictionary of additional values that may be used if the
@@ -1570,12 +1570,15 @@ class GenericEntityEditView(AnnalistGenericView):
 
         Returns the updated responseinfo value.
         """
+        # Tasks invoked without saving current entity
+        # If no response generated yet, save entity
         responseinfo = self.save_entity(
             viewinfo, entityvaluemap, entityformvals, context_extra_values,
             responseinfo=responseinfo
             )
         if responseinfo.is_response_error():
             return responseinfo
+        # Tasks invoked after current entity has been saved (if required)
         if task_id == entitytypeinfo.TASK_ID+"/Define_view_list":
             #@@TODO: drive this logic from a stored _task description
             # Extract info from entityformvals
@@ -2065,6 +2068,8 @@ class GenericEntityEditView(AnnalistGenericView):
         If form data indicates a task button has been triggered,
         return its Id, otherwise return None.
         """
+        # Implementation deferred until save logioc can be refactored
+        #     [ entitytypeinfo.TASK_ID+"/Copy_type_view_list"
         task_ids = (
             [ entitytypeinfo.TASK_ID+"/Define_view_list"
             , entitytypeinfo.TASK_ID+"/Define_repeat_field" 
