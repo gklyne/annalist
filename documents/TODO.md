@@ -36,23 +36,39 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
 - [x] BUG: user who creates collection with CONFIG access is unable to edit the collection metadata.
       NOTE: for view/edit collection metadata, need permissions to come from the referenced collection, not _annalist_site (or some other workaround?)
-- [ ] Task button option to copy type+view+list and update names and URIs
+- [x] Review length restriction on entity/type ids: does it serve any purpose?
+    - Increased max segment length to 128 in urls.poy and util.py function valid_id.
+- [ ] Review file/URL layout for enums, etc 
+    - (Enums?  For web access or file access?)
+    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
+        - would also need to rename enum types; e.g. "_enum_value_mode" or just "_value_mode".
+    - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
+    - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
+    - migration:
+        - site data (enum data)
+        - references in field definitions
+        - help text
 - [ ] Review URI usage
-    - [ ] separation of collection metadata and entity data is a bit messy.  Could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
+    - [ ] separation of collection metadata and entity data is a bit messy.
+        x could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
+        x how to distinguish /l/ and /v/ URLs?
+        - use /d/ for all types, including built-ins
         - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
         - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
+        - migration strategy
+            - On opening collection, move collection directory content to /d/ directory, and rename.
     - [x] avoid explicit reference to `_annalist_collection`?
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
         - Use `@id`, thus: { "@id": <some_resource> } .
-- [ ] Review file/URL layout for enums, etc 
-    - (Enums?  For web access or file access?)
-    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
-    - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
-    - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
-    - thus need consistency.  Use d/_enum/Enum-type/value for now?
+- [ ] See_also_r field duplicated?
+    - Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
+        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
+            - RDF_schema_defs/_view/Class
+            - _view/Vocab_view
+        - Or can Journal_defs use Entity_see_also_r ?  [Maybe]
+        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 - [ ] Access to page link without continuation (view only)?
-- [ ] Review length restriction on entity/type ids: does it serve any purpose?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
@@ -63,6 +79,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
+- [ ] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
+- [ ] Migration logic: check that new supertypes are applied
+- [ ] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value (confirmed also in development version):  Problem is entity reference render type without a target type specified: should check for this when displaying field.
 
 (feature freeze for V0.9alpha?)
 (0.5?)
@@ -77,6 +96,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".  Also "Slug"?
 - [ ] Provide content for the links in the page footer
@@ -158,6 +178,11 @@ Technical debt:
 
 Usability notes:
 
+- [ ] Task button option to copy type+view+list and update names and URIs
+    - problems:
+        - how is the new type name defined?  (Also the new view and list.)
+        - should edits to the current type be saved first?
+    - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
 - [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
     - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
     - not seeing the problem here: revisit when problem surefaces again.
