@@ -39,4 +39,10 @@
     , "annal:button_help":      "Define initial view and list definitions for the current type.  (View and list type information and URI are taken from the current type; other fields are taken from the corresponding '_initial_values' record, and may be extended or modified later.)"
     }
   ]
+, "annal:unimplemented_edit_task_buttons":
+  [ { "annal:button_id":        "_task/Copy_type_view_list" 
+    , "annal:button_label":     "Copy type+view+list"
+    , "annal:button_help":      "Copy the type with associated view and list definitions for a new type type whose name hasbeen entered in the type id field.  Use this to define a new type (e.g. a sub-type) with associated list and view, based on the current type.  The current type view and list definitions are expected to start with the current type Id, possibly followed by a suffix; the new view and list definitions are identified using the new type id and the same suffixes.  Otherwise, the coprresponding view and/or list definition is not copied, and the new type refers to the same one. @@Is this reasonable, or just confusing?@@"
+    }
+  ]
 }

@@ -76,6 +76,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.33 at 2016-05-27 15:56:43
+for Annalist 0.1.33 at 2016-10-14 10:28:32
 
 
