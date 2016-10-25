@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/RepeatGroup"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "RepeatGroup"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Repeating field group (@@use Group_Seq 'Field group sequence')"
+, "rdfs:comment":       "# Repeating field group\r\n\r\nPresents a group of sub-fields, which may be repeated zero or more times in the containing form.  Each field value is rendered with a label."
+, "annal:uri":          "annal:Enum_render_type/RepeatGroup"
+}

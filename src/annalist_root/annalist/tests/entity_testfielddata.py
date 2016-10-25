@@ -131,8 +131,8 @@ def recordfield_load_keys(field_uri=False):
     return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type', '@context'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", 
-        render_type="Enum_render_type/Text", 
-        value_mode="Enum_value_mode/Value_direct",
+        render_type="_enum_render_type/Text", 
+        value_mode="_enum_value_mode/Value_direct",
         update="Field"):
     """
     Entity values used when creating a record field entity
@@ -146,8 +146,8 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
 
 def recordfield_values(
         coll_id="testcoll", field_id="testfield", field_uri=None,
-        render_type="Enum_render_type/Text", 
-        value_mode="Enum_value_mode/Value_direct",
+        render_type="_enum_render_type/Text", 
+        value_mode="_enum_value_mode/Value_direct",
         update="Field", hosturi=TestHostUri):
     d = recordfield_create_values(
         coll_id, field_id, 
@@ -231,7 +231,7 @@ def recordfield_entity_view_context_data(
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_render_type"
               , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-              , 'field_ref_type':         "Enum_render_type"
+              , 'field_ref_type':         "_enum_render_type"
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field render type)"
               , 'field_default_value':    "Text"
@@ -262,7 +262,7 @@ def recordfield_entity_view_context_data(
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_value_mode"
               , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-              , 'field_ref_type':         "Enum_value_mode"
+              , 'field_ref_type':         "_enum_value_mode"
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field value mode)"
               , 'field_default_value':    "Value_direct"

@@ -68,7 +68,7 @@ def copySitedata(src, sitedatasrc, tgt):
     assert os.path.exists(sitedatasrc), "Check site data source directory (%s)"%(sitedatasrc)
     assert tgt.startswith(TestBaseDir)
     # Site data is not updated by the tests, so initialize it just once for each test suite run
-    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_META_DIR)
+    sitedatatgt = os.path.join(tgt, test_layout.SITEDATA_DATA_DIR)
     global sitedata_target_reset
     if sitedata_target_reset == "all":
         replacetree(src, tgt)

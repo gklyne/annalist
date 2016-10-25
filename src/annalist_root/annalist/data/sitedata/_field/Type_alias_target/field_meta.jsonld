@@ -8,8 +8,8 @@
 , "rdfs:label":                 "Field alias name"
 , "rdfs:comment": 
     "An alias property URI that accesses the value at some other property URI (see field 'Field alias value')"
-, "annal:field_render_type":    "Enum_render_type/Identifier"
-, "annal:field_value_mode":     "Enum_value_mode/Value_direct"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Identifier"
 , "annal:field_entity_type":    "annal:Type_alias"
 , "annal:placeholder":          "(alias target property URI/CURIE)"

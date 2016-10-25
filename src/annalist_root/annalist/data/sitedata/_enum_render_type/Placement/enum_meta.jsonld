@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Placement"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Placement"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Position/size"
+, "rdfs:comment":       "# Render type: field position/size\r\n\r\nA field placement option, which may be rendered as a drop-down selection.\r\n\r\nThis render type is used specifically in [Position/size]($BASE:_field/Field_placement/) fields used in [Field]($BASE:_view/Field_view/), [View]($BASE:_view/View_view), [List]($BASE:_view/List_view) or [Field group]($BASE:_view/Field_group_view) views.\r\n\r\n## Implementation details\r\n\r\nThe stored placement value is a specially formatted string that provides position and size information for different display sizes, based on a 12-column grid.  For example:\r\n\r\n        small:0,12;medium:0,6;large:0,4\r\n\r\ndefines a field placement that starts in the leftmost column (0) on all displays.  The rendered field occupies the full width of a small display,  half the width of a medium display and a third of the width of a large display.\r\n\r\nWhere placement for a display size is not specified, details for the next smaller size are used.  For example:\r\n\r\n        small:0,12;medium:0,6\r\n\r\ndefines a field that is rendered the full width of a small display, and half the width of a medium or large display.\r\n\r\nThe presentation of a field placement field uses a drop-down box with semi-graphical representation for a selection of commonly used field placements."
+, "annal:uri":          "annal:Enum_render_type/Placement"
+}

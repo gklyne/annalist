@@ -81,6 +81,7 @@ META_COLL_BASE_REF      = "../d/"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
 #SITEDATA_TYPEID         = "_sitedata"                              # not used
+SITEDATA_DATA_DIR       = SITEDATA_DIR + "/d"                       # used in tests
 SITEDATA_META_DIR       = SITEDATA_DIR + "/" + COLL_META_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
 SITEDATA_PROV_FILE      = COLL_PROV_FILE                            # used in views
@@ -103,7 +104,7 @@ TYPE_DIR_PREV           = "types"                           # collection directo
 TYPE_META_FILE          = "type_meta.jsonld"                # type metadata file name
 TYPE_PROV_FILE          = "type_prov.jsonld"                # type provenance file name
 COLL_BASE_TYPE_REF      = TYPE_TYPEID + "/%(id)s"           # ref type relative to collection base URL
-COLL_TYPE_VIEW          = "d/" + COLL_BASE_TYPE_REF + "/"   # ref type view relative to collection entity
+COLL_TYPE_VIEW          = COLL_BASE_REF + COLL_BASE_TYPE_REF + "/"   # ref type view relative to collection entity
 COLL_TYPE_PATH          = COLL_META_DIR + "/" + TYPE_DIR + "/%(id)s"
                                                             # type dir relative to collection root dir
 
@@ -114,7 +115,7 @@ LIST_DIR_PREV           = "lists"                           # collection directo
 LIST_META_FILE          = "list_meta.jsonld"                # list metadata file name
 LIST_PROV_FILE          = "list_prov.jsonld"                # list provenance file name
 COLL_BASE_LIST_REF      = LIST_TYPEID + "/%(id)s"           # ref list relative to collection base URL
-COLL_LIST_VIEW          = "d/" + COLL_BASE_LIST_REF + "/"   # ref list view relative to collection entity
+COLL_LIST_VIEW          = COLL_BASE_REF + COLL_BASE_LIST_REF + "/"   # ref list view relative to collection entity
 COLL_LIST_PATH          = COLL_META_DIR + "/" + LIST_DIR + "/%(id)s"
                                                             # list dir relative to collection root dir
 
@@ -125,7 +126,7 @@ VIEW_DIR_PREV           = "views"                           # previous collectio
 VIEW_META_FILE          = "view_meta.jsonld"                # view metadata file name
 VIEW_PROV_FILE          = "view_prov.jsonld"                # view provenance file name
 COLL_BASE_VIEW_REF      = VIEW_TYPEID + "/%(id)s"           # ref view relative to collection base URL
-COLL_VIEW_VIEW          = "d/" + COLL_BASE_VIEW_REF + "/"   # ref view relative to collection entity
+COLL_VIEW_VIEW          = COLL_BASE_REF + COLL_BASE_VIEW_REF + "/"   # ref view relative to collection entity
 COLL_VIEW_PATH          = COLL_META_DIR + "/" + VIEW_DIR + "/%(id)s"
                                                             # view dir relative to collection root dir
 
@@ -136,7 +137,7 @@ GROUP_DIR_PREV          = "groups"                          # previous collectio
 GROUP_META_FILE         = "group_meta.jsonld"               # group metadata file name
 GROUP_PROV_FILE         = "group_prov.jsonld"               # group provenance file name
 COLL_BASE_GROUP_REF     = GROUP_TYPEID + "/%(id)s"          # ref group relative to collection base URL
-COLL_GROUP_VIEW         = "d/" + COLL_BASE_GROUP_REF + "/"  # ref group view relative to collection entity
+COLL_GROUP_VIEW         = COLL_BASE_REF + COLL_BASE_GROUP_REF + "/"  # ref group view relative to collection entity
 COLL_GROUP_PATH         = COLL_META_DIR + "/" + GROUP_DIR + "/%(id)s"
                                                             # group dir relative to collection root dir
 
@@ -147,7 +148,7 @@ FIELD_DIR_PREV          = "fields"                          # previous collectio
 FIELD_META_FILE         = "field_meta.jsonld"               # field metadata file name
 FIELD_PROV_FILE         = "field_prov.jsonld"               # field provenance file name
 COLL_BASE_FIELD_REF     = FIELD_TYPEID + "/%(id)s"          # ref field relative to collection base URL
-COLL_FIELD_VIEW         = "d/" + COLL_BASE_FIELD_REF + "/"  # ref field view relative to collection entity
+COLL_FIELD_VIEW         = COLL_BASE_REF + COLL_BASE_FIELD_REF + "/"  # ref field view relative to collection entity
 COLL_FIELD_PATH         = COLL_META_DIR + "/" + FIELD_DIR + "/%(id)s"
                                                             # field dir relative to collection root dir
 
@@ -158,7 +159,7 @@ USER_DIR_PREV           = "users"                           # previous collectio
 USER_META_FILE          = "user_meta.jsonld"                # user metadata file name
 USER_PROV_FILE          = "user_prov.jsonld"                # user provenance file name
 COLL_BASE_USER_REF      = USER_TYPEID + "/%(id)s"           # ref user relative to collection base URL
-COLL_USER_VIEW          = "d/" + COLL_BASE_USER_REF + "/"   # ref user relative to collection entity
+COLL_USER_VIEW          = COLL_BASE_REF + COLL_BASE_USER_REF + "/"   # ref user relative to collection entity
 COLL_USER_PATH          = COLL_META_DIR + "/" + USER_DIR + "/%(id)s"
                                                             # user dir relative to collection root dir
 
@@ -169,21 +170,44 @@ VOCAB_DIR_PREV          = "vocabs"                          # previous collectio
 VOCAB_META_FILE         = "vocab_meta.jsonld"               # vocab metadata file name
 VOCAB_PROV_FILE         = "vocab_prov.jsonld"               # vocab provenance file name
 COLL_BASE_VOCAB_REF     = VOCAB_TYPEID + "/%(id)s"          # ref vocab relative to collection base URL
-COLL_VOCAB_VIEW         = "d/" + COLL_BASE_VOCAB_REF + "/"  # ref vocab view relative to collection entity
+COLL_VOCAB_VIEW         = COLL_BASE_REF + COLL_BASE_VOCAB_REF + "/"  # ref vocab view relative to collection entity
 COLL_VOCAB_PATH         = COLL_META_DIR + "/" + VOCAB_DIR + "/%(id)s"
                                                             # vocab dir relative to collection root dir
 
-# Enumerated value description records
-ENUM_TYPEID             = "_enum"                           # enum id, used in URL
-ENUM_DIR                = "_enum"                           # collection directory in file system
-ENUM_DIR_PREV           = "enums"                           # previous collection directory
+# Enumerated value descriptions
+#@@ ENUM_TYPEID             = "_enum"                           # enum id, used in URL
+#@@ ENUM_DIR                = "_enum"                           # collection directory in file system
+
+ENUM_FIELD_PLACEMENT_ID     = "_enum_field_placement"       # Field placement options
+ENUM_LIST_TYPE_ID           = "_enum_list_type"             # List type (list, grid)
+ENUM_RENDER_TYPE_ID         = "_enum_render_type"           # Field render type
+ENUM_VALUE_MODE_ID          = "_enum_value_mode"            # Field value mode (direct, entity, upload, etc.)
+ENUM_VALUE_TYPE_ID          = "_enum_value_type"            # Field value type (text, longtext, etc.)
+
+ENUM_FIELD_PLACEMENT_DIR    = ENUM_FIELD_PLACEMENT_ID       # Field placement options
+ENUM_LIST_TYPE_DIR          = ENUM_LIST_TYPE_ID             # List type (list, grid)
+ENUM_RENDER_TYPE_DIR        = ENUM_RENDER_TYPE_ID           # Field render type
+ENUM_VALUE_MODE_DIR         = ENUM_VALUE_MODE_ID            # Field value mode (direct, entity, upload, etc.)
+ENUM_VALUE_TYPE_DIR         = ENUM_VALUE_TYPE_ID            # Field value type (text, longtext, etc.)
+
+#@@ ENUM_DIR_PREV           = "enums"                           # previous enumerated data directory
+ENUM_FIELD_PLACEMENT_DIR_PREV1  = "enums/Enum_field_placement"
+ENUM_LIST_TYPE_DIR_PREV1        = "enums/Enum_list_type"
+ENUM_RENDER_TYPE_DIR_PREV1      = "enums/Enum_render_type"
+ENUM_VALUE_MODE_DIR_PREV1       = "enums/Enum_value_mode"
+ENUM_VALUE_TYPE_DIR_PREV1       = "enums/Enum_value_type"
+ENUM_FIELD_PLACEMENT_DIR_PREV2  = "_enum/Enum_field_placement"
+ENUM_LIST_TYPE_DIR_PREV2        = "_enum/Enum_list_type"
+ENUM_RENDER_TYPE_DIR_PREV2      = "_enum/Enum_render_type"
+ENUM_VALUE_MODE_DIR_PREV2       = "_enum/Enum_value_mode"
+ENUM_VALUE_TYPE_DIR_PREV2       = "_enum/Enum_value_type"
+
 ENUM_META_FILE          = "enum_meta.jsonld"                # enum metadata file name
 ENUM_PROV_FILE          = "enum_prov.jsonld"                # enum provenance file name
-ENUM_COLL_BASE_REF      = "../../../"                       # Ref collection base from enum, overides EntityData
-ENUM_CONTEXT_FILE       = ENUM_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref collection context file
+# COLL_ENUM_TYPE_PATH     = COLL_BASE_REF + "%(type_id)s/"
 COLL_BASE_ENUM_REF      = "%(type_id)s/%(id)s"              # ref enum relative to collection base URL
 COLL_ENUM_VIEW          = "d/%(type_id)s/%(id)s/"           # ref enum view relative to collection entity
-COLL_ENUM_PATH          = COLL_META_DIR + "/" + ENUM_DIR + "/%(type_id)s/%(id)s"
+COLL_ENUM_PATH          = COLL_META_DIR + "/%(type_id)s/%(id)s"
 
 # Record type data records (these act as parents for Entity data records)
 TYPEDATA_TYPEID         = "_entitytypedata"                 # typedata id
@@ -224,7 +248,17 @@ DATA_DIRS_CURR_PREV = (
     , (VIEW_DIR,  VIEW_DIR_PREV)
     , (GROUP_DIR, GROUP_DIR_PREV)
     , (FIELD_DIR, FIELD_DIR_PREV)
-    , (ENUM_DIR,  ENUM_DIR_PREV)
+    #@@ , (ENUM_DIR,  ENUM_DIR_PREV)
+    , (ENUM_FIELD_PLACEMENT_DIR,    ENUM_FIELD_PLACEMENT_DIR_PREV1)
+    , (ENUM_LIST_TYPE_DIR,          ENUM_LIST_TYPE_DIR_PREV1)
+    , (ENUM_RENDER_TYPE_DIR,        ENUM_RENDER_TYPE_DIR_PREV1)
+    , (ENUM_VALUE_MODE_DIR,         ENUM_VALUE_MODE_DIR_PREV1)
+    , (ENUM_VALUE_TYPE_DIR,         ENUM_VALUE_TYPE_DIR_PREV1)
+    , (ENUM_FIELD_PLACEMENT_DIR,    ENUM_FIELD_PLACEMENT_DIR_PREV2)
+    , (ENUM_LIST_TYPE_DIR,          ENUM_LIST_TYPE_DIR_PREV2)
+    , (ENUM_RENDER_TYPE_DIR,        ENUM_RENDER_TYPE_DIR_PREV2)
+    , (ENUM_VALUE_MODE_DIR,         ENUM_VALUE_MODE_DIR_PREV2)
+    , (ENUM_VALUE_TYPE_DIR,         ENUM_VALUE_TYPE_DIR_PREV2)
     ])
 DATA_DIRS       = map(lambda pair:pair[0], DATA_DIRS_CURR_PREV)
 DATA_DIRS_PREV  = map(lambda pair:pair[1], DATA_DIRS_CURR_PREV)
@@ -264,6 +298,7 @@ class Layout(object):
         self.SITEDATA_ID        = SITEDATA_ID
         self.SITEDATA_DIR       = SITEDATA_DIR
         self.SITEDATA_OLD_DIR   = SITEDATA_OLD_DIR
+        self.SITEDATA_DATA_DIR  = SITEDATA_DATA_DIR                         # e.g. c/_annalist_site/_annalist_collection
         self.SITEDATA_META_DIR  = SITEDATA_META_DIR                         # e.g. c/_annalist_site/_annalist_collection
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
         self.SITEDATA_CONTEXT_DIR = os.path.join(                          # e.g. /data/annalist_site/c/_annalist_site/_annalist_collection/site_context.jsonld

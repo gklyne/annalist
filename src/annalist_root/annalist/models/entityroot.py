@@ -253,7 +253,6 @@ class EntityRoot(object):
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.  See method `get_alt_entities` for more details.
         """
-        # log.info("@@ EntityRoot.child_entity_ids: parent %s, altscope %s"%(self.get_id(), altscope))
         if altscope == "select":
             altscope = "all"
         for i in self._children(cls, altscope=altscope):
@@ -526,7 +525,6 @@ class EntityRoot(object):
         """
         parent_dir = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
         assert "%" not in parent_dir, "_entitypath template variable interpolation may be in filename part only"
-        # log.info("@@ EntityRoot._base_children: parent %s, parent_dir %s"%(self.get_id(),parent_dir))
         child_files = []
         if os.path.isdir(parent_dir):
             child_files = os.listdir(parent_dir)

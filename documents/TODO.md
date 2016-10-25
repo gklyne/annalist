@@ -57,6 +57,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
         - migration strategy
             - On opening collection, move collection directory content to /d/ directory, and rename.
+    - [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
     - [x] avoid explicit reference to `_annalist_collection`?
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
@@ -82,6 +83,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
 - [ ] Migration logic: check that new supertypes are applied
 - [ ] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value (confirmed also in development version):  Problem is entity reference render type without a target type specified: should check for this when displaying field.
+- [ ] Add predefined tag list to Journal_defs
 
 (feature freeze for V0.9alpha?)
 (0.5?)

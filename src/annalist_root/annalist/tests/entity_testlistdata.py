@@ -122,7 +122,7 @@ def recordlist_create_values(
         { 'annal:type':                 "annal:List"
         , 'rdfs:label':                 "%s %s/%s"%(update, coll_id, list_id)
         , 'rdfs:comment':               "%s help for %s/%s"%(update, coll_id, list_id)
-        , "annal:display_type":         "Enum_list_type/List"
+        , "annal:display_type":         "_enum_list_type/List"
         , "annal:default_view":         "_view/Default_view"
         , "annal:default_type":         "_type/Default_type"
         , "annal:list_entity_selector": "ALL"
@@ -212,7 +212,7 @@ def recordlist_view_context_data(
               , "field_render_type":  "Enum_choice"
               , "field_value_mode":   "Value_direct"
               , "field_placement":    get_placement_classes("small:0,12;medium:6,6")
-              , "field_value":        "Enum_list_type/List"
+              , "field_value":        "_enum_list_type/List"
               , "options":            [] # ["list", "grid"]
               })
           , context_field_row(
@@ -309,7 +309,7 @@ def recordlist_view_form_data(
         action=None, cancel=None, task=None,
         update="RecordView"):
     form_data_dict = (
-        { "List_type":              "Enum_list_type/List"
+        { "List_type":              "_enum_list_type/List"
         , "List_label":             "%s list (%s/@@list_id@@)"%(update, coll_id)
         , "List_comment":           "%s help (%s/@@list_id@@)"%(update, coll_id)
         , "List_default_type":      "_type/Default_type"

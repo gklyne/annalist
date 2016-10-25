@@ -1,0 +1,9 @@
+{ "@id":                "_enum_field_placement/_initial_values"
+, "@type":              ["annal:Enum", "annal:Field_placement"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_placement_id"
+, "annal:type_id":      "_enum_field_placement"
+, "rdfs:label":         "annal:Field_placement/_placement_id"
+, "rdfs:comment":       "Options for field placement: Full-width, Half-width-left, Half-width-right, etc."
+, "annal:uri":          "annal:Field_placement/_placement_id"
+}

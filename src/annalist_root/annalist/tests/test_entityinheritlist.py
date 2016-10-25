@@ -170,10 +170,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(f2['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        if len(entities) != 217:
+        if len(entities) != 213:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 224)    # Will change with site data
+        self.assertEqual(len(entities), 213)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):
@@ -284,7 +284,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Bib_address/%(cont)s">Bib_address</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Text/%(cont)s">Short text</a>
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Text/%(cont)s">Short text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:Text</span>

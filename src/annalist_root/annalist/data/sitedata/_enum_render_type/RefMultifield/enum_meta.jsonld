@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/RefMultifield"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "RefMultifield"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Fields of referenced entity"
+, "rdfs:comment":       "# Fields of referenced entity\r\n\r\nPresents as a field containing one or more fields from a referenced entity.\r\n\r\nThe containing field definition contains an entity type reference, and also refers to a group of fields that are displayed from a referenced entity of the specified type.\r\n\r\nIn edit mode, an entity is selected from a dropdown list.  In view mode, the indicated fields are displayed from the referenced entity.\r\n\r\nThis render type can be used to display arbitrary fields from a referenced entity; it is often used for displaying images and other media along with associated annotations."
+, "annal:uri":          "annal:Enum_render_type/RefMultifield"
+}

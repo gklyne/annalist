@@ -225,7 +225,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows = s.form.find_all("div", class_="tbody")
         #@@
         # for i in range(len(trows)):
-        #     print "\ntrow[%d]:\n%s\n"%(i, trows[i])
+        #     print "\n@@ trow[%d]:\n%s\n"%(i, trows[i])
         #@@
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
@@ -270,7 +270,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list["@type"],                    [ANNAL.CURIE.List])
         self.assertEqual(type_list[ANNAL.CURIE.id],             list_id)
         self.assertEqual(type_list[ANNAL.CURIE.type_id],        "_list")
-        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "Enum_list_type/List")
+        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "_enum_list_type/List")
         self.assertEqual(type_list[ANNAL.CURIE.default_type],   "_type/"+type_id)
         self.assertEqual(type_list[ANNAL.CURIE.default_view],   "_view/"+view_id)
         self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
@@ -513,21 +513,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_coll",            ["_coll",            "Collection"] ]
-            , [ "_type/_field",           ["_field",           "Field"] ]
-            , [ "_type/_group",           ["_group",           "Field group"] ]
-            # , [ "_type/_initial_values",  ["_initial_values",  None] ]
-            , [ "_type/_list",            ["_list",            "List"] ]
-            , [ "_type/_type",            ["_type",            "Type"] ]
-            , [ "_type/_user",            ["_user",            "User permissions"] ]
-            , [ "_type/_view",            ["_view",            "View"] ]
-            , [ "_type/_vocab",           ["_vocab",           "Vocabulary namespace"] ]
-            , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
-            , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
-            , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
-            , [ "_type/Enum_value_mode",  ["Enum_value_mode",  "Field value mode"] ]
-            , [ "_type/type1",            ["type1",            "RecordType coll1/type1"] ]
-            , [ "_type/type2",            ["type2",            "RecordType coll1/type2"] ]
+            [ [ "_type/_coll",             ["_coll",             "Collection"] ]
+            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"] ]
+            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"] ]
+            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"] ]
+            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"] ]
+            , [ "_type/_field",            ["_field",            "Field"] ]
+            , [ "_type/_group",            ["_group",            "Field group"] ]
+            , [ "_type/_list",             ["_list",             "List"] ]
+            , [ "_type/_type",             ["_type",             "Type"] ]
+            , [ "_type/_user",             ["_user",             "User permissions"] ]
+            , [ "_type/_view",             ["_view",             "View"] ]
+            , [ "_type/_vocab",            ["_vocab",            "Vocabulary namespace"] ]
+            , [ "_type/Default_type",      ["Default_type",      "Default record"] ]
+            , [ "_type/type1",             ["type1",             "RecordType coll1/type1"] ]
+            , [ "_type/type2",             ["type2",             "RecordType coll1/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -591,7 +591,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(
             s, "List_type", 
             self.list_types_expected, 
-            "Enum_list_type/List"
+            "_enum_list_type/List"
             )
         self.check_select_field(
             s, "List_default_type", 
@@ -706,7 +706,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_input_type_value(s, "List_entity_selector", "text", "'annal:List' in [@type]")
         self.check_input_type_value(s, "List_target_type", "text", "annal:List")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -805,7 +805,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", "View_list")
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -911,7 +911,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:Field_group' in [@type]"
             )
         self.check_input_type_value(s, "List_target_type", "text", "annal:Field_group")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -1072,7 +1072,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Field_entity_type", "text", "")
         self.check_input_type_value(s, "Field_restrict", "text", "")
         self.check_select_field(
-            s, "Field_render_type",   self.render_types_expected, "Enum_render_type/Text"
+            s, "Field_render_type",   self.render_types_expected, "_enum_render_type/Text"
             )
         self.check_select_field(
             s, "Field_typeref", 
@@ -1229,7 +1229,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:Vocabulary' in [@type]"
             )
         self.check_input_type_value(s, "List_target_type", "text", "annal:Vocabulary")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_type/Longtext"
+, "@type":              ["annal:Enum_value_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Longtext"
+, "annal:type_id":      "_enum_value_type"
+, "rdfs:label":         "annal:Longtext"
+, "rdfs:comment":       "# Value type: annal:Longtext\r\n\r\nText string that may contain layout characters."
+, "annal:uri":          "annal:Longtext"
+}

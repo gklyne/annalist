@@ -79,22 +79,25 @@ class AnnalistUserTest(AnnalistTestCase):
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.layout = (
-            { 'enum_typeid':    layout.ENUM_TYPEID
-            , 'field_typeid':   layout.FIELD_TYPEID
-            , 'group_typeid':   layout.GROUP_TYPEID
-            , 'list_typeid':    layout.LIST_TYPEID
-            , 'type_typeid':    layout.TYPE_TYPEID
-            , 'user_typeid':    layout.USER_TYPEID
-            , 'view_typeid':    layout.VIEW_TYPEID
-            , 'vocab_typeid':   layout.VOCAB_TYPEID
-            , 'enum_dir':       layout.ENUM_DIR
-            , 'field_dir':      layout.FIELD_DIR
-            , 'group_dir':      layout.GROUP_DIR
-            , 'list_dir':       layout.LIST_DIR
-            , 'type_dir':       layout.TYPE_DIR
-            , 'user_dir':       layout.USER_DIR
-            , 'view_dir':       layout.VIEW_DIR
-            , 'vocab_dir':      layout.VOCAB_DIR
+            { 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
+            , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
+            , 'enum_render_type_dir':       layout.ENUM_RENDER_TYPE_DIR
+            , 'enum_value_type_dir':        layout.ENUM_VALUE_TYPE_DIR
+            , 'enum_value_mode_dir':        layout.ENUM_VALUE_MODE_DIR
+            , 'field_typeid':               layout.FIELD_TYPEID
+            , 'group_typeid':               layout.GROUP_TYPEID
+            , 'list_typeid':                layout.LIST_TYPEID
+            , 'type_typeid':                layout.TYPE_TYPEID
+            , 'user_typeid':                layout.USER_TYPEID
+            , 'view_typeid':                layout.VIEW_TYPEID
+            , 'vocab_typeid':               layout.VOCAB_TYPEID
+            , 'field_dir':                  layout.FIELD_DIR
+            , 'group_dir':                  layout.GROUP_DIR
+            , 'list_dir':                   layout.LIST_DIR
+            , 'type_dir':                   layout.TYPE_DIR
+            , 'user_dir':                   layout.USER_DIR
+            , 'view_dir':                   layout.VIEW_DIR
+            , 'vocab_dir':                  layout.VOCAB_DIR
             })
         return
 

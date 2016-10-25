@@ -95,22 +95,25 @@ class RecordListTest(AnnalistTestCase):
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.layout = (
-            { 'enum_typeid':    layout.ENUM_TYPEID
-            , 'field_typeid':   layout.FIELD_TYPEID
-            , 'group_typeid':   layout.GROUP_TYPEID
-            , 'list_typeid':    layout.LIST_TYPEID
-            , 'type_typeid':    layout.TYPE_TYPEID
-            , 'user_typeid':    layout.USER_TYPEID
-            , 'view_typeid':    layout.VIEW_TYPEID
-            , 'vocab_typeid':   layout.VOCAB_TYPEID
-            , 'enum_dir':       layout.ENUM_DIR
-            , 'field_dir':      layout.FIELD_DIR
-            , 'group_dir':      layout.GROUP_DIR
-            , 'list_dir':       layout.LIST_DIR
-            , 'type_dir':       layout.TYPE_DIR
-            , 'user_dir':       layout.USER_DIR
-            , 'view_dir':       layout.VIEW_DIR
-            , 'vocab_dir':      layout.VOCAB_DIR
+            { 'enum_field_placement_id':    layout.ENUM_FIELD_PLACEMENT_ID
+            , 'enum_list_type_id':          layout.ENUM_LIST_TYPE_ID
+            , 'enum_render_type_id':        layout.ENUM_RENDER_TYPE_ID
+            , 'enum_value_type_id':         layout.ENUM_VALUE_TYPE_ID
+            , 'enum_value_mode_id':         layout.ENUM_VALUE_MODE_ID
+            , 'field_typeid':               layout.FIELD_TYPEID
+            , 'group_typeid':               layout.GROUP_TYPEID
+            , 'list_typeid':                layout.LIST_TYPEID
+            , 'type_typeid':                layout.TYPE_TYPEID
+            , 'user_typeid':                layout.USER_TYPEID
+            , 'view_typeid':                layout.VIEW_TYPEID
+            , 'vocab_typeid':               layout.VOCAB_TYPEID
+            , 'field_dir':                  layout.FIELD_DIR
+            , 'group_dir':                  layout.GROUP_DIR
+            , 'list_dir':                   layout.LIST_DIR
+            , 'type_dir':                   layout.TYPE_DIR
+            , 'user_dir':                   layout.USER_DIR
+            , 'view_dir':                   layout.VIEW_DIR
+            , 'vocab_dir':                  layout.VOCAB_DIR
             })
         return
 
@@ -287,7 +290,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_label=None,
             list_url=None,
             list_uri=None,
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_default_type="Default_type",
             list_default_view="Default_view",
             list_selector="ALL",
@@ -506,7 +509,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "List_type",
                     self.list_type_opts,
-                    "Enum_list_type/List")+
+                    "_enum_list_type/List")+
                 """
                 </div>
               </div>
@@ -728,7 +731,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   <span>List display type</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <a href="/testsite/c/testcoll/d/Enum_list_type/List/?continuation_url=%(cont_here)s">
+                  <a href="/testsite/c/testcoll/d/_enum_list_type/List/?continuation_url=%(cont_here)s">
                     List display
                   </a>
                 </div>
@@ -876,7 +879,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_label=default_label("testcoll", layout.LIST_TYPEID, "00000001"),
             list_url=list_url,
             list_uri=None,
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_selector="ALL"
             )
         return
@@ -1050,7 +1053,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="new",
             num_fields=2,
             list_id="", orig_list_id="orig_list_id",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_selector="ALL",
             list_target_type=""
             )
@@ -1071,7 +1074,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="new",
             num_fields=2,
             list_id="!badlist", orig_list_id="orig_list_id",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_selector="ALL",
             list_target_type=""
             )
@@ -1130,7 +1133,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="copy",
             num_fields=2,
             list_id="", orig_list_id="orig_list_id",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_selector="ALL",
             list_target_type=""
             )
@@ -1153,7 +1156,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="copy",
             num_fields=2,
             list_id="!badlist", orig_list_id="Default_list",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_url=None,
             list_uri="annal:display/Default_list",
             list_selector="ALL",
@@ -1240,7 +1243,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="edit",
             num_fields=2,
             list_id="", orig_list_id="orig_list_id",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_url=None,
             list_uri=None,
             list_selector="ALL",
@@ -1269,7 +1272,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             action="edit",
             num_fields=2,
             list_id="!badlist", orig_list_id="editlist",
-            list_type="Enum_list_type/List",
+            list_type="_enum_list_type/List",
             list_url=None,
             list_uri=None,
             list_selector="ALL",

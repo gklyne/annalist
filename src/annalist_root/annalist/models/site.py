@@ -296,12 +296,30 @@ class Site(EntityRoot):
             """\n"""+
             """    %(site_base_dir)s\n"""+
             """      c/\n"""+
-            """        _annalist_site/\n"""+
-            """          _annalist_collection/         (site-wide definitions)\n"""+
+            """        _annalist_site/                 (site-wide definitions)\n"""+
+            """          _annalist_collection/\n"""+
             """            coll_meta.jsonld            (site metadata)\n"""+
+            """          d/\n"""+
             """            coll_context.jsonld         (JSON-LD context for site definitions)\n"""+
-            """            %(enum_dir)s/\n"""+
-            """              (enumerated type values)\n"""+
+            """            %(enum_field_placement_dir)s/\n"""+
+            """              (field-placement-value)/\n"""+
+            """                enum_meta.jsonld\n"""+
+            """               :\n"""+
+            """            %(enum_list_type_dir)s/\n"""+
+            """              (list-type-id)/\n"""+
+            """                enum_meta.jsonld\n"""+
+            """               :\n"""+
+            """            %(enum_render_type_dir)s/\n"""+
+            """              (render-type-id)/\n"""+
+            """                enum_meta.jsonld\n"""+
+            """               :\n"""+
+            """            %(enum_value_type_dir)s/\n"""+
+            """              (value-type-id)/\n"""+
+            """                enum_meta.jsonld\n"""+
+            """               :\n"""+
+            """            %(enum_value_mode_dir)s/\n"""+
+            """              (value-mode-id)/\n"""+
+            """                enum_meta.jsonld\n"""+
             """               :\n"""+
             """            %(field_dir)s/\n"""+
             """              (view-field definitions)\n"""+
@@ -327,7 +345,8 @@ class Site(EntityRoot):
             """        (collection-id)/                (user-created data collection)\n"""+
             """          _annalist_collection/         (collection definitions)\n"""+
             """            coll_meta.jsonld            (collection metadata)\n"""+
-            """            coll_context.jsonld         (JSON-LD context for collection definitions)\n"""+
+            """          d/\n"""+
+            """            coll_context.jsonld         (JSON-LD context for collection data)\n"""+
             """            %(type_dir)s/                      (collection type definitions)\n"""+
             """              (type-id)/\n"""+
             """                type_meta.jsonld\n"""+
@@ -352,7 +371,6 @@ class Site(EntityRoot):
             """              (user-id)/\n"""+
             """                user_meta.jsonld\n"""+
             """               :\n"""+
-            """          d/\n"""+
             """            (type-id)/                  (contains all entity data for identified type)\n"""+
             """              (entity-id)/              (contains data for identified type/entity)\n"""+
             """                entity_data.jsonld      (entity data)\n"""+
@@ -369,18 +387,23 @@ class Site(EntityRoot):
             """for Annalist %(version)s at %(datetime)s\n"""+
             """\n"""+
             """\n""")%
-                { 'site_base_dir':  site._entitydir
-                , 'site_base_uri':  site._entityurl
-                , 'datetime':       datetime_now.isoformat(' ')
-                , 'version':        annalist.__version__
-                , 'enum_dir':       layout.ENUM_DIR
-                , 'field_dir':      layout.FIELD_DIR
-                , 'group_dir':      layout.GROUP_DIR
-                , 'list_dir':       layout.LIST_DIR
-                , 'type_dir':       layout.TYPE_DIR
-                , 'user_dir':       layout.USER_DIR
-                , 'view_dir':       layout.VIEW_DIR
-                , 'vocab_dir':      layout.VOCAB_DIR
+                { 'site_base_dir':              site._entitydir
+                , 'site_base_uri':              site._entityurl
+                , 'datetime':                   datetime_now.isoformat(' ')
+                , 'version':                    annalist.__version__
+                #@@ , 'enum_dir':       layout.ENUM_DIR
+                , 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
+                , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
+                , 'enum_render_type_dir':       layout.ENUM_RENDER_TYPE_DIR
+                , 'enum_value_type_dir':        layout.ENUM_VALUE_TYPE_DIR
+                , 'enum_value_mode_dir':        layout.ENUM_VALUE_MODE_DIR
+                , 'field_dir':                  layout.FIELD_DIR
+                , 'group_dir':                  layout.GROUP_DIR
+                , 'list_dir':                   layout.LIST_DIR
+                , 'type_dir':                   layout.TYPE_DIR
+                , 'user_dir':                   layout.USER_DIR
+                , 'view_dir':                   layout.VIEW_DIR
+                , 'vocab_dir':                  layout.VOCAB_DIR
                 }
             )
         with site._fileobj("README", ANNAL.CURIE.Richtext, "text/markdown", "wt") as readme:

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/URILink"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "URILink"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Web link"
+, "rdfs:comment":       "# Web link\r\n\r\nThe stored field value is a URL string.  In edit mode, it is presented as a text box for entering (or pasting) a URL value.  In view mode, it is rendered as a hyperlink."
+, "annal:uri":          "annal:Enum_render_type/URILink"
+}

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Enum_choice"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Enum_choice"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Entity choice"
+, "rdfs:comment":       "# Render type: Entity reference choice\r\n\r\nAn entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection, without a '+' button to define a new member of the enumeration."
+, "annal:uri":          "annal:Enum_render_type/Enum_choice"
+}
