@@ -50,7 +50,7 @@ installable_collections = (
             }
         }
     , "Bibliography_defs":   
-        { 'data_dir': "bibdata"
+        { 'data_dir': "Bibliography_defs"
         , 'coll_meta':
             { "rdfs:label":     "Bibliography definitions"
             , "rdfs:comment":   "# Bibliography definitions"+

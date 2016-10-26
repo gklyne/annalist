@@ -178,12 +178,12 @@ class RecordEnumTest(AnnalistTestCase):
         self.assertEqual(e._entityid,       "testenum2")
         self.assertEqual(e._entityurl,      
             TestHostUri + recordenum_url(
-                "testenum2", coll_id="testcoll", type_id="_enum"    # See note
+                "testenum2", coll_id="testcoll", type_id="_enum_base_id"    # See note
                 )
             )
         self.assertEqual(e._entitydir,      
             recordenum_dir(
-                "testenum2", coll_id="testcoll", type_id="_enum"    # See note
+                "testenum2", coll_id="testcoll", type_id="_enum_base_id"    # See note
                 )
             )
         self.assertEqual(e._values,         None)

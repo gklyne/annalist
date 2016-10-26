@@ -99,7 +99,7 @@ class FieldAliasTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata(scope="collections")
+        resetSitedata(scope="collections")
         return
 
     @classmethod

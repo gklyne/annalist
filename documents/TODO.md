@@ -66,9 +66,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Enum_render_type
         - [x] Enum_value_mode
         - [x] Enum_value_type
+        - [x] retest
     - [ ] revise "Bib data type"
-        - [ ] make regular type
-        - [ ] remove specialk case logic in entitytypeinfo
+        - [x] make regular type
+        - [x] remove special case logic in entitytypeinfo
+        - [ ] Need manual test of BibliographyData.
+        - [ ] Abandon old BibliographyData on demo system.
+            - [ ] Create new one for my papers, with hacked utility to auto-convert from BibTex?
     - [ ] update help text
         - [x] update various references found in help text
         - [ ] check refaudio, refimage links (using $COLL to access lists)

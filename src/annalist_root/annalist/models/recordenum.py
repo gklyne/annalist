@@ -25,7 +25,7 @@ from annalist.models.entitydata import EntityData
 
 class RecordEnumBase(EntityData):
 
-    _entitytypeid   = "_enum"
+    _entitytypeid   = "_enum_base_id"
     _entitytype     = ANNAL.CURIE.Enum
     _entityview     = layout.COLL_ENUM_VIEW
     _entitypath     = layout.COLL_ENUM_PATH

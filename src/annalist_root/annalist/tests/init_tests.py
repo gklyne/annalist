@@ -134,6 +134,8 @@ def install_annalist_named_coll(coll_id):
         date_time_now.isoformat()
         )
     coll = site.add_collection(coll_id, coll_metadata)
+    # print "@@ src_dir %s"%src_dir
+    # print "@@ coll_id %s, coll_dir %s"%(coll_id, coll._entitydir)
     msgs = initialize_coll_data(src_dir, coll)
     if msgs:
         for msg in msgs:
@@ -190,7 +192,6 @@ def init_annalist_named_test_coll(
     """
     Similar to init_annalist_test_coll, but collection also installs and 
     inherits from named collection definitions.
-
     """
     # @@TODO: DRY: use create_test_coll_inheriting
     # @@TODO: rename: install_create_test_coll_inheriting

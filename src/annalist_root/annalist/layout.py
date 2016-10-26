@@ -175,9 +175,6 @@ COLL_VOCAB_PATH         = COLL_META_DIR + "/" + VOCAB_DIR + "/%(id)s"
                                                             # vocab dir relative to collection root dir
 
 # Enumerated value descriptions
-#@@ ENUM_TYPEID             = "_enum"                           # enum id, used in URL
-#@@ ENUM_DIR                = "_enum"                           # collection directory in file system
-
 ENUM_FIELD_PLACEMENT_ID     = "_enum_field_placement"       # Field placement options
 ENUM_LIST_TYPE_ID           = "_enum_list_type"             # List type (list, grid)
 ENUM_RENDER_TYPE_ID         = "_enum_render_type"           # Field render type
