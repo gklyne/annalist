@@ -14,8 +14,8 @@
   "annal:repeat_label_add": "",
   "annal:default_value": "",
   "annal:field_value_type": "annal:Audio",
-  "annal:field_value_mode": "Enum_value_mode/Value_import",
-  "annal:field_render_type": "Enum_render_type/RefAudio",
+  "annal:field_value_mode": "_enum_value_mode/Value_import",
+  "annal:field_render_type": "_enum_render_type/RefAudio",
   "annal:field_ref_field": "",
   "@context": [
     "../../coll_context.jsonld"

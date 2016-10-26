@@ -1,5 +1,5 @@
 {
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "rdfs:label": "Imported images",
   "rdfs:comment": "# List of imported images\r\n\r\nPresents a list of entities that contain images imported from the web.\r\n",
   "annal:id": "Imported_image",

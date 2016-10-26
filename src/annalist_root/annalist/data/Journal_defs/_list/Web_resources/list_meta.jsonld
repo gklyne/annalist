@@ -1,5 +1,5 @@
 {
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "rdfs:label": "Web resources",
   "rdfs:comment": "# List web resources\r\n\r\nPresents a list of web resources, which are like web bookmarks in a collection that can be referenced by other entities.",
   "annal:id": "Web_resources",

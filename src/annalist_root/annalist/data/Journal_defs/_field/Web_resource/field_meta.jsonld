@@ -14,8 +14,8 @@
   "annal:repeat_label_add": "",
   "annal:default_value": "",
   "annal:field_value_type": "rdfs:Resource",
-  "annal:field_value_mode": "Enum_value_mode/Value_direct",
-  "annal:field_render_type": "Enum_render_type/URILink",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/URILink",
   "annal:field_ref_field": "",
   "@context": [
     "../../coll_context.jsonld"

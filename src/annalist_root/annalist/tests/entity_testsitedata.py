@@ -16,6 +16,7 @@ import urlparse
 import logging
 log = logging.getLogger(__name__)
 
+from annalist                               import layout
 from annalist.util                          import valid_id, split_type_entity_id
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
@@ -200,7 +201,7 @@ def get_site_list_types_sorted():
 
 def get_site_list_types_linked(coll_id):
     return (
-        [ add_link_to_field_choice(fc, coll_id, "Enum_list_type") 
+        [ add_link_to_field_choice(fc, coll_id, layout.ENUM_LIST_TYPE_ID) 
           for fc in get_site_list_types_sorted() 
         ])
 

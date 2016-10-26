@@ -6,7 +6,7 @@
   "annal:record_type": "coll:Included_image",
   "annal:type_id": "_list",
   "annal:list_entity_selector": "'coll:Included_image' in [@type]",
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "annal:list_fields": [
     {
       "annal:field_placement": "small:0,3",

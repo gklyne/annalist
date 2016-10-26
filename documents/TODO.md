@@ -60,8 +60,24 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] update site layout definitions
     - [x] rename site data files (enum data)
     - [x] update code and tests to work with new enumeration type names
+    - [x] search out any references to old enumeration type names; fix (note absolute URIs use original names)
+        - [x] Enum_field_placement
+        - [x] Enum_list_type
+        - [x] Enum_render_type
+        - [x] Enum_value_mode
+        - [x] Enum_value_type
+    - [ ] revise "Bib data type"
+        - [ ] make regular type
+        - [ ] remove specialk case logic in entitytypeinfo
     - [ ] update help text
-    - [ ] search out any references to old enumeration type names; fix
+        - [x] update various references found in help text
+        - [ ] check refaudio, refimage links (using $COLL to access lists)
+        - [ ] check Annalist_schema
+            - [ ] Property/field_render_type (major edits)
+            - [ ] Property/field_value_mode
+            - [ ] Property/repeat_label_add
+            - [ ] Property/repeat_label_delete
+    - [ ] rename "field_type" -> "render_type" (where? migration needed?)
     - [ ] re-test
     - migration - see next
 - [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
