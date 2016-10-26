@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/EntityTypeId"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "EntityTypeId"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Entity type Id"
+, "rdfs:comment":       "# Render type: entity type id\r\n\r\nField is short text string (slug); may be displayed as hyperlink to the type definition."
+, "annal:uri":          "annal:Enum_render_type/EntityTypeId"
+}

@@ -38,37 +38,54 @@ NOTE: this document is used for short-term working notes; some longer-term plann
       NOTE: for view/edit collection metadata, need permissions to come from the referenced collection, not _annalist_site (or some other workaround?)
 - [x] Review length restriction on entity/type ids: does it serve any purpose?
     - Increased max segment length to 128 in urls.poy and util.py function valid_id.
-- [ ] Review file/URL layout for enums, etc 
+
+- [x] Review file/URL layout for enums, and more 
     - (Enums?  For web access or file access?)
-    - (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
-        - would also need to rename enum types; e.g. "_enum_value_mode" or just "_value_mode".
     - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
     - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
-    - migration:
-        - site data (enum data)
-        - references in field definitions
-        - help text
-- [ ] Review URI usage
-    - [ ] separation of collection metadata and entity data is a bit messy.
-        x could we drop the `/d/` segment and just use type names (and maybe a reserved directory for collection metadata)?
-        x how to distinguish /l/ and /v/ URLs?
-        - use /d/ for all types, including built-ins
-        - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
-        - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
-        - migration strategy
-            - On opening collection, move collection directory content to /d/ directory, and rename.
-    - [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
+    - separation of collection metadata and entity data is a bit messy.
+    - use /d/ for all types, including built-ins
+    - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
+    - this would also simplify the base URI issues, and reduce the duplication of JSON-LD context files.
+    - migration strategy
+        - On opening collection, move collection directory content to /d/ directory.
+        - On opening collection, rename any old enumeration types.
+        - On accessinbg field definitions, convert any enumeration type references.
     - [x] avoid explicit reference to `_annalist_collection`?
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
         - Use `@id`, thus: { "@id": <some_resource> } .
-- [ ] See_also_r field duplicated?
+- [ ] Re-work handling of built-in enumeration types
+    - Reference as (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
+    - would also need to rename enum types; e.g. "_enum_value_mode" or just "_value_mode".
+    - [x] update site layout definitions
+    - [x] rename site data files (enum data)
+    - [x] update code and tests to work with new enumeration type names
+    - [ ] update help text
+    - [ ] search out any references to old enumeration type names; fix
+    - [ ] re-test
+    - migration - see next
+- [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
+    - using /d/ for all data, including collection metadata, helps to ensure that relative references can work with http:// and file:// URLs (or access via Annalist and direct access to data).  Essentially, /d/ is the base URL for all collection data references.  But site data references won't work this way, so there is a distinction here between collection data and collection config metadata.
+    - [x] investigate: maybe '_annalist_collection' should be a type?  '_coll'?  Probably not: type _coll is used to access site ata about all collections.
+    - [ ] update layout definitions
+    - [ ] generate JSONLD context in /d/ only
+    - [ ] seek out any other references
+    - [ ] test
+    - [ ] collection migration
+        - [ ] move content of /_annalist_collection/ to /d/
+        - [ ] rename old enumeration types
+        - [ ] collection data field definitions: update any enumeration type references
+        - [ ] anything else?  Do search on demo system collection data
+        - [ ] regenerate context
+
+- [ ] See_also_r field duplicated in field options list?
     - Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
         - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
             - RDF_schema_defs/_view/Class
             - _view/Vocab_view
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe]
-        - Tried changing Journal_defs See_also_r to use Group_set_row renqqder type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
+        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
+        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 - [ ] Access to page link without continuation (view only)?
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
@@ -140,8 +157,8 @@ Technical debt:
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplaytInfo?)
 - [ ] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
-- [ ] Consider treating Enum types as regular types under /d/?
-- [ ] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
+- [x] Consider treating Enum types as regular types under /d/?
+- [x] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
@@ -162,9 +179,9 @@ Technical debt:
     - [ ] Need more direct way to locate type (and other entities?) by URI
     - [ ] Review common mechanism to retreive URI for entity?  
           (Current mechanism fixes use of annal:uri for all entities; maybe OK)
-    - [ ] Think about how to optimize retreival of subtypes/supertypes
+    - [ ] Think about how to optimize retrieval of subtypes/supertypes
     - [ ] Do special case for types, or more generic caching approach?
-- [ ] Customize view style getting out of sync with other page styles
+- [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.

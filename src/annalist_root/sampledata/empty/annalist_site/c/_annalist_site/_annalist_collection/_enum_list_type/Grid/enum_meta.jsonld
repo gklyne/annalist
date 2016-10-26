@@ -1,0 +1,9 @@
+{ "@id":                "_enum_list_type/Grid"
+, "@type":              ["annal:Enum_list_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Grid"
+, "annal:type_id":      "_enum_list_type"
+, "rdfs:label":         "Grid display"
+, "rdfs:comment":       "# Grid display\r\n\r\nList displayed with each entry in a multi-line cell, with cells arranged on a grid pattern."
+, "annal:uri":          "annal:list_type/Grid"
+}

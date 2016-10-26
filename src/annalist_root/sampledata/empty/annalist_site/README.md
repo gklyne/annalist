@@ -6,12 +6,30 @@ Directory layout:
 
     /Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
       c/
-        _annalist_site/
-          _annalist_collection/         (site-wide definitions)
+        _annalist_site/                 (site-wide definitions)
+          _annalist_collection/
             coll_meta.jsonld            (site metadata)
+          d/
             coll_context.jsonld         (JSON-LD context for site definitions)
-            _enum/
-              (enumerated type values)
+            _enum_field_placement/
+              (field-placement-value)/
+                enum_meta.jsonld
+               :
+            _enum_list_type/
+              (list-type-id)/
+                enum_meta.jsonld
+               :
+            _enum_render_type/
+              (render-type-id)/
+                enum_meta.jsonld
+               :
+            _enum_value_type/
+              (value-type-id)/
+                enum_meta.jsonld
+               :
+            _enum_value_mode/
+              (value-mode-id)/
+                enum_meta.jsonld
                :
             _field/
               (view-field definitions)
@@ -37,7 +55,8 @@ Directory layout:
         (collection-id)/                (user-created data collection)
           _annalist_collection/         (collection definitions)
             coll_meta.jsonld            (collection metadata)
-            coll_context.jsonld         (JSON-LD context for collection definitions)
+          d/
+            coll_context.jsonld         (JSON-LD context for collection data)
             _type/                      (collection type definitions)
               (type-id)/
                 type_meta.jsonld
@@ -62,7 +81,6 @@ Directory layout:
               (user-id)/
                 user_meta.jsonld
                :
-          d/
             (type-id)/                  (contains all entity data for identified type)
               (entity-id)/              (contains data for identified type/entity)
                 entity_data.jsonld      (entity data)
@@ -76,6 +94,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.33 at 2016-10-14 10:28:32
+for Annalist 0.1.33 at 2016-10-25 16:28:36
 
 

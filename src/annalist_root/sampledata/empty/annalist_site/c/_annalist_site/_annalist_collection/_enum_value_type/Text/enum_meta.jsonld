@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_type/Text"
+, "@type":              ["annal:Enum_value_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Text"
+, "annal:type_id":      "_enum_value_type"
+, "rdfs:label":         "annal:Text"
+, "rdfs:comment":       "# Value type: annal:Text\r\n\r\nSimple text string without layout or formatting codes."
+, "annal:uri":          "annal:Text"
+}

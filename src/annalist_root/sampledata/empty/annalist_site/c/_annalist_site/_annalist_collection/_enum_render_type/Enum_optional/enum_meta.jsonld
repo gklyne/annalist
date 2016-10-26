@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Enum_optional"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Enum_optional"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Optional entity ref"
+, "rdfs:comment":       "# Render type: Optional entity reference\r\n\r\nAn entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection, or no value at all.  Rendering also includes a '+' button that can be used to define a new instance of thereferenced entity type."
+, "annal:uri":          "annal:Enum_render_type/Enum_optional"
+}
