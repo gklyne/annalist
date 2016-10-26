@@ -40,7 +40,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Increased max segment length to 128 in urls.poy and util.py function valid_id.
 
 - [x] Review file/URL layout for enums, and more 
-    - (Enums?  For web access or file access?)
     - need to make sure that access isn't interrupted by URI/FILE path discrepancies; e.g. Enum
     - consider: use of file:// URI vs http://.  Need data to work without Annalist present.
     - separation of collection metadata and entity data is a bit messy.
