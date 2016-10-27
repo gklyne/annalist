@@ -128,6 +128,9 @@ setup(
             , 'data/Bibliography_defs/_type/*/*.jsonld'
             , 'data/Bibliography_defs/_view/*/*.jsonld'
             , 'data/Bibliography_defs/_vocab/*/*.jsonld'
+            , 'data/Bibliography_defs/entitydata/*/*.jsonld'
+            , 'data/Bibliography_defs/entitydata/*/*/*.jsonld'
+            , 'data/Bibliography_defs/entitydata/*/*/*/*.jsonld'
             # Vocabulary namespace definitions
             , 'data/namedata/_field/*/*.jsonld'
             , 'data/namedata/_group/*/*.jsonld'

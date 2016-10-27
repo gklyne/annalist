@@ -173,7 +173,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         if len(entities) != 213:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 213)    # Will change with site data
+        self.assertEqual(len(entities), 227)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):

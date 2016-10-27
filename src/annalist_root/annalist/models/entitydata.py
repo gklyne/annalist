@@ -36,7 +36,7 @@ class EntityData(Entity):
         """
         Initialize a new Entity Data object, without metadata.
 
-        EntityData objects sit in this entity type hierarchy:
+        EntityData objects sit in this entity storage hierarchy:
 
             Site 
                 Collection 
@@ -50,6 +50,7 @@ class EntityData(Entity):
                     which the entity is descended.
         entity_id   the local identifier (slug) for the data record
         """
+        # print "@@ EntityData.__init__ id %s, _entitytypeid %s, parent_id %s"%(entity_id, self._entitytypeid, parent.get_id())
         self._entitytypeid  = self._entitytypeid or parent.get_id()
         super(EntityData, self).__init__(parent, entity_id)
         self._paramdict     = { 'type_id': self._entitytypeid, 'id': entity_id }

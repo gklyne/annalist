@@ -1,1 +1,1 @@
-This directory contains a copllection of often-used namespace vocabulary definitions that are not part of the Annalist core namespace data.
+This directory contains a collection of often-used namespace vocabulary definitions that are not part of the Annalist core namespace data.

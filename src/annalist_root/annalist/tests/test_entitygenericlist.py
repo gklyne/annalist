@@ -174,7 +174,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_enumerate_value_modes(self):
-        # Test enumeration of all collection and site entities
+        # Test enumeration of value modes (tests enumeration type listing)
         # Introduced to facilitate debugging of site data storage rework
         entity_list = (
             EntityFinder(self.testcoll, selector="ALL")

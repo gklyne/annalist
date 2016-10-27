@@ -152,7 +152,7 @@ class Entity(EntityRoot):
     def _find_alt_parents(self, altscope=None, parents_seen=[]):
         """
         Local helper function returns a list of entities, not including the current entity,
-        that are potentially in scope for containing entities consiudered to belong to
+        that are potentially in scope for containing entities considered to belong to
         the current entity.
 
         This function also checks for recursive references and returns an error if
@@ -376,7 +376,6 @@ class Entity(EntityRoot):
                 break
         if not base_id:
             cls._last_id = last_id
-        # print "base_id %s, new_id %s, last_id %d"%(base_id, new_id, last_id)
         return new_id
 
     @classmethod

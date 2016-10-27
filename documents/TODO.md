@@ -67,12 +67,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Enum_value_mode
         - [x] Enum_value_type
         - [x] retest
-    - [ ] revise "Bib data type"
+    - [x] revise "Bib data type"
         - [x] make regular type
         - [x] remove special case logic in entitytypeinfo
-        - [ ] Need manual test of BibliographyData.
-        - [ ] Abandon old BibliographyData on demo system.
-            - [ ] Create new one for my papers, with hacked utility to auto-convert from BibTex?
+        - [x] Need manual test of BibliographyData.
+        - [x] Abandon old BibliographyData on demo system.
     - [ ] update help text
         - [x] update various references found in help text
         - [ ] check refaudio, refimage links (using $COLL to access lists)
@@ -91,12 +90,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] generate JSONLD context in /d/ only
     - [ ] seek out any other references
     - [ ] test
+    - [ ] new site migration
+        - [ ] move content of _annalist_site/_annalist_collection/ to _annalist_site//d/
     - [ ] collection migration
         - [ ] move content of /_annalist_collection/ to /d/
         - [ ] rename old enumeration types
         - [ ] collection data field definitions: update any enumeration type references
         - [ ] anything else?  Do search on demo system collection data
         - [ ] regenerate context
+- [ ] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
 
 - [ ] See_also_r field duplicated in field options list?
     - Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
@@ -106,6 +108,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
         - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 - [ ] Access to page link without continuation (view only)?
+- [ ] $SITE, $COLL symbols should not include host value (like $BASE)
+- [ ] --force option for `annalist-manager installcoll`
 
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name

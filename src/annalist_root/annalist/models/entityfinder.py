@@ -126,11 +126,13 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        # NOTE: consider types from all scopes, then entities from specifiecd scope
+        # NOTE: consider types from all scopes, then entities from specified scope
         for entitytypeinfo in self.get_collection_subtypes(type_id, "all"):
-            for e in entitytypeinfo.enum_entities_with_implied_values(
+            es = entitytypeinfo.enum_entities_with_implied_values(
                     user_permissions, altscope=altscope
-                    ):
+                    )
+            es = list(es) #@@ Force strict eval
+            for e in es:
                 if e.get_id() != "_initial_values":
                     yield e
         return
@@ -152,7 +154,7 @@ class EntityFinder(object):
         """
         if type_id:
             #@@
-            # log.info("get_base_entities: type_id %s"%type_id)
+            log.info("get_base_entities: type_id %s"%type_id)
             #@@
             return self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)

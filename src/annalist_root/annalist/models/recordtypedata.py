@@ -40,6 +40,12 @@ class RecordTypeData(Entity):
         parent      is the parent collection from which the type data is descended.
         type_id     the local identifier (slug) for the record type
         """
+        # @@
+        # log.info(
+        #     "@@ RecordTypeData.__init__ id %s, _entitytypeid %s, parent_id %s"%
+        #     (type_id, self._entitytypeid, parent.get_id())
+        #     )
+        # @@
         self._entityref = layout.COLL_BASE_TYPEDATA_REF%{'id': type_id}
         super(RecordTypeData, self).__init__(parent, type_id)
         return
@@ -64,7 +70,7 @@ class RecordTypeData(Entity):
         """
         Returns a list of alternative parents for the current inheritance branch only;
         i.e. does not attempt to follow altparent chains in referenced trees.
-        (That is handled by `_find_alt_parents` below.)
+        (That is handled by `_find_alt_parents`.)
 
         This method overrides the method in Entity to take account of the need to
         look beyond the immediate RecordTypeData instance to follow links to collections

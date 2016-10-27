@@ -582,7 +582,7 @@ class EntityTypeInfo(object):
         """
         #@@
         # log.info(
-        #     "@@ enum_entities_with_implied_values: parent %s, altscope %s"%
+        #     "@@ EntityTypeInfo.enum_entities_with_implied_values: parent %s, altscope %s"%
         #     (self.entityparent.get_id(), altscope)
         #     )
         #@@
