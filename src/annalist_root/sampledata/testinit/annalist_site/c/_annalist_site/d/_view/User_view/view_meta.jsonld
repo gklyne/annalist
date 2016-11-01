@@ -1,0 +1,28 @@
+{ "@id":                "_view/User_view"
+, "@type":              ["annal:View"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "User_view"
+, "annal:uri":          "annal:display/User_view"
+, "rdfs:label":         "User permissions"
+, "rdfs:comment":       "# User permissions view\r\n\r\nUsed for defining user permissions, which are the basis of Annalist access control.\r\n\r\nUser permissions are associated with a combination of a **User Id** and a **URI**.\r\n\r\nThe **User id** is arbitrary, and can be any token specified by the user when they log in.\r\n\r\nThe URI is derived from a separate user authentication service, and usually takes the form of a `mailto:` URI with an authenticated email address for the user.  For example, when authentication is performed using Google, the email address associated with the Google login is used.\r\n\r\n## Fields\r\n\r\n[User Id]($BASE:_field/User_id/):\r\nShort user user Id.\r\n\r\n[User name]($BASE:_field/User_name/):\r\nthe name of the user, consisting of first_name and last_name, space-separated.  The value is quite arbitrary, and is used only for constructing some messages.\r\n\r\n[Description]($BASE:_field/User_description/):\r\nan optional descriptive string describing the user, their role and/or permissions.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n\r\n[URI]($BASE:_field/User_URI/):\r\nA URI that has an authenticated association with the user.  Usually, a `mailto:` URI containing an authenticated email addreess.\r\n\r\n[Permissions]($BASE:_field/User_permissions/):\r\na space-separated list of user permission tokens; e.g 'VIEW CREATE UPDATE DELETE CONFIG'. User permissions are typically defined for each collection, but, may also be site-wide if they are defined as part of the `_annalist_site` collection, in which case they are applied in any collection for which more specific permissions are niot defined. \r\n\r\nCurrently recognized permission tokens include:\r\n\r\n* `ADMIN` - permits user administration and permission assignment.  As a site-wide permission, also permits creating new collections, and deleting existing ones.\r\n* `CREATE_COLLECTION` - as a site-wide permission, permits creating new collections.  Any created collections automatically grant `ADMIN` permission to the user who creates them.\r\n* `DELETE_COLLECTION` - as a site-wide permission, permits deletion of any collection.\r\n* `CONFIG` - permits definition and modification of collection structures (types, views, lists, fields, etc.).\r\n* `VIEW` - permits viewing of data records.\r\n* `CREATE` - permits creation of new data records.\r\n* `UPDATE` - permits modification of existing data records.\r\n* `DELETE` - permits deletion of existing data reciords.\r\n\r\nSite wide permissions are listed at [_annalist_site/l/User_list/]($SITE:c/_annalist_site/l/User_list/)."
+, "annal:record_type":  "annal:User"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/User_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/User_name"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_description"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/User_permissions"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

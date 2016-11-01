@@ -146,7 +146,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "type1")
         self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(type_dir)s/type1/"%self.layout, 
+            "/c/testcoll/d/%(type_dir)s/type1/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -165,7 +165,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "type2")
         self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(type_dir)s/type2/"%self.layout, 
+            "/c/testcoll/d/%(type_dir)s/type2/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -191,7 +191,7 @@ class RecordTypeTest(AnnalistTestCase):
         t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(type_dir)s/Default_type"%self.layout, 
+            "/c/_annalist_site/d/%(type_dir)s/Default_type"%self.layout, 
             t.get_url()
             )
         self.assertIn(

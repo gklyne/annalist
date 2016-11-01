@@ -131,12 +131,13 @@ class EntityResourceAccess(AnnalistGenericView):
         """
         Return a description for the indicated entity resource, or None
         """
-        log.debug("EntityResourceAccess.find_resource %s/%s/%s"%(entity.get_type_id(), entity.get_id(), resource_ref))
+        log.debug(
+            "EntityResourceAccess.find_resource %s/%s/%s"%
+            (entity.get_type_id(), entity.get_id(), resource_ref)
+            )
         fixed_resources = (
-            [ { "resource_name": layout.COLL_META_FILE,        "resource_dir": layout.COLL_META_DIR,     "resource_type": "application/ld+json" }
-            , { "resource_name": layout.COLL_PROV_FILE,        "resource_dir": layout.COLL_META_DIR,     "resource_type": "application/ld+json" }
-            # , { "resource_name": layout.SITEDATA_META_FILE,    "resource_dir": layout.SITEDATA_META_DIR, "resource_type": "application/ld+json" }
-            # , { "resource_name": layout.SITEDATA_PROV_FILE,    "resource_dir": layout.SITEDATA_META_DIR, "resource_type": "application/ld+json" }
+            [ { "resource_name": layout.COLL_META_FILE,        "resource_dir": layout.COLL_BASE_DIR,     "resource_type": "application/ld+json" }
+            , { "resource_name": layout.COLL_PROV_FILE,        "resource_dir": layout.COLL_BASE_DIR,     "resource_type": "application/ld+json" }
             , { "resource_name": layout.COLL_CONTEXT_FILE,     "resource_dir": ".",                      "resource_type": "application/ld+json" }
             , { "resource_name": layout.TYPE_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
             , { "resource_name": layout.TYPE_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }

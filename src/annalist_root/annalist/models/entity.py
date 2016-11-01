@@ -530,7 +530,7 @@ class Entity(EntityRoot):
         return None
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None):
+    def load(cls, parent, entityid, altscope=None, reserved_ok=False):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -553,7 +553,7 @@ class Entity(EntityRoot):
         #         log.error("".join(traceback.format_stack()))
         #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         entity = None
-        if util.valid_id(entityid):
+        if util.valid_id(entityid, reserved_ok=reserved_ok):
             (e, v) = cls.try_alt_parentage(
                 parent, entityid, (lambda e: e._load_values()), 
                 altscope=altscope

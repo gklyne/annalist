@@ -546,7 +546,7 @@ class EntityRoot(object):
 
         NOTE: `Site` class overrides this.
         """
-        log.info("@@ EntityRoot._children: parent %s, altscope %s"%(self.get_id(), altscope))
+        # log.info("@@ EntityRoot._children: parent %s, altscope %s"%(self.get_id(), altscope))
         if altscope != "site":
             return self._base_children(cls)
         return iter(())     # Empty iterator

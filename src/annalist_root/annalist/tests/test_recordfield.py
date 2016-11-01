@@ -149,7 +149,7 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "field1")
         self.assertEqual(t.get_type_id(), layout.FIELD_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(field_dir)s/field1/"%self.layout, 
+            "/c/testcoll/d/%(field_dir)s/field1/"%self.layout, 
             t.get_url()
             )
         t.set_values(recordfield_create_values(field_id="field1"))
@@ -164,7 +164,7 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "field2")
         self.assertEqual(t.get_type_id(), layout.FIELD_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(field_dir)s/field2/"%self.layout, 
+            "/c/testcoll/d/%(field_dir)s/field2/"%self.layout, 
             t.get_url()
             )
         t.set_values(recordfield_create_values(field_id="field2"))
@@ -186,7 +186,7 @@ class RecordFieldTest(AnnalistTestCase):
         t = RecordField.load(self.testcoll, "Field_value_type", altscope="all")
         self.assertEqual(t.get_id(), "Field_value_type")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(field_dir)s/Field_value_type"%self.layout, 
+            "/c/_annalist_site/d/%(field_dir)s/Field_value_type"%self.layout, 
             t.get_url()
             )
         self.assertIn(

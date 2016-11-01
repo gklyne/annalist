@@ -39,25 +39,17 @@ def initialize_coll_data(src_data_dir, tgt_coll):
     tgt_data_dir, data_file = tgt_coll._dir_path()
     log.info("Copy Annalist collection data from %s to %s"%(src_data_dir, tgt_data_dir))
     for sdir in layout.DATA_VOCAB_DIRS:     # Don't copy user permissions
-        expand_sdir = os.path.join(src_data_dir, sdir)
-        if os.path.isdir(expand_sdir):
+        if os.path.isdir(os.path.join(src_data_dir, sdir)):
             log.info("- %s -> %s"%(sdir, tgt_data_dir))
             Site.replace_site_data_dir(tgt_coll, sdir, src_data_dir)
     # Copy entity data to target collection.
-    #
-    # @TODO: This is hacky: it would be cleaner if the source directory were just
-    #        an exact copy of what ends up in the target collection directory.
-    #        Currently, a directory "entitydata" in the source data tree is used
-    #        for all user data directories and entities.
-    #        (cf. data/Annalist_schema)
-    #
-    expand_sdir = os.path.join(src_data_dir, "entitydata" )
-    expand_tdir = os.path.join(
-        tgt_data_dir, layout.META_COLL_REF+layout.COLL_ENTITYDATA_PATH
-        )
-    if os.path.isdir(expand_sdir):
-        log.info("- %s -> %s"%(sdir, expand_tdir))
-        replacetree(expand_sdir, expand_tdir)
+    expand_entitydata = os.path.join(src_data_dir, "entitydata" )
+    if os.path.isdir(expand_entitydata):
+        log.info("- Copy entitydata/...")
+        for edir in os.listdir(expand_entitydata):
+            if os.path.isdir(os.path.join(expand_entitydata, edir)):
+                log.info("- %s -> %s"%(edir, tgt_data_dir))
+                Site.replace_site_data_dir(tgt_coll, edir, expand_entitydata)
     # Generate initial JSON-LD context data
     tgt_coll.generate_coll_jsonld_context()
     return []

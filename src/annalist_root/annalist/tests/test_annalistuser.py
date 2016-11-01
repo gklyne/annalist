@@ -126,7 +126,7 @@ class AnnalistUserTest(AnnalistTestCase):
         self.assertEqual(usr.get_id(), "user1")
         self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(user_dir)s/user1/"%self.layout, 
+            "/c/testcoll/d/%(user_dir)s/user1/"%self.layout, 
             usr.get_url()
             )
         self.assertEqual(
@@ -145,7 +145,7 @@ class AnnalistUserTest(AnnalistTestCase):
         self.assertEqual(usr.get_id(), "user2")
         self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(user_dir)s/user2/"%self.layout, 
+            "/c/testcoll/d/%(user_dir)s/user2/"%self.layout, 
             usr.get_url()
             )
         self.assertEqual(
@@ -173,7 +173,7 @@ class AnnalistUserTest(AnnalistTestCase):
         usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(user_dir)s/_unknown_user_perms/"%self.layout, 
+            "/c/_annalist_site/d/%(user_dir)s/_unknown_user_perms/"%self.layout, 
             usr.get_url()
             )
         self.assertIn(

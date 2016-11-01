@@ -199,7 +199,7 @@ class JsonldContextTest(AnnalistTestCase):
         self.testsite    = init_annalist_test_site()
         self.testcoll    = init_annalist_test_coll()
         self.sitebasedir = TestBaseDir
-        self.collbasedir = os.path.join(self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_META_DIR)
+        self.collbasedir = os.path.join(self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR)
         self.collbaseurl = "file://" + self.collbasedir + "/"
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -310,7 +310,7 @@ class JsonldContextTest(AnnalistTestCase):
         g = Graph()
         s = self.testsite.site_data_stream()
         # b = self.testsite.get_url()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
+        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DATA_DIR) + "/"
         # print "***** b: "+repr(b)
         # print "***** s: "+repr(s)
         result = g.parse(source=s, publicID=b, format="json-ld")
@@ -580,7 +580,7 @@ class JsonldContextTest(AnnalistTestCase):
               os.path.join(
                 TestBaseDir, 
                 layout.SITEDATA_DIR,        # site-wide data collection
-                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_DIR,       # collection base directory
                 layout.COLL_BASE_ENUM_REF%{ 'type_id': list_type_list.get_type_id(), 'id': list_type_list.get_id() }
                 )
             )

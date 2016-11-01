@@ -297,9 +297,8 @@ class Site(EntityRoot):
             """    %(site_base_dir)s\n"""+
             """      c/\n"""+
             """        _annalist_site/                 (site-wide definitions)\n"""+
-            """          _annalist_collection/\n"""+
-            """            coll_meta.jsonld            (site metadata)\n"""+
             """          d/\n"""+
+            """            coll_meta.jsonld            (site metadata)\n"""+
             """            coll_context.jsonld         (JSON-LD context for site definitions)\n"""+
             """            %(enum_field_placement_dir)s/\n"""+
             """              (field-placement-value)/\n"""+
@@ -343,9 +342,8 @@ class Site(EntityRoot):
             """              (vocabulary namespace definitions)\n"""+
             """               :\n"""+
             """        (collection-id)/                (user-created data collection)\n"""+
-            """          _annalist_collection/         (collection definitions)\n"""+
-            """            coll_meta.jsonld            (collection metadata)\n"""+
             """          d/\n"""+
+            """            coll_meta.jsonld            (collection metadata)\n"""+
             """            coll_context.jsonld         (JSON-LD context for collection data)\n"""+
             """            %(type_dir)s/                      (collection type definitions)\n"""+
             """              (type-id)/\n"""+

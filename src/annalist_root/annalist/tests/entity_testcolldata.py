@@ -69,7 +69,7 @@ def collectiondata_resource_url(coll_id="testcoll", resource_ref=layout.COLL_MET
     """
     return urlparse.urljoin(
         collectiondata_url(coll_id=coll_id),
-        "%s/%s"%(layout.COLL_META_DIR, resource_ref)
+        "%s/%s"%(layout.COLL_BASE_DIR, resource_ref)
         )
 
 def collectiondata_view_url(coll_id="testcoll", action=None):
@@ -103,7 +103,7 @@ def collectiondata_view_resource_url(coll_id="testcoll", resource_ref=layout.COL
     """
     return urlparse.urljoin(
         collectiondata_view_url(coll_id=coll_id, action="view"),
-        "%s/%s"%(layout.COLL_META_DIR,resource_ref)
+        "%s/%s"%(layout.COLL_BASE_DIR,resource_ref)
         )
 
 #   -----------------------------------------------------------------------------
@@ -161,7 +161,7 @@ def collectiondata_read_values(coll_id="testcoll", coll_label=None, coll_descr=N
     d.update(
         { '@id':            layout.META_COLL_REF
         , '@type':          ["annal:Collection"]
-        , '@context':       [{"@base": "../d/"}, layout.COLL_CONTEXT_FILE]
+        , '@context':       [{"@base": layout.META_COLL_BASE_REF}, layout.COLL_CONTEXT_FILE]
         })
     return d
 

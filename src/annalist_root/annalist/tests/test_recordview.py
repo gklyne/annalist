@@ -136,7 +136,7 @@ class RecordViewTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "view1")
         self.assertEqual(t.get_type_id(), layout.VIEW_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(view_dir)s/view1/"%self.layout, 
+            "/c/testcoll/d/%(view_dir)s/view1/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -155,7 +155,7 @@ class RecordViewTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "view2")
         self.assertEqual(t.get_type_id(), layout.VIEW_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(view_dir)s/view2/"%self.layout, 
+            "/c/testcoll/d/%(view_dir)s/view2/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -181,7 +181,7 @@ class RecordViewTest(AnnalistTestCase):
         t = RecordView.load(self.testcoll, "Default_view", altscope="all")
         self.assertEqual(t.get_id(), "Default_view")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(view_dir)s/Default_view"%self.layout, 
+            "/c/_annalist_site/d/%(view_dir)s/Default_view"%self.layout, 
             t.get_url()
             )
         self.assertIn(

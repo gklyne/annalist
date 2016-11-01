@@ -7,9 +7,8 @@ Directory layout:
     /Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_site/
       c/
         _annalist_site/                 (site-wide definitions)
-          _annalist_collection/
-            coll_meta.jsonld            (site metadata)
           d/
+            coll_meta.jsonld            (site metadata)
             coll_context.jsonld         (JSON-LD context for site definitions)
             _enum_field_placement/
               (field-placement-value)/
@@ -53,9 +52,8 @@ Directory layout:
               (vocabulary namespace definitions)
                :
         (collection-id)/                (user-created data collection)
-          _annalist_collection/         (collection definitions)
-            coll_meta.jsonld            (collection metadata)
           d/
+            coll_meta.jsonld            (collection metadata)
             coll_context.jsonld         (JSON-LD context for collection data)
             _type/                      (collection type definitions)
               (type-id)/
@@ -94,6 +92,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.33 at 2016-11-01 09:54:55
+for Annalist 0.1.33 at 2016-11-01 16:03:34
 
 

@@ -44,7 +44,7 @@ def recordenum_url(enum_id, coll_id="testcoll", type_id="testtype"):
     type_id     id of enumeration type
     """
     return (
-        "/testsite/c/%(coll_id)s/_annalist_collection/%(type_id)s/%(enum_id)s/"%
+        "/testsite/c/%(coll_id)s/d/%(type_id)s/%(enum_id)s/"%
             { 'coll_id': coll_id
             , 'type_id': type_id
             , 'enum_id': enum_id

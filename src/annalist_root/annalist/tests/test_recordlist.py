@@ -146,7 +146,7 @@ class RecordListTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "list1")
         self.assertEqual(t.get_type_id(), layout.LIST_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(list_dir)s/list1/"%self.layout, 
+            "/c/testcoll/d/%(list_dir)s/list1/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -165,7 +165,7 @@ class RecordListTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "list2")
         self.assertEqual(t.get_type_id(), layout.LIST_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(list_dir)s/list2/"%self.layout, 
+            "/c/testcoll/d/%(list_dir)s/list2/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -191,7 +191,7 @@ class RecordListTest(AnnalistTestCase):
         t = RecordList.load(self.testcoll, "Default_list", altscope="all")
         self.assertEqual(t.get_id(), "Default_list")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(list_dir)s/Default_list"%self.layout, 
+            "/c/_annalist_site/d/%(list_dir)s/Default_list"%self.layout, 
             t.get_url()
             )
         self.assertIn(
