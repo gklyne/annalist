@@ -339,7 +339,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def _check_context_fields(self, response, 
             field_id="(?field_id)", 
             field_type="(?field_type)",
-            field_render="(?field_type)",
+            field_render_type="(?field_render_type)",
             field_value_mode="Value_direct",
             field_label="(?field_label)",
             field_placeholder="(?field_placeholder)",
@@ -393,7 +393,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Slug",
             field_placement=    "small-12 medium-6 columns",
-            field_value=        field_render,
+            field_value=        field_render_type,
             options=            self.render_options
             )
         # Field 2: Value type
@@ -892,7 +892,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="00000001",
             field_type="annal:Text",
-            field_render="Text",
+            field_render_type="Text",
             field_label=default_label("testcoll", layout.FIELD_TYPEID, "00000001"),
             field_placeholder="",
             field_property="",
@@ -935,7 +935,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="Type_label",
             field_type="annal:Text",
-            field_render="Text",
+            field_render_type="Text",
             field_label="Label",
             field_placeholder="(label)",
             field_property="rdfs:label",

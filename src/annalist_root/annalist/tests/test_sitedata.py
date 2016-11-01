@@ -296,7 +296,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
             # print "f: " + field_id
             view_field = RecordField.load(self.coll1, field_id, altscope="all")
-            field_type = view_field[ANNAL.CURIE.field_render_type]
+            render_type = view_field[ANNAL.CURIE.field_render_type]
             value_type = view_field[ANNAL.CURIE.field_value_type]
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
@@ -316,7 +316,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                         self.assertEqual(
                             view_field[ANNAL.CURIE.field_entity_type], type_uri
                             )
-                if is_repeat_field_render_type(field_type):
+                if is_repeat_field_render_type(render_type):
                     # Check extra fields
                     group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
@@ -336,10 +336,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"
                     ])
-                if field_type in enum_types:
+                if render_type in enum_types:
                     self.assertIn(ANNAL.CURIE.field_ref_type, view_field)
             except Exception as e:
-                log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, field_type))
+                log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, render_type))
                 raise
         return
 

@@ -54,7 +54,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] collections and repeated properties:
         - Using owl:sameAs in form { "owl:sameAs": <some_resource> } as equivalent to just <someresource>.
         - Use `@id`, thus: { "@id": <some_resource> } .
-- [ ] Re-work handling of built-in enumeration types
+- [x] Re-work handling of built-in enumeration types
     - Reference as (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
     - would also need to rename enum types; e.g. "_enum_value_mode" or just "_value_mode".
     - [x] update site layout definitions
@@ -74,15 +74,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Abandon old BibliographyData on demo system.
     - [ ] update help text
         - [x] update various references found in help text
-        - [ ] check refaudio, refimage links (using $COLL to access lists)
-        - [ ] check Annalist_schema
-            - [ ] Property/field_render_type (major edits)
-            - [ ] Property/field_value_mode
-            - [ ] Property/repeat_label_add
-            - [ ] Property/repeat_label_delete
-    - [ ] rename "field_type" -> "render_type" (where? migration needed?)
-    - [ ] re-test
-    - migration - see next
+        - [x] check refaudio, refimage links (using $COLL to access lists)
+        - [x] check Annalist_schema
+            - [x] Property/field_render_type (major edits)
+            - [x] Property/field_value_mode
+            - [x] Property/repeat_label_add
+            - [x] Property/repeat_label_delete
+    - [x] rename "field_type" -> "render_type"
+        - mostly done - just one test module updated.
+        - note 'field_type' is also used in field descriptions to record key internal structural distinctions.
+    - [x] re-test
 - [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
     - using /d/ for all data, including collection metadata, helps to ensure that relative references can work with http:// and file:// URLs (or access via Annalist and direct access to data).  Essentially, /d/ is the base URL for all collection data references.  But site data references won't work this way, so there is a distinction here between collection data and collection config metadata.
     - [x] investigate: maybe '_annalist_collection' should be a type?  '_coll'?  Probably not: type _coll is used to access site ata about all collections.

@@ -12,7 +12,7 @@
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:repeat_label_add",
-  "rdfs:comment": "# Add repeated field button label\r\n\r\nUsed in a field definition for a repeated field (render types [Repeating field group]($BASE:_enum_render_type/RepeatGroup/), [Repeating fields as row]($BASE:_enum_render_type/RepeatGroupRow/), [Field group sequence]($BASE:_enum_render_type/Group_Seq), [Field group sequence as table]($BASE:_enum_render_type/Group_Seq_Row), [Field group set]($BASE:_enum_render_type/Group_Set) and [Field group set as table]($BASE:_enum_render_type/Group_Set_Row)), the value is used to label the button that adds a new repeated entry.\r\n",
+  "rdfs:comment": "# Add repeated field button label\r\n\r\nUsed in a field definition for a repeated field (render types [Field group sequence]($BASE:_enum_render_type/Group_Seq), [Field group sequence as table]($BASE:_enum_render_type/Group_Seq_Row), [Field group set]($BASE:_enum_render_type/Group_Set) and [Field group set as table]($BASE:_enum_render_type/Group_Set_Row)).  (Also deprecated render types [Repeating field group]($BASE:_enum_render_type/RepeatGroup/) and [Repeating fields as row]($BASE:_enum_render_type/RepeatGroupRow/)).\r\n\r\nThe value is used to label the button that adds a new repeated entry.\r\n",
   "rdfs:domain": [
     {
       "@id": "annal:Field"
