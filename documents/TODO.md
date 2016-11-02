@@ -87,10 +87,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
     - using /d/ for all data, including collection metadata, helps to ensure that relative references can work with http:// and file:// URLs (or access via Annalist and direct access to data).  Essentially, /d/ is the base URL for all collection data references.  But site data references won't work this way, so there is a distinction here between collection data and collection config metadata.
     - [x] investigate: maybe '_annalist_collection' should be a type?  '_coll'?  Probably not: type _coll is used to access site data about all collections.
-    - [ ] update layout definitions
-    - [ ] generate JSONLD context in /d/ only
+    - [x] update layout definitions
+    - [x] generate JSONLD context in /d/ only
     - [ ] seek out any other references
-    - [ ] test
+    - [x] test
     - [ ] new site migration
         - [ ] move content of _annalist_site/_annalist_collection/ to _annalist_site//d/
     - [ ] collection migration

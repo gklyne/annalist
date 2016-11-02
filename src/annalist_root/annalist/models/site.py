@@ -229,7 +229,6 @@ class Site(EntityRoot):
                 returns a context dictionary for the field thus described.
         """
         # Build context data
-        #@@ context = self.get_site_jsonld_context()
         context = self.site_data_collection().get_coll_jsonld_context()
         # Assemble and write out context description
         datetime_now = datetime.datetime.today().replace(microsecond=0)
@@ -389,7 +388,6 @@ class Site(EntityRoot):
                 , 'site_base_uri':              site._entityurl
                 , 'datetime':                   datetime_now.isoformat(' ')
                 , 'version':                    annalist.__version__
-                #@@ , 'enum_dir':       layout.ENUM_DIR
                 , 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
                 , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
                 , 'enum_render_type_dir':       layout.ENUM_RENDER_TYPE_DIR

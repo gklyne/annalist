@@ -79,7 +79,7 @@ META_COLL_REF           = "../"
 META_COLL_BASE_REF      = "../d/"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
-SITEDATA_DATA_DIR       = SITEDATA_DIR + "/" + COLL_BASE_DIR        # used in tests
+SITEDATA_BASE_DIR       = SITEDATA_DIR + "/" + COLL_BASE_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
 SITEDATA_PROV_FILE      = COLL_PROV_FILE                            # used in views
 SITEDATA_CONTEXT_PATH   = "./"                                      # used in models
@@ -289,7 +289,7 @@ class Layout(object):
         self.SITEDATA_ID        = SITEDATA_ID
         self.SITEDATA_DIR       = SITEDATA_DIR
         self.SITEDATA_OLD_DIR   = SITEDATA_OLD_DIR
-        self.SITEDATA_DATA_DIR  = SITEDATA_DATA_DIR                         # e.g. c/_annalist_site/d
+        self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR                         # e.g. c/_annalist_site/d
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
         return
 
