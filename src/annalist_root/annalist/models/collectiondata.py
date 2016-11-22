@@ -79,27 +79,27 @@ def copy_coll_data(src_coll, tgt_coll):
         msgs += new_entity._copy_entity_files(e)
     return msgs
 
-def migrate_coll_config_dir(coll, prev_dir, curr_dir):
+def migrate_collection_dir(coll, prev_dir, curr_dir):
     """
-    Migrate a single configuration directory for the indicated collection.
+    Migrate (rename) a single directory belonging to the indicated collection.
 
     Returns list of errors or empty list.
     """
     errs = []
     if not prev_dir:
         return errs
-    coll_conf_dir, coll_meta_file = coll._dir_path()
+    coll_base_dir, coll_meta_file = coll._dir_path()
     # log.debug(
-    #     "collectiondata.migrate_coll_config_dir %s: %s -> %s"%
-    #     (coll_conf_dir, prev_dir, curr_dir)
+    #     "collectiondata.migrate_collection_dir %s: %s -> %s"%
+    #     (coll_base_dir, prev_dir, curr_dir)
     #     )
-    expand_prev_dir = os.path.join(coll_conf_dir, prev_dir)
-    expand_curr_dir = os.path.join(coll_conf_dir, curr_dir)
+    expand_prev_dir = os.path.join(coll_base_dir, prev_dir)
+    expand_curr_dir = os.path.join(coll_base_dir, curr_dir)
     # log.debug("  prev %s"%(expand_prev_dir,))
     # log.debug("  curr %s"%(expand_curr_dir,))
     if (curr_dir != prev_dir) and os.path.isdir(expand_prev_dir):
-        log.info("migrate_coll_config_dir: %s"%coll_conf_dir)
-        log.info("                 rename: %s -> %s"%(prev_dir, curr_dir))
+        log.info("migrate_coll_base_dir: %s"%coll_base_dir)
+        log.info("               rename: %s -> %s"%(prev_dir, curr_dir))
         # print "@@ rename %s -> %s"%(expand_prev_dir, expand_curr_dir)
         try:
             os.rename(expand_prev_dir, expand_curr_dir)
@@ -107,7 +107,7 @@ def migrate_coll_config_dir(coll, prev_dir, curr_dir):
         except Exception as e:
             msg = message.COLL_MIGRATE_DIR_FAILED%(coll.get_id(), prev_dir, curr_dir, e)
             # print "@@ "+msg
-            log.error("migrate_coll_config_dir: "+msg)
+            log.error("migrate_collection_dir: "+msg)
             errs.append(msg)
     return errs
 
@@ -118,9 +118,20 @@ def migrate_coll_config_dirs(coll):
     Returns list of errors or empty list.
     """
     errs = []
+    coll_base_dir, coll_meta_file = coll._dir_path()
+    coll_conf_old_dir = os.path.join(coll_base_dir, layout.COLL_BASE_CONF_OLD_DIR)
+    if os.path.isdir(coll_conf_old_dir):
+        log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
+        for edir in os.listdir(coll_conf_old_dir):
+            prev_dir = os.path.join(coll_conf_old_dir, edir)
+            if os.path.isdir(pev_dir):
+                #@@ log.info("- %s -> %s"%(edir, coll_base_dir))
+                e = migrate_collection_dir(coll, prev_dir, edir)
+                if e:
+                    errs.extend(e)
     for curr_dir, prev_dir in layout.COLL_DIRS_CURR_PREV:
         # print "@@ migrate coll dir %s -> %s"%(prev_dir, curr_dir)
-        e = migrate_coll_config_dir(coll, prev_dir, curr_dir)
+        e = migrate_collection_dir(coll, prev_dir, curr_dir)
         if e:
             errs.extend(e)
     return errs

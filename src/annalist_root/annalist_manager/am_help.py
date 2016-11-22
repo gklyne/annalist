@@ -21,7 +21,7 @@ command_summary_help = ("\n"+
     "Commands:\n"+
     "\n"+
     "  %(prog)s help [command]\n"+
-    "  %(prog)s runtests\n"+
+    "  %(prog)s runtests [testlabel]\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
     #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
@@ -110,9 +110,12 @@ def am_help(options, progname):
             "")
     elif options.args[0].startswith("runt"):
         help_text = ("\n"+
-            "  %(prog)s runtests\n"+
+            "  %(prog)s runtests [testlabel]\n"+
             "\n"+
             "Runs annalist test suite using installed software\n"+
+            "\n"+
+            "If 'testlabel' is specified, only the named test or test suite is run.\n"+
+            "Additionally, the full path name of the log file is displayed after the tests have run.\n"+
             "\n"+
             "")
     elif options.args[0].startswith("init"):

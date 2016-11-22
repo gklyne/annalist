@@ -212,7 +212,7 @@ def entity_dir_path(base_dir, path, filename):
                 from which data is to be read
     path        is a relative path or list of path segments within the site or 
                 resource for the site or collection from which data is to be read.
-                This value may be absent.
+                This value may be absent (an empty list).
     filename    is a file name for the data resource to be read.
 
     Returns a pair containing the full directory and path names for the entity file.

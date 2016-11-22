@@ -55,29 +55,32 @@ log = logging.getLogger(__name__)
 #         <collection-id>/
 #          :
 
-SITE_TYPEID             = "_site"
-SITE_DIR                = "annalist_site"
-SITEDATA_ID             = "_annalist_site"
-BIBDATA_ID              = "Bibliography_defs"
-SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
-SITEDATA_OLD_DIR        = "_annalist_site"
-SITE_META_PATH          = ""
-SITE_META_FILE          = "@@unused@@ site_meta.jsonld"
-META_SITE_REF           = "@@unused@@ ./"
-SITE_COLL_VIEW          = "c/%(id)s/"
-SITE_COLL_PATH          = "c/%(id)s"
-SITE_CONTEXT_FILE       = "site_context.jsonld"
-
 COLL_TYPEID             = "_coll"
 COLL_BASE_DIR           = "d"
+COLL_ROOT_CONF_OLD_DIR  = "_annalist_collection"
+COLL_BASE_CONF_OLD_DIR  = "../" + COLL_ROOT_CONF_OLD_DIR
 COLL_META_FILE          = "coll_meta.jsonld"
 COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_BASE_REF           = COLL_BASE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE
 COLL_PROV_REF           = COLL_BASE_REF + COLL_PROV_FILE
 META_COLL_REF           = "../"
-META_COLL_BASE_REF      = "../d/"
+META_COLL_BASE_REF      = "../d/"                           #@@ TODO: simplify or eliminate
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
+
+SITE_TYPEID             = "_site"
+SITE_DIR                = "annalist_site"
+SITEDATA_ID             = "_annalist_site"
+BIBDATA_ID              = "Bibliography_defs"
+SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
+SITEDATA_OLD_DIR1       = "_annalist_site"
+SITEDATA_OLD_DIR2       = SITEDATA_DIR+"/"+COLL_ROOT_CONF_OLD_DIR
+SITE_META_PATH          = ""
+SITE_META_FILE          = "@@unused@@ site_meta.jsonld"
+META_SITE_REF           = "@@unused@@ ./"
+SITE_COLL_VIEW          = "c/%(id)s/"
+SITE_COLL_PATH          = "c/%(id)s"
+SITE_CONTEXT_FILE       = "site_context.jsonld"
 
 SITEDATA_BASE_DIR       = SITEDATA_DIR + "/" + COLL_BASE_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
@@ -288,7 +291,8 @@ class Layout(object):
         self.SITE_DIR           = SITE_DIR
         self.SITEDATA_ID        = SITEDATA_ID
         self.SITEDATA_DIR       = SITEDATA_DIR
-        self.SITEDATA_OLD_DIR   = SITEDATA_OLD_DIR
+        self.SITEDATA_OLD_DIR1  = SITEDATA_OLD_DIR1
+        self.SITEDATA_OLD_DIR2  = SITEDATA_OLD_DIR2
         self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR                         # e.g. c/_annalist_site/d
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
         return

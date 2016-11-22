@@ -134,7 +134,7 @@ def am_updatesite(annroot, userhome, options):
     sitedata      = site.site_data_collection(test_exists=False)
     if sitedata is None:
         print("Initializing Annalist site metadata in %s (migrating to new layout)"%(sitebasedir))
-        site = Site.create_empty_site_data(
+        site = Site.create_site_metadata(
             sitebaseurl, sitebasedir,
             label="Annalist site (%s configuration)"%options.configuration, 
             description="Annalist %s site metadata and site-wide values."%options.configuration
@@ -143,26 +143,27 @@ def am_updatesite(annroot, userhome, options):
     site_data_src = os.path.join(annroot, "annalist/data/sitedata")  # @@TODO: more robust definition
     site_data_tgt, site_data_file = sitedata._dir_path()
     # --- Migrate old site data to new site directory
-    site_data_old = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR)
-    old_users     = os.path.join(site_data_old, layout.USER_DIR_PREV)
-    old_vocabs    = os.path.join(site_data_old, layout.VOCAB_DIR_PREV)
-    if os.path.isdir(old_users) or os.path.isdir(old_vocabs):
-        print("Copy Annalist old user and/or vocab data from %s"%site_data_old)
-        migrate_old_data(site_data_old, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
-        migrate_old_data(site_data_old, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
-    #@@
-    # if os.path.isdir(old_users) or os.path.isdir(old_vocabs):
-    #     print("Copy Annalist old user and/or vocab data from %s"%site_data_old)
-    #     for sdir in ("users", "vocabs"):
-    #         s     = os.path.join(site_data_old, sdir)
-    #         old_s = os.path.join(site_data_old, "old_"+sdir)
-    #         d     = os.path.join(site_data_tgt, sdir)
-    #         if os.path.isdir(s):
-    #             print("- %s +> %s (migrating)"%(sdir, d))
-    #             updatetree(s, d)
-    #             print("- %s >> %s (rename)"%(sdir, old_s))
-    #             os.rename(s, old_s)
-    #@@
+    #    _annalist_site/
+    site_data_old1 = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR1)
+    old_users1     = os.path.join(site_data_old1, layout.USER_DIR_PREV)
+    old_vocabs1     = os.path.join(site_data_old1, layout.VOCAB_DIR_PREV)
+    if os.path.isdir(old_users1) or os.path.isdir(old_vocabs1):
+        print("Copy Annalist old user and/or vocab data from %s"%site_data_old1)
+        migrate_old_data(site_data_old1, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
+        migrate_old_data(site_data_old1, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
+    #    c/_annalist_site/_annalist_collection/ - using new dir names
+    site_data_old2 = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR2)
+    old_users2     = os.path.join(site_data_old2, layout.USER_DIR)
+    old_vocabs2    = os.path.join(site_data_old2, layout.VOCAB_DIR)
+    if os.path.isdir(old_users2) or os.path.isdir(old_vocabs2):
+        print("Copy Annalist old user and/or vocab data from %s"%site_data_old2)
+        migrate_old_data(site_data_old2, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
+        migrate_old_data(site_data_old2, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
+    # --- Archive old site data so it's not visible next time
+    if os.path.isdir(site_data_old1):
+        archive_old_data(site_data_old1, "")
+    if os.path.isdir(site_data_old2):
+        archive_old_data(site_data_old2, "")
     # --- Copy latest site data to target directory
     print("Copy Annalist site data")
     print("from %s"%site_data_src)

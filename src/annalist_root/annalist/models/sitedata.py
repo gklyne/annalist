@@ -47,7 +47,7 @@ class SiteData(Collection):
 
         Returns the site data collection as an instance of the supplied SiteData class.
         """
-        log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
+        log.debug("SiteData.create_sitedata: entityid %s"%(layout.SITEDATA_ID))
         return cls.create(parent, layout.SITEDATA_ID, sitedata)
 
     @classmethod
@@ -64,7 +64,7 @@ class SiteData(Collection):
         with data oaded from the corresponding Annalist storage, or None if there is no
         such collection data.
         """
-        log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
+        log.debug("SiteData.load_sitedata: entityid %s"%(layout.SITEDATA_ID))
         d = cls.load(parent, layout.SITEDATA_ID)
         if test_exists:
             assert d, "Site data for %r not found"%(parent,)

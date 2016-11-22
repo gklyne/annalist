@@ -249,10 +249,9 @@ class Site(EntityRoot):
     # These methods are used by test_createsitedata and annalist-manager to initialize
     # or update Annalist site data.  Tests are run using data copied from sampledata/init
     # to sampledata/data, allowing for additional test fixture files to be included.
-
-    #@@TODO: rename as create_site_metadata ??
+    #
     @staticmethod
-    def create_empty_site_data(site_base_uri, site_base_dir, 
+    def create_site_metadata(site_base_uri, site_base_dir, 
         label=None, description=None):
         """
         Create new site metadata record for a new site, and 
@@ -267,7 +266,7 @@ class Site(EntityRoot):
         if description is None:
             description = "Annalist site metadata and site-wide values."
         annal_comment = (
-            "Initialized by annalist.models.site.create_empty_site_data at "+
+            "Initialized by annalist.models.site.create_site_metadata at "+
             datetime_now.isoformat(' ')
             )
         site = Site(site_base_uri, site_base_dir)
@@ -465,7 +464,7 @@ class Site(EntityRoot):
         Creates a README.md file in the site base directory, and creates a
         collection _annalist_site containing built-in types, views, etc.
         """
-        site = Site.create_empty_site_data(
+        site = Site.create_site_metadata(
             site_base_uri, site_base_dir, label=label, description=description
             )
         sitedata = site.site_data_collection()

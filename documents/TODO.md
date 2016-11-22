@@ -89,12 +89,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] investigate: maybe '_annalist_collection' should be a type?  '_coll'?  Probably not: type _coll is used to access site data about all collections.
     - [x] update layout definitions
     - [x] generate JSONLD context in /d/ only
-    - [ ] seek out any other references
+    - [x] seek out any other references
     - [x] test
     - [ ] new site migration
-        - [ ] move content of _annalist_site/_annalist_collection/ to _annalist_site//d/
+        - [ ] move content of _annalist_site/_annalist_collection/ to _annalist_site/d/
+            - handled by collection migration of "_analist site"
+            - check site data update logic - am_createsite.updatesite
+            - most site data is fully recreated on each update, via:
+                - am_createsite.am_updatesite
+                - Site.create_site_metadata
+                - etc.
+            - user and vocab entries are copied from previuous site data
+        - [ ] added logic to rename old site data to be clear it's no longer used
+        - [ ] New logic needs testing.
     - [ ] collection migration
-        - [ ] move content of /_annalist_collection/ to /d/
+        - [.] move content of /_annalist_collection/ to /d/
         - [ ] rename old enumeration types
         - [ ] collection data field definitions: update any enumeration type references
         - [ ] anything else?  Do search on demo system collection data
@@ -288,8 +297,13 @@ Notes for Future TODOs:
 - [ ] Implement at least one other identify provider (ORCID?)
     - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
         - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
+        - UPDATE: See: 
+        -   http://support.orcid.org/knowledgebase/articles/343182
+        -   http://support.orcid.org/knowledgebase/articles/343182-register-a-public-api-client-application
+        -   http://members.orcid.org/api/introduction-orcid-public-api
     - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
         - hard to find actual provider service other than Google
+    - [ ] https://aarc-project.eu
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
