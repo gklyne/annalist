@@ -84,15 +84,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - mostly done - just one test module updated.
         - note 'field_type' is also used in field descriptions to record key internal structural distinctions.
     - [x] re-test
-- [ ] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
+- [x] eliminate '_annalist_collection' subdirectory: just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectory
     - using /d/ for all data, including collection metadata, helps to ensure that relative references can work with http:// and file:// URLs (or access via Annalist and direct access to data).  Essentially, /d/ is the base URL for all collection data references.  But site data references won't work this way, so there is a distinction here between collection data and collection config metadata.
     - [x] investigate: maybe '_annalist_collection' should be a type?  '_coll'?  Probably not: type _coll is used to access site data about all collections.
     - [x] update layout definitions
     - [x] generate JSONLD context in /d/ only
     - [x] seek out any other references
     - [x] test
-    - [ ] new site migration
-        - [ ] move content of _annalist_site/_annalist_collection/ to _annalist_site/d/
+    - [x] new site migration
+        - [x] move content of _annalist_site/_annalist_collection/ to _annalist_site/d/
             - handled by collection migration of "_analist site"
             - check site data update logic - am_createsite.updatesite
             - most site data is fully recreated on each update, via:
@@ -100,14 +100,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - Site.create_site_metadata
                 - etc.
             - user and vocab entries are copied from previuous site data
-        - [ ] added logic to rename old site data to be clear it's no longer used
-        - [ ] New logic needs testing.
-    - [ ] collection migration
-        - [.] move content of /_annalist_collection/ to /d/
-        - [ ] rename old enumeration types
-        - [ ] collection data field definitions: update any enumeration type references
-        - [ ] anything else?  Do search on demo system collection data
-        - [ ] regenerate context
+        - [x] added logic to rename old site data to be clear it's no longer used
+        - [x] New logic needs testing.
+    - [x] collection migration
+        - [x] move content of /_annalist_collection/ to /d/
+            - this now done on collection load so that config is in right place for data migration
+        - [x] rename old enumeration types
+        - [x] collection data field definitions: update any enumeration type references
+            - N/A: only referenced from built-in views for _field, _list, etc.
+        - [x] anything else?  Do search on demo system collection data
+        - [x] regenerate context
+            - already done in collectiondata.migrate_coll_data
+        - [x] test: old CruisingLog collection migrates successfully, config dir and type names.
+        
 - [ ] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
 
 - [ ] See_also_r field duplicated in field options list?

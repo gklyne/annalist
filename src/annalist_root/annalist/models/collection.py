@@ -30,6 +30,7 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 from annalist                       import layout
+from annalist                       import message
 from annalist.exceptions            import Annalist_Error
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
@@ -42,7 +43,6 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
-# from annalist.models.collectiondata import migrate_coll_config_dirs
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
     is_render_type_id,
@@ -178,6 +178,45 @@ class Collection(Entity):
         return coll
 
     @classmethod
+    def _migrate_collection_config_dir(cls, parent, coll_id):
+        # If old collection layout is present, migrate to new layout using "d/
+        # Rename collection configuration directories and files individually so that 
+        # existing data directories are not touched.
+        parent_base_dir, parent_meta_file = parent._dir_path()
+        coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
+        coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
+        coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
+        # print("@@ Test migrate old configuration from %s"%(coll_conf_old_dir,))
+        if os.path.isdir(coll_conf_old_dir):
+            log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
+            # print("@@ Migrate old configuration from %s"%(coll_conf_old_dir,))
+            for old_name in os.listdir(coll_conf_old_dir):
+                old_path = os.path.join(coll_conf_old_dir, old_name)
+                if ( ( os.path.isdir(old_path) ) or
+                     ( os.path.isfile(old_path) and old_path.endswith(".jsonld") )
+                   ):
+                    log.info("- %s -> %s"%(old_name, coll_base_dir))
+                    new_path = os.path.join(coll_base_dir, old_name)
+                    # print ("@@ rename %s -> %s"%(old_path, new_path))
+                    try:
+                        os.rename(old_path, new_path)
+                    except Exception as e:
+                        msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, old_path, new_path, e)
+                        # print "@@ "+msg
+                        log.error("Collection._migrate_collection_config_dir: "+msg)
+                        assert False, msg
+            # Rename old config dir to avoid triggering this logic again
+            coll_conf_saved_dir = coll_conf_old_dir+".saved"
+            try:
+                os.rename(coll_conf_old_dir, coll_conf_saved_dir)
+            except Exception as e:
+                msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, coll_conf_old_dir, coll_conf_saved_dir, e)
+                # print "@@ "+msg
+                log.error("Collection._migrate_collection_config_dir: "+msg)
+                assert False, msg
+        return
+
+    @classmethod
     def load(cls, parent, coll_id, altscope=None):
         """
         Overload Entity.load with logic to set alternative parent details for 
@@ -194,6 +233,7 @@ class Collection(Entity):
         the corresponding Annalist storage, or None if there is no such entity.
         """
         # log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
+        cls._migrate_collection_config_dir(parent, coll_id)
         coll = super(Collection, cls).load(parent, coll_id, altscope=altscope)
         if coll is not None:
             cls._set_alt_parent_coll(parent, coll)

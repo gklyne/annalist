@@ -114,8 +114,8 @@ def am_help(options, progname):
             "\n"+
             "Runs annalist test suite using installed software\n"+
             "\n"+
-            "If 'testlabel' is specified, only the named test or test suite is run.\n"+
-            "Additionally, the full path name of the log file is displayed after the tests have run.\n"+
+            "If 'testlabel' is specified, only the named test or test suite is run, and\n"+
+            "the full path name of the log file is displayed after the tests have run.\n"+
             "\n"+
             "")
     elif options.args[0].startswith("init"):
@@ -297,10 +297,11 @@ def am_help(options, progname):
             "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
             "\n"+
             "This command applies migrations to data for all entities in\n"+
-            "collection 'coll_id', by reading and rewriting data for each entity.\n"+
-            "The migrations applied are defined by supertypes and fiekld aliases\n"+
-            "defined for types used by the collection, along with any software version\mn"+
-            "migrations that may be applicable.\n"+
+            "collection 'coll_id', by updating older forms of collection\n"+
+            "configuration data, and reading and rewriting data for each entity.\n"+
+            "The entity migrations applied are defined by supertypes and field\n"+
+            "aliases defined for types used by the collection, along with any\n"+
+            "Annalist software version data migrations that may be applicable.\n"+
             "\n"+
             config_options_help+
             "\n"+

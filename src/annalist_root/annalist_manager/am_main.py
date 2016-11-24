@@ -95,7 +95,9 @@ def parseCommandArgs(argv):
                         action="store_true", 
                         dest="debug", 
                         default=False,
-                        help="Run with full debug output enabled")
+                        help="Run with full debug output enabled.  "+
+                             "Also creates log file 'annalist-manager.log' in the working directory"
+                        )
     parser.add_argument("command", metavar="COMMAND",
                         nargs=None,
                         help="sub-command, one of the options listed below."
@@ -179,7 +181,8 @@ def runCommand(userhome, userconfig, argv):
     """
     options = parseCommandArgs(argv[1:])
     if options and options.debug:
-        logging.basicConfig(level=logging.DEBUG)
+        # This doesn't work as expected - some kind of interference with Django log settings?
+        logging.basicConfig(level=logging.DEBUG, filename="annalist-manager.log", filemode="w")
     else:
         logging.basicConfig(level=logging.INFO)
     # log.debug("runCommand: configbase %s, filebase %s, argv %s"%(configbase, filebase, repr(argv)))
