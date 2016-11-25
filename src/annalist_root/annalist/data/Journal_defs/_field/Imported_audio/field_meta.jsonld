@@ -1,6 +1,6 @@
 {
-  "rdfs:label": "Field referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
-  "rdfs:comment": "Imported audio clip",
+  "rdfs:label": "Imported audio clip",
+  "rdfs:comment": "Field referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(URL of audio to import)",

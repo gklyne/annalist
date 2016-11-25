@@ -681,15 +681,24 @@ class Collection(Entity):
                     # For diagnostics to locate incompatible use...
                     fcontext = {'fid': field_id}
                 if puri in property_contexts:
-                    pcontext = property_contexts[puri]
-                    if ( ( not fcontext ) or
-                         ( pcontext.get("@type", None)      != fcontext.get("@type", None) ) or
-                         ( pcontext.get("@container", None) != fcontext.get("@container", None) ) ):
-                        msg = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
+                    pcontext    = property_contexts[puri]
+                    p_type      = pcontext.get("@type", None)
+                    p_container = pcontext.get("@container", None)
+                    f_type      = fcontext.get("@type", None)
+                    f_container = fcontext.get("@container", None)
+                    if ( ( p_type      != f_type      ) or
+                         ( p_container != f_container ) ):
+                        msg  = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
+                        # msgp = "pcontext @type %s, @container %s"%(p_type, p_container)
+                        # msgf = "fcontext @type %s, @container %s"%(f_type, f_container)
                         log.warning(msg)
                         # print "@@ "+msg
+                        # print "@@ pcontext @type %s, @container %s"%(p_type, p_container)
+                        # print "@@ fcontext @type %s, @container %s"%(f_type, f_container)
                         property_contexts[puri]['err'] = msg
                         errs.append(msg)
+                        # errs.append(msgp)
+                        # errs.append(msgf)
                 elif ( fcontext and
                        ( uri_parts[0] in property_contexts ) or         # Prefix defined vocab?
                        ( uri_parts[0] in ["http", "https", "file"] ) ): # Full URI?

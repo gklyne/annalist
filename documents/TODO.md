@@ -72,7 +72,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] remove special case logic in entitytypeinfo
         - [x] Need manual test of BibliographyData.
         - [x] Abandon old BibliographyData on demo system.
-    - [ ] update help text
+    - [x] update help text
         - [x] update various references found in help text
         - [x] check refaudio, refimage links (using $COLL to access lists)
         - [x] check Annalist_schema
@@ -112,20 +112,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] regenerate context
             - already done in collectiondata.migrate_coll_data
         - [x] test: old CruisingLog collection migrates successfully, config dir and type names.
-        
-- [ ] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
-
-- [ ] See_also_r field duplicated in field options list?
-    - Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
-        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
-            - RDF_schema_defs/_view/Class
-            - _view/Vocab_view
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
-- [ ] Access to page link without continuation (view only)?
+- [x] --force option for `annalist-manager installcoll`
+- [x] See_also_r field duplicated in field options list?
+    - [x] check errors in context file
+        - Fix so far is to ensure Journal_defs uses property "@id" in group, as does Entity def
 - [ ] $SITE, $COLL symbols should not include host value (like $BASE)
-- [ ] --force option for `annalist-manager installcoll`
+- [ ] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
+    - [ ] View is basically default display plus URI
+    - [ ] List is like default list all (with types), but select on type URI annal:Enum
+    - [ ] Update site data tests
 
+(release 0.1.34)
+
+- [ ] Access to page link without continuation (view only)?
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions (could be a data bridge?)
@@ -145,7 +144,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode) - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [ ] *delete views: rationalize into single view?
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
@@ -158,7 +158,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".  Also "Slug"?
 - [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-    - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and foce use of HTTPS.
+    - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
     - [ ] Shared/personal deployment should generate a new secret key in settings
@@ -185,6 +185,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
+- [ ] See_also_r field duplicated in field options list?
+    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
+        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
+            - RDF_schema_defs/_view/Class
+            - _view/Vocab_view
+        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
+        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 
 Data collection definitions:
 

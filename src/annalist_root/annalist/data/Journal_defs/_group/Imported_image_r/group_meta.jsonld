@@ -7,7 +7,7 @@
   "annal:uri": "annal:group/_initial_values",
   "annal:group_fields": [
     {
-      "annal:property_uri": "coll:imported_image",
+      "annal:property_uri": "",
       "annal:field_placement": "small:0,12",
       "annal:field_id": "_field/Imported_image_m"
     }

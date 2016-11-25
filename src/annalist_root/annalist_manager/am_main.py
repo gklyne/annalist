@@ -90,7 +90,7 @@ def parseCommandArgs(argv):
     parser.add_argument("-f", "--force",
                         action='store_true',
                         dest="force",
-                        help="Force overwrite of existing site data.")
+                        help="Force overwrite of existing site data or collection.")
     parser.add_argument("--debug",
                         action="store_true", 
                         dest="debug", 
