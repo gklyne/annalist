@@ -65,27 +65,29 @@ COLL_BASE_REF           = COLL_BASE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE
 COLL_PROV_REF           = COLL_BASE_REF + COLL_PROV_FILE
 META_COLL_REF           = "../"
-META_COLL_BASE_REF      = "../d/"                           #@@ TODO: simplify or eliminate
+META_COLL_BASE_REF      = "./"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
 
 SITE_TYPEID             = "_site"
 SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
-BIBDATA_ID              = "Bibliography_defs"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"
 SITEDATA_OLD_DIR2       = SITEDATA_DIR+"/"+COLL_ROOT_CONF_OLD_DIR
 SITE_META_PATH          = ""
-SITE_META_FILE          = "@@unused@@ site_meta.jsonld"
-META_SITE_REF           = "@@unused@@ ./"
+SITE_META_FILE          = "site_meta.jsonld"    # Currently not used except to store description data
+META_SITE_REF           = "./"
 SITE_COLL_VIEW          = "c/%(id)s/"
 SITE_COLL_PATH          = "c/%(id)s"
 SITE_CONTEXT_FILE       = "site_context.jsonld"
+SITE_DATABASE_FILE      = "db.sqlite3"
 
 SITEDATA_BASE_DIR       = SITEDATA_DIR + "/" + COLL_BASE_DIR        # used in tests
 SITEDATA_META_FILE      = COLL_META_FILE                            # used in views
 SITEDATA_PROV_FILE      = COLL_PROV_FILE                            # used in views
 SITEDATA_CONTEXT_PATH   = "./"                                      # used in models
+
+BIBDATA_ID              = "Bibliography_defs"                       # used for testing
 
 # -------------------------
 # Entities of various types
@@ -216,7 +218,6 @@ COLL_TYPEDATA_PATH      = "d/%(id)s"                        # dir type data rela
 
 # Entity data records (these contain user data, organized by record type)
 # Entity data layout information...
-COLL_ENTITYDATA_PATH    = "d/"
 TYPEDATA_ENTITY_VIEW    = "%(id)s/"
 TYPEDATA_ENTITY_PATH    = "%(id)s"
 COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
@@ -295,6 +296,8 @@ class Layout(object):
         self.SITEDATA_OLD_DIR2  = SITEDATA_OLD_DIR2
         self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR                         # e.g. c/_annalist_site/d
         self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
+        self.SITE_META_FILE     = SITE_META_FILE
+        self.SITE_DATABASE_FILE = SITE_DATABASE_FILE
         return
 
 # End.

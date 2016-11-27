@@ -116,7 +116,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] See_also_r field duplicated in field options list?
     - [x] check errors in context file
         - Fix so far is to ensure Journal_defs uses property "@id" in group, as does Entity def
-- [ ] $SITE, $COLL symbols should not include host value (like $BASE)
+- [x] $SITE, $COLL symbols should not include host value (like $BASE)
+    - Values set up in views.displayinfo.context_data
+- [x] Problems with logic to archive old site data (am_createsite and maybe elsewhere)
+    - [x] update setting to move sqlite database to root of site
+    - [x] Migration logic in site update to move sqlite database 'db.sqlite3' to site root
+    - [x] Also migrate old `site_meta.jsonld' in root of site (see am_createsite.py:163)
+    - [x] Then rename old '_annalist_site/' directory - eventually, these archived directories can be removed.
+    - [x] Test new software install and site update
 - [ ] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
     - [ ] View is basically default display plus URI
     - [ ] List is like default list all (with types), but select on type URI annal:Enum

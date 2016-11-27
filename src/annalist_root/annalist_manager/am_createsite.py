@@ -144,9 +144,19 @@ def am_updatesite(annroot, userhome, options):
     site_data_tgt, site_data_file = sitedata._dir_path()
     # --- Migrate old site data to new site directory
     #    _annalist_site/
-    site_data_old1 = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR1)
-    old_users1     = os.path.join(site_data_old1, layout.USER_DIR_PREV)
-    old_vocabs1     = os.path.join(site_data_old1, layout.VOCAB_DIR_PREV)
+    site_data_old1      = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR1)
+    old_site_metadata   = os.path.join(site_data_old1, site_layout.SITE_META_FILE)
+    old_site_database   = os.path.join(site_data_old1, site_layout.SITE_DATABASE_FILE)
+    old_users1          = os.path.join(site_data_old1, layout.USER_DIR_PREV)
+    old_vocabs1         = os.path.join(site_data_old1, layout.VOCAB_DIR_PREV)
+    if os.path.isfile(old_site_metadata):
+        print("Move old site metadata: %s -> %s"%(old_site_metadata, sitebasedir))
+        new_site_metadata   = os.path.join(sitebasedir, site_layout.SITE_META_FILE)
+        os.rename(old_site_metadata, new_site_metadata)
+    if os.path.isfile(old_site_database):
+        print("Move old site database: %s -> %s"%(old_site_database, sitebasedir))
+        new_site_database   = os.path.join(sitebasedir, site_layout.SITE_DATABASE_FILE)
+        os.rename(old_site_database, new_site_database)
     if os.path.isdir(old_users1) or os.path.isdir(old_vocabs1):
         print("Copy Annalist old user and/or vocab data from %s"%site_data_old1)
         migrate_old_data(site_data_old1, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
@@ -160,7 +170,7 @@ def am_updatesite(annroot, userhome, options):
         migrate_old_data(site_data_old2, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
         migrate_old_data(site_data_old2, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
     # --- Archive old site data so it's not visible next time
-    if os.path.isdir(site_data_old1):
+    if os.path.isdir(site_data_old1):  
         archive_old_data(site_data_old1, "")
     if os.path.isdir(site_data_old2):
         archive_old_data(site_data_old2, "")
@@ -175,7 +185,7 @@ def am_updatesite(annroot, userhome, options):
         Site.update_site_data_dir(sitedata, sdir, site_data_src)
     for sdir in layout.COLL_DIRS_PREV:
         remove_old_data(site_data_tgt, sdir)
-    print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
+    print("Generating context for site data")
     sitedata.generate_coll_jsonld_context()
     # --- Copy provider data to site config provider directory
     provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
@@ -191,26 +201,25 @@ def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):
     """
     Migrate data from a single old-site directory to the new site
     """
-    old_dir        = os.path.join(old_site_dir, old_data_dir)
-    old_dir_backup = os.path.join(old_site_dir, "backup_"+old_data_dir)
-    new_dir        = os.path.join(new_site_dir, new_data_dir)
+    old_dir = os.path.join(old_site_dir, old_data_dir)
+    new_dir = os.path.join(new_site_dir, new_data_dir)
     if os.path.isdir(old_dir):
         print("- %s +> %s (migrating)"%(old_dir, new_dir))
         updatetree(old_dir, new_dir)
         archive_old_data(old_site_dir, old_data_dir)
-        # print("- %s >> %s (rename)"%(old_dir, old_dir_backup))
-        # os.rename(old_dir, old_dir_backup)
     return
 
 def archive_old_data(site_dir, data_dir):
     """
     Archive old data no longer required.
     """
+    # print("@@ site_dir %s, data_dir %s"%(site_dir, data_dir))
     old_dir     = os.path.join(site_dir, data_dir)
-    arc_dir     = "old_"+data_dir
-    old_dir_arc = os.path.join(site_dir, arc_dir)
     if os.path.isdir(old_dir):
-        print("- %s >> %s (rename)"%(old_dir, arc_dir))
+        if old_dir.endswith("/"):
+            old_dir = old_dir[:-1]
+        old_dir_arc = old_dir+".saved"
+        print("- %s >> %s (rename)"%(old_dir, old_dir_arc))
         os.rename(old_dir, old_dir_arc)
     return
 
