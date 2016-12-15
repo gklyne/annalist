@@ -128,6 +128,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] View is basically default display plus URI
     - [ ] List is like default list all (with types), but select on type URI annal:Enum
     - [ ] Update site data tests
+- [x] Data migration: enumeration labels not available (e.g. for render types, list types)
+    - [x] cf. http://localhost:8000/annalist/c/Performances/d/_field/Place/
+    - [x] cf. http://localhost:8000/annalist/c/Performances/d/_list/Default_list/
+    - Affected types: _field, _list, 
+        - Entity/Composition (looks like an error)
+    - Enum types to migrate:
+        - [x] list_type (_list)
+        - [x] render_type, value_mode, NOT value_type (_field)
 
 (release 0.1.34)
 

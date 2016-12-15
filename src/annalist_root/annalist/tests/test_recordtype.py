@@ -976,7 +976,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
-            , 'annal:display_type': "List"
+            , 'annal:display_type': "_enum_list_type/List"
             , 'annal:list_entity_selector': "'test:%(type_id)s' in [@type]"%common_vals
             })
         self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)

@@ -20,6 +20,7 @@ from annalist                   import layout
 from annalist.identifiers       import ANNAL
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
+from annalist.util              import split_type_entity_id, extract_entity_id, make_type_entity_id
 
 class RecordField(EntityData):
 
@@ -48,6 +49,16 @@ class RecordField(EntityData):
         """
         return None
 
+    def _map_entity_field_enum_val(self, entitydata, key, type_id, old_enum_val, new_enum_val):
+        """
+        Map enumerated value of specified type
+        """
+        if key in entitydata:
+            type_id_here, enum_val_here = split_type_entity_id(entitydata[key])
+            if type_id_here == type_id and enum_val_here == old_enum_val:
+                entitydata[key] = make_type_entity_id(type_id, new_enum_val)
+        return entitydata
+
     def _migrate_values(self, entitydata):
         """
         Field description entity format migration method.
@@ -68,13 +79,27 @@ class RecordField(EntityData):
             , (ANNAL.CURIE.field_target_type,   ANNAL.CURIE.field_value_type     )
             ])
         entitydata = self._migrate_values_map_field_names(migration_map, entitydata)
+        # Fix up enumerated values to use new enumeratiomn type names
+        field_enum_types = (
+            [ (ANNAL.CURIE.field_render_type, "_enum_render_type")
+            , (ANNAL.CURIE.field_value_mode,  "_enum_value_mode")
+            ])
+        for fkey, ftype in field_enum_types:
+            if fkey in entitydata and entitydata[fkey]:
+                entitydata[fkey] = make_type_entity_id(
+                    ftype, extract_entity_id(entitydata[fkey])
+                    )
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
-            entitydata[ANNAL.CURIE.field_render_type] = "Text"
-        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroup":
-            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq"
-        elif entitydata[ANNAL.CURIE.field_render_type] == "RepeatGroupRow":
-            entitydata[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
+            entitydata[ANNAL.CURIE.field_render_type] = "_enum_render_type/Text"
+        entitydata = self._map_entity_field_enum_val(
+            entitydata, ANNAL.CURIE.field_render_type, "_enum_render_type", 
+            "RepeatGroup", "Group_Seq"
+            )
+        entitydata = self._map_entity_field_enum_val(
+            entitydata, ANNAL.CURIE.field_render_type, "_enum_render_type", 
+            "RepeatGroupRow", "Group_Seq_Row"
+            )
         # Calculate mode from other fields if not defined
         val_render = entitydata[ANNAL.CURIE.field_render_type]
         ref_type  = entitydata.get(ANNAL.CURIE.field_ref_type, None)

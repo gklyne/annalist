@@ -90,7 +90,7 @@ def extract_entity_id(eid):
 
 def fill_type_entity_id(eid, default_type_id=None):
     """
-    Assemble a type+entity comopisite identifier based on a supplied id string.
+    Assemble a type+entity composite identifier based on a supplied id string.
     If the string does not already include a type_id value, the supplied default
     is used.
     """

@@ -29,8 +29,7 @@ from annalist.identifiers       import ANNAL
 from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
-from annalist.util              import extract_entity_id
-
+from annalist.util              import extract_entity_id, make_type_entity_id
 
 class RecordList(EntityData):
 
@@ -73,6 +72,10 @@ class RecordList(EntityData):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
+        for fkey, ftype in [(ANNAL.CURIE.display_type, "_enum_list_type")]:
+            entitydata[fkey] = make_type_entity_id(
+                ftype, extract_entity_id(entitydata[fkey])
+                )
         for f in entitydata[ANNAL.CURIE.list_fields]:
             field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
             if field_id == "Field_render":

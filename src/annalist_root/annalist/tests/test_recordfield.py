@@ -1240,8 +1240,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
-            , "annal:field_render_type":    "Text"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_value_type":     "annal:Text"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:property_uri":         tgt_field_uri
@@ -1263,8 +1263,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 message.REPEAT_FIELD_LABEL%common_vals['field_label']
-            , "annal:field_render_type":    "Group_Seq_Row"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         rpt_field_uri
@@ -1325,8 +1325,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
-            , "annal:field_render_type":    "Text"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         tgt_field_uri
@@ -1347,8 +1347,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals['field_label']
-            , "annal:field_render_type":    "RefMultifield"
-            , "annal:field_value_mode":     "Value_entity"
+            , "annal:field_render_type":    "_enum_render_type/RefMultifield"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         ref_field_uri
