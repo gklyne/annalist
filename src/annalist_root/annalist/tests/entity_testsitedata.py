@@ -128,6 +128,7 @@ site_lists = (
     [ FieldChoice("_list/_initial_values")
     , FieldChoice("_list/Default_list",               label="List entities")
     , FieldChoice("_list/Default_list_all",           label="List entities with type information")
+    , FieldChoice("_list/Enum_list_all",              label="List enumeration values and types")
     , FieldChoice("_list/Field_group_list",           label="Field groups")
     , FieldChoice("_list/Field_list",                 label="Field definitions")
     , FieldChoice("_list/List_list",                  label="List definitions")
@@ -212,15 +213,16 @@ def get_site_list_types():
 
 site_views = (
     [ FieldChoice("_view/_initial_values")
-    , FieldChoice("_view/Collection_view",  label="Collection metadata"  )
-    , FieldChoice("_view/Default_view",     label="Default record view"     )
-    , FieldChoice("_view/Field_group_view", label="Field group definition"        )
-    , FieldChoice("_view/Field_view",       label="Field definition"  )
-    , FieldChoice("_view/List_view",        label="List definition"   )
-    , FieldChoice("_view/Type_view",        label="Type definition"   )
-    , FieldChoice("_view/User_view",        label="User permissions"   )
-    , FieldChoice("_view/View_view",        label="View definition"   )
-    , FieldChoice("_view/Vocab_view",       label="Vocabulary namespace")
+    , FieldChoice("_view/Collection_view",  label="Collection metadata"    )
+    , FieldChoice("_view/Default_view",     label="Default record view"    )
+    , FieldChoice("_view/Enum_view",        label="Enumerated value view"  )
+    , FieldChoice("_view/Field_group_view", label="Field group definition" )
+    , FieldChoice("_view/Field_view",       label="Field definition"       )
+    , FieldChoice("_view/List_view",        label="List definition"        )
+    , FieldChoice("_view/Type_view",        label="Type definition"        )
+    , FieldChoice("_view/User_view",        label="User permissions"       )
+    , FieldChoice("_view/View_view",        label="View definition"        )
+    , FieldChoice("_view/Vocab_view",       label="Vocabulary namespace"   )
     ])
 
 def get_site_views_sorted():
@@ -296,6 +298,11 @@ site_default_entity_fields = (
     [ fc 
       for fc in site_defined_entity_fields 
       if fc.id != "_field/Entity_see_also" 
+    ])
+
+site_enum_fields = (
+    [ FieldChoice("_field/_initial_values")
+    , FieldChoice("_field/Enum_uri",                   label="Value URI"           )
     ])
 
 site_coll_fields = (
@@ -519,6 +526,7 @@ site_fields = (
     # site_bibentry_fields[1:] +
     site_coll_fields[1:] +
     site_defined_entity_fields[1:] +
+    site_enum_fields[1:] +
     site_field_fields[1:] +
     site_defined_group_fields[1:] +
     site_defined_list_fields[1:] +
