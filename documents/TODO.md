@@ -11,7 +11,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Update tutorial to cover inheritance of definitions
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
-- [ ] New demo screencasts
+- [ ] New demo screencast(s)
 
 
 # Version 0.1.33, towards 0.1.34
@@ -158,6 +158,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] "Type definition" help text is a little conbfusing (cf 'Entity types ...').
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
@@ -166,6 +167,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
 - [ ] look into entity cacheing (esp. RecordType) for performance improvement
 - [ ] update Django version used to latest version designated for long term support (1.8?)
+- [ ] update pip to latest version in python environment (for continued testing)
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
