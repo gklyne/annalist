@@ -1,0 +1,25 @@
+{ "@id":                        "_list/Enum_list_all"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Enum_list_all"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/Enum_list_all"
+, "rdfs:label":                 "List enumeration values and types"
+, "rdfs:comment":               "# List of enumerated values with enumeration type information\r\n\r\nThis page lists enumerated values in a collection along with their enumeration types."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/Default_view"
+, "annal:default_type":         "_type/Default_type"
+, "annal:list_entity_selector": "\"annal:Enum\" in [@type]"
+, "annal:record_type":          "annal:Enum"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_type"
+    , "annal:field_placement":      "small:3,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:6,6"
+    }
+  ]
+}

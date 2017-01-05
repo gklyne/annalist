@@ -75,7 +75,7 @@ def am_createsite(annroot, userhome, options):
             return am_errors.AM_EXISTS
     # --- Initialize empty site data in target directory
     print("Initializing Annalist site in %s"%(sitebasedir))
-    site = Site.create_empty_site_data(
+    site = Site.create_site_metadata(
         sitebaseurl, sitebasedir,
         label="Annalist site (%s configuration)"%options.configuration, 
         description="Annalist %s site metadata and site-wide values."%options.configuration
@@ -89,7 +89,12 @@ def am_createsite(annroot, userhome, options):
     for sdir in layout.COLL_DIRS:
         print("- %s -> %s"%(sdir, site_data_tgt))
         Site.replace_site_data_dir(sitedata, sdir, site_data_src)
-    print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
+    # @@TODO: filename logic copied from EntityRoot and Collection - create separate method for getting this
+    (sitedata_dir, sitedata_file) = sitedata._dir_path()
+    context_dir  = os.path.join(sitedata_dir, layout.META_COLL_BASE_REF)
+    context_file = os.path.join(context_dir, layout.COLL_CONTEXT_FILE)
+    #@@
+    print("Generating %s"%(context_file))
     sitedata.generate_coll_jsonld_context()
     # --- Copy provider data to site config provider directory
     provider_dir_src = os.path.join(annroot, "annalist/data/identity_providers")

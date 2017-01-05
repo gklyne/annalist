@@ -1,5 +1,5 @@
 { "@id":                "_type/_enum_value_type"
-, "@type":              ["annal:Enum", "annal:Type"]
+, "@type":              ["annal:Type_enum", "annal:Type"]
 , "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
 , "annal:id":           "_enum_value_type"
 , "annal:type_id":      "_type"

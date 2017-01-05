@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.32; this release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.
+Current status: public prototype release 0.1.34; this release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.
 
 
 # V1.0 release
@@ -66,7 +66,7 @@ Alternative form of list view, e.g. for image galeries.
 - Authentication mechanisms
   - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
 - OAuth2 dynamic registration - https://tools.ietf.org/html/rfc7591 - if IDPs support it.
-- EUdat?
+- EUdat? (Also see notes from discussion at crossref with Matthew Dovey - cf The European Open Science Cloud for Research - EOSC - apparently this subsumes id aspects of EUDat.)
 
 
 ## Support multiple entity providers
@@ -89,7 +89,7 @@ Notes:
 
 ## Provenance and journalling
 
-1. Capture provenance informnation as data records are updated (authenticated user, date+time, records view used, etc.)
+1. Capture provenance information as data records are updated (authenticated user, date+time, records view used, etc.)
 2. Support provenance pingbacks, e.g. for discovery of downstream use.
     - Cf. [prov-aq/#provenance-pingback](http://www.w3.org/TR/prov-aq/#provenance-pingback)
 
