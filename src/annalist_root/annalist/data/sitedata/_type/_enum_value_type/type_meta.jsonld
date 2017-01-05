@@ -1,0 +1,11 @@
+{ "@id":                "_type/_enum_value_type"
+, "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_enum_value_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_value_type"
+, "rdfs:label":         "Field value type"
+, "rdfs:comment":       "# Field value type\r\n\r\nUsed in field descriptions to describe the ultimate type of the field value referenced by a field, which may be different from the stored reference value."
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

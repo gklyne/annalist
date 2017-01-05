@@ -1,0 +1,28 @@
+{ "@id":                "_view/Enum_view"
+, "@type":              ["annal:View"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":      "_view"
+, "annal:id":           "Enum_view"
+, "annal:uri":          "annal:display/Enum_view"
+, "rdfs:label":         "Enumerated value view"
+, "rdfs:comment":       "# Enumerated value view\r\n\r\nView of enumerated value: incudes enumeration type and enumerated value URI.\r\n\r\nThis view defines a set of fields that are associated with a value of some enum,eration type: a value Id, an enumeration type, an enumeration value URI, a short label and a comment that can be used to provide an extended description.  The comment may be used to populate interactive help information.\r\n\r\nThis view can also be used to change the enumeration type of a value.\r\n\r\n## Fields:\r\n\r\n[Id]($BASE:_field/Entity_id/): Entity identifier\r\n\r\n[Type]($BASE:_field/Entity_type/): Reference to type of this record.\r\n\r\n[Value URI]($BASE:_field/Enum_URI/):\r\nA URI that identifies this particular enumerated value.\r\n\r\n[Label]($BASE:_field/Entity_label/): short label used to describe this record.\r\n\r\n[Comment]($BASE:_field/Entity_comment/): longer text description of this record.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n"
+, "annal:record_type":  ""
+, "annal:open_view":    true
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Entity_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Entity_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Enum_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

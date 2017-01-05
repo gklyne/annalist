@@ -817,10 +817,10 @@ div.row div.new-button button
     background: -moz-linear-gradient(top,  #ffffff 0%, #c9c9c9 100%, #f9f9f9 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#c9c9c9), color-stop(100%,#f9f9f9)); /* Chrome,Safari4+ */
     background: -webkit-linear-gradient(top,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* IE10+ */
+    /* background: -o-linear-gradient(top,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* Opera 11.10+ */
+    /* background: -ms-linear-gradient(top,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* IE10+ */
     background: linear-gradient(to bottom,  #ffffff 0%,#c9c9c9 100%,#f9f9f9 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+    /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
 }
 
 div.row div.new-button button span.select-edit-button-text
@@ -899,9 +899,10 @@ div.row.table div.tbody div.columns
     ------------------------------------------------------------------------- */
 
 div.help {
+    /* display:        block; */
     margin-top:     -0.5rem;
-    padding-left:   1.0rem;
-    padding-right:  1.0rem;
+    padding-left:   0.5rem;
+    padding-right:  0.5rem;
 }
 
 div.help > h1 {

@@ -21,7 +21,7 @@ command_summary_help = ("\n"+
     "Commands:\n"+
     "\n"+
     "  %(prog)s help [command]\n"+
-    "  %(prog)s runtests\n"+
+    "  %(prog)s runtests [testlabel]\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
     #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
@@ -32,7 +32,7 @@ command_summary_help = ("\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
     "  %(prog)s createsitedata [ CONFIG ]\n"+
     "  %(prog)s updatesitedata [ CONFIG ]\n"+
-    "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
+    "  %(prog)s installcollection coll_id [--force] [ CONFIG ]\n"+
     "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
@@ -110,9 +110,12 @@ def am_help(options, progname):
             "")
     elif options.args[0].startswith("runt"):
         help_text = ("\n"+
-            "  %(prog)s runtests\n"+
+            "  %(prog)s runtests [testlabel]\n"+
             "\n"+
             "Runs annalist test suite using installed software\n"+
+            "\n"+
+            "If 'testlabel' is specified, only the named test or test suite is run, and\n"+
+            "the full path name of the log file is displayed after the tests have run.\n"+
             "\n"+
             "")
     elif options.args[0].startswith("init"):
@@ -254,9 +257,12 @@ def am_help(options, progname):
             "")
     elif options.args[0].startswith("installc"):
         help_text = ("\n"+
-            "  %(prog)s installcollection coll_id [ CONFIG ]\n"+
+            "  %(prog)s installcollection coll_id [--force] [ CONFIG ]\n"+
             "\n"+
             "Install collection 'coll_id' from site data included in software distribution.\n"+
+            "\n"+
+            "If the collection already exists, it will not be overwritten unless\n"+
+            "the '--force' option is specified\n"+
             "\n"+
             "Annalist software ships with a number of predefined collections that are part of\n"+
             "the annalist software installation.  These collections can be used as starting\n"+
@@ -294,10 +300,11 @@ def am_help(options, progname):
             "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
             "\n"+
             "This command applies migrations to data for all entities in\n"+
-            "collection 'coll_id', by reading and rewriting data for each entity.\n"+
-            "The migrations applied are defined by supertypes and fiekld aliases\n"+
-            "defined for types used by the collection, along with any software version\mn"+
-            "migrations that may be applicable.\n"+
+            "collection 'coll_id', by updating older forms of collection\n"+
+            "configuration data, and reading and rewriting data for each entity.\n"+
+            "The entity migrations applied are defined by supertypes and field\n"+
+            "aliases defined for types used by the collection, along with any\n"+
+            "Annalist software version data migrations that may be applicable.\n"+
             "\n"+
             config_options_help+
             "\n"+

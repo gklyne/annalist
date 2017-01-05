@@ -30,7 +30,7 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 This release provides enhancements and bug fixes for login, list view selection, formatted (Markdown) text display and online help text, and JSON-LD generation. It also implements internal structural and data layout changes to the software, and enhancements to data migration support.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/
+https://groups.google.com/d/msg/annalist-discuss/nkCLssp37e8/3Pfj8QI9BAAJ
 
 See also: 
 

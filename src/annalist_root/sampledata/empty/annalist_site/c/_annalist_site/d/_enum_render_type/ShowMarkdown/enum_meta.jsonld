@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/ShowMarkdown"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "ShowMarkdown"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Display Markdown rich text"
+, "rdfs:comment":       "# Display Markdown rich text\r\n\r\nDisplay-only Markdown rich text (no input).\r\n\r\nThis differs from the [Markdown]($BASE:_enum_render_type/Markdown/) render type in that the formatted text displayed in edit mode, and cannot be modified on the displayed form.\r\n\r\nThe underlying markdown text is subject to the same substitutions as the [Markdown]($BASE:_enum_render_type/Markdown/) render type."
+, "annal:uri":          "annal:Enum_render_type/ShowMarkdown"
+}

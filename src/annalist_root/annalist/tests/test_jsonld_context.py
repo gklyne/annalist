@@ -199,13 +199,8 @@ class JsonldContextTest(AnnalistTestCase):
         self.testsite    = init_annalist_test_site()
         self.testcoll    = init_annalist_test_coll()
         self.sitebasedir = TestBaseDir
-        self.collbasedir = os.path.join(self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_META_DIR)
-        self.enumbasedir = os.path.join(self.collbasedir, layout.ENUM_DIR)
+        self.collbasedir = os.path.join(self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR)
         self.collbaseurl = "file://" + self.collbasedir + "/"
-        self.enumbaseurl = "file://" + self.enumbasedir + "/"
-        # print "**** sitebasedir "+self.sitebasedir
-        # print "**** collbasedir "+self.collbasedir
-        # print "**** enumbasedir "+self.enumbasedir
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -315,7 +310,7 @@ class JsonldContextTest(AnnalistTestCase):
         g = Graph()
         s = self.testsite.site_data_stream()
         # b = self.testsite.get_url()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_META_DIR) + "/"
+        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_BASE_DIR) + "/"
         # print "***** b: "+repr(b)
         # print "***** s: "+repr(s)
         result = g.parse(source=s, publicID=b, format="json-ld")
@@ -556,7 +551,7 @@ class JsonldContextTest(AnnalistTestCase):
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
-        Enum_list_type = RecordEnumFactory('Enum_list_type', 'Enum_list_type')
+        Enum_list_type = RecordEnumFactory(layout.ENUM_LIST_TYPE_ID, layout.ENUM_LIST_TYPE_ID)
         list_type_list = Enum_list_type.load(
             self.testcoll, "Grid", altscope="all"
             )
@@ -564,7 +559,7 @@ class JsonldContextTest(AnnalistTestCase):
         g = Graph()
         s = list_type_list._read_stream()
         b = urlparse.urljoin(
-                self.enumbaseurl,
+                self.collbaseurl,
                 layout.COLL_BASE_ENUM_REF%
                     { 'type_id': list_type_list.get_type_id()
                     , 'id': list_type_list.get_id() 
@@ -585,7 +580,7 @@ class JsonldContextTest(AnnalistTestCase):
               os.path.join(
                 TestBaseDir, 
                 layout.SITEDATA_DIR,        # site-wide data collection
-                layout.COLL_META_DIR,       # collection metadata directory
+                layout.COLL_BASE_DIR,       # collection base directory
                 layout.COLL_BASE_ENUM_REF%{ 'type_id': list_type_list.get_type_id(), 'id': list_type_list.get_id() }
                 )
             )

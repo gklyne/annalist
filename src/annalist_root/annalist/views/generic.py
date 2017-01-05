@@ -338,7 +338,7 @@ class AnnalistGenericView(ContentNegotiationView):
             log.warning("".join(traceback.format_stack()))
             return self.error(self.error403values(scope=scope))
         # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permission]))
-        # user_perms is an AnnalistrUser object
+        # user_perms is an AnnalistUser object
         coll_id = collection.get_id() if collection else "(No coll)"
         if scope not in user_perms[ANNAL.CURIE.user_permission]:
             if user_id == "_unknown_user_perms":

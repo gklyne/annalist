@@ -27,6 +27,7 @@ from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
+from annalist.models.entityfinder       import EntityFinder
 
 from annalist.views.uri_builder             import uri_with_params
 from annalist.views.recordviewdelete        import RecordViewDeleteConfirmedView
@@ -320,6 +321,29 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['fields'][5]['field_value'],        expect_field_data)
         self.assertEqual(r.context['fields'][5]['options'],            self.no_options)
         return
+
+    #   -----------------------------------------------------------------------------
+    #   Bib entry view/list tests
+    #   -----------------------------------------------------------------------------
+
+    def test_enumerate_bib_types(self):
+        # Test enumeration of all bibliographic record types
+        # Introduced to facilitate debugging of site data storage rework
+        entity_list = (
+            EntityFinder(self.testcoll, selector="ALL")
+                .get_entities_sorted(type_id="Enum_bib_type", altscope="all",
+                    user_permissions=None, 
+                    context={}, 
+                    search=""
+                    )
+            )
+        # Enumerate enumeration types
+        entity_types_ids = [ (e.get_type_id(), e.get_id()) for e in entity_list ]
+        # log.info("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
+        self.assertEqual(len(entity_types_ids), 14)
+        return
+
+
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

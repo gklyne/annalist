@@ -2,6 +2,7 @@
   "web": {
     "provider": "Local",
     "provider_label": "Local username",
+    "provider_order": 9,
     "mechanism": "django"
   }
 }

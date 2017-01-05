@@ -26,13 +26,13 @@ from django.conf import settings
 
 from annalist.identifiers import ANNAL
 
-def valid_id(id):
+def valid_id(id, reserved_ok=False):
     """
     Checks the supplied id is valid as an Annalist identifier.
 
     The main requirement is that it is valid as a URI path segment, so it can be used
     in the creation of URIs for Annalist resources.  Also, filters out reserved Annalist
-    identifiers.
+    identifiers unless reserved_ok=True parameter is provided.
 
     >>> valid_id("abcdef_1234")
     True
@@ -40,15 +40,18 @@ def valid_id(id):
     False
     >>> valid_id("_annalist_collection")
     False
+    >>> valid_id("_annalist_collection", reserved_ok=True)
+    True
     >>> valid_id("")
     False
     """
     reserved = (
         [ "_annalist_collection"
+        # , "_annalist_site"
         ])
     # cf. urls.py:
-    if id and re.match(r"\w{1,32}$", id):
-        return id not in reserved
+    if id and re.match(r"\w{1,128}$", id):
+        return reserved_ok or (id not in reserved)
     # log.warning("util.valid_id: id %s"%(id))
     return False
 
@@ -87,7 +90,7 @@ def extract_entity_id(eid):
 
 def fill_type_entity_id(eid, default_type_id=None):
     """
-    Assemble a type+entity comopisite identifier based on a supplied id string.
+    Assemble a type+entity composite identifier based on a supplied id string.
     If the string does not already include a type_id value, the supplied default
     is used.
     """
@@ -209,7 +212,7 @@ def entity_dir_path(base_dir, path, filename):
                 from which data is to be read
     path        is a relative path or list of path segments within the site or 
                 resource for the site or collection from which data is to be read.
-                This value may be absent.
+                This value may be absent (an empty list).
     filename    is a file name for the data resource to be read.
 
     Returns a pair containing the full directory and path names for the entity file.
@@ -439,6 +442,8 @@ def replacetree(src, tgt):
     Work-around for python problem with shutils tree copy functions on Windows.
     See: http://stackoverflow.com/questions/23924223/
     """
+    # print "@@ replacetree src %s"%(src,)
+    # print "@@ replacetree tgt %s"%(tgt,)
     if os.path.exists(tgt):
         removetree(tgt)
     shutil.copytree(src, tgt)

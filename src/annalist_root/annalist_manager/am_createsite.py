@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 
 from annalist.identifiers           import ANNAL, RDFS
 from annalist                       import layout
-from annalist.util                  import removetree, replacetree, updatetree
+from annalist.util                  import removetree, replacetree, updatetree, ensure_dir
 
 from annalist.models.site           import Site
 
@@ -63,13 +63,19 @@ def am_createsite(annroot, userhome, options):
             removetree(sitebasedir)
         else:
             print(
-                "Old data already exists at %s (use --force or -f to overwrite)"%
+                "Old data already exists at %s (use '--force' or '-f' to overwrite)."%
                 (sitebasedir), file=sys.stderr
+                )
+            print(
+                "NOTE: using '--force' or '-f' "+
+                "removes old site user permissions and namespace data "+
+                "and requires re-initialization of Django database with local usernames; "+
+                "consider using 'annalist-manager updatesite'."
                 )
             return am_errors.AM_EXISTS
     # --- Initialize empty site data in target directory
     print("Initializing Annalist site in %s"%(sitebasedir))
-    site = Site.create_empty_site_data(
+    site = Site.create_site_metadata(
         sitebaseurl, sitebasedir,
         label="Annalist site (%s configuration)"%options.configuration, 
         description="Annalist %s site metadata and site-wide values."%options.configuration
@@ -83,47 +89,24 @@ def am_createsite(annroot, userhome, options):
     for sdir in layout.COLL_DIRS:
         print("- %s -> %s"%(sdir, site_data_tgt))
         Site.replace_site_data_dir(sitedata, sdir, site_data_src)
-    print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
+    # @@TODO: filename logic copied from EntityRoot and Collection - create separate method for getting this
+    (sitedata_dir, sitedata_file) = sitedata._dir_path()
+    context_dir  = os.path.join(sitedata_dir, layout.META_COLL_BASE_REF)
+    context_file = os.path.join(context_dir, layout.COLL_CONTEXT_FILE)
+    #@@
+    print("Generating %s"%(context_file))
     sitedata.generate_coll_jsonld_context()
+    # --- Copy provider data to site config provider directory
+    provider_dir_src = os.path.join(annroot, "annalist/data/identity_providers")
+    provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
+    print("Copy identity provider data:")
+    print("- from: %s"%(provider_dir_src,))
+    print("-   to: %s"%(provider_dir_tgt,))
+    ensure_dir(provider_dir_tgt)
+    updatetree(provider_dir_src, provider_dir_tgt)
+    # --- Created
     print("Now run 'annalist-manager initialize' to create site admin database")
     return status
-
-def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):
-    """
-    Migrate data from a single old-site directory to the new site
-    """
-    old_dir        = os.path.join(old_site_dir, old_data_dir)
-    old_dir_backup = os.path.join(old_site_dir, "backup_"+old_data_dir)
-    new_dir        = os.path.join(new_site_dir, new_data_dir)
-    if os.path.isdir(old_dir):
-        print("- %s +> %s (migrating)"%(old_dir, new_dir))
-        updatetree(old_dir, new_dir)
-        archive_old_data(old_site_dir, old_data_dir)
-        # print("- %s >> %s (rename)"%(old_dir, old_dir_backup))
-        # os.rename(old_dir, old_dir_backup)
-    return
-
-def archive_old_data(site_dir, data_dir):
-    """
-    Archive old data no longer required.
-    """
-    old_dir     = os.path.join(site_dir, data_dir)
-    arc_dir     = "old_"+data_dir
-    old_dir_arc = os.path.join(site_dir, arc_dir)
-    if os.path.isdir(old_dir):
-        print("- %s >> %s (rename)"%(old_dir, arc_dir))
-        os.rename(old_dir, old_dir_arc)
-    return
-
-def remove_old_data(site_dir, data_dir):
-    """
-    Remove old data no longer required.
-    """
-    old_dir = os.path.join(site_dir, data_dir)
-    if os.path.isdir(old_dir):
-        print("- %s (remove)"%(old_dir,))
-        removetree(old_dir)
-    return
 
 def am_updatesite(annroot, userhome, options):
     """
@@ -156,7 +139,7 @@ def am_updatesite(annroot, userhome, options):
     sitedata      = site.site_data_collection(test_exists=False)
     if sitedata is None:
         print("Initializing Annalist site metadata in %s (migrating to new layout)"%(sitebasedir))
-        site = Site.create_empty_site_data(
+        site = Site.create_site_metadata(
             sitebaseurl, sitebasedir,
             label="Annalist site (%s configuration)"%options.configuration, 
             description="Annalist %s site metadata and site-wide values."%options.configuration
@@ -165,26 +148,37 @@ def am_updatesite(annroot, userhome, options):
     site_data_src = os.path.join(annroot, "annalist/data/sitedata")  # @@TODO: more robust definition
     site_data_tgt, site_data_file = sitedata._dir_path()
     # --- Migrate old site data to new site directory
-    site_data_old = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR)
-    old_users     = os.path.join(site_data_old, layout.USER_DIR_PREV)
-    old_vocabs    = os.path.join(site_data_old, layout.VOCAB_DIR_PREV)
-    if os.path.isdir(old_users) or os.path.isdir(old_vocabs):
-        print("Copy Annalist old user and/or vocab data from %s"%site_data_old)
-        migrate_old_data(site_data_old, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
-        migrate_old_data(site_data_old, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
-    #@@
-    # if os.path.isdir(old_users) or os.path.isdir(old_vocabs):
-    #     print("Copy Annalist old user and/or vocab data from %s"%site_data_old)
-    #     for sdir in ("users", "vocabs"):
-    #         s     = os.path.join(site_data_old, sdir)
-    #         old_s = os.path.join(site_data_old, "old_"+sdir)
-    #         d     = os.path.join(site_data_tgt, sdir)
-    #         if os.path.isdir(s):
-    #             print("- %s +> %s (migrating)"%(sdir, d))
-    #             updatetree(s, d)
-    #             print("- %s >> %s (rename)"%(sdir, old_s))
-    #             os.rename(s, old_s)
-    #@@
+    #    _annalist_site/
+    site_data_old1      = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR1)
+    old_site_metadata   = os.path.join(site_data_old1, site_layout.SITE_META_FILE)
+    old_site_database   = os.path.join(site_data_old1, site_layout.SITE_DATABASE_FILE)
+    old_users1          = os.path.join(site_data_old1, layout.USER_DIR_PREV)
+    old_vocabs1         = os.path.join(site_data_old1, layout.VOCAB_DIR_PREV)
+    if os.path.isfile(old_site_metadata):
+        print("Move old site metadata: %s -> %s"%(old_site_metadata, sitebasedir))
+        new_site_metadata   = os.path.join(sitebasedir, site_layout.SITE_META_FILE)
+        os.rename(old_site_metadata, new_site_metadata)
+    if os.path.isfile(old_site_database):
+        print("Move old site database: %s -> %s"%(old_site_database, sitebasedir))
+        new_site_database   = os.path.join(sitebasedir, site_layout.SITE_DATABASE_FILE)
+        os.rename(old_site_database, new_site_database)
+    if os.path.isdir(old_users1) or os.path.isdir(old_vocabs1):
+        print("Copy Annalist old user and/or vocab data from %s"%site_data_old1)
+        migrate_old_data(site_data_old1, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
+        migrate_old_data(site_data_old1, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
+    #    c/_annalist_site/_annalist_collection/ - using new dir names
+    site_data_old2 = os.path.join(sitebasedir, site_layout.SITEDATA_OLD_DIR2)
+    old_users2     = os.path.join(site_data_old2, layout.USER_DIR)
+    old_vocabs2    = os.path.join(site_data_old2, layout.VOCAB_DIR)
+    if os.path.isdir(old_users2) or os.path.isdir(old_vocabs2):
+        print("Copy Annalist old user and/or vocab data from %s"%site_data_old2)
+        migrate_old_data(site_data_old2, layout.USER_DIR_PREV,  site_data_tgt, layout.USER_DIR )
+        migrate_old_data(site_data_old2, layout.VOCAB_DIR_PREV, site_data_tgt, layout.VOCAB_DIR)
+    # --- Archive old site data so it's not visible next time
+    if os.path.isdir(site_data_old1):  
+        archive_old_data(site_data_old1, "")
+    if os.path.isdir(site_data_old2):
+        archive_old_data(site_data_old2, "")
     # --- Copy latest site data to target directory
     print("Copy Annalist site data")
     print("from %s"%site_data_src)
@@ -196,7 +190,7 @@ def am_updatesite(annroot, userhome, options):
         Site.update_site_data_dir(sitedata, sdir, site_data_src)
     for sdir in layout.COLL_DIRS_PREV:
         remove_old_data(site_data_tgt, sdir)
-    print("Generating %s"%(site_layout.SITEDATA_CONTEXT_DIR))
+    print("Generating context for site data")
     sitedata.generate_coll_jsonld_context()
     # --- Copy provider data to site config provider directory
     provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
@@ -204,7 +198,44 @@ def am_updatesite(annroot, userhome, options):
     print("Copy identity provider data:")
     print("- from: %s"%(provider_dir_src,))
     print("-   to: %s"%(provider_dir_tgt,))
+    ensure_dir(provider_dir_tgt)
     updatetree(provider_dir_src, provider_dir_tgt)
     return status
+
+def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):
+    """
+    Migrate data from a single old-site directory to the new site
+    """
+    old_dir = os.path.join(old_site_dir, old_data_dir)
+    new_dir = os.path.join(new_site_dir, new_data_dir)
+    if os.path.isdir(old_dir):
+        print("- %s +> %s (migrating)"%(old_dir, new_dir))
+        updatetree(old_dir, new_dir)
+        archive_old_data(old_site_dir, old_data_dir)
+    return
+
+def archive_old_data(site_dir, data_dir):
+    """
+    Archive old data no longer required.
+    """
+    # print("@@ site_dir %s, data_dir %s"%(site_dir, data_dir))
+    old_dir     = os.path.join(site_dir, data_dir)
+    if os.path.isdir(old_dir):
+        if old_dir.endswith("/"):
+            old_dir = old_dir[:-1]
+        old_dir_arc = old_dir+".saved"
+        print("- %s >> %s (rename)"%(old_dir, old_dir_arc))
+        os.rename(old_dir, old_dir_arc)
+    return
+
+def remove_old_data(site_dir, data_dir):
+    """
+    Remove old data no longer required.
+    """
+    old_dir = os.path.join(site_dir, data_dir)
+    if os.path.isdir(old_dir):
+        print("- %s (remove)"%(old_dir,))
+        removetree(old_dir)
+    return
 
 # End.

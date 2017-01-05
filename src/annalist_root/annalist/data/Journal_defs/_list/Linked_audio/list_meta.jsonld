@@ -1,5 +1,5 @@
 {
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "rdfs:label": "Linked audio clips",
   "rdfs:comment": "# List of linked audio clips\r\n\r\nPresents a list of audio clip resources from the web.  Each entity is like a bookmark that can be referenced by other entities in the collection, and has additional information about the audio clip.\r\n",
   "annal:id": "Linked_audio",

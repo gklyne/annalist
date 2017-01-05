@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_type/_initial_values"
+, "@type":              ["annal:Enum_value_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "ZZZZ"
+, "annal:type_id":      "_enum_value_type"
+, "rdfs:label":         "annal:ZZZZ"
+, "rdfs:comment":       "# Value type: annal:ZZZZ\r\n\r\n..."
+, "annal:uri":          "annal:ZZZZ"
+}

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/RefAudio"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "RefAudio"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Audio clip reference"
+, "rdfs:comment":       "# Audio clip reference\r\n\r\nURI reference: the referenced resource is rendered as an audio player widget.\r\n\r\nDepending on the [Value mode]($COLL:l/Default_list/_enum_value_mode/) used, the actual field value may be a URL (link), an uploaded audio file or an audio clip imported from the web."
+, "annal:uri":          "annal:Enum_render_type/RefAudio"
+}

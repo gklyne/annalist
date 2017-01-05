@@ -17,15 +17,15 @@
     - `annalist-manager initialize`
     - `annalist-manager updateadmin ...` (if needed)
 - [x] Test collection installation; e.g.
-    - `annalist-manager installcoll RDF_schema_defs`
-    - `annalist-manager installcoll Annalist_schema`    
+    - `annalist-manager installcoll RDF_schema_defs --force`
+    - `annalist-manager installcoll Annalist_schema --force`    
 - [x] Test migrations; e.g.
     - `annalist-manager migratecoll RDF_schema_defs`
     - `annalist-manager migratecoll Annalist_schema`    
 - [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [x] Documentation and tutorial updates
-- [x] Demo screencast update
+- [-] Documentation and tutorial updates
+- [-] Demo screencast update
 - [x] Check all recent changes are committed (`git status`)
 
 - [x] Create release preparation branch
@@ -36,23 +36,23 @@
 - [x] Add TODO list to release notes (edit out working notes)
 - [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
 - [x] Bump data compatibility version if new data is not compatible with older releases
-- [x] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`)
+- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [x] Reinstall and re-run test suite
 - [x] Add release highlights description to release notes
 - [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
 - [x] Review roadmap (`documents/roadmap.md`)
-- [x] Update version number in scripts, documents, etc.
+- [ ] Update version number in scripts, documents, etc.
     - [x] Release notes
     - [x] documents/installing-annalist.md
     - [x] documents/roadmap.md
     - [x] documents/pages/index.html
-    - [x] documents/tutorial/annalist-tutorial.adoc
+    - [-] documents/tutorial/annalist-tutorial.adoc
     - [x] src/newkit_to_annalist_net.sh
     - [x] src/newkit_to_annalist_dev.sh
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts and makefiles
 - [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Check for new dependencies; update setup.py as needed.
+- [x] Test instalation tools (and check for new dependencies; update setup.py as needed).
     - copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
     - login to dev.annalist.net, then
@@ -67,12 +67,14 @@
         annalist-manager defaultadmin
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
-- [x] Regenerate tutorial document
+- [-] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [x] Update and test demo installation on annalist.net
     - ssh to annalist@annalist.net
+    - `. backup_annalist_site.sh`
+    - `mv annalist_site_2015MMDD/ annalist_site_2017----`
     - `killall python`
     - `. anenv/bin/activate`
     - `pip uninstall annalist`
@@ -84,7 +86,7 @@
 - [x] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
-- [x] Update tutorial document at annalist.net
+- [-] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
 - [x] Check out demo system.
 - [x] Commit changes
@@ -98,7 +100,7 @@
 - [x] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.1.30"`
+    - `git commit -m "Master branch updated to V0.1.34"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop

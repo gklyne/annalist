@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/View_choice"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "View_choice"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Choose view"
+, "rdfs:comment":       "# Render type: View_choice\r\n\r\nAn entity identifier referring to a view definition available in the current collection.  This is a special internal render type used by the view form renderer for enabling alternatiuve view selection, and combines a drop-down selector with a 'Show view' button."
+, "annal:uri":          "annal:Enum_render_type/View_choice"
+}

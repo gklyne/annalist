@@ -37,6 +37,8 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+from annalist.models.entityfinder   import EntityFinder
+from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.uri_builder             import uri_params, uri_with_params, continuation_params_url
 from annalist.views.entitylist              import EntityGenericListView
@@ -84,6 +86,7 @@ from entity_testsitedata    import (
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
+    get_site_entities, get_site_entities_sorted,  
     )
 from entity_testlistdata    import recordlist_url
 
@@ -147,6 +150,44 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_EntityDefaultListView(self):
         self.assertEqual(EntityGenericListView.__name__, "EntityGenericListView", "Check EntityGenericListView class name")
+        return
+
+    def test_enumerate_all_entities(self):
+        # Test enumeration of all collection and site entities
+        # Introduced to facilitate debugging of site data storage rework
+        entity_list = (
+            EntityFinder(self.testcoll, selector="ALL")
+                .get_entities_sorted(type_id=None, altscope="all",
+                    user_permissions=None, 
+                    context={}, 
+                    search=""
+                    )
+            )
+        entity_types_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
+        # log.debug("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
+        self.assertEqual(len(entity_types_ids), 173)    # Will change with site data
+        expect_entities  = get_site_entities_sorted()
+        expect_types_ids = [ fc.id for fc in expect_entities ]
+        # log.debug("@@ entity_types_ids: \n"+"\n".join([ repr(eti) for eti in entity_types_ids[145:] ]))
+        # log.debug("@@ expect_types_ids: \n"+"\n".join([ repr(eti) for eti in expect_types_ids[145:] ]))
+        self.assertEqual(entity_types_ids, expect_types_ids)
+        return
+
+    def test_enumerate_value_modes(self):
+        # Test enumeration of value modes (tests enumeration type listing)
+        # Introduced to facilitate debugging of site data storage rework
+        entity_list = (
+            EntityFinder(self.testcoll, selector="ALL")
+                .get_entities_sorted(type_id="_enum_value_mode", altscope="all",
+                    user_permissions=None, 
+                    context={}, 
+                    search=""
+                    )
+            )
+        # Enumerate enumeration types
+        entity_types_ids = [ (e.get_type_id(), e.get_id()) for e in entity_list ]
+        # log.info("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
+        self.assertEqual(len(entity_types_ids), 5)
         return
 
     def test_get_default_all_list(self):
@@ -281,7 +322,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(f2['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        self.assertEqual(len(entities), 164)    # Will change with site data
+        # listed_entities = { e['entity_id']: e for e in entities }
+        # for eid in listed_entities:
+        #     print "@@ eid %s"%(eid)
+        self.assertEqual(len(entities), 170)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -449,7 +493,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Coll_comment/%(cont)s">Coll_comment</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Markdown/%(cont)s">
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Markdown/%(cont)s">
                       Markdown rich text
                     </a>
                   </div>
@@ -475,7 +519,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Coll_parent/%(cont)s">Coll_parent</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:Slug</span>
@@ -499,7 +543,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Coll_software_version/%(cont)s">Coll_software_version</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/Enum_render_type/Showtext/%(cont)s">Display text</a>
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Showtext/%(cont)s">Display text</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:Text</span>

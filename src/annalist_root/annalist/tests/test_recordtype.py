@@ -95,22 +95,25 @@ class RecordTypeTest(AnnalistTestCase):
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.layout = (
-            { 'enum_typeid':    layout.ENUM_TYPEID
-            , 'field_typeid':   layout.FIELD_TYPEID
-            , 'group_typeid':   layout.GROUP_TYPEID
-            , 'list_typeid':    layout.LIST_TYPEID
-            , 'type_typeid':    layout.TYPE_TYPEID
-            , 'user_typeid':    layout.USER_TYPEID
-            , 'view_typeid':    layout.VIEW_TYPEID
-            , 'vocab_typeid':   layout.VOCAB_TYPEID
-            , 'enum_dir':       layout.ENUM_DIR
-            , 'field_dir':      layout.FIELD_DIR
-            , 'group_dir':      layout.GROUP_DIR
-            , 'list_dir':       layout.LIST_DIR
-            , 'type_dir':       layout.TYPE_DIR
-            , 'user_dir':       layout.USER_DIR
-            , 'view_dir':       layout.VIEW_DIR
-            , 'vocab_dir':      layout.VOCAB_DIR
+            { 'enum_field_placement_id':    layout.ENUM_FIELD_PLACEMENT_ID
+            , 'enum_list_type_id':          layout.ENUM_LIST_TYPE_ID
+            , 'enum_render_type_id':        layout.ENUM_RENDER_TYPE_ID
+            , 'enum_value_type_id':         layout.ENUM_VALUE_TYPE_ID
+            , 'enum_value_mode_id':         layout.ENUM_VALUE_MODE_ID
+            , 'field_typeid':               layout.FIELD_TYPEID
+            , 'group_typeid':               layout.GROUP_TYPEID
+            , 'list_typeid':                layout.LIST_TYPEID
+            , 'type_typeid':                layout.TYPE_TYPEID
+            , 'user_typeid':                layout.USER_TYPEID
+            , 'view_typeid':                layout.VIEW_TYPEID
+            , 'vocab_typeid':               layout.VOCAB_TYPEID
+            , 'field_dir':                  layout.FIELD_DIR
+            , 'group_dir':                  layout.GROUP_DIR
+            , 'list_dir':                   layout.LIST_DIR
+            , 'type_dir':                   layout.TYPE_DIR
+            , 'user_dir':                   layout.USER_DIR
+            , 'view_dir':                   layout.VIEW_DIR
+            , 'vocab_dir':                  layout.VOCAB_DIR
             })
         return
 
@@ -143,7 +146,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "type1")
         self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(type_dir)s/type1/"%self.layout, 
+            "/c/testcoll/d/%(type_dir)s/type1/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -162,7 +165,7 @@ class RecordTypeTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "type2")
         self.assertEqual(t.get_type_id(), layout.TYPE_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(type_dir)s/type2/"%self.layout, 
+            "/c/testcoll/d/%(type_dir)s/type2/"%self.layout, 
             t.get_url()
             )
         self.assertEqual(
@@ -188,7 +191,7 @@ class RecordTypeTest(AnnalistTestCase):
         t = RecordType.load(self.testcoll, "Default_type", altscope="all")
         self.assertEqual(t.get_id(), "Default_type")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(type_dir)s/Default_type"%self.layout, 
+            "/c/_annalist_site/d/%(type_dir)s/Default_type"%self.layout, 
             t.get_url()
             )
         self.assertIn(
@@ -973,7 +976,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
-            , 'annal:display_type': "List"
+            , 'annal:display_type': "_enum_list_type/List"
             , 'annal:list_entity_selector': "'test:%(type_id)s' in [@type]"%common_vals
             })
         self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)

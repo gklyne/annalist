@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Enum_choice_opt"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Enum_choice_opt"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Optional entity choice"
+, "rdfs:comment":       "# Render type: Optional entity reference\r\n\r\nAn entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection, without a '+' button to define a new member of the enumeration.  The placeholder string is also presented as an option which effectively means none of the available entities is chosen."
+, "annal:uri":          "annal:Enum_render_type/Enum_choice_opt"
+}

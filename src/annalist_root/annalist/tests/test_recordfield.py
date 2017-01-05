@@ -98,22 +98,25 @@ class RecordFieldTest(AnnalistTestCase):
         # self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.layout = (
-            { 'enum_typeid':    layout.ENUM_TYPEID
-            , 'field_typeid':   layout.FIELD_TYPEID
-            , 'group_typeid':   layout.GROUP_TYPEID
-            , 'list_typeid':    layout.LIST_TYPEID
-            , 'type_typeid':    layout.TYPE_TYPEID
-            , 'user_typeid':    layout.USER_TYPEID
-            , 'view_typeid':    layout.VIEW_TYPEID
-            , 'vocab_typeid':   layout.VOCAB_TYPEID
-            , 'enum_dir':       layout.ENUM_DIR
-            , 'field_dir':      layout.FIELD_DIR
-            , 'group_dir':      layout.GROUP_DIR
-            , 'list_dir':       layout.LIST_DIR
-            , 'type_dir':       layout.TYPE_DIR
-            , 'user_dir':       layout.USER_DIR
-            , 'view_dir':       layout.VIEW_DIR
-            , 'vocab_dir':      layout.VOCAB_DIR
+            { 'enum_field_placement_id':    layout.ENUM_FIELD_PLACEMENT_ID
+            , 'enum_list_type_id':          layout.ENUM_LIST_TYPE_ID
+            , 'enum_render_type_id':        layout.ENUM_RENDER_TYPE_ID
+            , 'enum_value_type_id':         layout.ENUM_VALUE_TYPE_ID
+            , 'enum_value_mode_id':         layout.ENUM_VALUE_MODE_ID
+            , 'field_typeid':               layout.FIELD_TYPEID
+            , 'group_typeid':               layout.GROUP_TYPEID
+            , 'list_typeid':                layout.LIST_TYPEID
+            , 'type_typeid':                layout.TYPE_TYPEID
+            , 'user_typeid':                layout.USER_TYPEID
+            , 'view_typeid':                layout.VIEW_TYPEID
+            , 'vocab_typeid':               layout.VOCAB_TYPEID
+            , 'field_dir':                  layout.FIELD_DIR
+            , 'group_dir':                  layout.GROUP_DIR
+            , 'list_dir':                   layout.LIST_DIR
+            , 'type_dir':                   layout.TYPE_DIR
+            , 'user_dir':                   layout.USER_DIR
+            , 'view_dir':                   layout.VIEW_DIR
+            , 'vocab_dir':                  layout.VOCAB_DIR
             })
         return
 
@@ -146,7 +149,7 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "field1")
         self.assertEqual(t.get_type_id(), layout.FIELD_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(field_dir)s/field1/"%self.layout, 
+            "/c/testcoll/d/%(field_dir)s/field1/"%self.layout, 
             t.get_url()
             )
         t.set_values(recordfield_create_values(field_id="field1"))
@@ -161,7 +164,7 @@ class RecordFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_id(), "field2")
         self.assertEqual(t.get_type_id(), layout.FIELD_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(field_dir)s/field2/"%self.layout, 
+            "/c/testcoll/d/%(field_dir)s/field2/"%self.layout, 
             t.get_url()
             )
         t.set_values(recordfield_create_values(field_id="field2"))
@@ -183,7 +186,7 @@ class RecordFieldTest(AnnalistTestCase):
         t = RecordField.load(self.testcoll, "Field_value_type", altscope="all")
         self.assertEqual(t.get_id(), "Field_value_type")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(field_dir)s/Field_value_type"%self.layout, 
+            "/c/_annalist_site/d/%(field_dir)s/Field_value_type"%self.layout, 
             t.get_url()
             )
         self.assertIn(
@@ -336,7 +339,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     def _check_context_fields(self, response, 
             field_id="(?field_id)", 
             field_type="(?field_type)",
-            field_render="(?field_type)",
+            field_render_type="(?field_render_type)",
             field_value_mode="Value_direct",
             field_label="(?field_label)",
             field_placeholder="(?field_placeholder)",
@@ -390,7 +393,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Slug",
             field_placement=    "small-12 medium-6 columns",
-            field_value=        field_render,
+            field_value=        field_render_type,
             options=            self.render_options
             )
         # Field 2: Value type
@@ -616,7 +619,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "Field_render_type",
                     get_site_field_types_sorted(),
-                    "Enum_render_type/Text",
+                    "_enum_render_type/Text",
                     escape_label=True)+
                 """
                 </div>
@@ -648,7 +651,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   render_choice_options(
                     "Field_value_mode",
                     get_site_value_modes_sorted(),
-                    "Enum_value_mode/Value_direct")+
+                    "_enum_value_mode/Value_direct")+
                 """
                 </div>
               </div>
@@ -889,7 +892,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="00000001",
             field_type="annal:Text",
-            field_render="Text",
+            field_render_type="Text",
             field_label=default_label("testcoll", layout.FIELD_TYPEID, "00000001"),
             field_placeholder="",
             field_property="",
@@ -932,7 +935,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="Type_label",
             field_type="annal:Text",
-            field_render="Text",
+            field_render_type="Text",
             field_label="Label",
             field_placeholder="(label)",
             field_property="rdfs:label",
@@ -1237,8 +1240,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
-            , "annal:field_render_type":    "Text"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_value_type":     "annal:Text"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:property_uri":         tgt_field_uri
@@ -1260,8 +1263,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 message.REPEAT_FIELD_LABEL%common_vals['field_label']
-            , "annal:field_render_type":    "Group_Seq_Row"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         rpt_field_uri
@@ -1322,8 +1325,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 "%(field_label)s"%common_vals
-            , "annal:field_render_type":    "Text"
-            , "annal:field_value_mode":     "Value_direct"
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         tgt_field_uri
@@ -1344,8 +1347,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
             , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals['field_label']
-            , "annal:field_render_type":    "RefMultifield"
-            , "annal:field_value_mode":     "Value_entity"
+            , "annal:field_render_type":    "_enum_render_type/RefMultifield"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         ref_field_uri

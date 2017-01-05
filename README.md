@@ -5,12 +5,16 @@ annalist
 
 A free-form web data notebook - "Data management for little guys"
 
-_Current status (2015-08-04):  public prototype, released for evaluation and feedback._ 
+_Current status (2016-06-12):  public prototype, released for evaluation and feedback, approachiong feature freeze for a version 1 release.
 
 For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
 
 NOTE: most recent stable software release is on the Git `master` branch; current development work is on the `develop` branch.
 
+Demo system home page
+---------------------
+
+For general information about Annalist, and demonstration system links, see the [Annalist demonstration system home page](http://annalist.net/).
 
 Quick-start
 -----------

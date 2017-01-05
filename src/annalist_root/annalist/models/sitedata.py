@@ -8,7 +8,7 @@ named Collection object.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2014, 2015, G. Klyne"
+__copyright__   = "Copyright 2014 G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
@@ -47,7 +47,7 @@ class SiteData(Collection):
 
         Returns the site data collection as an instance of the supplied SiteData class.
         """
-        log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
+        log.debug("SiteData.create_sitedata: entityid %s"%(layout.SITEDATA_ID))
         return cls.create(parent, layout.SITEDATA_ID, sitedata)
 
     @classmethod
@@ -64,7 +64,7 @@ class SiteData(Collection):
         with data oaded from the corresponding Annalist storage, or None if there is no
         such collection data.
         """
-        log.debug("SiteData.create: entityid %s"%(layout.SITEDATA_ID))
+        log.debug("SiteData.load_sitedata: entityid %s"%(layout.SITEDATA_ID))
         d = cls.load(parent, layout.SITEDATA_ID)
         if test_exists:
             assert d, "Site data for %r not found"%(parent,)

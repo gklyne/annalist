@@ -1,0 +1,11 @@
+{ "@id":                "./"
+, "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           ["../../coll_context.jsonld"]
+, "annal:id":           "Enum_bib_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_bib_type"
+, "rdfs:label":         "Bibliographic entry type"
+, "rdfs:comment":       "Bibliographic entry type (e.g. article, book, inproceedings, etc.)"
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

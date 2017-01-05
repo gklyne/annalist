@@ -1,0 +1,11 @@
+{ "@id":                "_type/_enum_list_type"
+, "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_enum_list_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_list_type"
+, "rdfs:label":         "List display type"
+, "rdfs:comment":       "# List display type\r\n\r\nList display type (e.g. List or Grid)."
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

@@ -39,25 +39,17 @@ def initialize_coll_data(src_data_dir, tgt_coll):
     tgt_data_dir, data_file = tgt_coll._dir_path()
     log.info("Copy Annalist collection data from %s to %s"%(src_data_dir, tgt_data_dir))
     for sdir in layout.DATA_VOCAB_DIRS:     # Don't copy user permissions
-        expand_sdir = os.path.join(src_data_dir, sdir)
-        if os.path.isdir(expand_sdir):
+        if os.path.isdir(os.path.join(src_data_dir, sdir)):
             log.info("- %s -> %s"%(sdir, tgt_data_dir))
             Site.replace_site_data_dir(tgt_coll, sdir, src_data_dir)
     # Copy entity data to target collection.
-    #
-    # @TODO: This is hacky: it would be cleaner if the source directory were just
-    #        an exact copy of what ends up in the target collection directory.
-    #        Currently, a directory "entitydata" in the source data tree is used
-    #        for all user data directories and entities.
-    #        (cf. data/Annalist_schema)
-    #
-    expand_sdir = os.path.join(src_data_dir, "entitydata" )
-    expand_tdir = os.path.join(
-        tgt_data_dir, layout.META_COLL_REF+layout.COLL_ENTITYDATA_PATH
-        )
-    if os.path.isdir(expand_sdir):
-        log.info("- %s -> %s"%(sdir, expand_tdir))
-        replacetree(expand_sdir, expand_tdir)
+    expand_entitydata = os.path.join(src_data_dir, "entitydata" )
+    if os.path.isdir(expand_entitydata):
+        log.info("- Copy entitydata/...")
+        for edir in os.listdir(expand_entitydata):
+            if os.path.isdir(os.path.join(expand_entitydata, edir)):
+                log.info("- %s -> %s"%(edir, tgt_data_dir))
+                Site.replace_site_data_dir(tgt_coll, edir, expand_entitydata)
     # Generate initial JSON-LD context data
     tgt_coll.generate_coll_jsonld_context()
     return []
@@ -87,35 +79,36 @@ def copy_coll_data(src_coll, tgt_coll):
         msgs += new_entity._copy_entity_files(e)
     return msgs
 
-def migrate_coll_config_dir(coll, prev_dir, curr_dir):
+def migrate_collection_dir(coll, prev_dir, curr_dir):
     """
-    Migrate a single configuration directory for the indicated collection.
+    Migrate (rename) a single directory belonging to the indicated collection.
+
+    Returns list of errors or empty list.
     """
     errs = []
     if not prev_dir:
         return errs
-    coll_conf_dir, coll_meta_file = coll._dir_path()
+    coll_base_dir, coll_meta_file = coll._dir_path()
     # log.debug(
-    #     "collectiondata.migrate_coll_config_dir %s: %s -> %s"%
-    #     (coll_conf_dir, prev_dir, curr_dir)
+    #     "collectiondata.migrate_collection_dir %s: %s -> %s"%
+    #     (coll_base_dir, prev_dir, curr_dir)
     #     )
-    expand_prev_dir = os.path.join(coll_conf_dir, prev_dir)
-    expand_curr_dir = os.path.join(coll_conf_dir, curr_dir)
+    expand_prev_dir = os.path.join(coll_base_dir, prev_dir)
+    expand_curr_dir = os.path.join(coll_base_dir, curr_dir)
     # log.debug("  prev %s"%(expand_prev_dir,))
     # log.debug("  curr %s"%(expand_curr_dir,))
     if (curr_dir != prev_dir) and os.path.isdir(expand_prev_dir):
-        log.info("migrate_coll_config_dir: %s"%coll_conf_dir)
-        log.info("                 rename: %s -> %s"%(prev_dir, curr_dir))
+        log.info("migrate_coll_base_dir: %s"%coll_base_dir)
+        log.info("               rename: %s -> %s"%(prev_dir, curr_dir))
         # print "@@ rename %s -> %s"%(expand_prev_dir, expand_curr_dir)
         try:
             os.rename(expand_prev_dir, expand_curr_dir)
-            pass
         except Exception as e:
             msg = message.COLL_MIGRATE_DIR_FAILED%(coll.get_id(), prev_dir, curr_dir, e)
             # print "@@ "+msg
-            log.error("migrate_coll_config_dir: "+msg)
-            errs .append(msg)
-    return []
+            log.error("migrate_collection_dir: "+msg)
+            errs.append(msg)
+    return errs
 
 def migrate_coll_config_dirs(coll):
     """
@@ -126,7 +119,7 @@ def migrate_coll_config_dirs(coll):
     errs = []
     for curr_dir, prev_dir in layout.COLL_DIRS_CURR_PREV:
         # print "@@ migrate coll dir %s -> %s"%(prev_dir, curr_dir)
-        e = migrate_coll_config_dir(coll, prev_dir, curr_dir)
+        e = migrate_collection_dir(coll, prev_dir, curr_dir)
         if e:
             errs.extend(e)
     return errs
@@ -135,7 +128,7 @@ def migrate_coll_data(coll):
     """
     Migrate collection data for specified collection
 
-    returns     list of error messages; an empty list indicates success.
+    Returns list of errors or empty list.
     """
     log.info("Migrate Annalist collection data for %s"%(coll.get_id()))
     errs = migrate_coll_config_dirs(coll)
@@ -145,6 +138,6 @@ def migrate_coll_data(coll):
     for e in entityfinder.get_entities():
         e._save(post_update_flags={"nocontext"})
     coll.generate_coll_jsonld_context()    
-    return []
+    return errs
 
 # End.

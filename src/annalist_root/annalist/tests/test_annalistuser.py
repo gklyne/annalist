@@ -79,22 +79,25 @@ class AnnalistUserTest(AnnalistTestCase):
         self.sitedata = SiteData(self.testsite)
         self.testcoll = Collection(self.testsite, "testcoll")
         self.layout = (
-            { 'enum_typeid':    layout.ENUM_TYPEID
-            , 'field_typeid':   layout.FIELD_TYPEID
-            , 'group_typeid':   layout.GROUP_TYPEID
-            , 'list_typeid':    layout.LIST_TYPEID
-            , 'type_typeid':    layout.TYPE_TYPEID
-            , 'user_typeid':    layout.USER_TYPEID
-            , 'view_typeid':    layout.VIEW_TYPEID
-            , 'vocab_typeid':   layout.VOCAB_TYPEID
-            , 'enum_dir':       layout.ENUM_DIR
-            , 'field_dir':      layout.FIELD_DIR
-            , 'group_dir':      layout.GROUP_DIR
-            , 'list_dir':       layout.LIST_DIR
-            , 'type_dir':       layout.TYPE_DIR
-            , 'user_dir':       layout.USER_DIR
-            , 'view_dir':       layout.VIEW_DIR
-            , 'vocab_dir':      layout.VOCAB_DIR
+            { 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
+            , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
+            , 'enum_render_type_dir':       layout.ENUM_RENDER_TYPE_DIR
+            , 'enum_value_type_dir':        layout.ENUM_VALUE_TYPE_DIR
+            , 'enum_value_mode_dir':        layout.ENUM_VALUE_MODE_DIR
+            , 'field_typeid':               layout.FIELD_TYPEID
+            , 'group_typeid':               layout.GROUP_TYPEID
+            , 'list_typeid':                layout.LIST_TYPEID
+            , 'type_typeid':                layout.TYPE_TYPEID
+            , 'user_typeid':                layout.USER_TYPEID
+            , 'view_typeid':                layout.VIEW_TYPEID
+            , 'vocab_typeid':               layout.VOCAB_TYPEID
+            , 'field_dir':                  layout.FIELD_DIR
+            , 'group_dir':                  layout.GROUP_DIR
+            , 'list_dir':                   layout.LIST_DIR
+            , 'type_dir':                   layout.TYPE_DIR
+            , 'user_dir':                   layout.USER_DIR
+            , 'view_dir':                   layout.VIEW_DIR
+            , 'vocab_dir':                  layout.VOCAB_DIR
             })
         return
 
@@ -123,7 +126,7 @@ class AnnalistUserTest(AnnalistTestCase):
         self.assertEqual(usr.get_id(), "user1")
         self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(user_dir)s/user1/"%self.layout, 
+            "/c/testcoll/d/%(user_dir)s/user1/"%self.layout, 
             usr.get_url()
             )
         self.assertEqual(
@@ -142,7 +145,7 @@ class AnnalistUserTest(AnnalistTestCase):
         self.assertEqual(usr.get_id(), "user2")
         self.assertEqual(usr.get_type_id(), layout.USER_TYPEID)
         self.assertIn(
-            "/c/testcoll/_annalist_collection/%(user_dir)s/user2/"%self.layout, 
+            "/c/testcoll/d/%(user_dir)s/user2/"%self.layout, 
             usr.get_url()
             )
         self.assertEqual(
@@ -170,7 +173,7 @@ class AnnalistUserTest(AnnalistTestCase):
         usr = AnnalistUser.load(self.testcoll, "_unknown_user_perms", altscope="all")
         self.assertEqual(usr.get_id(), "_unknown_user_perms")
         self.assertIn(
-            "/c/_annalist_site/_annalist_collection/%(user_dir)s/_unknown_user_perms/"%self.layout, 
+            "/c/_annalist_site/d/%(user_dir)s/_unknown_user_perms/"%self.layout, 
             usr.get_url()
             )
         self.assertIn(

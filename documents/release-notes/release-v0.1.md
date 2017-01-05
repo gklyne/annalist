@@ -5,18 +5,21 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.1.32
+## Current release: 0.1.34
 
 (See "History" below for more details about this and previous releases)
 
-This release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.  Major enhancements include:
+This release provides numerous enhancements and bug fixes in a number of areas, many supporting changes to the data file layouts used.  Major enhancements include:
 
-* Re-working of the login screens to make the login process easier
-* Improve JSON-LD context and data generation.
-* Internal changes to collection data layout and details and migration support.
-* List definition view option to display the defined list.
-* List display re-organize entity type and scope selection controls.
-* Markdown and help text enhancements.
+* Data storage layout changes, also affecting URLs used to access collection data
+* Automatic migration of old collection data to new layout
+* More consistent URL structure using either `file:` or `http:` URLs.
+* Fixes to installable collection data.
+* Bibliography data definitions no longer part of Annalist core site data
+* Fix some login problems
+* Fix some access control problems
+* Fix some installation problems, particularly relating to installable collection data
+* Various documentation and built-in help text enhancements.
 
 
 ## Status
@@ -88,6 +91,159 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 # History
 
+## Version 0.1.34
+
+This is a summary of the main changes.  For more detailed information, see the changelist below for version 0.1.33.
+
+### Data layout changes
+
+The layout of collection data has been revised so that the file system layout more closely matches the URL structure for accessing collection content.  The directory `_annalist_collection` that was previously used for collection configuration data such as type and view definitions is no longer used, and all data is in directory /d/ under the collection root directory.  Type names for internal data (e.g. `_type`, `_view`) now all start with '_' to avoid clashes with user-defined types.  Enumerated values are now treated as additional built-in types, rather than the special cases used previously.
+
+The effect of this is to make access and links to data records work consistently when using either `file:` or `http:` URLs.  It also means that the JSON-LD context file does not need to be duplicated within a collection.
+
+Logic has been added to the Annalist server to automatically migrate older collections to the new layout when accessed.
+
+Some inconsistencies between built-in site data and installable collection data (that were causing warnings when generating context data) have been corrected.  In particular, the repeating "See also" field in collection `Journal_defs` was inconsistent with the similar site-defined field in default Entity views.
+
+The SQLite database file used for Django configuration and administration (and any locally defined user accounts) has been moved to the site root directory.  This prevents overwriting previous configuration options (and the site admin account) when site data is updated.
+
+### Installable collection data changes
+
+In the wake of data migration support and changes to the on-disk layout of data files, installation-supplied data collections have been revised.  Bibliography data definitions (used for some testing) have beenmoved out of the core Annalist site data and are now provided as an installable collection.
+
+### Bug fixes and enhancements
+
+Numerous bugs from the previous release have been fixed
+
+* User with just CONFIG access to a collection can now edit collection metadata
+* Collection, type and entity ids can now be up to 128 characters (was 32 characters)
+* Installation of login button images
+* Create login provider directory if needed when installing/updating site data
+* In `Markdown` view fields, `$SITE` and `$COLL` symbol substitutions do not include host value (like `$BASE`)
+* Add default view and list definitions to site data for enumerated values
+* `annalist-manager installcoll` now has a `--force` option for installation over existing collection data.
+* `annalist-manager createsite` now populates login provider configuration data
+* `annalist-manager createsite --force` warns about loss of old user permissions
+* "KeyError: 'recent_userid'" error report when no previous login is available
+* `annalist-manager installcoll Journal_defs` fixed error in data
+
+### Documentation improvements
+
+* README.md front page and PyPI front page include pointer to annalist.net
+* Data migration code uses proper reporting/diagnostic mechanisms
+* Various enhancements to the built-in help text, with improved cross-linking between related pages.  Corrected several omissions.
+
+## Version 0.1.33, towards 0.1.34
+
+- [x] BUG: login button images not copied to new installation.
+    - [x] Added identity_providers/images as static directory
+    - [x] Remove login image from Annalist static data directory
+- [x] BUG: when initializing/updating site data, create providers directory if needed
+    - [x] Added 'ensure_dir' call to logic that copies provider details
+- [x] BUG: Site users removed by software update ...
+    - not 'updatesite', 'initialize', 
+    - normal upgrade options don't see to do it: maybe use of `createsite --force`?
+    - added further comment to createsite --force message
+- [x] BUG: `annalist-manager createsite` does not populate provider data
+    - works in 0.1.33
+- [x] BUG: KeyError: 'recent_userid' when no previous login:
+        ERROR 2016-07-04 09:12:44,921 Internal Server Error: /annalist/login_post/
+      FIXED: check in new installation
+- [x] BUG: `annalist-manager installcoll Journal_defs`
+      FIXED: (syntax error in field data)
+- [x] README front page and PyPI front page include pointer to annalist.net
+- [x] Replace print statements in data migration code with a proper reporting/diagnostic mechanism.
+- [x] BUG: user with CONFIG access is unable to edit the collection metadata.
+      For view/edit collection metadata, need permissions to come from the referenced collection, not _annalist_site
+- [x] Review length restriction on entity/type ids: does it serve any purpose?
+    - Increased max segment length to 128 in urls.py and util.py function valid_id.
+
+- [x] Review file/URL layout for enums, and more 
+    - use /d/ for all types, including built-ins
+    - note extra logic in models.collectiondata and models.entitytypeinfo, etc.
+    - this reduces duplication of JSON-LD context files.
+    - migration strategy
+        - On opening collection, move collection directory content to /d/ directory.
+        - On opening collection, rename any old enumeration types.
+        - On accessing field definitions, convert any enumeration type references.
+    - [x] avoid explicit reference to `_annalist_collection`
+    - [x] collections and repeated properties:
+        - Use `@id`, thus: { "@id": <some_resource> } .
+        - This avoids creation of intermediate blank nodes in the RDF.
+- [x] Re-work handling of built-in enumeration types
+    - Reference as (<type_id>/<entity_id>: e.g. d/Enum_value_mode/Value_direct/)
+    - also rename enum types; e.g. "_enum_value_mode".
+    - [x] update site layout definitions
+    - [x] rename site data files (for enum type and value definitions)
+    - [x] update code and tests to work with new enumeration type names
+    - [x] replace all references to old enumeration type names; fix
+        - (note annal: namespace URIs use original names, without leading '_')
+        - [x] Enum_field_placement
+        - [x] Enum_list_type
+        - [x] Enum_render_type
+        - [x] Enum_value_mode
+        - [x] Enum_value_type
+    - [x] revise "Bib data type"
+        - [x] make regular type
+        - [x] remove special case logic in entitytypeinfo
+        - [x] Need manual test of BibliographyData.
+        - [x] Abandon old BibliographyData on demo system.
+    - [x] update built-in help text
+        - [x] update various references found in help text
+        - [x] check refaudio, refimage links (using $COLL to access lists)
+        - [x] check Annalist_schema
+            - [x] Property/field_render_type (major edits)
+            - [x] Property/field_value_mode
+            - [x] Property/repeat_label_add
+            - [x] Property/repeat_label_delete
+    - [x] rename "field_type" -> "render_type"
+        - note 'field_type' is also used in field descriptions for internal distinctions.
+- [x] eliminate '_annalist_collection' subdirectory
+    - just use collection /d/ for coll_meta.jsonld: extension will ensure no clash with type subdirectories
+    - using /d/ for all data, including collection metadata, helps to ensure that relative references can work with http:// and file:// URLs (or access via Annalist and direct access to data).  Essentially, /d/ is the base URL for all collection data references.  But site data references won't work this way, so there is a distinction here between collection data and collection config metadata.
+    - [x] update layout definitions
+    - [x] generate JSONLD context in /d/ only
+    - [x] new site migration
+        - [x] move content of _annalist_site/_annalist_collection/ to _annalist_site/d/
+            - handled by collection migration of "_analist site"
+            - check site data update logic - am_createsite.updatesite
+            - most site data is fully recreated on each update, via:
+                - am_createsite.am_updatesite
+                - Site.create_site_metadata
+                - etc.
+            - user and vocab entries are copied from previuous site data
+        - [x] added logic to rename old site data to be clear it's no longer used
+    - [x] collection migration
+        - [x] move content of /_annalist_collection/ to /d/
+            - this now done on collection load so that config is in right place for data migration
+        - [x] rename old enumeration types
+        - [x] regenerate context
+            - done in collectiondata.migrate_coll_data
+- [x] --force option for `annalist-manager installcoll`
+- [x] See_also_r field duplicated in field options list?
+    - [x] check errors in context file
+        - Fix so far is to ensure Journal_defs uses property "@id" in group, as does Entity def
+- [x] $SITE, $COLL symbols should not include host value (like $BASE)
+    - Values set up in views.displayinfo.context_data
+- [x] Problems with logic to archive old site data (am_createsite and maybe elsewhere)
+    - [x] update setting to move sqlite database to root of site
+    - [x] Migration logic in site update to move sqlite database 'db.sqlite3' to site root
+    - [x] Also migrate old `site_meta.jsonld' in root of site (see am_createsite.py:163)
+    - [x] Then rename old '_annalist_site/' directory - eventually, these archived directories can be removed.
+- [x] Data migration: enumeration labels not available (e.g. for render types, list types)
+    - [x] cf. http://localhost:8000/annalist/c/Performances/d/_field/Place/
+    - [x] cf. http://localhost:8000/annalist/c/Performances/d/_list/Default_list/
+    - Affected types: _field, _list, 
+    - Enum type fields migrated:
+        - [x] list_type (_list; recordlist.py)
+        - [x] render_type, value_mode, NOT value_type (_field; recordfield.py)
+- [x] Add view and list definitions for enumerated values to site data (cf. Enum_bib_type, type annal:Enum)
+    - [x] View is basically default display plus URI
+    - [x] List is like default list all (with types), but select for type URI annal:Enum
+    - Note: have just defined one list for all enumerated values
+        - a next step would be to define lists for per-enumeration values.
+
+
 ## Version 0.1.32
 
 This release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.  Enhancements include:
@@ -143,7 +299,7 @@ The data migration faclities remain a work-in-progress, and should improve over 
 
 With the release of [rdflib-jsonld v0.4.0](https://github.com/RDFLib/rdflib-jsonld/tree/0.4.0), the Annalist JSON-LD generation has been enhanced to make use of `@base` directives.  A consequence of this is that internal entity references, that were previously exported as literals, can be used as relative URI references, and appear as URI nodes when read as JSON-LD into an RDF graph.  Also, entity `@id` values are now exproted as `type-id/entity-id` valuyes that resolve against the declared `@base` URI to the correct entity URL.
 
-For this to work as intended, collection entity data has to be migrated to the new format using the `@base` URI declarationb.  See the above for details about about data migration.
+For this to work as intended, collection entity data has to be migrated to the new format using the `@base` URI declaration.  See the above for details about about data migration.
 
 
 ### List selection and display

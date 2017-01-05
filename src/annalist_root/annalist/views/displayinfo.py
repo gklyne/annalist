@@ -402,7 +402,8 @@ class DisplayInfo(object):
                     )
             else:
                 self.use_entity_id  = entity_id
-            # Special case permissions...
+            # Special case permissions when accessing collection metadata:
+            # use the collection itself rather than the site data collection to which it belongs.
             if self.type_id == "_coll":
                 # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)
                 c = Collection.load(self.site, entity_id, altscope="all")
@@ -440,7 +441,7 @@ class DisplayInfo(object):
             # type-based map was provided.
             self.http_response = (
                 self.http_response or 
-                self.view.form_action_auth(action, self.collection, permissions_map)
+                self.view.form_action_auth(action, self.coll_perms, permissions_map)
                 )
         return self.http_response
 
@@ -689,6 +690,7 @@ class DisplayInfo(object):
         Context values set here do not need to be named in the valuye maop used to
         create the view context.
         """
+        site_url_parts = urlparse.urlsplit(self.site._entityurl)
         context = (
             { 'site_label':         self.sitedata["title"]
             , 'title':              self.sitedata["title"]
@@ -698,7 +700,7 @@ class DisplayInfo(object):
             , 'type_id':            self.type_id
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
-            , "SITE":               self.site._entityurl
+            , "SITE":               site_url_parts.path
             , "HOST":               self.reqhost
             })
         context.update(self.authorizations)
@@ -707,8 +709,8 @@ class DisplayInfo(object):
             context.update(
                 { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]
-                , "COLL":       self.collection._entityurl
-                , "BASE":       coll_url_parts.path + layout.COLL_ENTITYDATA_PATH
+                , "COLL":       coll_url_parts.path
+                , "BASE":       coll_url_parts.path + layout.COLL_BASE_REF
                 })
             context['title'] = "%(coll_label)s"%context
         if self.recordview:

@@ -6,7 +6,7 @@
   "annal:record_type": "coll:Imported_audio",
   "annal:type_id": "_list",
   "annal:list_entity_selector": "'coll:Imported_audio' in [@type]",
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "annal:list_fields": [
     {
       "annal:field_placement": "small:0,3",

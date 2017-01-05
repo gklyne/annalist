@@ -1,0 +1,21 @@
+{ "@id":                        "annal:display/BibEntry_list"
+, "@type":                      ["annal:List"]
+, "@context":                   ["../../coll_context.jsonld"]
+, "annal:id":                   "BibEntry_list"
+, "annal:type_id":              "_list"
+, "rdfs:label":                 "List bibliographic entries"
+, "rdfs:comment":               "Description of list of views"
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:record_type":          "bib:BibEntry"
+, "annal:default_view":         "_view/BibEntry_view"
+, "annal:default_type":         "_type/BibEntry_type"
+, "annal:list_entity_selector": "'bib:BibEntry' in [@type]"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}

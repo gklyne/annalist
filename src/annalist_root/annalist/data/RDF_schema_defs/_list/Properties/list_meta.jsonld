@@ -8,7 +8,7 @@
   ],
   "annal:default_type": "_type/Property",
   "annal:default_view": "_view/Property",
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "annal:id": "Properties",
   "annal:list_entity_selector": "'rdf:Property' in [@type]",
   "annal:list_fields": [

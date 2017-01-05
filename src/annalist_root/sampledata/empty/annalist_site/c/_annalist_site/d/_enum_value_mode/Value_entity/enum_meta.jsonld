@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_mode/Value_entity"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Value_entity"
+, "annal:type_id":      "_enum_value_mode"
+, "annal:uri":          "annal:Enum_value_mode/Value_entity"
+, "rdfs:label":         "Entity reference"
+, "rdfs:comment":       "# Value mode: Entity reference\r\n\r\nThe stored field value is a reference to a separate entity.  The selected value is the full content of the referenced entity.  In practice, this is used with render type [Fields of referenced entity]($BASE:_enum_render_type/RefMultifield/), with a field group defining one or more fields to be displayed from the referenced entity.\r\n\r\nThe [Field value type]($BASE:_field/Field_value_type/) field should be the type URI of the referenced entity, the [Refer to type]($BASE:_field/Field_typeref/) field indicates the internal type identifier of the referenced entity, and the [Refer to field]($BASE:_field/Field_fieldref/) field is unspecified or blank."
+}

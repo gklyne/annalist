@@ -570,20 +570,23 @@ def am_installcollection(annroot, userhome, options):
             file=sys.stderr
             )
         return am_errors.AM_UNEXPECTEDARGS
-    coll_id = getargvalue(getarg(options.args, 0), "Collection Id to install: ")
-    coll    = Collection.load(site, coll_id)
-    if (coll and coll.get_values()):
-        print("Collection already exists: %s"%(coll_id), file=sys.stderr)
-        return am_errors.AM_COLLECTIONEXISTS
-
     # Check collection Id
+    coll_id = getargvalue(getarg(options.args, 0), "Collection Id to install: ")
     if coll_id in installable_collections:
         src_dir_name = installable_collections[coll_id]['data_dir']
     else:
         print("Collection name to install not known: %s"%(coll_id), file=sys.stderr)
         print("Available collection Ids are: %s"%(",".join(installable_collections.keys())))
         return am_errors.AM_NOCOLLECTION
-
+    # Check if ciollection already exists
+    coll    = Collection.load(site, coll_id)
+    if (coll and coll.get_values()):
+        if options.force:
+            print("Existing collection %s will be removed ('--force' specified)"%(coll_id), file=sys.stderr)
+            Collection.remove(site, coll_id)
+        else:
+            print("Collection already exists: %s"%(coll_id), file=sys.stderr)
+            return am_errors.AM_COLLECTIONEXISTS
     # Install collection now
     src_dir = os.path.join(annroot, "annalist/data", src_dir_name)
     print("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))

@@ -1,5 +1,5 @@
 {
-  "annal:display_type": "Enum_list_type/List",
+  "annal:display_type": "_enum_list_type/List",
   "rdfs:label": "Uploaded audio clips",
   "rdfs:comment": "# List of uploaded audio clips\r\n\r\nPresents a list of audio clips that have been uploaded into the current collection.\r\n",
   "annal:id": "Uploaded_audio",

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_mode/Value_upload"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Value_upload"
+, "annal:type_id":      "_enum_value_mode"
+, "annal:uri":          "annal:Enum_value_mode/Value_upload"
+, "rdfs:label":         "File upload"
+, "rdfs:comment":       "# Value mode: File upload\r\n\r\nField value is uploaded attachment, and may be rendered for viewing using a resource reference renderer such as [Image reference]($BASE:_enum_render_type/RefImage/) or [Audio clip reference]($BASE:_enum_render_type/RefAudio/).\r\n\r\nWhen editing the containing entity, a browser file-upload control is displayed."
+}

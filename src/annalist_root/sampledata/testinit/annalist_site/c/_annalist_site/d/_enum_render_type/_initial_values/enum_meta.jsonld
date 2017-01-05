@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/_initial_values"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_render_type_id"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "annal:Enum_render_type/_render_type_id"
+, "rdfs:comment":       "Field rendering type: controls how field data is interpreted and rendered in form displatys.  Available render types are (currently) built in the the Annalist application"
+, "annal:uri":          "annal:Enum_render_type/_render_type_id"
+}

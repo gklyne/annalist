@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/FileUpload"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "FileUpload"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "File upload"
+, "rdfs:comment":       "# Render type: file upload\r\n\r\nChoose and upload file from client computer. (Mostly superseded by ``Value_mode` options.)"
+, "annal:uri":          "annal:Enum_render_type/FileUpload"
+}

@@ -1,0 +1,11 @@
+{ "@id":                "_type/_enum_render_type"
+, "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_enum_render_type"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_render_type"
+, "rdfs:label":         "Field render type"
+, "rdfs:comment":       "# Field render type\r\n\r\nField type controlling the kind of data displayed and how it is rendered."
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

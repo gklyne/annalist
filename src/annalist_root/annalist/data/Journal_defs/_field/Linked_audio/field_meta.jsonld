@@ -1,6 +1,6 @@
 {
   "rdfs:label": "Linked audio clip",
-  "rdfs:comment": "Field referring to an audio resource in an "Linked audio clip" (coll:Linked_audio) entity.",
+  "rdfs:comment": "Field referring to an audio resource in a 'Linked audio clip' (coll:Linked_audio) entity.",
   "annal:group_ref": "",
   "annal:type_id": "_field",
   "annal:placeholder": "(Enter audio clip URL)",
@@ -14,8 +14,8 @@
   "annal:repeat_label_add": "",
   "annal:default_value": "",
   "annal:field_value_type": "annal:Audio",
-  "annal:field_value_mode": "Enum_value_mode/Value_direct",
-  "annal:field_render_type": "Enum_render_type/RefAudio",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/RefAudio",
   "annal:field_ref_field": "",
   "@context": [
     "../../coll_context.jsonld"

@@ -5,9 +5,9 @@
   "annal:record_type": "",
   "annal:group_fields": [
     {
-      "annal:property_uri": "",
-      "annal:field_placement": "",
-      "annal:field_id": "See_also"
+      "annal:field_id": "See_also",
+      "annal:property_uri": "@id",
+      "annal:field_placement": ""
     }
   ],
   "@context": [

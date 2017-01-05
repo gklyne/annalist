@@ -311,7 +311,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         expected = (
             { "@id":                    "../"
             , "@type":                  [ "annal:Collection" ]
-            , "@context":               [ {"@base": "../d/"}, "coll_context.jsonld" ]
+            , "@context":               [ {"@base": layout.META_COLL_BASE_REF}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
             , "annal:type_id":          "_coll"
             , "annal:type":             "annal:Collection"
@@ -373,7 +373,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         expected = (
             { "@id":                    "../"
             , "@type":                  [ "annal:Collection" ]
-            , "@context":               [ {"@base": "../d/"}, "coll_context.jsonld" ]
+            , "@context":               [ {"@base": layout.META_COLL_BASE_REF}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
             , "annal:type_id":          "_coll"
             , "annal:type":             "annal:Collection"

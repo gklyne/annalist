@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/RefImage"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "RefImage"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Image reference"
+, "rdfs:comment":       "# Image reference\r\n\r\nURI reference: the referenced resource is rendered as an image.\r\n\r\nDepending on the [Value mode]($COLL:l/Default_list/_enum_value_mode/) used, the actual field value may be a URL (link), an uploaded image file or an image imported from the web."
+, "annal:uri":          "annal:Enum_render_type/RefImage"
+}

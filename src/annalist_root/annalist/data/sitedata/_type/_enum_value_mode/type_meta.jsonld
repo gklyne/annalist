@@ -1,0 +1,11 @@
+{ "@id":                "_type/_enum_value_mode"
+, "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_enum_value_mode"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Enum_value_mode"
+, "rdfs:label":         "Field value mode"
+, "rdfs:comment":       "# Field value mode\r\n\r\nUsed in field descriptions to describe how the field value is used to determine a target value for display."
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

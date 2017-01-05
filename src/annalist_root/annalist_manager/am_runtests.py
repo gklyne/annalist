@@ -19,6 +19,7 @@ from utils.SetcwdContext    import ChangeCurrentDir
 
 import am_errors
 from am_settings            import am_get_settings
+from am_getargvalue         import getarg, getargvalue, getsecret
 
 def am_runtests(annroot, options):
     """
@@ -36,7 +37,7 @@ def am_runtests(annroot, options):
     if not testsettings:
         print("Settings not found (%s)"%("runtests"), file=sys.stderr)
         return am_errors.AM_NOSETTINGS
-    if len(options.args) > 0:
+    if len(options.args) > 1:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
     status = am_errors.AM_SUCCESS
@@ -44,14 +45,17 @@ def am_runtests(annroot, options):
     with ChangeCurrentDir(annroot):
         # For some reason, tests are not discovered unless run from here
         cmd = "test"
+        testname = getarg(options.args, 0) or ""
         subprocess_command = (
-            "django-admin %s --pythonpath=%s --settings=%s --top-level-directory=%s"%
-            (cmd, annroot, testsettings.modulename, annroot)
+            "django-admin %s %s --pythonpath=%s --settings=%s --top-level-directory=%s"%
+            (cmd, testname, annroot, testsettings.modulename, annroot)
             )
         log.debug("am_initialize subprocess: %s"%subprocess_command)
         # OLD: status = os.system(subprocess_command)
         status = subprocess.call(subprocess_command.split())
         log.debug("am_initialize subprocess status: %s"%status)
+        if testname:
+            print("Log file name:\n%s"%(annroot+"/annalist.log"))
     return status
 
 # End.

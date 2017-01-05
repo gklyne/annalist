@@ -36,17 +36,34 @@ from entity_testutils       import collection_dir, site_view_url, site_title
 #   -----------------------------------------------------------------------------
 
 def recordenum_url(enum_id, coll_id="testcoll", type_id="testtype"):
+    """
+    Returns internal access URL for indicated enumerated value.
+
+    enum_id     id of enumerated value
+    coll-id     id of collection
+    type_id     id of enumeration type
+    """
     return (
-        "/testsite/c/%(coll_id)s/_annalist_collection/%(enum_dir)s/%(type_id)s/%(enum_id)s/"%
-            { 'coll_id': coll_id, 'type_id': type_id, 'enum_id': enum_id
-            , 'enum_dir': layout.ENUM_DIR
+        "/testsite/c/%(coll_id)s/d/%(type_id)s/%(enum_id)s/"%
+            { 'coll_id': coll_id
+            , 'type_id': type_id
+            , 'enum_id': enum_id
             }
         )
 
 def recordenum_view_url(enum_id, coll_id="testcoll", type_id="testtype"):
+    """
+    Returns public access URL / URI for indicated enumerated value.
+
+    enum_id     id of enumerated value
+    coll-id     id of collection
+    type_id     id of enumeration type
+    """
     return (
         "/testsite/c/%(coll_id)s/d/%(type_id)s/%(enum_id)s/"%
-        {'coll_id': coll_id, 'type_id': type_id, 'enum_id': enum_id}
+        {'coll_id': coll_id
+        , 'type_id': type_id
+        , 'enum_id': enum_id}
         )
 
 def recordenum_dir(enum_id, coll_id="testcoll", type_id="testtype"):
@@ -100,8 +117,8 @@ def recordenum_read_values(
         enum_id, coll_id=coll_id, type_id=type_id, update=update, hosturi=hosturi
         ).copy()
     d.update(
-        { '@id':            layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum1"}
-        , '@context':       [{'@base': "../../../"}, "../../../coll_context.jsonld"]
+        { '@id':        layout.COLL_BASE_ENUM_REF%{'type_id': layout.ENUM_LIST_TYPE_ID, 'id': "testenum1"}
+        , '@context':   [{'@base': "../../"}, "../../coll_context.jsonld"]
         })
     return d
 
@@ -117,7 +134,7 @@ class RecordEnumTest(AnnalistTestCase):
         init_annalist_test_site()
         self.testsite  = Site(TestBaseUri, TestBaseDir)
         self.testcoll  = Collection(self.testsite, "testcoll")
-        self.testenum  = RecordEnumFactory("testenum", "Enum_list_type")
+        self.testenum  = RecordEnumFactory("testenum", layout.ENUM_LIST_TYPE_ID)
         return
 
     def tearDown(self):
@@ -136,31 +153,37 @@ class RecordEnumTest(AnnalistTestCase):
         e = self.testenum(self.testcoll, "testenum")
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
-        self.assertEqual(e._entityref,      layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum"})
+        self.assertEqual(e._entityref,      
+            layout.COLL_BASE_ENUM_REF%{'type_id': layout.ENUM_LIST_TYPE_ID, 'id': "testenum"}
+            )
         self.assertEqual(e._entityid,       "testenum")
-        self.assertEqual(e._entityurl,      TestHostUri + recordenum_url("testenum", coll_id="testcoll", type_id="Enum_list_type"))
-        self.assertEqual(e._entitydir,      recordenum_dir("testenum", coll_id="testcoll", type_id="Enum_list_type"))
+        self.assertEqual(e._entityurl,      
+            TestHostUri + recordenum_url("testenum", coll_id="testcoll", type_id=layout.ENUM_LIST_TYPE_ID)
+            )
+        self.assertEqual(e._entitydir,      
+            recordenum_dir("testenum", coll_id="testcoll", type_id=layout.ENUM_LIST_TYPE_ID)
+            )
         self.assertEqual(e._values,         None)
         return
 
     def test_recordenum_base_init(self):
         # Note that if base class is used directly, the type_id value isn't recognized 
         # as it needs to be a class property.
-        e = RecordEnumBase(self.testcoll, "testenum2", "Enum_list_type")
+        e = RecordEnumBase(self.testcoll, "testenum2", layout.ENUM_LIST_TYPE_ID)
         self.assertEqual(e._entitytype,     ANNAL.CURIE.Enum)
         self.assertEqual(e._entityfile,     layout.ENUM_META_FILE)
         self.assertEqual(e._entityref,      
-            layout.COLL_BASE_ENUM_REF%{'type_id': "Enum_list_type", 'id': "testenum2"}
+            layout.COLL_BASE_ENUM_REF%{'type_id': layout.ENUM_LIST_TYPE_ID, 'id': "testenum2"}
             )
         self.assertEqual(e._entityid,       "testenum2")
         self.assertEqual(e._entityurl,      
             TestHostUri + recordenum_url(
-                "testenum2", coll_id="testcoll", type_id=layout.ENUM_TYPEID
+                "testenum2", coll_id="testcoll", type_id="_enum_base_id"    # See note
                 )
             )
         self.assertEqual(e._entitydir,      
             recordenum_dir(
-                "testenum2", coll_id="testcoll", type_id=layout.ENUM_TYPEID
+                "testenum2", coll_id="testcoll", type_id="_enum_base_id"    # See note
                 )
             )
         self.assertEqual(e._values,         None)
@@ -169,29 +192,29 @@ class RecordEnumTest(AnnalistTestCase):
 
     def test_recordenum1_data(self):
         e = self.testenum(self.testcoll, "testenum1")
-        e.set_values(recordenum_create_values("testenum1", type_id="Enum_list_type"))
+        e.set_values(recordenum_create_values("testenum1", type_id=layout.ENUM_LIST_TYPE_ID))
         ed = e.get_values()
         self.assertEqual(set(ed.keys()), set(recordenum_value_keys()))
-        v = recordenum_values("testenum1", type_id="Enum_list_type")
+        v = recordenum_values("testenum1", type_id=layout.ENUM_LIST_TYPE_ID)
         self.assertDictionaryMatch(ed, v)
         return
 
     def test_recordenum2_data(self):
         e = self.testenum(self.testcoll, "testenum2")
-        e.set_values(recordenum_create_values("testenum2", type_id="Enum_list_type"))
+        e.set_values(recordenum_create_values("testenum2", type_id=layout.ENUM_LIST_TYPE_ID))
         ed = e.get_values()
         self.assertEqual(set(ed.keys()), set(recordenum_value_keys()))
-        v = recordenum_values("testenum2", type_id="Enum_list_type")
+        v = recordenum_values("testenum2", type_id=layout.ENUM_LIST_TYPE_ID)
         self.assertDictionaryMatch(ed, v)
         return
 
     def test_recordenum_create_load(self):
-        ev = recordenum_create_values("testenum1", type_id="Enum_list_type")
+        ev = recordenum_create_values("testenum1", type_id=layout.ENUM_LIST_TYPE_ID)
         e  = self.testenum.create(self.testcoll, "testenum1", ev)
-        self.assertEqual(e._entitydir, recordenum_dir("testenum1", type_id="Enum_list_type"))
+        self.assertEqual(e._entitydir, recordenum_dir("testenum1", type_id=layout.ENUM_LIST_TYPE_ID))
         self.assertTrue(os.path.exists(e._entitydir))
         ed = self.testenum.load(self.testcoll, "testenum1").get_values()
-        v  = recordenum_read_values("testenum1", type_id="Enum_list_type")
+        v  = recordenum_read_values("testenum1", type_id=layout.ENUM_LIST_TYPE_ID)
         self.assertKeysMatch(ed, v)
         self.assertDictionaryMatch(ed, v)
         return
@@ -202,13 +225,13 @@ class RecordEnumTest(AnnalistTestCase):
         e1 = Entity(r, "testid1")
         self.assertEqual(e1.get_type_id(),  None)
         e2 = self.testenum(e1, "testid2")
-        self.assertEqual(e2.get_type_id(),  "Enum_list_type")
+        self.assertEqual(e2.get_type_id(),  layout.ENUM_LIST_TYPE_ID)
         return
 
     def test_recordenum_child_ids(self):
         child_ids1 = self.testcoll.child_entity_ids(self.testenum, altscope="all")
         self.assertEqual(set(child_ids1), {'_initial_values', 'Grid', 'List'})
-        ev = recordenum_create_values("testenum1", type_id="Enum_list_type")
+        ev = recordenum_create_values("testenum1", type_id=layout.ENUM_LIST_TYPE_ID)
         e  = self.testenum.create(self.testcoll, "testenum1", ev)
         child_ids2 = self.testcoll.child_entity_ids(self.testenum, altscope="all")
         self.assertEqual(set(child_ids2), {'_initial_values', 'Grid', 'List', 'testenum1'})

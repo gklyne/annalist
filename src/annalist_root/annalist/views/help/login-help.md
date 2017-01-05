@@ -8,6 +8,6 @@ The intended means of user authentication is via a third party login service:
 
 Authentication using a local user account (e.g. created by an admin user using the 'admin' link on the page footer) can be performed by selecting `Local` as the Login service, and entering a password when requested.
 
-Being logged in does not necessarily mean you have permissions to acess Annalist data;  it simply means that Annalist has an indication of who you are.  Permissions to access Annalist collection data are set up separately by the site administrator or data collection owner.
+Being logged in does not necessarily mean you have permissions to access Annalist data;  it simply means that Annalist has an indication of who you are.  Permissions to access Annalist collection data are set up separately by the site administrator or data collection owner.
 
 Initial administrator access and permissions can be established using the `annalist-manager` command line utility.

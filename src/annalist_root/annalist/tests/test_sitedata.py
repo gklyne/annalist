@@ -225,7 +225,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows = s.form.find_all("div", class_="tbody")
         #@@
         # for i in range(len(trows)):
-        #     print "\ntrow[%d]:\n%s\n"%(i, trows[i])
+        #     print "\n@@ trow[%d]:\n%s\n"%(i, trows[i])
         #@@
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
@@ -270,7 +270,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list["@type"],                    [ANNAL.CURIE.List])
         self.assertEqual(type_list[ANNAL.CURIE.id],             list_id)
         self.assertEqual(type_list[ANNAL.CURIE.type_id],        "_list")
-        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "Enum_list_type/List")
+        self.assertEqual(type_list[ANNAL.CURIE.display_type],   "_enum_list_type/List")
         self.assertEqual(type_list[ANNAL.CURIE.default_type],   "_type/"+type_id)
         self.assertEqual(type_list[ANNAL.CURIE.default_view],   "_view/"+view_id)
         self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
@@ -296,7 +296,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
             # print "f: " + field_id
             view_field = RecordField.load(self.coll1, field_id, altscope="all")
-            field_type = view_field[ANNAL.CURIE.field_render_type]
+            render_type = view_field[ANNAL.CURIE.field_render_type]
             value_type = view_field[ANNAL.CURIE.field_value_type]
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
@@ -316,7 +316,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                         self.assertEqual(
                             view_field[ANNAL.CURIE.field_entity_type], type_uri
                             )
-                if is_repeat_field_render_type(field_type):
+                if is_repeat_field_render_type(render_type):
                     # Check extra fields
                     group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
@@ -336,10 +336,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"
                     ])
-                if field_type in enum_types:
+                if render_type in enum_types:
                     self.assertIn(ANNAL.CURIE.field_ref_type, view_field)
             except Exception as e:
-                log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, field_type))
+                log.warning("check_type_fields error %s, field_id %s, render_type %s"%(e, field_id, render_type))
                 raise
         return
 
@@ -513,21 +513,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_coll",            ["_coll",            "Collection"] ]
-            , [ "_type/_field",           ["_field",           "Field"] ]
-            , [ "_type/_group",           ["_group",           "Field group"] ]
-            # , [ "_type/_initial_values",  ["_initial_values",  None] ]
-            , [ "_type/_list",            ["_list",            "List"] ]
-            , [ "_type/_type",            ["_type",            "Type"] ]
-            , [ "_type/_user",            ["_user",            "User permissions"] ]
-            , [ "_type/_view",            ["_view",            "View"] ]
-            , [ "_type/_vocab",           ["_vocab",           "Vocabulary namespace"] ]
-            , [ "_type/Default_type",     ["Default_type",     "Default record"] ]
-            , [ "_type/Enum_list_type",   ["Enum_list_type",   "List display type"] ]
-            , [ "_type/Enum_render_type", ["Enum_render_type", "Field render type"] ]
-            , [ "_type/Enum_value_mode",  ["Enum_value_mode",  "Field value mode"] ]
-            , [ "_type/type1",            ["type1",            "RecordType coll1/type1"] ]
-            , [ "_type/type2",            ["type2",            "RecordType coll1/type2"] ]
+            [ [ "_type/_coll",             ["_coll",             "Collection"] ]
+            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"] ]
+            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"] ]
+            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"] ]
+            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"] ]
+            , [ "_type/_field",            ["_field",            "Field"] ]
+            , [ "_type/_group",            ["_group",            "Field group"] ]
+            , [ "_type/_list",             ["_list",             "List"] ]
+            , [ "_type/_type",             ["_type",             "Type"] ]
+            , [ "_type/_user",             ["_user",             "User permissions"] ]
+            , [ "_type/_view",             ["_view",             "View"] ]
+            , [ "_type/_vocab",            ["_vocab",            "Vocabulary namespace"] ]
+            , [ "_type/Default_type",      ["Default_type",      "Default record"] ]
+            , [ "_type/type1",             ["type1",             "RecordType coll1/type1"] ]
+            , [ "_type/type2",             ["type2",             "RecordType coll1/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -591,7 +591,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(
             s, "List_type", 
             self.list_types_expected, 
-            "Enum_list_type/List"
+            "_enum_list_type/List"
             )
         self.check_select_field(
             s, "List_default_type", 
@@ -631,17 +631,18 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
-            [ [ "_list/Default_list",       ["Default_list",        "List entities"] ]
+            [ [ "_list/Default_list",       ["Default_list",        "List entities"                      ] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
-            , [ "_list/Field_group_list",   ["Field_group_list",    "Field groups"] ]
-            , [ "_list/Field_list",         ["Field_list",          "Field definitions"] ]
-            , [ "_list/List_list",          ["List_list",           "List definitions"] ]
-            , [ "_list/Type_list",          ["Type_list",           "Entity types"] ]
-            , [ "_list/User_list",          ["User_list",           "User permissions"] ]
-            , [ "_list/View_list",          ["View_list",           "View definitions"] ]
-            , [ "_list/Vocab_list",         ["Vocab_list",          "Vocabulary namespaces"] ]
-            , [ "_list/list1",              ["list1",               "RecordList coll1/list1"] ]
-            , [ "_list/list2",              ["list2",               "RecordList coll1/list2"] ]   
+            , [ "_list/Enum_list_all",      ["Enum_list_all",       "List enumeration values and types"  ] ]
+            , [ "_list/Field_group_list",   ["Field_group_list",    "Field groups"                       ] ]
+            , [ "_list/Field_list",         ["Field_list",          "Field definitions"                  ] ]
+            , [ "_list/List_list",          ["List_list",           "List definitions"                   ] ]
+            , [ "_list/Type_list",          ["Type_list",           "Entity types"                       ] ]
+            , [ "_list/User_list",          ["User_list",           "User permissions"                   ] ]
+            , [ "_list/View_list",          ["View_list",           "View definitions"                   ] ]
+            , [ "_list/Vocab_list",         ["Vocab_list",          "Vocabulary namespaces"              ] ]
+            , [ "_list/list1",              ["list1",               "RecordList coll1/list1"             ] ]
+            , [ "_list/list2",              ["list2",               "RecordList coll1/list2"             ] ]   
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -706,7 +707,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_input_type_value(s, "List_entity_selector", "text", "'annal:List' in [@type]")
         self.check_input_type_value(s, "List_target_type", "text", "annal:List")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -745,15 +746,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
-            [ [ "_view/Collection_view",    ["Collection_view",     "Collection metadata"] ]
-            , [ "_view/Default_view",       ["Default_view",        "Default record view"] ]
+            [ [ "_view/Collection_view",    ["Collection_view",     "Collection metadata"   ] ]
+            , [ "_view/Default_view",       ["Default_view",        "Default record view"   ] ]
+            , [ "_view/Enum_view",          ["Enum_view",           "Enumerated value view" ] ]
             , [ "_view/Field_group_view",   ["Field_group_view",    "Field group definition"] ]
-            , [ "_view/Field_view",         ["Field_view",          "Field definition"] ]
-            , [ "_view/List_view",          ["List_view",           "List definition"] ]
-            , [ "_view/Type_view",          ["Type_view",           "Type definition"] ]
-            , [ "_view/User_view",          ["User_view",           "User permissions"] ]
-            , [ "_view/View_view",          ["View_view",           "View definition"] ]
-            , [ "_view/Vocab_view",         ["Vocab_view",          "Vocabulary namespace"] ]
+            , [ "_view/Field_view",         ["Field_view",          "Field definition"      ] ]
+            , [ "_view/List_view",          ["List_view",           "List definition"       ] ]
+            , [ "_view/Type_view",          ["Type_view",           "Type definition"       ] ]
+            , [ "_view/User_view",          ["User_view",           "User permissions"      ] ]
+            , [ "_view/View_view",          ["View_view",           "View definition"       ] ]
+            , [ "_view/Vocab_view",         ["Vocab_view",          "Vocabulary namespace"  ] ]
             , [ "_view/view1",              ["view1",               "RecordView coll1/view1"] ]
             , [ "_view/view2",              ["view2",               "RecordView coll1/view2"] ]   
             ])
@@ -805,7 +807,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", "View_list")
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -911,7 +913,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:Field_group' in [@type]"
             )
         self.check_input_type_value(s, "List_target_type", "text", "annal:Field_group")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 
@@ -958,44 +960,45 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             #     Field selector                      Field id             Render type      Value type   Field label (?)
             # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
             [ [ "_field/Coll_comment",              ["Coll_comment",      "Markdown rich text", 
-                                                                                            "annal:Richtext"        ] ]
+                                                                                            "annal:Richtext"         ] ]
             , [ "_field/Coll_default_list_id",      ["Coll_default_list_id", 
-                                                                          "Display text",   "annal:Text"            ] ]
+                                                                          "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_default_view_entity",  ["Coll_default_view_entity", 
-                                                                          "Display text",   "annal:Text"            ] ]
+                                                                          "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_default_view_id",      ["Coll_default_view_id", 
-                                                                          "Display text",   "annal:Text"            ] ]
+                                                                          "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_default_view_type",    ["Coll_default_view_type", 
-                                                                          "Display text",   "annal:Text"            ] ]
+                                                                          "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_parent",               ["Coll_parent",       "Optional entity choice",  
-                                                                                            "annal:Slug"            ] ]
+                                                                                            "annal:Slug"             ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 
-                                                                          "Display text",   "annal:Text"            ] ]
-            , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"    ] ]
-            , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:Slug"            ] ]
-            , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"            ] ]
-            , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"         ] ]
+                                                                          "Display text",   "annal:Text"             ] ]
+            , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"     ] ]
+            , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:Slug"             ] ]
+            , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
+            , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
-                                                                                            "rdfs:Resource"         ] ]
-            , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"            ] ]
-            , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"        ] ]
-            , [ "_field/Field_default",             ["Field_default",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",    "annal:Identifier"       ] ]
-            , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",    "annal:Identifier"       ] ]
-            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:Slug"       ] ]
-            , [ "_field/Field_id",                  ["Field_id",          "Entity Id",     "annal:Slug"             ] ]
-            , [ "_field/Field_label",               ["Field_label",       "Short text",    "annal:Text"             ] ]
-            , [ "_field/Field_missing",             ["Field_missing",     "Short text",    "annal:Text"             ] ]
-            , [ "_field/Field_placeholder",         ["Field_placeholder", "Short text",    "annal:Text"             ] ]
-            , [ "_field/Field_placement",           ["Field_placement",   "Position/size", "annal:Placement"        ] ]
-            , [ "_field/Field_property",            ["Field_property",    "Identifier",    "annal:Identifier"       ] ]
-            , [ "_field/Field_render_type",         ["Field_render_type", "Entity choice", "annal:Slug"             ] ]
-            , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"           ] ]
-            , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"        ] ]
-            , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",    "annal:Text"             ] ]
-            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:Slug"       ] ]
-            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice", "annal:Slug"             ] ]
-            , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",    "annal:Identifier"       ] ]
+                                                                                            "rdfs:Resource"          ] ]
+            , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:Slug"             ] ]
+            , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"         ] ]
+            , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:Slug"        ] ]
+            , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:Slug"             ] ]
+            , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_missing",             ["Field_missing",     "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_placeholder",         ["Field_placeholder", "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_placement",           ["Field_placement",   "Position/size",  "annal:Placement"        ] ]
+            , [ "_field/Field_property",            ["Field_property",    "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_render_type",         ["Field_render_type", "Entity choice",  "annal:Slug"             ] ]
+            , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"            ] ]
+            , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"         ] ]
+            , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:Slug"        ] ]
+            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:Slug"             ] ]
+            , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Group_comment",             ["Group_comment"             ] ]
             , [ "_field/Group_field_placement",     ["Group_field_placement"     ] ]
             , [ "_field/Group_field_property",      ["Group_field_property"      ] ]
@@ -1072,7 +1075,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Field_entity_type", "text", "")
         self.check_input_type_value(s, "Field_restrict", "text", "")
         self.check_select_field(
-            s, "Field_render_type",   self.render_types_expected, "Enum_render_type/Text"
+            s, "Field_render_type",   self.render_types_expected, "_enum_render_type/Text"
             )
         self.check_select_field(
             s, "Field_typeref", 
@@ -1229,7 +1232,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:Vocabulary' in [@type]"
             )
         self.check_input_type_value(s, "List_target_type", "text", "annal:Vocabulary")
-        self.check_select_field(s, "List_type", self.list_types_expected, "Enum_list_type/List")
+        self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
             no_selection("(default record type)") + self.types_expected, 

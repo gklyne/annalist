@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/TokenSet"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "TokenSet"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Space-separated tokens"
+, "rdfs:comment":       "# Space-separated tokens\r\n\r\nThe stored field value is a list of tokens, which are rendered as a space-separated text.  The individual  tokens may not contain spaces.\r\n\r\nCurrently, this field render type is used for [user permissions]($BASE:_field/User_permissions/)."
+, "annal:uri":          "annal:Enum_render_type/TokenSet"
+}

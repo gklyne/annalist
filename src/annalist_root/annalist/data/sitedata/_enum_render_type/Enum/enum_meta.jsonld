@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Enum"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Enum"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Required entity ref"
+, "rdfs:comment":       "# Render type: Required entity reference\r\n\r\nAn entity identifier referring to some value of a designated type in the current collection, which may be rendered as a drop-down selection."
+, "annal:uri":          "annal:Enum_render_type/Enum"
+}

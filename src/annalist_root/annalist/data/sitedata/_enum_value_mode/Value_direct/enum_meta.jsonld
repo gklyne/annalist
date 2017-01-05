@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_mode/Value_direct"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Value_direct"
+, "annal:type_id":      "_enum_value_mode"
+, "annal:uri":          "annal:Enum_value_mode/Value_direct"
+, "rdfs:label":         "Direct value"
+, "rdfs:comment":       "# Value mode: Direct value\r\n\r\nField value is actual value to be displayed."
+}

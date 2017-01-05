@@ -209,65 +209,73 @@ ENTITY_PERMISSIONS = (
     })
 
 TYPE_CLASS_MAP = (
-    { COLL_ID:              Collection
-    , USER_ID:              AnnalistUser
-    , TYPE_ID:              RecordType
-    , LIST_ID:              RecordList
-    , VIEW_ID:              RecordView
-    , GROUP_ID:             RecordGroup
-    , FIELD_ID:             RecordField
-    , VOCAB_ID:             RecordVocab
-    , 'Enum_list_type':     RecordEnumFactory('Enum_list_type',   'Enum_list_type')
-    , 'Enum_render_type':   RecordEnumFactory('Enum_render_type', 'Enum_render_type')
-    , 'Enum_value_mode':    RecordEnumFactory('Enum_value_mode',  'Enum_value_mode')
-    , 'Enum_bib_type':      RecordEnumFactory('Enum_bib_type',    'Enum_bib_type')
+    { COLL_ID:                  Collection
+    , USER_ID:                  AnnalistUser
+    , TYPE_ID:                  RecordType
+    , LIST_ID:                  RecordList
+    , VIEW_ID:                  RecordView
+    , GROUP_ID:                 RecordGroup
+    , FIELD_ID:                 RecordField
+    , VOCAB_ID:                 RecordVocab
+    , '_enum_field_placement':  RecordEnumFactory('_enum_field_placement',  '_enum_field_placement')
+    , '_enum_list_type':        RecordEnumFactory('_enum_list_type',        '_enum_list_type')
+    , '_enum_render_type':      RecordEnumFactory('_enum_render_type',      '_enum_render_type')
+    , '_enum_value_mode':       RecordEnumFactory('_enum_value_mode',       '_enum_value_mode')
+    , '_enum_value_type':       RecordEnumFactory('_enum_value_type',       '_enum_value_type')
+    #@@ , '_enum_bib_type':     RecordEnumFactory('_enum_bib_type',    '_enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
-    { COLL_ID:              COLL_MESSAGES
-    , USER_ID:              USER_MESSAGES
-    , TYPE_ID:              TYPE_MESSAGES
-    , LIST_ID:              LIST_MESSAGES
-    , VIEW_ID:              VIEW_MESSAGES
-    , GROUP_ID:             GROUP_MESSAGES
-    , FIELD_ID:             FIELD_MESSAGES
-    , VOCAB_ID:             VOCAB_MESSAGES
-    , 'Enum_list_type':     ENUM_MESSAGES
-    , 'Enum_render_type':   ENUM_MESSAGES
-    , 'Enum_value_mode':    ENUM_MESSAGES
-    , 'Enum_bib_type':      ENUM_MESSAGES
+    { COLL_ID:                  COLL_MESSAGES
+    , USER_ID:                  USER_MESSAGES
+    , TYPE_ID:                  TYPE_MESSAGES
+    , LIST_ID:                  LIST_MESSAGES
+    , VIEW_ID:                  VIEW_MESSAGES
+    , GROUP_ID:                 GROUP_MESSAGES
+    , FIELD_ID:                 FIELD_MESSAGES
+    , VOCAB_ID:                 VOCAB_MESSAGES
+    , '_enum_field_placement':  ENUM_MESSAGES  
+    , '_enum_list_type':        ENUM_MESSAGES
+    , '_enum_render_type':      ENUM_MESSAGES
+    , '_enum_value_mode':       ENUM_MESSAGES
+    , '_enum_value_type':       ENUM_MESSAGES
+    #@@ , '_enum_bib_type':     ENUM_MESSAGES
     })
 
 SITE_PERMISSIONS_MAP = (
-    { COLL_ID:              SITE_PERMISSIONS
-    , USER_ID:              ADMIN_PERMISSIONS
-    , TYPE_ID:              SITE_PERMISSIONS
-    , LIST_ID:              SITE_PERMISSIONS
-    , VIEW_ID:              SITE_PERMISSIONS
-    , GROUP_ID:             SITE_PERMISSIONS
-    , FIELD_ID:             SITE_PERMISSIONS
-    , VOCAB_ID:             ADMIN_PERMISSIONS  #@@ CONFIG??
-    , 'Enum_list_type':     SITE_PERMISSIONS
-    , 'Enum_render_type':   SITE_PERMISSIONS
-    , 'Enum_value_mode':    SITE_PERMISSIONS
-    , 'Enum_bib_type':      SITE_PERMISSIONS
-    , 'EntityData':         SITE_PERMISSIONS
+    { COLL_ID:                  SITE_PERMISSIONS
+    , USER_ID:                  ADMIN_PERMISSIONS
+    , TYPE_ID:                  SITE_PERMISSIONS
+    , LIST_ID:                  SITE_PERMISSIONS
+    , VIEW_ID:                  SITE_PERMISSIONS
+    , GROUP_ID:                 SITE_PERMISSIONS
+    , FIELD_ID:                 SITE_PERMISSIONS
+    , VOCAB_ID:                 ADMIN_PERMISSIONS  #@@ CONFIG??
+    , '_enum_field_placement':  SITE_PERMISSIONS  
+    , '_enum_list_type':        SITE_PERMISSIONS
+    , '_enum_render_type':      SITE_PERMISSIONS
+    , '_enum_value_mode':       SITE_PERMISSIONS
+    , '_enum_value_type':       SITE_PERMISSIONS
+    #@@ , '_enum_bib_type':         SITE_PERMISSIONS
+    , 'EntityData':             SITE_PERMISSIONS
     })
 
 TYPE_PERMISSIONS_MAP = (
-    { COLL_ID:              CONFIG_PERMISSIONS
-    , USER_ID:              ADMIN_PERMISSIONS
-    , TYPE_ID:              CONFIG_PERMISSIONS
-    , LIST_ID:              CONFIG_PERMISSIONS
-    , VIEW_ID:              CONFIG_PERMISSIONS
-    , GROUP_ID:             CONFIG_PERMISSIONS
-    , FIELD_ID:             CONFIG_PERMISSIONS
-    , VOCAB_ID:             CONFIG_PERMISSIONS
-    , 'Enum_list_type':     CONFIG_PERMISSIONS
-    , 'Enum_render_type':   CONFIG_PERMISSIONS
-    , 'Enum_value_mode':    CONFIG_PERMISSIONS
-    , 'Enum_bib_type':      CONFIG_PERMISSIONS
-    , 'EntityData':         ENTITY_PERMISSIONS
+    { COLL_ID:                  CONFIG_PERMISSIONS
+    , USER_ID:                  ADMIN_PERMISSIONS
+    , TYPE_ID:                  CONFIG_PERMISSIONS
+    , LIST_ID:                  CONFIG_PERMISSIONS
+    , VIEW_ID:                  CONFIG_PERMISSIONS
+    , GROUP_ID:                 CONFIG_PERMISSIONS
+    , FIELD_ID:                 CONFIG_PERMISSIONS
+    , VOCAB_ID:                 CONFIG_PERMISSIONS
+    , '_enum_field_placement':  SITE_PERMISSIONS  
+    , '_enum_list_type':        SITE_PERMISSIONS
+    , '_enum_render_type':      SITE_PERMISSIONS
+    , '_enum_value_mode':       SITE_PERMISSIONS
+    , '_enum_value_type':       SITE_PERMISSIONS
+    #@@ , '_enum_bib_type':         CONFIG_PERMISSIONS
+    , 'EntityData':             ENTITY_PERMISSIONS
     })
 
 def get_built_in_type_ids():
@@ -574,7 +582,7 @@ class EntityTypeInfo(object):
         """
         #@@
         # log.info(
-        #     "@@ enum_entities_with_implied_values: parent %s, altscope %s"%
+        #     "@@ EntityTypeInfo.enum_entities_with_implied_values: parent %s, altscope %s"%
         #     (self.entityparent.get_id(), altscope)
         #     )
         #@@
@@ -596,6 +604,12 @@ class EntityTypeInfo(object):
                         altscope=altscope):
                     yield self.get_entity(eid)
             else:
+                #@@
+                # log.info(
+                #     "@@ enum_entities_with_implied_values: parent %s, altscope %s"%
+                #     (self.entityparent.get_id(), altscope)
+                #     )
+                #@@
                 for eid in self.entityparent.child_entity_ids(
                         self.entityclass, 
                         altscope=altscope):
