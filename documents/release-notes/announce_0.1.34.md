@@ -31,7 +31,8 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 After an extended hiatus due to some upheaval in my personal life, I've just released an update (0.1.34) to the public prototype of Annalist.  This release provides numerous enhancements and bug fixes, as well revision of the file storage layout used to make URLs used more consistent.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/.../...
+https://groups.google.com/d/msg/annalist-discuss/tXnhUgZvKv8/kRr2Le7-BQAJ
+
 
 See also: 
 
