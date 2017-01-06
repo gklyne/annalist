@@ -53,10 +53,13 @@ LOGGING = {
         },
         # Log to a text file that can be rotated by logrotate
         'logfile': {
-            'class': 'logging.handlers.WatchedFileHandler',
-            'level': TRACE_FIELD_VALUE,
-            'filename': LOGGING_FILE,
-            'formatter': 'timed'
+            # 'class': 'logging.handlers.WatchedFileHandler',
+            'class':        'logging.handlers.RotatingFileHandler',
+            'filename':     LOGGING_FILE,
+            'maxBytes':     5*1024*1024,            # 5Mb
+            'backupCount':  9,                      # Keep 9 files
+            'level':        TRACE_FIELD_VALUE,
+            'formatter':    'timed'
         },
     },
     'loggers': {

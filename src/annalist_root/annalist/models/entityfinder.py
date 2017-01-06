@@ -154,7 +154,7 @@ class EntityFinder(object):
         """
         if type_id:
             #@@
-            log.info("get_base_entities: type_id %s"%type_id)
+            # log.info("get_base_entities: type_id %s"%type_id)
             #@@
             return self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)

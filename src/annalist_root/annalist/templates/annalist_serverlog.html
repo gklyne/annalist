@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block heading %}{{ heading }}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="large-12 columns">
+    <h3>Server log ({{serverlogname}})</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <form method="POST" action="#">
+      {% csrf_token %}
+      <div class="view-fieldrow row">
+        <div class="small-12 columns serverlog">{{serverlog}}</div>
+      </div>
+      <div class="row">
+        <div class="small-12 medium-6 columns">
+          <div class="row">
+            <div class="form-buttons small-12 columns">
+              <input type="submit" value="Cancel"   name="cancel" />
+            </div>
+          </div>
+        </div>
+        <div class="small-12 medium-6 columns">
+          &nbsp;
+        </div>
+      </div>
+      <input type="hidden" name="continuation_url"  value="{{continuation_url}}"/>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

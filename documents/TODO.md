@@ -18,10 +18,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Access to page link without continuation (view only)
     - Added permalink to entity view page, after page heading
     - Rearranged page layout so that page heading comes below top nav bar
-- [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
+- [x] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
-    - [ ] site link to download log, if admin permissions (could be a data bridge?)
-    - [ ] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+    - [x] site link to view log, if admin permissions (could be a data bridge?)
+    - [x] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
+        - Done for personal config - could easily be extended to others
 - [ ] annalist-manager options for users, consider:
     - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]

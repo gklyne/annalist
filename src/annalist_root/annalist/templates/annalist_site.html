@@ -6,11 +6,13 @@
 
 {% block content %}
 
+<!--
   <div class="row">
     <div class="large-12 columns">
       <h3>Collections</h3>
     </div>
   </div>
+-->
 
   <div class="row">
     <div class="large-12 columns">
@@ -26,7 +28,7 @@
                     <span>&nbsp;</span>
                   </div>
                   <div class="view-label col-head small-4 columns">
-                    <span>Id</span>
+                    <span>Collection Id</span>
                   </div>
                   <div class="view-label col-head small-7 columns">
                     <span>Label</span>
@@ -68,13 +70,6 @@
                 <input type="submit" value="Remove selected" name="remove" />
               </div>
             </div>
-            <!-- original:
-            <div class="row">
-              <div class="small-3 columns right">
-                <input type="submit" value="Remove selected" name="remove" class="right" />
-              </div>
-            </div>
-            -->
             {% endif %}
 
             {% if auth_create_coll %}
@@ -101,19 +96,6 @@
                 <input type="submit" value="New collection" name="new" />
               </div>
             </div>
-            <!-- original:
-            <div class="row">
-              <div class="small-3 columns">
-                <input type="text" size="32" name="new_id" value=""/>
-              </div>
-              <div class="small-7 columns">
-                <input type="text" size="64" name="new_label" value=""/>
-              </div>
-              <div class="small-2 columns">
-                <input type="submit" value="New" name="new" class="right" />
-              </div>
-            </div>
-            -->
             {% endif %}
 
           </div>
