@@ -97,11 +97,18 @@ form div.row .columns .row .columns .row
     ------------------------------------------------------------------------- */
 
 h2.page-heading {
-    margin-top:    0.2rem;
-    margin-bottom: 0;
-    padding:       0 0.9375rem;
-    font-size:     1.625rem;
-    color:         #666666;
+    margin-top:     0.2rem;
+    margin-bottom:  0;
+    padding:        0 0.9375rem;
+    font-size:      1.625rem;
+    color:          #666666;
+}
+
+h2.page-heading > a.permalink {
+    vertical-align: 0.1rem;
+    padding-left:   0.5rem;
+    font-size:      1rem;
+    color:          #008cba; /* copied from Foundation <a> colour */
 }
 
 p.djangolinks 

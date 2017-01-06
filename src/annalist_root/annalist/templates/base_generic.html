@@ -16,8 +16,6 @@
 </head>
 
 <body>
-  <h2 class="page-heading">{% block heading %}Annalist linked data notebook{% endblock %}</h2>
-
   {% block topmenu %}
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
@@ -112,6 +110,8 @@
     </p>
   </div>
   {% endif %}
+
+  <h2 class="page-heading">{% block heading %}Annalist linked data notebook{% endblock %}</h2>
 
   {% block content %}
   <!--

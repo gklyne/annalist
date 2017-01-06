@@ -15,7 +15,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.35, towards 0.1.36
 
-- [ ] Access to page link without continuation (view only)?
+- [x] Access to page link without continuation (view only)
+    - Added permalink to entity view page, after page heading
+    - Rearranged page layout so that page heading comes below top nav bar
 - [ ] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
     - [x] annalist-manager serverlog command returns log file name
     - [ ] site link to download log, if admin permissions (could be a data bridge?)
