@@ -56,7 +56,7 @@ LOGGING = {
             # 'class': 'logging.handlers.WatchedFileHandler',
             'class':        'logging.handlers.RotatingFileHandler',
             'filename':     LOGGING_FILE,
-            'maxBytes':     5*1024*1024,            # 5Mb
+            'maxBytes':     1*1024*1024,            # 1Mb
             'backupCount':  9,                      # Keep 9 files
             'level':        TRACE_FIELD_VALUE,
             'formatter':    'timed'
