@@ -23,9 +23,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] site link to view log, if admin permissions (could be a data bridge?)
     - [x] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
         - Done for personal config - could easily be extended to others
-- [ ] annalist-manager options for users, consider:
-    - [ ] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
-    - [ ] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
+- [x] annalist-manager options for users, consider:
+    - [x] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
+    - [x] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
 - [ ] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
@@ -36,7 +36,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.5?)
 
-- [ ] "Type definition" help text is a little conbfusing (cf 'Entity types ...').
+- [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
