@@ -33,7 +33,11 @@ from annalist                       import layout
 from annalist                       import util
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
-from annalist.models.annalistuser   import AnnalistUser, default_user_id, default_user_uri
+from annalist.models.annalistuser   import (
+    AnnalistUser, 
+    default_user_id, default_user_uri, 
+    unknown_user_id, unknown_user_uri
+    )
 
 from annalist.views.uri_builder     import uri_with_params, continuation_params
 
@@ -255,13 +259,14 @@ class AnnalistGenericView(ContentNegotiationView):
         records of a deleted account being granted to a new account created with the 
         same user_id (username).
 
-        This function returns default permissions if the user details supplied cannot be matched.
+        This funbction includes any collection- or site- default permissions in the 
+        set of permissions returned.
 
-        Permissions are cached in the view object so that the prmissions record is read at 
+        Permissions are cached in the view object so that the permissions record is read at 
         most once for any HTTP request. 
 
         collection      the collection for which permissions are required.
-        user_id         local identifier for the type to retrieve.
+        user_id         local identifier for the user permnissions to retrieve.
         user_uri        authenticated identifier associated with the user_id.  That is,
                         the authentication service used is presumed to confirm that
                         the identifier belongs to the user currently logged in with
@@ -276,15 +281,17 @@ class AnnalistGenericView(ContentNegotiationView):
             #         (user_id, user_uri, collection.get_id(), collection.get_user_permissions(user_id, user_uri))
             #         )
             parentcoll = collection or self.site()
-            user_perms = (
-                parentcoll.get_user_permissions(user_id, user_uri) or
-                parentcoll.get_user_permissions(default_user_id, default_user_uri)
-                )
-            # user_perms = (
-            #     (collection and collection.get_user_permissions(user_id, user_uri)) or
-            #     self.site().get_user_permissions(user_id, user_uri) or
-            #     self.site().get_user_permissions("_default_user_perms", "annal:User/_default_user_perms")
-            #     )
+            if user_id == unknown_user_id:
+                # Don't apply collection default-user permissions if no authenticated user
+                user_perms = parentcoll.get_user_permissions(unknown_user_id, unknown_user_uri)
+            else:
+                # Combine user permissions with default-user permissions for collection
+                default_perms = parentcoll.get_user_permissions(default_user_id, default_user_uri)
+                user_perms    = parentcoll.get_user_permissions(user_id, user_uri) or default_perms
+                user_perms[ANNAL.CURIE.user_permission] = list(
+                    set(user_perms[ANNAL.CURIE.user_permission]) | 
+                    set(default_perms[ANNAL.CURIE.user_permission])
+                    ) 
             self._user_perms[coll_id] = user_perms
             # log.debug("get_user_permissions %r"%(self._user_perms,))
         return self._user_perms[coll_id]
@@ -341,7 +348,7 @@ class AnnalistGenericView(ContentNegotiationView):
         # user_perms is an AnnalistUser object
         coll_id = collection.get_id() if collection else "(No coll)"
         if scope not in user_perms[ANNAL.CURIE.user_permission]:
-            if user_id == "_unknown_user_perms":
+            if user_id == unknown_user_id:
                 err = self.error401values(scope=scope)
             else:
                 err = self.error403values(scope=scope)

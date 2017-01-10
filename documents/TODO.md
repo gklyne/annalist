@@ -28,7 +28,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
 - [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
     - include migration logic
-- [ ] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
+- [x] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
+    - [x] revise authorization logic to include default-user permissions for collection
+    - [x] create test cases for this
 - [ ] Migration logic: check that new supertypes are applied
 - [ ] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value (confirmed also in development version):  Problem is entity reference render type without a target type specified: should check for this when displaying field.
 - [ ] Add predefined tag list to Journal_defs
