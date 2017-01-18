@@ -380,7 +380,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:id",
             field_render_type=  "EntityId",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_placement=    "small-12 medium-6 columns",
             field_value=        field_id,
             options=            self.no_options
@@ -391,7 +391,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:field_render_type",
             field_render_type=  "Enum_choice",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_placement=    "small-12 medium-6 columns",
             field_value=        field_render_type,
             options=            self.render_options
@@ -414,7 +414,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:field_value_mode",
             field_render_type=  "Enum_choice",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_value=        field_value_mode,
             options=            self.value_mode_options
             )
@@ -468,7 +468,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:field_ref_type",
             field_render_type=  "Enum_optional",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_value=        field_typeref,
             options=            self.ref_type_options
             )
@@ -512,7 +512,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:group_ref",
             field_render_type=  "Enum_optional",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_value=        field_viewref,
             options=            self.group_options
             )

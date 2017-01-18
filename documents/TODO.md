@@ -26,8 +26,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] annalist-manager options for users, consider:
     - [x] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [x] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [ ] `annal:Slug` type URI for entity references - is now type/id: rename type?  (annal:Entity_ref?)
-    - include migration logic
+- [x] `annal:Slug` type URI for entity references renamed to annal:EntityRef.
+    - [x] renamned in code andf site data
+    - [x] migration logic
+        - _field records, field annal:field_value_type
 - [x] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
     - [x] revise authorization logic to include default-user permissions for collection
     - [x] create test cases for this

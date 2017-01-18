@@ -12,7 +12,7 @@ Literals:
 
 References:
 
-- Slug/Entity_ref
+- EntityRef
 - Type
 - List
 - View

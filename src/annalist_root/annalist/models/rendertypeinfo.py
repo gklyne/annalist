@@ -32,7 +32,7 @@ _render_type_literal = set(
 
 _render_type_id = set(
     [ "Identifier"
-    , "Slug"
+    , "EntityRef"
     , "RefAudio", "RefImage", "URILink", "URIImage"
     , "RefMultifield"
     , "Group_Set", "Group_Set_Row"

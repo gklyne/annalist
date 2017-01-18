@@ -21,7 +21,7 @@
   "rdfs:label": "Field value mode",
   "rdfs:range": [
     {
-      "@id": "annal:Slug"
+      "@id": "annal:EntityRef"
     }
   ],
   "rdfs:subPropertyOf": []

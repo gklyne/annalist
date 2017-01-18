@@ -21,7 +21,7 @@
   "rdfs:label": "User permission",
   "rdfs:range": [
     {
-      "@id": "annal:Slug"
+      "@id": "annal:EntityRef"
     }
   ],
   "rdfs:subPropertyOf": []

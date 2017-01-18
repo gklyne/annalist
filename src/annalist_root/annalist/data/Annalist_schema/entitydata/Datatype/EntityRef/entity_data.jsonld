@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Datatype",
+    "rdfs:Resource",
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "EntityRef",
+  "annal:type": "rdfs:Datatype",
+  "annal:type_id": "Datatype",
+  "annal:uri": "annal:EntityRef",
+  "rdfs:comment": "# Local entity reference\r\n\r\nThe class of strings that serve as local entity references within a collection, resolved to URIs using the base URI for all data in the collection.\r\n\r\nHas the general form `type_id/entity_id`, where `type_id` and `entity_id` together serve to uniquely identify an entity among all those defined in a collection.",
+  "rdfs:label": "Local entity reference",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}
