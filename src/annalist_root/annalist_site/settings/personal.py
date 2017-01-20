@@ -54,7 +54,8 @@ LOGGING = {
         # Log to a text file that can be rotated by logrotate
         'logfile': {
             # 'class': 'logging.handlers.WatchedFileHandler',
-            'class':        'logging.handlers.RotatingFileHandler',
+            # 'class':        'logging.handlers.RotatingFileHandler',
+            'class':        'annalist_site.settings.common.RotatingNewFileHandler',
             'filename':     LOGGING_FILE,
             'maxBytes':     1*1024*1024,            # 1Mb
             'backupCount':  9,                      # Keep 9 files
@@ -100,6 +101,15 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
+log.info("Annalist starting...")
+
+# Force new log files for any rotating file log handlers
+for h in log.handlers:
+    log.info("@@ log handler %r"%(h,))
+    if isinstance(h, logging.handlers.RotatingFileHandler):
+        log.info("@@ log rollover")        
+        h.doRollover()
+
 # log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
 log.info(ANNALIST_VERSION_MSG)
 log.debug("SETTINGS_MODULE:  "+SETTINGS_MODULE)

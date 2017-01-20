@@ -160,9 +160,10 @@ class EntityGenericListView(AnnalistGenericView):
         scope      = request.GET.get('scope',  None)
         search_for = request.GET.get('search', "")
         log.info(
-            "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s, search %s"%
+            "views.entitylist.get:  coll_id %s, type_id %s, list_id %s, scope %s, search '%s'"%
             (coll_id, type_id, list_id, scope, search_for)
             )
+        log.log(settings.TRACE_FIELD_VALUE, "  %s"%(self.get_request_path()))
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
             return listinfo.http_response
@@ -235,7 +236,7 @@ class EntityGenericListView(AnnalistGenericView):
         """
         log.info("views.entitylist.post: coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
         log.log(settings.TRACE_FIELD_VALUE, "  %s"%(self.get_request_path()))
-        log.log(settings.TRACE_FIELD_VALUE, "  form data %r"%(request.POST))
+        # log.log(settings.TRACE_FIELD_VALUE, "  form data %r"%(request.POST))
         listinfo = self.list_setup(coll_id, type_id, list_id, request.POST.dict())
         if listinfo.http_response:
             return listinfo.http_response

@@ -120,13 +120,7 @@ class GenericEntityEditView(AnnalistGenericView):
             "views.entityedit.get:  coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "views.entityedit.get %s"%(self.get_request_path())
-        #     )
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
-        #       (coll_id, type_id, entity_id, view_id, action)
-        #     )
+        log.log(settings.TRACE_FIELD_VALUE, "  %s"%(self.get_request_path()))
         self.get_view_template(action, type_id, entity_id)
         action           = action or "view"
         viewinfo         = self.view_setup(
@@ -201,16 +195,10 @@ class GenericEntityEditView(AnnalistGenericView):
             "views.entityedit.post: coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
               (coll_id, type_id, entity_id, view_id, action)
             )
-        log.log(settings.TRACE_FIELD_VALUE,
-            "views.entityedit.post %s"%(self.get_request_path())
-            )
-        log.log(settings.TRACE_FIELD_VALUE,
-            "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
-              (coll_id, type_id, entity_id, view_id, action)
-            )
-        log.log(settings.TRACE_FIELD_VALUE,
-            "  form data %r"%(request.POST)
-            )
+        log.log(settings.TRACE_FIELD_VALUE, "  %s"%(self.get_request_path()))
+        # log.log(settings.TRACE_FIELD_VALUE,
+        #     "  form data %r"%(request.POST)
+        #     )
         if request.FILES:
             for f in request.FILES:
                 log.info(
