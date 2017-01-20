@@ -21,6 +21,7 @@ from django.conf import settings
 
 from annalist                       import layout
 from annalist                       import message
+from annalist.identifiers           import ANNAL
 from annalist.util                  import replacetree, updatetree
 
 from annalist.models.site           import Site
@@ -136,6 +137,8 @@ def migrate_coll_data(coll):
         return errs
     entityfinder = EntityFinder(coll)
     for e in entityfinder.get_entities():
+        coll.update_entity_types(e)
+        log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
         e._save(post_update_flags={"nocontext"})
     coll.generate_coll_jsonld_context()    
     return errs

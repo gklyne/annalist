@@ -33,7 +33,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
     - [x] revise authorization logic to include default-user permissions for collection
     - [x] create test cases for this
-- [ ] Migration logic: check that new supertypes are applied
+- [x] Migration logic: check that new supertypes are applied
+    - [x] Add Collection.update_entity_types
+    - [x] Call Collection.update_entity_types from CollectionData.migrate_coll_data
+    - [x] Test case
+- [ ] Log rotation at server startup?
 - [ ] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value (confirmed also in development version):  Problem is entity reference render type without a target type specified: should check for this when displaying field.
 - [ ] Add predefined tag list to Journal_defs
 

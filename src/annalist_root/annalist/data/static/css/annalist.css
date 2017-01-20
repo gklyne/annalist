@@ -177,7 +177,7 @@ div.row div.columns p.caption
 
     ------------------------------------------------------------------------- */
 
-div.serverlog
+div.serverlog_disabled
 {
     overflow:         scroll;
     height:           46rem;
@@ -193,6 +193,18 @@ div.serverlog
     font-size:      0.875rem;
 }
 
+div.serverlog
+{
+    background-color: #fceaff;
+    border:           1px solid #f4e4f8;
+    padding:          0.4rem 0.25rem 0.2rem 0.25rem;
+    white-space:      pre;
+    font-family:      Consolas,Monaco,Lucida Console,
+                      Liberation Mono,DejaVu Sans Mono,
+                      Bitstream Vera Sans Mono,Courier New, 
+                      monospace;
+    font-size:      0.875rem;
+}
 
 
 /*  ------------------------------------------------------------------------- 

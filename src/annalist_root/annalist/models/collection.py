@@ -407,6 +407,25 @@ class Collection(Entity):
         s = RecordType.remove(self, type_id)
         return s
 
+    def update_entity_types(self, e):
+        """
+        Updates the list of type URIs associated with an entity by accessing the
+        supertypes of the associated type record.
+        """
+        type_uri = e.get(ANNAL.CURIE.type, None)
+        sts = [type_uri]
+        t   = self.get_uri_type(type_uri)
+        if t:
+            assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
+            for st in t.get(ANNAL.CURIE.supertype_uri, []):
+                if isinstance(st, dict):
+                    st = st['@id']
+                if st not in sts:
+                    sts.append(st)
+        # log.info("@@ update_entity_types %r"%(sts,))
+        e['@type'] = sts
+        return
+
     # Record views
 
     def views(self, altscope="all"):
