@@ -378,6 +378,8 @@ class Collection(Entity):
 
         returns a RecordType object for the identified type, or None.
         """
+        if not valid_id(type_id):
+            raise ValueError("Collection %s get_type(%s) invalid id"%(self.get_id(), type_id))
         self._load_types()
         t = self._types_by_id.get(type_id, None)
         # Was it created but not cached?

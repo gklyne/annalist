@@ -14,7 +14,7 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
-from annalist.util                  import extract_entity_id
+from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -75,6 +75,9 @@ class EntityFinder(object):
         of the supplied type in the current collection, including the 
         identified type itself.
         """
+        if not valid_id(type_id):
+            log.warning("EntityFinder.get_collection_uri_subtypes: invalid type_id %s"%(type_id,))
+            return []
         supertypeinfo = EntityTypeInfo(self._coll, type_id)
         supertypeuri  = supertypeinfo.get_type_uri()
         if supertypeuri is None:

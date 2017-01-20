@@ -137,7 +137,9 @@ def update_choice_labels(fieldchoices):
     new_choices = []
     for o in fieldchoices:
         if labels[o.label] > 1:
-            new_choices.append(FieldChoice(id=o.id, value=o.value, label=o.label, link=o.link, choice_value=True))
+            new_choices.append(
+                FieldChoice(id=o.id, value=o.value, label=o.label, link=o.link, choice_value=True)
+                )
         else:
             new_choices.append(o)
     return new_choices

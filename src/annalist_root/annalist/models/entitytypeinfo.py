@@ -222,7 +222,6 @@ TYPE_CLASS_MAP = (
     , '_enum_render_type':      RecordEnumFactory('_enum_render_type',      '_enum_render_type')
     , '_enum_value_mode':       RecordEnumFactory('_enum_value_mode',       '_enum_value_mode')
     , '_enum_value_type':       RecordEnumFactory('_enum_value_type',       '_enum_value_type')
-    #@@ , '_enum_bib_type':     RecordEnumFactory('_enum_bib_type',    '_enum_bib_type')
     })
 
 TYPE_MESSAGE_MAP = (
@@ -239,7 +238,6 @@ TYPE_MESSAGE_MAP = (
     , '_enum_render_type':      ENUM_MESSAGES
     , '_enum_value_mode':       ENUM_MESSAGES
     , '_enum_value_type':       ENUM_MESSAGES
-    #@@ , '_enum_bib_type':     ENUM_MESSAGES
     })
 
 SITE_PERMISSIONS_MAP = (
@@ -256,7 +254,6 @@ SITE_PERMISSIONS_MAP = (
     , '_enum_render_type':      SITE_PERMISSIONS
     , '_enum_value_mode':       SITE_PERMISSIONS
     , '_enum_value_type':       SITE_PERMISSIONS
-    #@@ , '_enum_bib_type':         SITE_PERMISSIONS
     , 'EntityData':             SITE_PERMISSIONS
     })
 
@@ -274,7 +271,6 @@ TYPE_PERMISSIONS_MAP = (
     , '_enum_render_type':      SITE_PERMISSIONS
     , '_enum_value_mode':       SITE_PERMISSIONS
     , '_enum_value_type':       SITE_PERMISSIONS
-    #@@ , '_enum_bib_type':         CONFIG_PERMISSIONS
     , 'EntityData':             ENTITY_PERMISSIONS
     })
 
@@ -352,6 +348,8 @@ class EntityTypeInfo(object):
             else:
                 self.permissions_map = TYPE_PERMISSIONS_MAP[type_id]
         else:
+            if not valid_id(type_id):
+                raise ValueError("EntityTypeInfo invalid type_id (%s)"%(type_id,))
             if RecordType.exists(coll, type_id, altscope="all"):
                 # log.info("@@ EntityTypeInfo: Type %s exists"%type_id)
                 self.recordtype     = coll.get_type(type_id)

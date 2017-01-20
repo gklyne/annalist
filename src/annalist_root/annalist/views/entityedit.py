@@ -709,6 +709,19 @@ class GenericEntityEditView(AnnalistGenericView):
         new_enum = self.find_new_enum(entityvaluemap, form_data)
         if new_enum:
             new_type_id    = extract_entity_id(new_enum['field_ref_type'])
+            if not valid_id(new_type_id):
+                # Report problem with field definition...
+                #@@ field_label = new_enum['field_label']
+                err_msg = message.NO_REFER_TO_TYPE%new_enum
+                log.info(err_msg)
+                responseinfo.set_http_response(
+                    self.form_re_render(
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=message.CREATE_FIELD_ENTITY_ERROR,
+                        error_message=err_msg
+                        )
+                    )
+                return responseinfo.get_http_response()
             new_typeinfo = EntityTypeInfo(
                 viewinfo.collection, new_type_id
                 )

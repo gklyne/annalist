@@ -38,29 +38,18 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Call Collection.update_entity_types from CollectionData.migrate_coll_data
     - [x] Test case
 - [x] Log rotation at server startup?
-- [ ] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value (confirmed also in development version):  Problem is entity reference render type without a target type specified: should check for this when displaying field.
-- [ ] Add predefined tag list to Journal_defs
+- [x] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value
+    - Problem is enumeration renderer without a target type specified
+- [ ] Add predefined tag list to Journal_defs (??)
 
 (feature freeze for V0.9alpha?)
 (0.5?)
 
-- [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
-- [ ] Remove surplus fields from context when context generation/migration issues are settled
-    - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] TECHDEBT: render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [ ] *delete views: rationalize into single view?
-- [ ] performance tuning: in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
-- [ ] look into entity cacheing (esp. RecordType) for performance improvement
+- [ ] Figure out how to preserve defined users when reinstalling the software.
+    - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
+    - Seems to be working, but needs explicit testing to make sure.
 - [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] update pip to latest version in python environment (for continued testing)
-- [ ] review renderers and revise to take all message strings from messages.py
-- [ ] review title/heading strings and revise to take all message strings from messages.py
-- [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
-- [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
-- [ ] Review nomenclature, especially labels, for all site data
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".  Also "Slug"?
-- [ ] Provide content for the links in the page footer
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -68,12 +57,40 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
+- [ ] Remove surplus fields from context when context generation/migration issues are settled
+    - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
+- [ ] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ] Remove corresponding special case code in bound_field.
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
+- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+- [ ] *delete views: rationalize into single view?
+- [ ] performance tuning
+    - [ ] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
+    - [ ] look into entity cacheing (esp. RecordType) for performance improvement
+        - partly done per-collection - is this enough?
+    - [ ] Re-think access to entities and types:
+        - [ ] There is repeated reading of RecordType values in EntityFinder
+              (cf. collection.types() and EntityTypeInfo constructor; also URI access)
+        - [ ] Need more direct way to locate type (and other entities?) by URI
+        - [ ] Review common mechanism to retrieve URI for entity?  
+              (Current mechanism fixes use of annal:uri for all entities; maybe OK)
+        - [ ] Think about how to optimize retrieval of subtypes/supertypes
+        - [ ] Do special case for types, or more generic caching approach?
+- [ ] review renderers and revise to take all message strings from messages.py
+- [ ] review title/heading strings and revise to take all message strings from messages.py
+- [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
+- [ ] Review nomenclature, especially labels, for all site data
+- [ ] Provide content for the links in the page footer
 - [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
-- [ ] Figure out how to preserve defined users when reinstalling the software.
-    - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
-    - Seems to be working, but needs explicit testing to make sure.
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -97,15 +114,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
         - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 
-Data collection definitions:
-
-- [ ] VoID, DCAT
-
 Technical debt:
 
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplaytInfo?)
-- [ ] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
+- [x] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
 - [x] Consider treating Enum types as regular types under /d/?
 - [x] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
@@ -122,30 +135,22 @@ Technical debt:
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
 - [ ] Inconsistent `@id` values in site data
-- [ ] Re-think access to entities and types:
-    - [ ] There is repeated reading of RecordType values in EntityFinder
-          (cf. collection.types() and EntityTypeInfo constructor; also URI access)
-    - [ ] Need more direct way to locate type (and other entities?) by URI
-    - [ ] Review common mechanism to retreive URI for entity?  
-          (Current mechanism fixes use of annal:uri for all entities; maybe OK)
-    - [ ] Think about how to optimize retrieval of subtypes/supertypes
-    - [ ] Do special case for types, or more generic caching approach?
 - [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
-- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ] Remove corresponding special case code in bound_field.
 - [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
-- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
+
+
+Data collection definitions:
+
+- [ ] VoID, DCAT, PROV
 
 
 Usability notes:
 
+- [ ] Absorb groups into field defs?
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
@@ -155,10 +160,9 @@ Usability notes:
     - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
     - not seeing the problem here: revisit when problem surefaces again.
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
-    - This could be tricky, as each view doesits own auth checks.
+    - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
     - As an edge case, dopn't worry about this immediately.
-- [ ] Absorb groups into field defs?
 - [ ] Add menu bar link to display content of collection rather than default
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
@@ -170,7 +174,7 @@ Usability notes:
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [x] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
 - [x] OR... allow an entity to specify its own default view? (this is now handled by subtyping)
-- [ ] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
+- [x] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
 - [x] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
 - [x] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
@@ -220,6 +224,7 @@ Notes for Future TODOs:
     - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
         - hard to find actual provider service other than Google
     - [ ] https://aarc-project.eu
+    - tried investigating EUDat, which looks promising but fails with invalid certificate
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
@@ -234,18 +239,14 @@ Notes for Future TODOs:
 - [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
 - [ ] From view of list definition, link to show list itself
     - Beside "Show view" button, add "Show list"?
-    - tried investigating EUDat, which looks promising but fails with invalid certificate
-
 - [ ] Embedded code expansion in help text, and maybe other Markdown:
-    - [ ] {{site}} base URL for site
-    - [ ] {{coll}} base url for collection
-    - [ ] {{url:typeid/entityid}} UREL for referenced entity.
+    - [x] {{site}} base URL for site
+    - [x] {{coll}} base url for collection
+    - [x] {{url:typeid/entityid}} UREL for referenced entity.
     - [ ] {{ref:typeid/entityid}} link for referenced entity, using label from target.
     - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
-
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
-
-- [ ] Think about extending field descrtiptions to include:
+- [ ] Think about extending field descriptions to include:
     - [ ] superproperty URIs (similar to supertype URIs in types)
     - [ ] rules that allow inferences of multiple RDF statements; e.g.
         ?a isRecordingOf ?b
@@ -254,7 +255,7 @@ Notes for Future TODOs:
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
     - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
-- [ ] Collection metadata editing requires site-level permissions; 
+- [x] Collection metadata editing requires site-level permissions; 
     - to apply collection level permissions wout require entity level access control settings
     - think about this?
     - see EntityTypeInfo.__init__
@@ -265,8 +266,8 @@ Notes for Future TODOs:
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
-- [ ] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
-- [ ] field renderer for unified import or upload resource?
+- [x] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
+- [x] field renderer for unified import or upload resource?
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -283,15 +284,16 @@ Notes for Future TODOs:
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
-- [ ] Associate a prefix with a collection? 
+- [ ] Associate a prefix with a collection
 - [x] Provide a way to edit collection metadata (e.g. link from Customize page)
-- [x] Provide a way to edit site metadata (e.g. via link from site front page)
-- [ ] Provide a way to view/edit site user permissions (e.g. via link from site front page)
-- [x] Provide a way to view/edit site type/view/list/etc descriptions (e.g. via link from site front page)
-    - not edit: site data should be stable and controlled.  Consider collection structure inheritiance instead.
+- [x] Provide a way to edit site metadata
+- [x] Provide a way to view/edit site user permissions
+- [x] Provide a way to view/edit site type/view/list/etc descriptions
+    - Not edit: site data should be stable and controlled.
+    - Provided collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
 - [x] Help display for view: use commentary text from view description; thus can tailor help for each view.
-- [ ] Use markdown directly for help text
+- [x] Use markdown directly for help text
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
