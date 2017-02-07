@@ -144,6 +144,16 @@ setup(
             , 'data/RDF_schema_defs/_list/*/*.jsonld'
             , 'data/RDF_schema_defs/_type/*/*.jsonld'
             , 'data/RDF_schema_defs/_view/*/*.jsonld'
+            # Concept definitions
+            , 'data/Concept_defs/_field/*/*.jsonld'
+            , 'data/Concept_defs/_group/*/*.jsonld'
+            , 'data/Concept_defs/_list/*/*.jsonld'
+            , 'data/Concept_defs/_type/*/*.jsonld'
+            , 'data/Concept_defs/_view/*/*.jsonld'
+            , 'data/Concept_defs/_vocab/*/*.jsonld'
+            , 'data/Concept_defs/entitydata/*/*.jsonld'
+            , 'data/Concept_defs/entitydata/*/*/*.jsonld'
+            , 'data/Concept_defs/entitydata/*/*/*/*.jsonld'
             # Journal definitions
             , 'data/Journal_defs/_field/*/*.jsonld'
             , 'data/Journal_defs/_group/*/*.jsonld'

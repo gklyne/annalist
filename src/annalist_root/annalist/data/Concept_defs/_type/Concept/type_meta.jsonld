@@ -1,0 +1,22 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Concept",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Concept",
+  "annal:supertype_uri": [],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Concepts",
+  "annal:type_view": "_view/Concept",
+  "annal:uri": "skos:Concept",
+  "rdfs:comment": "# Concept\r\n\r\nConcepts may be used to associate informal category information with journal entries or other entities.\r\n\r\nSee also: [The skos:Concept Class](https://www.w3.org/TR/skos-reference/#concepts) in the [SKOS reference document](https://www.w3.org/TR/skos-reference/).",
+  "rdfs:label": "Concept"
+}

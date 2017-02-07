@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Related_concept",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "entity[annal:record_type] subtype [annal:field_entity_type]",
+  "annal:field_ref_type": "_type/Concept",
+  "annal:field_render_type": "_enum_render_type/Enum_optional",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "skos:Concept",
+  "annal:group_ref": "",
+  "annal:id": "Related_concept",
+  "annal:placeholder": "(Select related concept)",
+  "annal:property_uri": "skos:related",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "A link to related concept or tag.",
+  "rdfs:label": "Related concept"
+}

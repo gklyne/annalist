@@ -19,6 +19,7 @@ recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/namedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/RDF_schema_defs *.jsonld *.md
 recursive-include annalist_root/annalist/data/Annalist_schema *.jsonld *.md
+recursive-include annalist_root/annalist/data/Concept_defs *.jsonld *.md
 recursive-include annalist_root/annalist/data/Journal_defs *.jsonld *.md
 recursive-include annalist_root/annalist/data/Bibliography_defs *.jsonld *.md
 recursive-include annalist_root/annalist/data/static/css *.css

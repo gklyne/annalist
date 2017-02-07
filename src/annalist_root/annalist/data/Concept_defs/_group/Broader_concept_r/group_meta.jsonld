@@ -1,0 +1,25 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_group/Broader_concept_r",
+  "@type": [
+    "annal:Field_group"
+  ],
+  "annal:group_fields": [
+    {
+      "annal:field_id": "_field/Broader_concept",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "@id"
+    }
+  ],
+  "annal:id": "Broader_concept_r",
+  "annal:record_type": "",
+  "annal:type": "annal:Field_group",
+  "annal:type_id": "_group",
+  "rdfs:comment": "Reference to related concept tag.",
+  "rdfs:label": "Broader concept"
+}

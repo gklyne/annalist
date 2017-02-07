@@ -23,6 +23,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] site link to view log, if admin permissions (could be a data bridge?)
     - [x] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
         - Done for personal config - could easily be extended to others
+- [x] Log rotation at server startup?
 - [x] annalist-manager options for users, consider:
     - [x] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
     - [x] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
@@ -37,14 +38,65 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Add Collection.update_entity_types
     - [x] Call Collection.update_entity_types from CollectionData.migrate_coll_data
     - [x] Test case
-- [x] Log rotation at server startup?
 - [x] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value
     - Problem is enumeration renderer without a target type specified
-- [ ] Add predefined tag list to Journal_defs (??)
+- [x] Add new installable collection (Concept_defs) for defining and associating SKOS Concept tag fields.
+    - [x] define type
+    - [x] define tag list
+        - tag URI should not be link? 
+    - [x] define tag view
+    - [x] define related concepts fields and group
+    - [x] define broader concepts fields and group
+    - [x] play with new structures, and test;  update Evidence definitions to see if it all works
+        - Note: also uses subtype and associated definitions for evidence types in Open_evidence.
+    - New entities in Concept_defs:
+        - _type/Concept
+        - _view/Concept
+        - _list/Concepts
+        - _field/Broader_concept
+        - _field/Broader_concept_r
+        - _field/Concept_id
+        - _field/Concept_uri
+        - _field/Entity_concept
+        - _field/Entity_concept_r
+        - _field/Related_concept
+        - _field/Related_concept_r
+        - _group/Broader_concept_r
+        - _group/Entity_concept_r
+        - _group/Related_concept_r
+        - _vocab/dc
+        - _vocab/skos
+- [x] annalist.net front page - link to CEUR paper on web - needs testing
+- [x] Split Common_defs from Journal_defs?
+
+(release - version 0.1.36)
+
+- [ ] Absorb groups into field defs
+    - [ ] extend field definition view to include list of fields (etc.)
+    - [ ] modify field definition reader to use locally defined fields in preference to group reference
+    - [ ] check for other uses of field group reference field
+    - [ ] update site definitions to use field lists in field definitions
+    - [ ] eliminate field groups from site definitions
+    - [ ] migrate group references in user field definitions to use internal field list
+    - [ ] test migration functionality
+    - [ ] apply migrations to installable collections
+    - [ ] eliminate group definitions in installable collections
+    - [ ] modify or eliminate task buttons that create field groiup entities
+    - [ ] seek out other references to RecordGroup class
+    - [ ] seek out other references to field group type name or URI
+    - ... and eventually:
+    - [ ] Remove class RecordGroup
+    - [ ] Remove field group type URI from annal: namespace
+    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
 
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
+    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
+    - If absolute URI is stored, can local reference be discovered for hyperlinking?
+    - I think evolvability is served by making these exchangeable
+- [ ] Login sequence from authz error page does not return to original page viewed
 - [ ] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
     - Seems to be working, but needs explicit testing to make sure.
@@ -117,7 +169,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 Technical debt:
 
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
-- [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplaytInfo?)
+- [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [x] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
 - [x] Consider treating Enum types as regular types under /d/?
 - [x] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
@@ -141,6 +193,7 @@ Technical debt:
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
 - [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
+- [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 
 
 Data collection definitions:
@@ -150,7 +203,6 @@ Data collection definitions:
 
 Usability notes:
 
-- [ ] Absorb groups into field defs?
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)

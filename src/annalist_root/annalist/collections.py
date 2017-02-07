@@ -29,6 +29,18 @@ installable_collections = (
             , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
             }
         } 
+    , "Concept_defs":   
+        { 'data_dir': "Concept_defs"
+        , 'coll_meta':
+            { "rdfs:label":     "Concept definitions"
+            , "rdfs:comment":   "# Concept definitions\r\n\r\n"+
+                                "This collection defines types, views and fields that can be used "+
+                                "to associate concepts (based on the SKOS vocabulary) with entities."+
+                                "\r\n"
+            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
+            , "annal:default_view_type":    "Concept"
+            }
+        }
     , "Journal_defs":   
         { 'data_dir': "Journal_defs"
         , 'coll_meta':
@@ -43,7 +55,8 @@ installable_collections = (
                                 "(mostly) unstructured information about some process, "+
                                 "along with associated resources."+
                                 "\r\n"
-            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
+            , "annal:inherit_from":         "_coll/Concept_defs"
+            , "annal:comment":              "Initialized by: `annalist-manager installcollection`"
             , "annal:default_view_id":      "Journal_note_view"
             , "annal:default_view_type":    "Journal"
             , "annal:default_view_entity":  "01_journal_resources"

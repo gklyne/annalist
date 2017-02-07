@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Concept",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Concept",
+  "annal:default_view": "_view/Concept",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Concept",
+  "annal:list_entity_selector": "'skos:Concept' in [@type]",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,3"
+    },
+    {
+      "annal:field_id": "_field/Concept_uri",
+      "annal:field_placement": "small:0,12;medium:3,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:6,6"
+    }
+  ],
+  "annal:record_type": "skos:Concept",
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "rdfs:comment": "# List concepts\r\n",
+  "rdfs:label": "Concepts"
+}
