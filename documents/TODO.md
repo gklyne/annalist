@@ -71,6 +71,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (release - version 0.1.36)
 
+- [ ] Update installed software on fast-project.analist.net
+
 - [ ] Absorb groups into field defs
     - [ ] extend field definition view to include list of fields (etc.)
     - [ ] modify field definition reader to use locally defined fields in preference to group reference
