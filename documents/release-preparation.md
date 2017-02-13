@@ -104,9 +104,9 @@
         - `git checkout master`
         - `git merge release-prep-x.y.z`
 - [x] Test again on master branch
-- [ ] Push master branch, and tags
+- [.] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.1.34"`
+    - `git commit -m "Master branch updated to V0.1.36"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
