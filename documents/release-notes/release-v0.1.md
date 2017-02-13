@@ -5,21 +5,20 @@ Release 0.1 is the first public prototype of Annalist.  It contains what I hope 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.1.34
+## Current release: 0.1.36
 
 (See "History" below for more details about this and previous releases)
 
-This release provides numerous enhancements and bug fixes in a number of areas, many supporting changes to the data file layouts used.  Major enhancements include:
+This is mainly a "maintence" release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
 
-* Data storage layout changes, also affecting URLs used to access collection data
-* Automatic migration of old collection data to new layout
-* More consistent URL structure using either `file:` or `http:` URLs.
-* Fixes to installable collection data.
-* Bibliography data definitions no longer part of Annalist core site data
-* Fix some login problems
-* Fix some access control problems
-* Fix some installation problems, particularly relating to installable collection data
-* Various documentation and built-in help text enhancements.
+Changes include:
+
+* Server logging and log access enhancements.  Among other things, these make it possible for Annalist users withj site ADMIN permissions to view server logs without a shell login on the server host system.
+* Additional command line tools for setting up initial user accounts.
+* Improved control over default access permissions for a collection.
+* Small internal changes and bug-fixes to data migration logic.
+* Improved reporting of some incorrectly defined view fields.
+* New installable collection data (Concept_defs) with definitions for associating SKOS Concept tags with entities.
 
 
 ## Status
@@ -90,6 +89,57 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 
 # History
+
+
+## Version 0.1.36
+
+This is mainly a "maintence" release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
+
+Changes include:
+
+* Server logging and log access enhancements.  Among other things, these make it possible for Annalist users withj site ADMIN permissions to view server logs without a shell login on the server host system.
+* Additional command line tools for setting up initial user accounts.
+* Improved control over default access permissions for a collection.
+* Small internal changes and improvements to data migration logic.
+* Improved reporting of some incorrectly defined view fields.
+* New installable collection data (Concept_defs) with definitions for associating SKOS Concept tags with entities.
+
+
+# Version 0.1.35, towards 0.1.36
+
+- [x] Access to page link without continuation (view only)
+    - Added permalink to entity view page, after page heading
+- [x] Rearranged page layout so that page heading comes below top nav bar
+- [x] Logging enhancements:
+    - [x] link to view log in bottom bar, if admin permissions
+    - [x] log file rotation (max 2Mb) for "personal" config
+        - could easily be extended to other configurations
+- [x] Log rotation at server startup
+    - web interface link shows entries for the current server run
+- [x] annalist-manager options for users:
+    - [x] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ]
+        - This provides a way to create local (Django) user accounts from command line
+    - [x] annalist-manager setuserpermissions [ username [ permissions ] ]
+        - this allows site-level permissions to be set for an identified user
+- [x] internal renaming `annal:Slug` type URI to 'annal:EntityRef'.
+    - [x] reflects updated structure of internal entity references
+    - [x] renamed in code and site data
+    - [x] migration logic added
+- [x] revise authorization logic to include default-user permissions for collection
+    - permissions  associzted with the default user ID in a collection are applied when accessing that collection.  Provides a way to configure per-collection default access rules.
+- [x] Migration logic: check that new supertypes are applied
+    - [x] Add Collection.update_entity_types
+    - [x] Call Collection.update_entity_types from CollectionData.migrate_coll_data
+    - [x] Add test case (in a new test suite for data migration tests)
+- [x] Improved error handling when a field uses an enumerated value render type without specifying a references type.  This was causing server errors; now it provides a somewhat more helpful user error message.
+- [x] Add new installable collection (Concept_defs) for defining and associating SKOS Concept tag fields.
+    - [x] define type
+    - [x] define view
+    - [x] define list
+    - [x] define related concepts fields and group
+    - [x] define broader concepts fields and group
+    - [x] define entity concepts field for associating concepts with an entity
+- [x] annalist.net front page - link to CEUR paper on web
 
 ## Version 0.1.34
 

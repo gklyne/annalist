@@ -4,7 +4,6 @@ Literals:
 
 - Text
 - Longtext
-- Slug
 - Identifier (URI/CURIE)
 - Number
 - Date
@@ -13,6 +12,7 @@ Literals:
 
 References:
 
+- EntityRef
 - Type
 - List
 - View

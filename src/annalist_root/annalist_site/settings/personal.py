@@ -57,7 +57,7 @@ LOGGING = {
             # 'class':        'logging.handlers.RotatingFileHandler',
             'class':        'annalist_site.settings.common.RotatingNewFileHandler',
             'filename':     LOGGING_FILE,
-            'maxBytes':     1*1024*1024,            # 1Mb
+            'maxBytes':     2*1024*1024,            # 2Mb
             'backupCount':  9,                      # Keep 9 files
             'level':        TRACE_FIELD_VALUE,
             'formatter':    'timed'

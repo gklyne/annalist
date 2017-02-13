@@ -2,66 +2,66 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
-- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (remove old files) 
+- [x] Feature freeze
+- [x] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
+- [x] Uninstall annalist (if installed): `pip uninstall annalist`
+- [x] Delete contents of build directory (remove old files) 
     - python setup.py clean --all
-- [ ] Clean old .pyc and temporary files
+- [x] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
-- [ ] Local install
-- [ ] Run test suite - `annalist-manager runtest`
-- [ ] Update site data in local 'personal' installation
+- [x] Local install
+- [x] Run test suite - `annalist-manager runtest`
+- [x] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
     - `annalist-manager updateadmin ...` (if needed)
-- [ ] Test collection installation; e.g.
+- [x] Test collection installation; e.g.
     - `annalist-manager installcoll RDF_schema_defs --force`
     - `annalist-manager installcoll Annalist_schema --force`    
-- [ ] Test migrations; e.g.
+- [x] Test migrations; e.g.
     - `annalist-manager migratecoll RDF_schema_defs`
     - `annalist-manager migratecoll Annalist_schema`    
-- [ ] Test 'personal' deployment in actual use
+- [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
 - [-] Documentation and tutorial updates
 - [-] Demo screencast update
-- [ ] Check all recent changes are committed (`git status`)
+- [x] Check all recent changes are committed (`git status`)
 
-- [ ] Create release preparation branch
+- [x] Create release preparation branch
     - git stash
     - git checkout -b release-prep-x.y.z develop
     - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [ ] Add TODO list to release notes (edit out working notes)
-- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [ ] Bump data compatibility version if new data is not compatible with older releases
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [ ] Reinstall and re-run test suite
-- [ ] Add release highlights description to release notes
-- [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [ ] Review roadmap (`documents/roadmap.md`)
+- [x] Add TODO list to release notes (edit out working notes)
+- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [x] Bump data compatibility version if new data is not compatible with older releases
+- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
+- [x] Reinstall and re-run test suite
+- [x] Add release highlights description to release notes
+- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
+- [x] Review roadmap (`documents/roadmap.md`)
 - [ ] Update version number in scripts, documents, etc.
-    - [ ] Release notes
-    - [ ] documents/installing-annalist.md
-    - [ ] documents/roadmap.md
-    - [ ] documents/pages/index.html
+    - [x] Release notes
+    - [x] documents/installing-annalist.md
+    - [x] documents/roadmap.md
+    - [x] documents/pages/index.html
     - [-] documents/tutorial/annalist-tutorial.adoc
-    - [ ] src/newkit_to_annalist_net.sh
-    - [ ] src/newkit_to_annalist_dev.sh
-    - [ ] src/newkit_to_conina_ubuntu.sh
-    - [ ] Docker build scripts and makefiles
-- [ ] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Test instalation tools (and check for new dependencies; update setup.py as needed).
-    - copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
+    - [x] src/newkit_to_annalist_net.sh
+    - [x] src/newkit_to_annalist_dev.sh
+    - [x] src/newkit_to_conina_ubuntu.sh
+    - [x] Docker build scripts and makefiles
+- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
+- [x] Test installation tools (and check for new dependencies; update setup.py as needed).
+    - [x] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
-    - login to dev.annalist.net, then
+    - [x] login to dev.annalist.net as 'graham', then
         rm -rf anenv
         virtualenv anenv
         . anenv/bin/activate
         pip install software/Annalist-0.1.xx.tar.gz
         annalist-manager runtests
-    - Test new site creation:
+    - [x] Test new site creation:
         annalist-manager createsite
         annalist-manager initialize
         annalist-manager defaultadmin
@@ -69,28 +69,34 @@
         curl http://localhost:8000/annalist/site/ -v
 - [-] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
-    - ssh to annalist@annalist.net
-    - `. backup_annalist_site.sh`
-    - `mv annalist_site_2015MMDD/ annalist_site_2017----`
-    - `killall python`
-    - `. anenv/bin/activate`
-    - `pip uninstall annalist`
-    - `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
-    - `annalist-manager runtests`
-    - `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
-    - `. update-run-annalist.sh`
-    - `cat annalist.out`
-- [ ] Update front page link at annalist.net:
+- [x] Update and test demo installation on annalist.net
+    - [x] ssh to annalist@annalist.net
+    - [x] `. backup_annalist_site.sh`
+    - [x] `mv annalist_site_2015MMDD/ annalist_site_2017----`
+    - [x] `killall python`
+    - [x] `. anenv/bin/activate`
+    - [x] `pip uninstall annalist`
+    - [x] `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
+    - [x] `annalist-manager runtests`
+    - [x] `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
+    - [x] update installed collections:
+        - `annalist-manager installcoll Concept_defs --force`
+        - `annalist-manager installcoll Journal_defs --force`
+        - `annalist-manager installcoll RDF_schema_defs --force`
+        - `annalist-manager installcoll Annalist_schema --force`
+        - `annalist-manager installcoll Namespace_defs --force`
+    - [x] `. update-run-annalist.sh`
+    - [x] `cat annalist.out`
+- [x] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
 - [-] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [ ] Check out demo system.
-- [ ] Commit changes
-- [ ] Upload to PyPI (see below)
+- [x] Check out demo system.
+- [x] Commit changes
+- [x] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
 - [ ] Merge release branch to master

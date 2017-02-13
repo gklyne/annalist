@@ -67,10 +67,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - _vocab/dc
         - _vocab/skos
 - [x] annalist.net front page - link to CEUR paper on web - needs testing
-- [x] Split Common_defs from Journal_defs?
 
 (release - version 0.1.36)
 
+- [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net
 
 - [ ] Absorb groups into field defs
