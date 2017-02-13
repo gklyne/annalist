@@ -267,7 +267,7 @@ def entitydata_context_data(
               , 'field_render_type':  'EntityId'
               , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  "annal:Slug"
+              , 'field_value_type':   "annal:EntityRef"
               # , 'field_value':      (Supplied separately)
               , 'options':            []
               },
@@ -275,7 +275,7 @@ def entitydata_context_data(
               , 'field_id':           'Entity_type'
               , 'field_name':         'entity_type'
               , 'field_render_type':  'EntityTypeId'
-              , 'field_value_type':  "annal:Slug"
+              , 'field_value_type':   "annal:EntityRef"
               , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
               , 'field_value_mode':   'Value_direct'
               # , 'field_value':      (Supplied separately)
@@ -288,7 +288,7 @@ def entitydata_context_data(
               , 'field_render_type':  'Text'
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  "annal:Text"
+              , 'field_value_type':   "annal:Text"
               , 'field_value':        entity_label
               , 'options':            []
               })
@@ -299,7 +299,7 @@ def entitydata_context_data(
               , 'field_render_type':  'Markdown'
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  "annal:Richtext"
+              , 'field_value_type':   "annal:Richtext"
               , 'field_value':        entity_descr
               , 'options':            []
               })
@@ -345,7 +345,7 @@ def entitydata_context_add_field(
         , 'field_label':        field_label
         , 'field_render_type':  field_render_type
         , 'field_value_mode':   field_value_mode
-        , 'field_value_type':  field_value_type
+        , 'field_value_type':   field_value_type
         , 'field_placement':    get_placement_classes(field_placement)
         , 'options':            field_options
         })
@@ -524,7 +524,7 @@ def entitydata_recordtype_view_context_data(
               , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
               , 'field_id':           'Type_id'
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  'annal:Slug'
+              , 'field_value_type':   'annal:EntityRef'
               # , 'field_value':      (Supplied separately)
               , 'options':            []
               })
@@ -534,7 +534,7 @@ def entitydata_recordtype_view_context_data(
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_id':           'Type_label'
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  'annal:Text'
+              , 'field_value_type':   'annal:Text'
               , 'field_value':        entity_label
               , 'options':            []
               })
@@ -544,7 +544,7 @@ def entitydata_recordtype_view_context_data(
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_id':           'Type_comment'
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  'annal:Richtext'
+              , 'field_value_type':   'annal:Richtext'
               , 'field_value':        entity_descr
               , 'options':            []
               })
@@ -554,7 +554,7 @@ def entitydata_recordtype_view_context_data(
               , 'field_placement':    get_placement_classes('small:0,12')
               , 'field_id':           'Type_uri'
               , 'field_value_mode':   'Value_direct'
-              , 'field_value_type':  'annal:Identifier'
+              , 'field_value_type':   'annal:Identifier'
               , 'field_value':        ""
               , 'options':            []
               })

@@ -38,8 +38,8 @@ from am_runserver           import (
     am_version
     )
 from am_createuser          import (
-    am_createadminuser, am_defaultadminuser, am_updateadminuser, 
-    am_setdefaultpermissions, am_setpublicpermissions,
+    am_createlocaluser, am_createadminuser, am_defaultadminuser, am_updateadminuser, 
+    am_setuserpermissions, am_setdefaultpermissions, am_setpublicpermissions,
     am_deleteuser
     )
 from am_managecollections   import (
@@ -126,12 +126,16 @@ def run(userhome, userconfig, options, progname):
         return am_runtests(annroot, options)
     if options.command.startswith("init"):                  # initialize (intsllaation, django database)
         return am_initialize(annroot, userhome, userconfig, options)
+    if options.command.startswith("createl"):               # createlocaluser
+        return am_createlocaluser(annroot, userhome, options)
     if options.command.startswith("createa"):               # createadminuser
         return am_createadminuser(annroot, userhome, options)
     if options.command.startswith("defaulta"):              # defaultadminuser
         return am_defaultadminuser(annroot, userhome, options)
     if options.command.startswith("updatea"):               # updateadminuser
         return am_updateadminuser(annroot, userhome, options)
+    if options.command.startswith("setuse"):                # setuserpermissions
+        return am_setuserpermissions(annroot, userhome, options)
     if options.command.startswith("setdef"):                # setdefaultpermissions
         return am_setdefaultpermissions(annroot, userhome, options)
     if options.command.startswith("setpub"):                # setpublicpermissions
@@ -217,6 +221,7 @@ if __name__ == "__main__":
 #
 # python am_main.py runtests
 # python am_main.py --config=runtests initialize
+# python am_main.py --config=runtests createlocaluser testtestuser  testestuser@localhost
 # python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
 # python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
 # python am_main.py --config=runtests deleteuser testtestadmin

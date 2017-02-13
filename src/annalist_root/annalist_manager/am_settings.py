@@ -30,10 +30,6 @@ class AnnalistSettings(object):
     annroot     is the root directory for the annalist software installation.
     userhome    is the home directory for the current user.
     options     contains options parsed from the command line.
-
-    returns     0 if all is well, or a non-zero status code.
-                This value is intended to be used as an exit status code
-                for the calling program.
     """
 
     def __init__(self, annroot, userhome, options):

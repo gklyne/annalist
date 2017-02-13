@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Concept_id"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Concept_id"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Concept_id"
+, "rdfs:label":                 "Concept id"
+, "rdfs:comment":               "A short string that identifies some concept."
+, "annal:field_name":           "entity_id"
+, "annal:field_render_type":    "_enum_render_type/EntityId"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "skos:Concept"
+, "annal:placeholder":          "(tag id)"
+, "annal:property_uri":         "annal:id"
+, "annal:field_placement":      "small:0,12;medium:0,3"
+, "annal:default_value":        ""
+}

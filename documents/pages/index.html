@@ -4,7 +4,6 @@
 <!-- index.html file for annalist.net demo host -->
 <!-- @@TODO: some proper styling?               -->
 
-
 <head>
   <link rel="stylesheet" type="text/css" href="css/style.css" />
   <title>annalist.net - Annalist demonstration system</title>
@@ -24,7 +23,7 @@
     <h1 id="title">
       <a href="#">annalist.net</a> - 
       <a htref="//demo.annalist.net/">Annalist</a> demonstration system
-      <span>0.1.34</span>
+      <span>0.1.36</span>
     </h1>
   </div>
   <!-- navigation -->
@@ -44,7 +43,7 @@
   <h1>Welcome to annalist.net</h1>
 
   <p>
-    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.34).
+    <a href="//demo.annalist.net/">Annalist demo server</a> (release 0.1.36).
   </p>
 
   <h2>Overview</h2>
@@ -101,14 +100,18 @@
       <a href="https://github.com/gklyne/annalist/blob/master/documents/using-annalist.adoc">
         Guide to using Annalist</a>.
     </li>
+    <!--
     <li>
       <a href="https://github.com/gklyne/annalist/blob/master/documents/publications/LDOW2016-paper/Annalist-paper-ACMSIG.pdf">LDoW 2016 workshop paper</a>.
+    </li>
+    -->
+    <li>
+      <a href="http://ceur-ws.org/Vol-1593/article-10.pdf">Workshop paper</a>, presented at the <a href="http://ceur-ws.org/Vol-1593/">2016 Linked Data on the Web (LDoW 2016) workshop</a>.
     </li>
     <li>
       <a href="https://github.com/gklyne/annalist/blob/master/documents/publications/LDOW2016-paper/annalist-presentation-ldow2016.pdf">LDoW 2016 workshop presentation</a>.
     </li>
   </ul>
-
   <p>
     <a href="https://zenodo.org/badge/latestdoi/19858/gklyne/annalist">
       <img src="https://zenodo.org/badge/19858/gklyne/annalist.svg" 
@@ -151,7 +154,7 @@
       <a href="http://annalist.net/annalist_sitedata/"><img src="img/get_the_data_125x50.png"/></a>
     </p>
     <p style="width: 100%;">
-      The raw JSON-LD data that underlies the Annalist demo site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  User data collections are contained in <a href="http://annalist.net/annalist_sitedata/c/">subdirectory c</a>, with a subdirectory for each separate collection.  Within each collection type, view and other configuration definitions are in a subdirectory "_annalist_collection".  A special collection <a href="http://annalist.net/annalist_sitedata/c/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions.
+      The raw JSON-LD data that underlies the Annalist demo site can be viewed at <a href="http://annalist.net/annalist_sitedata/">annalist.net/annalist_sitedata/</a>.  User data collections are contained in <a href="http://annalist.net/annalist_sitedata/c/">subdirectory c</a>, with a subdirectory for each separate collection.  A special collection <a href="http://annalist.net/annalist_sitedata/c/_annalist_site/">_annalist_site</a> contains site-wide configuration data and definitions.
     </p>
     <div style="clear:left;"/>
   </div>
@@ -211,8 +214,11 @@
 
   <ul class="green">
     <li>
-      <a href="software/Annalist-0.1.34.tar.gz">Annalist-0.1.34</a>: 
+      <a href="software/Annalist-0.1.36.tar.gz">Annalist-0.1.36</a>: 
       Downloadable software installation kit.  Needs Python 2.7, <code>virtualenv</code> and <code>pip</code>.  Install using <code>pip</code> into a newly created Python virtual environment.
+    </li>
+    <li>
+      <a href="software/Annalist-0.1.34.tar.gz">Annalist-0.1.34</a>  (older release).
     </li>
     <li>
       <a href="software/Annalist-0.1.32.tar.gz">Annalist-0.1.32</a>  (older release).

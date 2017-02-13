@@ -64,7 +64,7 @@ class RecordGroup(EntityData):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
-        for f in entitydata[ANNAL.CURIE.group_fields]:
+        for f in entitydata.get(ANNAL.CURIE.group_fields, []):
             field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
             if field_id == "Field_render":
                 f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"

@@ -21,7 +21,7 @@
   "rdfs:label": "Referenced type",
   "rdfs:range": [
     {
-      "@id": "annal:Slug"
+      "@id": "annal:EntityRef"
     }
   ],
   "rdfs:subPropertyOf": []

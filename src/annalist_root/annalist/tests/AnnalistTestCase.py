@@ -61,9 +61,10 @@ class AnnalistTestCase(TestCase):
         """
         Check that the expect_dict values are all present in actual_dict.
 
-        If a dictionary element contains a list, the listed values are assumed to
-        to be dictionaries which are matched recursively. (This logic is used when 
-        checking sub-contexts used to render data-defined forms.)
+        If a dictionary element (with a key other than '@type') contains a list, the 
+        listed values are assumed to be dictionaries which are matched recursively. 
+        (This logic is used when checking sub-contexts used to render data-defined 
+        forms.)
 
         Similarly, if a dictionary element is itself a dictionary, the 
         corresponding values are matched recursively.

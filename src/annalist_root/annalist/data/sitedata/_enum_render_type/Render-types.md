@@ -8,9 +8,9 @@ Results (reorganized and "attic" values removed)
 
     "annal:Enum_render_type/EntityId"
     "annal:Enum_render_type/EntityTypeId"
+    "annal:Enum_render_type/EntityRef"
     "annal:Enum_render_type/Text"
     "annal:Enum_render_type/Textarea"
-    "annal:Enum_render_type/Slug"
     "annal:Enum_render_type/Identifier"
 
     "annal:Enum_render_type/Enum"

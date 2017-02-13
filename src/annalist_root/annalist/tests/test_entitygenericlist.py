@@ -431,20 +431,20 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         field_entities = (
-            { ('Entity_id',         "EntityId",        "annal:Slug",       "Id")
+            { ('Entity_id',         "EntityId",        "annal:EntityRef",  "Id")
             , ('Coll_comment',      "Markdown",        "annal:Richtext",   "Collection metadata")
-            , ('Coll_parent',       "Enum_choice_opt", "annal:Slug",       "Parent")
+            , ('Coll_parent',       "Enum_choice_opt", "annal:EntityRef",  "Parent")
             , ('Coll_software_version', "Showtext",    "annal:Text",       "S/W version")
-            , ('Entity_type',       "EntityTypeId",    "annal:Slug",       "Type")
+            , ('Entity_type',       "EntityTypeId",    "annal:EntityRef",  "Type")
             , ('Entity_label',      "Text",            "annal:Text",       "Label")
             , ('Field_comment',     "Textarea",        "annal:Longtext",   "Help")
             , ('Field_placement',   "Placement",       "annal:Placement",  "Position/size")
-            , ('Field_render_type', "Enum_choice",     "annal:Slug",       "Render type")
-            , ('Field_value_mode',  "Enum_choice",     "annal:Slug",       "Value mode")
+            , ('Field_render_type', "Enum_choice",     "annal:EntityRef",  "Render type")
+            , ('Field_value_mode',  "Enum_choice",     "annal:EntityRef",  "Value mode")
             , ('Field_value_type',  "Identifier",      "annal:Identifier", "Value type")
             , ('Field_entity_type', "Identifier",      "annal:Identifier", "Entity type")
             , ('Field_default',     "Text",            "annal:Text",       "Default")
-            , ('Field_typeref',     "Enum_optional",   "annal:Slug",       "Refer to type")
+            , ('Field_typeref',     "Enum_optional",   "annal:EntityRef",  "Refer to type")
             , ('Field_restrict',    "Text",            "annal:Text",       "Value restriction")
             , ('List_comment',      "Markdown",        "annal:Richtext",   "Help")
             , ('List_default_type', "Enum_optional",   "annal:Type",       "Default type")
@@ -452,9 +452,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Type_label',        "Text",            "annal:Text",       "Label")
             , ('Type_comment',      "Markdown",        "annal:Richtext",   "Comment")
             , ('Type_uri',          "Identifier",      "annal:Identifier", "Type URI")
-            , ('List_choice',       "Enum_choice",     "annal:Slug",       "List view")
-            , ('View_choice',       "View_choice",     "annal:Slug",       "Choose view")
-            , ('Group_field_sel',   "Enum_optional",   "annal:Slug",       "Field id")
+            , ('List_choice',       "Enum_choice",     "annal:EntityRef",  "List view")
+            , ('View_choice',       "View_choice",     "annal:EntityRef",  "Choose view")
+            , ('Group_field_sel',   "Enum_optional",   "annal:EntityRef",  "Field id")
             })
         check_field_list_context_fields(self, r, field_entities)
         return
@@ -522,7 +522,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
-                    <span>annal:Slug</span>
+                    <span>annal:EntityRef</span>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip4)s>
                     <span>Parent</span>
@@ -609,13 +609,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 7)
         field_entities = (
-            { ( "Coll_comment",             "Markdown",         "annal:Richtext", "Collection metadata" )
-            , ( "Coll_default_list_id",     "Showtext",         "annal:Text",     "Default list"        )
-            , ( "Coll_default_view_entity", "Showtext",         "annal:Text",     "Default view entity" )
-            , ( "Coll_default_view_id",     "Showtext",         "annal:Text",     "Default view"        )
-            , ( "Coll_default_view_type",   "Showtext",         "annal:Text",     "Default view type"   )
-            , ( "Coll_parent",              "Enum_choice_opt",  "annal:Slug",     "Parent"              )
-            , ( "Coll_software_version",    "Showtext",         "annal:Text",     "S/W version"         )
+            { ( "Coll_comment",             "Markdown",        "annal:Richtext",  "Collection metadata" )
+            , ( "Coll_default_list_id",     "Showtext",        "annal:Text",      "Default list"        )
+            , ( "Coll_default_view_entity", "Showtext",        "annal:Text",      "Default view entity" )
+            , ( "Coll_default_view_id",     "Showtext",        "annal:Text",      "Default view"        )
+            , ( "Coll_default_view_type",   "Showtext",        "annal:Text",      "Default view type"   )
+            , ( "Coll_parent",              "Enum_choice_opt", "annal:EntityRef", "Parent"              )
+            , ( "Coll_software_version",    "Showtext",        "annal:Text",      "S/W version"         )
             })
         check_field_list_context_fields(self, r, field_entities)
         return

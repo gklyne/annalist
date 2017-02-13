@@ -327,7 +327,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:id",
             field_render_type=  "EntityId",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Slug",
+            field_value_type=   "annal:EntityRef",
             field_placement=    "small-12 medium-6 columns",
             field_value=        list_id,
             options=            self.no_options

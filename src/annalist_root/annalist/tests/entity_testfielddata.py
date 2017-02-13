@@ -210,7 +210,7 @@ def recordfield_entity_view_context_data(
               { 'field_id':               "Field_id"                  # 0 (0,0)
               , 'field_name':             "entity_id"
               , 'field_label':            "Field Id"
-              , 'field_value_type':       "annal:Slug"
+              , 'field_value_type':       "annal:EntityRef"
               , 'field_render_type':      "EntityId"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:..."
@@ -226,7 +226,7 @@ def recordfield_entity_view_context_data(
               { 'field_id':               "Field_render_type"              # 1 (0,1)
               , 'field_name':             "Field_render_type"
               , 'field_label':            "Render type"
-              , 'field_value_type':       "annal:Slug"
+              , 'field_value_type':       "annal:EntityRef"
               , 'field_render_type':      "Enum_choice"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_render_type"
@@ -257,7 +257,7 @@ def recordfield_entity_view_context_data(
               { 'field_id':               "Field_value_mode"          # 3 (1,1)
               , 'field_name':             "Field_value_mode"
               , 'field_label':            "Value mode"
-              , 'field_value_type':       "annal:Slug"
+              , 'field_value_type':       "annal:EntityRef"
               , 'field_render_type':      "Enum_choice"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_value_mode"
@@ -336,7 +336,7 @@ def recordfield_entity_view_context_data(
               { 'field_id':               "Field_typeref"             # 8 (5,0)
               , 'field_name':             "Field_typeref"
               , 'field_label':            "Refer to type"
-              , 'field_value_type':       "annal:Slug"
+              , 'field_value_type':       "annal:EntityRef"
               , 'field_render_type':      "Enum_optional"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:field_ref_type"
@@ -399,7 +399,7 @@ def recordfield_entity_view_context_data(
               { 'field_id':               "Field_groupref"            # 12 (8,0)
               , 'field_name':             "Field_groupref"
               , 'field_label':            "Field group"
-              , 'field_value_type':       "annal:Slug"
+              , 'field_value_type':       "annal:EntityRef"
               , 'field_render_type':      "Enum_optional"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "annal:group_ref"

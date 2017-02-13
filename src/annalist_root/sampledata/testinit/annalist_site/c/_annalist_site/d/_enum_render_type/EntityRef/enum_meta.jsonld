@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/EntityRef"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "EntityRef"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Local entity ref"
+, "rdfs:comment":       "# Reference to local entity\r\n\r\nA reference to an entity in the same collection.  Consists of a type identifier and an entity idenrtifier, separated by '/'.  If the type identifier is omitted it may be inferred from the field definition.  The form (including type identifier) may be used as a URI reference for accessing the entity data if resolved against the base URL for collection data."
+, "annal:uri":          "annal:Enum_render_type/EntityRef"
+}

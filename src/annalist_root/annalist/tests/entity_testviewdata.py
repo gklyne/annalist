@@ -259,7 +259,7 @@ def recordview_entity_view_context_data(
           [ context_field_row(
               { 'field_id':           'View_id'               # fields[0]
               , 'field_name':         'entity_id'
-              , 'field_value_type':   'annal:Slug'
+              , 'field_value_type':   'annal:EntityRef'
               , 'field_label':        'View Id'
               , 'field_render_type':  '_enum_render_type/EntityId'
               , 'field_value_mode':   '_enum_value_mode/Value_direct'

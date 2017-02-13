@@ -21,7 +21,7 @@
   "rdfs:label": "Collection default view entity id",
   "rdfs:range": [
     {
-      "@id": "annal:Slug"
+      "@id": "annal:EntityRef"
     }
   ],
   "rdfs:subPropertyOf": []

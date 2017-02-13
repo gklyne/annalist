@@ -29,6 +29,10 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
+from annalist.models.annalistuser   import (
+    default_user_id, default_user_uri, 
+    unknown_user_id, unknown_user_uri
+    )
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
@@ -86,10 +90,12 @@ class AuthorizationTest(AnnalistTestCase):
         self.coll1    = Collection(self.testsite, "coll1")
         self.coll2    = Collection(self.testsite, "coll2")
         self.coll3    = Collection(self.testsite, "coll3")
+        self.access_collection    = self.testcoll
+        self.access_collection_id = "testcoll"
         # populate site with different classes of users: admin, config, create, update, delete, view
         self.user_admin  = AnnalistUser.create(self.testcoll, "user_admin", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_admin",
+                coll_id=self.access_collection_id, user_id="user_admin",
                 user_name="Admin User",
                 user_uri="mailto:user_admin@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -97,7 +103,7 @@ class AuthorizationTest(AnnalistTestCase):
             )
         self.user_config  = AnnalistUser.create(self.testcoll, "user_config", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_config",
+                coll_id=self.access_collection_id, user_id="user_config",
                 user_name="Admin User",
                 user_uri="mailto:user_config@%s"%TestHost, 
                 user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
@@ -105,7 +111,7 @@ class AuthorizationTest(AnnalistTestCase):
             )
         self.user_create  = AnnalistUser.create(self.testcoll, "user_create", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_create",
+                coll_id=self.access_collection_id, user_id="user_create",
                 user_name="Admin User",
                 user_uri="mailto:user_create@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE", "CREATE"]
@@ -113,7 +119,7 @@ class AuthorizationTest(AnnalistTestCase):
             )
         self.user_update  = AnnalistUser.create(self.testcoll, "user_update", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_update",
+                coll_id=self.access_collection_id, user_id="user_update",
                 user_name="Admin User",
                 user_uri="mailto:user_update@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE"]
@@ -121,7 +127,7 @@ class AuthorizationTest(AnnalistTestCase):
             )
         self.user_delete  = AnnalistUser.create(self.testcoll, "user_delete", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_delete",
+                coll_id=self.access_collection_id, user_id="user_delete",
                 user_name="Admin User",
                 user_uri="mailto:user_delete@%s"%TestHost, 
                 user_permissions=["VIEW", "UPDATE", "DELETE"]
@@ -129,7 +135,7 @@ class AuthorizationTest(AnnalistTestCase):
             )
         self.user_view  = AnnalistUser.create(self.testcoll, "user_view", 
             annalistuser_create_values(
-                coll_id="testcoll", user_id="user_view",
+                coll_id=self.access_collection_id, user_id="user_view",
                 user_name="Admin User",
                 user_uri="mailto:user_view@%s"%TestHost, 
                 user_permissions=["VIEW"]
@@ -149,6 +155,14 @@ class AuthorizationTest(AnnalistTestCase):
                 user_name="Admin User",
                 user_uri="mailto:user_delete_coll@%s"%TestHost, 
                 user_permissions=["VIEW", "DELETE_COLLECTION"]
+                )
+            )
+        self.user_default_config_coll3 = AnnalistUser.create(self.coll3, default_user_id, 
+            annalistuser_create_values(
+                coll_id="coll3", user_id="user_default_coll3",
+                user_name="Default User in coll3",
+                user_uri=default_user_uri, 
+                user_permissions=["VIEW", "CONFIG"]
                 )
             )
         self.user_site_admin  = AnnalistUser.create(
@@ -237,7 +251,7 @@ class AuthorizationTest(AnnalistTestCase):
 
     def view_coll_get(self):
         u = entitydata_edit_url(action="view", 
-            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
         r = self.client.get(u)
@@ -245,11 +259,11 @@ class AuthorizationTest(AnnalistTestCase):
 
     def view_coll_post_edit(self):
         u = entitydata_edit_url(action="view", 
-            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
         f = collectiondata_view_form_data(action="view",
-            coll_id="testcoll",
+            coll_id=self.access_collection_id,
             edit="edit"
             )
         r = self.client.post(u, f)
@@ -257,7 +271,7 @@ class AuthorizationTest(AnnalistTestCase):
 
     def edit_coll_get(self):
         u = entitydata_edit_url(action="edit", 
-            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
         r = self.client.get(u)
@@ -265,11 +279,11 @@ class AuthorizationTest(AnnalistTestCase):
 
     def edit_coll_post_edit(self):
         u = entitydata_edit_url(action="edit", 
-            coll_id="_annalist_site", type_id="_coll", entity_id="testcoll", 
+            coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
         f = collectiondata_view_form_data(action="edit",
-            coll_id="testcoll",
+            coll_id=self.access_collection_id,
             edit="edit"
             )
         r = self.client.post(u, f)
@@ -296,7 +310,7 @@ class AuthorizationTest(AnnalistTestCase):
     def list_users(self):
         # requires ADMIN
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="_user", 
+            coll_id=self.access_collection_id, type_id="_user", 
             list_id="Default_list"
             )
         r = self.client.get(u)
@@ -306,7 +320,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires ADMIN
         e = self.create_user("view_user")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            coll_id=self.access_collection_id, type_id="_user", entity_id="view_user", 
             view_id="Default_view"
             )
         r = self.client.get(u)
@@ -316,11 +330,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires ADMIN
         e = self.create_user("view_user")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            coll_id=self.access_collection_id, type_id="_user", entity_id="view_user", 
             view_id="Default_view"
             )
         f = annalistuser_view_form_data(action="view",
-            coll_id="testcoll", user_id="view_user",
+            coll_id=self.access_collection_id, user_id="view_user",
             user_name="View User",
             user_uri="mailto:view_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
@@ -333,11 +347,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires ADMIN
         e = self.create_user("view_user")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_user", entity_id="view_user", 
+            coll_id=self.access_collection_id, type_id="_user", entity_id="view_user", 
             view_id="Default_view"
             )
         f = annalistuser_view_form_data(action="view",
-            coll_id="testcoll", user_id="view_user",
+            coll_id=self.access_collection_id, user_id="view_user",
             user_name="View User",
             user_uri="mailto:view_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"],
@@ -349,11 +363,11 @@ class AuthorizationTest(AnnalistTestCase):
     def new_user(self):
         # requires ADMIN
         u = entitydata_edit_url(action="new", 
-            coll_id="testcoll", type_id="_user",
+            coll_id=self.access_collection_id, type_id="_user",
             view_id="Default_view"
             )
         f = annalistuser_view_form_data(action="new",
-            coll_id="testcoll", user_id="new_user",
+            coll_id=self.access_collection_id, user_id="new_user",
             user_name="New User",
             user_uri="mailto:new_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -365,11 +379,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires ADMIN
         e = self.create_user("copy_user")
         u = entitydata_edit_url(action="copy", 
-            coll_id="testcoll", type_id="_user", entity_id="copy_user", 
+            coll_id=self.access_collection_id, type_id="_user", entity_id="copy_user", 
             view_id="Default_view"
             )
         f = annalistuser_view_form_data(action="copy",
-            coll_id="testcoll", user_id="copy_user_new", orig_id="copy_user",
+            coll_id=self.access_collection_id, user_id="copy_user_new", orig_id="copy_user",
             user_name="Copy User",
             user_uri="mailto:copy_user_new@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -380,11 +394,11 @@ class AuthorizationTest(AnnalistTestCase):
     def edit_user(self):
         e = self.create_user("edit_user")
         u = entitydata_edit_url(action="edit", 
-            coll_id="testcoll", type_id="_user", entity_id="edit_user", 
+            coll_id=self.access_collection_id, type_id="_user", entity_id="edit_user", 
             view_id="Default_view"
             )
         f = annalistuser_view_form_data(action="edit",
-            coll_id="testcoll", user_id="edit_user",
+            coll_id=self.access_collection_id, user_id="edit_user",
             user_name="Edit User",
             user_uri="mailto:edit_user@%s"%(TestHost), 
             user_permissions=["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
@@ -396,7 +410,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires ADMIN
         e = self.create_user("delete_user")
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="_user", 
+            coll_id=self.access_collection_id, type_id="_user", 
             list_id="Default_list"
             )
         f = annalistuser_delete_form_data(user_id="delete_user")
@@ -407,7 +421,7 @@ class AuthorizationTest(AnnalistTestCase):
     def delete_user_confirmed(self):
         # requires ADMIN
         e = self.create_user("delete_user")
-        u = entitydata_delete_confirm_url(coll_id="testcoll", type_id="_user")
+        u = entitydata_delete_confirm_url(coll_id=self.access_collection_id, type_id="_user")
         f = annalistuser_delete_confirm_form_data(user_id="delete_user")
         r = self.client.post(u, f)
         return r
@@ -416,15 +430,15 @@ class AuthorizationTest(AnnalistTestCase):
 
     def create_type(self, type_id):
         # Create placeholder for testing
-        t = RecordType.create(self.testcoll, type_id, 
-            recordtype_create_values(coll_id="testcoll", type_id="testtype")
+        t = RecordType.create(self.access_collection, type_id, 
+            recordtype_create_values(coll_id=self.access_collection_id, type_id="testtype")
             )
         return t
 
     def list_types(self):
         # requires VIEW
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="_type", 
+            coll_id=self.access_collection_id, type_id="_type", 
             list_id="Default_list"
             )
         r = self.client.get(u)
@@ -434,7 +448,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires VIEW
         e = self.create_type("view_type")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            coll_id=self.access_collection_id, type_id="_type", entity_id="view_type", 
             view_id="Default_view"
             )
         r = self.client.get(u)
@@ -444,11 +458,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("view_type")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            coll_id=self.access_collection_id, type_id="_type", entity_id="view_type", 
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="view",
-            coll_id="testcoll", type_id="_type", orig_id="view_type",
+            coll_id=self.access_collection_id, type_id="_type", orig_id="view_type",
             edit="edit"
             )
         r = self.client.post(u, f)
@@ -458,11 +472,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("view_type")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="_type", entity_id="view_type", 
+            coll_id=self.access_collection_id, type_id="_type", entity_id="view_type", 
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="view",
-            coll_id="testcoll", type_id="_type", orig_id="view_type",
+            coll_id=self.access_collection_id, type_id="_type", orig_id="view_type",
             copy="copy"
             )
         r = self.client.post(u, f)
@@ -471,11 +485,11 @@ class AuthorizationTest(AnnalistTestCase):
     def new_type(self):
         # requires CONFIG
         u = entitydata_edit_url(action="new", 
-            coll_id="testcoll", type_id="_type",
+            coll_id=self.access_collection_id, type_id="_type",
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="new",
-            coll_id="testcoll", 
+            coll_id=self.access_collection_id, 
             type_id="new_type", orig_id="orig_type"
             )
         r = self.client.post(u, f)
@@ -485,11 +499,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("copy_type")
         u = entitydata_edit_url(action="copy", 
-            coll_id="testcoll", type_id="_type", entity_id="copy_type", 
+            coll_id=self.access_collection_id, type_id="_type", entity_id="copy_type", 
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="copy",
-            coll_id="testcoll", 
+            coll_id=self.access_collection_id, 
             type_id="copy_type_new", orig_id="copy_type"
             )
         r = self.client.post(u, f)
@@ -499,11 +513,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("edit_type")
         u = entitydata_edit_url(action="edit", 
-            coll_id="testcoll", type_id="_type", entity_id="edit_type", 
+            coll_id=self.access_collection_id, type_id="_type", entity_id="edit_type", 
             view_id="Default_view"
             )
         f = recordtype_entity_view_form_data(action="edit",
-            coll_id="testcoll", 
+            coll_id=self.access_collection_id, 
             type_id="edit_type"
             )
         r = self.client.post(u, f)
@@ -513,7 +527,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("delete_type")
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="_type", 
+            coll_id=self.access_collection_id, type_id="_type", 
             list_id="Default_list"
             )
         f = recordtype_delete_form_data(type_id="delete_type")
@@ -526,7 +540,7 @@ class AuthorizationTest(AnnalistTestCase):
     def delete_type_confirmed(self):
         # requires CONFIG
         e = self.create_type("delete_type")
-        u = entitydata_delete_confirm_url(coll_id="testcoll", type_id="_type")
+        u = entitydata_delete_confirm_url(coll_id=self.access_collection_id, type_id="_type")
         f = entitydata_delete_confirm_form_data(entity_id="delete_type")
         r = self.client.post(u, f)
         return r
@@ -535,17 +549,17 @@ class AuthorizationTest(AnnalistTestCase):
 
     def create_data(self, entity_id):
         # Create placeholder for testing
-        typedata = RecordTypeData.create(self.testcoll, "Default_type", {})
+        typedata = RecordTypeData.create(self.access_collection, "Default_type", {})
         assert typedata is not None
         e = EntityData.create(typedata, entity_id, 
-            entitydata_create_values(entity_id, coll_id="testcoll", type_id="Default_type")
+            entitydata_create_values(entity_id, coll_id=self.access_collection_id, type_id="Default_type")
             )
         return e
 
     def list_data(self):
         # requires VIEW
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="Default_type", 
+            coll_id=self.access_collection_id, type_id="Default_type", 
             list_id="Default_list"
             )
         r = self.client.get(u)
@@ -555,7 +569,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires VIEW
         e = self.create_data("view_data")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="view_data", 
             view_id="Default_view"
             )
         r = self.client.get(u)
@@ -565,11 +579,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires UPDATE
         e = self.create_data("view_data")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="view_data", 
             view_id="Default_view"
             )
         f = entitydata_form_data(action="edit",
-            coll_id="testcoll", type_id="Default_type", 
+            coll_id=self.access_collection_id, type_id="Default_type", 
             entity_id="view_data", orig_id="view_data",
             edit="edit"
             )
@@ -580,11 +594,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CREATE
         e = self.create_data("view_data")
         u = entitydata_edit_url(action="view", 
-            coll_id="testcoll", type_id="Default_type", entity_id="view_data", 
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="view_data", 
             view_id="Default_view"
             )
         f = entitydata_form_data(action="copy",
-            coll_id="testcoll", type_id="Default_type", 
+            coll_id=self.access_collection_id, type_id="Default_type", 
             entity_id="copy_view_data", orig_id="view_data",
             copy="copy"
             )
@@ -594,11 +608,11 @@ class AuthorizationTest(AnnalistTestCase):
     def new_data(self):
         # requires CREATE
         u = entitydata_edit_url(action="new", 
-            coll_id="testcoll", type_id="Default_type",
+            coll_id=self.access_collection_id, type_id="Default_type",
             view_id="Default_view"
             )
         f = entitydata_form_data(action="new",
-            coll_id="testcoll", type_id="Default_type", entity_id="new_entity"
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="new_entity"
             )
         r = self.client.post(u, f)
         return r
@@ -607,11 +621,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CREATE
         e = self.create_data("copy_entity")
         u = entitydata_edit_url(action="copy", 
-            coll_id="testcoll", type_id="Default_type", entity_id="copy_entity", 
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="copy_entity", 
             view_id="Default_view"
             )
         f = entitydata_form_data(action="copy",
-            coll_id="testcoll", type_id="Default_type", 
+            coll_id=self.access_collection_id, type_id="Default_type", 
             entity_id="copy_entity_new", orig_id="copy_entity"
             )
         r = self.client.post(u, f)
@@ -622,11 +636,11 @@ class AuthorizationTest(AnnalistTestCase):
         # requires UPDATE
         e = self.create_data("edit_entity")
         u = entitydata_edit_url(action="edit", 
-            coll_id="testcoll", type_id="Default_type", entity_id="edit_entity", 
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="edit_entity", 
             view_id="Default_view"
             )
         f = entitydata_form_data(action="edit",
-            coll_id="testcoll", type_id="Default_type", entity_id="edit_entity"
+            coll_id=self.access_collection_id, type_id="Default_type", entity_id="edit_entity"
             )
         r = self.client.post(u, f)
         # log.info("r %s"%r)
@@ -636,7 +650,7 @@ class AuthorizationTest(AnnalistTestCase):
         # requires DELETE
         e = self.create_data("delete_entity")
         u = entitydata_list_type_url(
-            coll_id="testcoll", type_id="Default_type", 
+            coll_id=self.access_collection_id, type_id="Default_type", 
             list_id="Default_list"
             )
         f = entitydata_delete_form_data(entity_id="delete_entity")
@@ -649,7 +663,7 @@ class AuthorizationTest(AnnalistTestCase):
     def delete_data_confirmed(self):
         # requires DELETE
         e = self.create_data("delete_entity")
-        u = entitydata_delete_confirm_url(coll_id="testcoll", type_id="Default_type")
+        u = entitydata_delete_confirm_url(coll_id=self.access_collection_id, type_id="Default_type")
         f = entitydata_delete_confirm_form_data(entity_id="delete_entity")
         r = self.client.post(u, f)
         return r
@@ -1214,6 +1228,52 @@ class AuthorizationTest(AnnalistTestCase):
         self.assertEqual(self.delete_data().status_code,            403)
         self.assertEqual(self.delete_data_confirmed().status_code,  403)
         return
+
+    def test_default_user_coll3(self):
+        self.login_user("user_view")
+        self.access_collection    = self.coll3
+        self.access_collection_id = "coll3"
+        # try each function, test result
+        self.assertEqual(self.view_site_home_page().status_code,    200)
+        self.assertEqual(self.create_collection().status_code,      403)
+        self.assertEqual(self.remove_collection().status_code,      403)
+        self.assertEqual(self.view_coll_get().status_code,          200)
+        self.assertEqual(self.view_coll_post_edit().status_code,    302) #@@?
+        self.assertEqual(self.edit_coll_get().status_code,          200)
+        self.assertEqual(self.edit_coll_post_edit().status_code,    302)
+        self.assertEqual(self.remove_site_data().status_code,       403)
+        #
+        self.assertEqual(self.list_users().status_code,             403)
+        self.assertEqual(self.view_user_get().status_code,          403)
+        self.assertEqual(self.view_user_edit().status_code,         403)
+        self.assertEqual(self.view_user_copy().status_code,         403)
+        self.assertEqual(self.new_user().status_code,               403)
+        self.assertEqual(self.copy_user().status_code,              403)
+        self.assertEqual(self.edit_user().status_code,              403)
+        self.assertEqual(self.delete_user().status_code,            403)
+        self.assertEqual(self.delete_user_confirmed().status_code,  403)
+        #
+        self.assertEqual(self.list_types().status_code,             200)
+        self.assertEqual(self.view_type_get().status_code,          200)
+        self.assertEqual(self.view_type_edit().status_code,         302)
+        self.assertEqual(self.view_type_copy().status_code,         302)
+        self.assertEqual(self.new_type().status_code,               302)
+        self.assertEqual(self.copy_type().status_code,              302)
+        self.assertEqual(self.edit_type().status_code,              302)
+        self.assertEqual(self.delete_type().status_code,            200)
+        self.assertEqual(self.delete_type_confirmed().status_code,  302)
+        #
+        self.assertEqual(self.list_data().status_code,              200)
+        self.assertEqual(self.view_data_get().status_code,          200)
+        self.assertEqual(self.view_data_edit().status_code,         403)
+        self.assertEqual(self.view_data_copy().status_code,         403)
+        self.assertEqual(self.new_data().status_code,               403)
+        self.assertEqual(self.copy_data().status_code,              403)
+        self.assertEqual(self.edit_data().status_code,              403)
+        self.assertEqual(self.delete_data().status_code,            403)
+        self.assertEqual(self.delete_data_confirmed().status_code,  403)
+        return
+
 
     # Test permissions effect on entity lists
 

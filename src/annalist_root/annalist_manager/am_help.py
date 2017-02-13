@@ -24,9 +24,11 @@ command_summary_help = ("\n"+
     "  %(prog)s runtests [testlabel]\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
     #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
+    "  %(prog)s createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s defaultadminuser [ CONFIG ]\n"+
     "  %(prog)s updateadminuser [ username ] [ CONFIG ]\n"+
+    "  %(prog)s setuserpermissions [ username ] [ permissions ] [ CONFIG ]\n"+
     "  %(prog)s setdefaultpermissions [ permissions ] [ CONFIG ]\n"+
     "  %(prog)s setpublicpermissions [ permissions ] [ CONFIG ]\n"+
     "  %(prog)s deleteuser [ username ] [ CONFIG ]\n"+
@@ -72,6 +74,7 @@ permissions_help = (
     "or may be empty.  If multiple permissions are specified, some form of command-line\n"+
     "quoting should be used so they are presented as a single argument (e.g. enclose\n"+
     "the list of keywords in double quoted).\n"+
+    "\n"+
     "If not specified on the command line, the user will be prompted for default permissions.\n"+
     "\n"+
     "Initially defined permissions are:\n"+
@@ -128,16 +131,36 @@ def am_help(options, progname):
             config_options_help+
             "\n"+
             "")
+    elif options.args[0].startswith("createl"):
+        help_text = ("\n"+
+            "  %(prog)s createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
+            "\n"+
+            "Creates an Annalist local user.\n"+
+            "\n"+
+            "Prompts for a username, email address and password,\n"+
+            "where these are not provided on the command line.\n"+
+            "\n"+
+            "The local user details can be used to log in to Annalist using\n"+
+            "the 'Local user' login provider button on the login page.\n"+
+            "\n"+
+            "Annalist is intended to be used with a federated authentication service,\n"+
+            "such as Google+, but setting up such a service can be tricky, and for evaluation\n"+
+            "or personal-only use it may be quicker to use locally managed user credentials\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
     elif options.args[0].startswith("createa"):
         help_text = ("\n"+
-            "  %(prog)s createadminuser [ CONFIG ]\n"+
+            "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
             "\n"+
             "Creates an Annalist administrative user.\n"+
             "\n"+
-            "The software will prompt for a username, email address and password.\n"+
+            "Prompts for a username, email address and password,\n"+
+            "where these are not provided on the command line.\n"+
             "\n"+
             "The administrative user details can be used to log in to Annalist using\n"+
-            "the 'Local user credentials: login' link at the bottom of the login page.\n"+
+            "the 'Local user' login provider button on the login page.\n"+
             "An administrative user can then use the 'Admin' link at the bottom of other\n"+
             "Annalist pages to create, modify or delete other local user credentials.\n"+
             "\n"+
@@ -154,11 +177,11 @@ def am_help(options, progname):
             "\n"+
             "Creates a default Annalist administrative user.\n"+
             "\n"+
-            "The software uses default values for a username and email address, prompts for\n"+
+            "Uses default values for username and email address, prompts for\n"+
             "a password, and creates a new admin user with username 'admin'.\n"+
             "\n"+
             "The administrative user details can be used to log in to Annalist using\n"+
-            "the 'Local user credentials: login' link at the bottom of the login page.\n"+
+            "the 'Local user' login provider button on the login page.\n"+
             "An administrative user can then use the 'Admin' link at the bottom of other\n"+
             "Annalist pages to create, modify or delete other local user credentials.\n"+
             "\n"+
@@ -176,6 +199,18 @@ def am_help(options, progname):
             "Updates an existing Django user to admin status; i.e. they are assigned 'staff'\n"+
             "and 'superuser' attributes in the Django user database, and assigned site-wide\n"+
             "ADMIN permissions in the Annalist site indicated by CONFIG.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("setuse"):
+        help_text = ("\n"+
+            "  %(prog)s setuserpermissions [ username ] [ permissions ] [ CONFIG ]\n"+
+            "\n"+
+            "Sets site permissions for designated user in the Annalist site indicated by CONFIG.\n"+
+            "The designated user must already exist in the local Django database.\n"+
+            "\n"+
+            permissions_help+
             "\n"+
             config_options_help+
             "\n"+

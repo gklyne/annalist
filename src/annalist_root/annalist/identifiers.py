@@ -122,7 +122,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Group value types
     , "View_field", "List_field", "Group_field"
     # Value types
-    , "Text", "Longtext", "Richtext", "Slug", "Identifier"
+    , "Text", "Longtext", "Richtext", "EntityRef", "Identifier"
     , "Placement", "Image", "Audio", "Vocabulary"
     , "Resource"
     , "Default_type", "Unknown_type"
@@ -158,6 +158,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "default_list"
     , "default_view_id", "default_view_type", "default_view_entity"
     # Deprecated properties - used in entity migration tables
+    , "Slug", "RepeatGroup", "RepeatGroupRow" 
     , "options_typeref", "restrict_values", "target_field"
     , "field_target_type", "comment"
     , "supertype_uris"

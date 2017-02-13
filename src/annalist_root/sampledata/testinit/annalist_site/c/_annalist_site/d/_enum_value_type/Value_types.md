@@ -6,7 +6,7 @@ Obtained by:
 
 Results (reorganized and "attic" values removed)
 
-    annal:Slug
+    annal:EntityRef
     annal:Placement
     annal:Identifier
     annal:Enum

@@ -197,9 +197,9 @@ def recordlist_view_context_data(
           [ context_field_row(
               { "field_id":           "List_id"                   # fields[0]
               , "field_name":         "entity_id"
-              , "field_value_type":   "annal:Slug"
+              , "field_value_type":   "annal:EntityRef"
               , "field_label":        "List Id"
-              , "field_render_type":  "Slug"
+              , "field_render_type":  "EntityRef"
               , "field_value_mode":   "Value_direct"
               , "field_placement":    get_placement_classes("small:0,12;medium:0,6")
               # , "field_value":      (Supplied separately, below)

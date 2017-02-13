@@ -1,0 +1,23 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_vocab/skos",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:id": "skos",
+  "annal:type": "annal:Vocabulary",
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://www.w3.org/2004/02/skos/core#",
+  "rdfs:comment": "# Simple Knowledge Organization System Namespace\r\n\r\nVocabulary namespace for terms defined by the Simple Knowledge Organization System.\r\n\r\nSKOS is used for describing semi-formal terms or \"Concepts\", such as thesauri and classification schemes, for which a degree of flexibility is allowed in their use and interpretation compared with (say) formal ontologies.\r\n",
+  "rdfs:label": "Simple Knowledge Organization System",
+  "rdfs:seeAlso": [
+    {
+      "@id": "http://www.w3.org/TR/skos-reference/"
+    }
+  ]
+}

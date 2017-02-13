@@ -13,6 +13,7 @@ from annalist.views.home_redirects      import (
     )
 from annalist.views.profile             import ProfileView
 from annalist.views.confirm             import ConfirmView
+from annalist.views.serverlog           import ServerLogView
 from annalist.views.site                import SiteView, SiteActionView
 from annalist.views.collection          import CollectionView, CollectionEditView
 from annalist.views.annalistuserdelete  import AnnalistUserDeleteConfirmedView
@@ -69,6 +70,7 @@ urlpatterns = patterns('',
     url(r'^site/$',         SiteView.as_view(),             name='AnnalistSiteView'),
     url(r'^site/!action$',  SiteActionView.as_view(),       name='AnnalistSiteActionView'),
     url(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
+    url(r'^serverlog/$',    ServerLogView.as_view(),        name='AnnalistServerLogView'),
 
     # Special forms
     url(r'^c/(?P<coll_id>\w{1,128})/$',

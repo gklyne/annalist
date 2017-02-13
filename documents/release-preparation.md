@@ -52,16 +52,16 @@
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts and makefiles
 - [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [x] Test instalation tools (and check for new dependencies; update setup.py as needed).
-    - copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
+- [x] Test installation tools (and check for new dependencies; update setup.py as needed).
+    - [x] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
-    - login to dev.annalist.net, then
+    - [x] login to dev.annalist.net as 'graham', then
         rm -rf anenv
         virtualenv anenv
         . anenv/bin/activate
         pip install software/Annalist-0.1.xx.tar.gz
         annalist-manager runtests
-    - Test new site creation:
+    - [x] Test new site creation:
         annalist-manager createsite
         annalist-manager initialize
         annalist-manager defaultadmin
@@ -72,17 +72,23 @@
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [x] Update and test demo installation on annalist.net
-    - ssh to annalist@annalist.net
-    - `. backup_annalist_site.sh`
-    - `mv annalist_site_2015MMDD/ annalist_site_2017----`
-    - `killall python`
-    - `. anenv/bin/activate`
-    - `pip uninstall annalist`
-    - `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
-    - `annalist-manager runtests`
-    - `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
-    - `. update-run-annalist.sh`
-    - `cat annalist.out`
+    - [x] ssh to annalist@annalist.net
+    - [x] `. backup_annalist_site.sh`
+    - [x] `mv annalist_site_2015MMDD/ annalist_site_2017----`
+    - [x] `killall python`
+    - [x] `. anenv/bin/activate`
+    - [x] `pip uninstall annalist`
+    - [x] `pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade`
+    - [x] `annalist-manager runtests`
+    - [x] `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
+    - [x] update installed collections:
+        - `annalist-manager installcoll Concept_defs --force`
+        - `annalist-manager installcoll Journal_defs --force`
+        - `annalist-manager installcoll RDF_schema_defs --force`
+        - `annalist-manager installcoll Annalist_schema --force`
+        - `annalist-manager installcoll Namespace_defs --force`
+    - [x] `. update-run-annalist.sh`
+    - [x] `cat annalist.out`
 - [x] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
@@ -116,7 +122,7 @@
     - It may take a few minutes for the new DOI to resolve.
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh`, `makebibtestsitedata.sh` and `makeemptysitedata.sh`), retest
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`), retest
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
@@ -189,4 +195,5 @@ Clean up old docker containers
 (ht https://twitter.com/jpetazzo/status/347431091415703552):
 
     docker ps -a | grep 'weeks ago' | awk '{print $1}' | xargs --no-run-if-empty docker rm
+    docker ps -a | grep 'months ago' | awk '{print $1}' | xargs --no-run-if-empty docker rm
 

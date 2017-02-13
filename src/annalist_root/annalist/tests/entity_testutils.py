@@ -545,7 +545,7 @@ def check_context_field_value(test, context_field,
     context_field_value = context_field['field_value']
     if field_value is None:
         context_field_value = None
-    elif field_value_type in ["annal:Slug", "annal:Type", "annal:View", "annal:List"]:
+    elif field_value_type in ["annal:EntityRef", "annal:Type", "annal:View", "annal:List"]:
         context_field_value = extract_entity_id(context_field_value)
     if isinstance(field_value, (list, tuple)):
         for i in range(len(field_value)):
@@ -628,7 +628,7 @@ def check_field_list_context_fields(test, response, field_entities):
         field_property_uri= "annal:id",
         field_render_type=  "EntityId",
         field_value_mode=   "Value_direct",
-        field_value_type=   "annal:Slug",
+        field_value_type=   "annal:EntityRef",
         field_placement=    "small-4 medium-3 columns"
         )
     # 2nd field
@@ -640,7 +640,7 @@ def check_field_list_context_fields(test, response, field_entities):
         field_property_uri= "annal:field_render_type",
         field_render_type=  "Enum_choice",
         field_value_mode=   "Value_direct",
-        field_value_type=   "annal:Slug",
+        field_value_type=   "annal:EntityRef",
         field_placement=    "small-4 medium-3 columns"
         )
     # 3rd field
@@ -730,7 +730,7 @@ def check_type_view_context_fields(test, response,
         field_property_uri= "annal:id",
         field_render_type=  "EntityId",
         field_value_mode=   "Value_direct",
-        field_value_type=   "annal:Slug",
+        field_value_type=   "annal:EntityRef",
         field_placement=    "small-12 medium-6 columns",
         field_value=        entity_id,
         options=            type_no_options

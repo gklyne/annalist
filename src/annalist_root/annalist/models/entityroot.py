@@ -508,7 +508,7 @@ class EntityRoot(object):
 
         This method is called when an entity has been updated.  
 
-        Individual entity classes may provide their own override methiods for this.  
+        Individual entity classes may provide their own override methods for this.  
         (e.g. to trigger regeneration of context data when groups, views, fields or 
         vocabulary descriptions are updated.)
         """

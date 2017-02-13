@@ -16,6 +16,7 @@ import os
 import django
 import sys
 import logging
+import logging.handlers
 from annalist import __version__
 from annalist import layout
 
@@ -24,6 +25,26 @@ SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))           # src/an
 SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)                         # src/annalist_root/annalist_site
 SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)                      # src/annalist_root
 SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata"                           # src/annalist_root/sampledata
+
+class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
+    """
+    Define a rotating file logging handler that additionally forces a new file 
+    the first time it is instantiated in a run of the containing program.
+
+    NOTE: if multiple file hanfdlers are used with in an application, only the
+    first one instantiated will be allocated a new file at startup.  The
+    class variable '_newfile' might be replaced with a dictionary
+    indexed by the (fully expanded) filename.
+    """
+
+    _newfile = False
+
+    def __init__(self, *args, **kwargs):
+        super(RotatingNewFileHandler, self).__init__(*args, **kwargs)
+        if not RotatingNewFileHandler._newfile:
+            self.doRollover()
+            RotatingNewFileHandler._newfile = True
+        return
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/

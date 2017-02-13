@@ -92,6 +92,7 @@ class RecordField(EntityData):
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
             entitydata[ANNAL.CURIE.field_render_type] = "_enum_render_type/Text"
+        # Migrate changed render type names
         entitydata = self._map_entity_field_enum_val(
             entitydata, ANNAL.CURIE.field_render_type, "_enum_render_type", 
             "RepeatGroup", "Group_Seq"
@@ -99,6 +100,10 @@ class RecordField(EntityData):
         entitydata = self._map_entity_field_enum_val(
             entitydata, ANNAL.CURIE.field_render_type, "_enum_render_type", 
             "RepeatGroupRow", "Group_Seq_Row"
+            )
+        entitydata = self._map_entity_field_enum_val(
+            entitydata, ANNAL.CURIE.field_render_type, "_enum_render_type", 
+            "Slug", "EntityRef"
             )
         # Calculate mode from other fields if not defined
         val_render = entitydata[ANNAL.CURIE.field_render_type]
