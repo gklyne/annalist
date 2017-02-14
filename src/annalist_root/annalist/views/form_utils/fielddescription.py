@@ -78,7 +78,8 @@ class FieldDescription(object):
                         RecordGroup value or dictionary containing the referenced list 
                         of fields.
         group_ids_seen  group ids expanded so far, to check for recursive reference.
-        field_classes   if supplied, overrides field placement classes derived from value
+        field_placement_classes
+                        if supplied, overrides field placement classes derived from value
                         for `field_placement` string.
         """
         self._collection    = collection
@@ -175,6 +176,9 @@ class FieldDescription(object):
             # log.debug("FieldDescription: typeref %s: %r"%
             #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
             #     )
+
+        #@@ TODO: logic to use internal field list
+
         # If field references group, pull in field details
         if group_view:
             if field_id in group_ids_seen:
@@ -197,6 +201,9 @@ class FieldDescription(object):
                 , 'group_view':         group_view
                 , 'group_field_descs':  group_field_descs
                 })
+
+        #@@
+
         # log.debug("FieldDescription: %s"%field_id)
         # log.info("FieldDescription._field_desc %r"%(self._field_desc,))
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))
@@ -451,6 +458,10 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
+
+
+    #@@ Add logic to use intrernally defined field list
+
     # If field references group, pull in group details
     group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
     if group_ref:
@@ -463,6 +474,9 @@ def field_description_from_view_field(collection, field, view_context=None, grou
             # raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
     else:
         group_view = None
+
+    #@@
+
     # If present, `field_property` and `field_placement` override values in the field dexcription
     return FieldDescription(
         collection, recordfield, view_context=view_context, 

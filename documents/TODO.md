@@ -15,13 +15,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.37, towards 0.1.38
 
-- [ ] Split Resource_defs from Journal_defs?
-- [ ] Update installed software on fast-project.analist.net
-
-- [ ] Absorb groups into field defs
-    - [ ] extend field definition view to include list of fields (etc.)
+- [ ] Absorb field groups into field defs
     - [ ] modify field definition reader to use locally defined fields in preference to group reference
+        - in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
+            - Replace: group_view -> field_list
+            - Don't store group view in FieldDescription (just group_field_descs)
+            - Test and fix errors
+            - if list is defined within field definition, use that
+            - Update group_view_fields to return list if present
+            - Rename: group_ids_seen -> field_ids_seen (recursion check)
+            - [?? Rename: group_field_descs -> field_field_descs ??]
     - [ ] check for other uses of field group reference field
+        - entityedit.py task dispatching @@@
+        - entitylist.py get_list_entityvaluemap @@@
+        - test_sitedata.py check_type_list_view @@@
+    - [ ] extend field definition view to include list of fields
     - [ ] update site definitions to use field lists in field definitions
     - [ ] eliminate field groups from site definitions
     - [ ] migrate group references in user field definitions to use internal field list
@@ -35,6 +43,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Remove class RecordGroup
     - [ ] Remove field group type URI from annal: namespace
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+
+- [ ] Split Resource_defs from Journal_defs?
+- [ ] Update installed software on fast-project.analist.net
+    - (waiting for confirmation from Mat that data is OK)
 
 (feature freeze for V0.9alpha?)
 (0.5?)
