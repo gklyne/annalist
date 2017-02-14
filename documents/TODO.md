@@ -17,13 +17,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] Absorb field groups into field defs
     - [ ] modify field definition reader to use locally defined fields in preference to group reference
-        - in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
-            - Replace: group_view -> field_list
-            - Don't store group view in FieldDescription (just group_field_descs)
-            - Test and fix errors
-            - if list is defined within field definition, use that
-            - Update group_view_fields to return list if present
-            - Rename: group_ids_seen -> field_ids_seen (recursion check)
+        - [ ] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
+            - [x] Replace: group_view -> field_list
+            - [x] Don't store group view in FieldDescription (store field list instead)
+            - [x] Test and fix errors
+            - [ ] if list is defined within field definition, use that
+            - [ ] Update group_view_fields to return list if present
+            - [ ] Rename: group_ids_seen -> field_ids_seen (recursion check)
             - [?? Rename: group_field_descs -> field_field_descs ??]
     - [ ] check for other uses of field group reference field
         - entityedit.py task dispatching @@@

@@ -53,7 +53,7 @@ class FieldDescription(object):
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
-            group_view=None, group_ids_seen=[],
+            field_list=None, group_ids_seen=[],
             field_placement_classes=None
             ):
         """
@@ -74,9 +74,8 @@ class FieldDescription(object):
                         type selections.
         field_property  if supplied, overrides the field property URI from `recordfield`
         field_placement if supplied, overrides field placement from `recordfield`
-        group_view      if the field itself references a list of fields, this is a
-                        RecordGroup value or dictionary containing the referenced list 
-                        of fields.
+        field_list      if the field itself contains or references a list of fields, this is
+                        that list of fields.
         group_ids_seen  group ids expanded so far, to check for recursive reference.
         field_placement_classes
                         if supplied, overrides field placement classes derived from value
@@ -120,7 +119,6 @@ class FieldDescription(object):
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
-            , 'group_view':                 None
             , 'group_field_descs':          None
             , 'field_render_label':         get_label_renderer(        field_render_type, field_value_mode)
             , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
@@ -177,20 +175,16 @@ class FieldDescription(object):
             #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
             #     )
 
-        #@@ TODO: logic to use internal field list
-
-        # If field references group, pull in field details
-        if group_view:
+        # If field references or contains field list, pull in field details
+        if field_list:
             if field_id in group_ids_seen:
                 raise Annalist_Error(field_id, "Recursive field reference in field group")
             group_ids_seen = group_ids_seen + [field_id]
-            group_label = (field_label or 
-                group_view.get(RDFS.CURIE.label, self._field_desc['field_group_ref'])
-                )
-            add_label    = recordfield.get(ANNAL.CURIE.repeat_label_add, None) or "Add "+field_id
+            group_label  = field_label
+            add_label    = recordfield.get(ANNAL.CURIE.repeat_label_add,    None) or "Add "+field_id
             remove_label = recordfield.get(ANNAL.CURIE.repeat_label_delete, None) or "Remove "+field_id
             group_field_descs = []
-            for subfield in group_view[ANNAL.CURIE.group_fields]:
+            for subfield in field_list:
                 f = field_description_from_view_field(collection, subfield, view_context, group_ids_seen)
                 group_field_descs.append(f)
             self._field_desc.update(
@@ -198,11 +192,9 @@ class FieldDescription(object):
                 , 'group_label':        group_label
                 , 'group_add_label':    add_label
                 , 'group_delete_label': remove_label
-                , 'group_view':         group_view
-                , 'group_field_descs':  group_field_descs
+                , 'group_field_list':   field_list          # Description from field/group
+                , 'group_field_descs':  group_field_descs   # Resulting field description list
                 })
-
-        #@@
 
         # log.debug("FieldDescription: %s"%field_id)
         # log.info("FieldDescription._field_desc %r"%(self._field_desc,))
@@ -295,14 +287,14 @@ class FieldDescription(object):
     def group_view_fields(self):
         """
         If the field itself contains or uses a group of fields, returns a
-        RecordGroupValue or dictionary describing the fields.
+        list of the field references
         """
-        group_view = self._field_desc['group_view']
-        if group_view is None:
-            log.error("Field %(field_id)s is missing `group_view` value"%(self._field_desc))
+        field_list = self._field_desc['group_field_list']
+        if field_list is None:
+            log.error("Field %(field_id)s is missing `'group_field_list'` value"%(self._field_desc))
             # log.error("".join(traceback.format_stack()))
             return []
-        return self._field_desc['group_view'][ANNAL.CURIE.group_fields]
+        return field_list
 
     def group_field_descs(self):
         """
@@ -459,30 +451,27 @@ def field_description_from_view_field(collection, field, view_context=None, grou
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
 
-
-    #@@ Add logic to use intrernally defined field list
-
     # If field references group, pull in group details
-    group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
-    if group_ref:
-        group_view = RecordGroup.load(collection, group_ref, altscope="all")
-        if not group_view:
-            log.error("Group %s used in field %s"%(group_ref, field_id))
-            # log.error("".join(traceback.format_stack()))
-            # ex_type, ex, tb = sys.exc_info()
-            # traceback.print_tb(tb)
-            # raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
-    else:
-        group_view = None
-
-    #@@
+    field_list = recordfield.get(ANNAL.CURIE.field_fields, None)
+    if not field_list:
+        group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
+        if group_ref:
+            group_view = RecordGroup.load(collection, group_ref, altscope="all")
+            if group_view:
+                field_list = group_view.get(ANNAL.CURIE.group_fields, None)
+            else:
+                log.error("Group %s used in field %s not found"%(group_ref, field_id))
+                # log.error("".join(traceback.format_stack()))
+                # ex_type, ex, tb = sys.exc_info()
+                # traceback.print_tb(tb)
+                raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
 
     # If present, `field_property` and `field_placement` override values in the field dexcription
     return FieldDescription(
         collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),
         field_placement=field.get(ANNAL.CURIE.field_placement, None), 
-        group_view=group_view,
+        field_list=field_list,
         group_ids_seen=group_ids_seen
         )
 
