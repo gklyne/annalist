@@ -857,8 +857,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
             , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
             , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
-            , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
-            , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
+            #@@
+            # , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
+            # , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
+            #@@
             , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
             ])
         self.check_list_row_data(s, trows_expected)

@@ -14,7 +14,12 @@
 , "annal:property_uri":         "annal:supertype_uri"
 , "annal:field_placement":      "small:0,12"
 , "annal:default_value":        ""
-, "annal:group_ref":            "_group/Type_supertype_uri_r"
+, "annal:field_fields": 
+    [ { "annal:field_id":         "_field/Type_supertype_uri"
+      , "annal:property_uri":     "@id"
+      , "annal:field_placement":  "small:0,12"
+      }
+    ]
 , "annal:repeat_label_add":     "Add supertype URI"
 , "annal:repeat_label_delete":  "Remove supertype URI"
 }

@@ -265,8 +265,10 @@ site_field_groups = (
     , FieldChoice("_group/Entity_see_also_r",       label="Links to further information" )
     , FieldChoice("_group/Group_field_group",       label="Group field fields"           )
     , FieldChoice("_group/List_field_group",        label="List field fields"            )
-    , FieldChoice("_group/Type_alias_group",        label="Field alias fields"           )
-    , FieldChoice("_group/Type_supertype_uri_r",    label="Supertype URIs"               )
+    #@@
+    # , FieldChoice("_group/Type_alias_group",        label="Field alias fields"           )
+    # , FieldChoice("_group/Type_supertype_uri_r",    label="Supertype URIs"               )
+    #@@
     , FieldChoice("_group/View_field_group",        label="View field fields"            )
     ]) 
 

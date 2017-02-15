@@ -53,7 +53,7 @@ class FieldDescription(object):
     def __init__(self, 
             collection, recordfield, view_context=None, 
             field_property=None, field_placement=None, 
-            field_list=None, group_ids_seen=[],
+            field_list=None, field_ids_seen=[],
             field_placement_classes=None
             ):
         """
@@ -76,7 +76,7 @@ class FieldDescription(object):
         field_placement if supplied, overrides field placement from `recordfield`
         field_list      if the field itself contains or references a list of fields, this is
                         that list of fields.
-        group_ids_seen  group ids expanded so far, to check for recursive reference.
+        field_ids_seen  field ids expanded so far, to check for recursive reference.
         field_placement_classes
                         if supplied, overrides field placement classes derived from value
                         for `field_placement` string.
@@ -177,15 +177,15 @@ class FieldDescription(object):
 
         # If field references or contains field list, pull in field details
         if field_list:
-            if field_id in group_ids_seen:
+            if field_id in field_ids_seen:
                 raise Annalist_Error(field_id, "Recursive field reference in field group")
-            group_ids_seen = group_ids_seen + [field_id]
+            field_ids_seen = field_ids_seen + [field_id]
             group_label  = field_label
             add_label    = recordfield.get(ANNAL.CURIE.repeat_label_add,    None) or "Add "+field_id
             remove_label = recordfield.get(ANNAL.CURIE.repeat_label_delete, None) or "Remove "+field_id
             group_field_descs = []
             for subfield in field_list:
-                f = field_description_from_view_field(collection, subfield, view_context, group_ids_seen)
+                f = field_description_from_view_field(collection, subfield, view_context, field_ids_seen)
                 group_field_descs.append(f)
             self._field_desc.update(
                 { 'group_id':           field_id
@@ -347,10 +347,10 @@ class FieldDescription(object):
         """
         return self._field_desc['field_value_mode'] == "Value_upload"
 
-    def has_field_group_ref(self):
+    def has_field_list(self):
         """
-        Returns true if this field contains a reference to a field group,
-        which in turn references further field descriptions.
+        Returns true if this field contains or references a list of 
+        field descriptions
 
         @@ (Currently, this function duplicates `is_repeat_group`.)
 
@@ -425,7 +425,7 @@ class FieldDescription(object):
             yield k
         return
 
-def field_description_from_view_field(collection, field, view_context=None, group_ids_seen=[]):
+def field_description_from_view_field(collection, field, view_context=None, field_ids_seen=[]):
     """
     Returns a field description value created using information from
     a field reference in a view description record (i.e. a dictionary
@@ -440,7 +440,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
                     values to be used when rendering the field.  In particular, a copy 
                     of the view description record provides context for some enumeration 
                     type selections.
-    group_ids_seen  group ids expanded so far, to check for recursive reference.
+    field_ids_seen  field ids expanded so far, to check for recursive reference.
     """
     #@@TODO: for resilience, revert this when all tests pass?
     # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")  # Field ID slug in URI
@@ -455,6 +455,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
     field_list = recordfield.get(ANNAL.CURIE.field_fields, None)
     if not field_list:
         group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
+        # group_ref = None #@@@@
         if group_ref:
             group_view = RecordGroup.load(collection, group_ref, altscope="all")
             if group_view:
@@ -472,7 +473,7 @@ def field_description_from_view_field(collection, field, view_context=None, grou
         field_property=field.get(ANNAL.CURIE.property_uri, None),
         field_placement=field.get(ANNAL.CURIE.field_placement, None), 
         field_list=field_list,
-        group_ids_seen=group_ids_seen
+        field_ids_seen=field_ids_seen
         )
 
 # End.

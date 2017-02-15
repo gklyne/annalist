@@ -21,17 +21,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - [x] Replace: group_view -> field_list
             - [x] Don't store group view in FieldDescription (store field list instead)
             - [x] Test and fix errors
-            - [ ] if list is defined within field definition, use that
-            - [ ] Update group_view_fields to return list if present
-            - [ ] Rename: group_ids_seen -> field_ids_seen (recursion check)
-            - [?? Rename: group_field_descs -> field_field_descs ??]
+            - [x] Update group_view_fields to return list if present
+            - [x] field_desc.has_field_group_ref needs rework to align with refactoring
+            - [x] if list is defined within field definition, use that
+               - inlined repeat field definitions for type view
+               - fix up resilience checks in entityedit.find_fields
+               - remove unused group definitions
+               - fix up test cases
+            - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
+    - [ ] extend field definition view to include list of fields
+    - [ ] update site definitions to use field lists in field definitions
+    - [ ] eliminate field groups from site definitions
     - [ ] check for other uses of field group reference field
         - entityedit.py task dispatching @@@
         - entitylist.py get_list_entityvaluemap @@@
         - test_sitedata.py check_type_list_view @@@
-    - [ ] extend field definition view to include list of fields
-    - [ ] update site definitions to use field lists in field definitions
-    - [ ] eliminate field groups from site definitions
     - [ ] migrate group references in user field definitions to use internal field list
     - [ ] test migration functionality
     - [ ] apply migrations to installable collections

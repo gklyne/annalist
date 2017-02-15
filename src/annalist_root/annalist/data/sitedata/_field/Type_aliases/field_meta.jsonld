@@ -15,7 +15,10 @@
 , "annal:placeholder":          "(field aliases)"
 , "annal:property_uri":         "annal:field_aliases"
 , "annal:field_placement":      "small:0,12"
-, "annal:group_ref":            "_group/Type_alias_group"
+, "annal:field_fields": 
+    [ { "annal:field_id":       "_field/Type_alias_target" }
+    , { "annal:field_id":       "_field/Type_alias_source" }
+    ]
 , "annal:repeat_label_add":     "Add alias"
 , "annal:repeat_label_delete":  "Remove alias"
 }

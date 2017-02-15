@@ -2083,7 +2083,7 @@ class GenericEntityEditView(AnnalistGenericView):
         return None
 
     # The next two methods are used to locate form fields, which may be in repeat
-    # groups, that contain asctivated additional controls (buttons).
+    # groups, that contain activated additional controls (buttons).
     #
     # `find_fields` is a generator that locates candidate fields that *might* have 
     # a designated control, and
@@ -2117,24 +2117,26 @@ class GenericEntityEditView(AnnalistGenericView):
                     #     (field_desc.get_field_name(), group_list)
                     #     )
                     yield field_desc
-                if field_desc.has_field_group_ref():
-                    groupref = field_desc.group_ref()
-                    if not valid_id(groupref):
+                if field_desc.has_field_list():
+                    if not field_desc.group_field_descs():
                         # this is for resilience in the face of bad data
-                        log.warning(
-                            "entityedit.find_fields: invalid group_ref %s in field description for %s"%
-                               (groupref, field_desc['field_id'])
-                            )
+                        groupref = field_desc.group_ref()
+                        if groupref and not valid_id(groupref):
+                            log.warning(
+                                "entityedit.find_fields: invalid group_ref %s in field description for %s"%
+                                   (groupref, field_desc['field_id'])
+                                )
+                        else:
+                            log.warning(
+                                "entityedit.find_fields: no field list or group ref in field description for %s"%
+                                   (field_desc['field_id'])
+                                )
                     elif 'group_id' not in field_desc:
                         log.error(
                             "entityedit.find_fields: groupref %s, missing 'group_id' in field description for %s"%
                                (groupref, field_desc['field_id'])
                             )
                     else:
-                        log.debug(
-                            "entityedit.find_fields: Group field desc %s: %s"%
-                            (groupref, field_desc['field_id'])
-                            )
                         group_fields   = field_desc['group_field_descs']
                         new_group_list = group_list + [field_desc['group_id']]
                         for fd in _find_fields(group_fields, new_group_list):
