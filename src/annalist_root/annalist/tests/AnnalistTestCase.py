@@ -72,6 +72,10 @@ class AnnalistTestCase(TestCase):
         # log.info("\n***********\nexpect_dict %r"%(expect_dict))
         # log.info("\n-----------\nactual_dict %r"%(actual_dict))
         for k in expect_dict:
+            if k not in actual_dict:
+                log.info(prefix+"Expected key %s not found in actual"%(k))
+                log.info("  expect %r"%(expect_dict,))
+                log.info("  actual %r"%(actual_dict,))
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
             if isinstance(expect_dict[k],list):
                 if isinstance(actual_dict[k],list):

@@ -16,8 +16,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 # Version 0.1.37, towards 0.1.38
 
 - [ ] Absorb field groups into field defs
-    - [ ] modify field definition reader to use locally defined fields in preference to group reference
-        - [ ] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
+    - [x] modify field definition reader to use locally defined fields in preference to group reference
+        - [x] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
             - [x] Replace: group_view -> field_list
             - [x] Don't store group view in FieldDescription (store field list instead)
             - [x] Test and fix errors
@@ -30,6 +30,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                - fix up test cases
             - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
     - [ ] extend field definition view to include list of fields
+        - [x] Add field Field_fields to field view
+        - [x] Define field Field_fields, using field definitions from group Group_field_group
+        - [x] Test, fix tests
+        - [x] Eyeball changes by viewing type view fields 
+            - Group_field_xxx options are not available in field view: need to complete next steps...
+        - [ ] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
+        - [ ] Test, fix tests
+        - [ ] Eyeball changes by viewing type view fields 
+        - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
+
     - [ ] update site definitions to use field lists in field definitions
     - [ ] eliminate field groups from site definitions
     - [ ] check for other uses of field group reference field
@@ -48,6 +58,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Remove field group type URI from annal: namespace
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
 
+- [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)

@@ -549,6 +549,8 @@ def check_context_field_value(test, context_field,
         context_field_value = extract_entity_id(context_field_value)
     if isinstance(field_value, (list, tuple)):
         for i in range(len(field_value)):
+            # print "@@ check_context_field_value (list): [%d] %r"%(i, field_value[i])
+            # print "@@ check_context_field_value (list): [%d] %r (context)"%(i, context_field_value[i])
             log.debug("check_context_field_value (list): [%d] %r"%(i, field_value[i]))
             test.assertDictionaryMatch(context_field_value[i], field_value[i], prefix="[%d]"%i)
     elif isinstance(field_value, dict):

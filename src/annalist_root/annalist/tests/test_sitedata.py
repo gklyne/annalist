@@ -987,6 +987,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
+                                                                                            "annal:Field_list"       ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
@@ -1116,6 +1118,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_placeholder"
             , "_field/Field_default"
             , "_field/Field_groupref"
+            , "_field/Field_fields"
             , "_field/Field_repeat_label_add"
             , "_field/Field_repeat_label_delete"
             , "_field/Field_entity_type"
