@@ -682,7 +682,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Label</span>
+                  <span>Field label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_label" 
@@ -824,7 +824,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip10)s">
               <div class="row">
                 <div class="%(group_label_classes)s">
-                  <span>Fields</span>
+                  <span>Subfields</span>
                 </div>
                 <div class="%(group_row_head_classes)s">
                   <div class="row">
@@ -834,13 +834,13 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     <div class="small-11 columns">
                       <div class="edit-grouprow col-head row">
                         <div class="view-label col-head small-12 medium-4 columns">
-                          <span>Field id</span>
+                          <span>Subfield Id</span>
                         </div>
                         <div class="view-label col-head small-12 medium-4 columns">
-                          <span>Property URI</span>
+                          <span>Subfield URI</span>
                         </div>
                         <div class="view-label col-head small-12 medium-4 columns">
-                          <span>Position/size</span>
+                          <span>Subfield Pos/size</span>
                         </div>
                       </div>
                     </div>
@@ -967,7 +967,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow1col2, html=True)     # Render type
         self.assertContains(r, formrow2col1, html=True)     # Value type
         self.assertContains(r, formrow2col2, html=True)     # Value mode
-        self.assertContains(r, formrow3, html=True)         # Label
+        self.assertContains(r, formrow3, html=True)         # Field label
         self.assertContains(r, formrow4, html=True)         # Comment/help
         self.assertContains(r, formrow5col1, html=True)     # Property URI
         self.assertContains(r, formrow5col2, html=True)     # Placement
@@ -1091,7 +1091,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_id="Field_fields",
             field_type="annal:Field_list",
             field_render_type="Group_Seq_Row",
-            field_label="Fields",
+            field_label="Subfields",
             field_placeholder="(list of fields)",
             field_property="annal:field_fields",
             field_placement="small:0,12",
@@ -1104,20 +1104,20 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         field_fields = (
               [ { 'annal:property_uri':     'annal:field_id'
                 , 'annal:field_placement':  'small:0,12;medium:0,4'
-                , 'annal:field_id':         '_field/Group_field_sel'
+                , 'annal:field_id':         '_field/Field_subfield_sel'
                 }
               , { 'annal:property_uri':     'annal:property_uri'
                 , 'annal:field_placement':  'small:0,12;medium:4,4'
-                , 'annal:field_id':         '_field/Group_field_property'
+                , 'annal:field_id':         '_field/Field_subfield_property'
                 }
               , { 'annal:property_uri':     'annal:field_placement'
                 , 'annal:field_placement':  'small:0,12;medium:8,4'
-                , 'annal:field_id':         '_field/Group_field_placement'
+                , 'annal:field_id':         '_field/Field_subfield_placement'
                 }
               ])
         expect_context = recordfield_entity_view_context_data(
             field_id="Field_fields", orig_id="Field_fields", action="edit",
-            field_label="Fields",
+            field_label="Subfields",
             field_value_type="annal:Field_list",
             field_render_type="_enum_render_type/Group_Seq_Row",
             field_value_mode="_enum_value_mode/Value_direct",

@@ -29,17 +29,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                - remove unused group definitions
                - fix up test cases
             - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
-    - [ ] extend field definition view to include list of fields
+    - [x] extend field definition view to include list of fields
         - [x] Add field Field_fields to field view
         - [x] Define field Field_fields, using field definitions from group Group_field_group
         - [x] Test, fix tests
         - [x] Eyeball changes by viewing type view fields 
             - Group_field_xxx options are not available in field view: need to complete next steps...
-        - [ ] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
-        - [ ] Test, fix tests
-        - [ ] Eyeball changes by viewing type view fields 
+        - [x] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
+        - [x] Test, fix tests
+        - [x] Eyeball changes by viewing type view fields 
         - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
-
     - [ ] update site definitions to use field lists in field definitions
     - [ ] eliminate field groups from site definitions
     - [ ] check for other uses of field group reference field

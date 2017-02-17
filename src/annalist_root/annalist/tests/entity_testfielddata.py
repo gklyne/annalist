@@ -282,7 +282,7 @@ def recordfield_entity_view_context_data(
           , context_field_row(
               { 'field_id':               "Field_label"                 # 4 (2,0)
               , 'field_name':             "Field_label"
-              , 'field_label':            "Label"
+              , 'field_label':            "Field label"
               , 'field_value_type':       "annal:Text"
               , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
@@ -423,7 +423,7 @@ def recordfield_entity_view_context_data(
           , { 'field_id':               "Field_fields"                  # 13 (9,0)
             , 'field_name':             "Field_fields"
             , 'field_value_type':       "annal:Field_list"
-            , 'field_label':            "Fields"
+            , 'field_label':            "Subfields"
             , 'field_render_type':      "Group_Seq_Row"
             , 'field_value_mode':       "Value_direct"
             , 'field_property_uri':     "annal:field_fields"

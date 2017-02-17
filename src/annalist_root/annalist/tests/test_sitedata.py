@@ -1000,6 +1000,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"            ] ]
             , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"         ] ]
             , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_subfield_placement",  ["Field_subfield_placement",
+                                                                          "Position/size",  "annal:Placement"        ] ]
+            , [ "_field/Field_subfield_property",   ["Field_subfield_property",
+                                                                          "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
+                                                                          "Optional entity ref", 
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
