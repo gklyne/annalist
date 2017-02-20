@@ -135,7 +135,8 @@ class GenericEntityEditView(AnnalistGenericView):
         entity   = self.get_entity(
             viewinfo.src_entity_id or viewinfo.use_entity_id, typeinfo, action
             )
-        # log.debug("GenericEntityEditView.get %r"%(entity,))
+        # log.debug("@@ GenericEntityEditView.get %r"%(entity,))
+        #@@ entity['group_fields'] == []
         if entity is None:
             entity_label = (message.ENTITY_MESSAGE_LABEL%
                 { 'coll_id':    viewinfo.coll_id

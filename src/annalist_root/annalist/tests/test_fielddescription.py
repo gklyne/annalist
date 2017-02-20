@@ -206,6 +206,20 @@ class FieldDescriptionTest(AnnalistTestCase):
             label = 'small-12 medium-2 columns', 
             value = 'small-12 medium-10 columns'
             )
+        expect_field_list = (
+            [ { 'annal:property_uri':       'annal:field_id'
+              , 'annal:field_placement':    'small:0,12;medium:0,4'
+              , 'annal:field_id':           '_field/View_field_sel'
+              }
+            , { 'annal:property_uri':       'annal:property_uri'
+              , 'annal:field_placement':    'small:0,12;medium:4,4'
+              , 'annal:field_id':           '_field/View_field_property'
+              }
+            , { 'annal:property_uri':       'annal:field_placement'
+              , 'annal:field_placement':    'small:0,12;medium:8,4'
+              , 'annal:field_id':           '_field/View_field_placement'
+              }
+            ])
         expect_field_desc = (
             { 'field_id':               'View_fields'
             , 'field_name':             'View_fields'
@@ -220,7 +234,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             , 'field_ref_type':         None
             , 'field_choices':          None
             , 'field_ref_restriction':  'ALL'
-            , 'field_group_ref':        'View_field_group'
+            , 'field_group_ref':        None
+            , 'group_field_list':       expect_field_list
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd['field_render_type'], "Group_Seq_Row")

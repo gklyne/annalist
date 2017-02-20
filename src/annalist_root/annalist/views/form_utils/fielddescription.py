@@ -289,11 +289,13 @@ class FieldDescription(object):
         If the field itself contains or uses a group of fields, returns a
         list of the field references
         """
-        field_list = self._field_desc['group_field_list']
+        field_list = self._field_desc.get('group_field_list', None)
         if field_list is None:
-            log.error("Field %(field_id)s is missing `'group_field_list'` value"%(self._field_desc))
+            msg = "Field %(field_id)s is missing 'group_field_list' value"%(self._field_desc)
+            log.error(msg)
+            raise ValueError(msg)
             # log.error("".join(traceback.format_stack()))
-            return []
+            # return []
         return field_list
 
     def group_field_descs(self):
@@ -455,7 +457,6 @@ def field_description_from_view_field(collection, field, view_context=None, fiel
     field_list = recordfield.get(ANNAL.CURIE.field_fields, None)
     if not field_list:
         group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
-        # group_ref = None #@@@@
         if group_ref:
             group_view = RecordGroup.load(collection, group_ref, altscope="all")
             if group_view:

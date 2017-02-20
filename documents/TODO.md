@@ -39,7 +39,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Test, fix tests
         - [x] Eyeball changes by viewing type view fields 
         - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
-    - [ ] update site definitions to use field lists in field definitions
+    - [x] update site definitions to use field lists in field definitions
     - [ ] eliminate field groups from site definitions
     - [ ] check for other uses of field group reference field
         - entityedit.py task dispatching @@@
@@ -48,7 +48,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] migrate group references in user field definitions to use internal field list
     - [ ] test migration functionality
     - [ ] apply migrations to installable collections
+        - Annalist_schema
+        - Bibliography_defs
+        - Concept_defs
+        - Journal_defs
+        - RDF_schema_defs
     - [ ] eliminate group definitions in installable collections
+        - Annalist_schema
+        - Bibliography_defs
+        - Concept_defs
+        - Journal_defs
+        - RDF_schema_defs
     - [ ] modify or eliminate task buttons that create field groiup entities
     - [ ] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI

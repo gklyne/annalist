@@ -853,20 +853,22 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
+            [
             # [ [ "_group/_initial_values",          ["_initial_values"] ]
-            [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
-            , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
-            , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
             #@@
+            # [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
+            # , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
+            # , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
             # , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
             # , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
+            # , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
             #@@
-            , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
 
     # Create/edit group using group view
+    # NOTE: this presents a form for editing the group entity
     def test_group_edit_new(self):
         u = collection_entity_edit_url(
             coll_id="coll1", type_id="_group",
@@ -877,12 +879,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Group_label", "text", None)
         self.check_input_type_value(s, "Group_comment", "textarea", None)
         self.check_input_type_value(s, "Group_target_type", "text", None)
+        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        expect_fields = []
+        self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(
             s, "view_choice", self.views_expected, "_view/Field_group_view"
             )
         return
 
     # Edit/view group view
+    # NOTE: this presents a form for editing the group view entity
     def test_view_edit_group_view(self):
         u = collection_entity_edit_url(
             coll_id="coll1", type_id="_view", entity_id="Field_group_view",
