@@ -14,7 +14,12 @@
 , "annal:placeholder":          "(Links to further information)"
 , "annal:property_uri":         "rdfs:seeAlso"
 , "annal:field_placement":      "small:0,12"
-, "annal:group_ref":            "_group/Entity_see_also_r"
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/Entity_see_also"
+    , "annal:property_uri":     "@id"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
 , "annal:repeat_label_add":     "Add link"
 , "annal:repeat_label_delete":  "Remove link"
 }

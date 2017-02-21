@@ -14,7 +14,6 @@
 , "annal:placeholder":          "(Links to further information)"
 , "annal:property_uri":         "rdfs:seeAlso"
 , "annal:field_placement":      "small:0,12"
-, "annal:group_ref_@@@":        "_group/Entity_see_also_r"
 , "annal:field_fields":
   [ { "annal:field_id":         "_field/Entity_see_also"
     , "annal:property_uri":     "@id"

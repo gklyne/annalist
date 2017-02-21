@@ -40,7 +40,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Eyeball changes by viewing type view fields 
         - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
     - [x] update site definitions to use field lists in field definitions
-    - [ ] eliminate field groups from site definitions
+    - [x] eliminate field group definitions from site data
     - [ ] check for other uses of field group reference field
         - entityedit.py task dispatching @@@
         - entitylist.py get_list_entityvaluemap @@@
@@ -64,7 +64,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] seek out other references to field group type name or URI
     - ... and eventually:
     - [ ] Remove class RecordGroup
+    - [ ] eliminate _field/Field_groupref instances
+    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
+    - [ ] eliminate all Group_* fields
     - [ ] Remove field group type URI from annal: namespace
+    - [ ] eliminate _type/_group
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
 
 - [ ] Continuation from login is sometimes/often lost (provide example)

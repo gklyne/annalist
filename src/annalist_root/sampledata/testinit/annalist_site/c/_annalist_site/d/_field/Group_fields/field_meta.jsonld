@@ -13,8 +13,20 @@
 , "annal:placeholder":          "(field group list of fields)"
 , "annal:property_uri":         "annal:group_fields"
 , "annal:field_placement":      "small:0,12"
-  // Reference to description of repeated field
-, "annal:group_ref":            "_group/Group_field_group"
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/Group_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12;medium:4,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:8,4"
+    }
+  ]
 , "annal:repeat_label_add":     "Add field"
 , "annal:repeat_label_delete":  "Remove selected field(s)"
 }

@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_fields"
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Field_fields"
-, "rdfs:label":                 "Fields"
+, "rdfs:label":                 "Subfields"
 , "rdfs:comment":               "A list of sub-fields that are used by the containing field.\r\n\r\nThe list of fields was previously defined via a reference to a field group, but that made defining certain form structures unnecessarily complex, so this field allows the referenced sub-fields to be included directly in a field definition."
 , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
@@ -14,15 +14,15 @@
 , "annal:property_uri":         "annal:field_fields"
 , "annal:field_placement":      "small:0,12"
 , "annal:field_fields": 
-  [ { "annal:field_id":         "_field/Group_field_sel"
+  [ { "annal:field_id":         "_field/Field_subfield_sel"
     , "annal:property_uri":     "annal:field_id"
     , "annal:field_placement":  "small:0,12;medium:0,4"
     }
-  , { "annal:field_id":         "_field/Group_field_property"
+  , { "annal:field_id":         "_field/Field_subfield_property"
     , "annal:property_uri":     "annal:property_uri"
     , "annal:field_placement":  "small:0,12;medium:4,4"
     }
-  , { "annal:field_id":         "_field/Group_field_placement"
+  , { "annal:field_id":         "_field/Field_subfield_placement"
     , "annal:property_uri":     "annal:field_placement"
     , "annal:field_placement":  "small:0,12;medium:8,4"
     }
