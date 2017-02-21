@@ -1580,9 +1580,12 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         if responseinfo.is_response_error():
             return responseinfo
+
         # Tasks invoked after current entity has been saved (if required)
+        #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        #@@TODO: drive this logic from a stored _task description
+        #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         if task_id == entitytypeinfo.TASK_ID+"/Define_view_list":
-            #@@TODO: drive this logic from a stored _task description
             # Extract info from entityformvals
             base_id        = entityformvals[ANNAL.CURIE.id]
             type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_id
@@ -1625,6 +1628,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         elif task_id == entitytypeinfo.TASK_ID+"/Define_repeat_field":
             # Extract info from entityformvals (form is a field description)
             field_entity_id          = entityformvals[ANNAL.CURIE.id]
@@ -1642,25 +1646,27 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_delete      = message.REPEAT_FIELD_DELETE%field_label
             repeat_group_label       = message.REPEAT_GROUP_LABEL%field_label
             repeat_group_comment     = message.REPEAT_GROUP_COMMENT%field_label
+            #@@@
             # Create repeat-field group (defaults from sitedata '_group/_initial_values')
-            group_typeinfo = EntityTypeInfo(
-                viewinfo.collection, entitytypeinfo.GROUP_ID
-                )
-            group_entity   = group_typeinfo.get_create_entity(repeat_group_id)
-            group_entity.setdefault(RDFS.CURIE.label,         repeat_group_label)
-            group_entity.setdefault(RDFS.CURIE.comment,       repeat_group_comment)
-            group_entity.setdefault(ANNAL.CURIE.record_type,  field_entity_type)
-            # print "@@ field_entity_type: "+repr(field_entity_type)
-            # print "@@ field_property_uri: "+repr(field_property_uri)
-            # print "@@ field_value_type: "+repr(field_value_type)
-            if not group_entity.get(ANNAL.CURIE.group_fields, None):
-                group_entity[ANNAL.CURIE.group_fields] = (
-                    [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
-                      , ANNAL.CURIE.property_uri:       field_property_uri
-                      , ANNAL.CURIE.field_placement:    "small:0,12"
-                      }
-                    ])
-            group_entity._save()
+            # group_typeinfo = EntityTypeInfo(
+            #     viewinfo.collection, entitytypeinfo.GROUP_ID
+            #     )
+            # group_entity   = group_typeinfo.get_create_entity(repeat_group_id)
+            # group_entity.setdefault(RDFS.CURIE.label,         repeat_group_label)
+            # group_entity.setdefault(RDFS.CURIE.comment,       repeat_group_comment)
+            # group_entity.setdefault(ANNAL.CURIE.record_type,  field_entity_type)
+            # # print "@@ field_entity_type: "+repr(field_entity_type)
+            # # print "@@ field_property_uri: "+repr(field_property_uri)
+            # # print "@@ field_value_type: "+repr(field_value_type)
+            # if not group_entity.get(ANNAL.CURIE.group_fields, None):
+            #     group_entity[ANNAL.CURIE.group_fields] = (
+            #         [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
+            #           , ANNAL.CURIE.property_uri:       field_property_uri
+            #           , ANNAL.CURIE.field_placement:    "small:0,12"
+            #           }
+            #         ])
+            # group_entity._save()
+            #@@@
             # Create repeat-field referencing group
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
@@ -1668,7 +1674,15 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity   = field_typeinfo.get_create_entity(repeat_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "Group_Seq_Row"
             field_entity[ANNAL.CURIE.field_value_mode]  = "Value_direct"
-            field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+repeat_group_id
+            #@@@ field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+repeat_group_id
+            if not field_entity.get(ANNAL.CURIE.field_fields, None):
+                field_entity[ANNAL.CURIE.field_fields] = (
+                    [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
+                      , ANNAL.CURIE.property_uri:       field_property_uri
+                      , ANNAL.CURIE.field_placement:    "small:0,12"
+                      }
+                    ])
+            #@@@
             field_entity[ANNAL.CURIE.field_entity_type] = field_entity_type
             field_entity[ANNAL.CURIE.field_value_type]  = field_value_type
             field_entity.setdefault(RDFS.CURIE.label,                 repeat_field_label)
@@ -1679,6 +1693,7 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity.setdefault(ANNAL.CURIE.repeat_label_add,     repeat_field_add)
             field_entity.setdefault(ANNAL.CURIE.repeat_label_delete,  repeat_field_delete)
             field_entity._save()
+
             # Redisplay field view with message
             info_values = self.info_params(
                 message.TASK_CREATE_REPEAT_FIELD%
@@ -1700,6 +1715,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         elif task_id == entitytypeinfo.TASK_ID+"/Define_field_ref":
             # Extract info from entityformvals (form is a field description)
             field_entity_id       = entityformvals[ANNAL.CURIE.id]
@@ -1713,29 +1729,39 @@ class GenericEntityEditView(AnnalistGenericView):
             ref_field_label       = message.FIELD_REF_LABEL%field_label
             ref_field_comment     = message.FIELD_REF_COMMENT%field_label
             ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_label
+            #@@@
             # Create field-reference group (defaults from sitedata '_group/_initial_values')
-            group_typeinfo = EntityTypeInfo(
-                viewinfo.collection, entitytypeinfo.GROUP_ID
-                )
-            group_entity   = group_typeinfo.get_create_entity(ref_group_id)
-            group_entity.setdefault(RDFS.CURIE.label,         ref_field_label)
-            group_entity.setdefault(RDFS.CURIE.comment,       ref_field_comment)
-            group_entity.setdefault(ANNAL.CURIE.record_type,  field_entity_type)
-            if not group_entity.get(ANNAL.CURIE.group_fields, None):
-                group_entity[ANNAL.CURIE.group_fields] = (
-                    [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
-                      , ANNAL.CURIE.field_placement:    "small:0,12"
-                      }
-                    ])
-            group_entity._save()
-            # Create field group reference
+            # group_typeinfo = EntityTypeInfo(
+            #     viewinfo.collection, entitytypeinfo.GROUP_ID
+            #     )
+            # group_entity   = group_typeinfo.get_create_entity(ref_group_id)
+            # group_entity.setdefault(RDFS.CURIE.label,         ref_field_label)
+            # group_entity.setdefault(RDFS.CURIE.comment,       ref_field_comment)
+            # group_entity.setdefault(ANNAL.CURIE.record_type,  field_entity_type)
+            # if not group_entity.get(ANNAL.CURIE.group_fields, None):
+            #     group_entity[ANNAL.CURIE.group_fields] = (
+            #         [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
+            #           , ANNAL.CURIE.field_placement:    "small:0,12"
+            #           }
+            #         ])
+            # group_entity._save()
+            #@@@
+            # Create field referencing field
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
             field_entity   = field_typeinfo.get_create_entity(ref_field_id)
             field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"
             field_entity[ANNAL.CURIE.field_value_mode]  = "Value_entity"
-            field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+ref_group_id
+            #@@@
+            # field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+ref_group_id
+            #@@@
+            if not field_entity.get(ANNAL.CURIE.field_fields, None):
+                field_entity[ANNAL.CURIE.field_fields] = (
+                    [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
+                      , ANNAL.CURIE.field_placement:    "small:0,12"
+                      }
+                    ])
             field_entity[ANNAL.CURIE.field_entity_type] = field_entity_type
             field_entity[ANNAL.CURIE.field_value_type]  = field_value_type
             field_entity.setdefault(RDFS.CURIE.label,             ref_field_label)

@@ -42,9 +42,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] update site definitions to use field lists in field definitions
     - [x] eliminate field group definitions from site data
     - [ ] check for other uses of field group reference field
-        - entityedit.py task dispatching @@@
-        - entitylist.py get_list_entityvaluemap @@@
-        - test_sitedata.py check_type_list_view @@@
+        - [x] entityedit.py save_invoke_task (task dispatching)
+        - [x] fix up test cases
+        - [x] entitylist.py get_list_entityvaluemap
+        - [ ] Test task buttons in deployed software
+        - [ ] test_sitedata.py check_type_list_view @@@
+        - [ ] test_sitedata.py check_type_fields @@@
+        - [ ] test_render_repeatgroup.py @@@
+        - [ ] fielddescription.py @@@ later, when migration logic is confirmed and tested
     - [ ] migrate group references in user field definitions to use internal field list
     - [ ] test migration functionality
     - [ ] apply migrations to installable collections

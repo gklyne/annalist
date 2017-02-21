@@ -170,12 +170,15 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_mode":     "Value_entity"
-            , "annal:field_value_type":    "annal:Field_group"
+            , "annal:field_value_type":     "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
             , "annal:property_uri":         "test:ref_image"
             , "annal:field_placement":      "small:0,12;medium:0,6"
-            , "annal:group_ref":            "Test_refimg_group"
+            , "annal:field_fields": 
+                [ { "annal:field_id":   "Test_comment" }
+                , { "annal:field_id":   "Test_image"}
+                ]
             , "annal:field_ref_type":       "img_type"
             })
         self.assertTrue(refimg_field is not None)
@@ -203,11 +206,13 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:comment":               "Repeat image reference field comment"
             , "annal:field_render_type":    "RepeatGroupRow"
             , "annal:field_value_mode":     "Value_direct"
-            , "annal:field_value_type":    "annal:Field_group"
+            , "annal:field_value_type":     "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
             , "annal:property_uri":         "test:rpt_image"
             , "annal:field_placement":      "small:0,12"
-            , "annal:group_ref":            "Test_rptref_group"
+            , "annal:field_fields": 
+                [ { "annal:field_id":   "Test_refimg_field" }
+                ]
             })
         self.assertTrue(rptref_field is not None)
         return rptref_field
@@ -324,8 +329,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_label'],         "Image reference")
         self.assertEqual(f1['field_render_type'],   "RefMultifield")
         self.assertEqual(f1['field_value_mode'],    "Value_entity")
-        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_refimg_group")
+        self.assertEqual(f1['field_value_type'],    "annal:Field_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_comment" }
+            , { "annal:field_id":   "Test_image"}
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Image reference")
         self.assertEqual(f1['field_property_uri'],  "test:ref_image")
         self.assertEqual(f1['field_value'],         "Test_img_entity")
@@ -435,7 +444,11 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "RefMultifield")
         self.assertEqual(f1['field_value_mode'],    "Value_entity")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_refimg_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_comment" }
+            , { "annal:field_id":   "Test_image"}
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Image reference")
         self.assertEqual(f1['field_property_uri'],  "test:ref_image")
         self.assertEqual(f1['field_value'],         "Test_img_entity")
@@ -523,7 +536,10 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],    "Value_direct")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_rptref_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_refimg_field" }
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Repeat image reference")
         self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
         self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
@@ -685,7 +701,10 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],    "Value_direct")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_rptref_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_refimg_field" }
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Repeat image reference")
         self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
         self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})

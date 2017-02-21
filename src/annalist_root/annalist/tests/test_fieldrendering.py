@@ -102,7 +102,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                 , 'field_property_uri':         'annal:view_fields'
                 , 'field_placement':            get_placement_classes("small:0,12")
                 , 'field_placeholder':          '(repeat field description)'
-                , 'field_group_ref':            'View_field_view'
+                #@@ , 'field_group_ref':            'View_field_view'
                 , 'group_id':                   'View_fields'
                 , 'group_label':                'Fields'
                 , 'group_add_label':            'Add field'

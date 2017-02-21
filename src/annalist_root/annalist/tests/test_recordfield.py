@@ -1423,6 +1423,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
+        #@@@
         expect_repeat_group_values = (
             { "annal:id":           rpt_group_id
             , "annal:type":         "annal:Field_group"
@@ -1435,6 +1436,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 }
               ]
             })
+        #@@@
         expect_repeat_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
@@ -1448,9 +1450,15 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
+            , "annal:field_fields":
+              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+                , "annal:property_uri":     tgt_field_uri
+                , "annal:field_placement":  "small:0,12"
+                }
+              ]
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
-        self.check_entity_values(layout.GROUP_TYPEID, rpt_group_id, expect_repeat_group_values)
+        # self.check_entity_values(layout.GROUP_TYPEID, rpt_group_id, expect_repeat_group_values)
         self.check_entity_values(layout.FIELD_TYPEID, rpt_field_id, expect_repeat_field_values)
         return
 
@@ -1508,6 +1516,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
+        #@@@
         expect_ref_group_values = (
             { "annal:id":           ref_group_id
             , "annal:type":         "annal:Field_group"
@@ -1519,6 +1528,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 }
               ]
             })
+        #@@@
         expect_ref_field_values = (
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
@@ -1531,9 +1541,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
             , "annal:field_ref_type":       "Default_type"
+            , "annal:field_fields":
+              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+                , "annal:field_placement":  "small:0,12"
+                }
+              ]
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
-        self.check_entity_values(layout.GROUP_TYPEID, ref_group_id, expect_ref_group_values)
+        #@@@ self.check_entity_values(layout.GROUP_TYPEID, ref_group_id, expect_ref_group_values)
         self.check_entity_values(layout.FIELD_TYPEID, ref_field_id, expect_ref_field_values)
         return
 
