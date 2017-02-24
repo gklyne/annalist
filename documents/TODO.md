@@ -45,8 +45,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] entityedit.py save_invoke_task (task dispatching)
         - [x] fix up test cases
         - [x] entitylist.py get_list_entityvaluemap
-        - [ ] test_sitedata.py check_type_fields @@@
-        @@@@ need to think about type URI for repeating entity, and matching the field definitions entity type (annal:field_entity_type) to that type.  This may be important for controlling what fields appear where.  Suggests using annal:field_value_type from repeat field definition?
+        - [x] test_sitedata.py check_type_fields
         - [ ] test_render_repeatgroup.py @@@
         - [ ] Test task buttons in deployed software
         - [ ] fielddescription.py @@@ eliminate later, when migration logic is confirmed and tested

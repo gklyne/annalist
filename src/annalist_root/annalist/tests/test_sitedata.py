@@ -197,7 +197,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         option_labels_here     = (
             [self.html_encode(o.string) for o in select_elem.find_all("option")]
             )
-        #@@ option_labels_expected = [ fc.choice() for fc in options ]
         option_labels_expected = get_choice_labels(options)
         if option_labels_here != option_labels_expected:
             log.info("option_labels_here:     %r"%(option_labels_here,))
@@ -318,10 +317,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                             )
                 if is_repeat_field_render_type(render_type):
                     # Check extra fields
-                    #@@@@@@@@@@@@@@@@@@@
-                    # Why is this not failing?
-                    # group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
-                    #@@@@@@@@@@@@@@@@@@@
                     self.assertIn(ANNAL.CURIE.field_fields,        view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
@@ -332,19 +327,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     # print "@@ subfields: " + repeat_type_uri
                     self.check_type_fields("_field", repeat_type_uri, field_list)
                     # print "@@ subfields: end"
-                    #@@@@@@@@@@@@@@@@@@@
-                    # Check field group
-                    # field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
-                    # self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
-                    # self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
-                    # self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
-                    # #@@ self.assertEqual(field_group[ANNAL.CURIE.record_type], value_type)
-                    # self.check_type_fields("_group", 
-                    #     field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
-                    #     )
-                    #@@@@@@@@@@@@@@@@@@@
-                    # field_name is present only if different from field_id
-                    # self.assertIn(ANNAL.CURIE.field_name,  list_field)
                 enum_types = (
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"
@@ -428,23 +410,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Type")
         self.assertEqual(thead[2].span.string, "Label")
-        #@@ Original
-        trows_expected = (
-            [ [ "_list/list1",    ["list1",    "_list", "RecordList coll1/list1"] ]
-            , [ "_list/list2",    ["list2",    "_list", "RecordList coll1/list2"] ]
-            , [ "_type/type1",    ["type1",    "_type", "RecordType coll1/type1"] ]
-            , [ "_type/type2",    ["type2",    "_type", "RecordType coll1/type2"] ]
-            , [ "_user/testuser", ["testuser", "_user", "Test User"] ]
-            , [ "_view/view1",    ["view1",    "_view", "RecordView coll1/view1"] ]
-            , [ "_view/view2",    ["view2",    "_view", "RecordView coll1/view2"] ]
-            , [ "type1/entity1",  ["entity1",  "type1", "Entity coll1/type1/entity1"] ]
-            , [ "type1/entity2",  ["entity2",  "type1", "Entity coll1/type1/entity2"] ]
-            , [ "type1/entity3",  ["entity3",  "type1", "Entity coll1/type1/entity3"] ]
-            , [ "type2/entity1",  ["entity1",  "type2", "Entity coll1/type2/entity1"] ]
-            , [ "type2/entity2",  ["entity2",  "type2", "Entity coll1/type2/entity2"] ]
-            , [ "type2/entity3",  ["entity3",  "type2", "Entity coll1/type2/entity3"] ]
-            ])
-        #@@ Updated
         trows_expected = (
             [ [ "_list/list1",    ["list1",    "List",              "RecordList coll1/list1"] ]
             , [ "_list/list2",    ["list2",    "List",              "RecordList coll1/list2"] ]
@@ -461,7 +426,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "type2/entity3",  ["entity3",  "RecordType coll1/type2", "Entity coll1/type2/entity3"] ]
             ])
         self.check_list_row_data(s, trows_expected)
-
         # @@TODO: check entity and type links
         #         check_list_row_links?  or add 3rd element to each trows_expected
         return
