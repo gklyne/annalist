@@ -84,6 +84,12 @@ class FieldChoice(_FieldChoice_tuple):
         result = super(FieldChoice, _cls).__new__(_cls, id, value, label, link, choice_value)
         return result
 
+    def __cmp__(self, other):
+        """
+        Compares current FieldChoice value with another, and returns -1, 0, +1 as required.
+        """
+        return self.id.__cmp__(other.id)
+
     def choice(self, sep=u"\xa0\xa0\xa0"):
         """
         Return choice string
@@ -120,6 +126,7 @@ class FieldChoice(_FieldChoice_tuple):
         Variation of option_label returns HTML-encoded form of label text
         """
         return self.option_label(sep=sep)
+
 
 def update_choice_labels(fieldchoices):
     """

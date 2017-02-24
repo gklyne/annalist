@@ -376,13 +376,25 @@ site_field_fields = (
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
-    , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
-    , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
-    , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
+    # , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
+    # , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
+    # , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
     , FieldChoice("_field/Field_value_type",           label="Value type"          )
     ])  
+
+site_field_subfield_fields = (
+    [ FieldChoice("_field/_initial_values")
+    , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
+    , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
+    , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
+    ])  
+
+site_field_all_fields = (
+    [ FieldChoice("_field/_initial_values")] 
+    + sorted(site_field_fields[1:] + site_field_subfield_fields[1:])
+    )
 
 site_defined_group_fields = (
     [ FieldChoice("_field/_initial_values")
@@ -533,7 +545,7 @@ site_fields = (
     site_coll_fields[1:] +
     site_defined_entity_fields[1:] +
     site_enum_fields[1:] +
-    site_field_fields[1:] +
+    site_field_all_fields[1:] +
     site_defined_group_fields[1:] +
     site_defined_list_fields[1:] +
     site_defined_type_fields[1:] +

@@ -283,21 +283,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
         self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
-        # print "l: " + type_list[ANNAL.CURIE.id]
+        # print "@@ l: " + type_list[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
-        # print "v: " + type_view[ANNAL.CURIE.id]
+        # print "@@ v: " + type_view[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
         return
 
     # Test consistency of field descriptions for a given type
     def check_type_fields(self, type_id, type_uri, view_fields):
-        # print "t: " + type_id
+        # print "@@ t: " + type_id
         for f in view_fields:
-            field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
-            # print "f: " + field_id
-            view_field = RecordField.load(self.coll1, field_id, altscope="all")
-            render_type = view_field[ANNAL.CURIE.field_render_type]
-            value_type = view_field[ANNAL.CURIE.field_value_type]
+            field_id    = extract_entity_id(f[ANNAL.CURIE.field_id])
+            # print "@@ f: " + field_id
+            view_field  = RecordField.load(self.coll1, field_id, altscope="all")
+            render_type = extract_entity_id(view_field[ANNAL.CURIE.field_render_type])
+            value_type  = extract_entity_id(view_field[ANNAL.CURIE.field_value_type])
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
                 self.assertEqual(view_field[ANNAL.CURIE.id],      field_id)
@@ -318,18 +318,31 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                             )
                 if is_repeat_field_render_type(render_type):
                     # Check extra fields
-                    group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
+                    #@@@@@@@@@@@@@@@@@@@
+                    # Why is this not failing?
+                    # group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
+                    #@@@@@@@@@@@@@@@@@@@
+                    self.assertIn(ANNAL.CURIE.field_fields,        view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
+                    self.assertIn(ANNAL.CURIE.field_value_type,    view_field)
+                    # Check field list
+                    field_list      = view_field[ANNAL.CURIE.field_fields]
+                    repeat_type_uri = view_field[ANNAL.CURIE.field_value_type]
+                    # print "@@ subfields: " + repeat_type_uri
+                    self.check_type_fields("_field", repeat_type_uri, field_list)
+                    # print "@@ subfields: end"
+                    #@@@@@@@@@@@@@@@@@@@
                     # Check field group
-                    field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
-                    self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
-                    self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
-                    self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
-                    #@@ self.assertEqual(field_group[ANNAL.CURIE.record_type], value_type)
-                    self.check_type_fields("_group", 
-                        field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
-                        )
+                    # field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
+                    # self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
+                    # self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
+                    # self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
+                    # #@@ self.assertEqual(field_group[ANNAL.CURIE.record_type], value_type)
+                    # self.check_type_fields("_group", 
+                    #     field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
+                    #     )
+                    #@@@@@@@@@@@@@@@@@@@
                     # field_name is present only if different from field_id
                     # self.assertIn(ANNAL.CURIE.field_name,  list_field)
                 enum_types = (
@@ -986,7 +999,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
-                                                                                            "rdfs:Resource"          ] ]
+                                                                                        "annal:Entity_see_also_list" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"         ] ]

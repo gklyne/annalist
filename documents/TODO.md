@@ -41,15 +41,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
     - [x] update site definitions to use field lists in field definitions
     - [x] eliminate field group definitions from site data
-    - [ ] check for other uses of field group reference field
+    - [.] check for other uses of field group reference field
         - [x] entityedit.py save_invoke_task (task dispatching)
         - [x] fix up test cases
         - [x] entitylist.py get_list_entityvaluemap
-        - [ ] Test task buttons in deployed software
-        - [ ] test_sitedata.py check_type_list_view @@@
         - [ ] test_sitedata.py check_type_fields @@@
+        @@@@ need to think about type URI for repeating entity, and matching the field definitions entity type (annal:field_entity_type) to that type.  This may be important for controlling what fields appear where.  Suggests using annal:field_value_type from repeat field definition?
         - [ ] test_render_repeatgroup.py @@@
-        - [ ] fielddescription.py @@@ later, when migration logic is confirmed and tested
+        - [ ] Test task buttons in deployed software
+        - [ ] fielddescription.py @@@ eliminate later, when migration logic is confirmed and tested
     - [ ] migrate group references in user field definitions to use internal field list
     - [ ] test migration functionality
     - [ ] apply migrations to installable collections
