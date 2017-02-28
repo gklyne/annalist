@@ -38,7 +38,6 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
 
 from annalist.views.uri_builder     import (

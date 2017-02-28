@@ -43,7 +43,6 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 
 from annalist.views.fields.find_renderers   import is_repeat_field_render_type

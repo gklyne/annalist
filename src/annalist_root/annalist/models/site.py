@@ -38,7 +38,6 @@ from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
