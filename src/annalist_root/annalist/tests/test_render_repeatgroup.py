@@ -23,7 +23,6 @@ from annalist.models.recordtype         import RecordType
 from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
-from annalist.models.recordgroup        import RecordGroup
 from annalist.models.entitydata         import EntityData
 
 from AnnalistTestCase       import AnnalistTestCase
@@ -100,26 +99,30 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
             , "annal:placeholder":          "(test repeat field)"
             , "annal:property_uri":         "test:repeat_fields"
             , "annal:field_placement":      "small:0,12"
-            , "annal:group_ref":            "testrepeatgroup"
+            , "annal:field_fields": 
+                [ { "annal:field_id":   "Entity_comment" }
+                ]
             , "annal:repeat_label_add":     label_add
             , "annal:repeat_label_delete":  label_delete
             })
         self.assertTrue(testrepeatfield is not None)
         return testrepeatfield
 
-    def _create_testrepeatgroup(self):
-        testrepeatgroup = RecordGroup.create(self.testcoll, "testrepeatgroup",
-            { "annal:type":         "annal:Field_group"
-            , "annal:uri":          "test:testrecordgroup"
-            , "rdfs:label":         "Test record group label"
-            , "rdfs:comment":       "Test record group comment"
-            , "annal:record_type":  "test:testtype"
-            , "annal:group_fields": 
-                [ { "annal:field_id":   "Entity_comment" }
-                ]
-            })
-        self.assertTrue(testrepeatgroup is not None)
-        return testrepeatgroup
+    #@@@
+    # def _create_testrepeatgroup___(self):
+    #     testrepeatgroup = RecordGroup.create(self.testcoll, "testrepeatgroup",
+    #         { "annal:type":         "annal:Field_group"
+    #         , "annal:uri":          "test:testrecordgroup"
+    #         , "rdfs:label":         "Test record group label"
+    #         , "rdfs:comment":       "Test record group comment"
+    #         , "annal:record_type":  "test:testtype"
+    #         , "annal:group_fields": 
+    #             [ { "annal:field_id":   "Entity_comment" }
+    #             ]
+    #         })
+    #     self.assertTrue(testrepeatgroup is not None)
+    #     return testrepeatgroup
+    #@@@
 
     def _create_testentity(self):
         testentity = EntityData.create(self.testdata, "testentity",
@@ -137,7 +140,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         testrepeatfield = self._create_testrepeatfield(
             label_add="Add group",
             label_delete="Remove group")
-        testrepeatgroup = self._create_testrepeatgroup()
         # Render view
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="testview")
         r = self.client.get(u)
@@ -158,13 +160,16 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(f0['field_value'], "00000001")
         # 2nd field - repeat group
         f1 = context_view_field(r.context, 1, 0)
+        repeat_fields = (
+            [ { "annal:field_id":   "Entity_comment" }
+            ])
         self.assertEqual(f1['field_id'],           "testrepeatfield")
         self.assertEqual(f1['field_name'],         "testrepeatfield")
         self.assertEqual(f1['field_label'],        "Test repeat field label")
         self.assertEqual(f1['field_render_type'],  "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],   "Value_direct")
         self.assertEqual(f1['field_value_type'],  "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],    "testrepeatgroup")
+        self.assertEqual(f1['group_field_list'],   repeat_fields)
         self.assertEqual(f1['group_label'],        "Test repeat field label")
         self.assertEqual(f1['group_add_label'],    "Add group")
         self.assertEqual(f1['group_delete_label'], "Remove group")
@@ -238,7 +243,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         testrepeatfield = self._create_testrepeatfield(
             label_add=None,
             label_delete="")
-        testrepeatgroup = self._create_testrepeatgroup()
         # Render view
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="testview")
         r = self.client.get(u)
@@ -259,13 +263,16 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(context_view_field(r.context, i, 0)['field_value'], "00000001")
         # 2nd field - repeat group
         i = 1
+        repeat_fields = (
+            [ { "annal:field_id":   "Entity_comment" }
+            ])
         self.assertEqual(context_view_field(r.context, i, 0)['field_id'],           "testrepeatfield")
         self.assertEqual(context_view_field(r.context, i, 0)['field_name'],         "testrepeatfield")
         self.assertEqual(context_view_field(r.context, i, 0)['field_label'],        "Test repeat field label")
         self.assertEqual(context_view_field(r.context, i, 0)['field_render_type'],  "Group_Seq_Row")
         self.assertEqual(context_view_field(r.context, i, 0)['field_value_mode'],   "Value_direct")
-        self.assertEqual(context_view_field(r.context, i, 0)['field_value_type'],  "annal:Field_group")
-        self.assertEqual(context_view_field(r.context, i, 0)['field_group_ref'],    "testrepeatgroup")
+        self.assertEqual(context_view_field(r.context, i, 0)['field_value_type'],   "annal:Field_group")
+        self.assertEqual(context_view_field(r.context, i, 0)['group_field_list'],   repeat_fields)
         self.assertEqual(context_view_field(r.context, i, 0)['group_label'],        "Test repeat field label")
         self.assertEqual(context_view_field(r.context, i, 0)['group_add_label'],    "Add testrepeatfield")
         self.assertEqual(context_view_field(r.context, i, 0)['group_delete_label'], "Remove testrepeatfield")
@@ -280,7 +287,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         testrepeatfield = self._create_testrepeatfield(
             label_add="Add group",
             label_delete="Remove group")
-        testrepeatgroup = self._create_testrepeatgroup()
         testentity      = self._create_testentity()
         # Render view
         u = entitydata_edit_url(

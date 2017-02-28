@@ -46,11 +46,21 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] fix up test cases
         - [x] entitylist.py get_list_entityvaluemap
         - [x] test_sitedata.py check_type_fields
-        - [ ] test_render_repeatgroup.py @@@
+        - [x] test_render_repeatgroup.py
         - [ ] Test task buttons in deployed software
-        - [ ] fielddescription.py @@@ eliminate later, when migration logic is confirmed and tested
+        - [ ] fielddescription.py @@@ eliminate group reference later, when migration logic is confirmed and tested
+    - [ ] modify or eliminate task buttons that create field group entities
+    - [ ] check for other uses of recordGroup class
+        - [ ] test_render_ref_multifields.py @@@
+        - [ ] views/form_utils/fielddescription.py @@@
     - [ ] migrate group references in user field definitions to use internal field list
+        - [ ] Add logic to RecordField to import field definitions from group definition
+        - [ ] What about value type of repeat field?  Warning if mismatch?
+        - [ ] Add optional deprecation warning when recordgroup is instantiated (except for migration)
+        - [ ] Above changes should mean all live references are to inline field list
+        - [ ] Add _group rename to collection migration function
     - [ ] test migration functionality
+        - [ ] Add test case to test_data_migration
     - [ ] apply migrations to installable collections
         - Annalist_schema
         - Bibliography_defs
@@ -63,7 +73,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Concept_defs
         - Journal_defs
         - RDF_schema_defs
-    - [ ] modify or eliminate task buttons that create field groiup entities
     - [ ] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI
     - ... and eventually:

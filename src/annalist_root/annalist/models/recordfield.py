@@ -34,8 +34,8 @@ class RecordField(EntityData):
         """
         Initialize a new RecordField object, without metadta (yet).
 
-        parent      is the parent entity from which the view is descended.
-        field_id    the local identifier for the record view
+        parent      is the parent collection to which the field belons.
+        field_id    the local identifier for the record field
         """
         # assert altparent, "RecordField instantiated with no altparent"
         super(RecordField, self).__init__(parent, field_id)
