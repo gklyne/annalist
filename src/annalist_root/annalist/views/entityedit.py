@@ -1731,6 +1731,7 @@ class GenericEntityEditView(AnnalistGenericView):
             ref_field_id          = field_entity_id    + layout.SUFFIX_MULTI
             ref_group_id          = field_entity_id    + layout.SUFFIX_MULTI_G
             ref_property_uri      = field_property_uri + layout.SUFFIX_MULTI_P
+            ref_entity_type       = field_entity_type if field_entity_type != ANNAL.CURIE.Field_list else ""
             ref_field_label       = message.FIELD_REF_LABEL%field_label
             ref_field_comment     = message.FIELD_REF_COMMENT%field_label
             ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_label
@@ -1755,27 +1756,27 @@ class GenericEntityEditView(AnnalistGenericView):
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
-            field_entity   = field_typeinfo.get_create_entity(ref_field_id)
-            field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"
-            field_entity[ANNAL.CURIE.field_value_mode]  = "Value_entity"
+            ref_field_entity   = field_typeinfo.get_create_entity(ref_field_id)
+            ref_field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"
+            ref_field_entity[ANNAL.CURIE.field_value_mode]  = "Value_entity"
             #@@@
-            # field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+ref_group_id
+            # ref_field_entity[ANNAL.CURIE.group_ref]         = entitytypeinfo.GROUP_ID+"/"+ref_group_id
             #@@@
-            if not field_entity.get(ANNAL.CURIE.field_fields, None):
-                field_entity[ANNAL.CURIE.field_fields] = (
+            if not ref_field_entity.get(ANNAL.CURIE.field_fields, None):
+                ref_field_entity[ANNAL.CURIE.field_fields] = (
                     [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
                       , ANNAL.CURIE.field_placement:    "small:0,12"
                       }
                     ])
-            field_entity[ANNAL.CURIE.field_entity_type] = field_entity_type
-            field_entity[ANNAL.CURIE.field_value_type]  = field_value_type
-            field_entity.setdefault(RDFS.CURIE.label,             ref_field_label)
-            field_entity.setdefault(RDFS.CURIE.comment,           ref_field_comment)
-            field_entity.setdefault(ANNAL.CURIE.placeholder,      ref_field_placeholder)
-            field_entity.setdefault(ANNAL.CURIE.property_uri,     ref_property_uri)
-            field_entity.setdefault(ANNAL.CURIE.field_placement,  "small:0,12")
-            field_entity.setdefault(ANNAL.CURIE.field_ref_type,   "Default_type")
-            field_entity._save()
+            ref_field_entity.setdefault(RDFS.CURIE.label,               ref_field_label)
+            ref_field_entity.setdefault(RDFS.CURIE.comment,             ref_field_comment)
+            ref_field_entity.setdefault(ANNAL.CURIE.placeholder,        ref_field_placeholder)
+            ref_field_entity.setdefault(ANNAL.CURIE.field_entity_type,  ref_entity_type)
+            ref_field_entity.setdefault(ANNAL.CURIE.field_value_type,   ANNAL.CURIE.Field_list)
+            ref_field_entity.setdefault(ANNAL.CURIE.property_uri,       ref_property_uri)
+            ref_field_entity.setdefault(ANNAL.CURIE.field_placement,    "small:0,12")
+            ref_field_entity.setdefault(ANNAL.CURIE.field_ref_type,     "Default_type")
+            ref_field_entity._save()
             # Display new reference field view with message; continuation same as current view
             info_values = self.info_params(
                 message.TASK_CREATE_REFERENCE_FIELD%
@@ -1797,6 +1798,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         elif task_id == entitytypeinfo.TASK_ID+"/Show_list":
             list_entity_id = viewinfo.use_entity_id or viewinfo.orig_entity_id
             list_uri = self.view_uri(
@@ -1818,6 +1820,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 list_uri, {'continuation_url': cont_here}
                 )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         else:
             log.error("EntityEdit.save_invoketask: Unknown task_id %s"%(task_id,))
             err_values = self.error_params(

@@ -1409,7 +1409,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             })
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        rpt_group_id  = tgt_field_id + layout.SUFFIX_REPEAT_G
+        #@@@ rpt_group_id  = tgt_field_id + layout.SUFFIX_REPEAT_G
         rpt_field_id  = tgt_field_id + layout.SUFFIX_REPEAT
         rpt_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REPEAT_P
         expect_field_values = (
@@ -1424,18 +1424,18 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_placement":      "small:0,12"
             })
         #@@@
-        expect_repeat_group_values = (
-            { "annal:id":           rpt_group_id
-            , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         message.REPEAT_GROUP_LABEL%common_vals['field_label']
-            , "annal:record_type":  "%(type_uri)s"%common_vals
-            , "annal:group_fields":
-              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
-                , "annal:property_uri":     tgt_field_uri
-                , "annal:field_placement":  "small:0,12"
-                }
-              ]
-            })
+        # expect_repeat_group_values = (
+        #     { "annal:id":           rpt_group_id
+        #     , "annal:type":         "annal:Field_group"
+        #     , "rdfs:label":         message.REPEAT_GROUP_LABEL%common_vals['field_label']
+        #     , "annal:record_type":  "%(type_uri)s"%common_vals
+        #     , "annal:group_fields":
+        #       [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+        #         , "annal:property_uri":     tgt_field_uri
+        #         , "annal:field_placement":  "small:0,12"
+        #         }
+        #       ]
+        #     })
         #@@@
         expect_repeat_field_values = (
             { "annal:id":                   rpt_field_id
@@ -1502,7 +1502,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Check content of type, view and list
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        ref_group_id  = tgt_field_id + layout.SUFFIX_MULTI_G
+        #@@@ ref_group_id  = tgt_field_id + layout.SUFFIX_MULTI_G
         ref_field_id  = tgt_field_id + layout.SUFFIX_MULTI
         ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_MULTI_P
         expect_field_values = (
@@ -1517,17 +1517,17 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_placement":      "small:0,12"
             })
         #@@@
-        expect_ref_group_values = (
-            { "annal:id":           ref_group_id
-            , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         message.FIELD_REF_LABEL%common_vals['field_label']
-            , "annal:record_type":  "%(type_uri)s"%common_vals
-            , "annal:group_fields":
-              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
-                , "annal:field_placement":  "small:0,12"
-                }
-              ]
-            })
+        # expect_ref_group_values = (
+        #     { "annal:id":           ref_group_id
+        #     , "annal:type":         "annal:Field_group"
+        #     , "rdfs:label":         message.FIELD_REF_LABEL%common_vals['field_label']
+        #     , "annal:record_type":  "%(type_uri)s"%common_vals
+        #     , "annal:group_fields":
+        #       [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+        #         , "annal:field_placement":  "small:0,12"
+        #         }
+        #       ]
+        #     })
         #@@@
         expect_ref_field_values = (
             { "annal:id":                   ref_field_id
@@ -1536,7 +1536,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']

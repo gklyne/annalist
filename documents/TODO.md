@@ -41,21 +41,46 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
     - [x] update site definitions to use field lists in field definitions
     - [x] eliminate field group definitions from site data
+    - [x] modify or eliminate task buttons that create field group entities
     - [.] check for other uses of field group reference field
         - [x] entityedit.py save_invoke_task (task dispatching)
         - [x] fix up test cases
         - [x] entitylist.py get_list_entityvaluemap
         - [x] test_sitedata.py check_type_fields
         - [x] test_render_repeatgroup.py
-        - [ ] Test task buttons in deployed software
+        - [x] Test Define repeat field button in deployed software
             - [x] Define repeat field - button text mentions group
             - [x] Define repeat field - value type should be annal:Field_list
-            - [x] Field view - entity type field should account for field list
+            - [x] Referenced field view - entity type field should be blank, or field list
             - [x] Field entity type help text mentions group
             - [x] Define repeat field - confirmation message mentions group; message needs refinement
-            - [ ] ... (similar for Define field reference?)  button
+        - [x] Test Define field reference button in deployed software
+            - [x] Button text mentions group
+            - [x] Default value type should be annal:Field_list
+            - [-] Field entity type help text mentions group; sort out with separation of tooltip text
+            - [x] Confirmation message mentions group; message needs refinement
+            - [x] "Refer to type" has default type -> can this be inferred from target field?  Or prompt to specify value.
         - [ ] fielddescription.py @@@ eliminate group reference later, when migration logic is confirmed and tested
-    - [ ] modify or eliminate task buttons that create field group entities
+
+    - [ ] BUG (attempt to save copy of site label field):
+            ERROR 2017-03-03 16:07:18,131 [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
+            Traceback (most recent call last):
+              File "annalist_root/annalist/views/entityedit.py", line 264, in post
+                response = self.form_response(viewinfo, context_extra_values)
+              File "annalist_root/annalist/views/entityedit.py", line 539, in form_response
+                responseinfo=responseinfo
+              File "annalist_root/annalist/views/entityedit.py", line 1080, in save_entity
+                typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
+              File "annalist_root/annalist/views/entityedit.py", line 1455, in rename_entity
+                msg        = new_entity._copy_entity_files(old_entity)
+              File "annalist_root/annalist/models/entityroot.py", line 581, in _copy_entity_files
+                for p, f in src_entity._entity_files():
+              File "annalist_root/annalist/models/entityroot.py", line 563, in _entity_files
+                for f in os.listdir(self._entitydir):
+            OSError: [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
+        *** appears to be using original name here, not new name allocated.  New file has been created OK.  
+        *** Or not using directory of original site copy.
+ 
     - [ ] check for other uses of recordGroup class
         - [ ] test_render_ref_multifields.py @@@
         - [ ] views/form_utils/fielddescription.py @@@
@@ -81,6 +106,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - RDF_schema_defs
     - [ ] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI
+
     - ... and eventually:
     - [ ] Remove class RecordGroup
     - [ ] eliminate _field/Field_groupref instances
@@ -89,6 +115,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Remove field group type URI from annal: namespace
     - [ ] eliminate _type/_group
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+    - [ ] Clean up dead code:
+        - [ ] test_recordfield.py
 
     - [ ] Provide field popup help separately from comment field (without MarkDown)
         - [ ] Add new property URI to ANNAL namespace
@@ -96,7 +124,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [ ] Default to comment if blank
         - [ ] Add migration logic to copy comment
         - [ ] Edit sitedata field definitions
-- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked 
+- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
+- [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
 - [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net

@@ -17,4 +17,8 @@ pip uninstall -y annalist
 python setup.py install
 annalist-manager updatesite
 
+echo ""
 echo "To start server with updated site data: annalist-manager runserver"
+echo ""
+
+# End.
