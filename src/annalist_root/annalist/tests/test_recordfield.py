@@ -656,7 +656,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_value_type" 
                          placeholder="(field value type)" 
-                         value="annal:Text"/>
+                         value=""/>
                 </div>
               </div>
             </div>
@@ -1002,7 +1002,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             field_id="00000001",
-            field_type="annal:Text",
+            field_type="",
             field_render_type="Text",
             field_label=default_label("testcoll", layout.FIELD_TYPEID, "00000001"),
             field_placeholder="",
@@ -1444,7 +1444,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
@@ -1497,7 +1497,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             view_id="Field_view"
             )
         self.assertIn(v, r['location'])
-        w = "Created%%20reference%%20to%%20field%%20%(field_id)s"%common_vals
+        w = "Created%%20reference%%20to%%20field%%20'%(field_id)s'"%common_vals
         self.assertIn(w, r['location'])
         # Check content of type, view and list
         tgt_field_id  = "%(field_id)s"%common_vals

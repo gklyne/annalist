@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "Assumes annalist environment has been activated, and latest software installed"
 echo "e.g."
 echo "    source anenv/bin/activate"

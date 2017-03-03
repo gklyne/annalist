@@ -95,7 +95,7 @@ class FieldDescriptionTest(AnnalistTestCase):
         expect_field_desc = (
             { 'field_id':                   '_initial_values'
             , 'field_name':                 '_initial_values'
-            , 'field_value_type':           ANNAL.CURIE.Text
+            , 'field_value_type':           ''
             , 'field_label':                ''
             , 'field_help':                 '(tooltip text here)'
             , 'field_render_type':          'Text'

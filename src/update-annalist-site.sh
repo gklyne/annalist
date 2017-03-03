@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "Update Annalist site data for installed software"
 echo ""
 

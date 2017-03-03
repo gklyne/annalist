@@ -1053,7 +1053,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         s = self.get_page(u)
         self.check_input_type_value(s, "entity_id", "text", None)
-        self.check_input_type_value(s, "Field_value_type", "text", "annal:Text")
+        self.check_input_type_value(s, "Field_value_type", "text", "")
         self.check_input_type_value(s, "Field_label", "text", "")
         self.check_input_type_value(s, "Field_comment", "textarea", None)
         self.check_input_type_value(s, "Field_placeholder", "text", "")

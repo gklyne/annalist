@@ -48,6 +48,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] test_sitedata.py check_type_fields
         - [x] test_render_repeatgroup.py
         - [ ] Test task buttons in deployed software
+            - [x] Define repeat field - button text mentions group
+            - [x] Define repeat field - value type should be annal:Field_list
+            - [x] Field view - entity type field should account for field list
+            - [x] Field entity type help text mentions group
+            - [x] Define repeat field - confirmation message mentions group; message needs refinement
+            - [ ] ... (similar for Define field reference?)  button
         - [ ] fielddescription.py @@@ eliminate group reference later, when migration logic is confirmed and tested
     - [ ] modify or eliminate task buttons that create field group entities
     - [ ] check for other uses of recordGroup class
@@ -84,6 +90,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] eliminate _type/_group
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
 
+    - [ ] Provide field popup help separately from comment field (without MarkDown)
+        - [ ] Add new property URI to ANNAL namespace
+        - [ ] Add new field; change label on commemnt field
+        - [ ] Default to comment if blank
+        - [ ] Add migration logic to copy comment
+        - [ ] Edit sitedata field definitions
+- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked 
 - [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net

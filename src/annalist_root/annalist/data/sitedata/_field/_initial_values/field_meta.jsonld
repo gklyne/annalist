@@ -5,7 +5,7 @@
 , "rdfs:comment":               "(tooltip text here)"
 , "annal:field_render_type":    "_enum_render_type/Text"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
-, "annal:field_value_type":     "annal:Text"
+, "annal:field_value_type":     ""
 , "annal:placeholder":          ""
 , "annal:property_uri":         ""
 }

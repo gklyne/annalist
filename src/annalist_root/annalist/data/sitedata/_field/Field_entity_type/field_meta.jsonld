@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Field_entity_type"
 , "rdfs:label":                 "Entity type"
-, "rdfs:comment":               "Type (URI or CURIE) of entity to which field applies. Used to determine when this field is offered as an option. (See also fields 'View entity type' in view definition, 'List entity type' in list definition, and 'Group entity type' in group definition.)"
+, "rdfs:comment":               "Type (URI or CURIE) of entity to which field applies. Used to determine when this field is offered as an option. (See also fields [Value type]($BASE:_field/Field_value_type) in field definition, [View entity type]($BASE:_field/View_target_type) in view definition, [List entity type]($BASE:_field/List_target_type) in list definition, and [Group entity type]($BASE:_field/Group_target_type) in group definition.)"
 , "annal:field_name":           "Field_entity_type"
 , "annal:field_render_type":    "_enum_render_type/Identifier"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"

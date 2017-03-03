@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 python setup.py clean --all
 python setup.py build sdist
 
