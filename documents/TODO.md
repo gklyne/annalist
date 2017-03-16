@@ -61,8 +61,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - [x] Confirmation message mentions group; message needs refinement
             - [x] "Refer to type" has default type -> can this be inferred from target field?  Or prompt to specify value.
         - [ ] fielddescription.py @@@ eliminate group reference later, when migration logic is confirmed and tested
-
-    - [ ] BUG (attempt to save copy of site label field):
+    - [x] BUG (attempt to save copy of site label field):
+            INFO 2017-03-07 15:58:08,108 form_response entity_id Test_label_02, orig_entity_id Entity_label, type_id _field, orig_type_id _field 
+            INFO 2017-03-07 15:58:08,133 @@ save_entity: rename_entity _field/Entity_label to _field/Test_label_02 for action edit 
+            INFO 2017-03-07 15:58:08,133 rename_entity old: Entity_label, new: Test_label_02, vals: {u'rdfs:label': u'Test Label 2', u'rdfs:comment': u'Short string used to label a displayed entity.', u'annal:type_id': u'_field', u'annal:placeholder': u'(label)', u'annal:property_uri': u'rdfs:label', u'@id': u'_field/Entity_label', u'annal:field_placement': u'small:0,12', u'annal:default_value': u'', u'annal:field_value_type': u'annal:Text', u'annal:field_value_mode': u'_enum_value_mode/Value_direct', u'annal:uri': u'annal:fields/Entity_label', u'annal:field_render_type': u'_enum_render_type/Text', 'annal:url': u'/annalist/c/test_collection/d/_field/Entity_label/', u'@context': [{u'base': u'../../'}, u'../../coll_context.jsonld'], u'annal:id': u'Test_label_02', u'@type': [u'annal:Field'], 'annal:type': u'annal:Field'} 
+            INFO 2017-03-07 15:58:08,134 Generating context for collection test_collection 
             ERROR 2017-03-03 16:07:18,131 [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
             Traceback (most recent call last):
               File "annalist_root/annalist/views/entityedit.py", line 264, in post
@@ -78,10 +81,55 @@ NOTE: this document is used for short-term working notes; some longer-term plann
               File "annalist_root/annalist/models/entityroot.py", line 563, in _entity_files
                 for f in os.listdir(self._entitydir):
             OSError: [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
-        *** appears to be using original name here, not new name allocated.  New file has been created OK.  
-        *** Or not using directory of original site copy.
- 
-    - [ ] check for other uses of recordGroup class
+            - *** Steps to reproduce:
+                - Select scope all listing of entities
+                - Select site entity
+                - Click "edit" button
+                - Enter new entity id
+                - Click Save
+            - *** Problem appears to be that the software is tryingto copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
+            - *** Options
+                - don't copy data inherited from other collections (leave references?)
+                - copy data - needs to preserve information about the originbal collection
+        - [ ] Handle change of collection like change of type: copy data to new location
+            - [x] GET: copy original collection id to form as 'orig_coll'
+            - [ ] POST:
+                - [ ] extract orig coll id from form, default to current coll id
+                - [ ] save collection id information into DisplayInfo object
+                    - set_type_entity_id?
+            - [ ] DisplayInfo.__init__: initialize collection id values
+            - [ ] DisplayInfo.set_type_entity_id: set collection id values
+            - [ ] entityedit references to orig_type_id; also check orig_coll_id
+                - save_entity
+            - [ ] Check original collection access is honoured
+                - DisplayInfo.get_entity_info has special case logic for collection data access
+                - DisplayInfo.check_authorization does auth check, after collection has been set, and get_entity_info has been called.
+                - [ ] DisplayInfo.get_entity_info add .coll_copy value if new coll_id used
+                - [ ] DisplayInfo.check_authorization checks READ access to coll_copy collection if defined
+
+    Retionalize type/entity ids used in displayinfo
+        POST    type_id:                    
+                form orig_type/URI          
+
+                orig_type_id:               curr_type_id:
+                form orig_type/URI          form entity_type/URI
+                (via set_type_entity_id)    (via set_type_entity_id)
+                (corresponds to object
+                entitytypeinfo)
+
+                src_entity_id:              use_entity_id:
+                (via get_entity_info)       (via get_entity_info)
+
+                orig_entity_id:             curr_entity_id:
+                form orig_id / URI          form entity_id
+                (via set_type_entity_id)    (via set_type_entity_id)
+
+        BUT using orig_type_id only seems to create problems when
+        (a) the requested entity does not exist, or 
+        (b) URI construction in CONNEG tests
+
+
+    - [ ] check for other uses of RecordGroup class
         - [ ] test_render_ref_multifields.py @@@
         - [ ] views/form_utils/fielddescription.py @@@
     - [ ] migrate group references in user field definitions to use internal field list

@@ -66,6 +66,7 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='view_id',               e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',               e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )
+        , SimpleValueMap(c='orig_coll',             e=None,                    f='orig_coll'        )
         , SimpleValueMap(c='action',                e=None,                    f='action'           )
         , SimpleValueMap(c='continuation_url',      e=None,                    f='continuation_url' )
         , SimpleValueMap(c='continuation_param',    e=None,                    f=None               )
@@ -136,7 +137,6 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo.src_entity_id or viewinfo.use_entity_id, typeinfo, action
             )
         # log.debug("@@ GenericEntityEditView.get %r"%(entity,))
-        #@@ entity['group_fields'] == []
         if entity is None:
             entity_label = (message.ENTITY_MESSAGE_LABEL%
                 { 'coll_id':    viewinfo.coll_id
@@ -160,6 +160,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'url_type_id':            type_id
             , 'orig_id':                entityvals['entity_id']
             , 'orig_type':              type_id
+            , 'orig_coll':              coll_id
             , 'edit_view_enable':       'disabled="disabled"'
             , 'default_view_enable':    'disabled="disabled"'
             , 'customize_view_enable':  'disabled="disabled"'
@@ -212,11 +213,12 @@ class GenericEntityEditView(AnnalistGenericView):
         action              = request.POST.get('action', action)
         orig_entity_id      = request.POST.get('orig_id', entity_id)
         orig_entity_type_id = request.POST.get('orig_type', type_id)
-        entity_type_id      = extract_entity_id(request.POST.get('entity_type', type_id))
-        entity_id           = request.POST.get('entity_id', None)
+        orig_entity_coll_id = request.POST.get('orig_coll', coll_id)
+        curr_entity_type_id = extract_entity_id(request.POST.get('entity_type', type_id))
+        curr_entity_id      = request.POST.get('entity_id', None)
         view_id             = request.POST.get('view_id', view_id)
         viewinfo            = self.view_setup(
-            action, coll_id, orig_entity_type_id, view_id, entity_id, request.POST.dict()
+            action, coll_id, type_id, view_id, entity_id, request.POST.dict()
             )
         if viewinfo.http_response:
             return viewinfo.http_response
@@ -224,7 +226,7 @@ class GenericEntityEditView(AnnalistGenericView):
         # Except for entity_id, use values from URI when form does not supply a value
         viewinfo.set_type_entity_id(
             orig_type_id=orig_entity_type_id, orig_entity_id=orig_entity_id,
-            curr_type_id=entity_type_id, curr_entity_id=entity_id
+            curr_type_id=curr_entity_type_id, curr_entity_id=curr_entity_id
             )
         # log.info(
         #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
@@ -236,6 +238,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'url_type_id':        type_id
             , 'orig_id':            orig_entity_id
             , 'orig_type':          orig_entity_type_id
+            , 'orig_coll':          orig_entity_coll_id
             , 'continuation_param': viewinfo.get_continuation_param()
             })
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
@@ -494,7 +497,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
     # @@TODO: refactor form_response to separate methods for each action
     #         form_response should handle initial checking and dispatching.
-    #         The refactoring shopuld attempt to separate methods that use the
+    #         The refactoring should attempt to separate methods that use the
     #         form data to analyse the response received from methods that process
     #         update trhe entity data, or display a new form based on entity data.
     #         The `entityformvals` local variable which contains entity data updated
@@ -594,13 +597,13 @@ class GenericEntityEditView(AnnalistGenericView):
                 if auth_check:
                     return auth_check
                 viewinfo.collection.set_default_view(
-                    view_id=viewinfo.view_id, type_id=viewinfo.type_id, entity_id=viewinfo.orig_entity_id
+                    view_id=viewinfo.view_id, type_id=viewinfo.orig_type_id, entity_id=viewinfo.orig_entity_id
                     )
                 action = "list"
                 msg    = (message.DEFAULT_VIEW_UPDATED%
                     { 'coll_id':   viewinfo.coll_id
                     , 'view_id':   viewinfo.view_id
-                    , 'type_id':   viewinfo.type_id
+                    , 'type_id':   viewinfo.orig_type_id
                     , 'entity_id': viewinfo.orig_entity_id
                     })
                 redirect_uri = (
@@ -1042,10 +1045,11 @@ class GenericEntityEditView(AnnalistGenericView):
         # Create/update stored data now
         if not entity_renamed:
             # Normal (non-type) entity create or update, no renaming
+            # @@NOTE: includes "copy" operations; does not duplicate attachments
             err_vals = self.create_update_entity(new_typeinfo, entity_id, entity_values)
         else:
             # log.info(
-            #     "@@ rename_??? %s/%s to %s/%s"%
+            #     "@@ save_entity: rename_??? %s/%s to %s/%s"%
             #     ( typeinfo.get_type_id(), orig_entity_id, 
             #       new_typeinfo.get_type_id(), entity_id) 
             #     )
@@ -1071,11 +1075,13 @@ class GenericEntityEditView(AnnalistGenericView):
             #@@
             else:
                 # Non-type record rename
-                # log.info(
-                #     "@@ rename_entity %s/%s to %s/%s"%
-                #     ( typeinfo.get_type_id(), orig_entity_id, 
-                #       new_typeinfo.get_type_id(), entity_id) 
-                #     )
+                log.info(
+                    "@@ save_entity: rename_entity %s/%s to %s/%s for action %s"%
+                        ( typeinfo.get_type_id(), orig_entity_id, 
+                          new_typeinfo.get_type_id(), entity_id,
+                          action
+                        ) 
+                    )
                 err_vals = self.rename_entity(
                     typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
                     )
@@ -1354,6 +1360,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 "EntityEdit.rename_entity_type: attempt to change type of type record"
                 )
             return (message.INVALID_OPERATION_ATTEMPTED, message.INVALID_TYPE_CHANGE)
+
         # Don't allow renaming built-in type
         builtin_types = get_built_in_type_ids()
         if (new_type_id in builtin_types) or (old_type_id in builtin_types):

@@ -191,9 +191,11 @@ class DisplayInfo(object):
         self.request_dict       = request_dict
         self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
-        # Type/Entity ids from form
+        # Collection/Type/Entity ids - to be supplied based on form data in POST
+        self.orig_coll_id       = None
         self.orig_type_id       = None
         self.orig_entity_id     = None
+        # self.curr_coll_id       = None
         self.curr_type_id       = None
         self.curr_entity_id     = None
         # Type-specific messages
@@ -206,7 +208,8 @@ class DisplayInfo(object):
         self.coll_id            = None
         self.collection         = None
         self.coll_perms         = None  # Collection used for permissions checking
-        self.type_id            = None
+        self.coll_copy          = None  # Collection copied from
+        self.type_id            = None  # Type Id from request URI, not dependent on form data
         self.entitytypeinfo     = None
         self.list_id            = None
         self.recordlist         = None
