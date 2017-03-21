@@ -28,6 +28,7 @@ INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not s
 INVALID_TYPE_RENAME         = "Renaming of Annalist built-in types is not supported"
 CREATE_ENTITY_FAILED        = "Problem creating/updating entity %s/%s (see log for more info)"
 RENAME_ENTITY_FAILED        = "Problem renaming entity %s/%s to %s/%s (see log for more info)"
+COPY_ENTITY_FAILED          = "Problem copying entity %s/%s to %s/%s (see log for more info)"
 RENAME_TYPE_FAILED          = "Problem renaming type %s to %s (see log for more info)"
 
 IMPORT_ERROR                = "Resource import error"

@@ -437,7 +437,7 @@ class EntityTypeInfo(object):
             )
         # Set type URI for entity; previous types are not carried forwards
         # Don't save entity URI if same as URL
-        if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
+        if entity_values.get(ANNAL.CURIE.uri, "") == entity_values.get(ANNAL.CURIE.url, ""):
             entity_values.pop(ANNAL.CURIE.uri, None)
         entity_values['@type']          = self.get_all_type_uris() # NOTE: previous types not carried forward
         entity_values[ANNAL.CURIE.type] = self.get_type_uri()

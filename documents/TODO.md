@@ -93,42 +93,22 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - copy data - needs to preserve information about the originbal collection
         - [ ] Handle change of collection like change of type: copy data to new location
             - [x] GET: copy original collection id to form as 'orig_coll'
-            - [ ] POST:
-                - [ ] extract orig coll id from form, default to current coll id
-                - [ ] save collection id information into DisplayInfo object
-                    - set_type_entity_id?
-            - [ ] DisplayInfo.__init__: initialize collection id values
-            - [ ] DisplayInfo.set_type_entity_id: set collection id values
+            - [x] POST:
+                - [x] extract orig coll id from form, default to current coll id
+                - [x] save collection id information into DisplayInfo object
+            - [x] DisplayInfo.__init__: initialize collection id values
+            - [x] DisplayInfo.set_type_entity_id: set collection id values
             - [ ] entityedit references to orig_type_id; also check orig_coll_id
                 - save_entity
+            - [ ] Refactor entityedit save_entity
+            - [ ] Need to be able to retrieve original collection type info for copy
+                - does this need to be distinct from [save_][entity]typeinfo
             - [ ] Check original collection access is honoured
                 - DisplayInfo.get_entity_info has special case logic for collection data access
                 - DisplayInfo.check_authorization does auth check, after collection has been set, and get_entity_info has been called.
                 - [ ] DisplayInfo.get_entity_info add .coll_copy value if new coll_id used
                 - [ ] DisplayInfo.check_authorization checks READ access to coll_copy collection if defined
-
-    Retionalize type/entity ids used in displayinfo
-        POST    type_id:                    
-                form orig_type/URI          
-
-                orig_type_id:               curr_type_id:
-                form orig_type/URI          form entity_type/URI
-                (via set_type_entity_id)    (via set_type_entity_id)
-                (corresponds to object
-                entitytypeinfo)
-
-                src_entity_id:              use_entity_id:
-                (via get_entity_info)       (via get_entity_info)
-
-                orig_entity_id:             curr_entity_id:
-                form orig_id / URI          form entity_id
-                (via set_type_entity_id)    (via set_type_entity_id)
-
-        BUT using orig_type_id only seems to create problems when
-        (a) the requested entity does not exist, or 
-        (b) URI construction in CONNEG tests
-
-
+            - [x] New test case; edit inherited value with attachment
     - [ ] check for other uses of RecordGroup class
         - [ ] test_render_ref_multifields.py @@@
         - [ ] views/form_utils/fielddescription.py @@@
@@ -166,15 +146,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
 
-    - [ ] Provide field popup help separately from comment field (without MarkDown)
-        - [ ] Add new property URI to ANNAL namespace
-        - [ ] Add new field; change label on commemnt field
-        - [ ] Default to comment if blank
-        - [ ] Add migration logic to copy comment
-        - [ ] Edit sitedata field definitions
-- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
-- [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
-- [ ] Continuation from login is sometimes/often lost (provide example)
+- [ ] Provide field popup help separately from comment field (without MarkDown)
+    - [ ] Add new property URI to ANNAL namespace
+    - [ ] Add new field; change label on commemnt field
+    - [ ] Default to comment if blank
+    - [ ] Add migration logic to copy comment
+    - [ ] Edit sitedata field definitions
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)
@@ -293,6 +270,9 @@ Data collection definitions:
 
 Usability notes:
 
+- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
+- [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
+- [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)

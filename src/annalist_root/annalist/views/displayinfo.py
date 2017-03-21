@@ -195,6 +195,7 @@ class DisplayInfo(object):
         self.orig_coll_id       = None
         self.orig_type_id       = None
         self.orig_entity_id     = None
+        self.orig_typeinfo      = None
         # self.curr_coll_id       = None
         self.curr_type_id       = None
         self.curr_entity_id     = None
@@ -219,17 +220,24 @@ class DisplayInfo(object):
         self.http_response      = None
         return
 
-    def set_type_entity_id(self,
+    def set_coll_type_entity_id(self,
+        orig_coll_id=None,
         orig_type_id=None, orig_entity_id=None,
         curr_type_id=None, curr_entity_id=None
         ):
         """
-        Save type and entity ids from form
+        Save original collection, type and entity ids from form
         """
+        self.orig_coll_id       = EntityIdValueMapper.decode(orig_coll_id)
         self.orig_type_id       = EntityIdValueMapper.decode(orig_type_id)
         self.orig_entity_id     = EntityIdValueMapper.decode(orig_entity_id)
         self.curr_type_id       = EntityIdValueMapper.decode(curr_type_id)
         self.curr_entity_id     = EntityIdValueMapper.decode(curr_entity_id)
+        # If inherited from another collection, update origin collection object
+        if self.orig_coll_id and (self.orig_coll_id != self.coll_id):
+            c = Collection.load(self.site, self.orig_coll_id, altscope="all")
+            if c:
+                self.coll_copy = c
         return self.http_response
 
     def set_messages(self, messages):
@@ -267,6 +275,7 @@ class DisplayInfo(object):
                 #@@TODO: try with altscope="site"?
                 self.collection = Collection.load(self.site, coll_id, altscope="all")
                 self.coll_perms = self.collection
+                self.coll_copy  = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
@@ -307,6 +316,7 @@ class DisplayInfo(object):
             if type_id:
                 self.type_id        = type_id
                 self.entitytypeinfo = EntityTypeInfo(self.collection, type_id)
+                self.orig_typeinfo  = self.entitytypeinfo
                 if not self.entitytypeinfo.recordtype:
                     # log.warning("DisplayInfo.get_type_data: RecordType %s not found"%type_id)
                     self.http_response = self.view.error(
