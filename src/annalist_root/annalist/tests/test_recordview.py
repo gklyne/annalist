@@ -900,7 +900,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_copy_view(self):
         self.assertFalse(RecordView.exists(self.testcoll, "copyview"))
         f = recordview_entity_view_form_data(
-            view_id="copyview", orig_id="Default_view", action="copy", update="RecordView"
+            view_id="copyview", 
+            orig_id="Default_view", orig_coll="_annalist_site", action="copy", 
+            update="RecordView"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.VIEW_TYPEID, entity_id="Default_view", view_id="View_view"

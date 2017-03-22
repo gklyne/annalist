@@ -51,7 +51,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         viewinfo.check_authorization("delete")
         if viewinfo.http_response:
             return viewinfo.http_response
-        typeinfo     = viewinfo.entitytypeinfo
+        typeinfo     = viewinfo.curr_typeinfo
         message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
         messages     = (
             { 'entity_removed': typeinfo.entitymessages['entity_removed']%message_vals

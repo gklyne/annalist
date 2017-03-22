@@ -174,7 +174,7 @@ class EntityGenericListView(AnnalistGenericView):
                         search=search_for
                         )
                 )
-            typeinfo      = listinfo.entitytypeinfo
+            typeinfo      = listinfo.curr_typeinfo
             entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
             # Set up initial view context
             context_extra_values = (
@@ -320,7 +320,7 @@ class EntityGenericListView(AnnalistGenericView):
                     if curi:
                         dict_querydict["continuation_url"] = [curi]
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
-                    typeinfo = listinfo.entitytypeinfo
+                    typeinfo = listinfo.curr_typeinfo
                     if typeinfo is None:
                         typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
                     return (
@@ -336,8 +336,8 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                if listinfo.entitytypeinfo:
-                    permissions_map = listinfo.entitytypeinfo.permissions_map
+                if listinfo.curr_typeinfo:
+                    permissions_map = listinfo.curr_typeinfo.permissions_map
                 else:
                     permissions_map = CONFIG_PERMISSIONS
                 auth_check = self.form_action_auth("config", listinfo.collection, permissions_map)

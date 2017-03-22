@@ -433,7 +433,7 @@ def entitydata_delete_confirm_form_data(entity_id=None, search=None):
 #   -----------------------------------------------------------------------------
 
 def entitydata_default_view_form_data(
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, close=None, view=None, edit=None, copy=None, 
@@ -456,10 +456,13 @@ def entitydata_default_view_form_data(
         form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']         = entity_id
         form_data_dict['orig_type']       = type_id
+        form_data_dict['orig_coll']       = coll_id
     if orig_id:
         form_data_dict['orig_id']         = orig_id
     if orig_type:
         form_data_dict['orig_type']       = orig_type
+    if orig_coll:
+        form_data_dict['orig_coll']       = orig_coll
     if action:
         form_data_dict['action']          = action
     if cancel:

@@ -287,7 +287,7 @@ def recordtype_entity_view_context_data(
     return context_dict
 
 def recordtype_entity_view_form_data(
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         type_id="", orig_id=None, 
         action=None, cancel=None, close=None, edit=None, copy=None, task=None,
         update="RecordType",
@@ -310,15 +310,18 @@ def recordtype_entity_view_form_data(
         type_url  = recordtype_url(coll_id=coll_id, type_id=type_id)
         type_help = '%s help for %s in collection %s'%(update, type_id, coll_id)
         form_data_dict['entity_id']           = type_id
-        form_data_dict['orig_id']             = type_id
         form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
         form_data_dict['Type_comment']        = type_help
         form_data_dict['Type_uri']            = type_url or ""
         form_data_dict['Type_view']           = "_view/Default_view"
         form_data_dict['Type_list']           = "_list/Default_list"
+        form_data_dict['orig_id']             = type_id
         form_data_dict['orig_type']           = "_type"
+        form_data_dict['orig_coll']           = coll_id
     if orig_id:
         form_data_dict['orig_id']   = orig_id
+    if orig_coll:
+        form_data_dict['orig_coll'] = orig_coll
     if action:
         form_data_dict['action']    = action
     if cancel:

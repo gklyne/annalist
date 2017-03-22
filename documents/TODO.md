@@ -87,10 +87,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - Click "edit" button
                 - Enter new entity id
                 - Click Save
-            - *** Problem appears to be that the software is tryingto copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
-            - *** Options
-                - don't copy data inherited from other collections (leave references?)
-                - copy data - needs to preserve information about the originbal collection
+            - *** Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
         - [ ] Handle change of collection like change of type: copy data to new location
             - [x] GET: copy original collection id to form as 'orig_coll'
             - [x] POST:
@@ -98,17 +95,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - [x] save collection id information into DisplayInfo object
             - [x] DisplayInfo.__init__: initialize collection id values
             - [x] DisplayInfo.set_type_entity_id: set collection id values
-            - [ ] entityedit references to orig_type_id; also check orig_coll_id
-                - save_entity
-            - [ ] Refactor entityedit save_entity
-            - [ ] Need to be able to retrieve original collection type info for copy
-                - does this need to be distinct from [save_][entity]typeinfo
+            - [x] Refactor entityedit save_entity
+            - [x] entityedit references to orig_type_id; also check orig_coll_id
+            - [x] Need to be able to retrieve original collection type info for copy
             - [ ] Check original collection access is honoured
                 - DisplayInfo.get_entity_info has special case logic for collection data access
                 - DisplayInfo.check_authorization does auth check, after collection has been set, and get_entity_info has been called.
+                - [ ] Add test case for attempt to view/copy/edit entity inherited from collection with no access
                 - [ ] DisplayInfo.get_entity_info add .coll_copy value if new coll_id used
                 - [ ] DisplayInfo.check_authorization checks READ access to coll_copy collection if defined
             - [x] New test case; edit inherited value with attachment
+    - [ ] EntityEdit - clean up dead code
     - [ ] check for other uses of RecordGroup class
         - [ ] test_render_ref_multifields.py @@@
         - [ ] views/form_utils/fielddescription.py @@@

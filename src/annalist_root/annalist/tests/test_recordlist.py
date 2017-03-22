@@ -1085,7 +1085,9 @@ class RecordListEditViewTest(AnnalistTestCase):
     def test_post_copy_view(self):
         self.assertFalse(RecordList.exists(self.testcoll, "copylist"))
         f = recordlist_view_form_data(
-            list_id="copylist", orig_id="Default_list", action="copy", update="RecordList"
+            list_id="copylist", 
+            orig_id="Default_list", orig_coll="_annalist_site", action="copy", 
+            update="RecordList"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.LIST_TYPEID, entity_id="Default_list", view_id="List_view"

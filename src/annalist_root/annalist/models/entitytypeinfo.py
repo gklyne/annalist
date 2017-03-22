@@ -306,7 +306,7 @@ class EntityTypeInfo(object):
         Attributes of type information object are:
 
         recordtype      type object describing the identified type
-        entityparent    Parent enbtity for entities of this type, or None if 
+        entityparent    Parent entity for entities of this type, or None if 
                         the type is not defined for the collection
         entityaltparent Alternative (site-wide) parent entity for built-in types, 
                         or None
@@ -431,10 +431,8 @@ class EntityTypeInfo(object):
         """
         Creates and returns an entity for the current type, with the supplied values.
         """
-        log.debug(
-            "create_entity id %s, parent %s, values %r"%
-            (entity_id, self.entityparent, entity_values)
-            )
+        log.debug("create_entity: id %s, parent id %s"%(entity_id, self.entityparent.get_id()))
+        # log.debug("create_entity: values %r"%(entity_values,))
         # Set type URI for entity; previous types are not carried forwards
         # Don't save entity URI if same as URL
         if entity_values.get(ANNAL.CURIE.uri, "") == entity_values.get(ANNAL.CURIE.url, ""):

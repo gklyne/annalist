@@ -654,7 +654,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Create new entity
         self.assertFalse(RecordField.exists(self.testcoll, "newfield", altscope="all"))
         f = entitydata_default_view_form_data(
-                entity_id="newfield", type_id="_field", orig_type="Default_type", action="new"
+                entity_id="newfield", type_id="_field", 
+                orig_type="Default_type", action="new"
                 )
         u = entitydata_edit_url("new", "testcoll", "Default_type", view_id="Default_view")
         r = self.client.post(u, f)
