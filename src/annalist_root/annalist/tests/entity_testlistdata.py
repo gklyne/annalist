@@ -304,7 +304,7 @@ def recordlist_view_context_data(
     return context_dict
 
 def recordlist_view_form_data(
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         list_id="", orig_id=None, 
         action=None, cancel=None, task=None,
         update="RecordView"):
@@ -325,6 +325,7 @@ def recordlist_view_form_data(
         , "view_id":                "List_view"
         , "orig_id":                "orig_list_id"
         , "orig_type":              "_list"
+        , "orig_coll":              coll_id
         , "continuation_url":       entitydata_list_type_url(coll_id, "_list")        
         })
     if list_id is not None:
@@ -336,6 +337,8 @@ def recordlist_view_form_data(
         form_data_dict['List_comment']  = "%s help for %s/%s"%(update, coll_id, list_id)
     if orig_id:
         form_data_dict['orig_id']       = orig_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
     if action:
         form_data_dict['action']        = action
     if cancel:

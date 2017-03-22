@@ -786,9 +786,29 @@ class UploadResourceTest(AnnalistTestCase):
             "User %s: permissions for %s in collection %s"%(user_id, "Test User", testsubcoll.get_id()),
             user_permissions)
 
+        # Get editing form
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testimgtype", entity_id="test1", view_id="testimgview"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content)     #@@
+        hi1 = """<input type="hidden" name="orig_id"          value="test1" />"""
+        hi2 = """<input type="hidden" name="orig_type"        value="testimgtype" />"""
+        hi3 = """<input type="hidden" name="orig_coll"        value="testcoll" />"""
+        hi4 = """<input type="hidden" name="action"           value="edit" />"""
+        hi5 = """<input type="hidden" name="view_id"          value="testimgview" />"""
+        self.assertContains(r, hi1, html=True)
+        self.assertContains(r, hi2, html=True)
+        self.assertContains(r, hi3, html=True)
+        self.assertContains(r, hi4, html=True)
+        self.assertContains(r, hi5, html=True)
+
         # Edit entity
         f = entitydata_default_view_form_data(
-            coll_id="testsubcoll", type_id="testimgtype", entity_id="test1", action="edit", 
+            coll_id="testsubcoll", type_id="testimgtype", entity_id="test1", 
+            orig_coll="testcoll", action="edit", 
             update="Updated"
             )
         u = entitydata_edit_url(

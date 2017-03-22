@@ -76,9 +76,10 @@ class EntityRoot(object):
                         associated with this entity or any possible descendents.  The
                         value is used as a safety check to ensure that data is not 
                         created or deleted outside an area that is known to contain 
-                        only annalist data.
+                        only Annalist data.
         """
         self._entityid      = None
+        self._ancestorid    = None
         self._entityurl     = make_entity_base_url(entityurl)
         self._entityviewurl = make_entity_base_url(entityviewurl)
         self._entitydir     = make_entity_base_url(entitydir)

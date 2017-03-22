@@ -138,7 +138,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
 
-    #@@ ee also: text_upload_file.py
+    #@@ see also: text_upload_file.py
 
 
 # End.

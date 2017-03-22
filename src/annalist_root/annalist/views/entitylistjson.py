@@ -84,7 +84,7 @@ class EntityGenericListJsonView(EntityGenericListView):
                         context=listinfo.recordlist, search=search_for
                         )
                 )
-            typeinfo      = listinfo.entitytypeinfo
+            typeinfo      = listinfo.curr_typeinfo
             entityvallist = [ self.strip_context_values(e, base_url) for e in entity_list ]
         except Exception as e:
             log.exception(str(e))

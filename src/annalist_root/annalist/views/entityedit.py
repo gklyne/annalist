@@ -132,7 +132,7 @@ class GenericEntityEditView(AnnalistGenericView):
         self.help_markdown = viewinfo.recordview.get(RDFS.CURIE.comment, None)
 
         # Create local entity object or load values from existing
-        typeinfo = viewinfo.entitytypeinfo
+        typeinfo = viewinfo.curr_typeinfo
         entity   = self.get_entity(
             viewinfo.src_entity_id or viewinfo.use_entity_id, typeinfo, action
             )
@@ -149,10 +149,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         entityvals  = get_entity_values(
-            viewinfo.entitytypeinfo, entity,
+            viewinfo.curr_typeinfo, entity,
             entity_id=viewinfo.use_entity_id,
             action=viewinfo.action
             )
+        # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))
 
         # Set up rendered form response
         context_extra_values = (
@@ -160,7 +161,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'url_type_id':            type_id
             , 'orig_id':                entityvals['entity_id']
             , 'orig_type':              type_id
-            , 'orig_coll':              coll_id
+            , 'orig_coll':              entity._parent._ancestorid
             , 'edit_view_enable':       'disabled="disabled"'
             , 'default_view_enable':    'disabled="disabled"'
             , 'customize_view_enable':  'disabled="disabled"'
@@ -234,7 +235,7 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "    coll_id %s, type_id %s, entity_id %s, view_id %s, action %s"%
         #       (coll_id, type_id, entity_id, view_id, action)
         #     )
-        typeinfo        = viewinfo.entitytypeinfo
+        typeinfo        = viewinfo.curr_typeinfo
         context_extra_values = (
             { 'request_url':        self.get_request_path()
             , 'url_type_id':        type_id
@@ -275,7 +276,6 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         return response
-
 
     # Helper functions
 
@@ -404,7 +404,7 @@ class GenericEntityEditView(AnnalistGenericView):
             { 'continuation_url':   viewinfo.get_continuation_url() or ""
             , 'view_choices':       self.get_view_choices_field(viewinfo)
             })
-        entityvals   = viewinfo.entitytypeinfo.get_entity_implied_values(entityvals)
+        entityvals   = viewinfo.curr_typeinfo.get_entity_implied_values(entityvals)
         form_context = entityvaluemap.map_value_to_context(entityvals, **context_extra_values)
         form_context.update(viewinfo.context_data(entity_label=entityvals.get(RDFS.CURIE.label, None)))
         return form_context
@@ -518,7 +518,7 @@ class GenericEntityEditView(AnnalistGenericView):
             return HttpResponseRedirect(viewinfo.get_continuation_next())
 
         responseinfo = ResponseInfo()
-        typeinfo     = viewinfo.entitytypeinfo
+        typeinfo     = viewinfo.curr_typeinfo
         messages     = viewinfo.type_messages
         if typeinfo:
             permissions_map = typeinfo.permissions_map
@@ -590,8 +590,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             if not responseinfo.has_http_response():
                 #@@ - moved to head of function
-                # if viewinfo.entitytypeinfo:
-                #     permissions_map = viewinfo.entitytypeinfo.permissions_map
+                # if viewinfo.curr_typeinfo:
+                #     permissions_map = viewinfo.curr_typeinfo.permissions_map
                 # else:
                 #     permissions_map = CONFIG_PERMISSIONS
                 #@@
@@ -626,8 +626,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             if not responseinfo.has_http_response():
                 #@@ - moved to head of function
-                # if viewinfo.entitytypeinfo:
-                #     permissions_map = viewinfo.entitytypeinfo.permissions_map
+                # if viewinfo.curr_typeinfo:
+                #     permissions_map = viewinfo.curr_typeinfo.permissions_map
                 # else:
                 #     permissions_map = CONFIG_PERMISSIONS
                 responseinfo.set_http_response(
@@ -955,7 +955,8 @@ class GenericEntityEditView(AnnalistGenericView):
         #     "save_entity_id %s, save_type_id %s, orig_entity_id %s, orig_type_id %s, action %s"%
         #     (save_entity_id, save_type_id, orig_entity_id, orig_type_id, action)
         #     )
-        orig_typeinfo  = viewinfo.entitytypeinfo
+        orig_typeinfo  = viewinfo.orig_typeinfo
+        save_typeinfo  = viewinfo.curr_typeinfo
         messages       = viewinfo.type_messages
         if self.uri_action == "view":
             # This is a view operation: nothing to save
@@ -1000,8 +1001,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
 
         # Check original parent exists (still)
-        #@@ TODO: unless this is a "new" action?
-        if not orig_typeinfo.parent_exists():
+        if (action != "new") and (not orig_typeinfo.parent_exists()):
             log.warning("save_entity: original entity parent does not exist")
             return responseinfo.set_http_response(
                 self.form_re_render(
@@ -1011,15 +1011,17 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
 
-        # Determine type information for saved entity
-        if save_type_id != orig_type_id:
-            # log.info("save_type_id: save_type_id %s"%(save_type_id))
-            save_typeinfo = EntityTypeInfo(
-                viewinfo.collection, save_type_id, 
-                create_typedata=True
-                )
-        else:
-            save_typeinfo = orig_typeinfo
+        # #@@@@ TO BE REMOVED
+        # # Determine type information for saved entity
+        # if save_type_id != orig_type_id:
+        #     # log.info("save_type_id: save_type_id %s"%(save_type_id))
+        #     save_typeinfo = EntityTypeInfo(
+        #         viewinfo.collection, save_type_id, 
+        #         create_typedata=True
+        #         )
+        # else:
+        #     save_typeinfo = orig_typeinfo
+        # #@@@@
 
         #@@@@ TO BE REMOVED
         # Check existence of entity to save according to action performed
@@ -1140,7 +1142,9 @@ class GenericEntityEditView(AnnalistGenericView):
                     entityformvals
                     )
             else:
-                err_vals, entity_values = self.save_update(viewinfo, save_typeinfo, save_entity_id, entityformvals)
+                err_vals, entity_values = self.save_update(viewinfo, 
+                    save_typeinfo, save_entity_id, entityformvals
+                    )
 
         # #@@@@ TO BE FACTORED
         # # Create/update stored data now
@@ -1333,12 +1337,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 orig_typeinfo, orig_entity_id, entityformvals
                 )
             #@@ temporary for testing - then incorporate logic below and fix.
-            err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
-        # return self.copy_entity(
-        #     orig_typeinfo, orig_entity_id, 
-        #     save_typeinfo, save_entity_id, 
-        #     entity_values
-        #     )
+            # err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
+            err_vals = self.copy_entity(
+                orig_typeinfo, orig_entity_id, 
+                save_typeinfo, save_entity_id, 
+                entity_values
+                )
         return (err_vals, entity_values)
 
     def save_rename(self, viewinfo, save_typeinfo, save_entity_id, orig_typeinfo, orig_entity_id, entityformvals):
@@ -1816,14 +1820,15 @@ class GenericEntityEditView(AnnalistGenericView):
         a pair of values for the error message heading and the error message body.
         """
         log.info(
-            "copy_entity old: %s/%s, new: %s/%s, vals: %r"%
+            "copy_entity old: %s/%s, new: %s/%s"%
               ( old_typeinfo.type_id, old_entity_id, 
-                new_typeinfo.type_id, new_entity_id, 
-                entity_values
+                new_typeinfo.type_id, new_entity_id
               )
             )
+        # log.debug("copy_entity vals: %r"%(entity_values,))
         # _new_entity just constructs a new object of the appropriate class
         old_entity = old_typeinfo._new_entity(old_entity_id)
+        # print("@@@@ old entity dir: %s"%(old_entity._entitydir,))
         new_entity = new_typeinfo.create_entity(new_entity_id, entity_values)
         msg        = new_entity._copy_entity_files(old_entity)
         if msg:

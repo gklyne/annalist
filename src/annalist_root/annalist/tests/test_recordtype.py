@@ -738,7 +738,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_copy_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
         f = recordtype_entity_view_form_data(
-            type_id="copytype", orig_id="Default_type", action="copy", update="RecordType"
+            type_id="copytype", 
+            orig_id="Default_type", orig_coll="_annalist_site", action="copy", 
+            update="RecordType"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"

@@ -68,8 +68,6 @@ class EntityData(Entity):
         attempting to read a file, the _load_values() method calls this function to
         look for any of the filenames returned.  If found, the file is renamed
         to the current version filename.
-
-        Default method returns an empty list.
         """
         return [layout.ENTITY_OLD_DATA_FILE]
 
