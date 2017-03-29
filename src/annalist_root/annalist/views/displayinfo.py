@@ -255,7 +255,7 @@ class DisplayInfo(object):
         renamed in the formdata (via .
         """
         log.debug(
-            "DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
+            "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
               ( orig_coll_id, orig_type_id, orig_entity_id, 
                 curr_type_id, curr_entity_id
               )
