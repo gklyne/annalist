@@ -354,7 +354,7 @@ def entitydata_context_add_field(
 def entitydata_form_data(
         entity_id="", orig_id=None, 
         type_id="testtype", orig_type=None,
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         action=None, cancel=None, close=None, edit=None, copy=None, 
         update="Entity"
         ):
@@ -373,10 +373,13 @@ def entitydata_form_data(
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
         form_data_dict['orig_type']         = type_id
+        form_data_dict['orig_coll']         = coll_id
     if orig_id:
         form_data_dict['orig_id']           = orig_id
     if orig_type:
         form_data_dict['orig_type']         = orig_type
+    if orig_coll:
+        form_data_dict['orig_coll']         = orig_coll
     if action:
         form_data_dict['action']            = action
     if cancel:

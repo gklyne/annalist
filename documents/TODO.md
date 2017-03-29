@@ -88,7 +88,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - Enter new entity id
                 - Click Save
             - *** Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
-        - [ ] Handle change of collection like change of type: copy data to new location
+        - [x] Handle change of collection like change of type: copy data to new location
             - [x] GET: copy original collection id to form as 'orig_coll'
             - [x] POST:
                 - [x] extract orig coll id from form, default to current coll id
@@ -98,13 +98,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - [x] Refactor entityedit save_entity
             - [x] entityedit references to orig_type_id; also check orig_coll_id
             - [x] Need to be able to retrieve original collection type info for copy
-            - [ ] Check original collection access is honoured
-                - DisplayInfo.get_entity_info has special case logic for collection data access
-                - DisplayInfo.check_authorization does auth check, after collection has been set, and get_entity_info has been called.
-                - [ ] Add test case for attempt to view/copy/edit entity inherited from collection with no access
-                - [ ] DisplayInfo.get_entity_info add .coll_copy value if new coll_id used
-                - [ ] DisplayInfo.check_authorization checks READ access to coll_copy collection if defined
-            - [x] New test case; edit inherited value with attachment
+            - [x] Check original collection access is honoured
+                - [x] fairly extensive changes to EntityEdit and DisplayInfo logic to keep track of the (possibly inherited) collection from which an entity is accessed.
+                - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
+                - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
+            - [x] New test cases; edit inherited value with attachment
     - [ ] EntityEdit - clean up dead code
     - [ ] check for other uses of RecordGroup class
         - [ ] test_render_ref_multifields.py @@@
@@ -156,6 +154,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?

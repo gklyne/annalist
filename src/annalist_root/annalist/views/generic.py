@@ -259,7 +259,7 @@ class AnnalistGenericView(ContentNegotiationView):
         records of a deleted account being granted to a new account created with the 
         same user_id (username).
 
-        This funbction includes any collection- or site- default permissions in the 
+        This function includes any collection- or site- default permissions in the 
         set of permissions returned.
 
         Permissions are cached in the view object so that the permissions record is read at 
@@ -371,22 +371,8 @@ class AnnalistGenericView(ContentNegotiationView):
         Returns None if the desired action is authorized for the current user, otherwise
         an HTTP response value to return an error condition.
         """
-        # @@TODO: in due course, eliminate action_scope.
-        # action_scope = (
-        #     { "view":   "VIEW"      # View data record
-        #     , "list":   "VIEW"      # ..
-        #     , "search": "VIEW"      # ..
-        #     , "new":    "CREATE"    # Create data record
-        #     , "copy":   "CREATE"    # ..
-        #     , "edit":   "UPDATE"    # Update data record
-        #     , "delete": "DELETE"    # Delete datra record
-        #     , "config": "CONFIG"    # Change collection configuration
-        #     , "admin":  "ADMIN"     # Change users or permissions
-        #     })
         if action in perm_required:
             auth_scope = perm_required[action]
-        # elif action in action_scope:
-        #     auth_scope = action_scope[action]
         else:
             log.warning("form_action_auth: unknown action: %s"%(action))
             log.warning("perm_required: %r"%(perm_required,))

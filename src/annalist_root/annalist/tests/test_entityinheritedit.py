@@ -95,23 +95,49 @@ class EntityInheritListViewTest(AnnalistTestCase):
 
     def setUp(self):
         self.testsite  = init_annalist_test_site()
-        self.testcoll  = init_annalist_named_test_coll(layout.BIBDATA_ID)
-        self.testdata  = RecordTypeData.load(self.testcoll, "testtype")
-        self.testtype2 = RecordType.create(
-            self.testcoll, "testtype2", recordtype_create_values("testcoll", "testtype2")
+        self.testcoll  = init_annalist_test_coll()
+        self.testsubcoll = create_test_coll_inheriting(
+            base_coll_id="testcoll", coll_id="testsubcoll", type_id="testtype"
             )
-        self.testdata2 = RecordTypeData.create(self.testcoll, "testtype2", {})
-        create_test_user(self.testcoll, "testuser", "testpassword")
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
-        e1 = self._create_entity_data("entity1")
-        e2 = self._create_entity_data("entity2")
-        e3 = self._create_entity_data("entity3")
-        e4 = EntityData.create(self.testdata2, "entity4", 
-            entitydata_create_values("entity4", type_id="testtype2")
+        create_test_user(self.testcoll,    "testuser",    "testpassword")
+        create_test_user(self.testsubcoll, "testsubuser", "testpassword")
+        # Allow user "testuser" access in collectrion "testsubcoll"
+        user_permissions = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
+        user_id          = "testuser"
+        user_perms = self.testsubcoll.create_user_permissions(
+            user_id, "mailto:%s@%s"%(user_id, TestHost),
+            "Test Subuser",
+            "User %s: permissions for %s in collection %s"%
+              ( user_id, "Test Subuser", self.testsubcoll.get_id() ),
+            user_permissions)
+        # Block user "testsubuser" access in collection "testcoll"
+        user_permissions = []
+        user_id          = "testsubuser"
+        user_perms = self.testcoll.create_user_permissions(
+            user_id, "mailto:%s@%s"%(user_id, TestHost),
+            "Test Subuser",
+            "User %s: permissions for %s in collection %s"%
+              ( user_id, "Test Subuser", self.testcoll.get_id() ),
+            user_permissions)
+        # Block defauklt user access in collection "testcoll"
+        user_permissions = []
+        user_id          = "_default_user_perms"
+        user_uri         = "annal:User/_default_user_perms"
+        user_perms = self.testcoll.create_user_permissions(
+            user_id, user_uri,
+            "Test Subuser",
+            "User %s: permissions for %s in collection %s"%
+              ( user_id, "Test Subuser", self.testcoll.get_id() ),
+            user_permissions)
+        # Create inherited entity "testcoll/testtype/entity2"
+        self.testdata    = RecordTypeData.load(self.testcoll, "testtype")
+        self.testentity2 = self._create_entity_data("entity2")
+        self.testsubdata = RecordTypeData.load(self.testsubcoll, "testtype")
+        # loggedin = self.client.login(username="testuser", password="testpassword")
+        # self.assertTrue(loggedin)
+        self.continuation_url = entitydata_list_type_url(
+            coll_id="testsubcoll", type_id="testtype"
             )
-        self.list_ids = get_site_bib_lists_linked("testcoll")
         return
 
     def tearDown(self):
@@ -128,7 +154,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def _create_entity_data(self, entity_id, update="Entity"):
-        "Helper function creates entity data with supplied entity_id"
+        "Helper function creates entity data in 'testcoll/testtype' with supplied id"
         e = EntityData.create(self.testdata, entity_id, 
             entitydata_create_values(entity_id, update=update)
             )
@@ -138,7 +164,144 @@ class EntityInheritListViewTest(AnnalistTestCase):
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
 
-    #@@ see also: text_upload_file.py
+    #   -----------------------------------------------------------------------------
+    #   Form submission tests
+    #   -----------------------------------------------------------------------------
 
+    #   See: test_upload_file.py
+
+    #   -----------------------------------------------------------------------------
+    #   Access control tests
+    #   -----------------------------------------------------------------------------
+
+    #   ----- Confirm view/edit/copy operations with access allowed -----
+
+    # GET inherited entity from collection with access allowed
+
+    def test_get_view_inherited_entity(self):
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", 
+            "testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # self.assertEqual(r.content,       "")
+        return
+
+    # POST edit inherited entity from collection with access allowed
+
+    def test_post_edit_inherited_entity(self):
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        f = entitydata_form_data(action="edit", 
+            entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
+            orig_coll="testcoll"
+            )
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertIn(self.continuation_url, r['location'])
+        # Check that new data exists
+        self.assertTrue(EntityData.exists(self.testsubdata, "entity2"))
+        return
+
+    # POST copy inherited entity from collection with access allowed
+
+    def test_post_copy_inherited_entity(self):
+        loggedin = self.client.login(username="testuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        f = entitydata_form_data(action="copy", 
+            entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
+            orig_coll="testcoll"
+            )
+        u = entitydata_edit_url(action="copy", 
+            coll_id="testsubcoll", type_id="testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertIn(self.continuation_url, r['location'])
+        # Check that new data exists
+        self.assertTrue(EntityData.exists(self.testsubdata, "entity2"))
+        return
+
+    #   ----- Confirm view/edit/copy operations with access disallowed -----
+
+    # GET inherited entity from collection with no access
+
+    def test_post_edit_inherited_entity_no_access(self):
+        loggedin = self.client.login(username="testsubuser", password="testpassword")
+        # self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        f = entitydata_form_data(action="edit", 
+            entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
+            orig_coll="testcoll"
+            )
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   403)
+        self.assertEqual(r.reason_phrase, "Forbidden")
+        # Check that no new data exists
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        return
+
+    # POST edit inherited entity from collection with no access
+
+    def test_post_edit_inherited_entity_no_access(self):
+        loggedin = self.client.login(username="testsubuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        f = entitydata_form_data(action="edit", 
+            entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
+            orig_coll="testcoll"
+            )
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        # print "@@@@ r.content %r, r['location'] %r"%(r.content, r['location'])
+        self.assertEqual(r.status_code,   403)
+        self.assertEqual(r.reason_phrase, "Forbidden")
+        # Check that no new data exists
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        return
+
+    # POST copy inherited entity from collection with no access
+    def test_post_copy_inherited_entity_no_access(self):
+        loggedin = self.client.login(username="testsubuser", password="testpassword")
+        self.assertTrue(loggedin)
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        f = entitydata_form_data(action="copy", 
+            entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
+            orig_coll="testcoll"
+            )
+        u = entitydata_edit_url(action="copy", 
+            coll_id="testsubcoll", type_id="testtype", entity_id="entity2", 
+            view_id="Default_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   403)
+        self.assertEqual(r.reason_phrase, "Forbidden")
+        # Check that no new data exists
+        self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
+        return
 
 # End.

@@ -31,7 +31,10 @@ from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
-from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
+from annalist.models.entitytypeinfo import (
+    EntityTypeInfo, 
+    SITE_PERMISSIONS, CONFIG_PERMISSIONS
+    )
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -39,6 +42,8 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
+
+from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
 from annalist.views.uri_builder     import (
     uri_param_dict,
@@ -57,7 +62,7 @@ from annalist.views.fields.render_entityid  import EntityIdValueMapper
 #
 #   -------------------------------------------------------------------------------------------
 
-authorization_map = (
+context_authorization_map = (
     { "auth_create":        ["CREATE"]
     , "auth_delete":        ["DELETE"]
     , "auth_update":        ["UPDATE"]
@@ -203,7 +208,7 @@ class DisplayInfo(object):
         # Type-specific messages
         self.type_messages      = None
         # Default no permissions:
-        self.authorizations     = dict([(k, False) for k in authorization_map])
+        self.authorizations     = dict([(k, False) for k in context_authorization_map])
         self.reqhost            = None
         self.site               = None
         self.sitedata           = None
@@ -220,13 +225,27 @@ class DisplayInfo(object):
         self.http_response      = None
         return
 
+    def set_orig_coll_id(self, orig_coll_id=None):
+        """
+        For GET and POST operations, set up details of the collection from which
+        an existing identified entity is accessible.  This is used later to check 
+        collection access permissions.
+        """
+        self.orig_coll_id       = EntityIdValueMapper.decode(orig_coll_id)
+        # If inherited from another collection, update origin collection object
+        if self.orig_coll_id and (self.orig_coll_id != self.coll_id):
+            c = Collection.load(self.site, self.orig_coll_id, altscope="all")
+            if c:
+                self.orig_coll = c
+        return self.http_response
+
     def set_coll_type_entity_id(self,
         orig_coll_id=None,
         orig_type_id=None, orig_entity_id=None,
         curr_type_id=None, curr_entity_id=None
         ):
         """
-        For a form POIST operation, sets updated collection, type and entity
+        For a form POST operation, sets updated collection, type and entity
         identifiers from the form data.
 
         The original collection id may be different by virtue of inheritance
@@ -236,23 +255,20 @@ class DisplayInfo(object):
         renamed in the formdata (via .
         """
         log.debug(
-            "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
+            "DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
               ( orig_coll_id, orig_type_id, orig_entity_id, 
                 curr_type_id, curr_entity_id
               )
             )
-        self.orig_coll_id       = EntityIdValueMapper.decode(orig_coll_id)
+        self.set_orig_coll_id(orig_coll_id)
+        if self.http_response:
+            return self.http_response
         self.orig_type_id       = EntityIdValueMapper.decode(orig_type_id)
         self.orig_entity_id     = EntityIdValueMapper.decode(orig_entity_id)
         self.curr_type_id       = EntityIdValueMapper.decode(curr_type_id)
         self.curr_entity_id     = EntityIdValueMapper.decode(curr_entity_id)
-        # If inherited from another collection, update origin collection object
         if self.orig_coll_id and (self.orig_coll_id != self.coll_id):
-            c = Collection.load(self.site, self.orig_coll_id, altscope="all")
-            if c:
-                self.orig_coll = c
             self.orig_typeinfo = EntityTypeInfo(self.orig_coll, orig_type_id)
-            log.debug("@@ self.orig_typeinfo dir %s"%(self.orig_typeinfo.entityparent._entitydir))
         if self.curr_type_id and (self.curr_type_id != self.type_id):
            self.curr_typeinfo = EntityTypeInfo(self.collection, curr_type_id)
         return self.http_response
@@ -448,8 +464,8 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             # Save key authorizations for later rendering
-            for k in authorization_map:
-                for p in authorization_map[k]:
+            for k in context_authorization_map:
+                for p in context_authorization_map[k]:
                     self.authorizations[k] = (
                         self.authorizations[k] or 
                         self.view.authorize(p, self.perm_coll) is None
@@ -472,6 +488,34 @@ class DisplayInfo(object):
                 self.http_response or 
                 self.view.form_action_auth(action, self.perm_coll, permissions_map)
                 )
+        if ( (not self.http_response) and 
+             self.orig_coll_id and (self.orig_coll_id != self.perm_coll.get_id())
+             ):
+            # Copying content from different collection: check access
+            # print (
+            #     "@@@@ orig_coll_id %s, perm_coll_id %s, orig_type_id %s"%
+            #     (self.orig_coll_id, self.perm_coll.get_id(), self.orig_type_id)
+            #     )
+            if self.orig_typeinfo:
+                orig_permissions_map = self.orig_typeinfo.permissions_map
+                # @@TODO: replace with a principled per-entity permission required mechanism
+                #   There follows is a hack intended to be a least effort route to a fully
+                #   working test suite.  In due course this should be replaced by updates to
+                #   EntityTypeInfo to replace .permissions_map with a method to return a 
+                #   per-entity permission map.
+                # print (
+                #     "@@@@ orig_type_id %s, orig_entity_id %s"%(self.orig_type_id, self.orig_entity_id)
+                #     )
+                if self.orig_type_id == layout.USER_TYPEID:
+                    if self.orig_entity_id in [default_user_id, unknown_user_id]:
+                        orig_permissions_map = dict(orig_permissions_map)
+                        orig_permissions_map["view"] = CONFIG_PERMISSIONS["view"]
+                # @@
+            # print (
+            #     "@@@@ orig_permissions_map %s"%(orig_permissions_map,)
+            #     )
+            self.http_response = self.view.form_action_auth("view", 
+                self.orig_coll, orig_permissions_map)
         return self.http_response
 
     def report_error(self, message):
