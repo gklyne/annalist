@@ -548,6 +548,7 @@ def check_context_field_value(test, context_field,
     elif field_value_type in ["annal:EntityRef", "annal:Type", "annal:View", "annal:List"]:
         context_field_value = extract_entity_id(context_field_value)
     if isinstance(field_value, (list, tuple)):
+        test.assertEqual(len(field_value), len(context_field_value))
         for i in range(len(field_value)):
             # print "@@ check_context_field_value (list): [%d] %r"%(i, field_value[i])
             # print "@@ check_context_field_value (list): [%d] %r (context)"%(i, context_field_value[i])

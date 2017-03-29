@@ -254,12 +254,12 @@ class DisplayInfo(object):
         The current type identifier may be different by virtue of the type being
         renamed in the formdata (via .
         """
-        log.debug(
-            "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
-              ( orig_coll_id, orig_type_id, orig_entity_id, 
-                curr_type_id, curr_entity_id
-              )
-            )
+        # log.debug(
+        #     "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
+        #       ( orig_coll_id, orig_type_id, orig_entity_id, 
+        #         curr_type_id, curr_entity_id
+        #       )
+        #     )
         self.set_orig_coll_id(orig_coll_id)
         if self.http_response:
             return self.http_response
@@ -473,14 +473,10 @@ class DisplayInfo(object):
             # Check requested action
             action = action or "view"
             if self.curr_typeinfo:
-                # print "@@ type permissions map, action %s"%action
                 permissions_map = self.curr_typeinfo.permissions_map
             else:
-                # Use Collection permissions map
-                # print "@@ site permissions map, action %s"%action
+                # Use site permissions map (some site operations don't have an entity type?)
                 permissions_map = SITE_PERMISSIONS
-                # raise ValueError("displayinfo.check_authorization without entitytypeinfo")
-                # # permissions_map = {}
 
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
@@ -492,10 +488,6 @@ class DisplayInfo(object):
              self.orig_coll_id and (self.orig_coll_id != self.perm_coll.get_id())
              ):
             # Copying content from different collection: check access
-            # print (
-            #     "@@@@ orig_coll_id %s, perm_coll_id %s, orig_type_id %s"%
-            #     (self.orig_coll_id, self.perm_coll.get_id(), self.orig_type_id)
-            #     )
             if self.orig_typeinfo:
                 orig_permissions_map = self.orig_typeinfo.permissions_map
                 # @@TODO: replace with a principled per-entity permission required mechanism
@@ -503,17 +495,11 @@ class DisplayInfo(object):
                 #   working test suite.  In due course this should be replaced by updates to
                 #   EntityTypeInfo to replace .permissions_map with a method to return a 
                 #   per-entity permission map.
-                # print (
-                #     "@@@@ orig_type_id %s, orig_entity_id %s"%(self.orig_type_id, self.orig_entity_id)
-                #     )
                 if self.orig_type_id == layout.USER_TYPEID:
                     if self.orig_entity_id in [default_user_id, unknown_user_id]:
                         orig_permissions_map = dict(orig_permissions_map)
                         orig_permissions_map["view"] = CONFIG_PERMISSIONS["view"]
                 # @@
-            # print (
-            #     "@@@@ orig_permissions_map %s"%(orig_permissions_map,)
-            #     )
             self.http_response = self.view.form_action_auth("view", 
                 self.orig_coll, orig_permissions_map)
         return self.http_response
@@ -544,7 +530,6 @@ class DisplayInfo(object):
         Return default list_id for listing defined type, or None
         """
         list_id = None
-        # print "@@ get_type_list_id type_id %s, list_id %s"%(type_id, list_id)
         if type_id:
             if self.curr_typeinfo.recordtype:
                 list_id = extract_entity_id(
@@ -552,7 +537,6 @@ class DisplayInfo(object):
                     )
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
-        # print "@@ get_type_list_id %s"%list_id
         return list_id
 
     def get_list_id(self, type_id, list_id):
@@ -560,7 +544,6 @@ class DisplayInfo(object):
         Return supplied list_id if defined, otherwise find default list_id for
         entity type or collection (unless an error has been detected).
         """
-        # print "@@ get_list_id 1 %s"%list_id
         if not self.http_response:
             list_id = (
                 list_id or 
@@ -568,10 +551,8 @@ class DisplayInfo(object):
                 self.collection.get_default_list() or
                 ("Default_list" if type_id else "Default_list_all")
                 )
-            # print "@@ get_list_id 2 %s"%list_id
             if not list_id:
                 log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
-            # print "@@ get_list_id 3 %s"%list_id
         return list_id
 
     def get_list_view_id(self):

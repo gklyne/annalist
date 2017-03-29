@@ -103,7 +103,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
                 - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
             - [x] New test cases; edit inherited value with attachment
-    - [ ] EntityEdit - clean up dead code
+    - [x] EntityEdit - clean up dead code from previous refactoring
     - [ ] check for other uses of RecordGroup class
         - [ ] test_render_ref_multifields.py @@@
         - [ ] views/form_utils/fielddescription.py @@@

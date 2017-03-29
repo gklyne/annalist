@@ -352,6 +352,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_fieldref="",
             field_restrict="",
             field_viewref="",
+            field_fields=[],
             field_repeat_label_add="",
             field_repeat_label_delete=""
             ):
@@ -527,7 +528,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_render_type=  "Group_Seq_Row",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Field_list",
-            field_value=        [],
+            field_value=        field_fields,
             options=            self.no_options
             )
         # Field 14: add-field button label
@@ -1072,7 +1073,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_get_edit_field_fields(self):
         # Render field fields edit form
-        u = entitydata_edit_url("edit", "testcoll", layout.FIELD_TYPEID, entity_id="Field_fields", view_id="Field_view")
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Field_fields", 
+            view_id="Field_view"
+            )
         # log.info("test_get_edit uri %s"%u)
         r = self.client.get(u+"?continuation_url=/testsite/c/testcoll/d/_field/")
         # log.info("test_get_edit resp %s"%r.content)
@@ -1087,20 +1091,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         self.assertEqual(r.context['continuation_url'], "/testsite/c/testcoll/d/_field/")
         # Fields
-        self._check_context_fields(r, 
-            field_id="Field_fields",
-            field_type="annal:Field_list",
-            field_render_type="Group_Seq_Row",
-            field_label="Subfields",
-            field_placeholder="(list of fields)",
-            field_property="annal:field_fields",
-            field_placement="small:0,12",
-            field_entity_type="annal:Field",
-            field_repeat_label_add="Add field",
-            field_repeat_label_delete="Remove selected field(s)"
-            )
-        # Test context including field_fields value
-        # Fields listed in row of subfield description
         field_fields = (
               [ { 'annal:property_uri':     'annal:field_id'
                 , 'annal:field_placement':  'small:0,12;medium:0,4'
@@ -1115,6 +1105,21 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 , 'annal:field_id':         '_field/Field_subfield_placement'
                 }
               ])
+        self._check_context_fields(r, 
+            field_id="Field_fields",
+            field_type="annal:Field_list",
+            field_render_type="Group_Seq_Row",
+            field_label="Subfields",
+            field_placeholder="(list of fields)",
+            field_property="annal:field_fields",
+            field_placement="small:0,12",
+            field_entity_type="annal:Field",
+            field_fields=field_fields,
+            field_repeat_label_add="Add field",
+            field_repeat_label_delete="Remove selected field(s)"
+            )
+        # Separate context check of 'Field_fields' value
+        # (Fields are each listed in a row of the subfields description)
         expect_context = recordfield_entity_view_context_data(
             field_id="Field_fields", orig_id="Field_fields", action="edit",
             field_label="Subfields",
