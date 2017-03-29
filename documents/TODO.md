@@ -104,9 +104,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
             - [x] New test cases; edit inherited value with attachment
     - [x] EntityEdit - clean up dead code from previous refactoring
-    - [ ] check for other uses of RecordGroup class
-        - [ ] test_render_ref_multifields.py @@@
-        - [ ] views/form_utils/fielddescription.py @@@
+    - [.] check for other uses of RecordGroup class
+        - [x] test_render_ref_multifields.py
+        - [x] views/form_utils/fielddescription.py
+        - [ ] others to come?
     - [ ] migrate group references in user field definitions to use internal field list
         - [ ] Add logic to RecordField to import field definitions from group definition
         - [ ] What about value type of repeat field?  Warning if mismatch?
@@ -121,12 +122,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Concept_defs
         - Journal_defs
         - RDF_schema_defs
-    - [ ] eliminate group definitions in installable collections
-        - Annalist_schema
-        - Bibliography_defs
-        - Concept_defs
-        - Journal_defs
-        - RDF_schema_defs
+    - [.] eliminate group definitions in installable collections
+        - [ ] Annalist_schema
+        - [x] Bibliography_defs
+        - [ ] Concept_defs
+        - [ ] Journal_defs
+        - [ ] RDF_schema_defs
     - [ ] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI
 

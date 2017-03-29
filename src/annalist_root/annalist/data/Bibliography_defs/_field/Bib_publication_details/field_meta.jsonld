@@ -12,7 +12,27 @@
 , "annal:property_uri":         "bib:publication_details"
 , "annal:field_entity_type":    "bib:BibEntry"
   // Reference to description of publication details field
-, "annal:group_ref":            "_group/Bib_publication_group"
+  // , "annal:group_ref":            "_group/Bib_publication_group"
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/Bib_publisher"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_address"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_institution"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_organization"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_school"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_howpublished"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
 , "annal:repeat_label_add":     "Add publication details"
 , "annal:repeat_label_delete":  "Remove selected publication details"
 }

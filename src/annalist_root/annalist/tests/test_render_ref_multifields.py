@@ -23,7 +23,9 @@ from annalist.models.recordtype             import RecordType
 from annalist.models.recordtypedata         import RecordTypeData
 from annalist.models.recordview             import RecordView
 from annalist.models.recordfield            import RecordField
-from annalist.models.recordgroup            import RecordGroup
+#@@@@
+# from annalist.models.recordgroup            import RecordGroup
+#@@@@
 from annalist.models.entitydata             import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
@@ -184,20 +186,22 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertTrue(refimg_field is not None)
         return refimg_field
 
-    def _create_refimg_group(self):
-        test_refimg_group = RecordGroup.create(self.testcoll, "Test_refimg_group",
-            { "annal:type":         "annal:Field_group"
-            , "annal:uri":          "test:test_refimg_group"
-            , "rdfs:label":         "Ref image group label"
-            , "rdfs:comment":       "Ref image group comment"
-            , "annal:record_type":  "test:img_type"
-            , "annal:group_fields": 
-                [ { "annal:field_id":   "Test_comment" }
-                , { "annal:field_id":   "Test_image"}
-                ]
-            })
-        self.assertTrue(test_refimg_group is not None)
-        return test_refimg_group
+    #@@@@
+    # def _create_refimg_group(self):
+    #     test_refimg_group = RecordGroup.create(self.testcoll, "Test_refimg_group",
+    #         { "annal:type":         "annal:Field_group"
+    #         , "annal:uri":          "test:test_refimg_group"
+    #         , "rdfs:label":         "Ref image group label"
+    #         , "rdfs:comment":       "Ref image group comment"
+    #         , "annal:record_type":  "test:img_type"
+    #         , "annal:group_fields": 
+    #             [ { "annal:field_id":   "Test_comment" }
+    #             , { "annal:field_id":   "Test_image"}
+    #             ]
+    #         })
+    #     self.assertTrue(test_refimg_group is not None)
+    #     return test_refimg_group
+    #@@@@
 
     def _create_rptref_field(self, label_add=None, label_delete=None):
         rptref_field = RecordField.create(self.testcoll, "Test_rptref_field",
@@ -217,19 +221,21 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertTrue(rptref_field is not None)
         return rptref_field
 
-    def _create_rptref_group(self):
-        rptref_group = RecordGroup.create(self.testcoll, "Test_rptref_group",
-            { "annal:type":         "annal:Field_group"
-            , "annal:uri":          "test:test_rptref_group"
-            , "rdfs:label":         "Repeat image group label"
-            , "rdfs:comment":       "Repeat image group comment"
-            , "annal:record_type":  "test:img_type"
-            , "annal:group_fields": 
-                [ { "annal:field_id":   "Test_refimg_field" }
-                ]
-            })
-        self.assertTrue(rptref_group is not None)
-        return rptref_group
+    #@@@@
+    # def _create_rptref_group(self):
+    #     rptref_group = RecordGroup.create(self.testcoll, "Test_rptref_group",
+    #         { "annal:type":         "annal:Field_group"
+    #         , "annal:uri":          "test:test_rptref_group"
+    #         , "rdfs:label":         "Repeat image group label"
+    #         , "rdfs:comment":       "Repeat image group comment"
+    #         , "annal:record_type":  "test:img_type"
+    #         , "annal:group_fields": 
+    #             [ { "annal:field_id":   "Test_refimg_field" }
+    #             ]
+    #         })
+    #     self.assertTrue(rptref_group is not None)
+    #     return rptref_group
+    #@@@@
 
     def _create_refimg_image_field(self):
         refimg_image_field = RecordField.create(self.testcoll, "Test_image",
@@ -270,8 +276,10 @@ class RefMultifieldTest(AnnalistTestCase):
         refimg_view = self._create_refimg_view()
         # Create multifield reference field
         refimg_field = self._create_refimg_field()
+        #@@@@
         # Create multifield reference group
-        refimg_group = self._create_refimg_group()
+        # refimg_group = self._create_refimg_group()
+        #@@@@
         # Create multifield reference fields (where needed)
         refimg_image_field = self._create_refimg_image_field()
         refimg_image_field = self._create_refimg_comment_field()
@@ -286,12 +294,16 @@ class RefMultifieldTest(AnnalistTestCase):
         rptimg_view = self._create_rptimg_view()
         # Create repeat field referencing multifield reference
         rptref_field = self._create_rptref_field()
+        #@@@@
         # Create multifield reference group
-        rptref_group = self._create_rptref_group()
+        # rptref_group = self._create_rptref_group()
+        #@@@@
         # Create multifield reference field
         refimg_field = self._create_refimg_field()
+        #@@@@
         # Create multifield reference group
-        refimg_group = self._create_refimg_group()
+        # refimg_group = self._create_refimg_group()
+        #@@@@
         # Create multifield reference fields (where needed)
         refimg_image_field = self._create_refimg_image_field()
         refimg_image_field = self._create_refimg_comment_field()

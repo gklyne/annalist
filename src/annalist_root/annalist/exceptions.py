@@ -28,6 +28,17 @@ class Annalist_Error(Exception):
         return ( "Annalist_Error(%s, value=%s)"%
                  (repr(self._msg), repr(self._value)))
 
+class UnexpectedValue_Error(Annalist_Error):
+    """
+    Annalist unexpected value error
+
+    Typically raised when an entity contains a deprecated field
+    """
+
+    def __init__(self, value=None, msg="Entity not found"):
+        super(EntityNotFound_Error, self).__init__(value, msg)
+        return
+
 class EntityNotFound_Error(Annalist_Error):
     """
     Annalist entity (resource) not found error.
