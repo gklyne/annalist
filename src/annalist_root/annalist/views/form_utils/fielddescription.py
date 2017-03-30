@@ -17,9 +17,6 @@ from annalist.identifiers   import RDFS, ANNAL
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error, UnexpectedValue_Error
 from annalist.util          import extract_entity_id
 
-#@@@@
-# from annalist.models.recordgroup            import RecordGroup
-#@@@@
 from annalist.models.recordfield            import RecordField
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
@@ -461,17 +458,6 @@ def field_description_from_view_field(collection, field, view_context=None, fiel
         group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
         if group_ref:
             raise UnexpectedValue_Error("Group %s used in field %s"%(group_ref, field_id))
-            #@@@@
-            # group_view = RecordGroup.load(collection, group_ref, altscope="all")
-            # if group_view:
-            #     field_list = group_view.get(ANNAL.CURIE.group_fields, None)
-            # else:
-            #     log.error("Group %s used in field %s not found"%(group_ref, field_id))
-            #     # log.error("".join(traceback.format_stack()))
-            #     # ex_type, ex, tb = sys.exc_info()
-            #     # traceback.print_tb(tb)
-            #     raise EntityNotFound_Error("Group %s used in field %s"%(group_ref, field_id))
-            #@@@@
 
     # If present, `field_property` and `field_placement` override values in the field dexcription
     return FieldDescription(

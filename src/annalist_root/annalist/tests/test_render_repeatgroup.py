@@ -108,22 +108,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertTrue(testrepeatfield is not None)
         return testrepeatfield
 
-    #@@@
-    # def _create_testrepeatgroup___(self):
-    #     testrepeatgroup = RecordGroup.create(self.testcoll, "testrepeatgroup",
-    #         { "annal:type":         "annal:Field_group"
-    #         , "annal:uri":          "test:testrecordgroup"
-    #         , "rdfs:label":         "Test record group label"
-    #         , "rdfs:comment":       "Test record group comment"
-    #         , "annal:record_type":  "test:testtype"
-    #         , "annal:group_fields": 
-    #             [ { "annal:field_id":   "Entity_comment" }
-    #             ]
-    #         })
-    #     self.assertTrue(testrepeatgroup is not None)
-    #     return testrepeatgroup
-    #@@@
-
     def _create_testentity(self):
         testentity = EntityData.create(self.testdata, "testentity",
             { "annal:type":         "test:testtype"

@@ -129,7 +129,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [ ] Concept_defs
         - [ ] Journal_defs
         - [ ] RDF_schema_defs
-    - [ ] seek out other references to RecordGroup class
+    - [x] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI
 
     - ... and eventually:
