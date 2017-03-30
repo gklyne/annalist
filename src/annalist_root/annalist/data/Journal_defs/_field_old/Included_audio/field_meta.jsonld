@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Included audio",
+  "rdfs:comment": "Field referring to an audio resource in a linked, imported or uploaded audio clip entity (coll:Linked_audio, coll:Imported_audio, coll:Uploaded_audio) entity.",
+  "annal:group_ref": "",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(Audio reference - edit via linked, imported or uploaded audio view)",
+  "annal:property_uri": "coll:included_audio",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "",
+  "annal:default_value": "",
+  "annal:field_value_type": "annal:Audio",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/RefAudio",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_audio",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

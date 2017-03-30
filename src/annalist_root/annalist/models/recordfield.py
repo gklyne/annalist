@@ -24,6 +24,7 @@ from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.util                  import (
     split_type_entity_id, extract_entity_id, make_type_entity_id
     )
+from annalist.exceptions            import Annalist_Error
 
 class RecordField(EntityData):
 
@@ -93,30 +94,29 @@ class RecordField(EntityData):
                 entitydata[fkey] = make_type_entity_id(
                     ftype, extract_entity_id(entitydata[fkey])
                     )
-        # If reference to field group, define field list inline
+        # If reference to field group, copy group field list inline
         if ANNAL.CURIE.group_ref in entitydata:
             group_type_id, group_id = split_type_entity_id(
                 entitydata[ANNAL.CURIE.group_ref], default_type_id=layout.GROUP_TYPEID
                 )
             if group_id != "":
-                # Read group definition
                 log.info("Migrating group reference %s in field %s"%(group_id, field_id))
                 group_obj = RecordGroup_migration.load(self._parent, group_id)
                 if not group_obj:
-                    log.warning(
+                    msg = (
                         "Failed to load group '%s' for field '%s' in collection '%s'"%
                         (group_id, field_id, self._parent.get_id())
                         )
+                    log.warning(msg)
+                    raise Annalist_Error(msg)
                 field_value_type = entitydata[ANNAL.CURIE.field_value_type]
-                group_value_type = group_obj and group_obj[ANNAL.CURIE.record_type]
+                group_value_type = group_obj[ANNAL.CURIE.record_type]
                 if field_value_type and group_value_type and field_value_type != group_value_type:
                     log.warning(
                         "Group %s value type %s differs from field %s value type %s"%
                         (group_id, group_value_type, field_id, field_value_type)
                         )
-                # Copy group_fields to field_fields
                 entitydata[ANNAL.CURIE.field_fields] = group_obj[ANNAL.CURIE.group_fields]
-            # Delete group_ref
             del entitydata[ANNAL.CURIE.group_ref]
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:

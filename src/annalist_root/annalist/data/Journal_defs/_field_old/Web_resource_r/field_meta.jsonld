@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Web  resources",
+  "rdfs:comment": "Web resources related to this journal entry",
+  "annal:group_ref": "_group/Web_resource_r",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(select web resource)",
+  "annal:property_uri": "coll:resources",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "Remove web resource",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "Add web resource",
+  "annal:default_value": "",
+  "annal:field_value_type": "coll:Web_resource",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Web_resource_r",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

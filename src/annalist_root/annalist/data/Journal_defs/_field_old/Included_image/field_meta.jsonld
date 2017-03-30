@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Included image",
+  "rdfs:comment": "Field referring to an image resource in a linked, imported or uploaded image entity (coll:Linked_image, coll:Imported_image, coll:Uploaded_image) entity.",
+  "annal:group_ref": "",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(Image reference - edit via linked, imported or uploaded image view)",
+  "annal:property_uri": "coll:included_image",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "",
+  "annal:default_value": "",
+  "annal:field_value_type": "annal:Image",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/RefImage",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_image",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

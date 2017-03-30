@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Journal date",
+  "rdfs:comment": "Date of entry - any format can be used, but ISO (YYYY-MM-DD has the advantage that it naturally sorts in chronological order.",
+  "annal:group_ref": "",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(enter date, e.g. YYYY-MM-DD)",
+  "annal:property_uri": "coll:date",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12;medium:0,4",
+  "annal:repeat_label_add": "",
+  "annal:default_value": "",
+  "annal:field_value_type": "coll:Date",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/Text",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Journal_date",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

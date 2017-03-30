@@ -1,0 +1,18 @@
+{ "@id":                        "./"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Concept_uri"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Concept_uri"
+, "annal:type":                 "annal:Field"
+, "rdfs:label":                 "Concept URI"
+, "rdfs:comment":               "A URI used to identify a concept."
+, "annal:field_render_type":    "_enum_render_type/URILink"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "skos:Concept"
+, "annal:placeholder":          "(Concept URI)"
+, "annal:property_uri":         "annal:uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

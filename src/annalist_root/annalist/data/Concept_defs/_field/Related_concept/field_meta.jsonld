@@ -18,7 +18,6 @@
   "annal:field_render_type": "_enum_render_type/Enum_optional",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "skos:Concept",
-  "annal:group_ref": "",
   "annal:id": "Related_concept",
   "annal:placeholder": "(Select related concept)",
   "annal:property_uri": "skos:related",

@@ -117,12 +117,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Add _group rename to collection migration function
     - [x] test migration functionality
         - [x] Add test case to test_data_migration
-    - [ ] apply migrations to installable collections
-        - Annalist_schema
-        - Bibliography_defs
-        - Concept_defs
-        - Journal_defs
-        - RDF_schema_defs
+    - [x] apply migrations to installable collections
+        - Install software then use annalist-manager commands to apply migrations;
+        - Check, and copy migrated data back to source tree
+        - [x] Annalist_schema (should be no change)
+        - [x] Bibliography_defs (done by hand)
+        - [x] Concept_defs
+        - [x] Journal_defs
+        - [x] RDF_schema_defs
     - [.] eliminate group definitions in installable collections
         - [ ] Annalist_schema
         - [x] Bibliography_defs

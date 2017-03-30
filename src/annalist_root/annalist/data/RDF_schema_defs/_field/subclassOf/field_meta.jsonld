@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/subclassOf",
   "@type": [
     "annal:Field"
   ],
@@ -15,7 +18,6 @@
   "annal:field_render_type": "_enum_render_type/Enum",
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
   "annal:field_value_type": "rdfs:Class",
-  "annal:group_ref": "",
   "annal:id": "subclassOf",
   "annal:placeholder": "(select superclass)",
   "annal:property_uri": "rdfs:subClassOf",

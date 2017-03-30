@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/range",
   "@type": [
     "annal:Field"
   ],
@@ -15,7 +18,6 @@
   "annal:field_render_type": "_enum_render_type/Identifier",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdfs:Class",
-  "annal:group_ref": "",
   "annal:id": "range",
   "annal:placeholder": "(URI or CURIE of range of property)",
   "annal:property_uri": "rdfs:range",

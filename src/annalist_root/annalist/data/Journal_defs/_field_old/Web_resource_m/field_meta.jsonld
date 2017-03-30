@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Web resource Id+URL+label",
+  "rdfs:comment": "Reference to web resource fields",
+  "annal:group_ref": "_group/Web_resource_m",
+  "annal:type_id": "_field",
+  "annal:placeholder": "",
+  "annal:property_uri": "coll:web_resource_m",
+  "annal:field_ref_type": "_type/Web_resource",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "Remove web resource",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "Add web resource",
+  "annal:default_value": "",
+  "annal:field_value_type": "coll:Web_resource",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/RefMultifield",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Web_resource_m",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

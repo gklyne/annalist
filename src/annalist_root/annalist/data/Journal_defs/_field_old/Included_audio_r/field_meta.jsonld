@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Included audio clips",
+  "rdfs:comment": "Reference fields Id+label+audio of included audio clips.",
+  "annal:group_ref": "_group/Included_audio_r",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(audio clips)",
+  "annal:property_uri": "coll:included_audio_r",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "Remove clip",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "Add clip",
+  "annal:default_value": "",
+  "annal:field_value_type": "coll:Included_audio",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Included_audio_r",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

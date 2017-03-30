@@ -1,0 +1,28 @@
+{
+  "rdfs:label": "Uploaded images",
+  "rdfs:comment": "References to uploaded images",
+  "annal:group_ref": "_group/Uploaded_image_r",
+  "annal:type_id": "_field",
+  "annal:placeholder": "(select image)",
+  "annal:property_uri": "coll:uploaded_image_r",
+  "annal:field_ref_type": "",
+  "annal:field_entity_type": "",
+  "@id": "./",
+  "annal:repeat_label_delete": "Remove image",
+  "annal:field_ref_restriction": "",
+  "annal:field_placement": "small:0,12",
+  "annal:repeat_label_add": "Add image",
+  "annal:default_value": "",
+  "annal:field_value_type": "coll:Uploaded_image",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
+  "annal:field_ref_field": "",
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "annal:id": "Uploaded_image_r",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:type": "annal:Field"
+}

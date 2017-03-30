@@ -1,28 +1,37 @@
 {
-  "rdfs:label": "See also",
-  "rdfs:comment": "Links to further information about the artifact",
-  "annal:group_ref": "_group/See_also_r",
-  "annal:type_id": "_field",
-  "annal:placeholder": "(URL for to further information)",
-  "annal:property_uri": "rdfs:seeAlso",
-  "annal:field_ref_type": "",
-  "annal:field_entity_type": "",
-  "@id": "./",
-  "annal:repeat_label_delete": "Remove link",
-  "annal:field_ref_restriction": "",
-  "annal:field_placement": "small:0,12",
-  "annal:repeat_label_add": "Add link",
-  "annal:default_value": "",
-  "annal:field_value_type": "annal:Entity_see_also_list",
-  "annal:field_value_mode": "_enum_value_mode/Value_direct",
-  "annal:field_render_type": "_enum_render_type/Group_Set_Row",
-  "annal:field_ref_field": "",
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "annal:id": "See_also_r",
+  "@id": "_field/See_also_r",
   "@type": [
     "annal:Field"
   ],
-  "annal:type": "annal:Field"
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_fields": [
+    {
+      "annal:field_id": "See_also",
+      "annal:field_placement": "",
+      "annal:property_uri": "@id"
+    }
+  ],
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/Group_Set_Row",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Entity_see_also_list",
+  "annal:id": "See_also_r",
+  "annal:placeholder": "(URL for to further information)",
+  "annal:property_uri": "rdfs:seeAlso",
+  "annal:repeat_label_add": "Add link",
+  "annal:repeat_label_delete": "Remove link",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "Links to further information about the artifact",
+  "rdfs:label": "See also"
 }
