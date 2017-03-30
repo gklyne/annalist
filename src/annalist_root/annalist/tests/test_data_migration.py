@@ -30,6 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collectiondata import migrate_coll_data
 
@@ -57,6 +58,8 @@ from entity_testentitydata          import (
 #   Test data
 #
 #   -----------------------------------------------------------------------------
+
+# Test data for adding supertype URIs to entity type list
 
 test_supertype_type_create_values = (
     { 'annal:type':                 "annal:Type"
@@ -87,6 +90,71 @@ def test_subtype_entity_create_values(entity_id):
         , 'rdfs:comment':               "test_subtype_entity %s comment"%entity_id
         })
 
+# Test data for record group migration
+
+test_group_id            = "List_field_group"
+test_group_create_values = (
+    { "annal:type":         "annal:Field_group"
+    , "rdfs:label":         "List fields group"
+    , "rdfs:comment":       "Group for fields presented in a list view."
+    , "annal:uri":          "annal:group/List_field_group"
+    , "annal:record_type":  "annal:List_field"
+    , "annal:group_fields":
+      [ { "annal:field_id":         "_field/List_field_sel"
+        , "annal:property_uri":     "annal:field_id"
+        , "annal:field_placement":  "small:0,12;medium:0,6"
+        }
+      , { "annal:field_id":         "_field/List_field_placement"
+        , "annal:property_uri":     "annal:field_placement"
+        , "annal:field_placement":  "small:0,12;medium:6,6"
+        }
+      ]
+    })
+
+test_field_id               = "List_fields"
+test_field_create_values    = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:uri":                  "annal:fields/List_fields"
+    , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+    , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+    , "annal:field_value_type":     "annal:List_field"
+    , "annal:field_entity_type":    "annal:List_field"
+    , "annal:placeholder":          "(list field description)"
+    , "annal:property_uri":         "annal:list_fields"
+    , "annal:field_placement":      "small:0,12"
+    , "annal:group_ref":            "_group/List_field_group"
+    , "annal:repeat_label_add":     "Add field"
+    , "annal:repeat_label_delete":  "Remove selected field(s)"
+    })
+
+test_field_migrated_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:uri":                  "annal:fields/List_fields"
+    , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+    , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+    , "annal:field_value_type":     "annal:List_field"
+    , "annal:field_entity_type":    "annal:List_field"
+    , "annal:placeholder":          "(list field description)"
+    , "annal:property_uri":         "annal:list_fields"
+    , "annal:field_placement":      "small:0,12"
+    , "annal:field_fields":
+      [ { "annal:field_id":         "_field/List_field_sel"
+        , "annal:property_uri":     "annal:field_id"
+        , "annal:field_placement":  "small:0,12;medium:0,6"
+        }
+      , { "annal:field_id":         "_field/List_field_placement"
+        , "annal:property_uri":     "annal:field_placement"
+        , "annal:field_placement":  "small:0,12;medium:6,6"
+        }
+      ]
+    , "annal:repeat_label_add":     "Add field"
+    , "annal:repeat_label_delete":  "Remove selected field(s)"
+    })
+
 #   -----------------------------------------------------------------------------
 #
 #   Linked record tests
@@ -95,7 +163,7 @@ def test_subtype_entity_create_values(entity_id):
 
 class DataMigrationTest(AnnalistTestCase):
     """
-    Tests for linked records
+    Tests for entity data migration
     """
 
     def setUp(self):
@@ -172,6 +240,26 @@ class DataMigrationTest(AnnalistTestCase):
             coll_id, type_id, entity_id, 
             { '@type':      ['test:test_subtype_type', 'test:test_supertype_type', 'annal:EntityData']
             })
+        return
+
+    def test_field_fieldgroup_references(self):
+        """
+        Test migration of field group references in field definitions 
+        """
+        # Create field group
+        self.test_group = RecordGroup_migration.create(
+            self.testcoll, test_group_id, test_group_create_values
+            )
+        # Create field definition referencing field group
+        self.test_field = RecordField.create(
+            self.testcoll, test_field_id, test_field_create_values
+            )
+        # Apply migration to collection
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_migrated_values)
+        self.assertNotIn("annal:group_ref", field_data)
+        self.check_entity_does_not_exist("_group", test_group_id)
         return
 
 # End.

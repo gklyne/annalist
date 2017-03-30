@@ -15,7 +15,7 @@
     }
   ],
   "annal:id": "range_r",
-  "annal:record_type": "rdf:Property",
+  "annal:record_type": "rdfs:Class",
   "annal:type": "annal:Field_group",
   "annal:type_id": "_group",
   "annal:uri": "annal:group/_initial_values",

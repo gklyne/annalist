@@ -23,7 +23,7 @@ from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordenum     import RecordEnumFactory
@@ -214,7 +214,7 @@ TYPE_CLASS_MAP = (
     , TYPE_ID:                  RecordType
     , LIST_ID:                  RecordList
     , VIEW_ID:                  RecordView
-    , GROUP_ID:                 RecordGroup
+    , GROUP_ID:                 RecordGroup_migration
     , FIELD_ID:                 RecordField
     , VOCAB_ID:                 RecordVocab
     , '_enum_field_placement':  RecordEnumFactory('_enum_field_placement',  '_enum_field_placement')

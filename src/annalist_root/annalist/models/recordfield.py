@@ -16,11 +16,14 @@ log = logging.getLogger(__name__)
 
 from django.conf import settings
 
-from annalist                   import layout
-from annalist.identifiers       import ANNAL
-from annalist.models.entity     import Entity
-from annalist.models.entitydata import EntityData
-from annalist.util              import split_type_entity_id, extract_entity_id, make_type_entity_id
+from annalist                       import layout
+from annalist.identifiers           import ANNAL
+from annalist.models.entity         import Entity
+from annalist.models.entitydata     import EntityData
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
+from annalist.util                  import (
+    split_type_entity_id, extract_entity_id, make_type_entity_id
+    )
 
 class RecordField(EntityData):
 
@@ -72,6 +75,7 @@ class RecordField(EntityData):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
+        field_id = entitydata[ANNAL.CURIE.id]
         migration_map = (
             [ (ANNAL.CURIE.options_typeref,     ANNAL.CURIE.field_ref_type       )
             , (ANNAL.CURIE.restrict_values,     ANNAL.CURIE.field_ref_restriction)
@@ -79,7 +83,7 @@ class RecordField(EntityData):
             , (ANNAL.CURIE.field_target_type,   ANNAL.CURIE.field_value_type     )
             ])
         entitydata = self._migrate_values_map_field_names(migration_map, entitydata)
-        # Fix up enumerated values to use new enumeratiomn type names
+        # Fix up enumerated values to use new enumeration type names
         field_enum_types = (
             [ (ANNAL.CURIE.field_render_type, "_enum_render_type")
             , (ANNAL.CURIE.field_value_mode,  "_enum_value_mode")
@@ -89,6 +93,31 @@ class RecordField(EntityData):
                 entitydata[fkey] = make_type_entity_id(
                     ftype, extract_entity_id(entitydata[fkey])
                     )
+        # If reference to field group, define field list inline
+        if ANNAL.CURIE.group_ref in entitydata:
+            group_type_id, group_id = split_type_entity_id(
+                entitydata[ANNAL.CURIE.group_ref], default_type_id=layout.GROUP_TYPEID
+                )
+            if group_id != "":
+                # Read group definition
+                log.info("Migrating group reference %s in field %s"%(group_id, field_id))
+                group_obj = RecordGroup_migration.load(self._parent, group_id)
+                if not group_obj:
+                    log.warning(
+                        "Failed to load group '%s' for field '%s' in collection '%s'"%
+                        (group_id, field_id, self._parent.get_id())
+                        )
+                field_value_type = entitydata[ANNAL.CURIE.field_value_type]
+                group_value_type = group_obj and group_obj[ANNAL.CURIE.record_type]
+                if field_value_type and group_value_type and field_value_type != group_value_type:
+                    log.warning(
+                        "Group %s value type %s differs from field %s value type %s"%
+                        (group_id, group_value_type, field_id, field_value_type)
+                        )
+                # Copy group_fields to field_fields
+                entitydata[ANNAL.CURIE.field_fields] = group_obj[ANNAL.CURIE.group_fields]
+            # Delete group_ref
+            del entitydata[ANNAL.CURIE.group_ref]
         # Default render type to "Text"
         if ANNAL.CURIE.field_render_type not in entitydata:
             entitydata[ANNAL.CURIE.field_render_type] = "_enum_render_type/Text"
@@ -126,26 +155,19 @@ class RecordField(EntityData):
         if val_mode == "Value_field":
             if ( not (ref_type and ref_field) ):
                log.warning(
-                    "RecordField %s: val_mode 'Value_field' requires values for %s and %s"%( 
-                        entitydata[ANNAL.CURIE.id], 
-                        ANNAL.CURIE.field_ref_type, 
-                        ANNAL.CURIE.field_ref_field
-                        )
+                    "RecordField %s: val_mode 'Value_field' requires values for %s and %s"%
+                        (field_id, ANNAL.CURIE.field_ref_type, ANNAL.CURIE.field_ref_field)
                     )
         elif val_mode == "Value_entity":
             if not ref_type:
                log.warning(
-                    "RecordField %s: val_mode 'Value_entity' requires value for %s"%( 
-                        entitydata[ANNAL.CURIE.id], 
-                        ANNAL.CURIE.field_ref_type, 
-                        )
+                    "RecordField %s: val_mode 'Value_entity' requires value for %s"%
+                        (field_id, ANNAL.CURIE.field_ref_type)
                     )
             if ref_field:
                log.warning(
-                    "RecordField %s: val_mode 'Value_entity' should not define value for %s"%( 
-                        entitydata[ANNAL.CURIE.id], 
-                        ANNAL.CURIE.field_ref_field
-                        )
+                    "RecordField %s: val_mode 'Value_entity' should not define value for %s"%
+                        (field_id, ANNAL.CURIE.field_ref_field)
                     )
         # Return result
         return entitydata

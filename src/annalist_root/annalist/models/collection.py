@@ -41,7 +41,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
@@ -674,7 +674,7 @@ class Collection(Entity):
         # In due course, field groups will replaced by inline field lists.
         # This code does not process field lists for fields referenced by a group.
         #@@
-        for g in self.child_entities(RecordGroup, altscope="all"):
+        for g in self.child_entities(RecordGroup_migration, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
                 fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
                 guri = gref.get(ANNAL.CURIE.property_uri, None)

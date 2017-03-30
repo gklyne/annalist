@@ -108,14 +108,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] test_render_ref_multifields.py
         - [x] views/form_utils/fielddescription.py
         - [ ] others to come?
-    - [ ] migrate group references in user field definitions to use internal field list
-        - [ ] Add logic to RecordField to import field definitions from group definition
-        - [ ] What about value type of repeat field?  Warning if mismatch?
-        - [ ] Add optional deprecation warning when recordgroup is instantiated (except for migration)
-        - [ ] Above changes should mean all live references are to inline field list
-        - [ ] Add _group rename to collection migration function
-    - [ ] test migration functionality
-        - [ ] Add test case to test_data_migration
+    - [x] migrate group references in user field definitions to use internal field list
+        - [x] Add logic to RecordField to import field definitions from group definition
+        - [x] Warning on migration if value type of repeat field does not match type of referenced group
+        - [x] Add optional deprecation warning when recordgroup is instantiated (except for migration)
+            - NOTE: EntityTypeInfo scans suppress these warnings, as they're used by migration logic
+        - [x] Above changes should mean all live references are to inline field list
+        - [x] Add _group rename to collection migration function
+    - [x] test migration functionality
+        - [x] Add test case to test_data_migration
     - [ ] apply migrations to installable collections
         - Annalist_schema
         - Bibliography_defs

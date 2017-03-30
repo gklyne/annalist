@@ -11,6 +11,7 @@ import os.path
 import urlparse
 import shutil
 
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -33,17 +34,32 @@ class RecordGroup(EntityData):
     _entitypath     = layout.COLL_GROUP_PATH
     _entityfile     = layout.GROUP_META_FILE
 
+    _deprecation_warning = True
+
     def __init__(self, parent, group_id):
         """
-        Initialize a new RecordGroup object, without metadta (yet).
+        Initialize a new RecordGroup object, without metadata (yet).
 
         parent      is the parent entity from which the field group is descended.
         group_id    the local identifier for the field group
         """
+        if self._deprecation_warning:
+            log.warn("Instantiating _group/%s for collection %s"%(group_id, parent.get_id()))
+            # log.debug("".join(traceback.format_stack()))
         super(RecordGroup, self).__init__(parent, group_id)
         self._parent = parent
         # log.debug("RecordGroup %s: dir %s"%(group_id, self._entitydir))
         return
+
+    @classmethod
+    def load(cls, parent, entityid, altscope=None, reserved_ok=False, deprecation_warning=False):
+        """
+        Overloaded load method with default deprecation warning
+        """
+        if cls._deprecation_warning:
+            log.warn("Loading _group/%s for collection %s"%(entityid, parent.get_id()))
+            # log.debug("".join(traceback.format_stack()))
+        return super(RecordGroup, cls).load(parent, entityid, altscope=altscope, reserved_ok=reserved_ok)
 
     def _migrate_filenames(self):
         """
@@ -84,5 +100,16 @@ class RecordGroup(EntityData):
         """
         self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
+
+class RecordGroup_migration(RecordGroup):
+    """
+    Variation of RecordGroup with suppressed instantiation warning,
+    used for migrating old data.
+    """
+    _deprecation_warning = False
+
+    def __init__(self, parent, group_id):
+        super(RecordGroup_migration, self).__init__(parent, group_id)
+        return
 
 # End.

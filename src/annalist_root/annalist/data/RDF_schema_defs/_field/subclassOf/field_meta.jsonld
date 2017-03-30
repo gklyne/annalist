@@ -14,7 +14,7 @@
   "annal:field_ref_type": "_type/Class",
   "annal:field_render_type": "_enum_render_type/Enum",
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
-  "annal:field_value_type": "annal:Identifier",
+  "annal:field_value_type": "rdfs:Class",
   "annal:group_ref": "",
   "annal:id": "subclassOf",
   "annal:placeholder": "(select superclass)",

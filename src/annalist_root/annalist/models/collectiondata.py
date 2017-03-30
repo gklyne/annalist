@@ -140,6 +140,8 @@ def migrate_coll_data(coll):
         coll.update_entity_types(e)
         log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
         e._save(post_update_flags={"nocontext"})
+    # Rename _group directory
+    migrate_collection_dir(coll, layout.GROUP_DIR, layout.GROUP_DIR+".migrated")
     coll.generate_coll_jsonld_context()    
     return errs
 

@@ -14,7 +14,7 @@
   "annal:field_ref_type": "",
   "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
-  "annal:field_value_type": "annal:Identifier",
+  "annal:field_value_type": "rdfs:Class",
   "annal:group_ref": "_group/subclassOf_r",
   "annal:id": "subclassOf_r",
   "annal:placeholder": "(Repeat field subclass of)",
