@@ -125,12 +125,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Concept_defs
         - [x] Journal_defs
         - [x] RDF_schema_defs
-    - [.] eliminate group definitions in installable collections
-        - [ ] Annalist_schema
+    - [x] eliminate group definitions in installable collections
+        - [x] Annalist_schema
         - [x] Bibliography_defs
-        - [ ] Concept_defs
-        - [ ] Journal_defs
-        - [ ] RDF_schema_defs
+        - [x] Concept_defs
+        - [x] Journal_defs
+        - [x] RDF_schema_defs
     - [x] seek out other references to RecordGroup class
     - [ ] seek out other references to field group type name or URI
 
