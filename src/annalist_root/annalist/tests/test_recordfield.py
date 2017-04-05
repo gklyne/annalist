@@ -357,7 +357,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 13)
+        self.assertEqual(len(r.context['fields']), 12)
         f0  = context_view_field(r.context, 0, 0)
         f1  = context_view_field(r.context, 0, 1)
         f2  = context_view_field(r.context, 1, 0)
@@ -370,12 +370,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f9  = context_view_field(r.context, 5, 1)
         f10 = context_view_field(r.context, 6, 0)
         f11 = context_view_field(r.context, 7, 0)
-        f12 = context_view_field(r.context, 8, 0)
-        f13 = context_view_field(r.context, 9, 0)
-        f14 = context_view_field(r.context, 10, 0)
-        f15 = context_view_field(r.context, 10, 1)
-        f16 = context_view_field(r.context, 11, 0)
-        f17 = context_view_field(r.context, 12, 0)
+        # f12 = context_view_field(r.context, 8, 0)
+        f13 = context_view_field(r.context, 8, 0)
+        f14 = context_view_field(r.context, 9, 0)
+        f15 = context_view_field(r.context, 9, 1)
+        f16 = context_view_field(r.context, 10, 0)
+        f17 = context_view_field(r.context, 11, 0)
         # Field 0: Id
         check_context_field(self, f0,
             field_id=           "Field_id",
@@ -508,17 +508,17 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_default,
             options=            self.no_options
             )
-        # Field 12: reference group (for repeating field groups)
-        check_context_field(self, f12,
-            field_id=           "Field_groupref",
-            field_name=         "Field_groupref",
-            field_property_uri= "annal:group_ref",
-            field_render_type=  "Enum_optional",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:EntityRef",
-            field_value=        field_viewref,
-            options=            self.group_options
-            )
+        # # Field 12: reference group (for repeating field groups)
+        # check_context_field(self, f12,
+        #     field_id=           "Field_groupref",
+        #     field_name=         "Field_groupref",
+        #     field_property_uri= "annal:group_ref",
+        #     field_render_type=  "Enum_optional",
+        #     field_value_mode=   "Value_direct",
+        #     field_value_type=   "annal:EntityRef",
+        #     field_value=        field_viewref,
+        #     options=            self.group_options
+        #     )
         # Field 13: field list (for repeating field groups)
         # print "@@ f13 (Field_fields) %r"%(f13,)
         check_context_field(self, f13,
@@ -604,18 +604,18 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             tooltip6b=context_view_field(r.context, 5, 1)['field_help'],
             tooltip7=context_view_field(r.context, 6, 0)['field_help'],
             tooltip8=context_view_field(r.context, 7, 0)['field_help'],
-            tooltip9a=context_view_field(r.context, 8, 0)['field_help'],
-            tooltip10=context_view_field(r.context,  9, 0)['field_help'],
-            tooltip10f1=context_view_field(r.context, 9, 0).
+            # tooltip9a=context_view_field(r.context, 8, 0)['field_help'],
+            tooltip10=context_view_field(r.context,  8, 0)['field_help'],
+            tooltip10f1=context_view_field(r.context, 8, 0).
                        _field_description['group_field_descs'][0]['field_help'],
-            tooltip10f2=context_view_field(r.context, 9, 0).
+            tooltip10f2=context_view_field(r.context, 8, 0).
                        _field_description['group_field_descs'][1]['field_help'],
-            tooltip10f3=context_view_field(r.context, 9, 0).
+            tooltip10f3=context_view_field(r.context, 8, 0).
                        _field_description['group_field_descs'][2]['field_help'],
-            tooltip11a=context_view_field(r.context, 10, 0)['field_help'],
-            tooltip11b=context_view_field(r.context, 10, 1)['field_help'],
-            tooltip12=context_view_field(r.context,  11, 0)['field_help'],
-            tooltip13=context_view_field(r.context,  12, 0)['field_help'],
+            tooltip11a=context_view_field(r.context, 9, 0)['field_help'],
+            tooltip11b=context_view_field(r.context, 9, 1)['field_help'],
+            tooltip12=context_view_field(r.context,  10, 0)['field_help'],
+            tooltip13=context_view_field(r.context,  11, 0)['field_help'],
             )
         formrow1col1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -802,24 +802,24 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow9col1 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip9a)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Field group</span>
-                </div>
-                <div class="%(input_classes)s">
-                """+
-                  render_select_options(
-                    "Field_groupref", "Field group",
-                    [""] + get_site_field_groups_sorted(),
-                    "",
-                    placeholder="(no field group selected)")+
-                """
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
+        # formrow9col1 = ("""
+        #     <div class="small-12 medium-6 columns" title="%(tooltip9a)s">
+        #       <div class="row view-value-row">
+        #         <div class="%(label_classes)s">
+        #           <span>Field group</span>
+        #         </div>
+        #         <div class="%(input_classes)s">
+        #         """+
+        #           render_select_options(
+        #             "Field_groupref", "Field group",
+        #             [""] + get_site_field_groups_sorted(),
+        #             "",
+        #             placeholder="(no field group selected)")+
+        #         """
+        #         </div>
+        #       </div>
+        #     </div>
+        #     """)%field_vals(width=6)
 
         formrow10h = """
             <div class="small-12 columns" title="%(tooltip10)s">
@@ -976,8 +976,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow6col2, html=True)     # Ref field
         self.assertContains(r, formrow7, html=True)         # Placeholder
         self.assertContains(r, formrow8, html=True)         # Default
-        self.assertContains(r, formrow9col1, html=True)     # Field group
-                                                            # Spacing
+        # self.assertContains(r, formrow9col1, html=True)     # Field group
+        #                                                     # Spacing
         self.assertContains(r, formrow10h, html=True)       # Field list headers
         # self.assertContains(r, formrow10b1f1, html=True)    # Field list row 1 field 1
         self.assertContains(r, formrow10t, html=True)       # Field list tail (buttons)

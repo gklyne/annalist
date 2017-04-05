@@ -404,22 +404,22 @@ def recordfield_entity_view_context_data(
               , 'field_value':            ""
               , 'options':                []
               })
-          , context_field_row(
-              { 'field_id':               "Field_groupref"              # 12 (8,0)
-              , 'field_name':             "Field_groupref"
-              , 'field_label':            "Field group"
-              , 'field_value_type':       "annal:EntityRef"
-              , 'field_render_type':      "Enum_optional"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:group_ref"
-              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-              , 'field_ref_type':         "_group"
-              , 'field_ref_field':        None
-              , 'field_placeholder':      "(no field group selected)"
-              , 'field_default_value':    ""
-              , 'field_value':            ""
-              , 'options':                []
-              })
+          # , context_field_row(
+          #     { 'field_id':               "Field_groupref"              # 12 (8,0)
+          #     , 'field_name':             "Field_groupref"
+          #     , 'field_label':            "Field group"
+          #     , 'field_value_type':       "annal:EntityRef"
+          #     , 'field_render_type':      "Enum_optional"
+          #     , 'field_value_mode':       "Value_direct"
+          #     , 'field_property_uri':     "annal:group_ref"
+          #     , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+          #     , 'field_ref_type':         "_group"
+          #     , 'field_ref_field':        None
+          #     , 'field_placeholder':      "(no field group selected)"
+          #     , 'field_default_value':    ""
+          #     , 'field_value':            ""
+          #     , 'options':                []
+          #     })
           , { 'field_id':               "Field_fields"                  # 13 (9,0)
             , 'field_name':             "Field_fields"
             , 'field_value_type':       "annal:Field_list"

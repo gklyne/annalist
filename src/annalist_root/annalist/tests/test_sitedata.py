@@ -1075,11 +1075,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [FieldChoice("",label="(no type selected)")]+self.types_expected, 
             ""
             )
-        self.check_select_field(
-            s, "Field_groupref",
-            [FieldChoice("",label="(no field group selected)")]+self.grouprefs_expected, 
-            ""
-            )
+        #@@@@
+        # self.check_select_field(
+        #     s, "Field_groupref",
+        #     [FieldChoice("",label="(no field group selected)")]+self.grouprefs_expected, 
+        #     ""
+        #     )
+        #@@@@
         self.check_select_field(
             s, "view_choice", self.views_expected, "_view/Field_view"
             )
@@ -1106,7 +1108,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_fieldref"
             , "_field/Field_placeholder"
             , "_field/Field_default"
-            , "_field/Field_groupref"
+            #@@@@
+            # , "_field/Field_groupref"
+            #@@@@
             , "_field/Field_fields"
             , "_field/Field_repeat_label_add"
             , "_field/Field_repeat_label_delete"

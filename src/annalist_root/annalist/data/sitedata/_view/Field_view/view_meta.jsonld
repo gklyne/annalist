@@ -44,9 +44,9 @@
   , { "annal:field_id":         "_field/Field_default"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "_field/Field_groupref"
-    , "annal:field_placement":  "small:0,12;medium:0,6"
-    }
+//  , { "annal:field_id":         "_field/Field_groupref"
+//    , "annal:field_placement":  "small:0,12;medium:0,6"
+//    }
   , { "annal:field_id":         "_field/Field_fields"
     , "annal:field_placement":  "small:0,12"
     }
