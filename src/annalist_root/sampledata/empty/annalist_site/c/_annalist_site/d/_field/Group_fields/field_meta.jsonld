@@ -13,7 +13,6 @@
 , "annal:placeholder":          "(field group list of fields)"
 , "annal:property_uri":         "annal:group_fields"
 , "annal:field_placement":      "small:0,12"
-, "annal:group_ref_@@@":        "_group/Group_field_group"
 , "annal:field_fields":
   [ { "annal:field_id":         "_field/Group_field_sel"
     , "annal:property_uri":     "annal:field_id"

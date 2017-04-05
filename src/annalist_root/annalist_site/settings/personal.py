@@ -81,6 +81,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'annalist_root': {
+            'handlers': ['logfile'],
+            'level': 'INFO', # Or maybe INFO or DEBUG
+            'propagate': False
+        },
         'annalist_site': {
             'handlers': ['logfile'],
             'level': 'INFO', # Or maybe INFO or DEBUG

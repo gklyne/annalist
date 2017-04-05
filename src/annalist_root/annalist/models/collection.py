@@ -655,19 +655,19 @@ class Collection(Entity):
                     fcontext['fid'] = fid
                 e = self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
                 errs.extend(e)
-                # If this field contains a list of fields, scan those
+                # If this field contains a list of subfields, scan those
                 # NOTE: current implementation handles only a single level of field nesting
                 if field_list:
-                    for gref in field_list:
-                        gid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
-                        guri = gref.get(ANNAL.CURIE.property_uri, None)
+                    for subfref in field_list:
+                        subfid  = extract_entity_id(subfref[ANNAL.CURIE.field_id])
+                        subfuri = subfref.get(ANNAL.CURIE.property_uri, None)
                         furi, fcontext, field_list = self.get_field_uri_jsonld_context(
-                            gid, self.get_field_jsonld_context
+                            subfid, self.get_field_jsonld_context
                             )
                         if fcontext is not None:
-                            fcontext['fid'] = fid
-                            fcontext['gid'] = gid
-                        e = self.set_field_uri_jsonld_context(guri or furi, gid, fcontext, context)
+                            fcontext['fid']    = fid
+                            fcontext['subfid'] = subfid
+                        e = self.set_field_uri_jsonld_context(subfuri or furi, subfid, fcontext, context)
                         errs.extend(e)
         # Scan group fields and generate context data for property URIs used
         #@@TODO - to be deprecated
@@ -726,15 +726,28 @@ class Collection(Entity):
                 if not fcontext:
                     # For diagnostics to locate incompatible use...
                     fcontext = {'fid': field_id}
-                if puri in property_contexts:
+                if (puri in property_contexts):
                     pcontext    = property_contexts[puri]
+                    pcontext.pop('err', None)   # Drop pevious error(s) from report
                     p_type      = pcontext.get("@type", None)
-                    p_container = pcontext.get("@container", None)
                     f_type      = fcontext.get("@type", None)
+                    if (p_type != f_type):
+                        msg  = (
+                            "Incompatible value type for property %s in field %s (new %r; was %r)"%
+                            (puri, field_id, fcontext, pcontext)
+                            )
+                        log.warning(msg)
+                        property_contexts[puri]['err'] = msg
+                        errs.append(msg)
+                    p_container = pcontext.get("@container", None)
                     f_container = fcontext.get("@container", None)
-                    if ( ( p_type      != f_type      ) or
-                         ( p_container != f_container ) ):
-                        msg  = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
+                    if ( (p_container != f_container) and
+                         ( (p_container == "@list") or 
+                           (f_container == "@list") ) ):
+                        msg  = (
+                            "Incompatible container type for property %s in field %s (new %r; was %r)"%
+                            (puri, field_id, fcontext, pcontext)
+                            )
                         # msgp = "pcontext @type %s, @container %s"%(p_type, p_container)
                         # msgf = "fcontext @type %s, @container %s"%(f_type, f_container)
                         log.warning(msg)

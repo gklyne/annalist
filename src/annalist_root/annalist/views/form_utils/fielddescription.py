@@ -137,6 +137,10 @@ class FieldDescription(object):
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_desc['field_ref_type']
         if type_ref:
+            # @@@@@@ DEBUG
+            # if field_id == "Field_subfield_sel":
+            #     log.debug("field_ref_type %(field_ref_type)s, field_ref_restriction(%(field_ref_restriction)s)"%self._field_desc)
+            # @@@@@@ DEBUG
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
             # Determine subtypes of field entity type, if specified

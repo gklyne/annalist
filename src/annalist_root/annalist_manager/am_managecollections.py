@@ -582,4 +582,38 @@ def am_migratecollection(annroot, userhome, options):
         status = am_errors.AM_MIGRATECOLLFAIL
     return status
 
+def am_migrateallcollections(annroot, userhome, options):
+    """
+    Apply migrations to all collections
+
+        annalist_manager migrateallcollections
+
+    Reads and writes every entity in all collections, thereby 
+    applying data migrations and saving them in the stored data.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
+    print("Apply data migrations in all collections:")
+    for coll in site.collections():
+        coll_id = coll.get_id()
+        if coll_id != layout.SITEDATA_ID:
+            log.info("========== Processing '%s' =========="%(coll_id,))
+            print("---- Processing '%s'"%(coll_id,))
+            msgs   = migrate_coll_data(coll)
+            if msgs:
+                for msg in msgs:
+                    print(msg)
+                status = am_errors.AM_MIGRATECOLLFAIL
+    print("Data migrations complete.")
+    return status
+
 # End.

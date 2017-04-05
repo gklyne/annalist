@@ -9,7 +9,7 @@
 , "rdfs:comment":               "Links to further information."
 , "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
-, "annal:field_value_type":     "rdfs:Resource"
+, "annal:field_value_type":     "annal:Entity_see_also_list"
 , "annal:field_entity_type":    ""
 , "annal:placeholder":          "(Links to further information)"
 , "annal:property_uri":         "rdfs:seeAlso"

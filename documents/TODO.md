@@ -42,7 +42,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] update site definitions to use field lists in field definitions
     - [x] eliminate field group definitions from site data
     - [x] modify or eliminate task buttons that create field group entities
-    - [.] check for other uses of field group reference field
+    - [x] check for other uses of field group reference field
         - [x] entityedit.py save_invoke_task (task dispatching)
         - [x] fix up test cases
         - [x] entitylist.py get_list_entityvaluemap
@@ -60,34 +60,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
             - [-] Field entity type help text mentions group; sort out with separation of tooltip text
             - [x] Confirmation message mentions group; message needs refinement
             - [x] "Refer to type" has default type -> can this be inferred from target field?  Or prompt to specify value.
-        - [ ] fielddescription.py @@@ eliminate group reference later, when migration logic is confirmed and tested
+        - [x] fielddescription.py
     - [x] BUG (attempt to save copy of site label field):
-            INFO 2017-03-07 15:58:08,108 form_response entity_id Test_label_02, orig_entity_id Entity_label, type_id _field, orig_type_id _field 
-            INFO 2017-03-07 15:58:08,133 @@ save_entity: rename_entity _field/Entity_label to _field/Test_label_02 for action edit 
-            INFO 2017-03-07 15:58:08,133 rename_entity old: Entity_label, new: Test_label_02, vals: {u'rdfs:label': u'Test Label 2', u'rdfs:comment': u'Short string used to label a displayed entity.', u'annal:type_id': u'_field', u'annal:placeholder': u'(label)', u'annal:property_uri': u'rdfs:label', u'@id': u'_field/Entity_label', u'annal:field_placement': u'small:0,12', u'annal:default_value': u'', u'annal:field_value_type': u'annal:Text', u'annal:field_value_mode': u'_enum_value_mode/Value_direct', u'annal:uri': u'annal:fields/Entity_label', u'annal:field_render_type': u'_enum_render_type/Text', 'annal:url': u'/annalist/c/test_collection/d/_field/Entity_label/', u'@context': [{u'base': u'../../'}, u'../../coll_context.jsonld'], u'annal:id': u'Test_label_02', u'@type': [u'annal:Field'], 'annal:type': u'annal:Field'} 
-            INFO 2017-03-07 15:58:08,134 Generating context for collection test_collection 
-            ERROR 2017-03-03 16:07:18,131 [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
-            Traceback (most recent call last):
-              File "annalist_root/annalist/views/entityedit.py", line 264, in post
-                response = self.form_response(viewinfo, context_extra_values)
-              File "annalist_root/annalist/views/entityedit.py", line 539, in form_response
-                responseinfo=responseinfo
-              File "annalist_root/annalist/views/entityedit.py", line 1080, in save_entity
-                typeinfo, orig_entity_id, new_typeinfo, entity_id, entity_values
-              File "annalist_root/annalist/views/entityedit.py", line 1455, in rename_entity
-                msg        = new_entity._copy_entity_files(old_entity)
-              File "annalist_root/annalist/models/entityroot.py", line 581, in _copy_entity_files
-                for p, f in src_entity._entity_files():
-              File "annalist_root/annalist/models/entityroot.py", line 563, in _entity_files
-                for f in os.listdir(self._entitydir):
-            OSError: [Errno 2] No such file or directory: '/Users/graham/annalist_site/c/test_collection/d/_field/Entity_label/'
-            - *** Steps to reproduce:
+            - Steps to reproduce:
                 - Select scope all listing of entities
                 - Select site entity
                 - Click "edit" button
                 - Enter new entity id
                 - Click Save
-            - *** Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
+            - Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
         - [x] Handle change of collection like change of type: copy data to new location
             - [x] GET: copy original collection id to form as 'orig_coll'
             - [x] POST:
@@ -103,11 +84,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
                 - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
             - [x] New test cases; edit inherited value with attachment
-    - [x] EntityEdit - clean up dead code from previous refactoring
-    - [.] check for other uses of RecordGroup class
+    - [x] entityedit.py - clean up dead code from previous refactoring
+    - [x] check for other uses of RecordGroup class
         - [x] test_render_ref_multifields.py
         - [x] views/form_utils/fielddescription.py
-        - [ ] others to come?
     - [x] migrate group references in user field definitions to use internal field list
         - [x] Add logic to RecordField to import field definitions from group definition
         - [x] Warning on migration if value type of repeat field does not match type of referenced group
@@ -132,22 +112,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Journal_defs
         - [x] RDF_schema_defs
     - [x] seek out other references to RecordGroup class
+    - [x] annalist-manager option to migrate all collections
+    - [x] fix up installable collection problems picked up by collection migration 
+    - [ ] Remove field group from field view definition
+    - [ ] Update field view help text to mention subfields, not field group
     - [ ] seek out other references to field group type name or URI
-
-    - ... and eventually:
-    - [ ] Remove class RecordGroup
-    - [ ] eliminate _field/Field_groupref instances
-    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
-    - [ ] eliminate all Group_* fields
-    - [ ] Remove field group type URI from annal: namespace
-    - [ ] eliminate _type/_group
-    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
-    - [ ] Clean up dead code:
-        - [ ] test_recordfield.py
 
 - [ ] Provide field popup help separately from comment field (without MarkDown)
     - [ ] Add new property URI to ANNAL namespace
-    - [ ] Add new field; change label on commemnt field
+    - [ ] Add new field; change label on comment field
     - [ ] Default to comment if blank
     - [ ] Add migration logic to copy comment
     - [ ] Edit sitedata field definitions
@@ -326,6 +299,17 @@ Usability notes:
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
+
+- [ ] Final elimination of Recordroup (field group) entities
+    - [ ] Remove class RecordGroup
+    - [ ] eliminate _field/Field_groupref instances
+    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
+    - [ ] eliminate all Group_* fields
+    - [ ] Remove field group type URI from annal: namespace
+    - [ ] eliminate _type/_group
+    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+    - [ ] Clean up dead code:
+        - [ ] test_recordfield.py
 
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
