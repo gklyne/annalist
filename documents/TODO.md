@@ -15,7 +15,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.1.37, towards 0.1.38
 
-- [ ] Absorb field groups into field defs
+- [x] Absorb field groups into field defs
     - [x] modify field definition reader to use locally defined fields in preference to group reference
         - [x] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
             - [x] Replace: group_view -> field_list
@@ -116,9 +116,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] fix up installable collection problems picked up by collection migration 
     - [x] Remove field group from field view definition
     - [x] Update field view help text to mention subfields, not field group
-    - [ ] seek out other references to field group type name or URI
-    - annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
+    - [x] seek out other references to field group type name or URI
+        - NOTE: references to group type, views, lists remain for migration support, and free-standing view and list definitions, remain -- for now.
 
+- [ ] Annaslist_schema add annal:field_fields property
+- [ ] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
 - [ ] Provide field popup help separately from comment field (without MarkDown)
     - [ ] Add new property URI to ANNAL namespace
         - annal:tooltip
