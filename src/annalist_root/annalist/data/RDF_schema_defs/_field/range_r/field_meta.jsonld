@@ -26,7 +26,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdfs:Class",
   "annal:id": "range_r",
-  "annal:placeholder": "(Ranges of current property)",
+  "annal:placeholder": "(Property ranges)",
   "annal:property_uri": "rdfs:range",
   "annal:repeat_label_add": "Add range",
   "annal:repeat_label_delete": "Remove range",

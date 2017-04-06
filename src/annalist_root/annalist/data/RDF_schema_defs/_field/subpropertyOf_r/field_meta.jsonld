@@ -26,7 +26,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdf:Property",
   "annal:id": "subpropertyOf_r",
-  "annal:placeholder": "(Superproperty URIs or CURIEs)",
+  "annal:placeholder": "(Superproperties)",
   "annal:property_uri": "rdfs:subPropertyOf",
   "annal:repeat_label_add": "Add superproperty",
   "annal:repeat_label_delete": "Remove superproperty",

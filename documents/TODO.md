@@ -115,7 +115,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] annalist-manager option to migrate all collections
     - [x] fix up installable collection problems picked up by collection migration 
     - [x] Remove field group from field view definition
-    - [ ] Update field view help text to mention subfields, not field group
+    - [x] Update field view help text to mention subfields, not field group
     - [ ] seek out other references to field group type name or URI
     - annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
 

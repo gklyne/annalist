@@ -26,7 +26,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdfs:Class",
   "annal:id": "domain_r",
-  "annal:placeholder": "(Repeat field Domain)",
+  "annal:placeholder": "(Property domains)",
   "annal:property_uri": "rdfs:domain",
   "annal:repeat_label_add": "Add domain",
   "annal:repeat_label_delete": "Remove domain",

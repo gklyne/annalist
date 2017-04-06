@@ -19,7 +19,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "annal:Identifier",
   "annal:id": "class_uri",
-  "annal:placeholder": "(Class URI)",
+  "annal:placeholder": "(Class identifier - URI or CURIE)",
   "annal:property_uri": "annal:uri",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",

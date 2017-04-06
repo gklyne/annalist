@@ -974,7 +974,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                           "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
                                                                           "Optional entity ref", 
-                                                                                            "annal:EntityRef"        ] ]
+                                                                                            "annal:Field"            ] ]
             , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]

@@ -26,7 +26,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdfs:Class",
   "annal:id": "subclassOf_r",
-  "annal:placeholder": "(Repeat field subclass of)",
+  "annal:placeholder": "(Subclasses)",
   "annal:property_uri": "rdfs:subClassOf",
   "annal:repeat_label_add": "Add superclass",
   "annal:repeat_label_delete": "Remove superclass",
