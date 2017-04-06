@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-# from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
@@ -239,7 +238,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Field_value_mode',  "Enum_choice",   "annal:EntityRef",     "Value mode")
             , ('Field_value_type',  "Identifier",    "annal:Identifier",    "Value type")
             , ('Field_entity_type', "Identifier",    "annal:Identifier",    "Entity type")
-            , ('Field_default',     "Text",          "annal:Text",          "Default")
+            , ('Field_default',     "Text",          "annal:Text",          "Default value")
             , ('Field_typeref',     "Enum_optional", "annal:EntityRef",     "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")

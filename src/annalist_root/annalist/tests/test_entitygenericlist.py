@@ -203,7 +203,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
-        #@@ cont = ""
         tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
         tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
         tooltip3 = "" # 'title="%s"'%r.context['fields'][2]['field_help']
@@ -443,7 +442,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Field_value_mode',  "Enum_choice",     "annal:EntityRef",  "Value mode")
             , ('Field_value_type',  "Identifier",      "annal:Identifier", "Value type")
             , ('Field_entity_type', "Identifier",      "annal:Identifier", "Entity type")
-            , ('Field_default',     "Text",            "annal:Text",       "Default")
+            , ('Field_default',     "Text",            "annal:Text",       "Default value")
             , ('Field_typeref',     "Enum_optional",   "annal:EntityRef",  "Refer to type")
             , ('Field_restrict',    "Text",            "annal:Text",       "Value restriction")
             , ('List_comment',      "Markdown",        "annal:Richtext",   "Help")
@@ -686,7 +685,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_new_all_entity(self):
         # Also tests continuation_url parameter handling
-        #@@ s = site_view_url()
         s = collection_view_url(coll_id="testcoll")
         f = entitylist_form_data("new", list_id="Field_list", continuation_url=s)
         u = entitydata_list_all_url("testcoll", list_id="Field_list")

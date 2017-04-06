@@ -114,14 +114,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] seek out other references to RecordGroup class
     - [x] annalist-manager option to migrate all collections
     - [x] fix up installable collection problems picked up by collection migration 
-    - [ ] Remove field group from field view definition
+    - [x] Remove field group from field view definition
     - [ ] Update field view help text to mention subfields, not field group
     - [ ] seek out other references to field group type name or URI
+    - annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
 
 - [ ] Provide field popup help separately from comment field (without MarkDown)
     - [ ] Add new property URI to ANNAL namespace
+        - annal:tooltip
     - [ ] Add new field; change label on comment field
-    - [ ] Default to comment if blank
+    - [ ] Default to rdfs:comment value if blank
     - [ ] Add migration logic to copy comment
     - [ ] Edit sitedata field definitions
 - [ ] Split Resource_defs from Journal_defs?

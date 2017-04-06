@@ -221,16 +221,10 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     def check_list_row_data(self, s, trows_expected):
         trows = s.form.find_all("div", class_="tbody")
-        #@@
-        # for i in range(len(trows)):
-        #     print "\n@@ trow[%d]:\n%s\n"%(i, trows[i])
-        #@@
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
             e = trows_expected[i]   # expected
             f = trows[i]            # found
-            #@@ print "e: "+repr(e)
-            #@@ print "f: "+str(f)
             # <input class="select-box right" name="entity_select" type="checkbox" value="_list/list1"/>
             self.assertEqual(e[0], f.find("input", class_="select-box")["value"])
             for j in range(len(trows_expected[i][1])):
@@ -831,14 +825,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows_expected = (
             [
             # [ [ "_group/_initial_values",          ["_initial_values"] ]
-            #@@
-            # [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
-            # , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
-            # , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
-            # , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
-            # , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
-            # , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
-            #@@
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -1075,13 +1061,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             [FieldChoice("",label="(no type selected)")]+self.types_expected, 
             ""
             )
-        #@@@@
-        # self.check_select_field(
-        #     s, "Field_groupref",
-        #     [FieldChoice("",label="(no field group selected)")]+self.grouprefs_expected, 
-        #     ""
-        #     )
-        #@@@@
         self.check_select_field(
             s, "view_choice", self.views_expected, "_view/Field_view"
             )
@@ -1100,6 +1079,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_render_type"
             , "_field/Field_value_type"
             , "_field/Field_value_mode"
+            , "_field/Field_entity_type"
             , "_field/Field_label"
             , "_field/Field_comment"
             , "_field/Field_property"
@@ -1108,13 +1088,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_fieldref"
             , "_field/Field_placeholder"
             , "_field/Field_default"
-            #@@@@
-            # , "_field/Field_groupref"
-            #@@@@
             , "_field/Field_fields"
             , "_field/Field_repeat_label_add"
             , "_field/Field_repeat_label_delete"
-            , "_field/Field_entity_type"
             , "_field/Field_restrict"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
