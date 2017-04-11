@@ -128,7 +128,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         Extra logic is in FieldListValueMap handling of field lists.
 - [x] Annaslist_schema add annal:field_fields property.
     - Renamed type URI for field lists to match schema domain value.
-- [ ] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
+- [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
+    - Removed default option for now: everything is .URI or .CURIE
 - [ ] Provide field popup help separately from comment field (without MarkDown)
     - [ ] Add new property URI to ANNAL namespace
         - annal:tooltip
