@@ -520,7 +520,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:field_fields",
             field_render_type=  "Group_Seq_Row",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Subfield_item",
+            field_value_type=   "annal:Field_list",
             field_value=        field_fields,
             options=            self.no_options
             )
@@ -1066,7 +1066,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               ])
         self._check_context_fields(r, 
             field_id="Field_fields",
-            field_type="annal:Subfield_item",
+            field_type="annal:Field_list",
             field_render_type="Group_Seq_Row",
             field_label="Subfields",
             field_placeholder="(list of fields)",
@@ -1082,7 +1082,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = recordfield_entity_view_context_data(
             field_id="Field_fields", orig_id="Field_fields", action="edit",
             field_label="Subfields",
-            field_value_type="annal:Subfield_item",
+            field_value_type="annal:Field_list",
             field_render_type="_enum_render_type/Group_Seq_Row",
             field_value_mode="_enum_value_mode/Value_direct",
             field_property="annal:field_fields",
@@ -1393,7 +1393,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Subfield_item"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
@@ -1471,7 +1471,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Subfield_item"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
@@ -1534,7 +1534,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="Field_fields",
             field_render_type="Group_Seq_Row",
-            field_type="annal:Subfield_item",
+            field_type="annal:Field_list",
             field_entity_type="annal:Field",
             field_label="Subfields",
             field_placeholder="(list of fields)",
