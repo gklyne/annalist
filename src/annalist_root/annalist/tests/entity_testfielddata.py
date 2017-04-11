@@ -423,7 +423,7 @@ def recordfield_entity_view_context_data(
               })
           , { 'field_id':               "Field_fields"                  # 13 (9,0)
             , 'field_name':             "Field_fields"
-            , 'field_value_type':       "annal:Field_list"
+            , 'field_value_type':       "annal:Subfield_item"
             , 'field_label':            "Subfields"
             , 'field_render_type':      "Group_Seq_Row"
             , 'field_value_mode':       "Value_direct"

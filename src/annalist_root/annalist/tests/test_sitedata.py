@@ -211,11 +211,19 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def check_row_column(self, row_data, colnum, row_expected):
         if row_expected[colnum] is not None:
             e = row_expected[colnum]
-            f = (row_data
+            i = (row_data
                     .find("div", class_="row")
                     .find_all("div", class_="columns")[colnum]
-                    .stripped_strings.next()
+                    .stripped_strings
                 )
+            f = next(i, "(@@no value@@)")
+            if f != e:
+                print "@@ Expected: %r, found %r"%(e, f)
+                cols = (row_data
+                        .find("div", class_="row")
+                        .find_all("div", class_="columns")
+                    )
+                print "@@ cols %s"%(cols,)
             self.assertEqual(e, f, "%s != %s (%r)"%(e, f, row_expected))
         return
 
@@ -236,8 +244,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(len(trows), len(expect_fields))
         for i in range(len(trows)):
             tcols = trows[i].select("div.columns div.row div.columns")
-            # print "@@ trows[%d]\n%s"%(i, trows[i].prettify())
-            # print "@@tcols\n%s"%("\n\n".join([c.prettify() for c in tcols]))
             self.assertEqual(trows[i].div.input['type'],  "checkbox")
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
@@ -948,7 +954,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
-                                                                                        "annal:Entity_see_also_list" ] ]
+                                                                                        "annal:Entity_see_also_item" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"         ] ]
@@ -956,7 +962,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
-                                                                                            "annal:Field_list"       ] ]
+                                                                                            "annal:Subfield_item"    ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
@@ -1265,7 +1271,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 ]
               ]
             ])
+        # print s.prettify()
         self.check_list_row_data(s, trows_expected)
+        return
 
     # Create/edit user using user view
     def test_user_edit_new(self):

@@ -4,7 +4,7 @@
 , "annal:id":                   "Field_default"
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Field_default"
-, "rdfs:label":                 "Default"
+, "rdfs:label":                 "Default value"
 , "rdfs:comment":               "Default value (if any) for field."
 , "annal:field_render_type":    "_enum_render_type/Text"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"

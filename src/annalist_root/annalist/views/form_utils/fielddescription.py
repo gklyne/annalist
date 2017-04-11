@@ -118,6 +118,7 @@ class FieldDescription(object):
             , 'group_label':                None
             , 'group_add_label':            None
             , 'group_delete_label':         None
+            , 'group_field_list':           None
             , 'group_field_descs':          None
             , 'field_render_label':         get_label_renderer(        field_render_type, field_value_mode)
             , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
@@ -154,7 +155,7 @@ class FieldDescription(object):
                       for t in entity_finder.get_collection_uri_subtypes(field_entity_type, altscope="all")
                     ])
                 self._field_desc['field_entity_subtypes'] = field_entity_subtypes
-                field_view_context = dict(view_context or {}, field={'subtypes': field_entity_subtypes})
+                field_view_context = dict(view_context or {}, subtypes=field_entity_subtypes)
             else:
                 field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
@@ -372,6 +373,8 @@ class FieldDescription(object):
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
             "  , 'type_ref': %r"%(self._field_desc["field_ref_type"])+
             "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
+            "  , 'group_list': %r"%(self._field_desc["group_field_list"])+
+            # "  , 'group_descs': %r"%(self._field_desc["group_field_descs"])+
             "  })"
             )
 
@@ -386,7 +389,7 @@ class FieldDescription(object):
             )
 
     def __repr__(self):
-        return self.__repr3__()
+        return self.__repr1__()
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object

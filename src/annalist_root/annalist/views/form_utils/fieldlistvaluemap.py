@@ -234,8 +234,9 @@ class FieldListValueMap(object):
             if field_desc.is_repeat_group():
                 # Repeat group occupies new row
                 rowdata.flush(self.fm)
+                view_field_context = dict(view_context, group=field_desc._field_desc)
                 repeatfieldsmap = FieldListValueMap('_repeatfieldsmap_', 
-                    coll, field_desc.group_view_fields(), view_context
+                    coll, field_desc.group_view_fields(), view_field_context
                     )
                 # Context name: cf. FieldListValueMap.map_entity_to_context
                 repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',

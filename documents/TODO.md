@@ -119,8 +119,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] seek out other references to field group type name or URI
         - NOTE: references to group type, views, lists remain for migration support, and free-standing view and list definitions, remain -- for now.
 
-- [ ] Fix handling of restriction expression for subfield selection.
-    [ ] Need test case coverage for subfields in field defintion, and domain and/or range classes in RDF_schema (e.g. _field/subpropertyOf on _field/subpropertyOf_r)
+- [.] Fix handling of restriction expression for subfield selection.
+    [x] Need test case coverage for subfields in field defintion, and domain and/or range classes in RDF_schema (e.g. _field/subpropertyOf on _field/subpropertyOf_r)
+    [x] In FieldListValueMap, add {'group': field_desc_dict} to extra value context.
+        - Should be accessible in restriction expression as 'field[...]'
+    [-] Update view help text to mention "field". 'field[<field-id>]' references subfields 
+        contained within a containing field, refers to a component of the containing field 
+        description.  (Turns out this wasn't needed - consider removing it?)
+        Extra logic is in FieldListValueMap handling of field lists.
 
 - [ ] Annaslist_schema add annal:field_fields property
 - [ ] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.

@@ -24,7 +24,7 @@
   "annal:field_ref_type": "",
   "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
-  "annal:field_value_type": "rdfs:Class",
+  "annal:field_value_type": "rdf:Property",
   "annal:id": "range_r",
   "annal:placeholder": "(Property ranges)",
   "annal:property_uri": "rdfs:range",

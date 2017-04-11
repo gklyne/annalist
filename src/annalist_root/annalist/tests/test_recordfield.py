@@ -41,7 +41,14 @@ from annalist.views.fields.render_placement import (
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from init_tests             import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    install_annalist_named_coll,
+    create_test_coll_inheriting,
+    init_annalist_named_test_coll,
+    resetSitedata
+    )
 from entity_testfielddata   import (
     recordfield_dir,
     recordfield_coll_url, recordfield_url,
@@ -267,7 +274,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             [ FieldChoice("_type/testtype", 
                 label="RecordType testcoll/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
-            )])
+                )
+            ])
         self.view_options       = get_site_views_linked("testcoll")
         self.group_options      = (
             [FieldChoice("", label="(no field group selected)")] +
@@ -512,7 +520,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_property_uri= "annal:field_fields",
             field_render_type=  "Group_Seq_Row",
             field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Field_list",
+            field_value_type=   "annal:Subfield_item",
             field_value=        field_fields,
             options=            self.no_options
             )
@@ -1058,7 +1066,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               ])
         self._check_context_fields(r, 
             field_id="Field_fields",
-            field_type="annal:Field_list",
+            field_type="annal:Subfield_item",
             field_render_type="Group_Seq_Row",
             field_label="Subfields",
             field_placeholder="(list of fields)",
@@ -1074,7 +1082,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = recordfield_entity_view_context_data(
             field_id="Field_fields", orig_id="Field_fields", action="edit",
             field_label="Subfields",
-            field_value_type="annal:Field_list",
+            field_value_type="annal:Subfield_item",
             field_render_type="_enum_render_type/Group_Seq_Row",
             field_value_mode="_enum_value_mode/Value_direct",
             field_property="annal:field_fields",
@@ -1385,7 +1393,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Field_list"
+            , "annal:field_value_type":     "annal:Subfield_item"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
@@ -1463,7 +1471,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Field_list"
+            , "annal:field_value_type":     "annal:Subfield_item"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
@@ -1476,6 +1484,241 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
         self.check_entity_values(layout.FIELD_TYPEID, ref_field_id, expect_ref_field_values)
+        return
+
+    #   -------- Test subfields with different selection types --------
+
+    def test_get_sitedata_field_fields_subfield_sel_options(self):
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Field_fields", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "Field_fields")
+        self.assertEqual(r.context['orig_id'],          "Field_fields")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_subfield_choices = (
+            [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Field_subfield_placement", 
+                label="Subfield Pos/size", 
+                link=entity_url("testcoll", "_field", "Field_subfield_placement")
+                )
+            , FieldChoice("_field/Field_subfield_property", 
+                label="Subfield URI", 
+                link=entity_url("testcoll", "_field", "Field_subfield_property")
+                )
+            , FieldChoice("_field/Field_subfield_sel", 
+                label="Subfield Id", 
+                link=entity_url("testcoll", "_field", "Field_subfield_sel")
+                )
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     'annal:field_id'
+                , 'annal:field_placement':  'small:0,12;medium:0,4'
+                , 'annal:field_id':         '_field/Field_subfield_sel'
+                }
+              , { 'annal:property_uri':     'annal:property_uri'
+                , 'annal:field_placement':  'small:0,12;medium:4,4'
+                , 'annal:field_id':         '_field/Field_subfield_property'
+                }
+              , { 'annal:property_uri':     'annal:field_placement'
+                , 'annal:field_placement':  'small:0,12;medium:8,4'
+                , 'annal:field_id':         '_field/Field_subfield_placement'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="Field_fields",
+            field_render_type="Group_Seq_Row",
+            field_type="annal:Subfield_item",
+            field_entity_type="annal:Field",
+            field_label="Subfields",
+            field_placeholder="(list of fields)",
+            field_property="annal:field_fields",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add field",
+            field_repeat_label_delete="Remove selected field(s)"
+            )
+        # Access and check selectable options for subfield id
+        f_Field_fields          = context_view_field(r.context, 9, 0)
+        f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
+        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        self.assertEqual(actual_subfield_choices, expect_subfield_choices)
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # test_get_sitedata_entity_seealso_r_options
+    def test_get_sitedata_entity_seealso_r_subfield_options(self):
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Entity_see_also_r", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "Entity_see_also_r")
+        self.assertEqual(r.context['orig_id'],          "Entity_see_also_r")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_subfield_choices = (
+            [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Entity_see_also", 
+                label="Link to further information", 
+                link=entity_url("testcoll", "_field", "Entity_see_also")
+                )
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     '@id'
+                , 'annal:field_placement':  'small:0,12'
+                , 'annal:field_id':         '_field/Entity_see_also'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="Entity_see_also_r",
+            field_render_type="Group_Set_Row",
+            field_type="annal:Entity_see_also_item",
+            field_entity_type="",
+            field_label="See also",
+            field_placeholder="(Links to further information)",
+            field_property="rdfs:seeAlso",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add link",
+            field_repeat_label_delete="Remove link"
+            )
+        # Access and check selectable options for subfield id
+        f_Field_fields          = context_view_field(r.context, 9, 0)
+        f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
+        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        self.assertEqual(actual_subfield_choices, expect_subfield_choices)
+        return
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def test_get_rdf_schema_field_domain_r_subfield_sel_options(self):
+        rdf_coll = install_annalist_named_coll("RDF_schema_defs")
+        testcoll = create_test_coll_inheriting("RDF_schema_defs")
+        self.ref_type_options   = (
+            self.ref_type_options +
+            [ FieldChoice('_type/Datatype', 
+                label=u'Data type', 
+                link=entity_url("testcoll", "_type", "Datatype")
+                )
+            , FieldChoice('_type/Property', 
+                label=u'Property',  
+                link=entity_url("testcoll", "_type", "Property")
+                )
+            , FieldChoice('_type/Class',    
+                label=u'Class',     
+                link=entity_url("testcoll", "_type", "Class")
+                )
+            ])
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="domain_r", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "domain_r")
+        self.assertEqual(r.context['orig_id'],          "domain_r")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_domain_choices = (
+            [ FieldChoice('', label='(Field Id of subfield)')
+            , FieldChoice("_field/domain", 
+                label="Domain", 
+                link=entity_url("testcoll", "_field", "domain")
+                )
+            , FieldChoice("_field/domain_r", 
+                label="Domains", 
+                link=entity_url("testcoll", "_field", "domain_r")
+                )
+            , FieldChoice("_field/property_uri", 
+                label="Property URI", 
+                link=entity_url("testcoll", "_field", "property_uri")
+                )
+            , FieldChoice("_field/range", 
+                label="Range", 
+                link=entity_url("testcoll", "_field", "range")
+                )
+            , FieldChoice("_field/range_r", 
+                label="Ranges", 
+                link=entity_url("testcoll", "_field", "range_r")
+                )
+            , FieldChoice("_field/subpropertyOf", 
+                label="Subproperty of", 
+                link=entity_url("testcoll", "_field", "subpropertyOf")
+                )
+            , FieldChoice("_field/subpropertyOf_r", 
+                label="Superproperties", 
+                link=entity_url("testcoll", "_field", "subpropertyOf_r")
+                )
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     '@id'
+                , 'annal:field_placement':  'small:0,12'
+                , 'annal:field_id':         '_field/domain'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="domain_r",
+            field_render_type="Group_Seq_Row",
+            field_type="rdf:Property",
+            field_entity_type="rdf:Property",
+            field_label="Domains",
+            field_placeholder="(Property domains)",
+            field_property="rdfs:domain",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add domain",
+            field_repeat_label_delete="Remove domain"
+            )
+        # Access and check selectable options for domain field
+        f_Field_fields = context_view_field(r.context, 9, 0)
+        f_domain_field = f_Field_fields.group_field_descs[0]
+        actual_domain_choices = f_domain_field["field_choices"].values()
+        self.assertEqual(actual_domain_choices, expect_domain_choices)
         return
 
 # End.
