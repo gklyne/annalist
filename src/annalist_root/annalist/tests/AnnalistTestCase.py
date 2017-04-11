@@ -145,4 +145,12 @@ class AnnalistTestCase(TestCase):
         self.assertIn(re.sub(r'\s+', " ", first), re.sub(r'\s+', " ", second), msg=msg)
         return
 
+    def assertStarts(self, first, second, msg=None):
+        """
+        Test that string `second` starts with the string `first`
+        """
+        second_start = second[:len(first)]
+        self.assertEqual(first, second_start, msg=msg)
+        return
+
 # End.

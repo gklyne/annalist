@@ -27,7 +27,7 @@
   , { "annal:field_id":         "_field/Field_label"
     , "annal:field_placement":  "small:0,12"
     }
-  , { "annal:field_id":         "_field/Field_comment"
+  , { "annal:field_id":         "_field/Field_help"
     , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "_field/Field_property"
@@ -43,6 +43,9 @@
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
   , { "annal:field_id":         "_field/Field_placeholder"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Field_tooltip"
     , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "_field/Field_default"

@@ -165,7 +165,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), 171)    # Will change with site data
+        self.assertEqual(len(actual_entity_ids), 172)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
@@ -324,7 +324,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 168)    # Will change with site data
+        self.assertEqual(len(entities), 169)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -436,7 +436,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Coll_software_version', "Showtext",    "annal:Text",       "S/W version")
             , ('Entity_type',       "EntityTypeId",    "annal:EntityRef",  "Type")
             , ('Entity_label',      "Text",            "annal:Text",       "Label")
-            , ('Field_comment',     "Textarea",        "annal:Longtext",   "Help")
+            , ('Field_help',        "Markdown",        "annal:Richtext",   "Help")
             , ('Field_placement',   "Placement",       "annal:Placement",  "Position/size")
             , ('Field_render_type', "Enum_choice",     "annal:EntityRef",  "Render type")
             , ('Field_value_mode',  "Enum_choice",     "annal:EntityRef",  "Value mode")

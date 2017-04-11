@@ -124,6 +124,7 @@ def recordfield_value_keys(field_uri=False):
         , 'annal:field_value_type'
         , 'annal:field_placement'
         , 'annal:placeholder'
+        , 'annal:tooltip'
         , 'annal:default_value'
         })
 
@@ -190,6 +191,7 @@ def recordfield_entity_view_context_data(
         field_property="",
         field_placement="",
         field_placeholder="",
+        field_tooltip="",
         field_fields=[],
         field_repeat_label_add="",
         field_repeat_label_delete="",
@@ -279,7 +281,6 @@ def recordfield_entity_view_context_data(
               , 'field_value':            field_value_mode
               , 'options':                []
               })
-          #@@@@@@@@@@@
           , context_field_row(
               { 'field_id':               "Field_entity_type"           # 4 (2,0)
               , 'field_name':             "Field_entity_type" 
@@ -313,17 +314,17 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_comment"               # 6 (4,0)
-              , 'field_name':             "Field_comment"
+              { 'field_id':               "Field_help"               # 6 (4,0)
+              , 'field_name':             "Field_help"
               , 'field_label':            "Help"
-              , 'field_value_type':       "annal:Longtext"
-              , 'field_render_type':      "Textarea"
+              , 'field_value_type':       "annal:Richtext"
+              , 'field_render_type':      "Markdown"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "rdfs:comment"
               , 'field_placement':        get_placement_classes('small:0,12')
               , 'field_ref_type':         None
               , 'field_ref_field':        None
-              , 'field_placeholder':      "(field usage commentary or help text)"
+              , 'field_placeholder':      "(Field usage commentary or help text)"
               , 'field_default_value':    ""
               , 'options':                []
               })
@@ -406,7 +407,22 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_default"               # 12 (8,0)
+              { 'field_id':               "Field_tooltip"               # 12 (8,0)
+              , 'field_name':             "Field_tooltip"
+              , 'field_label':            "Tooltip"
+              , 'field_value_type':       "annal:Longtext"
+              , 'field_render_type':      "Textarea"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:tooltip"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(Field usage popup help text)"
+              , 'field_default_value':    ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_default"               # 13 (9,0)
               , 'field_name':             "Field_default"
               , 'field_label':            "Default value"
               , 'field_value_type':       "annal:Text"
@@ -421,7 +437,7 @@ def recordfield_entity_view_context_data(
               , 'field_value':            ""
               , 'options':                []
               })
-          , { 'field_id':               "Field_fields"                  # 13 (9,0)
+          , { 'field_id':               "Field_fields"                  # 14 (10,0)
             , 'field_name':             "Field_fields"
             , 'field_value_type':       "annal:Field_list"
             , 'field_label':            "Subfields"
@@ -433,7 +449,7 @@ def recordfield_entity_view_context_data(
             , 'options':                []
             }
           , context_field_row(
-              { 'field_id':               "Field_repeat_label_add"      # 14 (10,0)
+              { 'field_id':               "Field_repeat_label_add"      # 15 (11,0)
               , 'field_name':             "Field_repeat_label_add"
               , 'field_label':            "Add value label"
               , 'field_value_type':       "annal:Text"
@@ -448,7 +464,7 @@ def recordfield_entity_view_context_data(
               , 'field_value':            field_repeat_label_add
               , 'options':                []
               },
-              { 'field_id':               "Field_repeat_label_delete"   # 15 (10,1)
+              { 'field_id':               "Field_repeat_label_delete"   # 16 (11,1)
               , 'field_name':             "Field_repeat_label_delete"
               , 'field_label':            "Delete value label"
               , 'field_value_type':       "annal:Text"
@@ -464,7 +480,7 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_restrict"              # 16 (11,0)
+              { 'field_id':               "Field_restrict"              # 17 (12,0)
               , 'field_name':             "Field_restrict"
               , 'field_label':            "Value restriction"
               , 'field_value_type':      "annal:Text"
@@ -515,7 +531,7 @@ def recordfield_entity_view_form_data(
         field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']         = field_id
         form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
-        form_data_dict['Field_comment']     = '%s help for %s in collection %s'%(update, field_id, coll_id)
+        form_data_dict['Field_help']        = '%s help for %s in collection %s'%(update, field_id, coll_id)
         form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
@@ -524,7 +540,7 @@ def recordfield_entity_view_form_data(
         form_data_dict['orig_id']           = orig_id
     if field_label:
         form_data_dict['Field_label']       = field_label
-        form_data_dict['Field_comment']     = "Help for "+field_label
+        form_data_dict['Field_help']        = "Help for "+field_label
     if entity_type:
         form_data_dict['Field_entity_type'] = entity_type
     if property_uri:

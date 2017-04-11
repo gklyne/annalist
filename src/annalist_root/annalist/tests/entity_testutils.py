@@ -868,7 +868,7 @@ def check_field_record(test, field_record,
         field_uri=None,
         field_url=None,
         field_label=None,
-        field_comment=None,
+        field_help=None,
         field_render_type=None,
         field_value_mode=None,
         field_property_uri=None,
@@ -876,6 +876,7 @@ def check_field_record(test, field_record,
         field_entity_type=None,
         field_value_type=None,
         field_placeholder=None,
+        field_tooltip=None,
         field_default=None,
         ):
         if field_id:
@@ -894,8 +895,8 @@ def check_field_record(test, field_record,
             test.assertEqual(field_url,          field_record['annal:url'])
         if field_label:
             test.assertEqual(field_label,        field_record['rdfs:label'])
-        if field_comment:
-            test.assertEqual(field_comment,      field_record['rdfs:comment'])
+        if field_help:
+            test.assertEqual(field_help,         field_record['rdfs:comment'])
 
         if field_name:
             test.assertEqual(field_name,         field_record['annal:field_name'])
@@ -919,6 +920,8 @@ def check_field_record(test, field_record,
             test.assertEqual(field_value_type,   field_record['annal:field_value_type'])
         if field_placeholder:
             test.assertEqual(field_placeholder,  field_record['annal:placeholder'])
+        if field_tooltip:
+            test.assertStarts(field_tooltip,     field_record['annal:tooltip'])
         if field_default:
             test.assertEqual(field_default,      field_record['annal:default_value'])
         return

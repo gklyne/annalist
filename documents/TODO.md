@@ -130,12 +130,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Renamed type URI for field lists to match schema domain value.
 - [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
     - Removed default option for now: everything is .URI or .CURIE
-- [ ] Provide field popup help separately from comment field (without MarkDown)
-    - [ ] Add new property URI to ANNAL namespace
+- [.] Provide field popup help separately from comment field (without MarkDown)
+    - [x] Add new property URI to ANNAL namespace
         - annal:tooltip
-    - [ ] Add new field; change label on comment field
+    - [x] Add new field; change label on comment field
+    - [ ] Use annal:tooltip in preference to rdfs:comment when rendering field.
     - [ ] Default to rdfs:comment value if blank
-    - [ ] Add migration logic to copy comment
+    - [ ] Add migration logic to copy comment to tooltip and add heading for comment:
+        - "# (label)\r\n\r\n(Tooltip)
     - [ ] Edit sitedata field definitions
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net

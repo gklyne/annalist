@@ -957,13 +957,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                                         "annal:Entity_see_also_item" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"         ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
-                                                                                            "annal:Field_list"    ] ]
+                                                                                            "annal:Field_list"       ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
+            , [ "_field/Field_help",                ["Field_help",        "Markdown rich text",  "annal:Richtext"    ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_missing",             ["Field_missing",     "Short text",     "annal:Text"             ] ]
@@ -981,6 +981,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
                                                                           "Optional entity ref", 
                                                                                             "annal:Field"            ] ]
+            , [ "_field/Field_tooltip",             ["Field_tooltip",     "Multiline text", "annal:Longtext"         ] ]
             , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
@@ -1044,21 +1045,22 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="Field_view", action="new"
             )
         s = self.get_page(u)
-        self.check_input_type_value(s, "entity_id", "text", None)
-        self.check_input_type_value(s, "Field_value_type", "text", "")
-        self.check_input_type_value(s, "Field_label", "text", "")
-        self.check_input_type_value(s, "Field_comment", "textarea", None)
+        self.check_input_type_value(s, "entity_id",         "text", None)
+        self.check_input_type_value(s, "Field_value_type",  "text", "")
+        self.check_input_type_value(s, "Field_label",       "text", "")
+        self.check_input_type_value(s, "Field_help",        "textarea", None)
         self.check_input_type_value(s, "Field_placeholder", "text", "")
-        self.check_input_type_value(s, "Field_property", "text", "")
+        self.check_input_type_value(s, "Field_tooltip",     "textarea", None)
+        self.check_input_type_value(s, "Field_property",    "text", "")
         # self.check_input_type_value(s, "Field_placement", "text", "")
         self.check_select_field(
             s, "Field_placement", 
             [FieldChoice("",label="(field position and size)")]+self.placements_expected, 
             ""
             )
-        self.check_input_type_value(s, "Field_default", "text", None)
+        self.check_input_type_value(s, "Field_default",     "text", None)
         self.check_input_type_value(s, "Field_entity_type", "text", "")
-        self.check_input_type_value(s, "Field_restrict", "text", "")
+        self.check_input_type_value(s, "Field_restrict",    "text", "")
         self.check_select_field(
             s, "Field_render_type",   self.render_types_expected, "_enum_render_type/Text"
             )
@@ -1087,12 +1089,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_value_mode"
             , "_field/Field_entity_type"
             , "_field/Field_label"
-            , "_field/Field_comment"
+            , "_field/Field_help"
             , "_field/Field_property"
             , "_field/Field_placement"
             , "_field/Field_typeref"
             , "_field/Field_fieldref"
             , "_field/Field_placeholder"
+            , "_field/Field_tooltip"
             , "_field/Field_default"
             , "_field/Field_fields"
             , "_field/Field_repeat_label_add"

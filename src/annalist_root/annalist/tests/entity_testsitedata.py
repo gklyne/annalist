@@ -352,12 +352,12 @@ site_bibentry_fields = (
 
 site_field_fields = (
     [ FieldChoice("_field/_initial_values")
-    , FieldChoice("_field/Field_comment",              label="Help"                )
     , FieldChoice("_field/Field_default",              label="Default value"       )
     , FieldChoice("_field/Field_entity_type",          label="Entity type"         )
     , FieldChoice("_field/Field_fieldref",             label="Refer to field"      )
     , FieldChoice("_field/Field_fields",               label="Subfields"           )
     , FieldChoice("_field/Field_groupref",             label="Field group"         )
+    , FieldChoice("_field/Field_help",                 label="Help"                )
     , FieldChoice("_field/Field_id",                   label="Field Id"            )
     , FieldChoice("_field/Field_label",                label="Field label"         )
     , FieldChoice("_field/Field_missing",              label="Missing"             )
@@ -368,6 +368,7 @@ site_field_fields = (
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
+    , FieldChoice("_field/Field_tooltip",              label="Tooltip"          )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
     , FieldChoice("_field/Field_value_type",           label="Value type"          )

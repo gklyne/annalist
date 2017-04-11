@@ -172,7 +172,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         if len(entities) != 213:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 222)    # Will change with site data
+        self.assertEqual(len(entities), 223)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):
@@ -232,7 +232,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
             , ('Entity_type',       "EntityTypeId",  "annal:EntityRef",     "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
-            , ('Field_comment',     "Textarea",      "annal:Longtext",      "Help")
+            , ('Field_help',        "Markdown",      "annal:Richtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
             , ('Field_render_type', "Enum_choice",   "annal:EntityRef",     "Render type")
             , ('Field_value_mode',  "Enum_choice",   "annal:EntityRef",     "Value mode")
