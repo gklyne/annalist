@@ -154,6 +154,8 @@ class bound_field(object):
             return self.get_field_help_esc()
         elif name == "field_tooltip":
             return self.get_field_tooltip()
+        elif name == "field_tooltip_attr":
+            return self.get_field_tooltip_attr()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
@@ -227,10 +229,21 @@ class bound_field(object):
 
     def get_field_tooltip(self):
         """
+        Return tooltip text for displaying field popup
+        """
+        tooltip_text_esc = escape(
+            self._field_description['field_tooltip'] or 
+            (self._field_description['field_help']) or
+            "@@tooltip for %(field_label)s@@"%self._field_description
+            )
+        return tooltip_text_esc
+
+    def get_field_tooltip_attr(self):
+        """
         Return tooltip attribute for displaying field help, or blank
         """
-        help_text_esc = self.get_field_help_esc()
-        return ''' title="%s"'''%help_text_esc if help_text_esc else ''
+        tooltip_text_esc = self.get_field_tooltip()
+        return ''' title="%s"'''%tooltip_text_esc if tooltip_text_esc else ''
 
     def get_target_value(self):
         """
@@ -387,6 +400,7 @@ class bound_field(object):
         yield "field_value_link_continuation"
         yield "field_help"
         yield "field_tooltip"
+        yield "field_tooltip_attr"
         yield "target_value"
         yield "target_value_link"
         yield "target_value_link_continuation"

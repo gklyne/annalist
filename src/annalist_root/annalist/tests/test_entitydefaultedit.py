@@ -156,10 +156,10 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "Collection testcoll")
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 0, 1)['field_help'],
-            tooltip3=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 2, 0)['field_help'],
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 0, 1)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 2, 0)['field_tooltip'],
             )
         formrow1 = """
               <div class="small-12 medium-6 columns" title="%(tooltip1)s">

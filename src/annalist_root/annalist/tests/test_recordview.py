@@ -536,13 +536,13 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="00000001",
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
-            tooltip5=context_view_field(r.context, 4, 0)['field_help'],
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_tooltip'],
             tooltip6f1=context_view_field(r.context, 5, 0).
-                       _field_description['group_field_descs'][0]['field_help']
+                       _field_description['group_field_descs'][0]['field_tooltip_test']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">

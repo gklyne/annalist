@@ -585,30 +585,30 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="00000001",
-            tooltip1a=context_view_field(r.context,    0, 0)['field_help'], # Field id
-            tooltip1b=context_view_field(r.context,    0, 1)['field_help'], # Render type
-            tooltip2a=context_view_field(r.context,    1, 0)['field_help'], # Value type
-            tooltip2b=context_view_field(r.context,    1, 1)['field_help'], # Value mode
-            tooltip3=context_view_field(r.context,     2, 0)['field_help'], # Entity type URI
-            tooltip4=context_view_field(r.context,     3, 0)['field_help'], # Label
-            tooltip5=context_view_field(r.context,     4, 0)['field_help'], # Help
-            tooltip6a=context_view_field(r.context,    5, 0)['field_help'], # Property
-            tooltip6b=context_view_field(r.context,    5, 1)['field_help'], # Placement
-            tooltip7a=context_view_field(r.context,    6, 0)['field_help'], # Typeref
-            tooltip7b=context_view_field(r.context,    6, 1)['field_help'], # Fieldref
-            tooltip8=context_view_field(r.context,     7, 0)['field_help'], # Placeholder
-            tooltip9=context_view_field(r.context,     8, 0)['field_help'], # Tooltip
-            tooltip10=context_view_field(r.context,    9, 0)['field_help'], # default
-            tooltip11=context_view_field(r.context,   10, 0)['field_help'], # Subfields
+            tooltip1a=context_view_field(r.context,    0, 0)['field_tooltip'], # Field id
+            tooltip1b=context_view_field(r.context,    0, 1)['field_tooltip'], # Render type
+            tooltip2a=context_view_field(r.context,    1, 0)['field_tooltip'], # Value type
+            tooltip2b=context_view_field(r.context,    1, 1)['field_tooltip'], # Value mode
+            tooltip3=context_view_field(r.context,     2, 0)['field_tooltip'], # Entity type URI
+            tooltip4=context_view_field(r.context,     3, 0)['field_tooltip'], # Label
+            tooltip5=context_view_field(r.context,     4, 0)['field_tooltip'], # Help
+            tooltip6a=context_view_field(r.context,    5, 0)['field_tooltip'], # Property
+            tooltip6b=context_view_field(r.context,    5, 1)['field_tooltip'], # Placement
+            tooltip7a=context_view_field(r.context,    6, 0)['field_tooltip'], # Typeref
+            tooltip7b=context_view_field(r.context,    6, 1)['field_tooltip'], # Fieldref
+            tooltip8=context_view_field(r.context,     7, 0)['field_tooltip'], # Placeholder
+            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # Tooltip
+            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # default
+            tooltip11=context_view_field(r.context,   10, 0)['field_tooltip'], # Subfields
             tooltip11f1=context_view_field(r.context, 10, 0).
-                       _field_description['group_field_descs'][0]['field_help'],
+                       _field_description['group_field_descs'][0]['field_tooltip'],
             tooltip11f2=context_view_field(r.context, 10, 0).
-                       _field_description['group_field_descs'][1]['field_help'],
+                       _field_description['group_field_descs'][1]['field_tooltip'],
             tooltip11f3=context_view_field(r.context, 10, 0).
-                       _field_description['group_field_descs'][2]['field_help'],
-            tooltip12a=context_view_field(r.context,  11, 0)['field_help'], # Add
-            tooltip12b=context_view_field(r.context,  11, 1)['field_help'], # Delete
-            tooltip13=context_view_field(r.context,   12, 0)['field_help'], # Restriction
+                       _field_description['group_field_descs'][2]['field_tooltip'],
+            tooltip12a=context_view_field(r.context,  11, 0)['field_tooltip'], # Add
+            tooltip12b=context_view_field(r.context,  11, 1)['field_tooltip'], # Delete
+            tooltip13=context_view_field(r.context,   12, 0)['field_tooltip'], # Restriction
             )
         formrow1col1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -822,8 +822,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-
-
         formrow11h = """
             <div class="small-12 columns" title="%(tooltip11)s">
               <div class="row">

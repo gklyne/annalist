@@ -475,14 +475,14 @@ class RecordListEditViewTest(AnnalistTestCase):
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.LIST_TYPEID, entity_id="00000001",
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
-            tooltip1a=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip1b=context_view_field(r.context, 0, 1)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
-            tooltip5=context_view_field(r.context, 3, 1)['field_help'],
-            tooltip6=context_view_field(r.context, 4, 0)['field_help'],
-            tooltip7=context_view_field(r.context, 5, 0)['field_help'],
+            tooltip1a=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip1b=context_view_field(r.context, 0, 1)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context, 3, 1)['field_tooltip'],
+            tooltip6=context_view_field(r.context, 4, 0)['field_tooltip'],
+            tooltip7=context_view_field(r.context, 5, 0)['field_tooltip'],
             )
         formrow1a = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">

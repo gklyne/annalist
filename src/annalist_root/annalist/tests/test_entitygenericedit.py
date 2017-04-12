@@ -220,10 +220,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Type definition - Collection testcoll</title>")
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
             button_save_tip="Save values and return to previous view.",
             button_view_tip="Save values and switch to entity view.",
             button_cancel_tip="Discard unsaved changes and return to previous view.",

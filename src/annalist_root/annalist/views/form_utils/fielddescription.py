@@ -85,10 +85,12 @@ class FieldDescription(object):
         field_id            = recordfield.get(ANNAL.CURIE.id,         "_missing_id_")
         field_name          = recordfield.get(ANNAL.CURIE.field_name, field_id)  # Field name in form
         field_label         = recordfield.get(RDFS.CURIE.label, "")
+        field_help          = recordfield.get(RDFS.CURIE.comment, "")
         field_property      = field_property  or recordfield.get(ANNAL.CURIE.property_uri, "")
         field_placement     = field_placement or recordfield.get(ANNAL.CURIE.field_placement, "")
         field_placement_c   = field_placement_classes or get_placement_classes(field_placement)
         field_placeholder   = recordfield.get(ANNAL.CURIE.placeholder, "")
+        field_tooltip       = recordfield.get(ANNAL.CURIE.tooltip, "")
         field_render_type   = extract_entity_id(recordfield.get(ANNAL.CURIE.field_render_type, ""))
         field_value_mode    = extract_entity_id(recordfield.get(ANNAL.CURIE.field_value_mode, "@@FieldDescription:value_mode@@"))
         field_ref_type      = extract_entity_id(recordfield.get(ANNAL.CURIE.field_ref_type, None))
@@ -102,18 +104,18 @@ class FieldDescription(object):
             , 'field_value_mode':           field_value_mode
             , 'field_value_type':           recordfield.get(ANNAL.CURIE.field_value_type, "")
             , 'field_label':                field_label
-            , 'field_help':                 recordfield.get(RDFS.CURIE.comment, "")
+            , 'field_help':                 field_help
             , 'field_property_uri':         field_property
             , 'field_placement':            field_placement_c
             , 'field_placeholder':          field_placeholder
+            , 'field_tooltip':              field_tooltip
+            , 'field_tooltip_test':         field_tooltip or (field_help) or ""
             , 'field_default_value':        recordfield.get(ANNAL.CURIE.default_value, None)
             , 'field_ref_type':             field_ref_type
             , 'field_ref_field':            recordfield.get(ANNAL.CURIE.field_ref_field, None)
             , 'field_ref_restriction':      recordfield.get(ANNAL.CURIE.field_ref_restriction, "ALL")
             , 'field_entity_type':          field_entity_type
             , 'field_choices':              None
-            # , 'field_choice_labels':        None
-            # , 'field_choice_links':         None
             , 'field_group_ref':            field_group_ref
             , 'group_label':                None
             , 'group_add_label':            None

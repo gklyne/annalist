@@ -320,7 +320,6 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             basepath=TestBasePath,
             cont_uri_param=cont_uri_param,
-            # tooltip1=r.context['fields'][0]['field_help'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -422,7 +421,7 @@ class RefMultifieldTest(AnnalistTestCase):
             coll_id="testcoll", type_id="ref_type", entity_id="Test_ref_entity", 
             view_id="Test_refimg_view",
             basepath=TestBasePath,
-            tooltip1=f0['field_help'],
+            tooltip1=f0['field_tooltip'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -444,7 +443,7 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             field_id="Test_refimg_field",
             basepath=TestBasePath,
-            tooltip2=f1['field_help'],
+            tooltip2=f1['field_tooltip'],
             )
         formrow2 = ("""
             <div class="small-12 medium-6 columns" title="%(tooltip2)s">
@@ -678,7 +677,7 @@ class RefMultifieldTest(AnnalistTestCase):
             coll_id="testcoll", type_id="ref_type", entity_id="Test_rpt_entity", 
             view_id="Test_rptimg_view",
             basepath=TestBasePath,
-            tooltip1=f0['field_help'],
+            tooltip1=f0['field_tooltip'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -721,7 +720,7 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_rptimg_view",
             repeat_id="Test_rptref_field",
             field_id="Test_refimg_field",
-            tooltip3b=f1._field_description['group_field_descs'][0]['field_help']
+            tooltip3b=f1._field_description['group_field_descs'][0]['field_tooltip_test']
             )
         formrow3a = """
             <div class="small-12 medium-2 columns hide-for-small-only">

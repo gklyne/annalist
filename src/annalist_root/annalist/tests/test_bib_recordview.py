@@ -145,11 +145,11 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="BibEntry_view",
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 4, 0)['field_help'],
-            tooltip5=context_view_field(r.context, 5, 0)._field_description['group_field_descs'][0]['field_help']
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_tooltip'],
+            tooltip6=context_view_field(r.context, 5, 0)._field_description['group_field_descs'][0]['field_tooltip_test']
           )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -194,8 +194,8 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip4)s">
+        formrow5 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip5)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Editable view?</span>
@@ -207,8 +207,8 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow5 = ("""
-            <div class="small-12 medium-4 columns" title="%(tooltip5)s">
+        formrow6 = ("""
+            <div class="small-12 medium-4 columns" title="%(tooltip6)s">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
                   <span>Field id</span>
@@ -228,7 +228,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=4)
-        formrow6 = """
+        formrow7 = """
             <div class="small-1 columns checkbox-in-edit-padding">
               <input type="checkbox" class="select-box right" 
                      name="View_fields__select_fields"
@@ -237,12 +237,13 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
             """
         # log.info("*** BibEntry_view content: "+r.content)
         # log.info("*** %r"%(r.context['fields'][5]._field_description['field_help']))
+        # log.info("*** %r"%(r.context['fields'][5]._field_description['group_field_descs'][0]['field_tooltip_test']))
         self.assertContains(r, formrow1, html=True)
         self.assertContains(r, formrow2, html=True)
         self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
         self.assertContains(r, formrow5, html=True)
         self.assertContains(r, formrow6, html=True)
+        self.assertContains(r, formrow7, html=True)
         return
 
     # Test view rendering of BibEntry_view: field selectors should include Bib_* fields

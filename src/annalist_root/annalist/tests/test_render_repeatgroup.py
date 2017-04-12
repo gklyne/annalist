@@ -163,7 +163,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         # Test rendered result
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
-            tooltip1=f0['field_help'],
+            tooltip1=f0['field_tooltip'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
