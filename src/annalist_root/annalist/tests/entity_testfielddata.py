@@ -391,7 +391,23 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_placeholder"           # 11 (7,0)
+              { 'field_id':               "Field_default"               # 11 (7,0)
+              , 'field_name':             "Field_default"
+              , 'field_label':            "Default value"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:default_value"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field default value)"
+              , 'field_default_value':    ""
+              , 'field_value':            ""
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_placeholder"           # 12 (8,0)
               , 'field_name':             "Field_placeholder"
               , 'field_label':            "Placeholder"
               , 'field_value_type':       "annal:Text"
@@ -407,7 +423,7 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_tooltip"               # 12 (8,0)
+              { 'field_id':               "Field_tooltip"               # 13 (9,0)
               , 'field_name':             "Field_tooltip"
               , 'field_label':            "Tooltip"
               , 'field_value_type':       "annal:Longtext"
@@ -419,22 +435,6 @@ def recordfield_entity_view_context_data(
               , 'field_ref_field':        None
               , 'field_placeholder':      "(Field usage popup help text)"
               , 'field_default_value':    ""
-              , 'options':                []
-              })
-          , context_field_row(
-              { 'field_id':               "Field_default"               # 13 (9,0)
-              , 'field_name':             "Field_default"
-              , 'field_label':            "Default value"
-              , 'field_value_type':       "annal:Text"
-              , 'field_render_type':      "Text"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:default_value"
-              , 'field_placement':        get_placement_classes('small:0,12')
-              , 'field_ref_type':         None
-              , 'field_ref_field':        None
-              , 'field_placeholder':      "(field default value)"
-              , 'field_default_value':    ""
-              , 'field_value':            ""
               , 'options':                []
               })
           , { 'field_id':               "Field_fields"                  # 14 (10,0)

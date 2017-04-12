@@ -42,13 +42,13 @@
   , { "annal:field_id":         "_field/Field_fieldref"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
+  , { "annal:field_id":         "_field/Field_default"
+    , "annal:field_placement":  "small:0,12"
+    }
   , { "annal:field_id":         "_field/Field_placeholder"
     , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "_field/Field_tooltip"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "_field/Field_default"
     , "annal:field_placement":  "small:0,12"
     }
   , { "annal:field_id":         "_field/Field_fields"

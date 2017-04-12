@@ -225,9 +225,9 @@ class RecordFieldTest(AnnalistTestCase):
             field_placement=    None,
             field_entity_type=  None,
             field_value_type=   "annal:Identifier",
+            field_default=      "annal:Text",
             field_placeholder=  "(field value type)",
             field_tooltip=      "Type (URI or CURIE) of underlying data",
-            field_default=      "annal:Text",
             )
         return
 
@@ -380,9 +380,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f_Field_placement           = context_view_field(r.context,  5, 1)
         f_Field_typeref             = context_view_field(r.context,  6, 0)
         f_Field_fieldref            = context_view_field(r.context,  6, 1)
-        f_Field_placeholder         = context_view_field(r.context,  7, 0)
-        f_Field_tooltip             = context_view_field(r.context,  8, 0)
-        f_Field_default             = context_view_field(r.context,  9, 0)
+        f_Field_default             = context_view_field(r.context,  7, 0)
+        f_Field_placeholder         = context_view_field(r.context,  8, 0)
+        f_Field_tooltip             = context_view_field(r.context,  9, 0)
         f_Field_fields              = context_view_field(r.context, 10, 0)
         f_Field_repeat_label_add    = context_view_field(r.context, 11, 0)
         f_Field_repeat_label_delete = context_view_field(r.context, 11, 1)
@@ -498,6 +498,16 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_fieldref,
             options=            self.no_options
             )
+        check_context_field(self, f_Field_default,
+            field_id=           "Field_default",
+            field_name=         "Field_default",
+            field_property_uri= "annal:default_value",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_default,
+            options=            self.no_options
+            )
         check_context_field(self, f_Field_placeholder,
             field_id=           "Field_placeholder",
             field_name=         "Field_placeholder",
@@ -516,16 +526,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Longtext",
             field_value=        field_tooltip,
-            options=            self.no_options
-            )
-        check_context_field(self, f_Field_default,
-            field_id=           "Field_default",
-            field_name=         "Field_default",
-            field_property_uri= "annal:default_value",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_default,
             options=            self.no_options
             )
         check_context_field(self, f_Field_fields,
@@ -596,9 +596,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             tooltip6b=context_view_field(r.context,    5, 1)['field_tooltip'], # Placement
             tooltip7a=context_view_field(r.context,    6, 0)['field_tooltip'], # Typeref
             tooltip7b=context_view_field(r.context,    6, 1)['field_tooltip'], # Fieldref
-            tooltip8=context_view_field(r.context,     7, 0)['field_tooltip'], # Placeholder
-            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # Tooltip
-            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # default
+            tooltip8=context_view_field(r.context,     7, 0)['field_tooltip'], # default
+            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # Placeholder
+            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # Tooltip
             tooltip11=context_view_field(r.context,   10, 0)['field_tooltip'], # Subfields
             tooltip11f1=context_view_field(r.context, 10, 0).
                        _field_description['group_field_descs'][0]['field_tooltip'],
@@ -785,6 +785,20 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip8)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
+                  <span>Default value</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_default" 
+                         placeholder="(field default value)"
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow9 = """
+            <div class="small-12 columns" title="%(tooltip9)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
                   <span>Placeholder</span>
                 </div>
                 <div class="%(input_classes)s">
@@ -794,8 +808,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow9 = """
-            <div class="small-12 columns" title="%(tooltip9)s">
+        formrow10 = """
+            <div class="small-12 columns" title="%(tooltip10)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                     <span>Tooltip</span>
@@ -804,20 +818,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                   <textarea cols="64" rows="6" name="Field_tooltip" class="small-rows-4 medium-rows-8"
                             placeholder="(Field usage popup help text)">
                   </textarea>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow10 = """
-            <div class="small-12 columns" title="%(tooltip10)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Default value</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_default" 
-                         placeholder="(field default value)"
-                         value=""/>
                 </div>
               </div>
             </div>
@@ -962,9 +962,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow6col2,  html=True)    # Placement
         self.assertContains(r, formrow7col1,  html=True)    # Ref type (enum)
         self.assertContains(r, formrow7col2,  html=True)    # Ref field
-        self.assertContains(r, formrow8,      html=True)    # Placeholder
-        self.assertContains(r, formrow9,      html=True)    # Tooltip
-        self.assertContains(r, formrow10,     html=True)    # Default
+        self.assertContains(r, formrow8,      html=True)    # Default
+        self.assertContains(r, formrow9,      html=True)    # Placeholder
+        self.assertContains(r, formrow10,     html=True)    # Tooltip
         self.assertContains(r, formrow11h,    html=True)    # Field list headers
         self.assertContains(r, formrow11t,    html=True)    # Field list tail (buttons)
         self.assertContains(r, formrow12col1, html=True)    # Add field label

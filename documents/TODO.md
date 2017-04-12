@@ -139,7 +139,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - ... calls bound_field.get_field_tooltip()
         - ... uses self._field_description['field_help']
     - [x] Default to rdfs:comment value if blank
-    - [ ] Re-order fields in field view so tooltip comes toward end
+    - [x] Re-order fields in field view so tooltip comes toward end
     - [ ] Add migration logic to copy comment to tooltip and add heading for comment:
         - "# (label)\r\n\r\n(Tooltip)
     - [ ] Edit sitedata field definitions
