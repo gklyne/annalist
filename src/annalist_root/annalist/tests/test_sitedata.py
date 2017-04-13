@@ -571,7 +571,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_type"
             )
         self.check_select_field(
@@ -635,7 +635,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/Default_type"
             )
         self.check_select_field(
@@ -686,7 +686,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_list"
             )
         self.check_select_field(
@@ -786,7 +786,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_view"
             )
         self.check_select_field(
@@ -892,7 +892,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_group"
             )
         self.check_select_field(
@@ -954,7 +954,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
-                                                                                        "annal:Entity_see_also_item" ] ]
+                                                                                        "annal:Entity_see_also_list" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
@@ -1122,7 +1122,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_field"
             )
         self.check_select_field(
@@ -1218,7 +1218,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_vocab"
             )
         self.check_select_field(
@@ -1328,7 +1328,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_user"
             )
         self.check_select_field(

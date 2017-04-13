@@ -5,7 +5,7 @@
 , "annal:type_id":              	"_field"
 , "annal:uri":                  	"annal:fields/Field_subfield_sel"
 , "rdfs:label":                 	"Subfield Id"
-, "rdfs:comment":               	"A Field Id to be included in a field definition that references the a subfield of the current field (e.g. in for a field that contains a repeated group of fields).  May be specified along with a property URI ('Field_subfield_property') and display placement ('Field_subfield_placement') values to describe how the subfield is accessed and displayed (or, if not specified, the property URI and placement used are taken fromn the referenced field definition)."
+, "rdfs:comment":               	"# Subfield Id\r\n\r\nA Field Id of a field to be included in a subfield list field definition (e.g. in a field that contains a repeated group of fields).\r\n\r\nMay be specified along with a property URI ([Subfield URI]($BASE:_field/Field_subfield_property)) and/or display placement ([Subfield Pos/size]($BASE:_field/Field_subfield_placement)) values to describe how the subfield is accessed and displayed.\r\n\r\n(If not specified, the property URI and placement used are taken from the referenced field definition.)"
 , "annal:placeholder":          	"(Field Id of subfield)"
 , "annal:field_name":           	"Field_id"
 , "annal:field_render_type":    	"_enum_render_type/Enum_optional"
@@ -17,4 +17,5 @@
 , "annal:property_uri":         	"annal:field_id"
 , "annal:field_placement":      	"small:0,12;medium:0,4"
 , "annal:default_value":        	""
+, "annal:tooltip":              	"A Field Id of a field to be included in a subfield list field definition (e.g. in a field that contains a repeated group of fields)."
 }

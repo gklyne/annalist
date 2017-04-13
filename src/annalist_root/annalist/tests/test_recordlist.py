@@ -382,7 +382,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             field_value_type=   "annal:Type",
             field_placement=    "small-12 medium-6 columns",
             field_value=        list_default_type,
-            options=            no_selection("(default record type)") + self.type_options
+            options=            no_selection("(default entity type)") + self.type_options
             )
         # 6
         check_context_field(self, f5,
@@ -555,9 +555,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_type", "Default type",
-                    no_selection("(default record type)") + self.type_options,
+                    no_selection("(default entity type)") + self.type_options,
                     "_type/Default_type",
-                    placeholder="(default record type)"
+                    placeholder="(default entity type)"
                     )+
                 """
                 </div>

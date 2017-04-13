@@ -356,7 +356,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         # 4th field - URI
         type_uri_placeholder = (
-            "(Type URI)"
+            "(Type URI or CURIE)"
             )
         check_context_field(self, f3,
             field_id=           "Type_uri",
@@ -503,7 +503,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Type_uri" 
-                         placeholder="(Type URI)"
+                         placeholder="(Type URI or CURIE)"
                          value=""/>
                 </div>
               </div>

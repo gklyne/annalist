@@ -363,8 +363,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_fieldref="",
             field_viewref="",
             field_fields=[],
-            field_repeat_label_add="",
-            field_repeat_label_delete="",
+            field_repeat_label_add="Add",
+            field_repeat_label_delete="Remove",
             field_restrict=""
             ):
         r = response
@@ -916,8 +916,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_add"
-                         placeholder="(add repeat field(s) button label)"
-                         value=""/>
+                         placeholder="(Add repeat field(s) button label)"
+                         value="Add"/>
                 </div>
               </div>
             </div>
@@ -926,12 +926,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip12b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Delete value label</span>
+                  <span>Remove value label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_delete"
-                         placeholder="(delete field(s) button label)"
-                         value=""/>
+                         placeholder="(Remove field(s) button label)"
+                         value="Remove"/>
                 </div>
               </div>
             </div>
@@ -1608,7 +1608,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             field_id="Entity_see_also_r",
             field_render_type="Group_Set_Row",
-            field_type="annal:Entity_see_also_item",
+            field_type="annal:Entity_see_also_list",
             field_entity_type="",
             field_label="See also",
             field_placeholder="(Links to further information)",

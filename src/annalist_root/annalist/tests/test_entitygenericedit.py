@@ -279,7 +279,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Type_uri"
-                         placeholder="(Type URI)"  
+                         placeholder="(Type URI or CURIE)"  
                          value=""/>
                 </div>
               </div>

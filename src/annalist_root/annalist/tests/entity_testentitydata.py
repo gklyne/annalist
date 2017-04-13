@@ -730,10 +730,12 @@ def default_label(coll_id=None, type_id=None, entity_id=None):
 
 def default_comment(coll_id=None, type_id=None, entity_id=None):
     # Note: for built-in types, default values matches corresponding sitedata _initial_values
-    if type_id in ["_type", "_view", "_list"]:
+    if type_id in ["_type", "_view", "_list", "_field"]:
         return ""
-    if type_id == "_field":
-        return "(tooltip text here)"
+    #@@
+    # if type_id == "_field":
+    #     return "(tooltip text here)"
+    #@@
     return message.ENTITY_DEFAULT_COMMENT%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def error_label(coll_id=None, type_id=None, entity_id=None):

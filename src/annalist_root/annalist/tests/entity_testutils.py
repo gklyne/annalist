@@ -775,7 +775,7 @@ def check_type_view_context_fields(test, response,
         )
     # 4th field - URI
     type_uri_placeholder = (
-        "(Type URI)"
+        "(Type URI or CURIE)"
         )
     check_context_field(test, f3,
         field_id=           "Type_uri",

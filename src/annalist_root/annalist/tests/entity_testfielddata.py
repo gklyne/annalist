@@ -194,8 +194,8 @@ def recordfield_entity_view_context_data(
         field_placeholder="",
         field_tooltip="",
         field_fields=[],
-        field_repeat_label_add="",
-        field_repeat_label_delete="",
+        field_repeat_label_add="Add",
+        field_repeat_label_delete="Remove",
         field_entity_type="",
         action=None, update="Field"
     ):
@@ -232,7 +232,7 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field id)"
-              , 'field_default_value':    None
+              , 'field_default_value':    ""
               # , 'field_value':          (Supplied separately)
               , 'options':                []
               },
@@ -461,13 +461,13 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               # , 'field_placeholder':      "..."
-              , 'field_default_value':    ""
+              , 'field_default_value':    "Add"
               , 'field_value':            field_repeat_label_add
               , 'options':                []
               },
               { 'field_id':               "Field_repeat_label_delete"   # 16 (11,1)
               , 'field_name':             "Field_repeat_label_delete"
-              , 'field_label':            "Delete value label"
+              , 'field_label':            "Remove value label"
               , 'field_value_type':       "annal:Text"
               , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
@@ -476,7 +476,7 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               # , 'field_placeholder':      "..."
-              , 'field_default_value':    ""
+              , 'field_default_value':    "Remove"
               , 'field_value':            field_repeat_label_delete
               , 'options':                []
               })
