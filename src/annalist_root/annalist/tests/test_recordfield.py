@@ -357,7 +357,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_placeholder="(?field_placeholder)",
             field_property="(?field_property)",
             field_placement="(?field_placement)",
-            field_tooltip="",
+            field_tooltip=None,
             field_default="",
             field_typeref="",
             field_fieldref="",

@@ -7,5 +7,6 @@
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     ""
 , "annal:placeholder":          ""
+, "annal:tooltip":              ""
 , "annal:property_uri":         ""
 }

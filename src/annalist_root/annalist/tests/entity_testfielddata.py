@@ -112,6 +112,7 @@ def recordfield_init_keys(field_uri=False):
         , 'rdfs:comment'
         , 'annal:field_render_type'
         , 'annal:field_value_mode'
+        , 'annal:tooltip'
         ])
     if field_uri:
         keys.add('annal:uri')
@@ -124,7 +125,6 @@ def recordfield_value_keys(field_uri=False):
         , 'annal:field_value_type'
         , 'annal:field_placement'
         , 'annal:placeholder'
-        , 'annal:tooltip'
         , 'annal:default_value'
         })
 
@@ -143,6 +143,7 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
         , 'rdfs:comment':               "%s help for %s in collection %s"%(update, field_id, coll_id)
         , 'annal:field_render_type':    render_type
         , 'annal:field_value_mode':     value_mode
+        , 'annal:tooltip':              "%s tooltip for %s in collection %s"%(update, field_id, coll_id)
         })
 
 def recordfield_values(
@@ -532,6 +533,7 @@ def recordfield_entity_view_form_data(
         form_data_dict['entity_id']         = field_id
         form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
         form_data_dict['Field_help']        = '%s help for %s in collection %s'%(update, field_id, coll_id)
+        form_data_dict['Field_tooltip']     = '%s tooltip for %s in collection %s'%(update, field_id, coll_id)
         form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
@@ -541,6 +543,7 @@ def recordfield_entity_view_form_data(
     if field_label:
         form_data_dict['Field_label']       = field_label
         form_data_dict['Field_help']        = "Help for "+field_label
+        form_data_dict['Field_tooltip']     = "Tooltip for "+field_label
     if entity_type:
         form_data_dict['Field_entity_type'] = entity_type
     if property_uri:

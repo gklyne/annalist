@@ -111,8 +111,9 @@ test_group_create_values = (
       ]
     })
 
-test_field_id               = "List_fields"
-test_field_create_values    = (
+test_field_id = "List_fields"
+
+test_field_group_create_values = (
     { "annal:type":                 "annal:Field"
     , "rdfs:label":                 "Fields"
     , "rdfs:comment":               "Fields presented in a list view."
@@ -122,6 +123,7 @@ test_field_create_values    = (
     , "annal:field_value_type":     "annal:List_field"
     , "annal:field_entity_type":    "annal:List_field"
     , "annal:placeholder":          "(list field description)"
+    , "annal:tooltip":              "Fields presented in a list view."
     , "annal:property_uri":         "annal:list_fields"
     , "annal:field_placement":      "small:0,12"
     , "annal:group_ref":            "_group/List_field_group"
@@ -129,7 +131,7 @@ test_field_create_values    = (
     , "annal:repeat_label_delete":  "Remove selected field(s)"
     })
 
-test_field_migrated_values = (
+test_field_group_migrated_values = (
     { "annal:type":                 "annal:Field"
     , "rdfs:label":                 "Fields"
     , "rdfs:comment":               "Fields presented in a list view."
@@ -139,6 +141,7 @@ test_field_migrated_values = (
     , "annal:field_value_type":     "annal:List_field"
     , "annal:field_entity_type":    "annal:List_field"
     , "annal:placeholder":          "(list field description)"
+    , "annal:tooltip":              "Fields presented in a list view."
     , "annal:property_uri":         "annal:list_fields"
     , "annal:field_placement":      "small:0,12"
     , "annal:field_fields":
@@ -153,6 +156,20 @@ test_field_migrated_values = (
       ]
     , "annal:repeat_label_add":     "Add field"
     , "annal:repeat_label_delete":  "Remove selected field(s)"
+    })
+
+test_field_tooltip_create_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:property_uri":         "annal:list_fields"
+    })
+
+test_field_tooltip_migrated_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "# Fields\r\n\r\nFields presented in a list view."
+    , "annal:tooltip":              "Fields presented in a list view."
     })
 
 #   -----------------------------------------------------------------------------
@@ -198,7 +215,7 @@ class DataMigrationTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata(scope="collections")
+        resetSitedata(scope="collections")
         return
 
     @classmethod
@@ -252,14 +269,28 @@ class DataMigrationTest(AnnalistTestCase):
             )
         # Create field definition referencing field group
         self.test_field = RecordField.create(
-            self.testcoll, test_field_id, test_field_create_values
+            self.testcoll, test_field_id, test_field_group_create_values
             )
         # Apply migration to collection
         migrate_coll_data(self.testcoll)
         # Read field definition and check for inline field list
-        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_migrated_values)
+        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_group_migrated_values)
         self.assertNotIn("annal:group_ref", field_data)
         self.check_entity_does_not_exist("_group", test_group_id)
+        return
+
+    def test_field_comment_tooltip(self):
+        """
+        Test migration of field without tooltip
+        """
+        # Create field definition
+        self.test_field = RecordField.create(
+            self.testcoll, test_field_id, test_field_tooltip_create_values
+            )
+        # Apply migration to collection
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_tooltip_migrated_values)
         return
 
 # End.

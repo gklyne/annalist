@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 from annalist                       import layout
-from annalist.identifiers           import ANNAL
+from annalist.identifiers           import ANNAL, RDFS
 from annalist.models.entity         import Entity
 from annalist.models.entitydata     import EntityData
 from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
@@ -94,6 +94,12 @@ class RecordField(EntityData):
                 entitydata[fkey] = make_type_entity_id(
                     ftype, extract_entity_id(entitydata[fkey])
                     )
+        # If comment and no tooltip, create tooltip and update comment
+        if (RDFS.CURIE.comment in entitydata) and (ANNAL.CURIE.tooltip not in entitydata):
+            label   = entitydata.get(RDFS.CURIE.label, "Field '%s'"%field_id)
+            comment = entitydata[RDFS.CURIE.comment]
+            entitydata[ANNAL.CURIE.tooltip] = comment
+            entitydata[RDFS.CURIE.comment]  = "# %s\r\n\r\n%s"%(label, comment)
         # If reference to field group, copy group field list inline
         if ANNAL.CURIE.group_ref in entitydata:
             group_type_id, group_id = split_type_entity_id(

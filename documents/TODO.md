@@ -140,9 +140,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - ... uses self._field_description['field_help']
     - [x] Default to rdfs:comment value if blank
     - [x] Re-order fields in field view so tooltip comes toward end
-    - [ ] Add migration logic to copy comment to tooltip and add heading for comment:
+    - [x] Add migration logic to copy comment to tooltip and add heading for comment:
         - "# (label)\r\n\r\n(Tooltip)
-    - [ ] Edit sitedata field definitions
+        - test case in test_data_migration.py
+        - adjust test logic to accommodfate this migration
+    - [.] Edit sitedata field definitions
 - [ ] Split Resource_defs from Journal_defs?
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)
