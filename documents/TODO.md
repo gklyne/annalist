@@ -145,17 +145,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - test case in test_data_migration.py
         - adjust test logic to accommodfate this migration
     - [x] Edit sitedata field definitions
-        - Automated conversion applied to facilitate manual fix-up
-        - Manual edits:
-            - Group_* don't bother
-            - Coll_* done
-            - Entity_* done
-            - Field_* done
-            - List_* done
-            - Type_* done
-            - User_* done
-            - View_* done
-            - Vocab_* done
+- [x] Re-arrange field definition view
 - [ ] Split Resource_defs from Journal_defs
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)
