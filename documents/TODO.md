@@ -130,7 +130,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Renamed type URI for field lists to match schema domain value.
 - [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
     - Removed default option for now: everything is .URI or .CURIE
-- [.] Provide field popup help separately from comment field (without MarkDown)
+- [x] Provide field popup help separately from comment field (without MarkDown)
     - [x] Add new property URI to ANNAL namespace
         - annal:tooltip
     - [x] Add new field; change label on comment field
@@ -144,17 +144,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - "# (label)\r\n\r\n(Tooltip)
         - test case in test_data_migration.py
         - adjust test logic to accommodfate this migration
-    - [.] Edit sitedata field definitions
+    - [x] Edit sitedata field definitions
         - Automated conversion applied to facilitate manual fix-up
-        - Group_* don't bother
-        - Coll_* done
-        - Entity_* done
-        - Field_* done
-        - List_* done
-        - Type_* done
-        - User_* done
-        - View_* done
-- [ ] Split Resource_defs from Journal_defs?
+        - Manual edits:
+            - Group_* don't bother
+            - Coll_* done
+            - Entity_* done
+            - Field_* done
+            - List_* done
+            - Type_* done
+            - User_* done
+            - View_* done
+            - Vocab_* done
+- [ ] Split Resource_defs from Journal_defs
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)
 
