@@ -23,8 +23,9 @@
   "annal:property_uri": "annal:uri",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "An absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "An absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
+  "rdfs:comment": "# Entity URI\r\n\r\nAn absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
   "rdfs:label": "Entity URI"
 }

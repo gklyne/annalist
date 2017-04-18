@@ -30,8 +30,9 @@
   "annal:property_uri": "rdfs:domain",
   "annal:repeat_label_add": "Add domain",
   "annal:repeat_label_delete": "Remove domain",
+  "annal:tooltip": "URIs or CURIEs of classes that are domains of the current property.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "URIs or CURIEs of classes that are domains of the current property.",
+  "rdfs:comment": "# Domains\r\n\r\nURIs or CURIEs of classes that are domains of the current property.",
   "rdfs:label": "Domains"
 }

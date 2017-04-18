@@ -23,8 +23,9 @@
   "annal:property_uri": "rdfs:subClassOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Refers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Refers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
+  "rdfs:comment": "# Subclass of\r\n\r\nRefers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
   "rdfs:label": "Subclass of"
 }

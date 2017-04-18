@@ -16,10 +16,10 @@
   "rdfs:label": "EntityData",
   "rdfs:seeAlso": [
     {
-      "@id": "/annalist/c/RDF_schema/v/Class/Class/EntityRoot/"
+      "@id": "/annalist/c/Annalist_schema/d/Class/EntityRoot/"
     },
     {
-      "@id": "/annalist/c/RDF_schema/v/Class/Class/Entity/"
+      "@id": "/annalist/c/Annalist_schema/d/Class/Entity/"
     }
   ],
   "rdfs:subClassOf": [

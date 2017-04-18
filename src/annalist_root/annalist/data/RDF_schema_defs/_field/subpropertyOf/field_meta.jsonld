@@ -23,8 +23,9 @@
   "annal:property_uri": "rdfs:subPropertyOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Indicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Indicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
+  "rdfs:comment": "# Subproperty of\r\n\r\nIndicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
   "rdfs:label": "Subproperty of"
 }

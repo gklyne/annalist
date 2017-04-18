@@ -30,8 +30,9 @@
   "annal:property_uri": "rdfs:subPropertyOf",
   "annal:repeat_label_add": "Add superproperty",
   "annal:repeat_label_delete": "Remove superproperty",
+  "annal:tooltip": "A list of superproperties of the current property",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "A list of superproperties of the current property",
+  "rdfs:comment": "# Superproperties\r\n\r\nA list of superproperties of the current property",
   "rdfs:label": "Superproperties"
 }

@@ -23,8 +23,9 @@
   "annal:property_uri": "rdfs:range",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "URI or CURIE of class that is a range of the current property.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "URI or CURIE of class that is a range of the current property.",
+  "rdfs:comment": "# Range\r\n\r\nURI or CURIE of class that is a range of the current property.",
   "rdfs:label": "Range"
 }

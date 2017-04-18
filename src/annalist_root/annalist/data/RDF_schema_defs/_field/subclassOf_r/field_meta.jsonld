@@ -30,8 +30,9 @@
   "annal:property_uri": "rdfs:subClassOf",
   "annal:repeat_label_add": "Add superclass",
   "annal:repeat_label_delete": "Remove superclass",
+  "annal:tooltip": "List of superclasses of the current class.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "List of superclasses of the current class.",
+  "rdfs:comment": "# Superclasses\r\n\r\nList of superclasses of the current class.",
   "rdfs:label": "Superclasses"
 }
