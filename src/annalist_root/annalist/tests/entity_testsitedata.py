@@ -54,19 +54,19 @@ def add_link_to_field_choice(fc, coll_id, default_type_id=None):
 
 site_types = (
     [ FieldChoice("_type/_initial_values")
-    , FieldChoice("_type/_coll",                      label="Collection"            )
-    , FieldChoice("_type/_enum_list_type",            label="List display type"     )
-    , FieldChoice("_type/_enum_render_type",          label="Field render type"     )
-    , FieldChoice("_type/_enum_value_mode",           label="Field value mode"      )
-    , FieldChoice("_type/_enum_value_type",           label="Field value type"      )
-    , FieldChoice("_type/_field",                     label="Field"                 )
-    , FieldChoice("_type/_group",                     label="Field group"           )
-    , FieldChoice("_type/_list",                      label="List"                  )
-    , FieldChoice("_type/_type",                      label="Type"                  )
-    , FieldChoice("_type/_user",                      label="User permissions"      )
-    , FieldChoice("_type/_view",                      label="View"                  )
-    , FieldChoice("_type/_vocab",                     label="Vocabulary namespace"  )
-    , FieldChoice("_type/Default_type",               label="Default record"        )
+    , FieldChoice("_type/_coll",                label="Collection"        )
+    , FieldChoice("_type/_enum_list_type",      label="List display type" )
+    , FieldChoice("_type/_enum_render_type",    label="Field render type" )
+    , FieldChoice("_type/_enum_value_mode",     label="Field value mode"  )
+    , FieldChoice("_type/_enum_value_type",     label="Field value type"  )
+    , FieldChoice("_type/_field",               label="Field"             )
+    , FieldChoice("_type/_group",               label="Field group"       )
+    , FieldChoice("_type/_list",                label="List"              )
+    , FieldChoice("_type/_type",                label="Type"              )
+    , FieldChoice("_type/_user",                label="User permissions"  )
+    , FieldChoice("_type/_view",                label="View"              )
+    , FieldChoice("_type/_vocab",               label="Namespace"         )
+    , FieldChoice("_type/Default_type",         label="Default record"    )
     ])
 
 def get_site_types_sorted():
@@ -84,8 +84,8 @@ def get_site_types():
 site_bib_types = (
     site_types[0:1]+
     sorted(site_types[1:] +
-        [ FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
-        , FieldChoice("_type/Enum_bib_type",              label="Bibliographic entry type"    )
+        [ FieldChoice("_type/BibEntry_type", label="Bibliographic record"     )
+        , FieldChoice("_type/Enum_bib_type", label="Bibliographic entry type" )
         ])
     )
 
