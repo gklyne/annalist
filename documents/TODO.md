@@ -146,7 +146,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - adjust test logic to accommodfate this migration
     - [x] Edit sitedata field definitions
 - [x] Re-arrange field definition view
-- [ ] Split Resource_defs from Journal_defs
+- [x] Split Resource_defs from Journal_defs
 - [ ] Update installed software on fast-project.analist.net
     - (waiting for confirmation from Mat that data is OK)
 

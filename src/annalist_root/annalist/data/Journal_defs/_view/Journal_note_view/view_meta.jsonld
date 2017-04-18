@@ -1,28 +1,31 @@
 {
-  "annal:view_fields": [
-    {
-      "annal:property_uri": "",
-      "annal:field_placement": "small:0,12",
-      "annal:field_id": "_field/Entity_label"
-    },
-    {
-      "annal:property_uri": "",
-      "annal:field_placement": "small:0,12",
-      "annal:field_id": "_field/Entity_comment"
-    }
-  ],
-  "rdfs:label": "Journal entry note view",
-  "rdfs:comment": "View of project journal entry that displays just the title and comment as a documentation page.",
-  "annal:id": "Journal_note_view",
-  "annal:type_id": "_view",
-  "annal:record_type": "coll:Journal",
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "annal:open_view": true,
-  "@id": "./",
+  "@id": "_view/Journal_note_view",
   "@type": [
     "annal:View"
   ],
-  "annal:type": "annal:View"
+  "annal:id": "Journal_note_view",
+  "annal:open_view": true,
+  "annal:record_type": "coll:Journal",
+  "annal:type": "annal:View",
+  "annal:type_id": "_view",
+  "annal:view_fields": [
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": ""
+    },
+    {
+      "annal:field_id": "_field/Entity_comment",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": ""
+    }
+  ],
+  "rdfs:comment": "View of project journal entry that displays just the title and comment as a documentation page.",
+  "rdfs:label": "Journal entry note view"
 }

@@ -30,8 +30,9 @@
   "annal:property_uri": "skos:broader",
   "annal:repeat_label_add": "Add concept",
   "annal:repeat_label_delete": "Remove concept",
+  "annal:tooltip": "References to broader concepts.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "References to broader concepts.",
+  "rdfs:comment": "# Broader concepts\r\n\r\nReferences to broader concepts.",
   "rdfs:label": "Broader concepts"
 }

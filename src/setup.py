@@ -125,12 +125,16 @@ setup(
             , 'data/namedata/_type/*/*.jsonld'
             , 'data/namedata/_view/*/*.jsonld'
             , 'data/namedata/_vocab/*/*.jsonld'
-            # RDF schema definitions
-            , 'data/RDF_schema_defs/_field/*/*.jsonld'
-            , 'data/RDF_schema_defs/_group/*/*.jsonld'
-            , 'data/RDF_schema_defs/_list/*/*.jsonld'
-            , 'data/RDF_schema_defs/_type/*/*.jsonld'
-            , 'data/RDF_schema_defs/_view/*/*.jsonld'
+            # Resource definitions
+            , 'data/Resource_defs/_field/*/*.jsonld'
+            , 'data/Resource_defs/_group/*/*.jsonld'
+            , 'data/Resource_defs/_list/*/*.jsonld'
+            , 'data/Resource_defs/_type/*/*.jsonld'
+            , 'data/Resource_defs/_view/*/*.jsonld'
+            , 'data/Resource_defs/_vocab/*/*.jsonld'
+            , 'data/Resource_defs/entitydata/*/*.jsonld'
+            , 'data/Resource_defs/entitydata/*/*/*.jsonld'
+            , 'data/Resource_defs/entitydata/*/*/*/*.jsonld'
             # Concept definitions
             , 'data/Concept_defs/_field/*/*.jsonld'
             , 'data/Concept_defs/_group/*/*.jsonld'
@@ -151,6 +155,12 @@ setup(
             , 'data/Journal_defs/entitydata/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*.jsonld'
             , 'data/Journal_defs/entitydata/*/*/*/*.jsonld'
+            # RDF schema definitions
+            , 'data/RDF_schema_defs/_field/*/*.jsonld'
+            , 'data/RDF_schema_defs/_group/*/*.jsonld'
+            , 'data/RDF_schema_defs/_list/*/*.jsonld'
+            , 'data/RDF_schema_defs/_type/*/*.jsonld'
+            , 'data/RDF_schema_defs/_view/*/*.jsonld'
             # Annalist schema
             , 'data/Annalist_schema/entitydata/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*.jsonld'

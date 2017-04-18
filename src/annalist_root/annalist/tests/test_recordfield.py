@@ -1533,6 +1533,26 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         expect_subfield_choices = (
             [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
+                )
             , FieldChoice("_field/Field_subfield_placement", 
                 label="Subfield Pos/size", 
                 link=entity_url("testcoll", "_field", "Field_subfield_placement")
@@ -1577,6 +1597,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f_Field_fields          = context_view_field(r.context, 10, 0)
         f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
         actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
         return
 
@@ -1597,9 +1618,29 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         expect_subfield_choices = (
             [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
             , FieldChoice("_field/Entity_see_also", 
                 label="Link to further information", 
                 link=entity_url("testcoll", "_field", "Entity_see_also")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
                 )
             ])
         field_fields = (
@@ -1661,6 +1702,26 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         expect_domain_choices = (
             [ FieldChoice('', label='(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
+                )
             , FieldChoice("_field/domain", 
                 label="Domain", 
                 link=entity_url("testcoll", "_field", "domain")
@@ -1668,6 +1729,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , FieldChoice("_field/domain_r", 
                 label="Domains", 
                 link=entity_url("testcoll", "_field", "domain_r")
+                )
+            , FieldChoice("_field/entity_uri", 
+                label="Entity URI", 
+                link=entity_url("testcoll", "_field", "entity_uri")
                 )
             , FieldChoice("_field/property_uri", 
                 label="Property URI", 
@@ -1689,6 +1754,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 label="Superproperties", 
                 link=entity_url("testcoll", "_field", "subpropertyOf_r")
                 )
+
+
             ])
         field_fields = (
               [ { 'annal:property_uri':     '@id'

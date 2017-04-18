@@ -18,9 +18,10 @@
   "annal:id": "Concept_uri",
   "annal:placeholder": "(Concept URI)",
   "annal:property_uri": "annal:uri",
+  "annal:tooltip": "A URI used to identify a concept.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
   "annal:uri": "annal:fields/Concept_uri",
-  "rdfs:comment": "A URI used to identify a concept.",
+  "rdfs:comment": "# Concept URI\r\n\r\nA URI used to identify a concept.",
   "rdfs:label": "Concept URI"
 }

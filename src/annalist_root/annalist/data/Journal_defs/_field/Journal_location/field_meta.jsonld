@@ -23,8 +23,9 @@
   "annal:property_uri": "coll:location",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Location of journal entry.  One-line short descriptive text.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Location of journal entry.  One-line short descriptive text.",
+  "rdfs:comment": "# Journal location\r\n\r\nLocation of journal entry.  One-line short descriptive text.",
   "rdfs:label": "Journal location"
 }

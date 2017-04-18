@@ -30,8 +30,9 @@
   "annal:property_uri": "annal:member",
   "annal:repeat_label_add": "Add journal reference",
   "annal:repeat_label_delete": "Remove journal reference",
+  "annal:tooltip": "References to journal entries",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "References to journal entries",
+  "rdfs:comment": "# Journal entries\r\n\r\nReferences to journal entries",
   "rdfs:label": "Journal entries"
 }

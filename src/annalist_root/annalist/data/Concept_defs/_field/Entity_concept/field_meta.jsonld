@@ -23,8 +23,9 @@
   "annal:property_uri": "dc:subject",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Reference or tag for a concept associated with an entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Reference or tag for a concept associated with an entity.",
+  "rdfs:comment": "# Concept tag\r\n\r\nReference or tag for a concept associated with an entity.",
   "rdfs:label": "Concept tag"
 }

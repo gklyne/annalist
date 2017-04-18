@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Imported_image",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/RefImage",
+  "annal:field_value_mode": "_enum_value_mode/Value_import",
+  "annal:field_value_type": "annal:Image",
+  "annal:id": "Imported_image",
+  "annal:placeholder": "(URL of image to import)",
+  "annal:property_uri": "coll:imported_image",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:tooltip": "Field referring to an image resource in an 'Imported image' (coll:Imported_image) entity.",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Imported image\r\n\r\nField referring to an image resource in an 'Imported image' (coll:Imported_image) entity.",
+  "rdfs:label": "Imported image"
+}

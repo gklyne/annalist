@@ -469,7 +469,7 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         # log.debug("render_json - data: %r"%(jsondata))
         response = HttpResponse(
-            json.dumps(jsondata, indent=2, separators=(',', ': ')),
+            json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
             content_type="application/ld+json"
             )
         response = self.add_link_header(response, links)

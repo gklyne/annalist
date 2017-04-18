@@ -1,0 +1,24 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_vocab/dc",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:id": "dc",
+  "annal:type": "annal:Vocabulary",
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://purl.org/dc/elements/1.1/",
+  "rdfs:comment": "# Dublin Core Metadata Element Set Namespace\r\n\r\nVocabulary namespace for terms defined by the Dublin Core metadata element set.\r\n",
+  "rdfs:label": "Dublin Core metadata element set",
+  "rdfs:seeAlso": [
+    {
+      "@id": "http://dublincore.org/documents/dces/",
+      "@id": "http://dublincore.org/documents/2012/06/14/dcmi-terms/"
+    }
+  ]
+}

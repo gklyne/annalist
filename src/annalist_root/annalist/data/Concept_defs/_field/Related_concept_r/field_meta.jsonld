@@ -30,8 +30,9 @@
   "annal:property_uri": "skos:related",
   "annal:repeat_label_add": "Add concept",
   "annal:repeat_label_delete": "Remove concept",
+  "annal:tooltip": "References to related concepts.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "References to related concepts.",
+  "rdfs:comment": "# Related concepts\r\n\r\nReferences to related concepts.",
   "rdfs:label": "Related concepts"
 }

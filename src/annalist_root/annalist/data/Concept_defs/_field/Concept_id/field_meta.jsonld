@@ -19,9 +19,10 @@
   "annal:id": "Concept_id",
   "annal:placeholder": "(tag id)",
   "annal:property_uri": "annal:id",
+  "annal:tooltip": "A short string that identifies some concept.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
   "annal:uri": "annal:fields/Concept_id",
-  "rdfs:comment": "A short string that identifies some concept.",
+  "rdfs:comment": "# Concept id\r\n\r\nA short string that identifies some concept.",
   "rdfs:label": "Concept id"
 }

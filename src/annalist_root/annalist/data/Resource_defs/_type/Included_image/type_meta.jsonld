@@ -1,0 +1,22 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Included_image",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Included_image",
+  "annal:supertype_uri": [],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Included_images",
+  "annal:type_view": "_view/Included_image",
+  "annal:uri": "coll:Included_image",
+  "rdfs:comment": "# Included image\r\n\r\nReference to included (uploaded, imported or linked) image.\r\n\r\nThis type subsumes uploaded, imported and linked images, and can be used in a view definition to present any or all of these.  For a list of images that may be any of these, use field [Included images]($BASE:_field/Included_image_r/) in a view definition.\r\n",
+  "rdfs:label": "Included image (internal type)"
+}

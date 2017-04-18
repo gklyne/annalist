@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Uploaded_audio",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/RefAudio",
+  "annal:field_value_mode": "_enum_value_mode/Value_upload",
+  "annal:field_value_type": "annal:Audio",
+  "annal:id": "Uploaded_audio",
+  "annal:placeholder": "(Select audio clip to upload)",
+  "annal:property_uri": "coll:uploaded_audio",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:tooltip": "Field referring to an audio resource in an 'Uploaded audio clip' (coll:Uploaded_audio) entity.",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Uploaded audio clip\r\n\r\nField referring to an audio resource in an 'Uploaded audio clip' (coll:Uploaded_audio) entity.",
+  "rdfs:label": "Uploaded audio clip"
+}

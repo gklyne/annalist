@@ -23,8 +23,9 @@
   "annal:property_uri": "coll:date",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Date of entry - any format can be used, but ISO (YYYY-MM-DD has the advantage that it naturally sorts in chronological order.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Date of entry - any format can be used, but ISO (YYYY-MM-DD has the advantage that it naturally sorts in chronological order.",
+  "rdfs:comment": "# Journal date\r\n\r\nDate of entry - any format can be used, but ISO (YYYY-MM-DD has the advantage that it naturally sorts in chronological order.",
   "rdfs:label": "Journal date"
 }
