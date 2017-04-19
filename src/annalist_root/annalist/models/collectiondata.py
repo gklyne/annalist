@@ -148,6 +148,8 @@ def migrate_coll_data(coll):
             coll.update_entity_types(e)
             log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
             e._save(post_update_flags={"nocontext"})
+            if e.get_errors():
+                errs.extend(e.get_errors())
     except Annalist_Error as err:
         errs.append(str(err))
     if errs:

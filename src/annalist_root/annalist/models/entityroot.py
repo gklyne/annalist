@@ -85,6 +85,7 @@ class EntityRoot(object):
         self._entitydir     = make_entity_base_url(entitydir)
         self._entitybasedir = entitybasedir
         self._values        = None
+        self._errors        = []
         # log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
 
@@ -185,6 +186,19 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
+
+    def set_error(self, msg):
+        """
+        Records error/diagnostic information in an entity
+        """
+        self._errors.append(msg)
+        return
+
+    def get_errors(self):
+        """
+        Returns a list of error/diagnostic entries associated with an entity, or an empty list
+        """
+        return self._errors
 
     def get_uri(self):
         """
