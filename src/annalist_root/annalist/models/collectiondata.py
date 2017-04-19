@@ -27,7 +27,8 @@ from annalist.exceptions            import Annalist_Error
 
 from annalist.models.site           import Site
 from annalist.models.entityfinder   import EntityFinder
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entitytypeinfo import EntityTypeInfo, TYPE_CLASS_MAP
+from annalist.models.recordtypedata import RecordTypeData
 
 def initialize_coll_data(src_data_dir, tgt_coll):
     """
@@ -110,6 +111,11 @@ def migrate_collection_dir(coll, prev_dir, curr_dir):
             # print "@@ "+msg
             log.error("migrate_collection_dir: "+msg)
             errs.append(msg)
+        # Create type data container for site types (so it can be enumerated later)
+        if curr_dir in TYPE_CLASS_MAP:
+            if not RecordTypeData.exists(coll, curr_dir):
+                log.info("Create RecordTypeData for %s"%curr_dir)
+                typedata  = RecordTypeData.create(coll, curr_dir, {})
     return errs
 
 def migrate_coll_config_dirs(coll):

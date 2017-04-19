@@ -110,7 +110,7 @@ class EntityFinder(object):
         Otherwise only collection entities are included.        
         """
         #@@
-        # log.info("get_type_entities: type_id %s"%type_id)
+        # log.info("get_type_entities: type_id %s, user_permissions %r"%(type_id,user_permissions))
         #@@
         entitytypeinfo = EntityTypeInfo(self._coll, type_id)
         for e in entitytypeinfo.enum_entities_with_implied_values(
@@ -144,6 +144,10 @@ class EntityFinder(object):
         """
         Iterate over all entities of all type ids from a supplied type iterator
         """
+        #@@
+        # types = list(types)
+        # log.info("get_all_types_entities: types %s"%(types,))
+        #@@
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
                 yield e
