@@ -147,8 +147,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Edit sitedata field definitions
 - [x] Re-arrange field definition view
 - [x] Split Resource_defs from Journal_defs
-- [ ] Update installed software on fast-project.analist.net
-    - (waiting for confirmation from Mat that data is OK)
+- [x] Update installed software on fast-project.analist.net
+- [x] Flushed out data migration problems with missing record group references
+- [x] Fixed data migration of entities whose 'annal:type' value does not match the corresponding type
+definition, which could occur when migrating data created in much older software releases.
+
 
 (feature freeze for V0.9alpha?)
 (0.5?)

@@ -403,7 +403,6 @@ class EntityTypeInfo(object):
             supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uri, None)
             if supertypes:
                 for st in supertypes:
-                    # supertype_uris is list of objects { 'annal:supertype_uri': uri }
                     t = st.get('@id', None)
                     if t:
                         types.append(t)

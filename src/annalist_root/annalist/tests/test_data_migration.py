@@ -239,7 +239,7 @@ class DataMigrationTest(AnnalistTestCase):
 
     # Tests
 
-    def test_view_entity_references(self):
+    def test_subtype_supertype_references(self):
         coll_id   = "testcoll"
         type_id   = "test_subtype_type"
         entity_id = "test_subtype_entity"
@@ -256,6 +256,34 @@ class DataMigrationTest(AnnalistTestCase):
         self.check_subtype_data(
             coll_id, type_id, entity_id, 
             { '@type':      ['test:test_subtype_type', 'test:test_supertype_type', 'annal:EntityData']
+            })
+        return
+
+    def test_wrong_type_uri_references(self):
+        coll_id   = "testcoll"
+        type_id   = "test_subtype_type"
+        entity_id = "test_subtype_entity"
+        # Create subtype record with wrong type URI
+        subtype_entity_values = test_subtype_entity_create_values(entity_id)
+        entity = self.test_subtype_type_info.create_entity(entity_id, subtype_entity_values)
+        entity[ANNAL.CURIE.type] = "test:wrong_type_uri"
+        entity._save()
+        # Test subtype entity created
+        self.check_subtype_data(
+            coll_id, type_id, entity_id, 
+            { '@type':      ['test:test_subtype_type', 'annal:EntityData']
+            , 'annal:type': "test:wrong_type_uri"
+            })
+        # Update subtype definition to include supertype reference
+        self.test_subtype_type[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
+        self.test_subtype_type._save()
+        self.testcoll._update_type_cache(self.test_subtype_type)
+        # Test migration of updated type information to data
+        migrate_coll_data(self.testcoll)
+        self.check_subtype_data(
+            coll_id, type_id, entity_id, 
+            { '@type':      ['test:test_subtype_type', 'test:test_supertype_type', 'annal:EntityData']
+            , 'annal:type': "test:test_subtype_type"
             })
         return
 

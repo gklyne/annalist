@@ -145,8 +145,10 @@ def migrate_coll_data(coll):
     try:
         entityfinder = EntityFinder(coll)
         for e in entityfinder.get_entities():
-            coll.update_entity_types(e)
             log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
+            typeinfo = EntityTypeInfo(coll, e[ANNAL.CURIE.type_id])
+            e[ANNAL.CURIE.type] = typeinfo.get_type_uri()
+            coll.update_entity_types(e)
             e._save(post_update_flags={"nocontext"})
             if e.get_errors():
                 errs.extend(e.get_errors())
