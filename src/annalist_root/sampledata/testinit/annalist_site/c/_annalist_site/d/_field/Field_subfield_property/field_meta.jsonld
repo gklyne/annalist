@@ -5,8 +5,7 @@
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Field_subfield_property"
 , "rdfs:label":                 "Subfield URI"
-, "rdfs:comment":               "Property URI (or CURIE) used to access subfield data in a data record when rendered using the current field definition.  This value, if present, overrides the property URI value from the referenced subfield description."
-, "annal:placeholder":          "(subfield property URI or CURIE)"
+, "rdfs:comment":               "# Subfield URI\r\n\r\nProperty URI (or CURIE) used to access subfield data in a data record when rendered using the current field definition.  This value, if present, overrides the property URI value from the referenced subfield description."
 , "annal:field_name":           "Field_property"
 , "annal:field_render_type":    "_enum_render_type/Identifier"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
@@ -15,4 +14,6 @@
 , "annal:property_uri":         "annal:property_uri"
 , "annal:field_placement":      "small:0,12;medium:0,4"
 , "annal:default_value":        ""
+, "annal:placeholder":          "(subfield property URI or CURIE)"
+, "annal:tooltip":              "Property URI (or CURIE) used to access subfield data in a data record when rendered using the current field definition.  This value, if present, overrides the property URI value from the referenced subfield description."
 }

@@ -12,6 +12,12 @@ annalist-manager updatesite --personal
 rm -rf $(annalist-manager sitedirectory --personal)/c/Bibliography_defs
 annalist-manager installcoll Bibliography_defs
 
+rm -rf $(annalist-manager sitedirectory --personal)/c/Resource_defs
+annalist-manager installcoll Resource_defs
+
+rm -rf $(annalist-manager sitedirectory --personal)/c/Concept_defs
+annalist-manager installcoll Concept_defs
+
 rm -rf $(annalist-manager sitedirectory --personal)/c/Journal_defs
 annalist-manager installcoll Journal_defs
 

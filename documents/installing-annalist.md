@@ -15,7 +15,7 @@
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.9 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
+* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
 
@@ -90,7 +90,11 @@ then
 
 Stop any existing annalist server.  Look for background processes running `annalist-manager` or `django-admin`.  There may be up to three separate background processes that need to be stopped.
 
-The installation instructions below can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
+NOTE: irreversible changes are applied to site and collection data when upgrading, particularly to version 0.5.0.  It is recommended to make a duplicate copy of the ananlist site data before upgrading the software,  This will make it possible to revert to an earlier verson in the event of problems with the ewer software. For example, to back up a default "personal" configuration on Linux:
+
+    cp -ax ~/annalist_site ~/annalist_site.backup
+
+The installation instructions below ("New software installation") can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
 
 The annalist user database may need to be initialized or migrated:
 
@@ -104,17 +108,31 @@ To update site-wide data for an existing Annalist site, use:
 
     annalist-manager updatesitedata [ CONFIG ]
 
+If any of the Annalist installable collection data is used then these should be re-installed (assuming they have not been modified locally since they were installed); e.g.
+
+    annalist-manager installcollection Resource_defs -f [CONFIG]
+    annalist-manager installcollection Concept_defs -f [CONFIG]
+    annalist-manager installcollection Journal_defs -f [CONFIG]
+
+(The `-f` or `--force` option allows the existing collection to be replaced by new defnitions provided by the new Annalist release.)
+
+Existing user collection data will be migrated as it is accessed, but it may be cleaner to migrate all data _en masse_ before startign to access it, thus:
+
+    annalist-manager migrateallcollections [ CONFIG ]
+
 Then start the server as before.
 
 e.g.
 
-    annalist-manager initialize --development
-    annalist-manager defaultadminuser --development
+    annalist-manager initialize --personal
+    annalist-manager defaultadminuser --personal
       Creating user admin
       Password:
       Re-enter password:
-    annalist-manager updatesitedata --development
-    annalist-manager runserver --development
+    annalist-manager updatesitedata --personal
+    annalist-manager installcollection Resource_defs -f --personal
+    annalist-manager migrateallcollections --personal
+    annalist-manager runserver --personal
 
 
 ## New software installation
@@ -137,7 +155,7 @@ The following assumes that software is installed under a directory called $WORKS
         Type "help", "copyright", "credits" or "license" for more information.
         >>> 
 
-    (On Linux/Unix systems, typing `python<tab>` may help to shopw what versions are installed.)
+    (On Linux/Unix systems, typing `python<tab>` may help to show what versions are installed.)
 
     In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
 
@@ -157,9 +175,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.1.36.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.0.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.1.36.tar.gz
+        pip install $WORKSPACE/Annalist-0.5.0.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -168,20 +186,22 @@ The following assumes that software is installed under a directory called $WORKS
     The output from this command should look something like this:
 
         (anenv)sasharissa:annalist_root graham$ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.1.36 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.0 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.36-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
         INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.36-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.36-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root
         INFO:annalist_site.settings.runtests:TEST_BASE_URI:   http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DB PATH:         /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.1.36-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:DB PATH:         /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist/data/identity_providers/')
+        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist.log
         INFO:rdflib:RDFLib Version: 4.2.1
         Creating test database for alias 'default'...
-        ...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        .........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 635 tests in 235.226s
+        Ran 649 tests in 255.730s
 
         OK
         Destroying test database for alias 'default'...
@@ -196,13 +216,16 @@ Annalist deployment details are controlled by files in the `src/annalist_root/an
 
 **Development**: Annalist site data is kept in a directory within the Annalist software source tree, and configuration files are in subdirectory `.annalist` of the installing user's home directory.
 
-**Personal**: Annalist site data is in a sibdirectory `annalist_site`, and configuration files are in subdirectory `.annalist`, of the installing user's home directory.
+**Personal**: Annalist site data is in a subdirectory `annalist_site`, and configuration files are in subdirectory `.annalist`, of the installing user's home directory.
 
 **Shared**: Annalist site data is kept in directory `/var/annalist_site`, and configuration files are in subdirectory `/etc/annalist`.  Such an installation will typically require root privileges on the host computer system to complete.
 
+For most purposes, the default (**Personal**) configuration works just fine.  For shared instances, I use this with a dedicated user (e.g. `annalist`).
+
+
 ### Annalist authentication options
 
-Annalist has been implemented to use federated authentication based on Open ID Connect (http://openid.net/connect/) rather than local user credential management.  Using third party authentication services should facilitate integration with single-sign-on (SSO) services, and avoids the security risks assciated with local password storage.  Unfortunately, installing and configuring a system to use an OpenID Connect authentication service does take some addtional effort to register the installed application with the authentication service.
+Annalist has been implemented to use federated authentication based on Open ID Connect (http://openid.net/connect/) rather than relying on local user credential management.  Using third party authentication services should facilitate integration with single-sign-on (SSO) services, and avoids the security risks assciated with local password storage.  Unfortunately, installing and configuring a system to use an OpenID Connect authentication service does take some addtional effort to register the installed application with the authentication service.
 
 Annalist currently supports two user authentication mechanisms: OpenID Connect using Google+, and local user login credentials.  (Other OpenID Connect providers may also work, but have not been tested.)
 
@@ -210,7 +233,7 @@ Annalist currently supports two user authentication mechanisms: OpenID Connect u
 
 Annalist OpenID Connect authentication has been tested with Google+ identity service.  Instructions for configuring a new installation to work with Google+ are in [Configuring Annalist to use OpenID Connect](openid-connect-setup.md).
 
-The configuration details for using an OpenID Connect provider are stored in a private area, away from the Annalist source files and site data, since they contain private keying data.  A subdirectory `providers` of the Annalist configuration directory contains a description file for weach supported OpenID Connect provider.  New providers may be supported by adding descrtiption files to this directory.  The provider description for Google may be a useful example for creating descriptions for other providers.  (But be aware that different providers will have different registration procedures, and may require subtlely different forms of configuration information.)
+The configuration details for using an OpenID Connect provider are stored in a private area, away from the Annalist source files and site data, since they contain private keying data.  A subdirectory `providers` of the Annalist configuration directory contains a description file for each supported OpenID Connect provider.  New providers may be supported by adding descrtiption files to this directory.  The provider description for Google may be a useful example for creating descriptions for other providers.  (But be aware that different providers will have different registration procedures, and may require subtlely different forms of configuration information.)
 
 #### Local user database
 
@@ -220,11 +243,11 @@ When installing Annalist, an administration account may be created using the `an
 
 ### Initial site setup
 
-These instructions use the example of a development configuration (`devel`) and a local user database: these options are not suitable for a full deployment, but are probably the least intrusive to use for early evaluation purposes.  Alternatively, for a quickstart, use the Docker container described above.
+These instructions use the example of a local user database: these options are not suitable for a full deployment, but are probably the least intrusive to use for early evaluation purposes.  Alternatively, for a quickstart, use the Docker container described above.
 
-NOTE: using the development configuration, data files are stored within the software source code tree, and will be removed when the software is updated.  Use `--personal` instead of `--development` in the sequence below if you want to preserve any data files you create.
+NOTE: using the development configuration, data files are stored within the software source code tree, and will be removed when the software is updated.  Use a personal configuration if you want to preserve any data files you create.
 
-1.  The commands must be issued with the annalist python environment activated.  If needed, use a command like this:
+1.  The commands must be issued with the annalist python environment activated.  If needed, use a command like this (where "annenv" is replaced with the name used previously to create the python virtual environment):
 
         source annenv/bin/activate
 
@@ -292,11 +315,14 @@ The following instructions assume a browser running on the same host as the Anna
 
     ![Initial login page](screenshots/Login-initial.png)
 
-3.  Select the Local user credentials 'login' link at the bottom of the page:
+3.  Enter the local adminsirator id (e.g. `admin`) in the **User IOd** field, then click on the 
+**Local username** button:
 
-    ![Django login page](screenshots/Login-django.png)
+    ![Django login page](screenshots/Login-django-1.png)
 
 4.  Enter the admin user credentials specified previously when creating the Annalist admin user, and click the 'Login' button:
+
+    ![Django login page](screenshots/Login-django-2.png)
 
 5.  Click the **Home** link on the top menu bar to return to the front page:
 
@@ -304,14 +330,14 @@ The following instructions assume a browser running on the same host as the Anna
 
     Note that the front page now shows text entry boxes and a button for creating a new collection.
 
-At this point, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).  Or just continue straight to create an initial dara collection.
+At this point, the **Admin** link in the page footer can be used to create additional local users via the local administrative interface (which is implemented in the underlying Django web application framework).  Or just continue straight to create an initial data collection.
 
 
 ## Create a collection
 
 This section assumes you are logged in to an Annalist system.
 
-To create a new _collection_, which is an Annalist unit of adminstratable and copyable data, enter a short name for the collection (consisting of just letters, digits and/or underscorte (`'_'`) characters) and a one-line label or description (which can contain arbitrary characters) into the text boxes presented:
+To create a new _collection_, which is an Annalist unit of administrable and copyable data, enter a short name for the collection (consisting of just letters, digits and/or underscorte (`'_'`) characters) and a one-line label or description (which can contain arbitrary characters) into the text boxes presented:
 
 ![Front page with details for new collection entered](screenshots/Front-page-collection-details.png)
 
@@ -326,7 +352,7 @@ Click on the link in the Id column to view the new collection:
 From this screen, you can start to add data to this collection.  For more information, see [Using Annalist](using-annalist.adoc)
 
 
-## `annalist-manager` command reference
+## `annalist-manager` commands
 
-@@TODO.  Use `annalist-manager help` for a command summary.
+Use `annalist-manager help` for a command summary.
 
