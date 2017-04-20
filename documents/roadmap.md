@@ -1,6 +1,8 @@
 # Development roadmap
 
-Current status: public prototype release 0.1.34; this release provides enhancements and bug fixes in a number of areas, as well as some major internal structural changes to the software.
+Current status: candidate feature-complete minmum viable product release 0.5.0.
+
+This release simplifies the user interface for defining entity views, and implements some major internal structural changes to the software and stored data.
 
 
 # V1.0 release

@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/List_default_view"
 , "rdfs:label":                 "Default view"
-, "rdfs:comment":               "Specifies a record view used when viewing, editing or creating records from this list view.  (Note that record views are not tied to a specific record type:  see also the List_record_type field.)"
+, "rdfs:comment":               "# Default view\r\n\r\nSpecifies a record view used when viewing, editing or creating entities from this list view.  (Note that record views are not tied to a specific entity type:  see also the [Default type]($BASE:_field/List_default_type) field.)"
 , "annal:field_render_type":    "_enum_render_type/Enum_optional"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:View"
@@ -15,4 +15,5 @@
 , "annal:field_ref_type":      "_view"
 , "annal:field_placement":      "small:0,12;medium:0,6"
 , "annal:default_value":        "Default_view"
+, "annal:tooltip":              "Specifies a record view used when viewing, editing or creating entities from this list view."
 }
