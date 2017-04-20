@@ -2,7 +2,7 @@
 
 ----
 
-NOTE: the 0.1 release series is now superseded by - [Release 0.5.x](./release-v0.5)
+NOTE: the 0.1 release series is now superseded by - [Release 0.5.x](./release-v0.5.md)
 
 ----
 
