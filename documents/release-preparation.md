@@ -76,7 +76,7 @@
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
+- [x] Update and test demo installation on annalist.net
     - [x] ssh to annalist@annalist.net
     - [x] `. backup_annalist_site.sh`
     - [x] `mv annalist_site_2015MMDD/ annalist_site_2017----`
@@ -124,16 +124,16 @@
     - e.g.
         - `git checkout develop`
         - `git merge release-prep-x.y.z`
-- [ ] Bump/check Zenodo DOI details:
+- [x] Bump/check Zenodo DOI details:
     - On GitHub, create a new release
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
     - The DOI in the badge should display the new release
     - It may take a few minutes for the new DOI to resolve.
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [ ] Re-test
+- [x] On develop branch, bump version number again (back to odd value)
+- [x] Reset TODO list (remove entries moved to release notes, update version)
+- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
+- [x] Re-test
 - [ ] Commit and push changes
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
