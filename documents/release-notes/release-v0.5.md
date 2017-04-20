@@ -7,7 +7,7 @@ A summary of issues intended to be resolved for product release can be seen in t
 
 ## Current release: 0.5.0
 
-This release contains the first candidate feature-complete functionality for an Annalist V1 software release.  The aim has beemn to complete features that are seen as likely to affect the stored data structures used by Annalist, to minimize future data migration requirements.  The intent is that this release will be used in actual projects to test if it offers minimal viable product functionality for its imntended use.  Meanwhile, planned developments will focus more on documentation, stability, security and performance concerns.
+This release contains the first candidate feature-complete functionality for an Annalist V1 software release.  The aim has been to complete features that are likely to affect the stored data structures used by Annalist, to minimize future data migration requirements.  The intent is to use this release in several projects to test if it offers minimal viable product functionality for its intended use.  Meanwhile, planned developments up to a version 1.0 release will focus on documentation, stability, security and performance concerns.
 
 The main change in this release from earlier (v0.1) releases is simplification the user interface for defining entity views (specifically, fields that contain repeating groups of values) by eliminating the use of separate field group entities.  This in turn has led to changes in the underlying view and field definition structures used by Annalist.
 
@@ -90,7 +90,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 See also previous release notes:
 
-- [Release 0.1.x](./release-v0.1)
+- [Release 0.1.x](./release-v0.1.md)
 
 # Version 0.5.0
 
