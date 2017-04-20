@@ -113,10 +113,10 @@
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [.] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.1.36"`
+    - `git commit -m "Master branch updated to V0.5.0"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
