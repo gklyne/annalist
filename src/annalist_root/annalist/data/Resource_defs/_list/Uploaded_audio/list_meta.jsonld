@@ -1,0 +1,32 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Uploaded_audio",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Uploaded_audio",
+  "annal:default_view": "_view/Default_view",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Uploaded_audio",
+  "annal:list_entity_selector": "\"coll:Uploaded_audio\" in [@type]",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:3,9"
+    }
+  ],
+  "annal:record_type": "coll:Uploaded_audio",
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "rdfs:comment": "# List of uploaded audio clips\r\n\r\nPresents a list of audio clips that have been uploaded into the current collection.\r\n",
+  "rdfs:label": "Uploaded audio clips"
+}

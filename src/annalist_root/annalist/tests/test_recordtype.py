@@ -356,7 +356,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         # 4th field - URI
         type_uri_placeholder = (
-            "(Type URI)"
+            "(Type URI or CURIE)"
             )
         check_context_field(self, f3,
             field_id=           "Type_uri",
@@ -438,10 +438,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
             default_label_esc="(New type initial values - label)",
             default_comment_esc=context_view_field(r.context, 2, 0)['field_value'],
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
             button_save_tip="Save values and return to previous view.",
             button_view_tip="Save values and switch to entity view.",
             button_cancel_tip="Discard unsaved changes and return to previous view.",
@@ -503,7 +503,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Type_uri" 
-                         placeholder="(Type URI)"
+                         placeholder="(Type URI or CURIE)"
                          value=""/>
                 </div>
               </div>
@@ -738,7 +738,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_copy_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
         f = recordtype_entity_view_form_data(
-            type_id="copytype", orig_id="Default_type", action="copy", update="RecordType"
+            type_id="copytype", 
+            orig_id="Default_type", orig_coll="_annalist_site", action="copy", 
+            update="RecordType"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"

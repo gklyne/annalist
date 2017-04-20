@@ -23,7 +23,6 @@ from annalist.models.recordtype             import RecordType
 from annalist.models.recordtypedata         import RecordTypeData
 from annalist.models.recordview             import RecordView
 from annalist.models.recordfield            import RecordField
-from annalist.models.recordgroup            import RecordGroup
 from annalist.models.entitydata             import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
@@ -170,31 +169,19 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:comment":               "Image reference field comment"
             , "annal:field_render_type":    "RefMultifield"
             , "annal:field_value_mode":     "Value_entity"
-            , "annal:field_value_type":    "annal:Field_group"
+            , "annal:field_value_type":     "annal:Field_group"
             , "annal:field_entity_type":    "test:img_type"
             , "annal:placeholder":          "(ref image field)"
             , "annal:property_uri":         "test:ref_image"
             , "annal:field_placement":      "small:0,12;medium:0,6"
-            , "annal:group_ref":            "Test_refimg_group"
+            , "annal:field_fields": 
+                [ { "annal:field_id":   "Test_comment" }
+                , { "annal:field_id":   "Test_image"}
+                ]
             , "annal:field_ref_type":       "img_type"
             })
         self.assertTrue(refimg_field is not None)
         return refimg_field
-
-    def _create_refimg_group(self):
-        test_refimg_group = RecordGroup.create(self.testcoll, "Test_refimg_group",
-            { "annal:type":         "annal:Field_group"
-            , "annal:uri":          "test:test_refimg_group"
-            , "rdfs:label":         "Ref image group label"
-            , "rdfs:comment":       "Ref image group comment"
-            , "annal:record_type":  "test:img_type"
-            , "annal:group_fields": 
-                [ { "annal:field_id":   "Test_comment" }
-                , { "annal:field_id":   "Test_image"}
-                ]
-            })
-        self.assertTrue(test_refimg_group is not None)
-        return test_refimg_group
 
     def _create_rptref_field(self, label_add=None, label_delete=None):
         rptref_field = RecordField.create(self.testcoll, "Test_rptref_field",
@@ -203,28 +190,16 @@ class RefMultifieldTest(AnnalistTestCase):
             , "rdfs:comment":               "Repeat image reference field comment"
             , "annal:field_render_type":    "RepeatGroupRow"
             , "annal:field_value_mode":     "Value_direct"
-            , "annal:field_value_type":    "annal:Field_group"
+            , "annal:field_value_type":     "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
             , "annal:property_uri":         "test:rpt_image"
             , "annal:field_placement":      "small:0,12"
-            , "annal:group_ref":            "Test_rptref_group"
-            })
-        self.assertTrue(rptref_field is not None)
-        return rptref_field
-
-    def _create_rptref_group(self):
-        rptref_group = RecordGroup.create(self.testcoll, "Test_rptref_group",
-            { "annal:type":         "annal:Field_group"
-            , "annal:uri":          "test:test_rptref_group"
-            , "rdfs:label":         "Repeat image group label"
-            , "rdfs:comment":       "Repeat image group comment"
-            , "annal:record_type":  "test:img_type"
-            , "annal:group_fields": 
+            , "annal:field_fields": 
                 [ { "annal:field_id":   "Test_refimg_field" }
                 ]
             })
-        self.assertTrue(rptref_group is not None)
-        return rptref_group
+        self.assertTrue(rptref_field is not None)
+        return rptref_field
 
     def _create_refimg_image_field(self):
         refimg_image_field = RecordField.create(self.testcoll, "Test_image",
@@ -265,8 +240,6 @@ class RefMultifieldTest(AnnalistTestCase):
         refimg_view = self._create_refimg_view()
         # Create multifield reference field
         refimg_field = self._create_refimg_field()
-        # Create multifield reference group
-        refimg_group = self._create_refimg_group()
         # Create multifield reference fields (where needed)
         refimg_image_field = self._create_refimg_image_field()
         refimg_image_field = self._create_refimg_comment_field()
@@ -281,12 +254,8 @@ class RefMultifieldTest(AnnalistTestCase):
         rptimg_view = self._create_rptimg_view()
         # Create repeat field referencing multifield reference
         rptref_field = self._create_rptref_field()
-        # Create multifield reference group
-        rptref_group = self._create_rptref_group()
         # Create multifield reference field
         refimg_field = self._create_refimg_field()
-        # Create multifield reference group
-        refimg_group = self._create_refimg_group()
         # Create multifield reference fields (where needed)
         refimg_image_field = self._create_refimg_image_field()
         refimg_image_field = self._create_refimg_comment_field()
@@ -324,8 +293,12 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_label'],         "Image reference")
         self.assertEqual(f1['field_render_type'],   "RefMultifield")
         self.assertEqual(f1['field_value_mode'],    "Value_entity")
-        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_refimg_group")
+        self.assertEqual(f1['field_value_type'],    "annal:Field_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_comment" }
+            , { "annal:field_id":   "Test_image"}
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Image reference")
         self.assertEqual(f1['field_property_uri'],  "test:ref_image")
         self.assertEqual(f1['field_value'],         "Test_img_entity")
@@ -347,7 +320,6 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             basepath=TestBasePath,
             cont_uri_param=cont_uri_param,
-            # tooltip1=r.context['fields'][0]['field_help'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -435,7 +407,11 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "RefMultifield")
         self.assertEqual(f1['field_value_mode'],    "Value_entity")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_refimg_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_comment" }
+            , { "annal:field_id":   "Test_image"}
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Image reference")
         self.assertEqual(f1['field_property_uri'],  "test:ref_image")
         self.assertEqual(f1['field_value'],         "Test_img_entity")
@@ -445,7 +421,7 @@ class RefMultifieldTest(AnnalistTestCase):
             coll_id="testcoll", type_id="ref_type", entity_id="Test_ref_entity", 
             view_id="Test_refimg_view",
             basepath=TestBasePath,
-            tooltip1=f0['field_help'],
+            tooltip1=f0['field_tooltip'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -467,7 +443,7 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_refimg_view",
             field_id="Test_refimg_field",
             basepath=TestBasePath,
-            tooltip2=f1['field_help'],
+            tooltip2=f1['field_tooltip'],
             )
         formrow2 = ("""
             <div class="small-12 medium-6 columns" title="%(tooltip2)s">
@@ -523,7 +499,10 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],    "Value_direct")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_rptref_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_refimg_field" }
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Repeat image reference")
         self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
         self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
@@ -685,7 +664,10 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],    "Value_direct")
         self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        self.assertEqual(f1['field_group_ref'],     "Test_rptref_group")
+        field_list = (
+            [ { "annal:field_id":   "Test_refimg_field" }
+            ])
+        self.assertEqual(f1['group_field_list'],    field_list)
         self.assertEqual(f1['group_label'],         "Repeat image reference")
         self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
         self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
@@ -695,7 +677,7 @@ class RefMultifieldTest(AnnalistTestCase):
             coll_id="testcoll", type_id="ref_type", entity_id="Test_rpt_entity", 
             view_id="Test_rptimg_view",
             basepath=TestBasePath,
-            tooltip1=f0['field_help'],
+            tooltip1=f0['field_tooltip'],
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -738,7 +720,7 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_rptimg_view",
             repeat_id="Test_rptref_field",
             field_id="Test_refimg_field",
-            tooltip3b=f1._field_description['group_field_descs'][0]['field_help']
+            tooltip3b=f1._field_description['group_field_descs'][0]['field_tooltip_test']
             )
         formrow3a = """
             <div class="small-12 medium-2 columns hide-for-small-only">

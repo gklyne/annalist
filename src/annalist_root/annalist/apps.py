@@ -2,7 +2,7 @@
 Annalist application hooks
 (cf. https://docs.djangoproject.com/en/dev/ref/applications/)
 
-The main purpose of this is to log settings values to the loig file, 
+The main purpose of this is to log settings values to the log file, 
 after the log file configuration has been applied.
 """
 

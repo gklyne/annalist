@@ -382,7 +382,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             field_value_type=   "annal:Type",
             field_placement=    "small-12 medium-6 columns",
             field_value=        list_default_type,
-            options=            no_selection("(default record type)") + self.type_options
+            options=            no_selection("(default entity type)") + self.type_options
             )
         # 6
         check_context_field(self, f5,
@@ -475,14 +475,14 @@ class RecordListEditViewTest(AnnalistTestCase):
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.LIST_TYPEID, entity_id="00000001",
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
-            tooltip1a=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip1b=context_view_field(r.context, 0, 1)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
-            tooltip5=context_view_field(r.context, 3, 1)['field_help'],
-            tooltip6=context_view_field(r.context, 4, 0)['field_help'],
-            tooltip7=context_view_field(r.context, 5, 0)['field_help'],
+            tooltip1a=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip1b=context_view_field(r.context, 0, 1)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context, 3, 1)['field_tooltip'],
+            tooltip6=context_view_field(r.context, 4, 0)['field_tooltip'],
+            tooltip7=context_view_field(r.context, 5, 0)['field_tooltip'],
             )
         formrow1a = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -555,9 +555,9 @@ class RecordListEditViewTest(AnnalistTestCase):
                 """+
                   render_select_options(
                     "List_default_type", "Default type",
-                    no_selection("(default record type)") + self.type_options,
+                    no_selection("(default entity type)") + self.type_options,
                     "_type/Default_type",
-                    placeholder="(default record type)"
+                    placeholder="(default entity type)"
                     )+
                 """
                 </div>
@@ -1085,7 +1085,9 @@ class RecordListEditViewTest(AnnalistTestCase):
     def test_post_copy_view(self):
         self.assertFalse(RecordList.exists(self.testcoll, "copylist"))
         f = recordlist_view_form_data(
-            list_id="copylist", orig_id="Default_list", action="copy", update="RecordList"
+            list_id="copylist", 
+            orig_id="Default_list", orig_coll="_annalist_site", action="copy", 
+            update="RecordList"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.LIST_TYPEID, entity_id="Default_list", view_id="List_view"

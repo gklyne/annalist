@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/entity_uri",
   "@type": [
     "annal:Field"
   ],
@@ -15,14 +18,14 @@
   "annal:field_render_type": "_enum_render_type/Identifier",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "annal:Identifier",
-  "annal:group_ref": "",
   "annal:id": "entity_uri",
   "annal:placeholder": "(Entity URI)",
   "annal:property_uri": "annal:uri",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "An absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "An absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
+  "rdfs:comment": "# Entity URI\r\n\r\nAn absolute URI or CURIE that acts as a global identifier for the entity to which it is applied.",
   "rdfs:label": "Entity URI"
 }

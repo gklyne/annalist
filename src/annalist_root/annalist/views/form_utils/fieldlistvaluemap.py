@@ -225,7 +225,7 @@ class FieldListValueMap(object):
         rowdata     = RowData(coll, view_context)
         for f in fields:
             # Add field descriptor for field presentation
-            # log.debug("FieldListValueMap: field %r"%(f,))
+            # log.debug("@@ FieldListValueMap: field %r"%(f,))
             field_desc = field_description_from_view_field(coll, f, view_context)
             properties = field_desc.resolve_duplicates(properties)
             self.fd.append(field_desc)
@@ -234,8 +234,9 @@ class FieldListValueMap(object):
             if field_desc.is_repeat_group():
                 # Repeat group occupies new row
                 rowdata.flush(self.fm)
+                view_field_context = dict(view_context, group=field_desc._field_desc)
                 repeatfieldsmap = FieldListValueMap('_repeatfieldsmap_', 
-                    coll, field_desc.group_view_fields(), view_context
+                    coll, field_desc.group_view_fields(), view_field_context
                     )
                 # Context name: cf. FieldListValueMap.map_entity_to_context
                 repeatvaluesmap = RepeatValuesMap(c='_fieldlistvaluemap_',

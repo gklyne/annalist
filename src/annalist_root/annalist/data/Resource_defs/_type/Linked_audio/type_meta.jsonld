@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Linked_audio",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [
+    {
+      "annal:alias_source": "coll:linked_audio",
+      "annal:alias_target": "coll:included_audio"
+    }
+  ],
+  "annal:id": "Linked_audio",
+  "annal:supertype_uri": [
+    {
+      "@id": "coll:Included_audio"
+    }
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Linked_audio",
+  "annal:type_view": "_view/Linked_audio",
+  "annal:uri": "coll:Linked_audio",
+  "rdfs:comment": "# Linked audio clip\r\n\r\nEntity containing a link to an audio clip on the web, along with a label and description.",
+  "rdfs:label": "Linked audio (internal type)"
+}

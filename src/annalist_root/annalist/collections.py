@@ -29,6 +29,19 @@ installable_collections = (
             , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
             }
         } 
+    , "Resource_defs":   
+        { 'data_dir': "Resource_defs"
+        , 'coll_meta':
+            { "rdfs:label":     "Resource definitions"
+            , "rdfs:comment":   "# Resource definitions"+
+                                "\r\n\r\n"+
+                                "This collection defines types, views and fields that "+
+                                "can be used to incorporate references to uploaded, "+
+                                "imported or linked media resources into entity views."+
+                                "\r\n"
+            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
+            }
+        }
     , "Concept_defs":   
         { 'data_dir': "Concept_defs"
         , 'coll_meta':
@@ -37,7 +50,8 @@ installable_collections = (
                                 "This collection defines types, views and fields that can be used "+
                                 "to associate concepts (based on the SKOS vocabulary) with entities."+
                                 "\r\n"
-            , "annal:comment":  "Initialized by: `annalist-manager installcollection`"
+            , "annal:inherit_from":         "_coll/Resource_defs"
+            , "annal:comment":              "Initialized by: `annalist-manager installcollection`"
             , "annal:default_view_type":    "Concept"
             }
         }

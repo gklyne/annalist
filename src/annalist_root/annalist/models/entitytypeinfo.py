@@ -23,7 +23,7 @@ from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordenum     import RecordEnumFactory
@@ -214,7 +214,7 @@ TYPE_CLASS_MAP = (
     , TYPE_ID:                  RecordType
     , LIST_ID:                  RecordList
     , VIEW_ID:                  RecordView
-    , GROUP_ID:                 RecordGroup
+    , GROUP_ID:                 RecordGroup_migration
     , FIELD_ID:                 RecordField
     , VOCAB_ID:                 RecordVocab
     , '_enum_field_placement':  RecordEnumFactory('_enum_field_placement',  '_enum_field_placement')
@@ -306,7 +306,7 @@ class EntityTypeInfo(object):
         Attributes of type information object are:
 
         recordtype      type object describing the identified type
-        entityparent    Parent enbtity for entities of this type, or None if 
+        entityparent    Parent entity for entities of this type, or None if 
                         the type is not defined for the collection
         entityaltparent Alternative (site-wide) parent entity for built-in types, 
                         or None
@@ -403,7 +403,6 @@ class EntityTypeInfo(object):
             supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uri, None)
             if supertypes:
                 for st in supertypes:
-                    # supertype_uris is list of objects { 'annal:supertype_uri': uri }
                     t = st.get('@id', None)
                     if t:
                         types.append(t)
@@ -431,13 +430,11 @@ class EntityTypeInfo(object):
         """
         Creates and returns an entity for the current type, with the supplied values.
         """
-        log.debug(
-            "create_entity id %s, parent %s, values %r"%
-            (entity_id, self.entityparent, entity_values)
-            )
+        log.debug("create_entity: id %s, parent id %s"%(entity_id, self.entityparent.get_id()))
+        # log.debug("create_entity: values %r"%(entity_values,))
         # Set type URI for entity; previous types are not carried forwards
         # Don't save entity URI if same as URL
-        if entity_values.get(ANNAL.CURIE.uri) == entity_values.get(ANNAL.CURIE.url):
+        if entity_values.get(ANNAL.CURIE.uri, "") == entity_values.get(ANNAL.CURIE.url, ""):
             entity_values.pop(ANNAL.CURIE.uri, None)
         entity_values['@type']          = self.get_all_type_uris() # NOTE: previous types not carried forward
         entity_values[ANNAL.CURIE.type] = self.get_type_uri()

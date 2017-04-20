@@ -44,7 +44,7 @@ from am_createuser          import (
     )
 from am_managecollections   import (
     am_installcollection, am_copycollection,
-    am_migrationreport, am_migratecollection, 
+    am_migrationreport, am_migratecollection, am_migrateallcollections
     )
 from am_help                import am_help, command_summary_help
 
@@ -154,6 +154,8 @@ def run(userhome, userconfig, options, progname):
         return am_migrationreport(annroot, userhome, options)
     if options.command.startswith("migratec"):              # migratecollection
         return am_migratecollection(annroot, userhome, options)
+    if options.command.startswith("migratea"):              # migrateallcollections
+        return am_migrateallcollections(annroot, userhome, options)
     if options.command.startswith("runs"):                  # runserver
         return am_runserver(annroot, userhome, options)
     if options.command.startswith("serv"):                  # serverlog
@@ -184,11 +186,11 @@ def runCommand(userhome, userconfig, argv):
     Returns exit status.
     """
     options = parseCommandArgs(argv[1:])
-    if options and options.debug:
-        # This doesn't work as expected - some kind of interference with Django log settings?
-        logging.basicConfig(level=logging.DEBUG, filename="annalist-manager.log", filemode="w")
-    else:
-        logging.basicConfig(level=logging.INFO)
+    # if options and options.debug:
+    #     # This doesn't work as expected - some kind of interference with Django log settings?
+    #     logging.basicConfig(level=logging.DEBUG, filename="annalist-manager.log", filemode="w")
+    # else:
+    #     logging.basicConfig(level=logging.INFO)
     # log.debug("runCommand: configbase %s, filebase %s, argv %s"%(configbase, filebase, repr(argv)))
     # log.debug("Options: %s"%(repr(options)))
     # else:

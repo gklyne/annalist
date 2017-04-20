@@ -54,19 +54,19 @@ def add_link_to_field_choice(fc, coll_id, default_type_id=None):
 
 site_types = (
     [ FieldChoice("_type/_initial_values")
-    , FieldChoice("_type/_coll",                      label="Collection"            )
-    , FieldChoice("_type/_enum_list_type",            label="List display type"     )
-    , FieldChoice("_type/_enum_render_type",          label="Field render type"     )
-    , FieldChoice("_type/_enum_value_mode",           label="Field value mode"      )
-    , FieldChoice("_type/_enum_value_type",           label="Field value type"      )
-    , FieldChoice("_type/_field",                     label="Field"                 )
-    , FieldChoice("_type/_group",                     label="Field group"           )
-    , FieldChoice("_type/_list",                      label="List"                  )
-    , FieldChoice("_type/_type",                      label="Type"                  )
-    , FieldChoice("_type/_user",                      label="User permissions"      )
-    , FieldChoice("_type/_view",                      label="View"                  )
-    , FieldChoice("_type/_vocab",                     label="Vocabulary namespace"  )
-    , FieldChoice("_type/Default_type",               label="Default record"        )
+    , FieldChoice("_type/_coll",                label="Collection"        )
+    , FieldChoice("_type/_enum_list_type",      label="List display type" )
+    , FieldChoice("_type/_enum_render_type",    label="Field render type" )
+    , FieldChoice("_type/_enum_value_mode",     label="Field value mode"  )
+    , FieldChoice("_type/_enum_value_type",     label="Field value type"  )
+    , FieldChoice("_type/_field",               label="Field"             )
+    , FieldChoice("_type/_group",               label="Field group"       )
+    , FieldChoice("_type/_list",                label="List"              )
+    , FieldChoice("_type/_type",                label="Type"              )
+    , FieldChoice("_type/_user",                label="User permissions"  )
+    , FieldChoice("_type/_view",                label="View"              )
+    , FieldChoice("_type/_vocab",               label="Namespace"         )
+    , FieldChoice("_type/Default_type",         label="Default record"    )
     ])
 
 def get_site_types_sorted():
@@ -84,8 +84,8 @@ def get_site_types():
 site_bib_types = (
     site_types[0:1]+
     sorted(site_types[1:] +
-        [ FieldChoice("_type/BibEntry_type",              label="Bibliographic record"        )
-        , FieldChoice("_type/Enum_bib_type",              label="Bibliographic entry type"    )
+        [ FieldChoice("_type/BibEntry_type", label="Bibliographic record"     )
+        , FieldChoice("_type/Enum_bib_type", label="Bibliographic entry type" )
         ])
     )
 
@@ -262,12 +262,6 @@ def get_site_bib_views():
 
 site_field_groups = (
     [ FieldChoice("_group/_initial_values")
-    , FieldChoice("_group/Entity_see_also_r",       label="Links to further information" )
-    , FieldChoice("_group/Group_field_group",       label="Group field fields"           )
-    , FieldChoice("_group/List_field_group",        label="List field fields"            )
-    , FieldChoice("_group/Type_alias_group",        label="Field alias fields"           )
-    , FieldChoice("_group/Type_supertype_uri_r",    label="Supertype URIs"               )
-    , FieldChoice("_group/View_field_group",        label="View field fields"            )
     ]) 
 
 def get_site_field_groups_sorted():
@@ -358,25 +352,39 @@ site_bibentry_fields = (
 
 site_field_fields = (
     [ FieldChoice("_field/_initial_values")
-    , FieldChoice("_field/Field_comment",              label="Help"                )
-    , FieldChoice("_field/Field_default",              label="Default"             )
+    , FieldChoice("_field/Field_default",              label="Default value"       )
     , FieldChoice("_field/Field_entity_type",          label="Entity type"         )
     , FieldChoice("_field/Field_fieldref",             label="Refer to field"      )
+    , FieldChoice("_field/Field_fields",               label="Subfields"           )
     , FieldChoice("_field/Field_groupref",             label="Field group"         )
+    , FieldChoice("_field/Field_help",                 label="Help"                )
     , FieldChoice("_field/Field_id",                   label="Field Id"            )
-    , FieldChoice("_field/Field_label",                label="Label"               )
-    , FieldChoice("_field/Field_missing",              label="Missing"             )
+    , FieldChoice("_field/Field_label",                label="Field label"         )
+    , FieldChoice("_field/Field_missing",              label="(Missing)"           )
     , FieldChoice("_field/Field_placeholder",          label="Placeholder"         )
     , FieldChoice("_field/Field_placement",            label="Position/size"       )
     , FieldChoice("_field/Field_property",             label="Property URI"        )
-    , FieldChoice("_field/Field_render_type",          label="Render type"   )
+    , FieldChoice("_field/Field_render_type",          label="Render type"         )
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
-    , FieldChoice("_field/Field_repeat_label_delete",  label="Delete value label"  )
+    , FieldChoice("_field/Field_repeat_label_delete",  label="Remove value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
+    , FieldChoice("_field/Field_tooltip",              label="Tooltip"             )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
     , FieldChoice("_field/Field_value_type",           label="Value type"          )
     ])  
+
+site_field_subfield_fields = (
+    [ FieldChoice("_field/_initial_values")
+    , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
+    , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
+    , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
+    ])  
+
+site_field_all_fields = (
+    [ FieldChoice("_field/_initial_values")] 
+    + sorted(site_field_fields[1:] + site_field_subfield_fields[1:])
+    )
 
 site_defined_group_fields = (
     [ FieldChoice("_field/_initial_values")
@@ -527,7 +535,7 @@ site_fields = (
     site_coll_fields[1:] +
     site_defined_entity_fields[1:] +
     site_enum_fields[1:] +
-    site_field_fields[1:] +
+    site_field_all_fields[1:] +
     site_defined_group_fields[1:] +
     site_defined_list_fields[1:] +
     site_defined_type_fields[1:] +

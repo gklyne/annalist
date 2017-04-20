@@ -352,7 +352,7 @@ def recordview_entity_view_context_data(
     return context_dict
 
 def recordview_entity_view_form_data(
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         view_id="", orig_id=None, 
         action=None, cancel=None, 
         target_record_type="annal:View",
@@ -396,13 +396,16 @@ def recordview_entity_view_form_data(
         form_data_dict['entity_id']     = view_id
     if view_id:
         form_data_dict['entity_id']     = view_id
-        form_data_dict['orig_id']       = view_id
         form_data_dict['View_label']    = '%s %s/%s'%(update, coll_id, view_id)
         form_data_dict['View_comment']  = '%s help for %s in collection %s'%(update, view_id, coll_id)
         form_data_dict['View_uri']      = TestBaseUri + "/c/%s/d/_view/%s/"%(coll_id, view_id)
+        form_data_dict['orig_id']       = view_id
         form_data_dict['orig_type']     = "_view"
+        form_data_dict['orig_coll']     = coll_id
     if orig_id:
         form_data_dict['orig_id']       = orig_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
     if action:
         form_data_dict['action']        = action
     if cancel:

@@ -33,9 +33,6 @@ Directory layout:
             _field/
               (view-field definitions)
                :
-            _group/
-              (field group definitions)
-               :
             _list/
               (entity list definitions)
                :
@@ -92,6 +89,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.1.36 at 2017-02-08 16:18:45
+for Annalist 0.5.0 at 2017-04-20 08:13:44
 
 

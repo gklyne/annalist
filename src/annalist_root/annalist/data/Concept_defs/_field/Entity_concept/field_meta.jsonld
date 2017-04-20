@@ -18,14 +18,14 @@
   "annal:field_render_type": "_enum_render_type/Enum_optional",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "skos:Concept",
-  "annal:group_ref": "",
   "annal:id": "Entity_concept",
   "annal:placeholder": "(Select concept tag)",
   "annal:property_uri": "dc:subject",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Reference or tag for a concept associated with an entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Reference or tag for a concept associated with an entity.",
+  "rdfs:comment": "# Concept tag\r\n\r\nReference or tag for a concept associated with an entity.",
   "rdfs:label": "Concept tag"
 }

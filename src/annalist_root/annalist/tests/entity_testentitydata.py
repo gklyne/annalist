@@ -354,7 +354,7 @@ def entitydata_context_add_field(
 def entitydata_form_data(
         entity_id="", orig_id=None, 
         type_id="testtype", orig_type=None,
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         action=None, cancel=None, close=None, edit=None, copy=None, 
         update="Entity"
         ):
@@ -373,10 +373,13 @@ def entitydata_form_data(
         form_data_dict['Entity_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']           = entity_id
         form_data_dict['orig_type']         = type_id
+        form_data_dict['orig_coll']         = coll_id
     if orig_id:
         form_data_dict['orig_id']           = orig_id
     if orig_type:
         form_data_dict['orig_type']         = orig_type
+    if orig_coll:
+        form_data_dict['orig_coll']         = orig_coll
     if action:
         form_data_dict['action']            = action
     if cancel:
@@ -433,7 +436,7 @@ def entitydata_delete_confirm_form_data(entity_id=None, search=None):
 #   -----------------------------------------------------------------------------
 
 def entitydata_default_view_form_data(
-        coll_id="testcoll", 
+        coll_id="testcoll", orig_coll=None,
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
         action=None, cancel=None, close=None, view=None, edit=None, copy=None, 
@@ -456,10 +459,13 @@ def entitydata_default_view_form_data(
         form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']         = entity_id
         form_data_dict['orig_type']       = type_id
+        form_data_dict['orig_coll']       = coll_id
     if orig_id:
         form_data_dict['orig_id']         = orig_id
     if orig_type:
         form_data_dict['orig_type']       = orig_type
+    if orig_coll:
+        form_data_dict['orig_coll']       = orig_coll
     if action:
         form_data_dict['action']          = action
     if cancel:
@@ -724,10 +730,12 @@ def default_label(coll_id=None, type_id=None, entity_id=None):
 
 def default_comment(coll_id=None, type_id=None, entity_id=None):
     # Note: for built-in types, default values matches corresponding sitedata _initial_values
-    if type_id in ["_type", "_view", "_list"]:
+    if type_id in ["_type", "_view", "_list", "_field"]:
         return ""
-    if type_id == "_field":
-        return "(tooltip text here)"
+    #@@
+    # if type_id == "_field":
+    #     return "(tooltip text here)"
+    #@@
     return message.ENTITY_DEFAULT_COMMENT%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def error_label(coll_id=None, type_id=None, entity_id=None):

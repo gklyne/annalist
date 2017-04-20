@@ -1,0 +1,32 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Web_resources",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Web_resource",
+  "annal:default_view": "_view/Web_resource",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Web_resources",
+  "annal:list_entity_selector": "\"coll:Web_resource\" in [@type]",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,4"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:4,8"
+    }
+  ],
+  "annal:record_type": "coll:Web_resource",
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "rdfs:comment": "# List web resources\r\n\r\nPresents a list of web resources, which are like web bookmarks in a collection that can be referenced by other entities.",
+  "rdfs:label": "Web resources"
+}

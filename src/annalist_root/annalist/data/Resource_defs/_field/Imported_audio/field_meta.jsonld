@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Imported_audio",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/RefAudio",
+  "annal:field_value_mode": "_enum_value_mode/Value_import",
+  "annal:field_value_type": "annal:Audio",
+  "annal:id": "Imported_audio",
+  "annal:placeholder": "(URL of audio to import)",
+  "annal:property_uri": "coll:imported_audio",
+  "annal:repeat_label_add": "",
+  "annal:repeat_label_delete": "",
+  "annal:tooltip": "Field referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Imported audio clip\r\n\r\nField referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
+  "rdfs:label": "Imported audio clip"
+}

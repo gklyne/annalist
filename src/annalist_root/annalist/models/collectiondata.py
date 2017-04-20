@@ -23,10 +23,12 @@ from annalist                       import layout
 from annalist                       import message
 from annalist.identifiers           import ANNAL
 from annalist.util                  import replacetree, updatetree
+from annalist.exceptions            import Annalist_Error
 
 from annalist.models.site           import Site
 from annalist.models.entityfinder   import EntityFinder
-from annalist.models.entitytypeinfo import EntityTypeInfo
+from annalist.models.entitytypeinfo import EntityTypeInfo, TYPE_CLASS_MAP
+from annalist.models.recordtypedata import RecordTypeData
 
 def initialize_coll_data(src_data_dir, tgt_coll):
     """
@@ -109,13 +111,18 @@ def migrate_collection_dir(coll, prev_dir, curr_dir):
             # print "@@ "+msg
             log.error("migrate_collection_dir: "+msg)
             errs.append(msg)
+        # Create type data container for site types (so it can be enumerated later)
+        if curr_dir in TYPE_CLASS_MAP:
+            if not RecordTypeData.exists(coll, curr_dir):
+                log.info("Create RecordTypeData for %s"%curr_dir)
+                typedata  = RecordTypeData.create(coll, curr_dir, {})
     return errs
 
 def migrate_coll_config_dirs(coll):
     """
     Migrate (rename) collection configuration directories.
 
-    Returns list of errors or empty list.
+    Returns list of error message strings, or empty list.
     """
     errs = []
     for curr_dir, prev_dir in layout.COLL_DIRS_CURR_PREV:
@@ -129,17 +136,30 @@ def migrate_coll_data(coll):
     """
     Migrate collection data for specified collection
 
-    Returns list of errors or empty list.
+    Returns list of error message strings, or empty list.
     """
     log.info("Migrate Annalist collection data for %s"%(coll.get_id()))
     errs = migrate_coll_config_dirs(coll)
     if errs:
         return errs
-    entityfinder = EntityFinder(coll)
-    for e in entityfinder.get_entities():
-        coll.update_entity_types(e)
-        log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
-        e._save(post_update_flags={"nocontext"})
+    try:
+        entityfinder = EntityFinder(coll)
+        for e in entityfinder.get_entities():
+            log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
+            typeinfo = EntityTypeInfo(coll, e[ANNAL.CURIE.type_id])
+            e[ANNAL.CURIE.type] = typeinfo.get_type_uri()
+            coll.update_entity_types(e)
+            e._save(post_update_flags={"nocontext"})
+            if e.get_errors():
+                errs.extend(e.get_errors())
+    except Annalist_Error as err:
+        errs.append(str(err))
+    if errs:
+        return errs
+    # Rename _group directory
+    errs = migrate_collection_dir(coll, layout.GROUP_DIR, layout.GROUP_DIR+".migrated")
+    if errs:
+        return errs
     coll.generate_coll_jsonld_context()    
     return errs
 

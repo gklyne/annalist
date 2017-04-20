@@ -18,14 +18,14 @@
   "annal:field_render_type": "_enum_render_type/Enum_optional",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "skos:Concept",
-  "annal:group_ref": "",
   "annal:id": "Related_concept",
   "annal:placeholder": "(Select related concept)",
   "annal:property_uri": "skos:related",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "A link to related concept or tag.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "A link to related concept or tag.",
+  "rdfs:comment": "# Related concept\r\n\r\nA link to related concept or tag.",
   "rdfs:label": "Related concept"
 }

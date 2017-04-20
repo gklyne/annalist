@@ -38,7 +38,6 @@ from annalist.models.sitedata       import SiteData
 from annalist.models.collection     import Collection
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
@@ -321,9 +320,6 @@ class Site(EntityRoot):
             """            %(field_dir)s/\n"""+
             """              (view-field definitions)\n"""+
             """               :\n"""+
-            """            %(group_dir)s/\n"""+
-            """              (field group definitions)\n"""+
-            """               :\n"""+
             """            %(list_dir)s/\n"""+
             """              (entity list definitions)\n"""+
             """               :\n"""+
@@ -439,7 +435,8 @@ class Site(EntityRoot):
         site_data_tgt, site_data_file = sitedata._dir_path()
         s = os.path.join(site_data_src, sdir)
         d = os.path.join(site_data_tgt, sdir)
-        replacetree(s, d)
+        if os.path.isdir(s):
+            replacetree(s, d)
         return
 
     @staticmethod
@@ -451,7 +448,8 @@ class Site(EntityRoot):
         site_data_tgt, site_data_file = sitedata._dir_path()
         s = os.path.join(site_data_src, sdir)
         d = os.path.join(site_data_tgt, sdir)
-        updatetree(s, d)
+        if os.path.isdir(s):
+            updatetree(s, d)
         return
 
     @staticmethod

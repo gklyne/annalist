@@ -43,7 +43,6 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordfield    import RecordField
 
 from annalist.views.fields.find_renderers   import is_repeat_field_render_type
@@ -197,7 +196,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         option_labels_here     = (
             [self.html_encode(o.string) for o in select_elem.find_all("option")]
             )
-        #@@ option_labels_expected = [ fc.choice() for fc in options ]
         option_labels_expected = get_choice_labels(options)
         if option_labels_here != option_labels_expected:
             log.info("option_labels_here:     %r"%(option_labels_here,))
@@ -213,26 +211,28 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def check_row_column(self, row_data, colnum, row_expected):
         if row_expected[colnum] is not None:
             e = row_expected[colnum]
-            f = (row_data
+            i = (row_data
                     .find("div", class_="row")
                     .find_all("div", class_="columns")[colnum]
-                    .stripped_strings.next()
+                    .stripped_strings
                 )
+            f = next(i, "(@@no value@@)")
+            if f != e:
+                print "@@ Expected: %r, found %r"%(e, f)
+                cols = (row_data
+                        .find("div", class_="row")
+                        .find_all("div", class_="columns")
+                    )
+                print "@@ cols %s"%(cols,)
             self.assertEqual(e, f, "%s != %s (%r)"%(e, f, row_expected))
         return
 
     def check_list_row_data(self, s, trows_expected):
         trows = s.form.find_all("div", class_="tbody")
-        #@@
-        # for i in range(len(trows)):
-        #     print "\n@@ trow[%d]:\n%s\n"%(i, trows[i])
-        #@@
         self.assertEqual(len(trows), len(trows_expected))
         for i in range(len(trows_expected)):
             e = trows_expected[i]   # expected
             f = trows[i]            # found
-            #@@ print "e: "+repr(e)
-            #@@ print "f: "+str(f)
             # <input class="select-box right" name="entity_select" type="checkbox" value="_list/list1"/>
             self.assertEqual(e[0], f.find("input", class_="select-box")["value"])
             for j in range(len(trows_expected[i][1])):
@@ -244,8 +244,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(len(trows), len(expect_fields))
         for i in range(len(trows)):
             tcols = trows[i].select("div.columns div.row div.columns")
-            # print "@@ trows[%d]\n%s"%(i, trows[i].prettify())
-            # print "@@tcols\n%s"%("\n\n".join([c.prettify() for c in tcols]))
             self.assertEqual(trows[i].div.input['type'],  "checkbox")
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
@@ -283,21 +281,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
         self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
-        # print "l: " + type_list[ANNAL.CURIE.id]
+        # print "@@ l: " + type_list[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
-        # print "v: " + type_view[ANNAL.CURIE.id]
+        # print "@@ v: " + type_view[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
         return
 
     # Test consistency of field descriptions for a given type
     def check_type_fields(self, type_id, type_uri, view_fields):
-        # print "t: " + type_id
+        # print "@@ t: " + type_id
         for f in view_fields:
-            field_id   = extract_entity_id(f[ANNAL.CURIE.field_id])
-            # print "f: " + field_id
-            view_field = RecordField.load(self.coll1, field_id, altscope="all")
-            render_type = view_field[ANNAL.CURIE.field_render_type]
-            value_type = view_field[ANNAL.CURIE.field_value_type]
+            field_id    = extract_entity_id(f[ANNAL.CURIE.field_id])
+            # print "@@ f: " + field_id
+            view_field  = RecordField.load(self.coll1, field_id, altscope="all")
+            render_type = extract_entity_id(view_field[ANNAL.CURIE.field_render_type])
+            value_type  = extract_entity_id(view_field[ANNAL.CURIE.field_value_type])
             try:
                 self.assertEqual(view_field["@type"], [ANNAL.CURIE.Field])
                 self.assertEqual(view_field[ANNAL.CURIE.id],      field_id)
@@ -318,20 +316,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                             )
                 if is_repeat_field_render_type(render_type):
                     # Check extra fields
-                    group_id = extract_entity_id(view_field[ANNAL.CURIE.group_ref])
+                    self.assertIn(ANNAL.CURIE.field_fields,        view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_add,    view_field)
                     self.assertIn(ANNAL.CURIE.repeat_label_delete, view_field)
-                    # Check field group
-                    field_group = RecordGroup.load(self.coll1, group_id, altscope="all")
-                    self.assertEqual(field_group["@type"], [ANNAL.CURIE.Field_group])
-                    self.assertEqual(field_group[ANNAL.CURIE.id],          group_id)
-                    self.assertEqual(field_group[ANNAL.CURIE.type_id],     "_group")
-                    #@@ self.assertEqual(field_group[ANNAL.CURIE.record_type], value_type)
-                    self.check_type_fields("_group", 
-                        field_group[ANNAL.CURIE.record_type], field_group[ANNAL.CURIE.group_fields]
-                        )
-                    # field_name is present only if different from field_id
-                    # self.assertIn(ANNAL.CURIE.field_name,  list_field)
+                    self.assertIn(ANNAL.CURIE.field_value_type,    view_field)
+                    # Check field list
+                    field_list      = view_field[ANNAL.CURIE.field_fields]
+                    repeat_type_uri = view_field[ANNAL.CURIE.field_value_type]
+                    # print "@@ subfields: " + repeat_type_uri
+                    self.check_type_fields("_field", repeat_type_uri, field_list)
+                    # print "@@ subfields: end"
                 enum_types = (
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"
@@ -415,23 +409,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Type")
         self.assertEqual(thead[2].span.string, "Label")
-        #@@ Original
-        trows_expected = (
-            [ [ "_list/list1",    ["list1",    "_list", "RecordList coll1/list1"] ]
-            , [ "_list/list2",    ["list2",    "_list", "RecordList coll1/list2"] ]
-            , [ "_type/type1",    ["type1",    "_type", "RecordType coll1/type1"] ]
-            , [ "_type/type2",    ["type2",    "_type", "RecordType coll1/type2"] ]
-            , [ "_user/testuser", ["testuser", "_user", "Test User"] ]
-            , [ "_view/view1",    ["view1",    "_view", "RecordView coll1/view1"] ]
-            , [ "_view/view2",    ["view2",    "_view", "RecordView coll1/view2"] ]
-            , [ "type1/entity1",  ["entity1",  "type1", "Entity coll1/type1/entity1"] ]
-            , [ "type1/entity2",  ["entity2",  "type1", "Entity coll1/type1/entity2"] ]
-            , [ "type1/entity3",  ["entity3",  "type1", "Entity coll1/type1/entity3"] ]
-            , [ "type2/entity1",  ["entity1",  "type2", "Entity coll1/type2/entity1"] ]
-            , [ "type2/entity2",  ["entity2",  "type2", "Entity coll1/type2/entity2"] ]
-            , [ "type2/entity3",  ["entity3",  "type2", "Entity coll1/type2/entity3"] ]
-            ])
-        #@@ Updated
         trows_expected = (
             [ [ "_list/list1",    ["list1",    "List",              "RecordList coll1/list1"] ]
             , [ "_list/list2",    ["list2",    "List",              "RecordList coll1/list2"] ]
@@ -448,7 +425,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "type2/entity3",  ["entity3",  "RecordType coll1/type2", "Entity coll1/type2/entity3"] ]
             ])
         self.check_list_row_data(s, trows_expected)
-
         # @@TODO: check entity and type links
         #         check_list_row_links?  or add 3rd element to each trows_expected
         return
@@ -513,19 +489,19 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_coll",             ["_coll",             "Collection"] ]
-            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"] ]
-            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"] ]
-            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"] ]
-            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"] ]
-            , [ "_type/_field",            ["_field",            "Field"] ]
-            , [ "_type/_group",            ["_group",            "Field group"] ]
-            , [ "_type/_list",             ["_list",             "List"] ]
-            , [ "_type/_type",             ["_type",             "Type"] ]
-            , [ "_type/_user",             ["_user",             "User permissions"] ]
-            , [ "_type/_view",             ["_view",             "View"] ]
-            , [ "_type/_vocab",            ["_vocab",            "Vocabulary namespace"] ]
-            , [ "_type/Default_type",      ["Default_type",      "Default record"] ]
+            [ [ "_type/_coll",             ["_coll",             "Collection"            ] ]
+            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"     ] ]
+            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"     ] ]
+            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"      ] ]
+            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"      ] ]
+            , [ "_type/_field",            ["_field",            "Field"                 ] ]
+            , [ "_type/_group",            ["_group",            "Field group"           ] ]
+            , [ "_type/_list",             ["_list",             "List"                  ] ]
+            , [ "_type/_type",             ["_type",             "Type"                  ] ]
+            , [ "_type/_user",             ["_user",             "User permissions"      ] ]
+            , [ "_type/_view",             ["_view",             "View"                  ] ]
+            , [ "_type/_vocab",            ["_vocab",            "Namespace"             ] ]
+            , [ "_type/Default_type",      ["Default_type",      "Default record"        ] ]
             , [ "_type/type1",             ["type1",             "RecordType coll1/type1"] ]
             , [ "_type/type2",             ["type2",             "RecordType coll1/type2"] ]
             ])
@@ -595,7 +571,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_type"
             )
         self.check_select_field(
@@ -659,7 +635,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/Default_type"
             )
         self.check_select_field(
@@ -710,7 +686,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_list"
             )
         self.check_select_field(
@@ -810,7 +786,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_view"
             )
         self.check_select_field(
@@ -853,18 +829,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
+            [
             # [ [ "_group/_initial_values",          ["_initial_values"] ]
-            [ [ "_group/Entity_see_also_r",    ["Entity_see_also_r",    "Links to further information"] ]
-            , [ "_group/Group_field_group",    ["Group_field_group",    "Group field fields"] ]
-            , [ "_group/List_field_group",     ["List_field_group",     "List field fields"] ]
-            , [ "_group/Type_alias_group",     ["Type_alias_group",     "Field alias fields"] ]
-            , [ "_group/Type_supertype_uri_r", ["Type_supertype_uri_r", "Supertype URIs"] ]
-            , [ "_group/View_field_group",     ["View_field_group",     "View field fields"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
 
     # Create/edit group using group view
+    # NOTE: this presents a form for editing the group entity
     def test_group_edit_new(self):
         u = collection_entity_edit_url(
             coll_id="coll1", type_id="_group",
@@ -875,12 +847,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Group_label", "text", None)
         self.check_input_type_value(s, "Group_comment", "textarea", None)
         self.check_input_type_value(s, "Group_target_type", "text", None)
+        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        expect_fields = []
+        self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(
             s, "view_choice", self.views_expected, "_view/Field_group_view"
             )
         return
 
     # Edit/view group view
+    # NOTE: this presents a form for editing the group view entity
     def test_view_edit_group_view(self):
         u = collection_entity_edit_url(
             coll_id="coll1", type_id="_view", entity_id="Field_group_view",
@@ -916,7 +892,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_group"
             )
         self.check_select_field(
@@ -978,14 +954,16 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
-                                                                                            "rdfs:Resource"          ] ]
+                                                                                        "annal:Entity_see_also_list" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_comment",             ["Field_comment",     "Multiline text", "annal:Longtext"         ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
+                                                                                            "annal:Field_list"       ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
+            , [ "_field/Field_help",                ["Field_help",        "Markdown rich text",  "annal:Richtext"    ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_missing",             ["Field_missing",     "Short text",     "annal:Text"             ] ]
@@ -996,6 +974,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"            ] ]
             , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"         ] ]
             , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",     "annal:Text"             ] ]
+            , [ "_field/Field_subfield_placement",  ["Field_subfield_placement",
+                                                                          "Position/size",  "annal:Placement"        ] ]
+            , [ "_field/Field_subfield_property",   ["Field_subfield_property",
+                                                                          "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
+                                                                          "Optional entity ref", 
+                                                                                            "annal:Field"            ] ]
+            , [ "_field/Field_tooltip",             ["Field_tooltip",     "Multiline text", "annal:Longtext"         ] ]
             , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
             , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
@@ -1059,32 +1045,28 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="Field_view", action="new"
             )
         s = self.get_page(u)
-        self.check_input_type_value(s, "entity_id", "text", None)
-        self.check_input_type_value(s, "Field_value_type", "text", "annal:Text")
-        self.check_input_type_value(s, "Field_label", "text", "")
-        self.check_input_type_value(s, "Field_comment", "textarea", None)
+        self.check_input_type_value(s, "entity_id",         "text", None)
+        self.check_input_type_value(s, "Field_value_type",  "text", "")
+        self.check_input_type_value(s, "Field_label",       "text", "")
+        self.check_input_type_value(s, "Field_help",        "textarea", None)
         self.check_input_type_value(s, "Field_placeholder", "text", "")
-        self.check_input_type_value(s, "Field_property", "text", "")
+        self.check_input_type_value(s, "Field_tooltip",     "textarea", None)
+        self.check_input_type_value(s, "Field_property",    "text", "")
         # self.check_input_type_value(s, "Field_placement", "text", "")
         self.check_select_field(
             s, "Field_placement", 
             [FieldChoice("",label="(field position and size)")]+self.placements_expected, 
             ""
             )
-        self.check_input_type_value(s, "Field_default", "text", None)
+        self.check_input_type_value(s, "Field_default",     "text", None)
         self.check_input_type_value(s, "Field_entity_type", "text", "")
-        self.check_input_type_value(s, "Field_restrict", "text", "")
+        self.check_input_type_value(s, "Field_restrict",    "text", "")
         self.check_select_field(
             s, "Field_render_type",   self.render_types_expected, "_enum_render_type/Text"
             )
         self.check_select_field(
             s, "Field_typeref", 
             [FieldChoice("",label="(no type selected)")]+self.types_expected, 
-            ""
-            )
-        self.check_select_field(
-            s, "Field_groupref",
-            [FieldChoice("",label="(no field group selected)")]+self.grouprefs_expected, 
             ""
             )
         self.check_select_field(
@@ -1103,20 +1085,21 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         expect_fields = (
             [ "_field/Field_id"
             , "_field/Field_render_type"
-            , "_field/Field_value_type"
-            , "_field/Field_value_mode"
             , "_field/Field_label"
-            , "_field/Field_comment"
+            , "_field/Field_help"
             , "_field/Field_property"
             , "_field/Field_placement"
+            , "_field/Field_value_type"
+            , "_field/Field_value_mode"
+            , "_field/Field_entity_type"
             , "_field/Field_typeref"
             , "_field/Field_fieldref"
-            , "_field/Field_placeholder"
             , "_field/Field_default"
-            , "_field/Field_groupref"
+            , "_field/Field_placeholder"
+            , "_field/Field_tooltip"
+            , "_field/Field_fields"
             , "_field/Field_repeat_label_add"
             , "_field/Field_repeat_label_delete"
-            , "_field/Field_entity_type"
             , "_field/Field_restrict"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -1139,7 +1122,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_field"
             )
         self.check_select_field(
@@ -1235,7 +1218,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_vocab"
             )
         self.check_select_field(
@@ -1291,7 +1274,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 ]
               ]
             ])
+        # print s.prettify()
         self.check_list_row_data(s, trows_expected)
+        return
 
     # Create/edit user using user view
     def test_user_edit_new(self):
@@ -1343,7 +1328,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             )
         self.check_select_field(
             s, "List_default_type", 
-            no_selection("(default record type)") + self.types_expected, 
+            no_selection("(default entity type)") + self.types_expected, 
             "_type/_user"
             )
         self.check_select_field(

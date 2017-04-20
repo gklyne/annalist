@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/subpropertyOf",
   "@type": [
     "annal:Field"
   ],
@@ -14,15 +17,15 @@
   "annal:field_ref_type": "_type/Property",
   "annal:field_render_type": "_enum_render_type/Enum",
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
-  "annal:field_value_type": "annal:Identifier",
-  "annal:group_ref": "",
+  "annal:field_value_type": "rdf:Property",
   "annal:id": "subpropertyOf",
-  "annal:placeholder": "",
+  "annal:placeholder": "(Superproperty - URI or CURIE)",
   "annal:property_uri": "rdfs:subPropertyOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Indicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Indicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
+  "rdfs:comment": "# Subproperty of\r\n\r\nIndicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
   "rdfs:label": "Subproperty of"
 }

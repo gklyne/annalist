@@ -76,14 +76,16 @@ class EntityRoot(object):
                         associated with this entity or any possible descendents.  The
                         value is used as a safety check to ensure that data is not 
                         created or deleted outside an area that is known to contain 
-                        only annalist data.
+                        only Annalist data.
         """
         self._entityid      = None
+        self._ancestorid    = None
         self._entityurl     = make_entity_base_url(entityurl)
         self._entityviewurl = make_entity_base_url(entityviewurl)
         self._entitydir     = make_entity_base_url(entitydir)
         self._entitybasedir = entitybasedir
         self._values        = None
+        self._errors        = []
         # log.debug("EntityRoot.__init__: entity URI %s, entity dir %s"%(self._entityurl, self._entitydir))
         return
 
@@ -184,6 +186,19 @@ class EntityRoot(object):
         Return collection metadata values
         """
         return self._values
+
+    def set_error(self, msg):
+        """
+        Records error/diagnostic information in an entity
+        """
+        self._errors.append(msg)
+        return
+
+    def get_errors(self):
+        """
+        Returns a list of error/diagnostic entries associated with an entity, or an empty list
+        """
+        return self._errors
 
     def get_uri(self):
         """

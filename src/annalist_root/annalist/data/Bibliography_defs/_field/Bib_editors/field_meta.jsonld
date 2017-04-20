@@ -11,8 +11,28 @@
 , "annal:placeholder":          "Editor(s) of article or compilation"
 , "annal:property_uri":         "bib:editor"
 , "annal:field_entity_type":    "bib:BibEntry"
-  // Reference to description of repeated editor field
-, "annal:group_ref":            "_group/Bib_person_group"
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/Bib_id"
+    , "annal:property_uri":     "bib:id"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_name"
+    , "annal:property_uri":     "bib:name"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_alternate"
+    , "annal:property_uri":     "bib:alternate"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_firstname"
+    , "annal:property_uri":     "bib:firstname"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Bib_lastname"
+    , "annal:property_uri":     "bib:lastname"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
 , "annal:repeat_label_add":     "Add editor"
 , "annal:repeat_label_delete":  "Remove selected editor(s)"
 }

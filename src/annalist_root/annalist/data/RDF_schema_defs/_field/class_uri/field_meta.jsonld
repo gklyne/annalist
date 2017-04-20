@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/class_uri",
   "@type": [
     "annal:Field"
   ],
@@ -15,14 +18,14 @@
   "annal:field_render_type": "_enum_render_type/Identifier",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "annal:Identifier",
-  "annal:group_ref": "",
   "annal:id": "class_uri",
-  "annal:placeholder": "(Class URI)",
+  "annal:placeholder": "(Class identifier - URI or CURIE)",
   "annal:property_uri": "annal:uri",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Absolute URI or CURIE, which serves as a global identifier for class to which is is applied.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Absolute URI or CURIE, which serves as a global identifier for class to which is is applied.",
+  "rdfs:comment": "# Class URI\r\n\r\nAbsolute URI or CURIE, which serves as a global identifier for class to which is is applied.",
   "rdfs:label": "Class URI"
 }

@@ -1,0 +1,33 @@
+{ "@id":                        "_field/Field_fields"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_fields"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_fields"
+, "rdfs:label":                 "Subfields"
+, "rdfs:comment":               "# Subfields\r\n\r\nA list of sub-fields that are presented within the containing field.\r\n\r\n(The list of fields was previously defined via a reference to a field group, but that made defining certain form structures rather complex; this field includes referenced sub-fields directly in the containing field definition.)"
+, "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Field_list"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:field_fields"
+, "annal:field_placement":      "small:0,12"
+, "annal:placeholder":          "(list of fields)"
+, "annal:tooltip":              "A list of sub-fields that are presented within the containing field."
+, "annal:field_fields": 
+  [ { "annal:field_id":         "_field/Field_subfield_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,4"
+    }
+  , { "annal:field_id":         "_field/Field_subfield_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12;medium:4,4"
+    }
+  , { "annal:field_id":         "_field/Field_subfield_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:8,4"
+    }
+  ]
+, "annal:repeat_label_add":     "Add field"
+, "annal:repeat_label_delete":  "Remove selected field(s)"
+}

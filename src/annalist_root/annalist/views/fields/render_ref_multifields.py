@@ -188,8 +188,13 @@ class RenderMultiFields_value(object):
     Renders column values for multiple fields in a group
 
     `context`   is a dictionary-like object that provides information for the
-                rendering operation.  `context['field']` contains the group 
-                field descriptions.
+                rendering operation.  
+
+                context['field']    is a bound_field combining the reference field 
+                                    description bound to an entity that contains a 
+                                    reference to some target entity.
+
+                @@@`context['field']` contains the group field descriptions.@@@
 
     returns a string that is incorporated into the resulting web page.
     """
@@ -201,11 +206,12 @@ class RenderMultiFields_value(object):
             context['field']
             )
     try:
-        # log.info("RenderMultiFields_value.render field: %r"%(context['field'],))
-        # log.info("RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
-        target_vals = context['field']['target_value']
+        # log.info("@@ RenderMultiFields_value.render field: %r"%(context['field'],))
+        # log.info("@@ RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
+        # target_vals = context['field']['target_value']
+        target_vals = context['field'].get_targetvals()
         extras      = context['field']['context_extra_values']
-        # log.debug("RenderMultiFields_value.render target_vals: %r"%(target_vals))
+        # log.info("@@ RenderMultiFields_value.render target_vals: %r"%(target_vals))
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 
             for f in group_field_descs 

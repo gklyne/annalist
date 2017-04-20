@@ -9,6 +9,13 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+class Urispace(object):
+    """
+    Placeholder class for URI values in namespace.
+    """
+    def __init__(self):
+        return
+
 class Curiespace(object):
     """
     Placeholder class for CURIE values in namespace.
@@ -45,6 +52,7 @@ class Namespace(object):
         """
         self._prefix  = prefix
         self._baseUri = baseUri
+        self.URI      = Urispace()
         self.CURIE    = Curiespace()
         return
 
@@ -69,17 +77,25 @@ class Namespace(object):
             return self.mk_uri(parts[1])
         return curie
 
+    def __getattr__(self, name):
+        """
+        Return value for <namespace>.<name>
+        """
+        # Called for attributes that aren't defined.
+        # Placeholder should generate error
+        return self.__dict__[attr]
+
 def makeNamespace(prefix, baseUri, names):
     """
     Create a namespace with given prefix, base URI and set of local names.
 
-    Returns the namespace value.  Attributes of the namespace value are URIs
-    for the corresponding identifier (e.g. ANNAL.Site, cf. below).  Attributes of
+    Returns the namespace value.  Attributes of the URI attribute are URIs for
+    the corresponding identifier (e.g. ANNAL.URI.Site, cf. below).  Attributes of
     the CURIE attribute are CURIES (e.g. ANNAL.CURIE.Site).
     """
     ns = Namespace(prefix, baseUri)
     for name in names:
-        setattr(ns, name, ns.mk_uri(name))
+        setattr(ns.URI,   name, ns.mk_uri(name))
         setattr(ns.CURIE, name, ns.mk_curie(name))
     return ns
 
@@ -117,7 +133,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Internal IDs for MIME types (see resourcetypes.py)
     , "Metadata", "Type_Data"
     # Entity types
-    , "User", "Type", "List", "View", "Field_group", "Field", "Enum"
+    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Enum"
     , "Enum_field_placement", "Enum_list_type", "Enum_render_type", "Enum_value_mode", "Enum_value_type"
     # Group value types
     , "View_field", "List_field", "Group_field"
@@ -149,9 +165,9 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Field definitions
     , "field_render_type", "field_value_type", "field_value_mode"
     , "field_entity_type"
-    , "placeholder", "default_value", "property_uri"
+    , "placeholder", "tooltip", "default_value", "property_uri"
     , "field_ref_type", "field_ref_restriction", "field_ref_field"
-    , "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "field_fields", "group_ref", "repeat_label_add", "repeat_label_delete"
     , "field_name", "field_placement"
     # Collection metadata
     , "software_version", "meta_comment", "inherit_from"

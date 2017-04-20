@@ -1,0 +1,28 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "field_fields",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:field_fields",
+  "rdfs:comment": "# Field sub-fields\r\n\r\nList of fields referenced by a repeating group or multifield reference field definition.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Field"
+    }
+  ],
+  "rdfs:label": "Subfields",
+  "rdfs:range": [
+    {
+      "@id": "annal:Field_list"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

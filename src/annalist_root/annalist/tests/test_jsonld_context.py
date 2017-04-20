@@ -85,9 +85,9 @@ def scan_list(graph, head):
     """
     Returns an iterator over a list whose head node is supplied.
     """
-    while head != URIRef(RDF.nil):
-        yield property_value(graph, head, RDF.first)
-        head = property_value(graph, head, RDF.rest)
+    while head != URIRef(RDF.URI.nil):
+        yield property_value(graph, head, RDF.URI.first)
+        head = property_value(graph, head, RDF.URI.rest)
     return
 
 #   -----------------------------------------------------------------------------
@@ -199,7 +199,9 @@ class JsonldContextTest(AnnalistTestCase):
         self.testsite    = init_annalist_test_site()
         self.testcoll    = init_annalist_test_coll()
         self.sitebasedir = TestBaseDir
-        self.collbasedir = os.path.join(self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR)
+        self.collbasedir = os.path.join(
+            self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR
+            )
         self.collbaseurl = "file://" + self.collbasedir + "/"
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
@@ -255,10 +257,10 @@ class JsonldContextTest(AnnalistTestCase):
         Iterate over nodes in an RDF list
         """
         next = head
-        while (next is not None) and (next != URIRef(RDF.nil)):
-            item = graph.value(subject=next, predicate=URIRef(RDF.first))
+        while (next is not None) and (next != URIRef(RDF.URI.nil)):
+            item = graph.value(subject=next, predicate=URIRef(RDF.URI.first))
             yield item
-            next = graph.value(subject=next, predicate=URIRef(RDF.rest))
+            next = graph.value(subject=next, predicate=URIRef(RDF.URI.rest))
         return
 
     def assertTripleIn(self, t, g):
@@ -326,17 +328,17 @@ class JsonldContextTest(AnnalistTestCase):
             )
         site_data        = self.testsite.site_data()
         ann_id           = Literal(layout.SITEDATA_ID)
-        ann_type         = URIRef(ANNAL.SiteData)
+        ann_type         = URIRef(ANNAL.URI.SiteData)
         ann_type_id      = Literal(SiteData._entitytypeid)
         software_version = Literal(annalist.__version_data__)
         label            = Literal(site_data[RDFS.CURIE.label])
         comment          = Literal(site_data[RDFS.CURIE.comment])
-        self.assertIn((subj, URIRef(ANNAL.id),      ann_id),      g)
-        self.assertIn((subj, URIRef(ANNAL.type),    ann_type),    g)
-        self.assertIn((subj, URIRef(ANNAL.type_id), ann_type_id), g)
-        self.assertIn((subj, URIRef(RDFS.label),    label),       g)
-        self.assertIn((subj, URIRef(RDFS.comment),  comment),     g)
-        self.assertIn((subj, URIRef(ANNAL.software_version), software_version), g)
+        self.assertIn((subj, URIRef(ANNAL.URI.id),      ann_id),      g)
+        self.assertIn((subj, URIRef(ANNAL.URI.type),    ann_type),    g)
+        self.assertIn((subj, URIRef(ANNAL.URI.type_id), ann_type_id), g)
+        self.assertIn((subj, URIRef(RDFS.URI.label),    label),       g)
+        self.assertIn((subj, URIRef(RDFS.URI.comment),  comment),     g)
+        self.assertIn((subj, URIRef(ANNAL.URI.software_version), software_version), g)
         return
 
     def test_jsonld_collection(self):
@@ -360,12 +362,12 @@ class JsonldContextTest(AnnalistTestCase):
         subj      = self.coll_url(self.testcoll.get_id())
         coll_data = self.testcoll._load_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(coll_data[RDFS.CURIE.label])       )
-            , (subj, RDFS.comment,           Literal(coll_data[RDFS.CURIE.comment])     )
-            , (subj, ANNAL.id,               Literal(coll_data[ANNAL.CURIE.id])         )
-            , (subj, ANNAL.type_id,          Literal(coll_data[ANNAL.CURIE.type_id])    )
-            , (subj, ANNAL.type,             URIRef(ANNAL.Collection)                   )
-            , (subj, ANNAL.software_version, Literal(annalist.__version_data__)         )
+            [ (subj, RDFS.URI.label,             Literal(coll_data[RDFS.CURIE.label])       )
+            , (subj, RDFS.URI.comment,           Literal(coll_data[RDFS.CURIE.comment])     )
+            , (subj, ANNAL.URI.id,               Literal(coll_data[ANNAL.CURIE.id])         )
+            , (subj, ANNAL.URI.type_id,          Literal(coll_data[ANNAL.CURIE.type_id])    )
+            , (subj, ANNAL.URI.type,             URIRef(ANNAL.URI.Collection)               )
+            , (subj, ANNAL.URI.software_version, Literal(annalist.__version_data__)         )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -406,11 +408,11 @@ class JsonldContextTest(AnnalistTestCase):
         subj        = b #@@ entity1.get_url()
         entity_data = entity1.get_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,   Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,       Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,  Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -441,14 +443,14 @@ class JsonldContextTest(AnnalistTestCase):
         vocab_list_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_list])
         vocab_view_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
-            [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
-            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type_list, URIRef(vocab_list_url)                        )
-            , (subj, ANNAL.type_view, URIRef(vocab_view_url)                        )
-            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                      )
+            [ (subj, RDF.URI.type,        URIRef(ANNAL.URI.Type)                        )
+            , (subj, RDFS.URI.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type_list, URIRef(vocab_list_url)                        )
+            , (subj, ANNAL.URI.type_view, URIRef(vocab_view_url)                        )
+            , (subj, ANNAL.URI.uri,       URIRef(ANNAL.URI.Vocabulary)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -479,26 +481,26 @@ class JsonldContextTest(AnnalistTestCase):
         view_user_data = view_user.get_values()
         view_uri       = ANNAL.to_uri(view_user_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
-            [ (subj, RDF.type,          URIRef(ANNAL.View)                           )
-            , (subj, RDFS.label,        Literal(view_user_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,      Literal(view_user_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,          Literal(view_user_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,     Literal(view_user_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.uri,         URIRef(view_uri)                             )
-            , (subj, ANNAL.open_view,   Literal(False)                               )
-            , (subj, ANNAL.record_type, URIRef(ANNAL.User)                           )
+            [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.View)                       )
+            , (subj, RDFS.URI.label,        Literal(view_user_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,      Literal(view_user_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,          Literal(view_user_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,     Literal(view_user_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.uri,         URIRef(view_uri)                             )
+            , (subj, ANNAL.URI.open_view,   Literal(False)                               )
+            , (subj, ANNAL.URI.record_type, URIRef(ANNAL.URI.User)                       )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         # Check field list contents
         fields = view_user_data[ANNAL.CURIE.view_fields]
-        head   = property_value(g, URIRef(subj), ANNAL.view_fields)
+        head   = property_value(g, URIRef(subj), ANNAL.URI.view_fields)
         items  = scan_list(g, head)
         for f in fields:
             fi  = URIRef(urlparse.urljoin(self.collbaseurl, f[ANNAL.CURIE.field_id]))
             fp  = Literal(f[ANNAL.CURIE.field_placement])
             fn  = items.next()
-            fni = property_value(g, fn, ANNAL.field_id)
-            fnp = property_value(g, fn, ANNAL.field_placement)
+            fni = property_value(g, fn, ANNAL.URI.field_id)
+            fnp = property_value(g, fn, ANNAL.URI.field_placement)
             self.assertEqual(fni, fi)
             self.assertEqual(fnp, fp)
         # self.assertRaises as context manager, see http://stackoverflow.com/a/28223420/324122
@@ -534,13 +536,13 @@ class JsonldContextTest(AnnalistTestCase):
         user_uri          = ANNAL.to_uri(user_default_data[ANNAL.CURIE.user_uri])
         user_perms        = user_default_data[ANNAL.CURIE.user_permission]
         for (s, p, o) in (
-            [ (subj, RDF.type,          URIRef(ANNAL.User)                              )
-            , (subj, RDFS.label,        Literal(user_default_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,      Literal(user_default_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,          Literal(user_default_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,     Literal(user_default_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.user_uri,    URIRef(user_uri)                                )
-            , (subj, ANNAL.user_permission, Literal(user_perms[0])                      )
+            [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.User)                          )
+            , (subj, RDFS.URI.label,        Literal(user_default_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,      Literal(user_default_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,          Literal(user_default_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,     Literal(user_default_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.user_uri,    URIRef(user_uri)                                )
+            , (subj, ANNAL.URI.user_permission, Literal(user_perms[0])                      )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -587,13 +589,13 @@ class JsonldContextTest(AnnalistTestCase):
         list_type_list_data = list_type_list.get_values()
         list_type_url       = ANNAL.to_uri(list_type_list_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
-            [ (subj, RDF.type,          URIRef(ANNAL.Enum)                                )
-            , (subj, RDF.type,          URIRef(ANNAL.Enum_list_type)                      )
-            , (subj, RDFS.label,        Literal(list_type_list_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,      Literal(list_type_list_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,          Literal(list_type_list_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,     Literal(list_type_list_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.uri,         URIRef(list_type_url)                             )
+            [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.Enum)                            )
+            , (subj, RDF.URI.type,          URIRef(ANNAL.URI.Enum_list_type)                  )
+            , (subj, RDFS.URI.label,        Literal(list_type_list_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,      Literal(list_type_list_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,          Literal(list_type_list_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,     Literal(list_type_list_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.uri,         URIRef(list_type_url)                             )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -646,13 +648,13 @@ class JsonldContextTest(AnnalistTestCase):
         blobns         = makeNamespace("blob", "http://example.org/blob/yyy#", ["reference"])
         type_uri       = blobns.to_uri(ref_image_data['@type'][0]) 
         for (s, p, o) in (
-            [ (subj, RDF.type,          URIRef(ANNAL.EntityData)                     )
-            , (subj, RDF.type,          URIRef(type_uri)                             )
-            , (subj, RDFS.label,        Literal(ref_image_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,      Literal(ref_image_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,          Literal(ref_image_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,     Literal(ref_image_data[ANNAL.CURIE.type_id]) )
-            , (subj, blobns.reference,  URIRef(imageurl)                             )
+            [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.EntityData)                 )
+            , (subj, RDF.URI.type,          URIRef(type_uri)                             )
+            , (subj, RDFS.URI.label,        Literal(ref_image_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,      Literal(ref_image_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,          Literal(ref_image_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,     Literal(ref_image_data[ANNAL.CURIE.type_id]) )
+            , (subj, blobns.URI.reference,  URIRef(imageurl)                             )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -692,11 +694,11 @@ class JsonldContextTest(AnnalistTestCase):
         subj        = TestHostUri + v.rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,   Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,       Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,  Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -737,14 +739,14 @@ class JsonldContextTest(AnnalistTestCase):
         vocab_list_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_list])
         vocab_view_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
-            [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
-            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type_list, URIRef(vocab_list_url)                        )
-            , (subj, ANNAL.type_view, URIRef(vocab_view_url)                        )
-            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                      )
+            [ (subj, RDF.URI.type,        URIRef(ANNAL.URI.Type)                        )
+            , (subj, RDFS.URI.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type_list, URIRef(vocab_list_url)                        )
+            , (subj, ANNAL.URI.type_view, URIRef(vocab_view_url)                        )
+            , (subj, ANNAL.URI.uri,       URIRef(ANNAL.URI.Vocabulary)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -799,14 +801,14 @@ class JsonldContextTest(AnnalistTestCase):
         new_list_url  = self.resolve_coll_url(self.testcoll, type_new_data[ANNAL.CURIE.type_list])
         new_view_url  = self.resolve_coll_url(self.testcoll, type_new_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
-            [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
-            , (subj, RDFS.label,      Literal(type_new_data[RDFS.CURIE.label])      )
-            , (subj, RDFS.comment,    Literal(type_new_data[RDFS.CURIE.comment])    )
-            , (subj, ANNAL.id,        Literal(type_new_data[ANNAL.CURIE.id])        )
-            , (subj, ANNAL.type_id,   Literal(type_new_data[ANNAL.CURIE.type_id])   )
-            , (subj, ANNAL.type_list, URIRef(new_list_url)                          )
-            , (subj, ANNAL.type_view, URIRef(new_view_url)                          )
-            , (subj, ANNAL.uri,       URIRef(type_new_data[ANNAL.CURIE.uri])        )
+            [ (subj, RDF.URI.type,        URIRef(ANNAL.URI.Type)                        )
+            , (subj, RDFS.URI.label,      Literal(type_new_data[RDFS.CURIE.label])      )
+            , (subj, RDFS.URI.comment,    Literal(type_new_data[RDFS.CURIE.comment])    )
+            , (subj, ANNAL.URI.id,        Literal(type_new_data[ANNAL.CURIE.id])        )
+            , (subj, ANNAL.URI.type_id,   Literal(type_new_data[ANNAL.CURIE.type_id])   )
+            , (subj, ANNAL.URI.type_list, URIRef(new_list_url)                          )
+            , (subj, ANNAL.URI.type_view, URIRef(new_view_url)                          )
+            , (subj, ANNAL.URI.uri,       URIRef(type_new_data[ANNAL.CURIE.uri])        )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -852,15 +854,15 @@ class JsonldContextTest(AnnalistTestCase):
         annal_data = annalvocab.get_values()
         seeAlso_1  = "https://github.com/gklyne/annalist/blob/master/src/annalist_root/annalist/identifiers.py"
         for (s, p, o) in (
-            [ (subj, RDF.type,      URIRef(ANNAL.EntityData)                 )
-            , (subj, RDF.type,      URIRef(ANNAL.Vocabulary)                 )
-            , (subj, RDFS.label,    Literal(annal_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,  Literal(annal_data[RDFS.CURIE.comment])  )
-            , (subj, RDFS.seeAlso,  URIRef(seeAlso_1)                        )            
-            , (subj, ANNAL.id,      Literal(annal_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id, Literal(annal_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type,    URIRef(ANNAL.Vocabulary)                 )
-            , (subj, ANNAL.uri,     URIRef(ANNAL._baseUri)                   )
+            [ (subj, RDF.URI.type,      URIRef(ANNAL.URI.EntityData)             )
+            , (subj, RDF.URI.type,      URIRef(ANNAL.URI.Vocabulary)             )
+            , (subj, RDFS.URI.label,    Literal(annal_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,  Literal(annal_data[RDFS.CURIE.comment])  )
+            , (subj, RDFS.URI.seeAlso,  URIRef(seeAlso_1)                        )            
+            , (subj, ANNAL.URI.id,      Literal(annal_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id, Literal(annal_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type,    URIRef(ANNAL.URI.Vocabulary)             )
+            , (subj, ANNAL.URI.uri,     URIRef(ANNAL._baseUri)                   )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -903,11 +905,11 @@ class JsonldContextTest(AnnalistTestCase):
         subj        = entity1.get_url().rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,   Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,       Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,  Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -946,11 +948,11 @@ class JsonldContextTest(AnnalistTestCase):
         subj        = entity1.get_url().rstrip("/")
         entity_data = entity1.get_values()
         for (s, p, o) in (
-            [ (subj, RDFS.label,             Literal(entity_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,           Literal(entity_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,               Literal(entity_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,          Literal(entity_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type,             URIRef(ANNAL.EntityData)                  )
+            [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,   Literal(entity_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,       Literal(entity_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,  Literal(entity_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
@@ -989,14 +991,14 @@ class JsonldContextTest(AnnalistTestCase):
         vocab_list_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_list])
         vocab_view_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
-            [ (subj, RDF.type,        URIRef(ANNAL.Type)                            )
-            , (subj, RDFS.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
-            , (subj, ANNAL.type_list, URIRef(vocab_list_url)                        )
-            , (subj, ANNAL.type_view, URIRef(vocab_view_url)                        )
-            , (subj, ANNAL.uri,       URIRef(ANNAL.Vocabulary)                      )
+            [ (subj, RDF.URI.type,        URIRef(ANNAL.URI.Type)                        )
+            , (subj, RDFS.URI.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,    Literal(type_vocab_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,        Literal(type_vocab_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,   Literal(type_vocab_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.type_list, URIRef(vocab_list_url)                        )
+            , (subj, ANNAL.URI.type_view, URIRef(vocab_view_url)                        )
+            , (subj, ANNAL.URI.uri,       URIRef(ANNAL.URI.Vocabulary)                  )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
@@ -1040,10 +1042,10 @@ class JsonldContextTest(AnnalistTestCase):
         # print("*****")
         subj = urlparse.urljoin(json_url, subj_ref)
         for (s, p, o) in (
-            [ (subj, ANNAL.entity_list, None)
+            [ (subj, ANNAL.URI.entity_list, None)
             ]):
             self.assertTripleIn( (URIRef(s), URIRef(p), o), g)
-        list_head  = g.value(subject=URIRef(subj), predicate=URIRef(ANNAL.entity_list))
+        list_head  = g.value(subject=URIRef(subj), predicate=URIRef(ANNAL.URI.entity_list))
         list_items = list(self.scan_rdf_list(g, list_head))
         return (json_url, list_items)
 

@@ -30,6 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.collectiondata import migrate_coll_data
 
@@ -57,6 +58,8 @@ from entity_testentitydata          import (
 #   Test data
 #
 #   -----------------------------------------------------------------------------
+
+# Test data for adding supertype URIs to entity type list
 
 test_supertype_type_create_values = (
     { 'annal:type':                 "annal:Type"
@@ -87,6 +90,88 @@ def test_subtype_entity_create_values(entity_id):
         , 'rdfs:comment':               "test_subtype_entity %s comment"%entity_id
         })
 
+# Test data for record group migration
+
+test_group_id            = "List_field_group"
+test_group_create_values = (
+    { "annal:type":         "annal:Field_group"
+    , "rdfs:label":         "List fields group"
+    , "rdfs:comment":       "Group for fields presented in a list view."
+    , "annal:uri":          "annal:group/List_field_group"
+    , "annal:record_type":  "annal:List_field"
+    , "annal:group_fields":
+      [ { "annal:field_id":         "_field/List_field_sel"
+        , "annal:property_uri":     "annal:field_id"
+        , "annal:field_placement":  "small:0,12;medium:0,6"
+        }
+      , { "annal:field_id":         "_field/List_field_placement"
+        , "annal:property_uri":     "annal:field_placement"
+        , "annal:field_placement":  "small:0,12;medium:6,6"
+        }
+      ]
+    })
+
+test_field_id = "List_fields"
+
+test_field_group_create_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:uri":                  "annal:fields/List_fields"
+    , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+    , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+    , "annal:field_value_type":     "annal:List_field"
+    , "annal:field_entity_type":    "annal:List_field"
+    , "annal:placeholder":          "(list field description)"
+    , "annal:tooltip":              "Fields presented in a list view."
+    , "annal:property_uri":         "annal:list_fields"
+    , "annal:field_placement":      "small:0,12"
+    , "annal:group_ref":            "_group/List_field_group"
+    , "annal:repeat_label_add":     "Add field"
+    , "annal:repeat_label_delete":  "Remove selected field(s)"
+    })
+
+test_field_group_migrated_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:uri":                  "annal:fields/List_fields"
+    , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+    , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+    , "annal:field_value_type":     "annal:List_field"
+    , "annal:field_entity_type":    "annal:List_field"
+    , "annal:placeholder":          "(list field description)"
+    , "annal:tooltip":              "Fields presented in a list view."
+    , "annal:property_uri":         "annal:list_fields"
+    , "annal:field_placement":      "small:0,12"
+    , "annal:field_fields":
+      [ { "annal:field_id":         "_field/List_field_sel"
+        , "annal:property_uri":     "annal:field_id"
+        , "annal:field_placement":  "small:0,12;medium:0,6"
+        }
+      , { "annal:field_id":         "_field/List_field_placement"
+        , "annal:property_uri":     "annal:field_placement"
+        , "annal:field_placement":  "small:0,12;medium:6,6"
+        }
+      ]
+    , "annal:repeat_label_add":     "Add field"
+    , "annal:repeat_label_delete":  "Remove selected field(s)"
+    })
+
+test_field_tooltip_create_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "Fields presented in a list view."
+    , "annal:property_uri":         "annal:list_fields"
+    })
+
+test_field_tooltip_migrated_values = (
+    { "annal:type":                 "annal:Field"
+    , "rdfs:label":                 "Fields"
+    , "rdfs:comment":               "# Fields\r\n\r\nFields presented in a list view."
+    , "annal:tooltip":              "Fields presented in a list view."
+    })
+
 #   -----------------------------------------------------------------------------
 #
 #   Linked record tests
@@ -95,7 +180,7 @@ def test_subtype_entity_create_values(entity_id):
 
 class DataMigrationTest(AnnalistTestCase):
     """
-    Tests for linked records
+    Tests for entity data migration
     """
 
     def setUp(self):
@@ -130,7 +215,7 @@ class DataMigrationTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata(scope="collections")
+        resetSitedata(scope="collections")
         return
 
     @classmethod
@@ -154,7 +239,7 @@ class DataMigrationTest(AnnalistTestCase):
 
     # Tests
 
-    def test_view_entity_references(self):
+    def test_subtype_supertype_references(self):
         coll_id   = "testcoll"
         type_id   = "test_subtype_type"
         entity_id = "test_subtype_entity"
@@ -172,6 +257,68 @@ class DataMigrationTest(AnnalistTestCase):
             coll_id, type_id, entity_id, 
             { '@type':      ['test:test_subtype_type', 'test:test_supertype_type', 'annal:EntityData']
             })
+        return
+
+    def test_wrong_type_uri_references(self):
+        coll_id   = "testcoll"
+        type_id   = "test_subtype_type"
+        entity_id = "test_subtype_entity"
+        # Create subtype record with wrong type URI
+        subtype_entity_values = test_subtype_entity_create_values(entity_id)
+        entity = self.test_subtype_type_info.create_entity(entity_id, subtype_entity_values)
+        entity[ANNAL.CURIE.type] = "test:wrong_type_uri"
+        entity._save()
+        # Test subtype entity created
+        self.check_subtype_data(
+            coll_id, type_id, entity_id, 
+            { '@type':      ['test:test_subtype_type', 'annal:EntityData']
+            , 'annal:type': "test:wrong_type_uri"
+            })
+        # Update subtype definition to include supertype reference
+        self.test_subtype_type[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
+        self.test_subtype_type._save()
+        self.testcoll._update_type_cache(self.test_subtype_type)
+        # Test migration of updated type information to data
+        migrate_coll_data(self.testcoll)
+        self.check_subtype_data(
+            coll_id, type_id, entity_id, 
+            { '@type':      ['test:test_subtype_type', 'test:test_supertype_type', 'annal:EntityData']
+            , 'annal:type': "test:test_subtype_type"
+            })
+        return
+
+    def test_field_fieldgroup_references(self):
+        """
+        Test migration of field group references in field definitions 
+        """
+        # Create field group
+        self.test_group = RecordGroup_migration.create(
+            self.testcoll, test_group_id, test_group_create_values
+            )
+        # Create field definition referencing field group
+        self.test_field = RecordField.create(
+            self.testcoll, test_field_id, test_field_group_create_values
+            )
+        # Apply migration to collection
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_group_migrated_values)
+        self.assertNotIn("annal:group_ref", field_data)
+        self.check_entity_does_not_exist("_group", test_group_id)
+        return
+
+    def test_field_comment_tooltip(self):
+        """
+        Test migration of field without tooltip
+        """
+        # Create field definition
+        self.test_field = RecordField.create(
+            self.testcoll, test_field_id, test_field_tooltip_create_values
+            )
+        # Apply migration to collection
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_tooltip_migrated_values)
         return
 
 # End.

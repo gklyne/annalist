@@ -38,6 +38,7 @@ command_summary_help = ("\n"+
     "  %(prog)s copycollection old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migrationreport old_coll_id new_coll_id [ CONFIG ]\n"+
     "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
+    "  %(prog)s migrateallcollections [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s settingsmodule [ CONFIG ]\n"+
@@ -340,6 +341,16 @@ def am_help(options, progname):
             "The entity migrations applied are defined by supertypes and field\n"+
             "aliases defined for types used by the collection, along with any\n"+
             "Annalist software version data migrations that may be applicable.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("migratea"):
+        help_text = ("\n"+
+            "  %(prog)s migrateallcollections [ CONFIG ]\n"+
+            "\n"+
+            "This command applies migrations to data for all entities in all collections\n"+
+            "See 'migratecollection' for information about the migrations applied.\n"+
             "\n"+
             config_options_help+
             "\n"+

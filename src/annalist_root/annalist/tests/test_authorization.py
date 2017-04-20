@@ -303,7 +303,7 @@ class AuthorizationTest(AnnalistTestCase):
     def create_user(self, user_id):
         # Create placeholder for testing
         return create_user_permissions(
-            self.testcoll, user_id, 
+            self.access_collection, user_id, 
             ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             )
 

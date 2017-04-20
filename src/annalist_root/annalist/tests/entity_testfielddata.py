@@ -112,6 +112,7 @@ def recordfield_init_keys(field_uri=False):
         , 'rdfs:comment'
         , 'annal:field_render_type'
         , 'annal:field_value_mode'
+        , 'annal:tooltip'
         ])
     if field_uri:
         keys.add('annal:uri')
@@ -142,6 +143,7 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
         , 'rdfs:comment':               "%s help for %s in collection %s"%(update, field_id, coll_id)
         , 'annal:field_render_type':    render_type
         , 'annal:field_value_mode':     value_mode
+        , 'annal:tooltip':              "%s tooltip for %s in collection %s"%(update, field_id, coll_id)
         })
 
 def recordfield_values(
@@ -183,14 +185,25 @@ def recordfield_read_values(
 
 def recordfield_entity_view_context_data(
         coll_id="testcoll", field_id=None, orig_id=None, type_ids=[],
+        field_label=None,
+        field_value_type="annal:Text",
+        field_render_type="Text",
+        field_value_mode="Value_direct",
+        field_property="",
+        field_placement="",
+        field_placeholder="",
+        field_tooltip="",
+        field_fields=[],
+        field_repeat_label_add="Add",
+        field_repeat_label_delete="Remove",
+        field_entity_type="",
         action=None, update="Field"
     ):
-    if field_id:
-        field_label = "%s %s/_field/%s"%(update, coll_id, field_id)
-        field_descr = "%s help for %s in collection %s"%(update, field_id, coll_id)
-    else:
-        field_label = "%s data ... (testcoll/_field)"%(update)
-        field_descr = "%s description ... (testcoll/_field)"%(update)
+    if not field_label:
+        if field_id:
+            field_label = "%s %s/_field/%s"%(update, coll_id, field_id)
+        else:
+            field_label = "%s data ... (testcoll/_field)"%(update)
     padding_placement = Placement(
         width=make_field_width(sw=0, mw=6, lw=6),
         offset=make_field_offset(so=0, mo=0, lo=0),
@@ -207,7 +220,7 @@ def recordfield_entity_view_context_data(
         , 'orig_id':            "orig_field_id"
         , 'fields':
           [ context_field_row(
-              { 'field_id':               "Field_id"                  # 0 (0,0)
+              { 'field_id':               "Field_id"                    # 0 (0,0)
               , 'field_name':             "entity_id"
               , 'field_label':            "Field Id"
               , 'field_value_type':       "annal:EntityRef"
@@ -219,11 +232,11 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field id)"
-              , 'field_default_value':    None
+              , 'field_default_value':    ""
               # , 'field_value':          (Supplied separately)
               , 'options':                []
               },
-              { 'field_id':               "Field_render_type"              # 1 (0,1)
+              { 'field_id':               "Field_render_type"           # 1 (0,1)
               , 'field_name':             "Field_render_type"
               , 'field_label':            "Render type"
               , 'field_value_type':       "annal:EntityRef"
@@ -235,44 +248,13 @@ def recordfield_entity_view_context_data(
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field render type)"
               , 'field_default_value':    "Text"
-              , 'field_value':            "Text"
+              , 'field_value':            field_render_type
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_value_type"                # 2 (1,0)
-              , 'field_name':             "Field_value_type"
-              , 'field_label':            "Value type"
-              , 'field_value_type':       "annal:Identifier"
-              , 'field_render_type':      "Identifier"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:field_value_type"
-              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-              , 'field_ref_type':         None
-              , 'field_ref_field':        None
-              , 'field_placeholder':      "(field value type)"
-              , 'field_default_value':    "annal:Text"
-              , 'field_value':            "annal:Text"
-              , 'options':                []
-              },
-              { 'field_id':               "Field_value_mode"          # 3 (1,1)
-              , 'field_name':             "Field_value_mode"
-              , 'field_label':            "Value mode"
-              , 'field_value_type':       "annal:EntityRef"
-              , 'field_render_type':      "Enum_choice"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:field_value_mode"
-              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
-              , 'field_ref_type':         "_enum_value_mode"
-              , 'field_ref_field':        None
-              , 'field_placeholder':      "(field value mode)"
-              , 'field_default_value':    "Value_direct"
-              , 'field_value':            "Value_direct"
-              , 'options':                []
-              })
-          , context_field_row(
-              { 'field_id':               "Field_label"               # 4 (2,0)
+              { 'field_id':               "Field_label"                 # 2 (1,0)
               , 'field_name':             "Field_label"
-              , 'field_label':            "Label"
+              , 'field_label':            "Field label"
               , 'field_value_type':       "annal:Text"
               , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
@@ -286,23 +268,22 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_comment"             # 5 (3,0)
-              , 'field_name':             "Field_comment"
+              { 'field_id':               "Field_help"                  # 3 (2,0)
+              , 'field_name':             "Field_help"
               , 'field_label':            "Help"
-              , 'field_value_type':       "annal:Longtext"
-              , 'field_render_type':      "Textarea"
+              , 'field_value_type':       "annal:Richtext"
+              , 'field_render_type':      "Markdown"
               , 'field_value_mode':       "Value_direct"
               , 'field_property_uri':     "rdfs:comment"
               , 'field_placement':        get_placement_classes('small:0,12')
               , 'field_ref_type':         None
               , 'field_ref_field':        None
-              , 'field_placeholder':      "(field usage commentary or help text)"
+              , 'field_placeholder':      "(Field usage commentary or help text)"
               , 'field_default_value':    ""
-              , 'field_value':            field_descr
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_property"            # 6 (4,0)
+              { 'field_id':               "Field_property"              # 4 (3,0)
               , 'field_name':             "Field_property"
               , 'field_label':            "Property URI"
               , 'field_value_type':       "annal:Identifier"
@@ -314,10 +295,10 @@ def recordfield_entity_view_context_data(
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field URI or CURIE)"
               , 'field_default_value':    ""
-              , 'field_value':            ""
+              , 'field_value':            field_property
               , 'options':                []
               },
-              { 'field_id':               "Field_placement"           # 7 (4,1)
+              { 'field_id':               "Field_placement"             # 5 (3,1)
               , 'field_name':             "Field_placement"
               , 'field_label':            "Position/size"
               , 'field_value_type':       "annal:Placement"
@@ -329,11 +310,58 @@ def recordfield_entity_view_context_data(
               , 'field_ref_field':        None
               , 'field_placeholder':      "(field position and size)"
               , 'field_default_value':    ""
-              , 'field_value':            ""
+              , 'field_value':            field_placement
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_typeref"             # 8 (5,0)
+              { 'field_id':               "Field_value_type"            # 6 (4,0)
+              , 'field_name':             "Field_value_type"
+              , 'field_label':            "Value type"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_value_type"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field value type)"
+              , 'field_default_value':    "annal:Text"
+              , 'field_value':            field_value_type
+              , 'options':                []
+              },
+              { 'field_id':               "Field_value_mode"            # 7 (4,1)
+              , 'field_name':             "Field_value_mode"
+              , 'field_label':            "Value mode"
+              , 'field_value_type':       "annal:EntityRef"
+              , 'field_render_type':      "Enum_choice"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_value_mode"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:6,6')
+              , 'field_ref_type':         "_enum_value_mode"
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(field value mode)"
+              , 'field_default_value':    "Value_direct"
+              , 'field_value':            field_value_mode
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_entity_type"           # 8 (5,0)
+              , 'field_name':             "Field_entity_type" 
+              , 'field_label':            "Entity type"
+              , 'field_value_type':       "annal:Identifier"
+              , 'field_render_type':      "Identifier"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:field_entity_type"
+              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              # , 'field_placeholder':      "..."
+              , 'field_default_value':    ""
+              , 'field_value':            field_entity_type
+              , 'options':                []
+              })
+          , context_field_row(
+              { 'field_id':               "Field_typeref"               # 9 (6,0)
               , 'field_name':             "Field_typeref"
               , 'field_label':            "Refer to type"
               , 'field_value_type':       "annal:EntityRef"
@@ -348,7 +376,7 @@ def recordfield_entity_view_context_data(
               , 'field_value':            ""
               , 'options':                []
               },
-              { 'field_id':               "Field_fieldref"            # 9 (5,1)
+              { 'field_id':               "Field_fieldref"              # 10 (6,1)
               , 'field_name':             "Field_fieldref"
               , 'field_label':            "Refer to field"
               , 'field_value_type':       "annal:Identifier"
@@ -364,25 +392,9 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_placeholder"         # 10 (6,0)
-              , 'field_name':             "Field_placeholder"
-              , 'field_label':            "Placeholder"
-              , 'field_value_type':       "annal:Text"
-              , 'field_render_type':      "Text"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:placeholder"
-              , 'field_placement':        get_placement_classes('small:0,12')
-              , 'field_ref_type':         None
-              , 'field_ref_field':        None
-              , 'field_placeholder':      "(placeholder text)"
-              , 'field_default_value':    ""
-              , 'field_value':            ""
-              , 'options':                []
-              })
-          , context_field_row(
-              { 'field_id':               "Field_default"             # 11 (7,0)
+              { 'field_id':               "Field_default"               # 11 (7,0)
               , 'field_name':             "Field_default"
-              , 'field_label':            "Default"
+              , 'field_label':            "Default value"
               , 'field_value_type':       "annal:Text"
               , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
@@ -396,23 +408,49 @@ def recordfield_entity_view_context_data(
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_groupref"            # 12 (8,0)
-              , 'field_name':             "Field_groupref"
-              , 'field_label':            "Field group"
-              , 'field_value_type':       "annal:EntityRef"
-              , 'field_render_type':      "Enum_optional"
+              { 'field_id':               "Field_placeholder"           # 12 (8,0)
+              , 'field_name':             "Field_placeholder"
+              , 'field_label':            "Placeholder"
+              , 'field_value_type':       "annal:Text"
+              , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:group_ref"
-              , 'field_placement':        get_placement_classes('small:0,12;medium:0,6')
-              , 'field_ref_type':         "_group"
+              , 'field_property_uri':     "annal:placeholder"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
               , 'field_ref_field':        None
-              , 'field_placeholder':      "(no field group selected)"
+              , 'field_placeholder':      "(placeholder text)"
               , 'field_default_value':    ""
-              , 'field_value':            ""
+              , 'field_value':            field_placeholder
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':                "Field_repeat_label_add"    # 13 (9,0)
+              { 'field_id':               "Field_tooltip"               # 13 (9,0)
+              , 'field_name':             "Field_tooltip"
+              , 'field_label':            "Tooltip"
+              , 'field_value_type':       "annal:Longtext"
+              , 'field_render_type':      "Textarea"
+              , 'field_value_mode':       "Value_direct"
+              , 'field_property_uri':     "annal:tooltip"
+              , 'field_placement':        get_placement_classes('small:0,12')
+              , 'field_ref_type':         None
+              , 'field_ref_field':        None
+              , 'field_placeholder':      "(Field usage popup help text)"
+              , 'field_default_value':    ""
+              , 'options':                []
+              })
+          , { 'field_id':               "Field_fields"                  # 14 (10,0)
+            , 'field_name':             "Field_fields"
+            , 'field_value_type':       "annal:Field_list"
+            , 'field_label':            "Subfields"
+            , 'field_render_type':      "Group_Seq_Row"
+            , 'field_value_mode':       "Value_direct"
+            , 'field_property_uri':     "annal:field_fields"
+            , 'field_placement':        get_placement_classes('small:0,12')
+            , 'field_value':            field_fields
+            , 'options':                []
+            }
+          , context_field_row(
+              { 'field_id':               "Field_repeat_label_add"      # 15 (11,0)
               , 'field_name':             "Field_repeat_label_add"
               , 'field_label':            "Add value label"
               , 'field_value_type':       "annal:Text"
@@ -423,13 +461,13 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               # , 'field_placeholder':      "..."
-              , 'field_default_value':    ""
-              , 'field_value':            ""
+              , 'field_default_value':    "Add"
+              , 'field_value':            field_repeat_label_add
               , 'options':                []
               },
-              { 'field_id':               "Field_repeat_label_delete" # 14 (9,1)
+              { 'field_id':               "Field_repeat_label_delete"   # 16 (11,1)
               , 'field_name':             "Field_repeat_label_delete"
-              , 'field_label':            "Delete value label"
+              , 'field_label':            "Remove value label"
               , 'field_value_type':       "annal:Text"
               , 'field_render_type':      "Text"
               , 'field_value_mode':       "Value_direct"
@@ -438,28 +476,12 @@ def recordfield_entity_view_context_data(
               , 'field_ref_type':         None
               , 'field_ref_field':        None
               # , 'field_placeholder':      "..."
-              , 'field_default_value':    ""
-              , 'field_value':            ""
+              , 'field_default_value':    "Remove"
+              , 'field_value':            field_repeat_label_delete
               , 'options':                []
               })
           , context_field_row(
-              { 'field_id':               "Field_entity_type"         # 15 (10,0)
-              , 'field_name':             "Field_entity_type" 
-              , 'field_label':            "Entity type"
-              , 'field_value_type':       "annal:Identifier"
-              , 'field_render_type':      "Identifier"
-              , 'field_value_mode':       "Value_direct"
-              , 'field_property_uri':     "annal:field_entity_type"
-              , 'field_placement':        get_placement_classes('small:0,12')
-              , 'field_ref_type':         None
-              , 'field_ref_field':        None
-              # , 'field_placeholder':      "..."
-              , 'field_default_value':    ""
-              , 'field_value':            ""
-              , 'options':                []
-              })
-          , context_field_row(
-              { 'field_id':               "Field_restrict"            # 16 (11,0)
+              { 'field_id':               "Field_restrict"              # 17 (12,0)
               , 'field_name':             "Field_restrict"
               , 'field_label':            "Value restriction"
               , 'field_value_type':      "annal:Text"
@@ -510,7 +532,8 @@ def recordfield_entity_view_form_data(
         field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']         = field_id
         form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
-        form_data_dict['Field_comment']     = '%s help for %s in collection %s'%(update, field_id, coll_id)
+        form_data_dict['Field_help']        = '%s help for %s in collection %s'%(update, field_id, coll_id)
+        form_data_dict['Field_tooltip']     = '%s tooltip for %s in collection %s'%(update, field_id, coll_id)
         form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
@@ -519,7 +542,8 @@ def recordfield_entity_view_form_data(
         form_data_dict['orig_id']           = orig_id
     if field_label:
         form_data_dict['Field_label']       = field_label
-        form_data_dict['Field_comment']     = "Help for "+field_label
+        form_data_dict['Field_help']        = "Help for "+field_label
+        form_data_dict['Field_tooltip']     = "Tooltip for "+field_label
     if entity_type:
         form_data_dict['Field_entity_type'] = entity_type
     if property_uri:

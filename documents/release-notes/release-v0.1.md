@@ -1,24 +1,43 @@
 # Annalist v0.1 release notes
 
+----
+
+NOTE: the 0.1 release series is now superseded by - [Release 0.5.x](./release-v0.5)
+
+----
+
 Release 0.1 is the first public prototype of Annalist.  It contains what I hope is sufficient tested functionality for evaluation purposes, but there may be intended capabilities not yet fully implemented, and many refinements to be applied.
 
 A summary of issues to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.1.36
+## Current release: 0.1.37
 
-(See "History" below for more details about this and previous releases)
+This release contains candidate feature-complete functionality for an Annalist V1 software release.  The aim has beemn to complete features that are seen as likely to affect the stored data structures used by Annalist, to minimize future data migration requirements.  The intent is that this release will be used in actual projects to test if it offers minimal viable product functionality for its imntended use.  Meanwhile, planned developments will focus more on documentation, stability, security and performance concerns.
 
-This is mainly a "maintence" release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
+### Revised view definition interface
 
-Changes include:
+Extensive changes that aim to simplify the user interface for defining entity views (specifically, fields that contain repeating groups of values) by eliminating the use of separate field group entities.  This in turn has led to changes in the underlying view and field definition structures used by Annalist.
 
-* Server logging and log access enhancements.  Among other things, these make it possible for Annalist users withj site ADMIN permissions to view server logs without a shell login on the server host system.
-* Additional command line tools for setting up initial user accounts.
-* Improved control over default access permissions for a collection.
-* Small internal changes and bug-fixes to data migration logic.
-* Improved reporting of some incorrectly defined view fields.
-* New installable collection data (Concept_defs) with definitions for associating SKOS Concept tags with entities.
+Also added are data migration capabilities for existing data collections that use record groups. These have been used to migrate installable collection data.
+
+The `Annalist_schema` instalable collection data (which provides RDF-schema based definitions for the Annalist-specific vocabulary terms) has been updated to reflect the field group changes.
+
+### Other features
+
+- popup help for view fields (tooltip text) is defined seperately from for general help text in a field definition.  (HTML5 tooltips don't support rich text formatting, so thios was limiting what could be included in the field definition help descriptions.)
+
+- the installable collection `Journal_defs` has been split into two, with the aim of improving ease of sharing common definitions:
+    - `Resource_defs` provides field and view definitions for uploaded, imported and linked media resources (currently image and audio), and annoted references to arbitrary web resources.  It also provides a number of commionly used namespace definitions (dc, foaf, and a namespace for local names without global URIs).
+    - `Journal_defs` (which uses media definitions imported from `Resource_defs`) now provides just the (mainly) narrative journal structure that has been found useful for capturing some kinds of activity description.
+
+- An `annalist-manager` subcommand (`migrateallcollections`) has been aded to migrate data for all collections in a site.
+
+### Bug fixes
+
+- Editing an entity inherited from another collection (which is supposed to create a new copy of that entity in the current collection) was generating an error when saving the edted entity.  The fix to this involved extensive refactoring of the entity editing and save logic to keep better track of the collection from which the original entity data was obtained.
+
+- Fixed site data and installable collection data so that entity selection for inclusion in fields presenting drop-down selection lists would operate more consistently.
 
 
 ## Status
@@ -91,6 +110,116 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 # History
 
 
+# Version 0.1.37, towards 0.5.0
+
+- [x] Absorb field groups into field defs
+    - This is an extensive change that aims to simplify the user interface for defining certain types of field (specifically, those that contain repeating groups of values) by eliminating the use of separate field group entities.  This in turn has led to a significant change in the underlying view and field defiition structures used by Annalist.  Also added are data migration capabilities for existing data collections that use record groups, which have been used in turn to migrate installable collection data.
+    - [x] Modify field definition reader to use locally defined fields rather than group reference
+        - [x] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
+            - [x] Replace: group_view -> field_list
+            - [x] Don't store group view in FieldDescription (store field list instead)
+            - [x] Update group_view_fields to return list if present
+            - [x] field_desc.has_field_group_ref needs rework to align with refactoring
+            - [x] if list is defined within field definition, use that
+            - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
+    - [x] Extend field definition view to include list of fields
+        - [x] Add field Field_fields to field view
+        - [x] Define field Field_fields, using field definitions from group Group_field_group
+        - [x] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
+    - [x] Update site definitions to use field lists in field definitions
+    - [x] Eliminate field group definitions from site data
+    - [x] Modify or eliminate task buttons that create field group entities
+    - [x] Check for other uses of field group reference field
+        - [x] entityedit.py save_invoke_task (task dispatching)
+        - [x] entitylist.py get_list_entityvaluemap
+        - [x] test_sitedata.py check_type_fields
+        - [x] test_render_repeatgroup.py
+        - [x] Test Define repeat field button in deployed software
+            - [x] Define repeat field - button text mentions group
+            - [x] Define repeat field - value type should be annal:Field_list
+            - [x] Referenced field view - entity type field should be blank, or field list
+            - [x] Field entity type help text mentions group
+            - [x] Define repeat field - confirmation message mentions group; message needs refinement
+        - [x] fielddescription.py
+    - [x] Check for and eliminate other uses of RecordGroup class
+        - [x] test_render_ref_multifields.py
+        - [x] views/form_utils/fielddescription.py
+    - [x] Remove field group field from field view definition
+    - [x] Update field view help text to mention subfields, not field group
+    - [x] Seek out other references to field group type name or URI
+        - NOTE: references to group type, views, lists remain for migration support, and free-standing view and list definitions, remain -- for now.
+- [x] Migrate group references in user field definitions to use internal field list
+    - [x] Add logic to RecordField to import field definitions from group definition
+    - [x] Warning on migration if value type of repeat field does not match type of referenced group
+    - [x] Add optional deprecation warning when recordgroup is instantiated (except for migration)
+        - NOTE: EntityTypeInfo scans suppress these warnings, as they're used by migration logic
+    - [x] Above changes should mean all live references are to inline field lists
+    - [x] Add _group rename to collection migration function
+- [x] Test migration functionality
+    - [x] Add test case to test_data_migration
+    - [x] Apply migrations to installable collections
+        - [x] Install software then use annalist-manager commands to apply migrations;
+        - [x] Check, and copy migrated data back to source tree
+        - [x] Annalist_schema)
+        - [x] Bibliography_defs
+        - [x] Concept_defs
+        - [x] Journal_defs
+        - [x] RDF_schema_defs
+    - [x] Eliminate group definitions in installable collections
+- [x] Add annalist-manager option to migrate all collections in site
+    - `annalist-manager migrateallcollections`
+    - [x] Fix up installable collection problems picked up by collection migration 
+- [x] BUG (attempt to save copy of site label field):
+        - Steps to reproduce:
+            - Select scope all listing of entities
+            - Select site entity
+            - Click "edit" button
+            - Enter new entity id
+            - Click Save
+        - Problem appears to be that the software was trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
+    - [x] Handle change of collection like change of type: copy data to new location
+        - [x] GET: copy original collection id to form as 'orig_coll'
+        - [x] POST:
+            - [x] extract orig coll id from form, default to current coll id
+            - [x] save collection id information into DisplayInfo object
+        - [x] DisplayInfo.__init__: initialize collection id values
+        - [x] DisplayInfo.set_type_entity_id: set collection id values
+        - [x] entityedit references to orig_type_id; also check orig_coll_id
+        - [x] Need to be able to retrieve original collection type info for copy
+        - [x] Check original collection access is honoured
+            - [x] fairly extensive changes to EntityEdit and DisplayInfo logic to keep track of the (possibly inherited) collection from which an entity is accessed.
+            - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
+            - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
+        - [x] New test case; edit inherited value with attachment
+- [x] Fix handling of restriction expression for subfield selection.
+    [x] Need test case coverage for subfields in field defintion, and domain and/or range classes in RDF_schema (e.g. _field/subpropertyOf on _field/subpropertyOf_r)
+    [x] In FieldListValueMap, add {'group': field_desc_dict} to extra value context.
+        - Should be accessible in restriction expression as 'group[...]'
+    [x] Update field and view forms help text.
+- [x] Annalist_schema add annal:field_fields property.
+    - [x] Renamed type URI for field lists to match schema domain value.
+- [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
+    - [x] Removed default option for now: everything is .URI or .CURIE
+- [x] Provide field popup help (without MarkDown) separately from comment field
+    - [x] Add new property URI to ANNAL namespace
+        - annal:tooltip
+    - [x] Add new field; change label on comment field
+    - [x] Use annal:tooltip in preference to rdfs:comment when rendering field.
+        - handled in render_fieldvalue.py via field.field_tooltip ...
+        - ... calls bound_field.get_field_tooltip()
+        - ... uses self._field_description['field_help']
+    - [x] Default to rdfs:comment value if blank
+    - [x] Re-order fields in field view so tooltip comes toward end
+    - [x] Add migration logic to copy comment to tooltip and add heading for comment:
+        - "# (label)\r\n\r\n(Tooltip)
+        - test case in test_data_migration.py
+        - adjust test logic to accommodfate this migration
+    - [x] Edit sitedata field definitions
+- [x] Split installable collection Resource_defs from Journal_defs
+- [x] Update installed software on fast-project.analist.net
+- [x] Update data migration logic tp fix entities whose 'annal:type' value does not match the corresponding type definition (which could occur when migrating old data).
+
+
 ## Version 0.1.36
 
 This is mainly a "maintence" release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
@@ -140,6 +269,7 @@ Changes include:
     - [x] define broader concepts fields and group
     - [x] define entity concepts field for associating concepts with an entity
 - [x] annalist.net front page - link to CEUR paper on web
+
 
 ## Version 0.1.34
 

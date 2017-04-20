@@ -163,14 +163,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     search=""
                     )
             )
-        entity_types_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
-        # log.debug("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
-        self.assertEqual(len(entity_types_ids), 173)    # Will change with site data
-        expect_entities  = get_site_entities_sorted()
-        expect_types_ids = [ fc.id for fc in expect_entities ]
-        # log.debug("@@ entity_types_ids: \n"+"\n".join([ repr(eti) for eti in entity_types_ids[145:] ]))
-        # log.debug("@@ expect_types_ids: \n"+"\n".join([ repr(eti) for eti in expect_types_ids[145:] ]))
-        self.assertEqual(entity_types_ids, expect_types_ids)
+        actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
+        # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
+        self.assertEqual(len(actual_entity_ids), 172)    # Will change with site data
+        expect_entities   = get_site_entities_sorted()
+        expect_entity_ids = [ fc.id for fc in expect_entities ]
+        # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
+        # log.debug("@@ expect_entity_ids: \n"+"\n".join([ repr(eti) for eti in expect_entity_ids[145:] ]))
+        self.assertEqual(actual_entity_ids, expect_entity_ids)
         return
 
     def test_enumerate_value_modes(self):
@@ -203,7 +203,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         # log.info(r.content) #@@
         cont = uri_params({"continuation_url": u})
-        #@@ cont = ""
         tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
         tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
         tooltip3 = "" # 'title="%s"'%r.context['fields'][2]['field_help']
@@ -325,7 +324,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 170)    # Will change with site data
+        self.assertEqual(len(entities), 169)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -437,13 +436,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Coll_software_version', "Showtext",    "annal:Text",       "S/W version")
             , ('Entity_type',       "EntityTypeId",    "annal:EntityRef",  "Type")
             , ('Entity_label',      "Text",            "annal:Text",       "Label")
-            , ('Field_comment',     "Textarea",        "annal:Longtext",   "Help")
+            , ('Field_help',        "Markdown",        "annal:Richtext",   "Help")
             , ('Field_placement',   "Placement",       "annal:Placement",  "Position/size")
             , ('Field_render_type', "Enum_choice",     "annal:EntityRef",  "Render type")
             , ('Field_value_mode',  "Enum_choice",     "annal:EntityRef",  "Value mode")
             , ('Field_value_type',  "Identifier",      "annal:Identifier", "Value type")
             , ('Field_entity_type', "Identifier",      "annal:Identifier", "Entity type")
-            , ('Field_default',     "Text",            "annal:Text",       "Default")
+            , ('Field_default',     "Text",            "annal:Text",       "Default value")
             , ('Field_typeref',     "Enum_optional",   "annal:EntityRef",  "Refer to type")
             , ('Field_restrict',    "Text",            "annal:Text",       "Value restriction")
             , ('List_comment',      "Markdown",        "annal:Richtext",   "Help")
@@ -686,7 +685,6 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     def test_post_new_all_entity(self):
         # Also tests continuation_url parameter handling
-        #@@ s = site_view_url()
         s = collection_view_url(coll_id="testcoll")
         f = entitylist_form_data("new", list_id="Field_list", continuation_url=s)
         u = entitydata_list_all_url("testcoll", list_id="Field_list")

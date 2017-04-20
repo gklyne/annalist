@@ -337,11 +337,11 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="00000001",
-            tooltip1=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
-            tooltip5=context_view_field(r.context, 4, 0)['field_help']
+            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context, 4, 0)['field_tooltip']
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -433,7 +433,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="testuser",
-            tooltip=context_view_field(r.context, 4, 0)['field_help']
+            tooltip=context_view_field(r.context, 4, 0)['field_tooltip']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">
@@ -471,7 +471,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.USER_TYPEID, entity_id="baduserperms",
-            tooltip=context_view_field(r.context, 4, 0)['field_help']
+            tooltip=context_view_field(r.context, 4, 0)['field_tooltip']
             )
         formrow5 = """
             <div class="small-12 columns" title="%(tooltip)s">
@@ -495,13 +495,40 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
+    #   -------- edit user --------
+
+    def test_post_edit_user(self):
+        # The main purpose of this test is to check that user permissions are saved properly
+        self.assertFalse(AnnalistUser.exists(self.testcoll, "edituser"))
+        f = annalistuser_view_form_data(
+            action="edit", orig_id="_default_user_perms", orig_coll="_annalist_site",
+            user_id="edituser",
+            user_name="User edituser",
+            user_uri="mailto:edituser@example.org",
+            user_permissions="VIEW CREATE UPDATE DELETE"
+            )
+        u = entitydata_edit_url(
+            "edit", "testcoll", 
+            layout.USER_TYPEID, entity_id="_default_user_perms", 
+            view_id="User_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'], self.continuation_url)
+        # Check that new user exists
+        self.assertTrue(AnnalistUser.exists(self.testcoll, "edituser"))
+        self._check_annalist_user_values("edituser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
+        return
+
     #   -------- copy user --------
 
     def test_post_copy_user(self):
         # The main purpose of this test is to check that user permissions are saved properly
         self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
         f = annalistuser_view_form_data(
-            action="copy", orig_id="_default_user_perms",
+            action="copy", orig_id="_default_user_perms", orig_coll="_annalist_site",
             user_id="copyuser",
             user_name="User copyuser",
             user_uri="mailto:copyuser@example.org",

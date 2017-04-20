@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_field/subclassOf",
   "@type": [
     "annal:Field"
   ],
@@ -14,15 +17,15 @@
   "annal:field_ref_type": "_type/Class",
   "annal:field_render_type": "_enum_render_type/Enum",
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
-  "annal:field_value_type": "annal:Identifier",
-  "annal:group_ref": "",
+  "annal:field_value_type": "rdfs:Class",
   "annal:id": "subclassOf",
-  "annal:placeholder": "(select superclass)",
+  "annal:placeholder": "(Superclass - URI or CURIE)",
   "annal:property_uri": "rdfs:subClassOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
+  "annal:tooltip": "Refers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "Refers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
+  "rdfs:comment": "# Subclass of\r\n\r\nRefers to a superclass of which the current class is a subclass.  That is, all instances of this class are also instances of the indicated superclass.\r\n",
   "rdfs:label": "Subclass of"
 }

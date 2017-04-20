@@ -18,7 +18,7 @@ Even sub-releases are stable versions, except for critical bug-fixes
 
 Odd sub-releases are work-in-progress, and code may change from day-to-day.
 """
-__version__        = "0.1.36"   # Software version number (odd = unstable)
+__version__        = "0.5.0"   # Software version number (odd = unstable)
 
 """
 Data compatibility version: this is saved with collection data, and is used to
@@ -30,6 +30,6 @@ presumption that new software can read older data, and migrate it where necessar
 Not all software updates create data that cannot be read by older software: for 
 these updates the __version_data__ value can be left unchanged.
 """
-__version_data__   = "0.1.33"   # Data compatibility version number
+__version_data__   = "0.1.37"   # Data compatibility version number
 
 # End.

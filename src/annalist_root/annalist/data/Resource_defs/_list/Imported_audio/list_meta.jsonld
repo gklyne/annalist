@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Imported_audio",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Included_audio",
+  "annal:default_view": "_view/Imported_audio",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Imported_audio",
+  "annal:list_entity_selector": "'coll:Imported_audio' in [@type]",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_type",
+      "annal:field_placement": "small:3,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:6,6"
+    }
+  ],
+  "annal:record_type": "coll:Imported_audio",
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "rdfs:comment": "# List of imported audio clips\r\n\r\nPresents a list of entities that contain audio clips imported from the web.",
+  "rdfs:label": "Imported audio clips"
+}

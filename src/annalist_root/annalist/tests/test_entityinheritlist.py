@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-# from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
@@ -173,7 +172,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         if len(entities) != 213:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 230)    # Will change with site data
+        self.assertEqual(len(entities), 223)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):
@@ -233,13 +232,13 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
             , ('Entity_type',       "EntityTypeId",  "annal:EntityRef",     "Type")
             , ('Entity_label',      "Text",          "annal:Text",          "Label")
-            , ('Field_comment',     "Textarea",      "annal:Longtext",      "Help")
+            , ('Field_help',        "Markdown",      "annal:Richtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
             , ('Field_render_type', "Enum_choice",   "annal:EntityRef",     "Render type")
             , ('Field_value_mode',  "Enum_choice",   "annal:EntityRef",     "Value mode")
             , ('Field_value_type',  "Identifier",    "annal:Identifier",    "Value type")
             , ('Field_entity_type', "Identifier",    "annal:Identifier",    "Entity type")
-            , ('Field_default',     "Text",          "annal:Text",          "Default")
+            , ('Field_default',     "Text",          "annal:Text",          "Default value")
             , ('Field_typeref',     "Enum_optional", "annal:EntityRef",     "Refer to type")
             , ('Field_restrict',    "Text",          "annal:Text",          "Value restriction")
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")

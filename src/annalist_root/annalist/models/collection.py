@@ -41,7 +41,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup
+from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.rendertypeinfo import (
     is_render_type_literal,
@@ -647,18 +647,40 @@ class Collection(Entity):
             for fref in v[ANNAL.CURIE.view_fields]:
                 fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
                 vuri = fref.get(ANNAL.CURIE.property_uri, None)
-                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                furi, fcontext, field_list = self.get_field_uri_jsonld_context(
+                    fid, self.get_field_jsonld_context
+                    )
                 if fcontext is not None:
                     fcontext['vid'] = v.get_id()
                     fcontext['fid'] = fid
                 e = self.set_field_uri_jsonld_context(vuri or furi, fid, fcontext, context)
                 errs.extend(e)
+                # If this field contains a list of subfields, scan those
+                # NOTE: current implementation handles only a single level of field nesting
+                if field_list:
+                    for subfref in field_list:
+                        subfid  = extract_entity_id(subfref[ANNAL.CURIE.field_id])
+                        subfuri = subfref.get(ANNAL.CURIE.property_uri, None)
+                        furi, fcontext, field_list = self.get_field_uri_jsonld_context(
+                            subfid, self.get_field_jsonld_context
+                            )
+                        if fcontext is not None:
+                            fcontext['fid']    = fid
+                            fcontext['subfid'] = subfid
+                        e = self.set_field_uri_jsonld_context(subfuri or furi, subfid, fcontext, context)
+                        errs.extend(e)
         # Scan group fields and generate context data for property URIs used
-        for g in self.child_entities(RecordGroup, altscope="all"):
+        #@@TODO - to be deprecated
+        # In due course, field groups will replaced by inline field lists.
+        # This code does not process field lists for fields referenced by a group.
+        #@@
+        for g in self.child_entities(RecordGroup_migration, altscope="all"):
             for gref in g[ANNAL.CURIE.group_fields]:
                 fid  = extract_entity_id(gref[ANNAL.CURIE.field_id])
                 guri = gref.get(ANNAL.CURIE.property_uri, None)
-                furi, fcontext = self.get_field_uri_jsonld_context(fid, self.get_field_jsonld_context)
+                furi, fcontext, field_list = self.get_field_uri_jsonld_context(
+                    fid, self.get_field_jsonld_context
+                    )
                 if fcontext is not None:
                     fcontext['gid'] = g.get_id()
                     fcontext['fid'] = fid
@@ -673,18 +695,21 @@ class Collection(Entity):
         Access field description, and return field property URI and appropriate 
         property description for JSON-LD context.
 
-        If there is no corresponding field description, returns (None, None)
+        Returns a triple consisting of the field property URI, the context information to be
+        generated for the field, and a list of any field references contained directly within
+        the field definition (as opposed to a field group reference)
 
-        If no context should be generated for the field URI, returns (uri, None)
+        If there is no corresponding field description, returns (None, None, None)
+
+        If no context should be generated for the field URI, returns (uri, None, field_list)
+
+        The field list returned is 'None' if there is no contained list of fields.
         """
         f = RecordField.load(self, fid, altscope="all")
         if f is None:
-            return (None, None)
-        # @@debugging@@
-        # if fid in ["Entity_id", "List_id"]:
-        #     print "@@ %s field   %r"%(fid, f)
-        #     print "@@ %s context %r"%(fid, get_field_context(f))
-        return (f[ANNAL.CURIE.property_uri], get_field_context(f))
+            return (None, None, None)
+        field_list = f.get(ANNAL.CURIE.field_fields, None)
+        return (f[ANNAL.CURIE.property_uri], get_field_context(f), field_list)
 
     def set_field_uri_jsonld_context(self, puri, field_id, fcontext, property_contexts):
         """
@@ -701,15 +726,28 @@ class Collection(Entity):
                 if not fcontext:
                     # For diagnostics to locate incompatible use...
                     fcontext = {'fid': field_id}
-                if puri in property_contexts:
+                if (puri in property_contexts):
                     pcontext    = property_contexts[puri]
+                    pcontext.pop('err', None)   # Drop pevious error(s) from report
                     p_type      = pcontext.get("@type", None)
-                    p_container = pcontext.get("@container", None)
                     f_type      = fcontext.get("@type", None)
+                    if (p_type != f_type):
+                        msg  = (
+                            "Incompatible value type for property %s in field %s (new %r; was %r)"%
+                            (puri, field_id, fcontext, pcontext)
+                            )
+                        log.warning(msg)
+                        property_contexts[puri]['err'] = msg
+                        errs.append(msg)
+                    p_container = pcontext.get("@container", None)
                     f_container = fcontext.get("@container", None)
-                    if ( ( p_type      != f_type      ) or
-                         ( p_container != f_container ) ):
-                        msg  = "Incompatible use of property %s in field %s (new %r; was %r)"% (puri, field_id, fcontext, pcontext)
+                    if ( (p_container != f_container) and
+                         ( (p_container == "@list") or 
+                           (f_container == "@list") ) ):
+                        msg  = (
+                            "Incompatible container type for property %s in field %s (new %r; was %r)"%
+                            (puri, field_id, fcontext, pcontext)
+                            )
                         # msgp = "pcontext @type %s, @container %s"%(p_type, p_container)
                         # msgf = "fcontext @type %s, @container %s"%(f_type, f_container)
                         log.warning(msg)

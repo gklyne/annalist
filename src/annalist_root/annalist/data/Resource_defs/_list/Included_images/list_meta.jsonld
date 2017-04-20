@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Included_images",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Included_image",
+  "annal:default_view": "_view/Included_image",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Included_images",
+  "annal:list_entity_selector": "'coll:Included_image' in [@type]",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_type",
+      "annal:field_placement": "small:3,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:6,6"
+    }
+  ],
+  "annal:record_type": "coll:Included_image",
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "rdfs:comment": "# List of Included images\r\n\r\nEach listed entity contains a reference to an included (uploaded, imported or linked) image, which can be referenced to present an image obtained by any of these means.",
+  "rdfs:label": "Included images"
+}

@@ -31,15 +31,19 @@ from annalist                       import layout
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import valid_id, extract_entity_id
 
-from annalist.models.entitytypeinfo import EntityTypeInfo, SITE_PERMISSIONS
+from annalist.models.entitytypeinfo import (
+    EntityTypeInfo, 
+    SITE_PERMISSIONS, CONFIG_PERMISSIONS
+    )
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup
 from annalist.models.recordvocab    import RecordVocab
+
+from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
 from annalist.views.uri_builder     import (
     uri_param_dict,
@@ -58,7 +62,7 @@ from annalist.views.fields.render_entityid  import EntityIdValueMapper
 #
 #   -------------------------------------------------------------------------------------------
 
-authorization_map = (
+context_authorization_map = (
     { "auth_create":        ["CREATE"]
     , "auth_delete":        ["DELETE"]
     , "auth_update":        ["UPDATE"]
@@ -192,23 +196,27 @@ class DisplayInfo(object):
         self.request_dict       = request_dict
         self.continuation_url   = request_dict.get('continuation_url', None)
         self.default_continue   = default_continue
-        # Type/Entity ids from form
+        # Collection/Type/Entity ids - to be supplied based on form data in POST
+        self.orig_coll_id       = None
         self.orig_type_id       = None
         self.orig_entity_id     = None
+        self.orig_typeinfo      = None
+        self.curr_coll_id       = None
         self.curr_type_id       = None
         self.curr_entity_id     = None
+        self.curr_typeinfo      = None
         # Type-specific messages
         self.type_messages      = None
         # Default no permissions:
-        self.authorizations     = dict([(k, False) for k in authorization_map])
+        self.authorizations     = dict([(k, False) for k in context_authorization_map])
         self.reqhost            = None
         self.site               = None
         self.sitedata           = None
         self.coll_id            = None
         self.collection         = None
-        self.coll_perms         = None  # Collection used for permissions checking
-        self.type_id            = None
-        self.entitytypeinfo     = None
+        self.orig_coll          = None  # Original collection for copy
+        self.perm_coll          = None  # Collection used for permissions checking
+        self.type_id            = None  # Type Id from request URI, not dependent on form data
         self.list_id            = None
         self.recordlist         = None
         self.view_id            = None
@@ -217,17 +225,52 @@ class DisplayInfo(object):
         self.http_response      = None
         return
 
-    def set_type_entity_id(self,
+    def set_orig_coll_id(self, orig_coll_id=None):
+        """
+        For GET and POST operations, set up details of the collection from which
+        an existing identified entity is accessible.  This is used later to check 
+        collection access permissions.
+        """
+        self.orig_coll_id       = EntityIdValueMapper.decode(orig_coll_id)
+        # If inherited from another collection, update origin collection object
+        if self.orig_coll_id and (self.orig_coll_id != self.coll_id):
+            c = Collection.load(self.site, self.orig_coll_id, altscope="all")
+            if c:
+                self.orig_coll = c
+        return self.http_response
+
+    def set_coll_type_entity_id(self,
+        orig_coll_id=None,
         orig_type_id=None, orig_entity_id=None,
         curr_type_id=None, curr_entity_id=None
         ):
         """
-        Save type and entity ids from form
+        For a form POST operation, sets updated collection, type and entity
+        identifiers from the form data.
+
+        The original collection id may be different by virtue of inheritance
+        from another collection (via 'orig_coll_id' parameter).
+
+        The current type identifier may be different by virtue of the type being
+        renamed in the formdata (via .
         """
+        # log.debug(
+        #     "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
+        #       ( orig_coll_id, orig_type_id, orig_entity_id, 
+        #         curr_type_id, curr_entity_id
+        #       )
+        #     )
+        self.set_orig_coll_id(orig_coll_id)
+        if self.http_response:
+            return self.http_response
         self.orig_type_id       = EntityIdValueMapper.decode(orig_type_id)
         self.orig_entity_id     = EntityIdValueMapper.decode(orig_entity_id)
         self.curr_type_id       = EntityIdValueMapper.decode(curr_type_id)
         self.curr_entity_id     = EntityIdValueMapper.decode(curr_entity_id)
+        if self.orig_coll_id and (self.orig_coll_id != self.coll_id):
+            self.orig_typeinfo = EntityTypeInfo(self.orig_coll, orig_type_id)
+        if self.curr_type_id and (self.curr_type_id != self.type_id):
+           self.curr_typeinfo = EntityTypeInfo(self.collection, curr_type_id)
         return self.http_response
 
     def set_messages(self, messages):
@@ -264,7 +307,8 @@ class DisplayInfo(object):
                 self.coll_id    = coll_id
                 #@@TODO: try with altscope="site"?
                 self.collection = Collection.load(self.site, coll_id, altscope="all")
-                self.coll_perms = self.collection
+                self.orig_coll  = self.collection
+                self.perm_coll  = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
                 if LooseVersion(ver) > LooseVersion(annalist.__version__):
                     self.http_response = self.view.error(
@@ -303,9 +347,10 @@ class DisplayInfo(object):
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             if type_id:
-                self.type_id        = type_id
-                self.entitytypeinfo = EntityTypeInfo(self.collection, type_id)
-                if not self.entitytypeinfo.recordtype:
+                self.type_id       = type_id
+                self.curr_typeinfo = EntityTypeInfo(self.collection, type_id)
+                self.orig_typeinfo = self.curr_typeinfo
+                if not self.curr_typeinfo.recordtype:
                     # log.warning("DisplayInfo.get_type_data: RecordType %s not found"%type_id)
                     self.http_response = self.view.error(
                         dict(self.view.error404values(),
@@ -347,7 +392,7 @@ class DisplayInfo(object):
                                 })
                             )
                         )
-                elif self.type_id is None and self.entitytypeinfo is None:
+                elif self.type_id is None and self.curr_typeinfo is None:
                     self.get_type_info(
                         extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
                         )
@@ -394,11 +439,11 @@ class DisplayInfo(object):
         Also handles some special case permissions settings if the entity is a Collection.
         """
         if not self.http_response:
-            assert self.entitytypeinfo is not None
+            assert self.curr_typeinfo is not None
             self.src_entity_id  = entity_id
             if action in ["new", "copy"]:
-                self.use_entity_id = self.entitytypeinfo.entityclass.allocate_new_id(
-                    self.entitytypeinfo.entityparent, base_id=entity_id
+                self.use_entity_id = self.curr_typeinfo.entityclass.allocate_new_id(
+                    self.curr_typeinfo.entityparent, base_id=entity_id
                     )
             else:
                 self.use_entity_id  = entity_id
@@ -408,7 +453,7 @@ class DisplayInfo(object):
                 # log.info("DisplayInfo.get_entity_info: access collection data for %s"%entity_id)
                 c = Collection.load(self.site, entity_id, altscope="all")
                 if c:
-                    self.coll_perms = c
+                    self.perm_coll = c
         return self.http_response
 
     def check_authorization(self, action):
@@ -419,30 +464,44 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             # Save key authorizations for later rendering
-            for k in authorization_map:
-                for p in authorization_map[k]:
+            for k in context_authorization_map:
+                for p in context_authorization_map[k]:
                     self.authorizations[k] = (
                         self.authorizations[k] or 
-                        self.view.authorize(p, self.coll_perms) is None
+                        self.view.authorize(p, self.perm_coll) is None
                         )
             # Check requested action
             action = action or "view"
-            if self.entitytypeinfo:
-                # print "@@ type permissions map, action %s"%action
-                permissions_map = self.entitytypeinfo.permissions_map
+            if self.curr_typeinfo:
+                permissions_map = self.curr_typeinfo.permissions_map
             else:
-                # Use Collection permissions map
-                # print "@@ site permissions map, action %s"%action
+                # Use site permissions map (some site operations don't have an entity type?)
                 permissions_map = SITE_PERMISSIONS
-                # raise ValueError("displayinfo.check_authorization without entitytypeinfo")
-                # # permissions_map = {}
 
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
             self.http_response = (
                 self.http_response or 
-                self.view.form_action_auth(action, self.coll_perms, permissions_map)
+                self.view.form_action_auth(action, self.perm_coll, permissions_map)
                 )
+        if ( (not self.http_response) and 
+             self.orig_coll_id and (self.orig_coll_id != self.perm_coll.get_id())
+             ):
+            # Copying content from different collection: check access
+            if self.orig_typeinfo:
+                orig_permissions_map = self.orig_typeinfo.permissions_map
+                # @@TODO: replace with a principled per-entity permission required mechanism
+                #   There follows is a hack intended to be a least effort route to a fully
+                #   working test suite.  In due course this should be replaced by updates to
+                #   EntityTypeInfo to replace .permissions_map with a method to return a 
+                #   per-entity permission map.
+                if self.orig_type_id == layout.USER_TYPEID:
+                    if self.orig_entity_id in [default_user_id, unknown_user_id]:
+                        orig_permissions_map = dict(orig_permissions_map)
+                        orig_permissions_map["view"] = CONFIG_PERMISSIONS["view"]
+                # @@
+            self.http_response = self.view.form_action_auth("view", 
+                self.orig_coll, orig_permissions_map)
         return self.http_response
 
     def report_error(self, message):
@@ -471,15 +530,13 @@ class DisplayInfo(object):
         Return default list_id for listing defined type, or None
         """
         list_id = None
-        # print "@@ get_type_list_id type_id %s, list_id %s"%(type_id, list_id)
         if type_id:
-            if self.entitytypeinfo.recordtype:
+            if self.curr_typeinfo.recordtype:
                 list_id = extract_entity_id(
-                    self.entitytypeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
+                    self.curr_typeinfo.recordtype.get(ANNAL.CURIE.type_list, None)
                     )
             else:
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
-        # print "@@ get_type_list_id %s"%list_id
         return list_id
 
     def get_list_id(self, type_id, list_id):
@@ -487,7 +544,6 @@ class DisplayInfo(object):
         Return supplied list_id if defined, otherwise find default list_id for
         entity type or collection (unless an error has been detected).
         """
-        # print "@@ get_list_id 1 %s"%list_id
         if not self.http_response:
             list_id = (
                 list_id or 
@@ -495,10 +551,8 @@ class DisplayInfo(object):
                 self.collection.get_default_list() or
                 ("Default_list" if type_id else "Default_list_all")
                 )
-            # print "@@ get_list_id 2 %s"%list_id
             if not list_id:
                 log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
-            # print "@@ get_list_id 3 %s"%list_id
         return list_id
 
     def get_list_view_id(self):
@@ -530,7 +584,7 @@ class DisplayInfo(object):
         # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
         # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
         redirect_uri = None
-        typeinfo     = self.entitytypeinfo
+        typeinfo     = self.curr_typeinfo
         if not typeinfo or typeinfo.get_type_id() != entity_type:
             typeinfo = EntityTypeInfo(self.collection, entity_type)
         if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
@@ -577,7 +631,7 @@ class DisplayInfo(object):
         if not self.http_response:
             view_id = (
                 view_id or 
-                self.entitytypeinfo.get_default_view_id()
+                self.curr_typeinfo.get_default_view_id()
                 )
             if not view_id:
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
@@ -657,10 +711,10 @@ class DisplayInfo(object):
         Returns a string that can be used as a reference to the entity metadata resource
         relative to an entity URL, optionally with a specified type parameter added.
         """
-        assert self.entitytypeinfo is not None
+        assert self.curr_typeinfo is not None
         return make_data_ref(
             self.view.get_request_path(), 
-            self.entitytypeinfo.entityclass._entityfile, 
+            self.curr_typeinfo.entityclass._entityfile, 
             return_type
             )
 
@@ -732,7 +786,7 @@ class DisplayInfo(object):
                 , 'entity_list_ref_json':   self.get_entity_list_ref("application/json")
                 })
             context['title'] = "%(list_label)s - %(coll_label)s"%context
-        if self.entitytypeinfo:
+        if self.curr_typeinfo:
             context.update(
                 { 'entity_data_ref':        self.get_entity_data_ref()
                 , 'entity_data_ref_json':   self.get_entity_data_ref("application/json")

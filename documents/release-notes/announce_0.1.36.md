@@ -31,7 +31,7 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 I've just released an update (0.1.36) to the public prototype of Annalist.  
 
-This is mainly a maintence release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
+This is mainly a maintenance release, with changes to support and management tooling and a new installable data collection.  There are relatively few changes to the core software.
 
 The full announcement is at: 
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@

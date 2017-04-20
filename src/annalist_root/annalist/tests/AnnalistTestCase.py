@@ -23,15 +23,21 @@ class AnnalistTestCase(TestCase):
     Additonal test methods for Annalist test cases
     """
 
-    def check_entity_values(self, type_id, entity_id, check_values=None):
+    def check_entity_does_not_exist(self, type_id, entity_id):
         "Helper function checks content of entity record"
         typeinfo = EntityTypeInfo(self.testcoll, type_id)
+        self.assertFalse(typeinfo.entity_exists(entity_id))
+        return
+
+    def check_entity_values(self, type_id, entity_id, check_values=None):
+        "Helper function checks content of entity record; returns entity"
+        typeinfo = EntityTypeInfo(self.testcoll, type_id)
         self.assertTrue(typeinfo.entity_exists(entity_id))
-        t = typeinfo.get_entity(entity_id)
-        self.assertEqual(t.get_id(), entity_id)
-        self.assertEqual(t.get_type_id(), type_id)
-        self.assertDictionaryMatch(t.get_values(), check_values)
-        return t
+        e = typeinfo.get_entity(entity_id)
+        self.assertEqual(e.get_id(), entity_id)
+        self.assertEqual(e.get_type_id(), type_id)
+        self.assertDictionaryMatch(e.get_values(), check_values)
+        return e
 
     def assertEqualPrefix(self, actual, expect, prefix=""):
         self.assertEqual(actual, expect, msg="%s: actual %r, expected %r"%(prefix, actual, expect))
@@ -72,6 +78,10 @@ class AnnalistTestCase(TestCase):
         # log.info("\n***********\nexpect_dict %r"%(expect_dict))
         # log.info("\n-----------\nactual_dict %r"%(actual_dict))
         for k in expect_dict:
+            if k not in actual_dict:
+                log.info(prefix+"Expected key %s not found in actual"%(k))
+                log.info("  expect %r"%(expect_dict,))
+                log.info("  actual %r"%(actual_dict,))
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
             if isinstance(expect_dict[k],list):
                 if isinstance(actual_dict[k],list):
@@ -133,6 +143,14 @@ class AnnalistTestCase(TestCase):
         Test if string `first` is contained within `second`, normalizing all whitespace.
         """
         self.assertIn(re.sub(r'\s+', " ", first), re.sub(r'\s+', " ", second), msg=msg)
+        return
+
+    def assertStarts(self, first, second, msg=None):
+        """
+        Test that string `second` starts with the string `first`
+        """
+        second_start = second[:len(first)]
+        self.assertEqual(first, second_start, msg=msg)
         return
 
 # End.

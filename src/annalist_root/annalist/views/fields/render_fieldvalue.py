@@ -49,7 +49,7 @@ _unused_col_head_template = (
     )
 
 no_tooltip   = ""
-with_tooltip = "{{field.field_tooltip|safe}}"
+with_tooltip = "{{field.field_tooltip_attr|safe}}"
 
 # Renderer wrapper templates
 

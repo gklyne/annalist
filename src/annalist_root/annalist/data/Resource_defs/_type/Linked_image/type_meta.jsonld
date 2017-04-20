@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Linked_image",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [
+    {
+      "annal:alias_source": "coll:linked_image",
+      "annal:alias_target": "coll:included_image"
+    }
+  ],
+  "annal:id": "Linked_image",
+  "annal:supertype_uri": [
+    {
+      "@id": "coll:Included_image"
+    }
+  ],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Linked_images",
+  "annal:type_view": "_view/Linked_image",
+  "annal:uri": "coll:Linked_image",
+  "rdfs:comment": "# Linked image\r\n\r\nEntity containing a link to an image on the web, along with a label and description.",
+  "rdfs:label": "Linked image (internal type)"
+}

@@ -154,6 +154,8 @@ class bound_field(object):
             return self.get_field_help_esc()
         elif name == "field_tooltip":
             return self.get_field_tooltip()
+        elif name == "field_tooltip_attr":
+            return self.get_field_tooltip_attr()
         elif name == "field_value_link_continuation":
             return self.get_link_continuation(self.get_field_link())
 
@@ -227,10 +229,21 @@ class bound_field(object):
 
     def get_field_tooltip(self):
         """
+        Return tooltip text for displaying field popup
+        """
+        tooltip_text_esc = escape(
+            self._field_description['field_tooltip'] or 
+            (self._field_description['field_help']) or
+            "@@tooltip for %(field_label)s@@"%self._field_description
+            )
+        return tooltip_text_esc
+
+    def get_field_tooltip_attr(self):
+        """
         Return tooltip attribute for displaying field help, or blank
         """
-        help_text_esc = self.get_field_help_esc()
-        return ''' title="%s"'''%help_text_esc if help_text_esc else ''
+        tooltip_text_esc = self.get_field_tooltip()
+        return ''' title="%s"'''%tooltip_text_esc if tooltip_text_esc else ''
 
     def get_target_value(self):
         """
@@ -296,29 +309,30 @@ class bound_field(object):
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr
                 type_id, entity_id = split_type_entity_id(self.get_field_value(), target_type)
-                # Get entity type info
-                #@@TODO: eliminate site param...
-                coll     = self._field_description._collection
-                typeinfo = EntityTypeInfo(coll, type_id)
-                # Check access permission, assuming user has "VIEW" permission in current collection
-                # This is primarily to prevent a loophole for accessing user account details
-                #@@TODO: pass actual user permissions in to bound_field or field description or extra params
-                user_permissions = ["VIEW"]
-                req_permissions  = list(set( typeinfo.permissions_map[a] for a in ["view", "list"] ))
-                if all([ p in user_permissions for p in req_permissions]):
-                    if entity_id is None or entity_id == "":
-                        raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))
-                    targetentity = typeinfo.get_entity(entity_id)
-                    if targetentity is None:
-                        raise TargetEntityNotFound_Error(value=(target_type, entity_id))
-                    targetentity = typeinfo.get_entity_implied_values(targetentity)
-                    self._targetvals = get_entity_values(typeinfo, targetentity)
-                    # log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
-                else:
-                    log.warning(
-                        "bound_field.get_targetvals: target value type %s requires %r permissions"%
-                        (target_type, req_permissions)
-                        )
+                if type_id and entity_id:
+                    # Get entity type info
+                    coll     = self._field_description._collection
+                    typeinfo = EntityTypeInfo(coll, type_id)
+                    # Check access permission, assuming user has "VIEW" permission in collection
+                    # This is primarily to prevent a loophole for accessing user account details
+                    #@@TODO: pass actual user permissions in to bound_field or field description 
+                    #        or extra params
+                    user_permissions = ["VIEW"]
+                    req_permissions  = list(set( typeinfo.permissions_map[a] for a in ["view", "list"] ))
+                    if all([ p in user_permissions for p in req_permissions]):
+                        if entity_id is None or entity_id == "":
+                            raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))
+                        targetentity = typeinfo.get_entity(entity_id)
+                        if targetentity is None:
+                            raise TargetEntityNotFound_Error(value=(target_type, entity_id))
+                        targetentity = typeinfo.get_entity_implied_values(targetentity)
+                        self._targetvals = get_entity_values(typeinfo, targetentity)
+                        # log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
+                    else:
+                        log.warning(
+                            "bound_field.get_targetvals: target value type %s requires %r permissions"%
+                            (target_type, req_permissions)
+                            )
         # log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
@@ -386,6 +400,7 @@ class bound_field(object):
         yield "field_value_link_continuation"
         yield "field_help"
         yield "field_tooltip"
+        yield "field_tooltip_attr"
         yield "target_value"
         yield "target_value_link"
         yield "target_value_link_continuation"
@@ -416,6 +431,10 @@ class bound_field(object):
             "  })")
 
     def fullrepr(self):
+        try:
+            field_view_value = self.field_view_value
+        except Exception as e:
+            field_view_value = str(e)
         return (
             ( "bound_field(\n"+
               "  { 'key': %r\n"+
@@ -426,7 +445,7 @@ class bound_field(object):
               "  })\n"
             )%( self._key
               , self.field_edit_value
-              , self.field_view_value 
+              , field_view_value 
               , self._field_description
               , dict(self._entityvals.items())
               )

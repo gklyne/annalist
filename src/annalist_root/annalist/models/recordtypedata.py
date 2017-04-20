@@ -46,8 +46,9 @@ class RecordTypeData(Entity):
         #     (type_id, self._entitytypeid, parent.get_id())
         #     )
         # @@
-        self._entityref = layout.COLL_BASE_TYPEDATA_REF%{'id': type_id}
+        self._entityref   = layout.COLL_BASE_TYPEDATA_REF%{'id': type_id}
         super(RecordTypeData, self).__init__(parent, type_id)
+        self._ancestorid = parent._ancestorid
         return
 
     # @@TODO remove this method and re-test (now redundant, handled through Entity class)

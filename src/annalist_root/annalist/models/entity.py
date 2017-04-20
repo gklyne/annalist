@@ -86,7 +86,7 @@ class Entity(EntityRoot):
             raise ValueError("Invalid entity identifier: %s"%(entityid))
         relpath = self.relpath(entityid)
         # log.debug(
-        #     "  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
+        #     "@@  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
         #     (entityid, parent._entityurl, parent._entitydir, relpath)
         #     )
         entity_url  = urlparse.urljoin(parent._entityurl, relpath) 
@@ -95,7 +95,7 @@ class Entity(EntityRoot):
         if not entity_dir.startswith(entity_base):
             entity_base = parent._entitybasedir
         # log.debug(
-        #     "  _ Entity.__init__: entity_url %s, entity_dir %s"%
+        #     "@@  _ Entity.__init__: entity_url %s, entity_dir %s"%
         #     (entity_url, entity_dir)
         #     )
         entityviewurl = urlparse.urljoin(
@@ -103,9 +103,10 @@ class Entity(EntityRoot):
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
         super(Entity, self).__init__(entity_url, entityviewurl, entity_dir, entity_base)
-        self._entityid  = entityid
-        self._parent    = parent
-        self._altparent = altparent     # Alternative to current entity to search
+        self._entityid   = entityid
+        self._parent     = parent
+        self._ancestorid = entityid    # May be changed by subclass _local_find_alt_parents
+        self._altparent  = altparent   # Alternative to current entity to search
         # log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
@@ -340,6 +341,7 @@ class Entity(EntityRoot):
             e = cls._child_init(altparent, entityid, entityviewurl=uv)
             v = func(e)
             if test(v):
+                # log.info("@@ try_alt_parentage ancestorid %s, entityid %s"%(altparent._ancestorid, entityid))
                 return (e, v)
         # Failed: log details
         #@@

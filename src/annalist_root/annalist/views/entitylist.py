@@ -127,28 +127,22 @@ class EntityGenericListView(AnnalistGenericView):
             None
             )
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
-
         repeatrows_field_descr = (
             { ANNAL.CURIE.id:                   "List_rows"
             , RDFS.CURIE.label:                 "Fields"
-            , RDFS.CURIE.comment:               "This resource describes the repeated field description used when displaying and/or editing a record view description"
+            , RDFS.CURIE.comment:               
+                "This resource describes the repeated field description used when "+
+                "displaying and/or editing a record view description"
             , ANNAL.CURIE.field_name:           "List_rows"
             , ANNAL.CURIE.field_render_type:    "RepeatListRow"
             , ANNAL.CURIE.property_uri:         "_list_entities_"
-            , ANNAL.CURIE.group_ref:            "_group/List_fields"
-            })
-        repeatrows_group_descr = (
-            { ANNAL.CURIE.id:           "List_fields"
-            , RDFS.CURIE.label:         "List fields description"
-            , ANNAL.CURIE.group_fields: listinfo.recordlist[ANNAL.CURIE.list_fields]
             })
         repeatrows_descr = FieldDescription(
             listinfo.collection, 
             repeatrows_field_descr,
-            group_view=repeatrows_group_descr
+            field_list=listinfo.recordlist[ANNAL.CURIE.list_fields]
             )
         entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
-
         return entitymap
 
     # GET
@@ -182,7 +176,7 @@ class EntityGenericListView(AnnalistGenericView):
                         search=search_for
                         )
                 )
-            typeinfo      = listinfo.entitytypeinfo
+            typeinfo      = listinfo.curr_typeinfo
             entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
             # Set up initial view context
             context_extra_values = (
@@ -328,7 +322,7 @@ class EntityGenericListView(AnnalistGenericView):
                     if curi:
                         dict_querydict["continuation_url"] = [curi]
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
-                    typeinfo = listinfo.entitytypeinfo
+                    typeinfo = listinfo.curr_typeinfo
                     if typeinfo is None:
                         typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
                     return (
@@ -344,8 +338,8 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                if listinfo.entitytypeinfo:
-                    permissions_map = listinfo.entitytypeinfo.permissions_map
+                if listinfo.curr_typeinfo:
+                    permissions_map = listinfo.curr_typeinfo.permissions_map
                 else:
                     permissions_map = CONFIG_PERMISSIONS
                 auth_check = self.form_action_auth("config", listinfo.collection, permissions_map)

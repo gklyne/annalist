@@ -548,7 +548,10 @@ def check_context_field_value(test, context_field,
     elif field_value_type in ["annal:EntityRef", "annal:Type", "annal:View", "annal:List"]:
         context_field_value = extract_entity_id(context_field_value)
     if isinstance(field_value, (list, tuple)):
+        test.assertEqual(len(field_value), len(context_field_value))
         for i in range(len(field_value)):
+            # print "@@ check_context_field_value (list): [%d] %r"%(i, field_value[i])
+            # print "@@ check_context_field_value (list): [%d] %r (context)"%(i, context_field_value[i])
             log.debug("check_context_field_value (list): [%d] %r"%(i, field_value[i]))
             test.assertDictionaryMatch(context_field_value[i], field_value[i], prefix="[%d]"%i)
     elif isinstance(field_value, dict):
@@ -587,6 +590,10 @@ def check_context_field(test, context_field,
     test.assertEqual(extract_entity_id(context_field['field_value_mode']),  field_value_mode)
     test.assertEqual(context_field['field_value_type'],                     field_value_type)
     if options:
+        if set(context_field['options']) != set(options):
+            log.info("@@ Options expected: %r"%(context_field['options'],))
+            log.info("@@ Options seen:     %r"%(options,))
+            log.info("@@ context_field:    %r"%(context_field,))
         test.assertEqual(set(context_field['options']), set(options))
     if field_placement:
         test.assertEqual(context_field['field_placement'].field, field_placement)
@@ -768,7 +775,7 @@ def check_type_view_context_fields(test, response,
         )
     # 4th field - URI
     type_uri_placeholder = (
-        "(Type URI)"
+        "(Type URI or CURIE)"
         )
     check_context_field(test, f3,
         field_id=           "Type_uri",
@@ -861,7 +868,7 @@ def check_field_record(test, field_record,
         field_uri=None,
         field_url=None,
         field_label=None,
-        field_comment=None,
+        field_help=None,
         field_render_type=None,
         field_value_mode=None,
         field_property_uri=None,
@@ -869,6 +876,7 @@ def check_field_record(test, field_record,
         field_entity_type=None,
         field_value_type=None,
         field_placeholder=None,
+        field_tooltip=None,
         field_default=None,
         ):
         if field_id:
@@ -887,8 +895,8 @@ def check_field_record(test, field_record,
             test.assertEqual(field_url,          field_record['annal:url'])
         if field_label:
             test.assertEqual(field_label,        field_record['rdfs:label'])
-        if field_comment:
-            test.assertEqual(field_comment,      field_record['rdfs:comment'])
+        if field_help:
+            test.assertEqual(field_help,         field_record['rdfs:comment'])
 
         if field_name:
             test.assertEqual(field_name,         field_record['annal:field_name'])
@@ -912,6 +920,8 @@ def check_field_record(test, field_record,
             test.assertEqual(field_value_type,   field_record['annal:field_value_type'])
         if field_placeholder:
             test.assertEqual(field_placeholder,  field_record['annal:placeholder'])
+        if field_tooltip:
+            test.assertStarts(field_tooltip,     field_record['annal:tooltip'])
         if field_default:
             test.assertEqual(field_default,      field_record['annal:default_value'])
         return

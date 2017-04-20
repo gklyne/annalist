@@ -5,7 +5,8 @@
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Group_fields"
 , "rdfs:label":                 "Fields"
-, "rdfs:comment":               "References the field group definition used when displaying and/or editing a field group definition.  (Yes, it is self-referential.)"
+, "rdfs:comment":               "# Fields\r\n\r\nReferences the field group definition used when displaying and/or editing a field group definition.  (Yes, it is self-referential.)"
+, "annal:tooltip":              "References the field group definition used when displaying and/or editing a field group definition.  (Yes, it is self-referential.)"
 , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Field_group_field"
@@ -13,8 +14,20 @@
 , "annal:placeholder":          "(field group list of fields)"
 , "annal:property_uri":         "annal:group_fields"
 , "annal:field_placement":      "small:0,12"
-  // Reference to description of repeated field
-, "annal:group_ref":            "_group/Group_field_group"
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/Group_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12;medium:4,4"
+    }
+  , { "annal:field_id":         "_field/Group_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:8,4"
+    }
+  ]
 , "annal:repeat_label_add":     "Add field"
 , "annal:repeat_label_delete":  "Remove selected field(s)"
 }

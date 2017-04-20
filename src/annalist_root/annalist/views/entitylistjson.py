@@ -84,7 +84,7 @@ class EntityGenericListJsonView(EntityGenericListView):
                         context=listinfo.recordlist, search=search_for
                         )
                 )
-            typeinfo      = listinfo.entitytypeinfo
+            typeinfo      = listinfo.curr_typeinfo
             entityvallist = [ self.strip_context_values(e, base_url) for e in entity_list ]
         except Exception as e:
             log.exception(str(e))
@@ -116,7 +116,7 @@ class EntityGenericListJsonView(EntityGenericListView):
         if "type" in listinfo.request_dict:
             return_type = listinfo.request_dict["type"]
         response = HttpResponse(
-            json.dumps(jsondata, indent=2, separators=(',', ': ')),
+            json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
             content_type=return_type
             )
         response = self.add_link_header(response, [{"rel": "canonical", "ref": list_url}] )

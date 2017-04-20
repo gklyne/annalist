@@ -5,14 +5,14 @@
     },
     "../../coll_context.jsonld"
   ],
-  "@id": "_list/Concept",
+  "@id": "_list/Concepts",
   "@type": [
     "annal:List"
   ],
   "annal:default_type": "_type/Concept",
   "annal:default_view": "_view/Concept",
   "annal:display_type": "_enum_list_type/List",
-  "annal:id": "Concept",
+  "annal:id": "Concepts",
   "annal:list_entity_selector": "'skos:Concept' in [@type]",
   "annal:list_fields": [
     {

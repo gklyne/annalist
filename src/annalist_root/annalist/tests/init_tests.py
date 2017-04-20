@@ -75,7 +75,8 @@ def copySitedata(src, sitedatasrc, tgt):
         for sdir in layout.COLL_DIRS:
             s = os.path.join(sitedatasrc, sdir)
             d = os.path.join(sitedatatgt, sdir)
-            replacetree(s, d)
+            if os.path.isdir(s):
+                replacetree(s, d)
     elif sitedata_target_reset == "collections":
         ds = os.path.join(src, "c")
         dt = os.path.join(tgt, "c")

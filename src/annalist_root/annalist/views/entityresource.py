@@ -55,7 +55,7 @@ class EntityResourceAccess(AnnalistGenericView):
             return viewinfo.http_response
 
         # Load values from entity
-        typeinfo     = viewinfo.entitytypeinfo
+        typeinfo     = viewinfo.curr_typeinfo
         entity       = self.get_entity(viewinfo.src_entity_id, typeinfo, "view")
         entity_label = (message.ENTITY_MESSAGE_LABEL%
             { 'coll_id':    viewinfo.coll_id

@@ -548,6 +548,18 @@ def am_copycollection(annroot, userhome, options):
     print("")
     return status
 
+def am_check_site_updated(coll):
+    """
+    Check that site data has ben updated before perfoprming data migration.
+    Data migraton is performed incompletely if the "_field" type is not visible, so
+    that is the test used here.
+    """
+    if layout.FIELD_TYPEID in coll._children(RecordType, altscope="all"):
+        return am_errors.AM_SUCCESS
+    print("Perform 'annalist-manager updatesitedata' before collection data migration.")
+    print("Collection data not migrated.")
+    return am_errors.AM_MIGRATECOLLFAIL
+
 def am_migratecollection(annroot, userhome, options):
     """
     Apply migrations for a specified collection
@@ -573,13 +585,52 @@ def am_migratecollection(annroot, userhome, options):
     if not (coll and coll.get_values()):
         print("Collection not found: %s"%(coll_id), file=sys.stderr)
         return am_errors.AM_NOCOLLECTION
-    status = am_errors.AM_SUCCESS
+    status = am_check_site_updated(coll)
+    if status != am_errors.AM_SUCCESS:
+        return status
     print("Apply data migrations in collection '%s'"%(coll_id,))
     msgs   = migrate_coll_data(coll)
     if msgs:
         for msg in msgs:
             print(msg)
         status = am_errors.AM_MIGRATECOLLFAIL
+    return status
+
+def am_migrateallcollections(annroot, userhome, options):
+    """
+    Apply migrations to all collections
+
+        annalist_manager migrateallcollections
+
+    Reads and writes every entity in all collections, thereby 
+    applying data migrations and saving them in the stored data.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    status, settings, site = get_settings_site(annroot, userhome, options)
+    if status != am_errors.AM_SUCCESS:
+        return status
+    print("Apply data migrations in all collections:")
+    for coll in site.collections():
+        status = am_check_site_updated(coll)
+        if status != am_errors.AM_SUCCESS:
+            return status
+        coll_id = coll.get_id()
+        if coll_id != layout.SITEDATA_ID:
+            log.info("========== Processing '%s' =========="%(coll_id,))
+            print("---- Processing '%s'"%(coll_id,))
+            msgs   = migrate_coll_data(coll)
+            if msgs:
+                for msg in msgs:
+                    print(msg)
+                status = am_errors.AM_MIGRATECOLLFAIL
+    print("Data migrations complete.")
     return status
 
 # End.

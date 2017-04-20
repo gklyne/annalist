@@ -41,7 +41,14 @@ from annalist.views.fields.render_placement import (
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from init_tests             import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    install_annalist_named_coll,
+    create_test_coll_inheriting,
+    init_annalist_named_test_coll,
+    resetSitedata
+    )
 from entity_testfielddata   import (
     recordfield_dir,
     recordfield_coll_url, recordfield_url,
@@ -70,6 +77,7 @@ from entity_testviewdata    import recordview_url
 from entity_testlistdata    import recordlist_url
 from entity_testgroupdata   import recordgroup_url
 from entity_testsitedata    import (
+    make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -209,7 +217,7 @@ class RecordFieldTest(AnnalistTestCase):
             field_uri=          None,
             field_url=          field_url,
             field_label=        "Value type",
-            field_comment=      None,
+            field_help=         None,
             field_name=         None,
             field_render_type=  "Identifier",
             field_value_mode=   "Value_direct",
@@ -217,8 +225,9 @@ class RecordFieldTest(AnnalistTestCase):
             field_placement=    None,
             field_entity_type=  None,
             field_value_type=   "annal:Identifier",
-            field_placeholder=  "(field value type)",
             field_default=      "annal:Text",
+            field_placeholder=  "(field value type)",
+            field_tooltip=      "Type (URI or CURIE) of underlying data",
             )
         return
 
@@ -266,7 +275,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             [ FieldChoice("_type/testtype", 
                 label="RecordType testcoll/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
-            )])
+                )
+            ])
         self.view_options       = get_site_views_linked("testcoll")
         self.group_options      = (
             [FieldChoice("", label="(no field group selected)")] +
@@ -323,7 +333,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_uri=          None,
             field_url=          v['annal:url'],
             field_label=        v['rdfs:label'],
-            field_comment=      v['rdfs:comment'],
+            field_help=         v['rdfs:comment'],
             field_name=         None,
             field_render_type=  extract_entity_id(v['annal:field_render_type']),
             field_value_mode=   extract_entity_id(v['annal:field_value_mode']),
@@ -332,6 +342,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_entity_type=  v.get('annal:field_entity_type', None),
             field_value_type=   v.get('annal:field_value_type',  None),
             field_placeholder=  v.get('annal:placeholder',       None),
+            field_tooltip=      v.get('annal:tooltip',           None),
             field_default=      v.get('annal:default_value',     None),
             )
         return e
@@ -341,40 +352,45 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_type="(?field_type)",
             field_render_type="(?field_render_type)",
             field_value_mode="Value_direct",
+            field_entity_type="",
             field_label="(?field_label)",
             field_placeholder="(?field_placeholder)",
             field_property="(?field_property)",
             field_placement="(?field_placement)",
+            field_tooltip=None,
             field_default="",
-            field_entity_type="",
             field_typeref="",
             field_fieldref="",
-            field_restrict="",
             field_viewref="",
-            field_repeat_label_add="",
-            field_repeat_label_delete=""
+            field_fields=[],
+            field_repeat_label_add="Add",
+            field_repeat_label_delete="Remove",
+            field_restrict=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 12)
-        f0  = context_view_field(r.context, 0, 0)
-        f1  = context_view_field(r.context, 0, 1)
-        f2  = context_view_field(r.context, 1, 0)
-        f3  = context_view_field(r.context, 1, 1)
-        f4  = context_view_field(r.context, 2, 0)
-        f5  = context_view_field(r.context, 3, 0)
-        f6  = context_view_field(r.context, 4, 0)
-        f7  = context_view_field(r.context, 4, 1)
-        f8  = context_view_field(r.context, 5, 0)
-        f9  = context_view_field(r.context, 5, 1)
-        f10 = context_view_field(r.context, 6, 0)
-        f11 = context_view_field(r.context, 7, 0)
-        f12 = context_view_field(r.context, 8, 0)
-        f13 = context_view_field(r.context, 9, 0)
-        f14 = context_view_field(r.context, 9, 1)
-        f15 = context_view_field(r.context, 10, 0)
-        f16 = context_view_field(r.context, 11, 0)
-        # Field 0: Id
-        check_context_field(self, f0,
+        self.assertEqual(len(r.context['fields']), 13)
+        f_Field_id                  = context_view_field(r.context,  0, 0)
+        f_Field_render_type         = context_view_field(r.context,  0, 1)
+
+        f_Field_label               = context_view_field(r.context,  1, 0)
+        f_Field_help                = context_view_field(r.context,  2, 0)
+        f_Field_property            = context_view_field(r.context,  3, 0)
+        f_Field_placement           = context_view_field(r.context,  3, 1)
+
+        f_Field_value_type          = context_view_field(r.context,  4, 0)
+        f_Field_value_mode          = context_view_field(r.context,  4, 1)
+        f_Field_entity_type         = context_view_field(r.context,  5, 0)
+
+        f_Field_typeref             = context_view_field(r.context,  6, 0)
+        f_Field_fieldref            = context_view_field(r.context,  6, 1)
+        f_Field_default             = context_view_field(r.context,  7, 0)
+        f_Field_placeholder         = context_view_field(r.context,  8, 0)
+        f_Field_tooltip             = context_view_field(r.context,  9, 0)
+        f_Field_fields              = context_view_field(r.context, 10, 0)
+        f_Field_repeat_label_add    = context_view_field(r.context, 11, 0)
+        f_Field_repeat_label_delete = context_view_field(r.context, 11, 1)
+        f_Field_restrict            = context_view_field(r.context, 12, 0)
+        check_context_field(self, f_Field_id,
             field_id=           "Field_id",
             field_name=         "entity_id",
             field_property_uri= "annal:id",
@@ -385,7 +401,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_id,
             options=            self.no_options
             )
-        check_context_field(self, f1,
+        check_context_field(self, f_Field_render_type,
             field_id=           "Field_render_type",
             field_name=         "Field_render_type",
             field_property_uri= "annal:field_render_type",
@@ -396,8 +412,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_render_type,
             options=            self.render_options
             )
-        # Field 2: Value type
-        check_context_field(self, f2,
+        check_context_field(self, f_Field_value_type,
             field_id=           "Field_value_type",
             field_name=         "Field_value_type",
             field_property_uri= "annal:field_value_type",
@@ -407,8 +422,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_type,
             options=            self.no_options
             )
-        # Field 3: Value mode
-        check_context_field(self, f3,
+        check_context_field(self, f_Field_value_mode,
             field_id=           "Field_value_mode",
             field_name=         "Field_value_mode",
             field_property_uri= "annal:field_value_mode",
@@ -418,128 +432,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_value_mode,
             options=            self.value_mode_options
             )
-        # Field 4: Label
-        check_context_field(self, f4,
-            field_id=           "Field_label",
-            field_name=         "Field_label",
-            field_property_uri= "rdfs:label",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_label,
-            options=            self.no_options
-            )
-        # Field 5: comment
-        check_context_field(self, f5,
-            field_id=           "Field_comment",
-            field_name=         "Field_comment",
-            field_property_uri= "rdfs:comment",
-            field_render_type=  "Textarea",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Longtext",
-            options=            self.no_options
-            )
-        # Field 6: Field_property URI
-        check_context_field(self, f6,
-            field_id=           "Field_property",
-            field_name=         "Field_property",
-            field_property_uri= "annal:property_uri",
-            field_render_type=  "Identifier",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Identifier",
-            field_value=        field_property,
-            options=            self.no_options
-            )
-        # Field 7: placement
-        check_context_field(self, f7,
-            field_id=           "Field_placement",
-            field_name=         "Field_placement",
-            field_property_uri= "annal:field_placement",
-            field_render_type=  "Placement",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Placement",
-            field_value=        field_placement,
-            options=            self.no_options
-            )
-        # Field 8: type of referenced entity
-        check_context_field(self, f8,
-            field_id=           "Field_typeref",
-            field_name=         "Field_typeref",
-            field_property_uri= "annal:field_ref_type",
-            field_render_type=  "Enum_optional",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:EntityRef",
-            field_value=        field_typeref,
-            options=            self.ref_type_options
-            )
-        # Field 9: field of referenced entity
-        check_context_field(self, f9,
-            field_id=           "Field_fieldref",
-            field_name=         "Field_fieldref",
-            field_property_uri= "annal:field_ref_field",
-            field_render_type=  "Identifier",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Identifier",
-            field_value=        field_fieldref,
-            options=            self.no_options
-            )
-        # Field 10: Placeholder
-        check_context_field(self, f10,
-            field_id=           "Field_placeholder",
-            field_name=         "Field_placeholder",
-            field_property_uri= "annal:placeholder",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_placeholder,
-            options=            self.no_options
-            )
-        # Field 11: default value
-        check_context_field(self, f11,
-            field_id=           "Field_default",
-            field_name=         "Field_default",
-            field_property_uri= "annal:default_value",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_default,
-            options=            self.no_options
-            )
-        # Field 12: enumeration restriction (for select rendering)
-        check_context_field(self, f12,
-            field_id=           "Field_groupref",
-            field_name=         "Field_groupref",
-            field_property_uri= "annal:group_ref",
-            field_render_type=  "Enum_optional",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:EntityRef",
-            field_value=        field_viewref,
-            options=            self.group_options
-            )
-        # Field 13: enumeration restriction (for select rendering)
-        check_context_field(self, f13,
-            field_id=           "Field_repeat_label_add",
-            field_name=         "Field_repeat_label_add",
-            field_property_uri= "annal:repeat_label_add",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_repeat_label_add,
-            options=            self.no_options
-            )
-        # Field 14: enumeration restriction (for select rendering)
-        check_context_field(self, f14,
-            field_id=           "Field_repeat_label_delete",
-            field_name=         "Field_repeat_label_delete",
-            field_property_uri= "annal:repeat_label_delete",
-            field_render_type=  "Text",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:Text",
-            field_value=        field_repeat_label_delete,
-            options=            self.no_options
-            )
-        # Field 15: enumeration type (for select rendering)
-        check_context_field(self, f15,
+        check_context_field(self, f_Field_entity_type,
             field_id=           "Field_entity_type",
             field_name=         "Field_entity_type",
             field_property_uri= "annal:field_entity_type",
@@ -549,8 +442,126 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value=        field_entity_type,
             options=            self.no_options
             )
-        # Field 16: enumeration restriction (for select rendering)
-        check_context_field(self, f16,
+        check_context_field(self, f_Field_label,
+            field_id=           "Field_label",
+            field_name=         "Field_label",
+            field_property_uri= "rdfs:label",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_label,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_help,
+            field_id=           "Field_help",
+            field_name=         "Field_help",
+            field_property_uri= "rdfs:comment",
+            field_render_type=  "Markdown",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Richtext",
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_property,
+            field_id=           "Field_property",
+            field_name=         "Field_property",
+            field_property_uri= "annal:property_uri",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_property,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_placement,
+            field_id=           "Field_placement",
+            field_name=         "Field_placement",
+            field_property_uri= "annal:field_placement",
+            field_render_type=  "Placement",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Placement",
+            field_value=        field_placement,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_typeref,
+            field_id=           "Field_typeref",
+            field_name=         "Field_typeref",
+            field_property_uri= "annal:field_ref_type",
+            field_render_type=  "Enum_optional",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:EntityRef",
+            field_value=        field_typeref,
+            options=            self.ref_type_options
+            )
+        check_context_field(self, f_Field_fieldref,
+            field_id=           "Field_fieldref",
+            field_name=         "Field_fieldref",
+            field_property_uri= "annal:field_ref_field",
+            field_render_type=  "Identifier",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Identifier",
+            field_value=        field_fieldref,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_default,
+            field_id=           "Field_default",
+            field_name=         "Field_default",
+            field_property_uri= "annal:default_value",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_default,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_placeholder,
+            field_id=           "Field_placeholder",
+            field_name=         "Field_placeholder",
+            field_property_uri= "annal:placeholder",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_placeholder,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_tooltip,
+            field_id=           "Field_tooltip",
+            field_name=         "Field_tooltip",
+            field_property_uri= "annal:tooltip",
+            field_render_type=  "Textarea",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Longtext",
+            field_value=        field_tooltip,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_fields,
+            field_id=           "Field_fields",
+            field_name=         "Field_fields",
+            field_property_uri= "annal:field_fields",
+            field_render_type=  "Group_Seq_Row",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Field_list",
+            field_value=        field_fields,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_repeat_label_add,
+            field_id=           "Field_repeat_label_add",
+            field_name=         "Field_repeat_label_add",
+            field_property_uri= "annal:repeat_label_add",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_repeat_label_add,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_repeat_label_delete,
+            field_id=           "Field_repeat_label_delete",
+            field_name=         "Field_repeat_label_delete",
+            field_property_uri= "annal:repeat_label_delete",
+            field_render_type=  "Text",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Text",
+            field_value=        field_repeat_label_delete,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_restrict,
             field_id=           "Field_restrict",
             field_name=         "Field_restrict",
             field_property_uri= "annal:field_ref_restriction",
@@ -577,23 +588,30 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="00000001",
-            tooltip1a=context_view_field(r.context, 0, 0)['field_help'],
-            tooltip1b=context_view_field(r.context, 0, 1)['field_help'],
-            tooltip2a=context_view_field(r.context, 1, 0)['field_help'],
-            tooltip2b=context_view_field(r.context, 1, 1)['field_help'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_help'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_help'],
-            tooltip5a=context_view_field(r.context, 4, 0)['field_help'],
-            tooltip5b=context_view_field(r.context, 4, 1)['field_help'],
-            tooltip6a=context_view_field(r.context, 5, 0)['field_help'],
-            tooltip6b=context_view_field(r.context, 5, 1)['field_help'],
-            tooltip7=context_view_field(r.context, 6, 0)['field_help'],
-            tooltip8=context_view_field(r.context, 7, 0)['field_help'],
-            tooltip9a=context_view_field(r.context, 8, 0)['field_help'],
-            tooltip10a=context_view_field(r.context, 9, 0)['field_help'],
-            tooltip10b=context_view_field(r.context, 9, 1)['field_help'],
-            tooltip11=context_view_field(r.context, 10, 0)['field_help'],
-            tooltip12=context_view_field(r.context, 11, 0)['field_help'],
+            tooltip1a=context_view_field(r.context,    0, 0)['field_tooltip'], # Field id
+            tooltip1b=context_view_field(r.context,    0, 1)['field_tooltip'], # Render type
+            tooltip2=context_view_field(r.context,     1, 0)['field_tooltip'], # Label
+            tooltip3=context_view_field(r.context,     2, 0)['field_tooltip'], # Help
+            tooltip4a=context_view_field(r.context,    3, 0)['field_tooltip'], # Property
+            tooltip4b=context_view_field(r.context,    3, 1)['field_tooltip'], # Placement
+            tooltip5a=context_view_field(r.context,    4, 0)['field_tooltip'], # Value type
+            tooltip5b=context_view_field(r.context,    4, 1)['field_tooltip'], # Value mode
+            tooltip6=context_view_field(r.context,     5, 0)['field_tooltip'], # Entity type URI
+            tooltip7a=context_view_field(r.context,    6, 0)['field_tooltip'], # Typeref
+            tooltip7b=context_view_field(r.context,    6, 1)['field_tooltip'], # Fieldref
+            tooltip8=context_view_field(r.context,     7, 0)['field_tooltip'], # default
+            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # Placeholder
+            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # Tooltip
+            tooltip11=context_view_field(r.context,   10, 0)['field_tooltip'], # Subfields
+            tooltip11f1=context_view_field(r.context, 10, 0).
+                       _field_description['group_field_descs'][0]['field_tooltip'],
+            tooltip11f2=context_view_field(r.context, 10, 0).
+                       _field_description['group_field_descs'][1]['field_tooltip'],
+            tooltip11f3=context_view_field(r.context, 10, 0).
+                       _field_description['group_field_descs'][2]['field_tooltip'],
+            tooltip12a=context_view_field(r.context,  11, 0)['field_tooltip'], # Add
+            tooltip12b=context_view_field(r.context,  11, 1)['field_tooltip'], # Delete
+            tooltip13=context_view_field(r.context,   12, 0)['field_tooltip'], # Restriction
             )
         formrow1col1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -626,42 +644,11 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow2col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip2a)s">
+        formrow2 = """
+            <div class="small-12 columns" title="%(tooltip2)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-              <span>Value type</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_value_type" 
-                         placeholder="(field value type)" 
-                         value="annal:Text"/>
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=6)
-        formrow2col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip2b)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Value mode</span>
-                </div>
-                <div class="%(input_classes)s">
-                """+
-                  render_choice_options(
-                    "Field_value_mode",
-                    get_site_value_modes_sorted(),
-                    "_enum_value_mode/Value_direct")+
-                """
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
-        formrow3 = """
-            <div class="small-12 columns" title="%(tooltip3)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Label</span>
+                  <span>Field label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_label" 
@@ -671,24 +658,23 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow4 = """
-            <div class="small-12 columns" title="%(tooltip4)s">
+        formrow3 = """
+            <div class="small-12 columns" title="%(tooltip3)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                     <span>Help</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <textarea cols="64" rows="6" name="Field_comment" class="small-rows-4 medium-rows-8"
-                            placeholder="(field usage commentary or help text)">
+                  <textarea cols="64" rows="6" name="Field_help" class="small-rows-4 medium-rows-8"
+                            placeholder="(Field usage commentary or help text)">
                       %(default_comment_esc)s
                   </textarea>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
-
-        formrow5col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
+        formrow4col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip4a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Property URI</span>
@@ -701,8 +687,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info("placement_option_value_dict %r"%(get_placement_option_value_dict(),))
-        formrow5col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip5b)s">
+        formrow4col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip4b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Position/size</span>
@@ -721,8 +707,53 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow6col1 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip6a)s">
+        formrow5col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+              <span>Value type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_value_type" 
+                         placeholder="(field value type)" 
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow5col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip5b)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Value mode</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_choice_options(
+                    "Field_value_mode",
+                    get_site_value_modes_sorted(),
+                    "_enum_value_mode/Value_direct")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow6col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip6)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Entity type</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_entity_type" 
+                         placeholder="(type URI/CURIE of entity to which field applies)" 
+                         value="" />
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=6)
+        formrow7col1 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip7a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to type</span>
@@ -740,8 +771,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow6col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip6b)s">
+        formrow7col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip7b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to field</span>
@@ -753,8 +784,22 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow7 = """
-            <div class="small-12 columns" title="%(tooltip7)s">
+        formrow8 = """
+            <div class="small-12 columns" title="%(tooltip8)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default value</span>
+                </div>
+                <div class="%(input_classes)s">
+                  <input type="text" size="64" name="Field_default" 
+                         placeholder="(field default value)"
+                         value=""/>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow9 = """
+            <div class="small-12 columns" title="%(tooltip9)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Placeholder</span>
@@ -766,82 +811,136 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow8 = """
-            <div class="small-12 columns" title="%(tooltip8)s">
+        formrow10 = """
+            <div class="small-12 columns" title="%(tooltip10)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Default</span>
+                    <span>Tooltip</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_default" 
-                         placeholder="(field default value)"
-                         value=""/>
+                  <textarea cols="64" rows="6" name="Field_tooltip" class="small-rows-4 medium-rows-8"
+                            placeholder="(Field usage popup help text)">
+                  </textarea>
                 </div>
               </div>
             </div>
             """%field_vals(width=12)
-        formrow9col1 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip9a)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Field group</span>
+        formrow11h = """
+            <div class="small-12 columns" title="%(tooltip11)s">
+              <div class="row">
+                <div class="%(group_label_classes)s">
+                  <span>Subfields</span>
                 </div>
-                <div class="%(input_classes)s">
-                """+
-                  render_select_options(
-                    "Field_groupref", "Field group",
-                    [""] + get_site_field_groups_sorted(),
-                    "",
-                    placeholder="(no field group selected)")+
-                """
+                <div class="%(group_row_head_classes)s">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 medium-4 columns">
+                          <span>Subfield Id</span>
+                        </div>
+                        <div class="view-label col-head small-12 medium-4 columns">
+                          <span>Subfield URI</span>
+                        </div>
+                        <div class="view-label col-head small-12 medium-4 columns">
+                          <span>Subfield Pos/size</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            """)%field_vals(width=6)
-        formrow10col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip10a)s">
+            """%field_vals(width=12)
+
+        # formrow11b1c = """
+        #     <div class="small-1 columns checkbox-in-edit-padding">
+        #       <input type="checkbox" class="select-box right" 
+        #              name="View_fields__select_fields"
+        #              value="0" />
+        #     </div>        
+        #     """
+
+        # formrow11b1f1 = ("""
+        #     <div class="small-12 medium-4 columns" title="%(tooltip11b1f1)s">
+        #       <div class="row show-for-small-only">
+        #         <div class="view-label small-12 columns">
+        #           <span>Field id</span>
+        #         </div>
+        #       </div>
+        #       <div class="row view-value-col">
+        #         <div class="view-value small-12 columns">
+        #         """+
+        #           render_select_options(
+        #             "View_fields__0__Field_id", "Field id",
+        #             no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
+        #             layout.FIELD_TYPEID+"/Entity_id",
+        #             placeholder="(field sel)"
+        #             )+
+        #         """
+        #         </div>
+        #       </div>
+        #     </div>
+        #     """)%field_vals(width=4)
+
+        formrow11t = """
+            <div class="small-12 columns">
+              <div class="row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Field_fields__remove"
+                             value="Remove selected field(s)" />
+                      <input type="submit" name="Field_fields__add"
+                             value="Add field" />
+                      <input type="submit" name="Field_fields__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Field_fields__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow12col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip12a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Add value label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_add"
-                         placeholder="(add repeat field(s) button label)"
-                         value=""/>
+                         placeholder="(Add repeat field(s) button label)"
+                         value="Add"/>
                 </div>
               </div>
             </div>
             """%field_vals(width=6)
-        formrow10col2 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip10b)s">
+        formrow12col2 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip12b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Delete value label</span>
+                  <span>Remove value label</span>
                 </div>
                 <div class="%(input_classes)s">
                   <input type="text" size="64" name="Field_repeat_label_delete"
-                         placeholder="(delete field(s) button label)"
-                         value=""/>
+                         placeholder="(Remove field(s) button label)"
+                         value="Remove"/>
                 </div>
               </div>
             </div>
             """%field_vals(width=6)
-        formrow11 = """
-            <div class="small-12 columns" title="%(tooltip11)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Entity type</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_entity_type" 
-                         placeholder="(type URI/CURIE of entity to which field applies)" 
-                         value="" />
-                </div>
-              </div>
-            </div>
-            """%field_vals(width=12)
-        formrow12 = """
-            <div class="small-12 columns" title="%(tooltip12)s">
+        formrow13 = """
+            <div class="small-12 columns" title="%(tooltip13)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Value restriction</span>
@@ -855,24 +954,25 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
         # log.info(r.content)   #@@
-        self.assertContains(r, formrow1col1, html=True)     # Id
-        self.assertContains(r, formrow1col2, html=True)     # Render type
-        self.assertContains(r, formrow2col1, html=True)     # Value type
-        self.assertContains(r, formrow2col2, html=True)     # Value mode
-        self.assertContains(r, formrow3, html=True)         # Label
-        self.assertContains(r, formrow4, html=True)         # Comment/help
-        self.assertContains(r, formrow5col1, html=True)     # Property URI
-        self.assertContains(r, formrow5col2, html=True)     # Placement
-        self.assertContains(r, formrow6col1, html=True)     # Ref type (enum)
-        self.assertContains(r, formrow6col2, html=True)     # Ref field
-        self.assertContains(r, formrow7, html=True)         # Placeholder
-        self.assertContains(r, formrow8, html=True)         # Default
-        self.assertContains(r, formrow9col1, html=True)     # Field group
-                                                            # Spacing
-        self.assertContains(r, formrow10col1, html=True)    # Add field label
-        self.assertContains(r, formrow10col2, html=True)    # Delete field label
-        self.assertContains(r, formrow11, html=True)        # Entity type
-        self.assertContains(r, formrow12, html=True)        # Restriction
+        self.assertContains(r, formrow1col1,  html=True)    # Id
+        self.assertContains(r, formrow1col2,  html=True)    # Render type
+        self.assertContains(r, formrow2,      html=True)    # Field label
+        self.assertContains(r, formrow3,      html=True)    # Comment/help
+        self.assertContains(r, formrow4col1,  html=True)    # Property URI
+        self.assertContains(r, formrow4col2,  html=True)    # Placement
+        self.assertContains(r, formrow5col1,  html=True)    # Value type
+        self.assertContains(r, formrow5col2,  html=True)    # Value mode
+        self.assertContains(r, formrow6col1,  html=True)    # Entity type
+        self.assertContains(r, formrow7col1,  html=True)    # Ref type (enum)
+        self.assertContains(r, formrow7col2,  html=True)    # Ref field
+        self.assertContains(r, formrow8,      html=True)    # Default
+        self.assertContains(r, formrow9,      html=True)    # Placeholder
+        self.assertContains(r, formrow10,     html=True)    # Tooltip
+        self.assertContains(r, formrow11h,    html=True)    # Field list headers
+        self.assertContains(r, formrow11t,    html=True)    # Field list tail (buttons)
+        self.assertContains(r, formrow12col1, html=True)    # Add field label
+        self.assertContains(r, formrow12col2, html=True)    # Delete field label
+        self.assertContains(r, formrow13,     html=True)    # Restriction
         return
 
     def test_get_new(self):
@@ -891,7 +991,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             field_id="00000001",
-            field_type="annal:Text",
+            field_type="",
             field_render_type="Text",
             field_label=default_label("testcoll", layout.FIELD_TYPEID, "00000001"),
             field_placeholder="",
@@ -957,6 +1057,72 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             "<p>Entity %s does not exist</p>"%(err_label), 
             status_code=404
             )
+        return
+
+    def test_get_edit_field_fields(self):
+        # Render field fields edit form
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Field_fields", 
+            view_id="Field_view"
+            )
+        # log.info("test_get_edit uri %s"%u)
+        r = self.client.get(u+"?continuation_url=/testsite/c/testcoll/d/_field/")
+        # log.info("test_get_edit resp %s"%r.content)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="Type_label")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "Field_fields")
+        self.assertEqual(r.context['orig_id'],          "Field_fields")
+        self.assertEqual(r.context['action'],           "edit")
+        self.assertEqual(r.context['continuation_url'], "/testsite/c/testcoll/d/_field/")
+        # Fields
+        field_fields = (
+              [ { 'annal:property_uri':     'annal:field_id'
+                , 'annal:field_placement':  'small:0,12;medium:0,4'
+                , 'annal:field_id':         '_field/Field_subfield_sel'
+                }
+              , { 'annal:property_uri':     'annal:property_uri'
+                , 'annal:field_placement':  'small:0,12;medium:4,4'
+                , 'annal:field_id':         '_field/Field_subfield_property'
+                }
+              , { 'annal:property_uri':     'annal:field_placement'
+                , 'annal:field_placement':  'small:0,12;medium:8,4'
+                , 'annal:field_id':         '_field/Field_subfield_placement'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="Field_fields",
+            field_type="annal:Field_list",
+            field_render_type="Group_Seq_Row",
+            field_label="Subfields",
+            field_placeholder="(list of fields)",
+            field_property="annal:field_fields",
+            field_placement="small:0,12",
+            field_entity_type="annal:Field",
+            field_fields=field_fields,
+            field_repeat_label_add="Add field",
+            field_repeat_label_delete="Remove selected field(s)"
+            )
+        # Separate context check of 'Field_fields' value
+        # (Fields are each listed in a row of the subfields description)
+        expect_context = recordfield_entity_view_context_data(
+            field_id="Field_fields", orig_id="Field_fields", action="edit",
+            field_label="Subfields",
+            field_value_type="annal:Field_list",
+            field_render_type="_enum_render_type/Group_Seq_Row",
+            field_value_mode="_enum_value_mode/Value_direct",
+            field_property="annal:field_fields",
+            field_placement="small:0,12",
+            field_placeholder="(list of fields)",
+            field_fields=field_fields,
+            field_repeat_label_add="Add field",
+            field_repeat_label_delete="Remove selected field(s)",
+            field_entity_type="annal:Field"
+            )
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     #   -----------------------------------------------------------------------------
@@ -1033,6 +1199,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
             )
+        # print "@@ context %r"%(context_bind_fields(r.context)['fields'][9],)
+        # print "@@ context field value %r"%(context_bind_fields(r.context)['fields'][9]['field_value'],)
+        # print "@@ expect  %r"%(expect_context['fields'][9],)
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
@@ -1233,7 +1402,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             })
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        rpt_group_id  = tgt_field_id + layout.SUFFIX_REPEAT_G
         rpt_field_id  = tgt_field_id + layout.SUFFIX_REPEAT
         rpt_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REPEAT_P
         expect_field_values = (
@@ -1247,18 +1415,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
-        expect_repeat_group_values = (
-            { "annal:id":           rpt_group_id
-            , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         message.REPEAT_GROUP_LABEL%common_vals['field_label']
-            , "annal:record_type":  "%(type_uri)s"%common_vals
-            , "annal:group_fields":
-              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
-                , "annal:property_uri":     tgt_field_uri
-                , "annal:field_placement":  "small:0,12"
-                }
-              ]
-            })
         expect_repeat_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
@@ -1266,15 +1422,21 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          "(Repeat field %(field_label)s)"%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
+            , "annal:field_fields":
+              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+                , "annal:property_uri":     tgt_field_uri
+                , "annal:field_placement":  "small:0,12"
+                }
+              ]
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
-        self.check_entity_values(layout.GROUP_TYPEID, rpt_group_id, expect_repeat_group_values)
+        # self.check_entity_values(layout.GROUP_TYPEID, rpt_group_id, expect_repeat_group_values)
         self.check_entity_values(layout.FIELD_TYPEID, rpt_field_id, expect_repeat_field_values)
         return
 
@@ -1313,12 +1475,11 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             view_id="Field_view"
             )
         self.assertIn(v, r['location'])
-        w = "Created%%20reference%%20to%%20field%%20%(field_id)s"%common_vals
+        w = "Created%%20reference%%20to%%20field%%20'%(field_id)s'"%common_vals
         self.assertIn(w, r['location'])
         # Check content of type, view and list
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        ref_group_id  = tgt_field_id + layout.SUFFIX_MULTI_G
         ref_field_id  = tgt_field_id + layout.SUFFIX_MULTI
         ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_MULTI_P
         expect_field_values = (
@@ -1332,17 +1493,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:property_uri":         tgt_field_uri
             , "annal:field_placement":      "small:0,12"
             })
-        expect_ref_group_values = (
-            { "annal:id":           ref_group_id
-            , "annal:type":         "annal:Field_group"
-            , "rdfs:label":         message.FIELD_REF_LABEL%common_vals['field_label']
-            , "annal:record_type":  "%(type_uri)s"%common_vals
-            , "annal:group_fields":
-              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
-                , "annal:field_placement":  "small:0,12"
-                }
-              ]
-            })
         expect_ref_field_values = (
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
@@ -1350,15 +1500,287 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
             , "annal:field_ref_type":       "Default_type"
+            , "annal:field_fields":
+              [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals
+                , "annal:field_placement":  "small:0,12"
+                }
+              ]
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
-        self.check_entity_values(layout.GROUP_TYPEID, ref_group_id, expect_ref_group_values)
         self.check_entity_values(layout.FIELD_TYPEID, ref_field_id, expect_ref_field_values)
+        return
+
+    #   -------- Test subfields with different selection types --------
+
+    def test_get_sitedata_field_fields_subfield_sel_options(self):
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Field_fields", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "Field_fields")
+        self.assertEqual(r.context['orig_id'],          "Field_fields")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_subfield_choices = (
+            [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
+                )
+            , FieldChoice("_field/Field_subfield_placement", 
+                label="Subfield Pos/size", 
+                link=entity_url("testcoll", "_field", "Field_subfield_placement")
+                )
+            , FieldChoice("_field/Field_subfield_property", 
+                label="Subfield URI", 
+                link=entity_url("testcoll", "_field", "Field_subfield_property")
+                )
+            , FieldChoice("_field/Field_subfield_sel", 
+                label="Subfield Id", 
+                link=entity_url("testcoll", "_field", "Field_subfield_sel")
+                )
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     'annal:field_id'
+                , 'annal:field_placement':  'small:0,12;medium:0,4'
+                , 'annal:field_id':         '_field/Field_subfield_sel'
+                }
+              , { 'annal:property_uri':     'annal:property_uri'
+                , 'annal:field_placement':  'small:0,12;medium:4,4'
+                , 'annal:field_id':         '_field/Field_subfield_property'
+                }
+              , { 'annal:property_uri':     'annal:field_placement'
+                , 'annal:field_placement':  'small:0,12;medium:8,4'
+                , 'annal:field_id':         '_field/Field_subfield_placement'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="Field_fields",
+            field_render_type="Group_Seq_Row",
+            field_type="annal:Field_list",
+            field_entity_type="annal:Field",
+            field_label="Subfields",
+            field_placeholder="(list of fields)",
+            field_property="annal:field_fields",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add field",
+            field_repeat_label_delete="Remove selected field(s)"
+            )
+        # Access and check selectable options for subfield id
+        f_Field_fields          = context_view_field(r.context, 10, 0)
+        f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
+        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
+        self.assertEqual(actual_subfield_choices, expect_subfield_choices)
+        return
+
+    # test_get_sitedata_entity_seealso_r_options
+    def test_get_sitedata_entity_seealso_r_subfield_options(self):
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="Entity_see_also_r", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "Entity_see_also_r")
+        self.assertEqual(r.context['orig_id'],          "Entity_see_also_r")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_subfield_choices = (
+            [ FieldChoice('', label=u'(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_see_also", 
+                label="Link to further information", 
+                link=entity_url("testcoll", "_field", "Entity_see_also")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
+                )
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     '@id'
+                , 'annal:field_placement':  'small:0,12'
+                , 'annal:field_id':         '_field/Entity_see_also'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="Entity_see_also_r",
+            field_render_type="Group_Set_Row",
+            field_type="annal:Entity_see_also_list",
+            field_entity_type="",
+            field_label="See also",
+            field_placeholder="(Links to further information)",
+            field_property="rdfs:seeAlso",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add link",
+            field_repeat_label_delete="Remove link"
+            )
+        # Access and check selectable options for subfield id
+        f_Field_fields          = context_view_field(r.context, 10, 0)
+        f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
+        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        self.assertEqual(actual_subfield_choices, expect_subfield_choices)
+        return
+
+    def test_get_rdf_schema_field_domain_r_subfield_sel_options(self):
+        rdf_coll = install_annalist_named_coll("RDF_schema_defs")
+        testcoll = create_test_coll_inheriting("RDF_schema_defs")
+        self.ref_type_options   = (
+            self.ref_type_options +
+            [ FieldChoice('_type/Datatype', 
+                label=u'Data type', 
+                link=entity_url("testcoll", "_type", "Datatype")
+                )
+            , FieldChoice('_type/Property', 
+                label=u'Property',  
+                link=entity_url("testcoll", "_type", "Property")
+                )
+            , FieldChoice('_type/Class',    
+                label=u'Class',     
+                link=entity_url("testcoll", "_type", "Class")
+                )
+            ])
+        u = entitydata_edit_url("edit", 
+            "testcoll", layout.FIELD_TYPEID, entity_id="domain_r", view_id="Field_view"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Test context
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "domain_r")
+        self.assertEqual(r.context['orig_id'],          "domain_r")
+        self.assertEqual(r.context['action'],           "edit")
+        # Fields
+        expect_domain_choices = (
+            [ FieldChoice('', label='(Field Id of subfield)')
+            , FieldChoice("_field/Entity_comment",
+                label="Comment", 
+                link=entity_url("testcoll", "_field", "Entity_comment")
+                )
+            , FieldChoice("_field/Entity_id",
+                label="Id", 
+                link=entity_url("testcoll", "_field", "Entity_id")
+                )
+            , FieldChoice("_field/Entity_label",
+                label="Label", 
+                link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_see_also_r",
+                label="See also",
+                link=entity_url("testcoll", "_field", "Entity_see_also_r")
+                )
+            , FieldChoice("_field/Entity_type",
+                label="Type", 
+                link=entity_url("testcoll", "_field", "Entity_type")
+                )
+            , FieldChoice("_field/domain", 
+                label="Domain", 
+                link=entity_url("testcoll", "_field", "domain")
+                )
+            , FieldChoice("_field/domain_r", 
+                label="Domains", 
+                link=entity_url("testcoll", "_field", "domain_r")
+                )
+            , FieldChoice("_field/entity_uri", 
+                label="Entity URI", 
+                link=entity_url("testcoll", "_field", "entity_uri")
+                )
+            , FieldChoice("_field/property_uri", 
+                label="Property URI", 
+                link=entity_url("testcoll", "_field", "property_uri")
+                )
+            , FieldChoice("_field/range", 
+                label="Range", 
+                link=entity_url("testcoll", "_field", "range")
+                )
+            , FieldChoice("_field/range_r", 
+                label="Ranges", 
+                link=entity_url("testcoll", "_field", "range_r")
+                )
+            , FieldChoice("_field/subpropertyOf", 
+                label="Subproperty of", 
+                link=entity_url("testcoll", "_field", "subpropertyOf")
+                )
+            , FieldChoice("_field/subpropertyOf_r", 
+                label="Superproperties", 
+                link=entity_url("testcoll", "_field", "subpropertyOf_r")
+                )
+
+
+            ])
+        field_fields = (
+              [ { 'annal:property_uri':     '@id'
+                , 'annal:field_placement':  'small:0,12'
+                , 'annal:field_id':         '_field/domain'
+                }
+              ])
+        self._check_context_fields(r, 
+            field_id="domain_r",
+            field_render_type="Group_Seq_Row",
+            field_type="rdf:Property",
+            field_entity_type="rdf:Property",
+            field_label="Domains",
+            field_placeholder="(Property domains)",
+            field_property="rdfs:domain",
+            field_placement="small:0,12",
+            field_fields=field_fields,
+            field_repeat_label_add="Add domain",
+            field_repeat_label_delete="Remove domain"
+            )
+        # Access and check selectable options for domain field
+        f_Field_fields = context_view_field(r.context, 10, 0)
+        f_domain_field = f_Field_fields.group_field_descs[0]
+        actual_domain_choices = f_domain_field["field_choices"].values()
+        self.assertEqual(actual_domain_choices, expect_domain_choices)
         return
 
 # End.

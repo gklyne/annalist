@@ -29,9 +29,11 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from AnnalistTestCase       import AnnalistTestCase
+from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests             import (
+    init_annalist_test_site, init_annalist_test_coll, create_test_coll_inheriting, resetSitedata
+    )
 from entity_testutils       import (
     create_test_user,
     create_user_permissions,
@@ -763,5 +765,83 @@ class UploadResourceTest(AnnalistTestCase):
             )
         self.assertTrue(siteobj.read() == testobj.read(), "Renamed entity image != original")
         return
+
+    def test_inherited_image_edit(self):
+        # This tests that editing an inherited image creartes a new copy in the
+        # inheriting collection.
+
+        # Upload image
+        self.test_image_edit_field()
+
+        # Create collection inheriting uploaded image
+        testsubcoll = create_test_coll_inheriting(
+            base_coll_id="testcoll", coll_id="testsubcoll", type_id="testtype"
+            )
+        # create_test_user(testsubcoll, "testuser", "testpassword")
+        user_permissions = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG"]
+        user_id          = "testuser"
+        user_perms = testsubcoll.create_user_permissions(
+            user_id, "mailto:%s@%s"%(user_id, TestHost),
+            "Test User",
+            "User %s: permissions for %s in collection %s"%(user_id, "Test User", testsubcoll.get_id()),
+            user_permissions)
+
+        # Get editing form
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testimgtype", entity_id="test1", view_id="testimgview"
+            )
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # log.info(r.content)     #@@
+        hi1 = """<input type="hidden" name="orig_id"          value="test1" />"""
+        hi2 = """<input type="hidden" name="orig_type"        value="testimgtype" />"""
+        hi3 = """<input type="hidden" name="orig_coll"        value="testcoll" />"""
+        hi4 = """<input type="hidden" name="action"           value="edit" />"""
+        hi5 = """<input type="hidden" name="view_id"          value="testimgview" />"""
+        self.assertContains(r, hi1, html=True)
+        self.assertContains(r, hi2, html=True)
+        self.assertContains(r, hi3, html=True)
+        self.assertContains(r, hi4, html=True)
+        self.assertContains(r, hi5, html=True)
+
+        # Edit entity
+        f = entitydata_default_view_form_data(
+            coll_id="testsubcoll", type_id="testimgtype", entity_id="test1", 
+            orig_coll="testcoll", action="edit", 
+            update="Updated"
+            )
+        u = entitydata_edit_url(
+            "edit", "testsubcoll", "testimgtype", entity_id="test1", view_id="testimgview"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+
+        # Retrieve updated form
+        r = self.client.get(u)
+        # Test context
+        self.assertEqual(len(r.context['fields']), 4)
+        f0 = context_view_field(r.context, 0, 0)
+        self.assertEqual(f0.field_id,     "Entity_id")
+        self.assertEqual(f0.field_value,  "test1")
+        f1 = context_view_field(r.context, 1, 0)
+        self.assertEqual(f1.field_id,     "Entity_label")
+        self.assertEqual(f1.field_value,  "Updated testsubcoll/testimgtype/test1")
+        f2 = context_view_field(r.context, 2, 0)
+        self.assertEqual(f2.field_id,     "Entity_comment")
+        f3 = context_view_field(r.context, 3, 0)
+        self.assertEqual(f3.field_id,     "Test_image")
+        self.assertDictionaryMatch(f3.field_value, test_image_field_value())
+
+        # Read back and compare entity resource
+        inherited_test_img_type_info = EntityTypeInfo(
+            testsubcoll, "testimgtype", create_typedata=True
+            )
+        siteobj = open(self.imagepath, "rb")
+        testobj = inherited_test_img_type_info.get_fileobj(
+            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+            )
+        self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
 
 # End.

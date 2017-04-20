@@ -1,0 +1,22 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Web_resource",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Web_resource",
+  "annal:supertype_uri": [],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Web_resources",
+  "annal:type_view": "_view/Web_resource",
+  "annal:uri": "coll:Web_resource",
+  "rdfs:comment": "# Web resource link\r\n\r\nEntity containing a link to an arbitrary resource on the web, along with a label and description.",
+  "rdfs:label": "Web resource (internal type)"
+}

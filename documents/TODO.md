@@ -13,87 +13,150 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 - [ ] New demo screencast(s)
 
-# Version 0.1.35, towards 0.1.36
+# Version 0.1.37, towards 0.1.38
 
-- [x] Access to page link without continuation (view only)
-    - Added permalink to entity view page, after page heading
-    - Rearranged page layout so that page heading comes below top nav bar
-- [x] Easy way to view log; from command line (via annalist-manager); from web site (link somewhere)
-    - [x] annalist-manager serverlog command returns log file name
-    - [x] site link to view log, if admin permissions (could be a data bridge?)
-    - [x] rotate log files (max 5Mb?) (cf. [RotatingFileHandler](https://docs.python.org/2/library/logging.handlers.html#logging.handlers.RotatingFileHandler))
-        - Done for personal config - could easily be extended to others
-- [x] Log rotation at server startup?
-- [x] annalist-manager options for users, consider:
-    - [x] annalist-manager createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
-    - [x] annalist-manager setuserpermissions [ username [ permissions ] ] [ CONFIG ]
-- [x] `annal:Slug` type URI for entity references renamed to annal:EntityRef.
-    - [x] renamned in code andf site data
-    - [x] migration logic
-        - _field records, field annal:field_value_type
-- [x] Setting default user access on a collection doesn't work as user record is created with site-level defaults.
-    - [x] revise authorization logic to include default-user permissions for collection
-    - [x] create test cases for this
-- [x] Migration logic: check that new supertypes are applied
-    - [x] Add Collection.update_entity_types
-    - [x] Call Collection.update_entity_types from CollectionData.migrate_coll_data
-    - [x] Test case
-- [x] Problem "Invalid entity identifier:" creating new instance of select "Related tool" value
-    - Problem is enumeration renderer without a target type specified
-- [x] Add new installable collection (Concept_defs) for defining and associating SKOS Concept tag fields.
-    - [x] define type
-    - [x] define tag list
-        - tag URI should not be link? 
-    - [x] define tag view
-    - [x] define related concepts fields and group
-    - [x] define broader concepts fields and group
-    - [x] play with new structures, and test;  update Evidence definitions to see if it all works
-        - Note: also uses subtype and associated definitions for evidence types in Open_evidence.
-    - New entities in Concept_defs:
-        - _type/Concept
-        - _view/Concept
-        - _list/Concepts
-        - _field/Broader_concept
-        - _field/Broader_concept_r
-        - _field/Concept_id
-        - _field/Concept_uri
-        - _field/Entity_concept
-        - _field/Entity_concept_r
-        - _field/Related_concept
-        - _field/Related_concept_r
-        - _group/Broader_concept_r
-        - _group/Entity_concept_r
-        - _group/Related_concept_r
-        - _vocab/dc
-        - _vocab/skos
-- [x] annalist.net front page - link to CEUR paper on web - needs testing
+- [x] Absorb field groups into field defs
+    - [x] modify field definition reader to use locally defined fields in preference to group reference
+        - [x] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
+            - [x] Replace: group_view -> field_list
+            - [x] Don't store group view in FieldDescription (store field list instead)
+            - [x] Test and fix errors
+            - [x] Update group_view_fields to return list if present
+            - [x] field_desc.has_field_group_ref needs rework to align with refactoring
+            - [x] if list is defined within field definition, use that
+               - inlined repeat field definitions for type view
+               - fix up resilience checks in entityedit.find_fields
+               - remove unused group definitions
+               - fix up test cases
+            - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
+    - [x] extend field definition view to include list of fields
+        - [x] Add field Field_fields to field view
+        - [x] Define field Field_fields, using field definitions from group Group_field_group
+        - [x] Test, fix tests
+        - [x] Eyeball changes by viewing type view fields 
+            - Group_field_xxx options are not available in field view: need to complete next steps...
+        - [x] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
+        - [x] Test, fix tests
+        - [x] Eyeball changes by viewing type view fields 
+        - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
+    - [x] update site definitions to use field lists in field definitions
+    - [x] eliminate field group definitions from site data
+    - [x] modify or eliminate task buttons that create field group entities
+    - [x] check for other uses of field group reference field
+        - [x] entityedit.py save_invoke_task (task dispatching)
+        - [x] fix up test cases
+        - [x] entitylist.py get_list_entityvaluemap
+        - [x] test_sitedata.py check_type_fields
+        - [x] test_render_repeatgroup.py
+        - [x] Test Define repeat field button in deployed software
+            - [x] Define repeat field - button text mentions group
+            - [x] Define repeat field - value type should be annal:Field_list
+            - [x] Referenced field view - entity type field should be blank, or field list
+            - [x] Field entity type help text mentions group
+            - [x] Define repeat field - confirmation message mentions group; message needs refinement
+        - [x] Test Define field reference button in deployed software
+            - [x] Button text mentions group
+            - [x] Default value type should be annal:Field_list
+            - [-] Field entity type help text mentions group; sort out with separation of tooltip text
+            - [x] Confirmation message mentions group; message needs refinement
+            - [x] "Refer to type" has default type -> can this be inferred from target field?  Or prompt to specify value.
+        - [x] fielddescription.py
+    - [x] BUG (attempt to save copy of site label field):
+            - Steps to reproduce:
+                - Select scope all listing of entities
+                - Select site entity
+                - Click "edit" button
+                - Enter new entity id
+                - Click Save
+            - Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
+        - [x] Handle change of collection like change of type: copy data to new location
+            - [x] GET: copy original collection id to form as 'orig_coll'
+            - [x] POST:
+                - [x] extract orig coll id from form, default to current coll id
+                - [x] save collection id information into DisplayInfo object
+            - [x] DisplayInfo.__init__: initialize collection id values
+            - [x] DisplayInfo.set_type_entity_id: set collection id values
+            - [x] Refactor entityedit save_entity
+            - [x] entityedit references to orig_type_id; also check orig_coll_id
+            - [x] Need to be able to retrieve original collection type info for copy
+            - [x] Check original collection access is honoured
+                - [x] fairly extensive changes to EntityEdit and DisplayInfo logic to keep track of the (possibly inherited) collection from which an entity is accessed.
+                - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
+                - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
+            - [x] New test cases; edit inherited value with attachment
+    - [x] entityedit.py - clean up dead code from previous refactoring
+    - [x] check for other uses of RecordGroup class
+        - [x] test_render_ref_multifields.py
+        - [x] views/form_utils/fielddescription.py
+    - [x] migrate group references in user field definitions to use internal field list
+        - [x] Add logic to RecordField to import field definitions from group definition
+        - [x] Warning on migration if value type of repeat field does not match type of referenced group
+        - [x] Add optional deprecation warning when recordgroup is instantiated (except for migration)
+            - NOTE: EntityTypeInfo scans suppress these warnings, as they're used by migration logic
+        - [x] Above changes should mean all live references are to inline field list
+        - [x] Add _group rename to collection migration function
+    - [x] test migration functionality
+        - [x] Add test case to test_data_migration
+    - [x] apply migrations to installable collections
+        - Install software then use annalist-manager commands to apply migrations;
+        - Check, and copy migrated data back to source tree
+        - [x] Annalist_schema (should be no change)
+        - [x] Bibliography_defs (done by hand)
+        - [x] Concept_defs
+        - [x] Journal_defs
+        - [x] RDF_schema_defs
+    - [x] eliminate group definitions in installable collections
+        - [x] Annalist_schema
+        - [x] Bibliography_defs
+        - [x] Concept_defs
+        - [x] Journal_defs
+        - [x] RDF_schema_defs
+    - [x] seek out other references to RecordGroup class
+    - [x] annalist-manager option to migrate all collections
+    - [x] fix up installable collection problems picked up by collection migration 
+    - [x] Remove field group from field view definition
+    - [x] Update field view help text to mention subfields, not field group
+    - [x] seek out other references to field group type name or URI
+        - NOTE: references to group type, views, lists remain for migration support, and free-standing view and list definitions, remain -- for now.
+- [x] Fix handling of restriction expression for subfield selection.
+    [x] Need test case coverage for subfields in field defintion, and domain and/or range classes in RDF_schema (e.g. _field/subpropertyOf on _field/subpropertyOf_r)
+    [x] In FieldListValueMap, add {'group': field_desc_dict} to extra value context.
+        - Should be accessible in restriction expression as 'field[...]'
+    [-] Update view help text to mention "field". 'field[<field-id>]' references subfields 
+        contained within a containing field, refers to a component of the containing field 
+        description.  (Turns out this wasn't needed - consider removing it?)
+        Extra logic is in FieldListValueMap handling of field lists.
+- [x] Annaslist_schema add annal:field_fields property.
+    - Renamed type URI for field lists to match schema domain value.
+- [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
+    - Removed default option for now: everything is .URI or .CURIE
+- [x] Provide field popup help separately from comment field (without MarkDown)
+    - [x] Add new property URI to ANNAL namespace
+        - annal:tooltip
+    - [x] Add new field; change label on comment field
+    - [x] Use annal:tooltip in preference to rdfs:comment when rendering field.
+        - handled in renbder_fieldvalue.py via field.field_tooltip ...
+        - ... calls bound_field.get_field_tooltip()
+        - ... uses self._field_description['field_help']
+    - [x] Default to rdfs:comment value if blank
+    - [x] Re-order fields in field view so tooltip comes toward end
+    - [x] Add migration logic to copy comment to tooltip and add heading for comment:
+        - "# (label)\r\n\r\n(Tooltip)
+        - test case in test_data_migration.py
+        - adjust test logic to accommodfate this migration
+    - [x] Edit sitedata field definitions
+- [x] Re-arrange field definition view
+- [x] Split Resource_defs from Journal_defs
+- [x] Update installed software on fast-project.analist.net
+- [x] Flushed out data migration problems with missing record group references
+- [x] Fixed data migration of entities whose 'annal:type' value does not match the corresponding type
+definition, which could occur when migrating data created in much older software releases.
 
-(release - version 0.1.36)
-
-- [ ] Split Resource_defs from Journal_defs?
-- [ ] Update installed software on fast-project.analist.net
-
-- [ ] Absorb groups into field defs
-    - [ ] extend field definition view to include list of fields (etc.)
-    - [ ] modify field definition reader to use locally defined fields in preference to group reference
-    - [ ] check for other uses of field group reference field
-    - [ ] update site definitions to use field lists in field definitions
-    - [ ] eliminate field groups from site definitions
-    - [ ] migrate group references in user field definitions to use internal field list
-    - [ ] test migration functionality
-    - [ ] apply migrations to installable collections
-    - [ ] eliminate group definitions in installable collections
-    - [ ] modify or eliminate task buttons that create field groiup entities
-    - [ ] seek out other references to RecordGroup class
-    - [ ] seek out other references to field group type name or URI
-    - ... and eventually:
-    - [ ] Remove class RecordGroup
-    - [ ] Remove field group type URI from annal: namespace
-    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
 
 (feature freeze for V0.9alpha?)
 (0.5?)
 
+- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
@@ -205,6 +268,9 @@ Data collection definitions:
 
 Usability notes:
 
+- [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
+- [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
+- [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
@@ -258,6 +324,17 @@ Usability notes:
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
+
+- [ ] Final elimination of Recordroup (field group) entities
+    - [ ] Remove class RecordGroup
+    - [ ] eliminate _field/Field_groupref instances
+    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
+    - [ ] eliminate all Group_* fields
+    - [ ] Remove field group type URI from annal: namespace
+    - [ ] eliminate _type/_group
+    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+    - [ ] Clean up dead code:
+        - [ ] test_recordfield.py
 
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [

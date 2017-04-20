@@ -169,7 +169,7 @@ def annalistuser_view_form_data(
         user_uri="mailto:testuser@example.org", 
         user_permissions="VIEW CREATE UPDATE DELETE CONFIG ADMIN",
         action=None, cancel=None, close=None, edit=None, copy=None, 
-        orig_id=None
+        orig_coll=None, orig_id=None
         ):
     form_data_dict = (
         { 'entity_id':          user_id
@@ -179,10 +179,13 @@ def annalistuser_view_form_data(
         , 'User_uri':           user_uri
         , 'User_permissions':   user_permissions
         , 'orig_type':          "_user"
+        , "orig_coll":          coll_id
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_user")
         })
     if orig_id:
         form_data_dict['orig_id']       = orig_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
     if action:
         form_data_dict['action']        = action
     if cancel:

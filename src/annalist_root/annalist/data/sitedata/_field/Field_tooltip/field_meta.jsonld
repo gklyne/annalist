@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_tooltip"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_tooltip"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_tooltip"
+, "rdfs:label":                 "Tooltip"
+, "rdfs:comment":               "# Tooltip\r\n\r\nDescriptive text explaining how field is intended to be used.  This text is used to provide content for a tooltip for the field when displayed in a form.  Does not use Markdown formatting."
+, "annal:field_render_type":    "_enum_render_type/Textarea"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Longtext"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:tooltip"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(Field usage popup help text)"
+, "annal:tooltip":              "Descriptive text explaining how field is intended to be used.  This text is used to provide content for a tooltip for the field when displayed in a form.  Does not use Markdown formatting."
+}
