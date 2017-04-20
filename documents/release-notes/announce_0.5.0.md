@@ -41,6 +41,7 @@ This is a significant milestone release, with candidate feature-complete functio
 
 The full announcement is at: 
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
+https://groups.google.com/d/msg/annalist-discuss/RTZMn4m4mQ4/yqvogukDAwAJ
 
 See also: 
 

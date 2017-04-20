@@ -15,17 +15,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.5.1, towards 0.5.2
 
-- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
-- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
-    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
-    - If absolute URI is stored, can local reference be discovered for hyperlinking?
-    - I think evolvability is served by making these exchangeable
-- [ ] Login sequence from authz error page does not return to original page viewed
-- [ ] Figure out how to preserve defined users when reinstalling the software.
+- [x] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
-    - Seems to be working, but needs explicit testing to make sure.
-- [ ] update Django version used to latest version designated for long term support (1.8?)
+    - Confirmed working through release update on demo system.
+- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
+    - copy site data in directly from `sitedata`
+    - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] update pip to latest version in python environment (for continued testing)
+- [ ] update Django version used to latest version designated for long term support (1.8?)
+- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
+- [ ] Login sequence from authz error page does not return to original page viewed
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -34,6 +33,20 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
+- [ ] See_also_r field duplicated in field options list?
+    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
+        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
+            - RDF_schema_defs/_view/Class
+            - _view/Vocab_view
+        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
+        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
+
+(Sub-release?)
+
+- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
+    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
+    - If absolute URI is stored, can local reference be discovered for hyperlinking?
+    - I think evolvability is served by making these exchangeable
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
@@ -64,9 +77,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data
 - [ ] Provide content for the links in the page footer
-- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
-    - copy site data in directly from `sitedata`
-    - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -82,13 +92,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
-- [ ] See_also_r field duplicated in field options list?
-    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
-        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
-            - RDF_schema_defs/_view/Class
-            - _view/Vocab_view
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 
 Technical debt:
 
@@ -100,7 +103,8 @@ Technical debt:
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
-- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+- [x] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+    - turns out it is stil needed to ensure uniqueness with /l/, /v/, etc. URLs.
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
@@ -110,7 +114,7 @@ Technical debt:
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
-- [ ] Inconsistent `@id` values in site data
+- [ ] Inconsistent `@id` values in site data ("." or "<type-id>/<entity-id>")
 - [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
@@ -122,20 +126,19 @@ Technical debt:
 
 Data collection definitions:
 
-- [ ] VoID, DCAT, PROV
+- [ ] VoID, DCAT, PROV, CRM
 
 
 Usability notes:
 
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
 - [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
-- [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
         - should edits to the current type be saved first?
     - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
-- [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
+- [x] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
     - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
     - not seeing the problem here: revisit when problem surefaces again.
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
@@ -146,7 +149,7 @@ Usability notes:
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
-- [ ] Better support for type renaming: hunt out all references and rename them too
+- [ ] Better support for type renaming: hunt out all references and rename them too?
 - [ ] Consistency checks for references to missing types (e.g. following rename)
 - [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
@@ -175,7 +178,7 @@ Usability notes:
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
 - [x] Option to re-order fields on view form
-- [ ] When creating type, default URI to be based on id entered
+- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
 - [ ] List display paging
 - [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
@@ -184,7 +187,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
-- [ ] Final elimination of Recordroup (field group) entities
+- [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
     - [ ] eliminate _field/Field_groupref instances
     - [ ] eliminate _view/Field_group_view, _list/Field_group_list

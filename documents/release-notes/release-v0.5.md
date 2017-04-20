@@ -90,7 +90,7 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 
 See also previous release notes:
 
-- [Release 0.1.x](./release-v0.1)
+- [Release 0.1.x](./release-v0.1.md)
 
 # Version 0.5.0
 
