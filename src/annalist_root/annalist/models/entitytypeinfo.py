@@ -660,4 +660,13 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo.get_fileobj: missing entityparent; type_id %s"%(self.type_id))
         return fileobj
 
+    def get_ancestor_id(self, entity):
+        """
+        Returns the ancestor collection id for the supplied entity assumed to be of the
+        current type.
+        """
+        if self.type_id == COLL_ID:
+            return layout.SITEDATA_ID
+        return entity._parent._ancestorid
+
 # End.

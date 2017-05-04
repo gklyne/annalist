@@ -83,10 +83,6 @@ baseentityvaluemap  = (
 class GenericEntityEditView(AnnalistGenericView):
     """
     View class for generic entity edit view
-
-    The view to be displayed can be specified through the constructor
-    (for predefined views) or through the HTTP request URI parameters
-    (for any view).
     """
 
     _entityedittemplate = 'annalist_entity_edit.html'
@@ -149,7 +145,8 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 )
         # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))
-        viewinfo.set_orig_coll_id(orig_coll_id=entity._parent._ancestorid)
+        orig_entity_coll_id = viewinfo.orig_typeinfo.get_ancestor_id(entity)
+        viewinfo.set_orig_coll_id(orig_coll_id=orig_entity_coll_id)
         if viewinfo.check_authorization(action):
             return viewinfo.http_response
 
@@ -165,7 +162,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'url_type_id':            type_id
             , 'orig_id':                entityvals['entity_id']
             , 'orig_type':              type_id
-            , 'orig_coll':              entity._parent._ancestorid
+            , 'orig_coll':              orig_entity_coll_id
             , 'edit_view_enable':       'disabled="disabled"'
             , 'default_view_enable':    'disabled="disabled"'
             , 'customize_view_enable':  'disabled="disabled"'

@@ -176,7 +176,7 @@ def collectiondata_view_form_data(
         coll_label=None,
         coll_descr=None,
         action=None, cancel=None, close=None, edit=None, copy=None, 
-        orig_id=None
+        orig_id=None, orig_coll=None
         ):
     d = collectiondata_create_values(coll_id=coll_id, coll_label=coll_label, coll_descr=coll_descr)
     form_data_dict = (
@@ -191,6 +191,8 @@ def collectiondata_view_form_data(
         })
     if orig_id:
         form_data_dict['orig_id']       = orig_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
     if action:
         form_data_dict['action']        = action
     if cancel:

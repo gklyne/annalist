@@ -15,16 +15,51 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.5.1, towards 0.5.2
 
+- [x] BUG: edit collection metadata fails on save with
+        Problem with collection identifier
+        Collection Linked_data_tools already exists
+    - Original form is not providing correct original collection id
+    - Added logic to entitytypeinfo to handle special case of collection ancestor id
+    - Modified entityedit GERT handler touse entitytypeinfo to access ancestor id
+    - Added new test case that detects the original problem
+- [x] BUG: failed to migrate linked data tools cleanly 
+    - Returns error when trying to view tool:
+    - Field See_also_r is missing 'group_field_list' value
+    - Caused by earlier migration failure; possible attamept to hand-edit data
+    - Fixed by removing old collection configuration data; no software change
+- [ ] BUG: migrating data doesn't update software version in data
+    - also: editing collection metadata doesn't update collection s/w version
+    - currently handled by save logic of edit form handler
+    - need to add something to data migration logic
 - [x] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
     - Confirmed working through release update on demo system.
 - [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
-- [ ] update pip to latest version in python environment (for continued testing)
-- [ ] update Django version used to latest version designated for long term support (1.8?)
+- [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
+- [ ] See_also_r field duplicated in field options list?
+    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
+        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?
+            - RDF_schema_defs/_view/Class (OK)
+            - _view/Vocab_view (OK)
+        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
+        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
+        - Now defined in Resource_defs: no significant difference other than the field name itself.
+            - See_also_r defined and referenced by:
+                - Carolan_Guitar -> this will be a migration case study
+                - Performance_defs -> (ditto?)
+                - 
+            - See_also_r referenced by:
+                - Open_evidence
+                - Performances (via Performance_defs)
+                - 
+- [ ] Clean up old data from previous migrations (notably groups)
 - [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
 - [ ] Login sequence from authz error page does not return to original page viewed
+- [ ] Turtle export option to work around JSON-LD context access problems for now
+- [ ] update pip to latest version in python environment (for continued testing)
+- [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -32,14 +67,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
-- [ ] See_also_r field duplicated in field options list?
-    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
-        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
-            - RDF_schema_defs/_view/Class
-            - _view/Vocab_view
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 
 (Sub-release?)
 

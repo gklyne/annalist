@@ -33,6 +33,6 @@
   "annal:tooltip": "Links to further information about the artifact",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# See also\r\n\r\nLinks to further information about the artifact",
-  "rdfs:label": "See also"
+  "rdfs:comment": "# See also\r\n\r\nLinks to further information about the artifact @@deprecated",
+  "rdfs:label": "See also @@deprecated"
 }

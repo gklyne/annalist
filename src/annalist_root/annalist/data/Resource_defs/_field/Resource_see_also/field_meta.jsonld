@@ -26,6 +26,6 @@
   "annal:tooltip": "A link to further information about the artifact",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# URL\r\n\r\nA link to further information about the artifact",
-  "rdfs:label": "URL"
+  "rdfs:comment": "# URL\r\n\r\nA link to further information about the artifact @@deprecated",
+  "rdfs:label": "URL @@deprecated"
 }
