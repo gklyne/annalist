@@ -31,6 +31,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - also: editing collection metadata doesn't update collection s/w version
     - currently handled by save logic of edit form handler
     - need to add something to data migration logic
+- [x] BUG: Exception in RenderMultiFields_value.renderAttributeError
+    - ("'NoneType' object has no attribute 'get'",)
+    - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
+    - turns out some earlier tests to provide improved reporting had been skipped.
 - [x] Figure out how to preserve defined users when reinstalling the software.
     - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
     - Confirmed working through release update on demo system.
@@ -54,7 +58,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - Open_evidence
                 - Performances (via Performance_defs)
                 - 
-- [ ] Clean up old data from previous migrations (notably groups)
+
+(Sub-release?)
+
+- [ ] Clean up old data on demo system from previous migrations (notably groups)
 - [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
 - [ ] Login sequence from authz error page does not return to original page viewed
 - [ ] Turtle export option to work around JSON-LD context access problems for now
