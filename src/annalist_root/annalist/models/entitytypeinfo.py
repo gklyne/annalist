@@ -662,8 +662,8 @@ class EntityTypeInfo(object):
 
     def get_ancestor_id(self, entity):
         """
-        Returns the ancestor collection id for the supplied entity assumed to be of the
-        current type.
+        Returns the ancestor collection id for the supplied entity
+        (which is assumed to be of the current type).
         """
         if self.type_id == COLL_ID:
             return layout.SITEDATA_ID

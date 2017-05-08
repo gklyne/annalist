@@ -27,10 +27,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Field See_also_r is missing 'group_field_list' value
     - Caused by earlier migration failure; possible attamept to hand-edit data
     - Fixed by removing old collection configuration data; no software change
-- [ ] BUG: migrating data doesn't update software version in data
+- [x] BUG: migrating data doesn't update software version in data
     - also: editing collection metadata doesn't update collection s/w version
-    - currently handled by save logic of edit form handler
-    - need to add something to data migration logic
+    - currently save logic of edit form handler calls viewinfo.update_coll_version()
+    - [x] Redefine software comoatibility version update as Collection method
+    - [x] DisplayInfo uses new method
+    - [x] Collection data migration calls new method
+    - [-] Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
 - [x] BUG: Exception in RenderMultiFields_value.renderAttributeError
     - ("'NoneType' object has no attribute 'get'",)
     - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
@@ -42,14 +45,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
-- [ ] See_also_r field duplicated in field options list?
+- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
+- [ ] See_also_r field duplicated in field options list
     - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
-        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?
-            - RDF_schema_defs/_view/Class (OK)
-            - _view/Vocab_view (OK)
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
-        - Now defined in Resource_defs: no significant difference other than the field name itself.
+        - Also defined in Resource_defs: no significant difference other than the field name itself.
             - See_also_r defined and referenced by:
                 - Carolan_Guitar -> this will be a migration case study
                 - Performance_defs -> (ditto?)
@@ -58,11 +57,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - Open_evidence
                 - Performances (via Performance_defs)
                 - 
+        - [x] Definitions in Resource_defs have been renamed and deprecated, and references to it have been changed to reference Entity_see_also definitions.
+        - [ ] Remove Resource_defs versions when the collections mentioned have been migrated and checked out.
+        - [ ] close this TODO when the collections mentioned have been checked out.
+- [ ] Fix performance data on fast-project system
+- [ ] Check all collections migrated on demo system and Fast-project
+- [ ] Clean up old data on demo systems from previous migrations (notably groups)
 
 (Sub-release?)
 
-- [ ] Clean up old data on demo system from previous migrations (notably groups)
-- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
 - [ ] Login sequence from authz error page does not return to original page viewed
 - [ ] Turtle export option to work around JSON-LD context access problems for now
 - [ ] update pip to latest version in python environment (for continued testing)
@@ -242,16 +245,17 @@ Notes for Future TODOs:
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
 - [ ] Keyboard shortcuts on forms - C-S to save, ...?
 - [ ] Implement at least one other identify provider (ORCID?)
-    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).
         - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
         - UPDATE: See: 
         -   http://support.orcid.org/knowledgebase/articles/343182
-        -   http://support.orcid.org/knowledgebase/articles/343182-register-a-public-api-client-application
+        -   http://support.orcid.org/knowledgebase articles/343182-register-a-public-api-client-application
         -   http://members.orcid.org/api/introduction-orcid-public-api
     - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
         - hard to find actual provider service other than Google
     - [ ] https://aarc-project.eu
     - tried investigating EUDat, which looks promising but fails with invalid certificate
+    - see also notes from discussion with Matthew Dovey at CrossRef event in Oxford (EOSC?)
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
@@ -335,6 +339,9 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
+- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility forthat collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
+    - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
+
 
 
 # Feedback
