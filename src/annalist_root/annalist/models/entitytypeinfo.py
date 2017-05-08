@@ -19,7 +19,7 @@ from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
 from annalist.models.collection     import Collection
-from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.annalistuser   import AnnalistUser, default_user_id, unknown_user_id
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
@@ -408,6 +408,48 @@ class EntityTypeInfo(object):
                         types.append(t)
         return types
 
+    def get_default_view_id(self):
+        """
+        Returns the default view id for the current record type
+        """
+        view_id = None
+        if self.recordtype:
+            view_id = extract_entity_id(self.recordtype.get(ANNAL.CURIE.type_view, None))
+        else:
+            log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
+        return view_id or "Default_view"
+
+    # Entity-specific methods
+
+    def get_entity_permissions_map(self, entity_id=None):
+        """
+        Returns an entity-specific permission map that takes account of special 
+        access permissions applied to specific individual entities.
+
+        Thge permission maop is a map from an action name ("view", "new", etc) to 
+        a permission token that must be granted to a requester for the action 
+        to be allowed.
+
+        If `entity_id` is not specified, or is None, returns a default permission map 
+        applicable to entities of the current type in the absence of more specific 
+        permission requirements.
+        """
+        entity_perms_map = self.permissions_map
+        # Check for entity-specific permissions
+        #
+        # The logic here is currently ad-hoc, but in due courtse coukd be replaced
+        # by something more generic
+        # log.info(
+        #     "@@ get_entity_permissions_map: type_id %s, entity_id %s"%(self.type_id, entity_id)
+        #     )
+        if self.type_id == USER_ID:
+            # Relax view access requirements for default and unknown user id
+            # (Real users require admin rights to view)
+            if entity_id in [default_user_id, unknown_user_id]:
+                entity_perms_map = dict(entity_perms_map)
+                entity_perms_map["view"] = CONFIG_PERMISSIONS["view"]
+        return entity_perms_map
+
     def _new_entity(self, entity_id):
         """
         Returns a new, entity object of the current type with the given id
@@ -632,17 +674,6 @@ class EntityTypeInfo(object):
             values.pop(ANNAL.CURIE.url, None)
         values[ANNAL.CURIE.id] = entity_id
         return values
-
-    def get_default_view_id(self):
-        """
-        Returns the default view id for the current record type
-        """
-        view_id = None
-        if self.recordtype:
-            view_id = extract_entity_id(self.recordtype.get(ANNAL.CURIE.type_view, None))
-        else:
-            log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
-        return view_id or "Default_view"
 
     def get_fileobj(self, entity_id, name, typeuri, mimetype, mode):
         """

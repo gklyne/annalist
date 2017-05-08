@@ -327,7 +327,8 @@ class EntityGenericListView(AnnalistGenericView):
                         typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
                     return (
                         self.form_action_auth(
-                            "delete", listinfo.collection, typeinfo.permissions_map
+                            "delete", listinfo.collection, 
+                            typeinfo.get_entity_permissions_map()
                             ) or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
@@ -338,11 +339,7 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                if listinfo.curr_typeinfo:
-                    permissions_map = listinfo.curr_typeinfo.permissions_map
-                else:
-                    permissions_map = CONFIG_PERMISSIONS
-                auth_check = self.form_action_auth("config", listinfo.collection, permissions_map)
+                auth_check = self.form_action_auth("config", listinfo.collection, CONFIG_PERMISSIONS)
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)

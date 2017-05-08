@@ -319,8 +319,9 @@ class bound_field(object):
                 # This is primarily to prevent a loophole for accessing user account details
                 #@@TODO: pass actual user permissions in to bound_field or field description 
                 #        or extra params
-                user_permissions = ["VIEW"]
-                req_permissions  = list(set( typeinfo.permissions_map[a] for a in ["view", "list"] ))
+                user_permissions    = ["VIEW"]
+                req_permissions_map = typeinfo.get_entity_permissions_map(entity_id)
+                req_permissions     = list(set( req_permissions_map[a] for a in ["view", "list"] ))
                 if all([ p in user_permissions for p in req_permissions]):
                     if entity_id is None or entity_id == "":
                         raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))

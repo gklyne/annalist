@@ -45,7 +45,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
-- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
+- [x] Lay groundwork in EntityTypeInfo for access control possibly defined per-entity.
+    - Currently used with ad-hoc logic for allowing view of default and unknown users
+    - Replaces similar ad-hoc logic previously in DisplayInfo
+    - Re-worked other direct references to EntityTypeInfo.permissions_map
 - [ ] See_also_r field duplicated in field options list
     - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
         - Also defined in Resource_defs: no significant difference other than the field name itself.

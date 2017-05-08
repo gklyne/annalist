@@ -27,7 +27,7 @@ from annalist.util                      import (
     )
 
 import annalist.models.entitytypeinfo as entitytypeinfo
-from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids
+from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids, CONFIG_PERMISSIONS
 from annalist.models.recordtype         import RecordType
 from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
@@ -524,10 +524,6 @@ class GenericEntityEditView(AnnalistGenericView):
         responseinfo = ResponseInfo()
         typeinfo     = viewinfo.curr_typeinfo
         messages     = viewinfo.type_messages
-        if typeinfo:
-            permissions_map = typeinfo.permissions_map
-        else:
-            permissions_map = CONFIG_PERMISSIONS
         orig_entity  = self.get_entity(viewinfo.orig_entity_id, typeinfo, viewinfo.action)
         # log.info("orig_entity %r"%(orig_entity.get_values(),))
         try:
@@ -593,7 +589,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                auth_check = self.form_action_auth("config", viewinfo.collection, permissions_map)
+                auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
                 if auth_check:
                     return auth_check
                 viewinfo.collection.set_default_view(
@@ -624,7 +620,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             if not responseinfo.has_http_response():
                 responseinfo.set_http_response(
-                    self.form_action_auth("config", viewinfo.collection, permissions_map)
+                    self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
                     )
             if not responseinfo.has_http_response():
                 cont_here = viewinfo.get_continuation_here(

@@ -42,7 +42,6 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
-
 from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
 from annalist.views.uri_builder     import (
@@ -438,6 +437,8 @@ class DisplayInfo(object):
         if not self.http_response:
             assert self.curr_typeinfo is not None
             self.src_entity_id  = entity_id
+            self.curr_entity_id = entity_id
+            self.orig_entity_id = entity_id
             if action in ["new", "copy"]:
                 self.use_entity_id = self.curr_typeinfo.entityclass.allocate_new_id(
                     self.curr_typeinfo.entityparent, base_id=entity_id
@@ -470,7 +471,13 @@ class DisplayInfo(object):
             # Check requested action
             action = action or "view"
             if self.curr_typeinfo:
-                permissions_map = self.curr_typeinfo.permissions_map
+                # log.info(
+                #     "@@ check_authorization (curr) action %s, type_id %s, entity_id %s"%
+                #     (action, self.curr_typeinfo.type_id, self.curr_entity_id)
+                #     )
+                permissions_map = (
+                    self.curr_typeinfo.get_entity_permissions_map(self.curr_entity_id)
+                    )
             else:
                 # Use site permissions map (some site operations don't have an entity type?)
                 permissions_map = SITE_PERMISSIONS
@@ -482,21 +489,19 @@ class DisplayInfo(object):
                 self.view.form_action_auth(action, self.perm_coll, permissions_map)
                 )
         if ( (not self.http_response) and 
-             self.orig_coll_id and (self.orig_coll_id != self.perm_coll.get_id())
-             ):
+             (self.orig_coll_id) and 
+             (self.orig_coll_id != self.perm_coll.get_id()) ):
             # Copying content from different collection: check access
             if self.orig_typeinfo:
-                orig_permissions_map = self.orig_typeinfo.permissions_map
-                # @@TODO: replace with a principled per-entity permission required mechanism
-                #   There follows is a hack intended to be a least effort route to a fully
-                #   working test suite.  In due course this should be replaced by updates to
-                #   EntityTypeInfo to replace .permissions_map with a method to return a 
-                #   per-entity permission map.
-                if self.orig_type_id == layout.USER_TYPEID:
-                    if self.orig_entity_id in [default_user_id, unknown_user_id]:
-                        orig_permissions_map = dict(orig_permissions_map)
-                        orig_permissions_map["view"] = CONFIG_PERMISSIONS["view"]
-                # @@
+                # log.info(
+                #     "@@ check_authorization (orig) action %s, type_id %s, entity_id %s"%
+                #     (action, self.orig_typeinfo.type_id, self.orig_entity_id)
+                #     )
+                orig_permissions_map = (
+                    self.orig_typeinfo.get_entity_permissions_map(self.orig_entity_id)
+                    )
+            else:
+                orig_permissions_map = SITE_PERMISSIONS
             self.http_response = self.view.form_action_auth("view", 
                 self.orig_coll, orig_permissions_map)
         return self.http_response
