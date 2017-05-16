@@ -58,6 +58,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
                 - [x] Open_evidence
                 - [ ] Performances (via Performance_defs)
         - [x] Definitions in Resource_defs have been removed.
+- [x] Tweak rendering of empty repeat-group
 - [ ] Fix performance data on fast-project system
 - [ ] Check all collections migrated on demo system and Fast-project
 - [ ] Clean up old data on demo systems from previous migrations (notably groups)
