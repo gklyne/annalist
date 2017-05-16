@@ -30,6 +30,10 @@ class OAuth2CheckBackend(object):
     as any record that may have been previously associated with the supplied
     username.  It becomes the responsibility of the calling view code to check 
     that the user details match any previously associated with the user id.
+
+    The returned user object is created or copied fromthe Django user base,
+    but if it already exists the email address is replaced with the one
+    returned by the OIDC authentication exchange.
     """
     def authenticate(self, username=None, password=None, profile_uri=None):
         if isinstance(password, unicode):
@@ -56,9 +60,8 @@ class OAuth2CheckBackend(object):
                 auth_username    = auth_username[:32]
         if username:
             try:
-                return_user = User.objects.get(username=username)
-                if return_user.email != auth_email:
-                    return_user = None
+                return_user       = User.objects.get(username=username)
+                return_user.email = auth_email
             except User.DoesNotExist:
                 create_username = username
         elif auth_username:

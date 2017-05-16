@@ -49,20 +49,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Currently used with ad-hoc logic for allowing view of default and unknown users
     - Replaces similar ad-hoc logic previously in DisplayInfo
     - Re-worked other direct references to EntityTypeInfo.permissions_map
-- [ ] See_also_r field duplicated in field options list
-    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
+- [x] See_also_r field duplicated in field options list
         - Also defined in Resource_defs: no significant difference other than the field name itself.
             - See_also_r defined and referenced by:
                 - Carolan_Guitar -> this will be a migration case study
                 - Performance_defs -> (ditto?)
-                - 
             - See_also_r referenced by:
-                - Open_evidence
-                - Performances (via Performance_defs)
-                - 
-        - [x] Definitions in Resource_defs have been renamed and deprecated, and references to it have been changed to reference Entity_see_also definitions.
-        - [ ] Remove Resource_defs versions when the collections mentioned have been migrated and checked out.
-        - [ ] close this TODO when the collections mentioned have been checked out.
+                - [x] Open_evidence
+                - [ ] Performances (via Performance_defs)
+        - [x] Definitions in Resource_defs have been removed.
 - [ ] Fix performance data on fast-project system
 - [ ] Check all collections migrated on demo system and Fast-project
 - [ ] Clean up old data on demo systems from previous migrations (notably groups)
@@ -70,6 +65,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (Sub-release?)
 
 - [ ] Login sequence from authz error page does not return to original page viewed
+- [x] OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
+    - instead of "email address mismatch", reports "was not authjenticated".
+    - but if different user id is selected, login propceeds OK
 - [ ] Turtle export option to work around JSON-LD context access problems for now
 - [ ] update pip to latest version in python environment (for continued testing)
 - [ ] update Django version used to latest version designated for long term support (1.8?)
