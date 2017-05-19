@@ -101,6 +101,13 @@ Notes:
 - provenance pingbacks - distributed provenance for real data?
 
 
+## Ontology import and export
+
+Create initial Annalist definitions from an imported Ontology.  These may not necessarily be the most effective presentation of data, but they can provide a starting point for refinement by hand.
+
+Similarly, OWL and/or RDFS class andnproperty declarations could be extracted and exported from definitions created with Annalist.  (There is already some logic in this direction used to create JSON-LD context files from Annalist definitions.)
+
+
 ## ResourceSync
 
 Implement ResourceSync protocol for sharing and propagation of Annalist data sets.
