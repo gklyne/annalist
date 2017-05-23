@@ -90,7 +90,7 @@ then
 
 Stop any existing annalist server.  Look for background processes running `annalist-manager` or `django-admin`.  There may be up to three separate background processes that need to be stopped.
 
-NOTE: irreversible changes are applied to site and collection data when upgrading, particularly to version 0.5.0.  It is recommended to make a duplicate copy of the ananlist site data before upgrading the software,  This will make it possible to revert to an earlier verson in the event of problems with the ewer software. For example, to back up a default "personal" configuration on Linux:
+NOTE: irreversible changes are applied to site and collection data when upgrading, particularly to version 0.5.0.  It is recommended to make a duplicate copy of the ananlist site data before upgrading the software,  This will make it possible to revert to an earlier verson in the event of problems with the newer software. For example, to back up a default "personal" configuration on Linux:
 
     cp -ax ~/annalist_site ~/annalist_site.backup
 

@@ -9,9 +9,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
 - [ ] Update tutorial to cover inheritance of definitions
+- [ ] New demo screencast(s)
+- [.] Build up corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
-- [ ] New demo screencast(s)
+
 
 # Version 0.5.1, towards 0.5.2
 
@@ -38,9 +40,6 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - ("'NoneType' object has no attribute 'get'",)
     - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
     - turns out some earlier tests to provide improved reporting had been skipped.
-- [x] Figure out how to preserve defined users when reinstalling the software.
-    - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
-    - Confirmed working through release update on demo system.
 - [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
@@ -60,8 +59,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] Definitions in Resource_defs have been removed.
 - [x] Tweak rendering of empty repeat-group
 - [x] Fix performance data on fast-project system
-- [ ] Check all collections migrated on demo system and Fast-project
-- [ ] Clean up old data on demo systems from previous migrations (notably groups)
+- [x] Check all collections migrated on demo system and Fast-project
+- [x] Clean up old data on demo systems from previous migrations (notably groups)
 
 (Sub-release?)
 
@@ -86,6 +85,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
     - I think evolvability is served by making these exchangeable
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
