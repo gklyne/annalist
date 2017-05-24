@@ -40,6 +40,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - ("'NoneType' object has no attribute 'get'",)
     - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
     - turns out some earlier tests to provide improved reporting had been skipped.
+- [x] BUG: OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
+    - instead of "email address mismatch", reports "was not authenticated".
+    - but if different user id is selected, login propceeds OK
+    - email address check in OIDC handler removed - this is handled and reported by the calling code
 - [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
     - copy site data in directly from `sitedata`
     - generate all other site data on-the-fly as needed (e.g. context, etc.)
@@ -62,12 +66,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Check all collections migrated on demo system and Fast-project
 - [x] Clean up old data on demo systems from previous migrations (notably groups)
 
-(Sub-release?)
+(Sub-release? 0.5.2)
 
+- [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Login sequence from authz error page does not return to original page viewed
-- [x] OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
-    - instead of "email address mismatch", reports "was not authjenticated".
-    - but if different user id is selected, login propceeds OK
 - [ ] Turtle export option to work around JSON-LD context access problems for now
 - [ ] update pip to latest version in python environment (for continued testing)
 - [ ] update Django version used to latest version designated for long term support (1.8?)

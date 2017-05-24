@@ -5,20 +5,12 @@ Annalist release 0.5.x is a candidate feature-complete minimal viable product fo
 A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.5.0
+## Current release: 0.5.2
 
-This release contains the first candidate feature-complete functionality for an Annalist V1 software release.  The aim has been to complete features that are likely to affect the stored data structures used by Annalist, to minimize future data migration requirements.  The intent is to use this release in several projects to test if it offers minimal viable product functionality for its intended use.  Meanwhile, planned developments up to a version 1.0 release will focus on documentation, stability, security and performance concerns.
+This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in version 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
 
-The main change in this release from earlier (v0.1) releases is simplification the user interface for defining entity views (specifically, fields that contain repeating groups of values) by eliminating the use of separate field group entities.  This in turn has led to changes in the underlying view and field definition structures used by Annalist.
+See the "History" section below for more details .
 
-Other changes include:
-
-- popup help for view fields (tooltip text) is defined seperately from for general help text in a field definition.
-- the installable collection `Journal_defs` has been split into `Resource_defs` and `Journal_defs`.
-- An `annalist-manager` subcommand has been aded to migrate data for all collections in a site.
-- A small number of bug fixes
-
-See the "History" selection below, and the notes for verion 0.1.37 in the [Release 0.1.x](./release-v0.1) notes for more details .
 
 ## Status
 
@@ -91,6 +83,54 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 See also previous release notes:
 
 - [Release 0.1.x](./release-v0.1.md)
+
+
+# Version 0.5.2
+
+This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in version 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
+
+The other technical change is some internal code refactoring to move towards possible per-entity access control (currently implemented on an ad hoc basis for default and unknown user permissions).
+
+
+# Version 0.5.1, towards 0.5.2
+
+- [x] BUG: edit collection metadata fails on save with
+    - Original form is not providing correct original collection id
+    - Added logic to entitytypeinfo to handle special case of collection ancestor id
+    - Modified entityedit GET handler to use entitytypeinfo to access ancestor id
+    - Added new test case that detects the original problem
+- [x] BUG: failed to migrate linked data tools cleanly 
+    - Returns error when trying to view tool:
+    - Field See_also_r is missing 'group_field_list' value
+    - Caused by earlier migration failure; possible from an attempt to hand-edit data
+    - Fixed by removing old collection configuration data; no software change
+- [x] BUG: migrating data doesn't update software version in data
+    - also: editing collection metadata doesn't update collection s/w version
+    - currently save logic of edit form handler calls viewinfo.update_coll_version()
+    - [x] Redefine software compatibility version update as Collection method
+    - [x] DisplayInfo updated to use new method
+    - [x] Collection data migration updated to call new method
+    - [-] Special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for very little practical benefit. So, for the time being, this is not being fixed.
+- [x] BUG: Exception in RenderMultiFields_value.renderAttributeError
+    - ("'NoneType' object has no attribute 'get'",)
+    - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
+    - it turns out some earlier tests to provide improved reporting had been skipped; these tests have been reactivated and reports are somewhat more helpful.
+- [x] BUG: OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
+    - instead of "email address mismatch", reports "was not authenticated".
+    - but if different user id is selected, login propceeds OK
+    - email address check in OIDC handler removed - this is handled and reported by the calling code
+- [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
+- [x] Lay groundwork in EntityTypeInfo for access control possibly defined per-entity.
+    - Currently used with ad-hoc logic for allowing view of default and unknown users
+    - Replaces similar ad-hoc logic previously in DisplayInfo
+    - Re-worked other direct references to EntityTypeInfo.permissions_map
+- [x] See_also_r field duplicated in field options list
+        - [x] Definitions in Resource_defs have been removed.
+        - NOTE: See_also_r defined and referenced by:
+            - Carolan_Guitar -> this will be a migration case study
+            - Performance_defs -> (ditto?)
+- [x] Tweak rendering of empty repeat-group
+
 
 # Version 0.5.0
 

@@ -1,8 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product release 0.5.0.
+Current status: candidate feature-complete minmum viable product, release 0.5.2.
 
-This release simplifies the user interface for defining entity views, and implements some major internal structural changes to the software and stored data.
+This is mainly a maintenance release that fixes problems introduced in release 0.5.0.
 
 
 # V1.0 release
@@ -18,11 +18,6 @@ More generally, features planned for future releases are recorded in the [issues
 ## Data bridges
 
 Especially spreadsheets.  See https://github.com/ninebynine/sds
-
-
-## Research objects
-
-Mechanisms for packaging to submitting to RO repositories.  Could be based on [DIP work](https://github.com/CottageLabs/dip), etc.
 
 
 ## Web backend storage
@@ -41,19 +36,6 @@ Mechanisms for packaging to submitting to RO repositories.  Could be based on [D
   - JSON-LD
   - uri-list
 - but serve native format directly.
-
-
-## Extended data types and presentation options
-
-Numbers, Dates, Georeferences, etc.
-
-I also want to look into using "live" links, e.g. to obtain georeference coordinates or environment sensor data for inclusion into data records.
-
-Notes:
-
-- more field types, including link browser
-    - image grid + metadata pop-up for mobile browsing?
-- see also: discussion with Cerys, and philosophy of minimal hurdles to data entry
 
 
 ## Grid view
