@@ -148,7 +148,7 @@ view_grouprow = (
               <span>{{field.field_label}}</span>
             </div>
             <div class="group-placeholder small-12 medium-10 columns">
-              <span>(None)</span>
+              <span>(None specified)</span>
             </div>
           </div>
         </div>

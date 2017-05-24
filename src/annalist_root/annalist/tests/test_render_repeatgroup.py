@@ -306,7 +306,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
                 <span>Test repeat field label</span>
               </div>
               <div class="group-placeholder %(group_row_body_classes)s">
-                <span>(None)</span>
+                <span>(None specified)</span>
               </div>
             </div>
             """%field_vals(width=12)

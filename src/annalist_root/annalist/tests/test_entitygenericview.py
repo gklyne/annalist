@@ -324,7 +324,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                   <span>Supertype URIs</span>
                 </div>
                 <div class="%(group_placeholder_classes)s">
-                  <span>(None)</span>
+                  <span>(None specified)</span>
                 </div>
               </div>
             </div>

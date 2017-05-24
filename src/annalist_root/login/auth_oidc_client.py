@@ -130,6 +130,10 @@ class OIDC_AuthDoneView(generic.View):
         # new set of OAuth2 credentials being used for a previously created Django user id.
         #
         if not authuser:
+            log.info(
+                "auth_oidc_client: userid %s, provider %s, credential %r"%
+                  (userid, provider, credential)
+                )
             return HttpResponseRedirectLogin(request, 
                 login_message.USER_NOT_AUTHENTICATED%(userid, provider)
                 )

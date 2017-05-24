@@ -22,13 +22,15 @@ import urlparse
 import shutil
 import json
 import datetime
-from collections    import OrderedDict
+from collections                    import OrderedDict
+from distutils.version              import LooseVersion
 
 import logging
 log = logging.getLogger(__name__)
 
 from django.conf import settings
 
+import annalist
 from annalist                       import layout
 from annalist                       import message
 from annalist.exceptions            import Annalist_Error
@@ -260,6 +262,15 @@ class Collection(Entity):
                     )
                 coll.set_alt_entities(parent_coll)
         return coll
+
+    # Software compatibility version
+
+    def update_software_compatibility_version(self):
+        # (assumes data loaded)
+        ver = self.get(ANNAL.CURIE.software_version, None) or "0.0.0"
+        if LooseVersion(ver) < LooseVersion(annalist.__version_data__):
+            self[ANNAL.CURIE.software_version] = annalist.__version_data__
+            self._save()
 
     # User permissions
 

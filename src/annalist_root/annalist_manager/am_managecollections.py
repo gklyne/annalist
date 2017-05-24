@@ -594,6 +594,8 @@ def am_migratecollection(annroot, userhome, options):
         for msg in msgs:
             print(msg)
         status = am_errors.AM_MIGRATECOLLFAIL
+    else:
+        coll.update_software_compatibility_version()
     return status
 
 def am_migrateallcollections(annroot, userhome, options):

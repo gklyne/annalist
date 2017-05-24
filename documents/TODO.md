@@ -9,164 +9,70 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
 - [ ] Update tutorial to cover inheritance of definitions
+- [ ] New demo screencast(s)
+- [.] Build up corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
-- [ ] New demo screencast(s)
-
-# Version 0.1.37, towards 0.1.38
-
-- [x] Absorb field groups into field defs
-    - [x] modify field definition reader to use locally defined fields in preference to group reference
-        - [x] in FieldDescritpion.py, use internal structure that is just a list of field id+property+placement from group def:
-            - [x] Replace: group_view -> field_list
-            - [x] Don't store group view in FieldDescription (store field list instead)
-            - [x] Test and fix errors
-            - [x] Update group_view_fields to return list if present
-            - [x] field_desc.has_field_group_ref needs rework to align with refactoring
-            - [x] if list is defined within field definition, use that
-               - inlined repeat field definitions for type view
-               - fix up resilience checks in entityedit.find_fields
-               - remove unused group definitions
-               - fix up test cases
-            - [x] Rename: group_ids_seen -> field_ids_seen (recursion check)
-    - [x] extend field definition view to include list of fields
-        - [x] Add field Field_fields to field view
-        - [x] Define field Field_fields, using field definitions from group Group_field_group
-        - [x] Test, fix tests
-        - [x] Eyeball changes by viewing type view fields 
-            - Group_field_xxx options are not available in field view: need to complete next steps...
-        - [x] Copy fields Group_field_sel, Group_field_property, Group_field_placement and rename references in Field_fields
-        - [x] Test, fix tests
-        - [x] Eyeball changes by viewing type view fields 
-        - NOTE: at this stage, the Group_ref field is still present, allowing old-style definitions
-    - [x] update site definitions to use field lists in field definitions
-    - [x] eliminate field group definitions from site data
-    - [x] modify or eliminate task buttons that create field group entities
-    - [x] check for other uses of field group reference field
-        - [x] entityedit.py save_invoke_task (task dispatching)
-        - [x] fix up test cases
-        - [x] entitylist.py get_list_entityvaluemap
-        - [x] test_sitedata.py check_type_fields
-        - [x] test_render_repeatgroup.py
-        - [x] Test Define repeat field button in deployed software
-            - [x] Define repeat field - button text mentions group
-            - [x] Define repeat field - value type should be annal:Field_list
-            - [x] Referenced field view - entity type field should be blank, or field list
-            - [x] Field entity type help text mentions group
-            - [x] Define repeat field - confirmation message mentions group; message needs refinement
-        - [x] Test Define field reference button in deployed software
-            - [x] Button text mentions group
-            - [x] Default value type should be annal:Field_list
-            - [-] Field entity type help text mentions group; sort out with separation of tooltip text
-            - [x] Confirmation message mentions group; message needs refinement
-            - [x] "Refer to type" has default type -> can this be inferred from target field?  Or prompt to specify value.
-        - [x] fielddescription.py
-    - [x] BUG (attempt to save copy of site label field):
-            - Steps to reproduce:
-                - Select scope all listing of entities
-                - Select site entity
-                - Click "edit" button
-                - Enter new entity id
-                - Click Save
-            - Problem appears to be that the software is trying to copy the original entity data (as part of a rename operation) from the current collection rather than the collection from which it has been inherited.
-        - [x] Handle change of collection like change of type: copy data to new location
-            - [x] GET: copy original collection id to form as 'orig_coll'
-            - [x] POST:
-                - [x] extract orig coll id from form, default to current coll id
-                - [x] save collection id information into DisplayInfo object
-            - [x] DisplayInfo.__init__: initialize collection id values
-            - [x] DisplayInfo.set_type_entity_id: set collection id values
-            - [x] Refactor entityedit save_entity
-            - [x] entityedit references to orig_type_id; also check orig_coll_id
-            - [x] Need to be able to retrieve original collection type info for copy
-            - [x] Check original collection access is honoured
-                - [x] fairly extensive changes to EntityEdit and DisplayInfo logic to keep track of the (possibly inherited) collection from which an entity is accessed.
-                - [x] Exposed a conflict with _user entity access; for now have added a hack in DisplayInfo.check_authorization, and added a new TODO (below) to implement a more principled interface to allow per-entity access controls.   Also have paper notes for cleaning up access control checks.
-                - [x] Add test case for attempt to view/copy/edit entity inherited from collection with no access
-            - [x] New test cases; edit inherited value with attachment
-    - [x] entityedit.py - clean up dead code from previous refactoring
-    - [x] check for other uses of RecordGroup class
-        - [x] test_render_ref_multifields.py
-        - [x] views/form_utils/fielddescription.py
-    - [x] migrate group references in user field definitions to use internal field list
-        - [x] Add logic to RecordField to import field definitions from group definition
-        - [x] Warning on migration if value type of repeat field does not match type of referenced group
-        - [x] Add optional deprecation warning when recordgroup is instantiated (except for migration)
-            - NOTE: EntityTypeInfo scans suppress these warnings, as they're used by migration logic
-        - [x] Above changes should mean all live references are to inline field list
-        - [x] Add _group rename to collection migration function
-    - [x] test migration functionality
-        - [x] Add test case to test_data_migration
-    - [x] apply migrations to installable collections
-        - Install software then use annalist-manager commands to apply migrations;
-        - Check, and copy migrated data back to source tree
-        - [x] Annalist_schema (should be no change)
-        - [x] Bibliography_defs (done by hand)
-        - [x] Concept_defs
-        - [x] Journal_defs
-        - [x] RDF_schema_defs
-    - [x] eliminate group definitions in installable collections
-        - [x] Annalist_schema
-        - [x] Bibliography_defs
-        - [x] Concept_defs
-        - [x] Journal_defs
-        - [x] RDF_schema_defs
-    - [x] seek out other references to RecordGroup class
-    - [x] annalist-manager option to migrate all collections
-    - [x] fix up installable collection problems picked up by collection migration 
-    - [x] Remove field group from field view definition
-    - [x] Update field view help text to mention subfields, not field group
-    - [x] seek out other references to field group type name or URI
-        - NOTE: references to group type, views, lists remain for migration support, and free-standing view and list definitions, remain -- for now.
-- [x] Fix handling of restriction expression for subfield selection.
-    [x] Need test case coverage for subfields in field defintion, and domain and/or range classes in RDF_schema (e.g. _field/subpropertyOf on _field/subpropertyOf_r)
-    [x] In FieldListValueMap, add {'group': field_desc_dict} to extra value context.
-        - Should be accessible in restriction expression as 'field[...]'
-    [-] Update view help text to mention "field". 'field[<field-id>]' references subfields 
-        contained within a containing field, refers to a component of the containing field 
-        description.  (Turns out this wasn't needed - consider removing it?)
-        Extra logic is in FieldListValueMap handling of field lists.
-- [x] Annaslist_schema add annal:field_fields property.
-    - Renamed type URI for field lists to match schema domain value.
-- [x] annalist.namespace - default to CURIE, use .URI for URI.  Affects JSON-LD context test.
-    - Removed default option for now: everything is .URI or .CURIE
-- [x] Provide field popup help separately from comment field (without MarkDown)
-    - [x] Add new property URI to ANNAL namespace
-        - annal:tooltip
-    - [x] Add new field; change label on comment field
-    - [x] Use annal:tooltip in preference to rdfs:comment when rendering field.
-        - handled in renbder_fieldvalue.py via field.field_tooltip ...
-        - ... calls bound_field.get_field_tooltip()
-        - ... uses self._field_description['field_help']
-    - [x] Default to rdfs:comment value if blank
-    - [x] Re-order fields in field view so tooltip comes toward end
-    - [x] Add migration logic to copy comment to tooltip and add heading for comment:
-        - "# (label)\r\n\r\n(Tooltip)
-        - test case in test_data_migration.py
-        - adjust test logic to accommodfate this migration
-    - [x] Edit sitedata field definitions
-- [x] Re-arrange field definition view
-- [x] Split Resource_defs from Journal_defs
-- [x] Update installed software on fast-project.analist.net
-- [x] Flushed out data migration problems with missing record group references
-- [x] Fixed data migration of entities whose 'annal:type' value does not match the corresponding type
-definition, which could occur when migrating data created in much older software releases.
 
 
-(feature freeze for V0.9alpha?)
-(0.5?)
+# Version 0.5.1, towards 0.5.2
 
-- [ ] Fix user access permission hack for copying inherited default user (see DisplayInfo.check_authorization)
-- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
-    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
-    - If absolute URI is stored, can local reference be discovered for hyperlinking?
-    - I think evolvability is served by making these exchangeable
+- [x] BUG: edit collection metadata fails on save with
+        Problem with collection identifier
+        Collection Linked_data_tools already exists
+    - Original form is not providing correct original collection id
+    - Added logic to entitytypeinfo to handle special case of collection ancestor id
+    - Modified entityedit GERT handler touse entitytypeinfo to access ancestor id
+    - Added new test case that detects the original problem
+- [x] BUG: failed to migrate linked data tools cleanly 
+    - Returns error when trying to view tool:
+    - Field See_also_r is missing 'group_field_list' value
+    - Caused by earlier migration failure; possible attamept to hand-edit data
+    - Fixed by removing old collection configuration data; no software change
+- [x] BUG: migrating data doesn't update software version in data
+    - also: editing collection metadata doesn't update collection s/w version
+    - currently save logic of edit form handler calls viewinfo.update_coll_version()
+    - [x] Redefine software comoatibility version update as Collection method
+    - [x] DisplayInfo uses new method
+    - [x] Collection data migration calls new method
+    - [-] Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
+- [x] BUG: Exception in RenderMultiFields_value.renderAttributeError
+    - ("'NoneType' object has no attribute 'get'",)
+    - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
+    - turns out some earlier tests to provide improved reporting had been skipped.
+- [x] BUG: OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
+    - instead of "email address mismatch", reports "was not authenticated".
+    - but if different user id is selected, login propceeds OK
+    - email address check in OIDC handler removed - this is handled and reported by the calling code
+- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
+    - copy site data in directly from `sitedata`
+    - generate all other site data on-the-fly as needed (e.g. context, etc.)
+- [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
+- [x] Lay groundwork in EntityTypeInfo for access control possibly defined per-entity.
+    - Currently used with ad-hoc logic for allowing view of default and unknown users
+    - Replaces similar ad-hoc logic previously in DisplayInfo
+    - Re-worked other direct references to EntityTypeInfo.permissions_map
+- [x] See_also_r field duplicated in field options list
+        - Also defined in Resource_defs: no significant difference other than the field name itself.
+            - See_also_r defined and referenced by:
+                - Carolan_Guitar -> this will be a migration case study
+                - Performance_defs -> (ditto?)
+            - See_also_r referenced by:
+                - [x] Open_evidence
+                - [ ] Performances (via Performance_defs)
+        - [x] Definitions in Resource_defs have been removed.
+- [x] Tweak rendering of empty repeat-group
+- [x] Fix performance data on fast-project system
+- [x] Check all collections migrated on demo system and Fast-project
+- [x] Clean up old data on demo systems from previous migrations (notably groups)
+
+(Sub-release? 0.5.2)
+
+- [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Login sequence from authz error page does not return to original page viewed
-- [ ] Figure out how to preserve defined users when reinstalling the software.
-    - I think it is because the Django sqlite database file is replaced.  Arranging for per-configuration database files (per above) might alleviate this.
-    - Seems to be working, but needs explicit testing to make sure.
-- [ ] update Django version used to latest version designated for long term support (1.8?)
+- [ ] Turtle export option to work around JSON-LD context access problems for now
 - [ ] update pip to latest version in python environment (for continued testing)
+- [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -174,7 +80,14 @@ definition, which could occur when migrating data created in much older software
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] "Type definition" help text is a little confusing (cf 'Entity types ...').
+
+(Sub-release?)
+
+- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
+    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
+    - If absolute URI is stored, can local reference be discovered for hyperlinking?
+    - I think evolvability is served by making these exchangeable
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
@@ -205,9 +118,6 @@ definition, which could occur when migrating data created in much older software
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data
 - [ ] Provide content for the links in the page footer
-- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
-    - copy site data in directly from `sitedata`
-    - generate all other site data on-the-fly as needed (e.g. context, etc.)
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -223,13 +133,6 @@ definition, which could occur when migrating data created in much older software
 - [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
-- [ ] See_also_r field duplicated in field options list?
-    - [ ] Entity_see_also_r duplicates label also used in Journal_defs/See_also_r (?)
-        - What uses Entity_see_also_r?  Is this needed?  Can it be sensibly relabelled or removed?  
-            - RDF_schema_defs/_view/Class
-            - _view/Vocab_view
-        - Or can Journal_defs use Entity_see_also_r ?  [Maybe - check definition and delete Journal_defs version if no difference]
-        - Tried changing Journal_defs See_also_r to use Group_set_row render type: maybe this will be enough?  IT MAY BE ENOUGH TO PREVENT CLASHES WHEN GENERATING A CONTEXT, BUT THE DIFFERENT DEFINITIONS REMAIN.  Change label for one?  Use same id for both?
 
 Technical debt:
 
@@ -241,7 +144,8 @@ Technical debt:
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
-- [ ] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+- [x] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
+    - turns out it is stil needed to ensure uniqueness with /l/, /v/, etc. URLs.
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
@@ -251,7 +155,7 @@ Technical debt:
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
-- [ ] Inconsistent `@id` values in site data
+- [ ] Inconsistent `@id` values in site data ("." or "<type-id>/<entity-id>")
 - [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
@@ -263,20 +167,19 @@ Technical debt:
 
 Data collection definitions:
 
-- [ ] VoID, DCAT, PROV
+- [ ] VoID, DCAT, PROV, CRM
 
 
 Usability notes:
 
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
 - [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
-- [ ] Continuation from login is sometimes/often lost (provide example)
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
         - should edits to the current type be saved first?
     - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
-- [ ] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
+- [x] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
     - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
     - not seeing the problem here: revisit when problem surefaces again.
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
@@ -287,7 +190,7 @@ Usability notes:
     - List of types, linked to lists?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
-- [ ] Better support for type renaming: hunt out all references and rename them too
+- [ ] Better support for type renaming: hunt out all references and rename them too?
 - [ ] Consistency checks for references to missing types (e.g. following rename)
 - [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
@@ -316,7 +219,7 @@ Usability notes:
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
 - [x] Option to re-order fields on view form
-- [ ] When creating type, default URI to be based on id entered
+- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
 - [ ] List display paging
 - [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
@@ -325,7 +228,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
-- [ ] Final elimination of Recordroup (field group) entities
+- [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
     - [ ] eliminate _field/Field_groupref instances
     - [ ] eliminate _view/Field_group_view, _list/Field_group_list
@@ -346,16 +249,17 @@ Notes for Future TODOs:
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
 - [ ] Keyboard shortcuts on forms - C-S to save, ...?
 - [ ] Implement at least one other identify provider (ORCID?)
-    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).  
+    - [ ] ORCID authentication - apparently OAuth2 based (cf. contact at JISC RDS workshop).
         - See also http://support.orcid.org/forums/175591-orcid-ideas-forum/suggestions/6478669-provide-authentication-with-openid-connect
         - UPDATE: See: 
         -   http://support.orcid.org/knowledgebase/articles/343182
-        -   http://support.orcid.org/knowledgebase/articles/343182-register-a-public-api-client-application
+        -   http://support.orcid.org/knowledgebase articles/343182-register-a-public-api-client-application
         -   http://members.orcid.org/api/introduction-orcid-public-api
     - [ ] Other OpenID Connect providers; e.g. see http://openid.net/certification/
         - hard to find actual provider service other than Google
     - [ ] https://aarc-project.eu
     - tried investigating EUDat, which looks promising but fails with invalid certificate
+    - see also notes from discussion with Matthew Dovey at CrossRef event in Oxford (EOSC?)
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
 - [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
@@ -439,6 +343,9 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
+- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility forthat collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
+    - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
+
 
 
 # Feedback

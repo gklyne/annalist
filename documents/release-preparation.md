@@ -25,10 +25,10 @@
     - (check ~/annalist_site/annalist.log for errors/warnings)
 - [x] Test 'personal' deployment in actual use
     - `annalist-manager runserver`
-- [-] Documentation and tutorial updates
-- [-] Demo screencast update
+- [ ] Documentation and tutorial updates
+- [ ] Demo screencast update
 - [x] Check all recent changes are committed (`git status`)
-- [x] Tag unstable release version on develop branch (e.g. "release-0.1.37")
+- [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
     - `git tag -a release-x.y.z`
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
@@ -45,19 +45,19 @@
 - [x] Reinstall and re-run test suite
 - [x] Add release highlights description to release notes (create new release notes file if needed)
 - [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [x] Review roadmap (`documents/roadmap.md`)
-- [x] Update version number in scripts, documents, etc.
+- [ ] Review roadmap (`documents/roadmap.md`)
+- [ ] Update version number in scripts, documents, etc.
     - [x] Release notes
     - [x] documents/installing-annalist.md
     - [x] documents/roadmap.md
     - [x] documents/pages/index.html
-    - [-] documents/tutorial/annalist-tutorial.adoc
+    - [ ] documents/tutorial/annalist-tutorial.adoc
     - [x] src/newkit_to_annalist_net.sh
     - [x] src/newkit_to_annalist_dev.sh
     - [x] src/newkit_to_conina_ubuntu.sh
     - [x] Docker build scripts and makefiles
-- [x] Create announcement text in `documents/release-notes/announce_0.1.*.md`
-- [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
+- [x] Create announcement text in `documents/release-notes/announce_0.5.*.md`
+- [x] Test installation tools (and check for new dependencies; update setup.py as needed).
     - [x] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
     - [x] login to dev.annalist.net as 'graham', then
@@ -72,40 +72,31 @@
         annalist-manager defaultadmin
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
-- [-] Regenerate tutorial document
+- [ ] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 - [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
-    - [x] ssh to annalist@annalist.net
-    - [x] `. backup_annalist_site.sh`
-    - [x] `mv annalist_site_2015MMDD/ annalist_site_2017----`
-    - [x] `killall python`
-    - [x] `. anenv/bin/activate`
-    - [x] `pip uninstall annalist`
-    - [x] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
-    - [x] `annalist-manager runtests`
-    - [-] `mv annalist_site/annalist.log archive/yyyymmdd-annalist.log`
-    - [x] annalist-manager updatesitedata
-    - [x] annalist-manager migrateallcollections
-    - [x] update installed collections:
-        - `annalist-manager installcoll Resource_defs --force`
-        - `annalist-manager installcoll Concept_defs --force`
-        - `annalist-manager installcoll Journal_defs --force`
-        - `annalist-manager installcoll RDF_schema_defs --force`
-        - `annalist-manager installcoll Annalist_schema --force`
-        - `annalist-manager installcoll Namespace_defs --force`
-    - [x] `. update-run-annalist.sh`
-    - [x] `cat annalist.out`
-- [-] Update front page link at annalist.net:
+- [x] Update and test demo installation on annalist.net
+    - [ ] ssh to annalist@annalist.net
+    - [ ] `. backup_annalist_site.sh`
+    - [ ] `mv annalist_site_2015MMDD/ annalist_site_2017----`
+    - [ ] `killall python`
+    - [ ] `. anenv/bin/activate`
+    - [ ] `pip uninstall annalist`
+    - [ ] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
+    - [ ] `annalist-manager runtests`
+    - [ ] `. update-annalist-site.sh`
+    - [ ] `. update-run-annalist.sh`
+    - [ ] `cat annalist.out`
+- [x] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
-- [-] Update tutorial document at annalist.net
+- [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
 - [x] Check out demo system.
-- [x] Commit changes
-- [x] Upload to PyPI (see below)
-- [x] Tag release on release branch
+- [ ] Commit changes ("Preparing release x.y.z")
+- [ ] Upload to PyPI (see below)
+- [ ] Tag release on release branch
     - `git tag -a release-x.y.z`
     - For message:
         "Annalist release x.y.z: (one-line description of release)"

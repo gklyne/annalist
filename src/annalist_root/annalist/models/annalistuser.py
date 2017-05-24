@@ -48,18 +48,18 @@ class AnnalistUser(EntityData):
     _entitypath     = layout.COLL_USER_PATH
     _entityfile     = layout.USER_META_FILE
 
-    def __init__(self, parent, type_id):
+    def __init__(self, parent, user_id):
         """
         Initialize a new AnnalistUser object, without metadata (yet).
 
         parent      is the parent entity from which the type is descended.
-        type_id     the local identifier for the record type
+        user_id     the local identifier for the user
         altparent   is a site object to search for this new entity,
                     allowing site-wide AnnalistUser values to be found.
         """
-        super(AnnalistUser, self).__init__(parent, type_id)
-        # log.debug("AnnalistUser %s: dir %s"%(type_id, self._entitydir))
-        # log.debug("AnnalistUser %s: url %s, viewurl %s"%(type_id, self._entityurl, self._entityviewurl))
+        super(AnnalistUser, self).__init__(parent, user_id)
+        # log.debug("AnnalistUser %s: dir %s"%(user_id, self._entitydir))
+        # log.debug("AnnalistUser %s: url %s, viewurl %s"%(user_id, self._entityurl, self._entityviewurl))
         return
 
     def _migrate_values(self, userpermissions):

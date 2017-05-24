@@ -301,39 +301,42 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        # log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
         target_type = self._field_description.get('field_ref_type',  None)
         target_key  = self._field_description.get('field_ref_field', None)
-        # log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr
+                field_val = self.get_field_value()
+                log.debug("field_val: %s"%(field_val,))
                 type_id, entity_id = split_type_entity_id(self.get_field_value(), target_type)
-                if type_id and entity_id:
-                    # Get entity type info
-                    coll     = self._field_description._collection
-                    typeinfo = EntityTypeInfo(coll, type_id)
-                    # Check access permission, assuming user has "VIEW" permission in collection
-                    # This is primarily to prevent a loophole for accessing user account details
-                    #@@TODO: pass actual user permissions in to bound_field or field description 
-                    #        or extra params
-                    user_permissions = ["VIEW"]
-                    req_permissions  = list(set( typeinfo.permissions_map[a] for a in ["view", "list"] ))
-                    if all([ p in user_permissions for p in req_permissions]):
-                        if entity_id is None or entity_id == "":
-                            raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))
-                        targetentity = typeinfo.get_entity(entity_id)
-                        if targetentity is None:
-                            raise TargetEntityNotFound_Error(value=(target_type, entity_id))
-                        targetentity = typeinfo.get_entity_implied_values(targetentity)
-                        self._targetvals = get_entity_values(typeinfo, targetentity)
-                        # log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
-                    else:
-                        log.warning(
-                            "bound_field.get_targetvals: target value type %s requires %r permissions"%
-                            (target_type, req_permissions)
-                            )
-        # log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
+                log.debug("bound_field.get_targetvals: type_id %s, entity_id %s"%(type_id, entity_id))
+                # Get entity type info
+                coll     = self._field_description._collection
+                typeinfo = EntityTypeInfo(coll, type_id)
+                # Check access permission, assuming user has "VIEW" permission in collection
+                # This is primarily to prevent a loophole for accessing user account details
+                #@@TODO: pass actual user permissions in to bound_field or field description 
+                #        or extra params
+                user_permissions    = ["VIEW"]
+                req_permissions_map = typeinfo.get_entity_permissions_map(entity_id)
+                req_permissions     = list(set( req_permissions_map[a] for a in ["view", "list"] ))
+                if all([ p in user_permissions for p in req_permissions]):
+                    if entity_id is None or entity_id == "":
+                        raise TargetIdNotFound_Error(value=(typeinfo.type_id, self.field_name))
+                    targetentity = typeinfo.get_entity(entity_id)
+                    if targetentity is None:
+                        raise TargetEntityNotFound_Error(value=(target_type, entity_id))
+                    targetentity = typeinfo.get_entity_implied_values(targetentity)
+                    self._targetvals = get_entity_values(typeinfo, targetentity)
+                    log.debug("bound_field.get_targetvals: %r"%(self._targetvals,))
+                else:
+                    log.warning(
+                        "bound_field.get_targetvals: target value type %s requires %r permissions"%
+                        (target_type, req_permissions)
+                        )
+        log.debug("bound_field.get_targetvals: targetvals %r"%(self._targetvals,))
         return self._targetvals
 
     def get_link_continuation(self, link):

@@ -33,7 +33,7 @@ from annalist.util                          import valid_id
 from annalist.models.site                   import Site
 from annalist.models.sitedata               import SiteData
 from annalist.models.collection             import Collection
-# from annalist.models.annalistuser           import AnnalistUser
+from annalist.models.annalistuser           import AnnalistUser
 
 # from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
 # from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
@@ -62,6 +62,10 @@ from entity_testcolldata    import (
     collectiondata_create_values, collectiondata_values, collectiondata_read_values,
     collectiondata_view_form_data
     )
+from entity_testuserdata    import (
+    annalistuser_view_form_data
+    )
+
 
 #   -----------------------------------------------------------------------------
 #
@@ -98,17 +102,26 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _check_collection_data_values(self, coll_id=None):
+    def _check_collection_data_values(self, coll_id=None, coll_label=None, coll_descr=None):
         """
         Helper function checks content of annalist collection data
         """
         self.assertTrue(Collection.exists(self.testsite, coll_id))
-        t = Collection.load(self.testsite, coll_id)
-        self.assertEqual(t.get_id(), coll_id)
-        self.assertEqual(t.get_view_url_path(), collection_view_url(coll_id="testcoll"))
-        v = collectiondata_values(coll_id=coll_id)
-        self.assertDictionaryMatch(t.get_values(), v)
-        return t
+        c = Collection.load(self.testsite, coll_id)
+        self.assertEqual(c.get_id(), coll_id)
+        self.assertEqual(c.get_view_url_path(), collection_view_url(coll_id="testcoll"))
+        v = collectiondata_values(
+            coll_id=coll_id, coll_label=coll_label, coll_descr=coll_descr
+            )
+        self.assertDictionaryMatch(c.get_values(), v)
+        return c
+
+    def _check_annalist_user_perms(self, user_id, user_perms):
+        self.assertTrue(AnnalistUser.exists(self.testcoll, user_id))
+        u = AnnalistUser.load(self.testcoll, user_id)
+        self.assertEqual(u.get_id(), user_id)
+        self.assertEqual(u[ANNAL.CURIE.user_permission], user_perms)
+        return
 
     #   -----------------------------------------------------------------------------
     #   Form rendering and access tests
@@ -388,27 +401,74 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     #   Form response tests
     #   -----------------------------------------------------------------------------
 
-    def _no_test_post_copy_coll(self):
-        # The main purpose of this test is to check that user permissions are saved properly
-        self.assertFalse(CollectionData.exists(self.testcoll, "copyuser"))
+    def test_edit_collection_metadata(self):
+        # This test performs a GET to retrieve values used in a form,
+        # then a POST to save updated collection metadata.
+        # This test is intended to test a problem encountered with updated 
+        # entity copying logic that needs to take special account of collection
+        # entities being presented as offspring of the site while being stored
+        # as part of a collection.
+        #
+        coll_id = "testcoll"
+        self.assertTrue(Collection.exists(self.testsite, coll_id))
+        c = Collection.load(self.testsite, coll_id)
+        self.assertEqual(c.get_id(), coll_id)
+        self.assertEqual(c.get_view_url_path(), collection_view_url(coll_id="testcoll"))
+        # GET collection metadata form data, and test values
+        u = collectiondata_url(coll_id="testcoll")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          "_coll")
+        self.assertEqual(r.context['entity_id'],        "testcoll")
+        self.assertEqual(r.context['orig_id'],          "testcoll")
+        self.assertEqual(r.context['orig_coll'],        layout.SITEDATA_ID)
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        orig_coll = r.context['orig_coll']
+        # Assemble and POST form data to =updated collection metadata
+        new_label = "Updated collection metadata"
+        f = collectiondata_view_form_data(
+            coll_id="testcoll", 
+            action="edit", 
+            coll_label=new_label,
+            # orig_coll="None"
+            orig_coll=layout.SITEDATA_ID
+            )
+        u = collectiondata_view_url(coll_id="testcoll", action="edit")
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        self.assertEqual(r['location'],   TestBaseUri+"/c/_annalist_site/d/_coll/")
+        # Check updated collection data
+        self._check_collection_data_values(coll_id="testcoll", coll_label=new_label)
+        return
+
+    def test_post_copy_user(self):
+        # The main purpose of this test is to check that user permissions are 
+        # saved properly
+        self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
         f = annalistuser_view_form_data(
-            action="copy", orig_id="_default_coll_perms",
+            action="copy", orig_id="_default_user_perms",
             user_id="copyuser",
             user_name="User copyuser",
             user_uri="mailto:copyuser@example.org",
-            user_permissions="VIEW CREATE UPDATE DELETE"
+            user_permissions="VIEW CREATE UPDATE DELETE",
+            orig_coll="_annalist_site"
             )
         u = entitydata_edit_url(
-            "copy", "testcoll", "_coll", entity_id="_default_coll_perms", view_id="User_view"
+            "copy", "testcoll", "_user", entity_id="_default_user_perms", view_id="User_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'], TestBaseUri+"/c/testcoll/d/_user/")
         # Check that new record type exists
-        self.assertTrue(CollectionData.exists(self.testcoll, "copyuser"))
-        self._check_annalist_coll_values("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
+        self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
+        self._check_annalist_user_perms("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
         return
 
 # End.
