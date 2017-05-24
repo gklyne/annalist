@@ -10,63 +10,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Have tutorial; can this be used?
 - [ ] Update tutorial to cover inheritance of definitions
 - [ ] New demo screencast(s)
-- [.] Build up corpus of FAQs
+- [ ] Build up corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 
 
-# Version 0.5.1, towards 0.5.2
-
-- [x] BUG: edit collection metadata fails on save with
-        Problem with collection identifier
-        Collection Linked_data_tools already exists
-    - Original form is not providing correct original collection id
-    - Added logic to entitytypeinfo to handle special case of collection ancestor id
-    - Modified entityedit GERT handler touse entitytypeinfo to access ancestor id
-    - Added new test case that detects the original problem
-- [x] BUG: failed to migrate linked data tools cleanly 
-    - Returns error when trying to view tool:
-    - Field See_also_r is missing 'group_field_list' value
-    - Caused by earlier migration failure; possible attamept to hand-edit data
-    - Fixed by removing old collection configuration data; no software change
-- [x] BUG: migrating data doesn't update software version in data
-    - also: editing collection metadata doesn't update collection s/w version
-    - currently save logic of edit form handler calls viewinfo.update_coll_version()
-    - [x] Redefine software comoatibility version update as Collection method
-    - [x] DisplayInfo uses new method
-    - [x] Collection data migration calls new method
-    - [-] Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
-- [x] BUG: Exception in RenderMultiFields_value.renderAttributeError
-    - ("'NoneType' object has no attribute 'get'",)
-    - this is caused by a reference to a non-existent field within a repeated field group: the error is in the data, due to old (erroneous) definitions not being removed, but the software reporting of this is unhelpful.
-    - turns out some earlier tests to provide improved reporting had been skipped.
-- [x] BUG: OIDC login sequence returns wrong message if there is email address mismatch (e.g., logged in to wrong Google account)
-    - instead of "email address mismatch", reports "was not authenticated".
-    - but if different user id is selected, login propceeds OK
-    - email address check in OIDC handler removed - this is handled and reported by the calling code
-- [x] Remove dependency of annalist-manager on test-suite-generated data when creating/updating site
-    - copy site data in directly from `sitedata`
-    - generate all other site data on-the-fly as needed (e.g. context, etc.)
-- [x] "Type definition" help text is a little confusing (cf 'Entity types ...').
-- [x] Lay groundwork in EntityTypeInfo for access control possibly defined per-entity.
-    - Currently used with ad-hoc logic for allowing view of default and unknown users
-    - Replaces similar ad-hoc logic previously in DisplayInfo
-    - Re-worked other direct references to EntityTypeInfo.permissions_map
-- [x] See_also_r field duplicated in field options list
-        - Also defined in Resource_defs: no significant difference other than the field name itself.
-            - See_also_r defined and referenced by:
-                - Carolan_Guitar -> this will be a migration case study
-                - Performance_defs -> (ditto?)
-            - See_also_r referenced by:
-                - [x] Open_evidence
-                - [ ] Performances (via Performance_defs)
-        - [x] Definitions in Resource_defs have been removed.
-- [x] Tweak rendering of empty repeat-group
-- [x] Fix performance data on fast-project system
-- [x] Check all collections migrated on demo system and Fast-project
-- [x] Clean up old data on demo systems from previous migrations (notably groups)
-
-(Sub-release? 0.5.2)
+# Version 0.5.3, towards 0.5.4
 
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Login sequence from authz error page does not return to original page viewed
@@ -138,14 +87,9 @@ Technical debt:
 
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
-- [x] Rework Bib_* definitions/enumerations so that they don't need special mention in EntityInfo
-- [x] Consider treating Enum types as regular types under /d/?
-- [x] Field layout padding logic at end of row is dependent on height of edit fields; consider re-working this in `fieldlistvaluemap` to generate fields in groups, where each group is rendered as a separate row.
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
-- [x] Consider eliminating the /c/ directory (but provide redirects for link compatibility/coolness)
-    - turns out it is stil needed to ensure uniqueness with /l/, /v/, etc. URLs.
 - [ ] review view URL returned for entities found with alternative parentage:
     - currently force URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
@@ -160,7 +104,7 @@ Technical debt:
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
-- [x] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
+- [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 
@@ -179,9 +123,6 @@ Usability notes:
         - how is the new type name defined?  (Also the new view and list.)
         - should edits to the current type be saved first?
     - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
-- [x] Group value type: use target type for @id fields, but also allow intermediate types (e.g., for prov:qualifiedAssociation -> prov:Association).  Check how this plays with changes made in previous release per Mat's comment.
-    - group target type field is used for field selection - should default to type of containing entity or new type.  Referenced type is not relevant there.
-    - not seeing the problem here: revisit when problem surefaces again.
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
     - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
@@ -192,14 +133,8 @@ Usability notes:
     - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too?
 - [ ] Consistency checks for references to missing types (e.g. following rename)
-- [x] Display entity-id *and* label values in drop-downs?  (e.g. "id (label)")
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
 - [ ] Persist item selection to refreshed display when move-up/movedown clicked?
-- [x] Easy(er) switch to alternative views (e.g. manufacture, performance for Carolan events)
-- [x] OR... allow an entity to specify its own default view? (this is now handled by subtyping)
-- [x] Type/List/View dropdowns: normally show only those types/lists/views defined by the current collection, but ensure it is still reasonably easy to get lists of built-in types as well.  Details need to be worked out.
-- [x] View forms need title (indicating type of thing viewed)?  Or let user define label for Id field?
-- [x] Provide field type that can be used to place fixed annotations/instructions in a form
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [x] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies list for CruisingLog
@@ -218,7 +153,6 @@ Usability notes:
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
-- [x] Option to re-order fields on view form
 - [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
 - [ ] List display paging
 - [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
@@ -290,10 +224,6 @@ Notes for Future TODOs:
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
     - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
-- [x] Collection metadata editing requires site-level permissions; 
-    - to apply collection level permissions wout require entity level access control settings
-    - think about this?
-    - see EntityTypeInfo.__init__
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider render type option for repeat group rows without headings? (simple repeat group doesn't hack it).
@@ -301,8 +231,6 @@ Notes for Future TODOs:
 - [ ] Scrolling through views from list - e.g. Next/Prev item buttons? (Iris G)
 - [ ] Option to scan for broken entity references (e.g., due to removal, renaming)
 - [ ] Extend task definitions to include validation: allow error reporting
-- [x] Allow comment field to be left blank and use label instead?  Maybe not: later, allow comment field to default to label.
-- [x] field renderer for unified import or upload resource?
 - [ ] Improve reporting of errors due to invalid view/field definitions, etc.
 - [ ] add 404 handling logic to generate message and return to next continuation up the chain.
     - [ ] reinstate get_entity_data in displayinfo, and include 404 response logic.
@@ -320,15 +248,7 @@ Notes for Future TODOs:
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
 - [ ] Associate a prefix with a collection
-- [x] Provide a way to edit collection metadata (e.g. link from Customize page)
-- [x] Provide a way to edit site metadata
-- [x] Provide a way to view/edit site user permissions
-- [x] Provide a way to view/edit site type/view/list/etc descriptions
-    - Not edit: site data should be stable and controlled.
-    - Provided collection structure inheritiance instead.
 - [ ] Undefined list error display, or any error - include link to collection in top bar
-- [x] Help display for view: use commentary text from view description; thus can tailor help for each view.
-- [x] Use markdown directly for help text
 - [ ] Think about fields that return subgraph
     - how to splice subgraph into parent - "lambda nodes"?
     - does field API support this? Check.
