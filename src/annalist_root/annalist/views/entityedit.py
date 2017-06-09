@@ -160,7 +160,7 @@ class GenericEntityEditView(AnnalistGenericView):
         context_extra_values = (
             { 'request_url':            self.get_request_path()
             , 'url_type_id':            type_id
-            , 'orig_id':                entityvals['entity_id']
+            , 'orig_id':                viewinfo.src_entity_id
             , 'orig_type':              type_id
             , 'orig_coll':              orig_entity_coll_id
             , 'edit_view_enable':       'disabled="disabled"'
@@ -327,7 +327,7 @@ class GenericEntityEditView(AnnalistGenericView):
         display, except that a "new" action becomes "edit" on the assumption that
         the new entity is saved before the refresh occurs.
 
-        'params', if supplied, is a dioctionary of additional query parameters to be added
+        'params', if supplied, is a dictionary of additional query parameters to be added
         to the resulting URI.
 
         If the entity has been renamed on the submitted form, this is taken into account

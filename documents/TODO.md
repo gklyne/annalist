@@ -17,7 +17,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.5.3, towards 0.5.4
 
+- [ ] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
+    - (Workaround: copy, save, then edit Id seems to work OK.)
+    - Related: when copying from oparent collection, similar error even if no change to Id.
+- [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
+- [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
+- [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
+        # <property label>
+        Zero, one or more instances of [<range type label>]($BASE:_type/<range type>).
+- [ ] When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
+- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+- [ ] Improve styling for printed form of Annalist pages (currently it looks a mess)
 - [ ] Login sequence from authz error page does not return to original page viewed
 - [ ] Turtle export option to work around JSON-LD context access problems for now
 - [ ] update pip to latest version in python environment (for continued testing)
@@ -116,6 +128,7 @@ Data collection definitions:
 
 Usability notes:
 
+- [ ] In field definition, "Entity type" should be drop-dwon, with subtype logic handling an initial dereference to obtain the type URI.
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
 - [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
 - [ ] Task button option to copy type+view+list and update names and URIs

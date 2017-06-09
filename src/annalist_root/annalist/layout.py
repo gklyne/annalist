@@ -271,6 +271,7 @@ COLL_DIRS_PREV  = map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
 SUFFIX_LIST             = ""
 SUFFIX_VIEW             = ""
 SUFFIX_TYPE             = ""
+SUFFIX_SUBTYPE          = "_sub"
 SUFFIX_REPEAT           = "_r"
 SUFFIX_REPEAT_P         = "_r"
 SUFFIX_REPEAT_G         = "_r"

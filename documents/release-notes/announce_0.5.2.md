@@ -27,11 +27,11 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 I've just released an update (0.5.2) of Annalist.  
 
-This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in release 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
+This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in release 0.5.0.  It also contains some minor presentation, help text and documentation enhancements (including an initial set of FAQs).
 
 The full announcement is at: 
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
-https://groups.google.com/d/msg/annalist-discuss/RTZMn4m4mQ4/yqvogukDAwAJ
+https://groups.google.com/d/msg/annalist-discuss/BBQabaHKudE/3aflgvUHBgAJ
 
 See also: 
 

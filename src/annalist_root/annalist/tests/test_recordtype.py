@@ -295,7 +295,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             ):
         # Common entity attributes
         self.assertEqual(response.context['entity_id'],        type_id)
-        self.assertEqual(response.context['orig_id'],          orig_type_id or type_id)
+        self.assertEqual(response.context['orig_id'],          orig_type_id)
         self.assertEqual(response.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(response.context['orig_type'],        layout.TYPE_TYPEID)
         self.assertEqual(response.context['coll_id'],          'testcoll')
@@ -563,14 +563,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['orig_id'],          None)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
         self._check_context_fields(r, 
             action="new",
-            type_id="00000001",
+            type_id="00000001", orig_type_id=None,
             type_label="(New type initial values - label)",
             type_uri="", type_supertype_uris=""
             )
@@ -590,14 +590,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_type_01")
-        self.assertEqual(r.context['orig_id'],          "Default_type_01")
+        self.assertEqual(r.context['orig_id'],          "Default_type")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
         self._check_context_fields(r, 
             action="copy",
-            type_id="Default_type_01",
+            type_id="Default_type_01", orig_type_id="Default_type",
             type_label="Default record",
             type_uri="", type_supertype_uris=""
             )
@@ -638,7 +638,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             action="edit",
-            type_id="Default_type",
+            type_id="Default_type", orig_type_id="Default_type",
             type_label="Default record",
             type_uri="annal:Default_type", type_supertype_uris=""
             )

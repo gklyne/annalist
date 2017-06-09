@@ -390,7 +390,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          "testtype")
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['orig_id'],          None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "")
         return
@@ -403,7 +403,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         check_type_view_context_fields(self, r, 
             action="edit",
-            entity_id="entity1", orig_entity_id=None,
+            entity_id="entity1", orig_entity_id="entity1",
             type_id="testtype",
             type_label="Entity testcoll/testtype/entity1",
             type_comment="Entity coll testcoll, type testtype, entity entity1",
@@ -423,7 +423,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         check_type_view_context_fields(self, r, 
             action="copy",
-            entity_id="entity1_01", orig_entity_id=None,
+            entity_id="entity1_01", orig_entity_id="entity1",
             type_id="testtype",
             type_label="Entity testcoll/testtype/entity1",
             type_comment="Entity coll testcoll, type testtype, entity entity1",

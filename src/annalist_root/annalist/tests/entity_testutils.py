@@ -711,8 +711,10 @@ def check_type_view_context_fields(test, response,
         type_aliases=[]
         ):
     # Common entity attributes
+    # if orig_entity_id == "":
+    #     orig_entity_id = entity_id
     test.assertEqual(response.context['entity_id'],        entity_id)
-    test.assertEqual(response.context['orig_id'],          orig_entity_id or entity_id)
+    test.assertEqual(response.context['orig_id'],          orig_entity_id)
     test.assertEqual(response.context['type_id'],          type_id)
     test.assertEqual(response.context['orig_type'],        type_id)
     test.assertEqual(response.context['coll_id'],          'testcoll')

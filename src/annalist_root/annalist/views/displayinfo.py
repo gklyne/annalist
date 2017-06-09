@@ -438,7 +438,7 @@ class DisplayInfo(object):
             assert self.curr_typeinfo is not None
             self.src_entity_id  = entity_id
             self.curr_entity_id = entity_id
-            self.orig_entity_id = entity_id
+            # self.orig_entity_id = entity_id # @@ messes up copy operation??
             if action in ["new", "copy"]:
                 self.use_entity_id = self.curr_typeinfo.entityclass.allocate_new_id(
                     self.curr_typeinfo.entityparent, base_id=entity_id

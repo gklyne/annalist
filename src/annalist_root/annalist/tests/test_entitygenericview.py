@@ -447,7 +447,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         check_type_view_context_fields(self, r, 
             action="edit",
-            entity_id="entity1", orig_entity_id=None,
+            entity_id="entity1", orig_entity_id="entity1",
             type_id="testtype",
             type_label="Entity testcoll/testtype/entity1",
             type_comment="Entity coll testcoll, type testtype, entity entity1",
