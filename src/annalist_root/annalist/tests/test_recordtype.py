@@ -449,7 +449,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 "Define initial view and list definitions for the current type.  "+
                 "(View and list type information and URI are taken from the current type; "+
                 "other fields are taken from the corresponding &#39;_initial_values&#39; record, "+
-                "and may be extended or modified later.)"
+                "and may be extended or modified later.)",
+            button_subtype_view_list_tip=
+                "Create a subtype of the current type with associated view and list definitions.  "+
+                "As far as sensible, details are copied and enhanced from the current type and "+
+                "its associated view and list."+
+                ""
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -533,9 +538,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
-                  <input type="submit" name="Define_view_list" value="Define view+list"
+                  <input type="submit" name="Define_view_list" 
+                         value="Define view+list"
                          title="%(button_view_list_tip)s" />
-                  <input type="submit" name="customize" value="Customize"
+                  <input type="submit" name="Define_subtype_view_list" 
+                         value="Define subtype+view+list"
+                         title="%(button_subtype_view_list_tip)s" />
+                  <input type="submit" name="customize" 
+                         value="Customize"
                          title="Open 'Customize' view for collection 'testcoll'." />
                 </div>
               </div>
@@ -957,8 +967,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         # Check content of type, view and list
         common_vals = (
-            { 'type_id':      "tasktype"
-            , 'type_label':   "RecordType testcoll/tasktype"
+            { 'type_id':    "tasktype"
+            , 'type_label': "RecordType testcoll/tasktype"
             })
         expect_type_values = (
             { 'annal:type':         "annal:Type"
@@ -969,12 +979,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             })
         expect_view_values = (
             { 'annal:type':         "annal:View"
-            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals['type_label']
+            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
             })
         expect_list_values = (
             { 'annal:type':         "annal:List"
-            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals['type_label']
+            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals

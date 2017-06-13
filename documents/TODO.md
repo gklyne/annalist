@@ -19,13 +19,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
     - (Workaround: copy, save, then edit Id seems to work OK.)
-    - Related: when copying from oparent collection, similar error even if no change to Id.
+    - Related: when copying from parent collection, similar error even if no change to Id.
+    - @@fixed?  test
 - [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
+- [ ] Make it easier to create subtype + view + list...
+    - Create simplistic "create subtype +..." button for experimentation
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
         # <property label>
         Zero, one or more instances of [<range type label>]($BASE:_type/<range type>).
+- [ ] Default type list/view comments: include link to type
 - [ ] When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
@@ -44,6 +48,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
+- [ ] Make it easier to create subtype + view + list...
+    - Re UI: use alternative view with additional fields and actions?
+    - Create subtype invokes alternative view with key fields filled in?
+    - Get some experience with "crude" solution first
+    - test case for subtype creation stages
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
