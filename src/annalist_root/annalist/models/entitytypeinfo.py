@@ -535,6 +535,24 @@ class EntityTypeInfo(object):
             entity = self.get_entity(entity_id, action="new")
         return entity
 
+    def get_copy_entity(self, entity_id, copy_entity_id):
+        """
+        Read or create an entity with the indicated entity_id.
+
+        If the identified entity does not already exist, a new entity is created 
+        but not (yet) saved.
+
+        The newly created entity is a copy of 'copy_entity_id'.        
+        """
+        entity_id = extract_entity_id(entity_id)
+        entity    = self.get_entity(entity_id)
+        if entity is None:
+            entity = self._new_entity(entity_id)
+            entity.set_values(
+                self.get_initial_entity_values(entity_id, copy_entity_id=copy_entity_id)
+                )
+        return entity
+
     def get_entity_implied_values(self, entity):
         """
         Adds implied values to the supplied entity value (e.g. aliases),
@@ -653,7 +671,7 @@ class EntityTypeInfo(object):
                     yield self.get_entity_implied_values(self.get_entity(eid))
         return
 
-    def get_initial_entity_values(self, entity_id):
+    def get_initial_entity_values(self, entity_id, copy_entity_id="_initial_values"):
         """
         Returns an initial value dictionary for the indicated entity.
 
@@ -666,13 +684,15 @@ class EntityTypeInfo(object):
             , RDFS.CURIE.label:     ""
             , RDFS.CURIE.comment:   ""
             })
-        init_entity = self.get_entity("_initial_values")
+        init_entity = self.get_entity(copy_entity_id)
         if init_entity:
             values = init_entity.get_values()
-            values.pop("@id", None)
-            values.pop(ANNAL.CURIE.id,  None)
-            values.pop(ANNAL.CURIE.url, None)
-        values[ANNAL.CURIE.id] = entity_id
+            values.pop("@id",              None)
+            values.pop(ANNAL.CURIE.id,     None)
+            values.pop(ANNAL.CURIE.url,    None)
+        values[ANNAL.CURIE.id]      = entity_id
+        values[RDFS.CURIE.label]    = ""
+        values[RDFS.CURIE.comment]  = ""
         return values
 
     def get_fileobj(self, entity_id, name, typeuri, mimetype, mode):

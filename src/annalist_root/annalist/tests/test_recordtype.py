@@ -434,9 +434,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # log.info(r.content)   #@@
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="00000001",
-            default_label="(New type initial values - label)",
+            default_label="",
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
-            default_label_esc="(New type initial values - label)",
+            default_label_esc="",
             default_comment_esc=context_view_field(r.context, 2, 0)['field_value'],
             tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
             tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
@@ -450,6 +450,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 "(View and list type information and URI are taken from the current type; "+
                 "other fields are taken from the corresponding &#39;_initial_values&#39; record, "+
                 "and may be extended or modified later.)",
+            button_subtype_tip=
+                "Create a subtype of the current type.  "+
+                "(View and list type identifiers are copied from the current type; "+
+                "the URI of the current type is inserted as a supertype URI of the new type; "+
+                "other fields are taken from the corresponding '_initial_values' record, "+
+                "and may be extended or modified later.)"+
+                "",
             button_subtype_view_list_tip=
                 "Create a subtype of the current type with associated view and list definitions.  "+
                 "As far as sensible, details are copied and enhanced from the current type and "+
@@ -541,9 +548,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                   <input type="submit" name="Define_view_list" 
                          value="Define view+list"
                          title="%(button_view_list_tip)s" />
-                  <input type="submit" name="Define_subtype_view_list" 
-                         value="Define subtype+view+list"
-                         title="%(button_subtype_view_list_tip)s" />
+                  <input type="submit" name="Define_subtype" 
+                         value="Define subtype"
+                         title="%(button_subtype_tip)s" />
                   <input type="submit" name="customize" 
                          value="Customize"
                          title="Open 'Customize' view for collection 'testcoll'." />
@@ -581,7 +588,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._check_context_fields(r, 
             action="new",
             type_id="00000001", orig_type_id=None,
-            type_label="(New type initial values - label)",
+            type_label="",
             type_uri="", type_supertype_uris=""
             )
         return

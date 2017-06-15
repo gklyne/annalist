@@ -76,12 +76,13 @@ class RecordList(EntityData):
             entitydata[fkey] = make_type_entity_id(
                 ftype, extract_entity_id(entitydata[fkey])
                 )
-        for f in entitydata[ANNAL.CURIE.list_fields]:
-            field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
-            if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
-            if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
+        if ANNAL.CURIE.list_fields in entitydata:
+            for f in entitydata[ANNAL.CURIE.list_fields]:
+                field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
+                if field_id == "Field_render":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
+                if field_id == "Field_type":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

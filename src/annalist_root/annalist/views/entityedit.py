@@ -1822,19 +1822,25 @@ class GenericEntityEditView(AnnalistGenericView):
         #@@------------------------------------------------------
 
         if task_id == entitytypeinfo.TASK_ID+"/Define_view_list":
+            if viewinfo.check_authorization("edit"):
+                return viewinfo.http_response
             # Extract info from entityformvals
             base_id        = entityformvals[ANNAL.CURIE.id]
             type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_id
             type_label     = entityformvals[RDFS.CURIE.label]
             type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
+            prev_view_id   = entityformvals.get(ANNAL.CURIE.type_view, None)
+            prev_list_id   = entityformvals.get(ANNAL.CURIE.type_list, None)
             view_entity_id = entitytypeinfo.VIEW_ID+"/"+base_id+layout.SUFFIX_VIEW
             list_entity_id = entitytypeinfo.LIST_ID+"/"+base_id+layout.SUFFIX_LIST
             list_selector  = "'%s' in [@type]"%(type_uri) if type_uri else "ALL"
+            # log.debug("task/Define_view_list prev_view_id %s"%(prev_view_id,))
+            # log.debug("task/Define_view_list prev_list_id %s"%(prev_list_id,))
             # Set up view details (other defaults from sitedata '_initial_values')
             view_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.VIEW_ID
                 )
-            view_entity   = view_typeinfo.get_create_entity(view_entity_id)
+            view_entity   = view_typeinfo.get_copy_entity(view_entity_id, prev_view_id)
             view_entity[ANNAL.CURIE.record_type] = type_uri
             view_entity.setdefault(RDFS.CURIE.label,   
                 message.TYPE_VIEW_LABEL%{"type_label": type_label}
@@ -1847,7 +1853,7 @@ class GenericEntityEditView(AnnalistGenericView):
             list_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.LIST_ID
                 )
-            list_entity   = list_typeinfo.get_create_entity(list_entity_id)
+            list_entity   = list_typeinfo.get_copy_entity(list_entity_id, prev_list_id)
             list_entity.setdefault(RDFS.CURIE.label,   
                 message.TYPE_LIST_LABEL%{"type_label": type_label}
                 )
@@ -1873,10 +1879,81 @@ class GenericEntityEditView(AnnalistGenericView):
             redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
+        elif task_id == entitytypeinfo.TASK_ID+"/Define_subtype":
+            if viewinfo.check_authorization("edit"):
+                return viewinfo.http_response
+            # Extract info from entityformvals
+            type_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.TYPE_ID
+                )
+            base_type_id        = entityformvals[ANNAL.CURIE.id] or viewinfo.use_entity_id
+            base_type_entity    = type_typeinfo.get_entity(base_type_id)
+            base_type_label     = base_type_entity.get(RDFS.CURIE.label, base_type_id)
+            base_type_uri       = base_type_entity.get(ANNAL.CURIE.uri,  "_coll:"+base_type_id)
+            base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
+            base_view_entity_id = base_type_entity.get(ANNAL.CURIE.type_view, "Default_view")
+            base_list_entity_id = base_type_entity.get(ANNAL.CURIE.type_list, "Default_list")
+            #@@
+            # base_type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
+            # base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_type_id
+            # base_supertypes     = entityformvals[ANNAL.CURIE.supertype_uri]
+            # base_view_entity_id = entityformvals[ANNAL.CURIE.type_view]
+            # base_list_entity_id = entityformvals[ANNAL.CURIE.type_list]
+            #@@
+            # Set up subtype details
+            sub_type_id         = base_type_id+layout.SUFFIX_SUBTYPE
+            sub_type_entity_id  = entitytypeinfo.TYPE_ID+"/"+sub_type_id
+            sub_type_uri        = base_type_uri and base_type_uri + layout.SUFFIX_SUBTYPE
+            sub_type_label      = "@@subtype of " + base_type_label
+            sub_type_values     = (
+                { "type_slug":      sub_type_id
+                , "type_uri":       sub_type_uri
+                , "type_label":     sub_type_label
+                , "type_id":        sub_type_entity_id
+                , "type_view_id":   base_view_entity_id
+                , "type_list_id":   base_list_entity_id
+                })
+            sub_type_comment    = message.TYPE_COMMENT%sub_type_values
+            sub_type_supertypes = [{ "@id": base_type_uri }] + base_supertypes
+            # Create subtype record, and save
+            type_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.TYPE_ID
+                )
+            sub_type_entity = type_typeinfo.get_create_entity(sub_type_entity_id)
+            sub_type_entity[RDFS.CURIE.label]           = sub_type_label
+            sub_type_entity[RDFS.CURIE.comment]         = sub_type_comment
+            sub_type_entity[ANNAL.CURIE.uri]            = sub_type_uri
+            sub_type_entity[ANNAL.CURIE.supertype_uri]  = sub_type_supertypes           
+            sub_type_entity[ANNAL.CURIE.type_view]      = base_view_entity_id
+            sub_type_entity[ANNAL.CURIE.type_list]      = base_list_entity_id
+            sub_type_entity._save()
+            # Construct response that redirects to view new type entity with message
+            view_uri_params = (
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    entitytypeinfo.TYPE_ID
+                , 'view_id':    "Type_view"
+                , 'entity_id':  sub_type_id
+                , 'action':     "edit"
+                })
+            info_values = self.info_params(
+                message.TASK_CREATE_SUBTYPE%{'label': sub_type_label}
+                )
+            more_uri_params = viewinfo.get_continuation_url_dict()
+            more_uri_params.update(info_values)
+            redirect_uri = (
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                    more_uri_params
+                    )
+                )
+            responseinfo = ResponseInfo()
+            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         elif task_id == entitytypeinfo.TASK_ID+"/Define_subtype_view_list":
+            # @@ This logic has many problems - leaving code for now, but do not use @@
             # Extract info from entityformvals
             base_type_id        = entityformvals[ANNAL.CURIE.id]
-            base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_id
+            base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_type_id
             base_view_entity_id = entityformvals[ANNAL.CURIE.type_view]
             base_list_entity_id = entityformvals[ANNAL.CURIE.type_list]
             # Set up subtype details
@@ -1905,8 +1982,8 @@ class GenericEntityEditView(AnnalistGenericView):
             base_view_entity   = view_typeinfo.get_create_entity(base_view_entity_id)
             sub_view_label     = message.TYPE_VIEW_LABEL%sub_type_values
             sub_view_comment   = message.TYPE_VIEW_COMMENT%sub_type_values
-            sub_view_open_view = base_view_entity.get(RDFS.CURIE.open_view,   None)
-            sub_view_fields    = base_view_entity.get(RDFS.CURIE.view_fields, None)
+            sub_view_open_view = base_view_entity.get(ANNAL.CURIE.open_view,   None)
+            sub_view_fields    = base_view_entity.get(ANNAL.CURIE.view_fields, None)
             sub_view_entity    = view_typeinfo.get_create_entity(sub_view_entity_id)
             sub_view_entity.setdefault(ANNAL.CURIE.record_type, sub_type_uri)
             sub_view_entity.setdefault(RDFS.CURIE.label,        sub_view_label)
@@ -1921,7 +1998,7 @@ class GenericEntityEditView(AnnalistGenericView):
             base_list_entity   = list_typeinfo.get_create_entity(base_list_entity_id)
             sub_list_label     = message.TYPE_LIST_LABEL%sub_type_values
             sub_list_comment   = message.TYPE_LIST_COMMENT%sub_type_values
-            sub_list_fields    = base_list_entity.get(RDFS.CURIE.view_fields, None)
+            sub_list_fields    = base_list_entity.get(ANNAL.CURIE.view_fields, None)
             sub_list_entity    = list_typeinfo.get_create_entity(sub_list_entity_id)
             sub_list_entity.setdefault(RDFS.CURIE.label,          sub_list_label)
             sub_list_entity.setdefault(RDFS.CURIE.comment,        sub_list_comment)
@@ -1939,9 +2016,9 @@ class GenericEntityEditView(AnnalistGenericView):
             sub_type_entity = type_typeinfo.get_create_entity(sub_type_entity_id)
             sub_type_entity.setdefault(RDFS.CURIE.label,        sub_type_label)
             sub_type_entity.setdefault(RDFS.CURIE.comment,      sub_type_comment)
-            sub_type_entity.setdefault(RDFS.CURIE.uri,          sub_type_uri)
-            sub_type_entity.setdefault(RDFS.CURIE.type_view,    sub_view_entity_id)
-            sub_type_entity.setdefault(RDFS.CURIE.type_list,    sub_list_entity_id)
+            sub_type_entity.setdefault(ANNAL.CURIE.uri,         sub_type_uri)
+            sub_type_entity.setdefault(ANNAL.CURIE.type_view,   sub_view_entity_id)
+            sub_type_entity.setdefault(ANNAL.CURIE.type_list,   sub_list_entity_id)
             sub_type_entity._save()
             responseinfo = self.save_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
@@ -1957,7 +2034,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     , 'action':     "edit"
                     })
                 info_values = self.info_params(
-                    message.TASK_CREATE_SUBTYPE_VIEW_LIST%{'label': type_label}
+                    message.TASK_CREATE_SUBTYPE_VIEW_LIST%{'label': sub_type_label}
                     )
                 more_uri_params = viewinfo.get_continuation_url_dict()
                 more_uri_params.update(info_values)
@@ -1970,6 +2047,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_repeat_field":
+            if viewinfo.check_authorization("edit"):
+                return viewinfo.http_response
             # Extract info from entityformvals (form is a field description)
             field_entity_id          = entityformvals[ANNAL.CURIE.id]
             field_label              = entityformvals[RDFS.CURIE.label]
@@ -2038,6 +2117,8 @@ class GenericEntityEditView(AnnalistGenericView):
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_field_ref":
+            if viewinfo.check_authorization("edit"):
+                return viewinfo.http_response
             # Extract info from entityformvals (form is a field description)
             field_entity_id       = entityformvals[ANNAL.CURIE.id]
             field_label           = entityformvals[RDFS.CURIE.label]
@@ -2407,6 +2488,8 @@ class GenericEntityEditView(AnnalistGenericView):
         #     [ entitytypeinfo.TASK_ID+"/Copy_type_view_list"
         task_ids = (
             [ entitytypeinfo.TASK_ID+"/Define_view_list"
+            , entitytypeinfo.TASK_ID+"/Define_subtype"
+            # , entitytypeinfo.TASK_ID+"/Define_subtype_view_list"
             , entitytypeinfo.TASK_ID+"/Define_repeat_field" 
             , entitytypeinfo.TASK_ID+"/Define_field_ref" 
             , entitytypeinfo.TASK_ID+"/Show_list" 

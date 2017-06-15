@@ -266,6 +266,13 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             tooltip5="", # 'title="%s"'%r.context['fields'][4]['field_help'],
             tooltip6="", # 'title="%s"'%r.context['fields'][5]['field_help'],
             tooltip7="", # 'title="%s"'%r.context['fields'][6]['field_help'],
+            button_subtype_tip=
+                "Create a subtype of the current type.  "+
+                "(View and list type identifiers are copied from the current type; "+
+                "the URI of the current type is inserted as a supertype URI of the new type; "+
+                "other fields are taken from the corresponding '_initial_values' record, "+
+                "and may be extended or modified later.)"+
+                "",
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" %(tooltip1)s>
@@ -381,6 +388,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
                   <!-- <input type="submit" name="open_view"    value="View description" /> -->
+                  <input type="submit" name="Define_subtype" value="Define subtype"
+                         title="%(button_subtype_tip)s" />
                   <input type="submit" name="default_view" value="Set default view"
                          title="Select this display as the default view for collection 'testcoll'." />
                   <input type="submit" name="customize"    value="Customize"

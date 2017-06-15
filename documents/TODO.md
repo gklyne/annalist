@@ -17,13 +17,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.5.3, towards 0.5.4
 
-- [ ] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
+- [x] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
     - (Workaround: copy, save, then edit Id seems to work OK.)
     - Related: when copying from parent collection, similar error even if no change to Id.
-    - @@fixed?  test
 - [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
-- [ ] Make it easier to create subtype + view + list...
-    - Create simplistic "create subtype +..." button for experimentation
+- [x] Make it easier to create subtype + view + list...
+    - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
+    - Enhance create view+list logic to copy previous view+liust as defaults
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
@@ -49,10 +49,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 (Sub-release?)
 
 - [ ] Make it easier to create subtype + view + list...
-    - Re UI: use alternative view with additional fields and actions?
-    - Create subtype invokes alternative view with key fields filled in?
-    - Get some experience with "crude" solution first
-    - test case for subtype creation stages
+    - Get some experience with initial solution; (previous release)
+    - Test cases for subtype creation stages
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?

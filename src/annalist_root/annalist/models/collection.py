@@ -655,7 +655,8 @@ class Collection(Entity):
                 context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altscope="all"):
-            for fref in v[ANNAL.CURIE.view_fields]:
+            view_fields = v.get(ANNAL.CURIE.view_fields, [])
+            for fref in view_fields:
                 fid  = extract_entity_id(fref[ANNAL.CURIE.field_id])
                 vuri = fref.get(ANNAL.CURIE.property_uri, None)
                 furi, fcontext, field_list = self.get_field_uri_jsonld_context(
