@@ -624,17 +624,19 @@ class DisplayInfo(object):
                 action=action
                 )
 
-    def get_entity_resource_url(self, coll_id, type_id, entity_id,resource_ref):
-        """
-        Return base URL for specified accessing entity resource data
-        """
-        base_url = self.view.view_uri(
-                "AnnalistEntityAccessView", 
-                coll_id=coll_id, 
-                type_id=type_id,
-                entity_id=entity_id
-                )
-        return urlparse.urljoin(base_url, resource_ref)
+    #@@TODO: remove this
+    # def get_entity_resource_url(self, coll_id, type_id, entity_id, resource_ref):
+    #     """
+    #     Return base URL for specified accessing entity resource data
+    #     """
+    #     base_url = self.view.view_uri(
+    #             "AnnalistEntityAccessView", 
+    #             coll_id=coll_id, 
+    #             type_id=type_id,
+    #             entity_id=entity_id
+    #             )
+    #     return urlparse.urljoin(base_url, resource_ref)
+    #@@
 
     def get_src_entity_resource_url(self, resource_ref):
         """
@@ -643,12 +645,20 @@ class DisplayInfo(object):
         """
         assert self.coll_id is not None
         assert self.curr_typeinfo is not None
-        return self.get_entity_resource_url(
+        return self.view.get_entity_data_url(
             self.coll_id,
             self.curr_typeinfo.get_type_id(),
-            self.src_entity_id or "__unknown_entity__",
+            self.src_entity_id or "__unknown_src_entity__",
             resource_ref
             )
+        #@@TODO: remove this
+        # return self.get_entity_resource_url(
+        #     self.coll_id,
+        #     self.curr_typeinfo.get_type_id(),
+        #     self.src_entity_id or "__unknown_entity__",
+        #     resource_ref
+        #     )
+        #@@
 
     # Additonal support functions
 
@@ -750,7 +760,7 @@ class DisplayInfo(object):
     def get_entity_data_ref(self, return_type=None):
         assert self.curr_typeinfo is not None
         data_ref = make_data_ref(
-            self.view.get_request_path(), 
+            self.view.get_request_path(),   # For parameter values
             self.curr_typeinfo.entityclass._entityfile, 
             return_type
             )

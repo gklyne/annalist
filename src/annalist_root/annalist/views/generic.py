@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
+import urlparse
 import json
 import markdown
 import traceback
@@ -100,6 +101,22 @@ class AnnalistGenericView(ContentNegotiationView):
         Return view URI given view name and any additional arguments
         """
         return reverse(viewname, kwargs=kwargs)
+
+    def get_entity_base_url(self, coll_id, type_id, entity_id):
+        """
+        Return base URL for specified entity
+        """
+        return self.view_uri(
+            "AnnalistEntityAccessView", 
+            coll_id=coll_id, type_id=type_id, entity_id=entity_id
+            )
+
+    def get_entity_data_url(self, coll_id, type_id, entity_id, resource_ref):
+        """
+        Return URL for data resource associated with the specified entity
+        """
+        base_url = self.get_entity_base_url(coll_id, type_id, entity_id)
+        return urlparse.urljoin(base_url, resource_ref)
 
     def continuation_next(self, request_dict={}, default_cont=None):
         """

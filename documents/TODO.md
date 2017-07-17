@@ -24,7 +24,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Make it easier to create subtype + view + list...
     - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
     - Enhance create view+list logic to copy previous view+liust as defaults
-- [ ] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.  Content negotation for non-HTML views should revert to the `.../d/...` form of URL,or the relative reference should be adjusted.
+- [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
 - [ ] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
 - [ ] BUG: when default view references non-accessible entity: no easy way to reset (not so easy to get to Customize form hence to collection metadata)
 - [ ] BUG: create subtype without login generates unhelpful error response
