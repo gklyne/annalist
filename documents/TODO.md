@@ -24,13 +24,30 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Make it easier to create subtype + view + list...
     - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
     - Enhance create view+list logic to copy previous view+liust as defaults
-- [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
-- [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
+- [ ] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.  Content negotation for non-HTML views should revert to the `.../d/...` form of URL,or the relative reference should be adjusted.
+- [ ] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
+- [ ] BUG: when default view references non-accessible entity: no easy way to reset (not so easy to get to Customize form hence to collection metadata)
+- [ ] BUG: create subtype without login generates unhelpful error response
+- [ ] BUG: display list with no fields generates error
+- [ ] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
+- [ ] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
+- [ ] BUG(?): delete list view while viewing that list results in error message.  Maybe just improve error message.
+- [ ] Separate buttons for create list and multiple-value fields (seq vs set)
+    - Was: When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
 - [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
         # <property label>
         Zero, one or more instances of [<range type label>]($BASE:_type/<range type>).
 - [ ] Default type list/view comments: include link to type
-- [ ] When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
+- [ ] Create FAQ for defining subtypes and sub-properties
+- [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
+- [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
+- [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+- [ ] When inheriting definitions, also use parent default view if none defined locally.
+
+(Sub-release?)
+
+- [ ] Introduce superproperty/ies field and button to create subproperty field definition
+- [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Improve styling for printed form of Annalist pages (currently it looks a mess)
@@ -193,7 +210,9 @@ Notes for Future TODOs:
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
 
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+- [ ] Add facility for import from RDF or SPARQL endpoint.
+    - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
       ]

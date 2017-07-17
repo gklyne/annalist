@@ -64,6 +64,7 @@ catalog-v001.xml
 
 # Logs and databases
 *.log
+*.out
 *.sql
 *.sqlite
 *.sqlite3

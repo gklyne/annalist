@@ -78,11 +78,11 @@ context_authorization_map = (
 
 def make_data_ref(request_url, data_ref, resource_type=None):
     """
-    Returns a URL reference rel.atiove to the suppliued request_url 
-    that can be used as a reference to a data resource based on
-    the supplied request URL, data reference and optional type.
+    Returns a URI reference that can be used as a reference a 
+    data resource based on the supplied request URL, 
+    data resource reference and optional type.
 
-    Scope-repated query parameters from the original request_url are 
+    Scope-related query parameters from the original request_url are 
     preserved, and others are discarded.
     """
     params = scope_params(uri_param_dict(request_url))
@@ -204,6 +204,7 @@ class DisplayInfo(object):
         self.curr_type_id       = None
         self.curr_entity_id     = None
         self.curr_typeinfo      = None
+        self.src_entity_id      = None
         # Type-specific messages
         self.type_messages      = None
         # Default no permissions:
@@ -438,7 +439,6 @@ class DisplayInfo(object):
             assert self.curr_typeinfo is not None
             self.src_entity_id  = entity_id
             self.curr_entity_id = entity_id
-            # self.orig_entity_id = entity_id # @@ messes up copy operation??
             if action in ["new", "copy"]:
                 self.use_entity_id = self.curr_typeinfo.entityclass.allocate_new_id(
                     self.curr_typeinfo.entityparent, base_id=entity_id
@@ -624,6 +624,32 @@ class DisplayInfo(object):
                 action=action
                 )
 
+    def get_entity_resource_url(self, coll_id, type_id, entity_id,resource_ref):
+        """
+        Return base URL for specified accessing entity resource data
+        """
+        base_url = self.view.view_uri(
+                "AnnalistEntityAccessView", 
+                coll_id=coll_id, 
+                type_id=type_id,
+                entity_id=entity_id
+                )
+        return urlparse.urljoin(base_url, resource_ref)
+
+    def get_src_entity_resource_url(self, resource_ref):
+        """
+        Return URL for accessing source entity resource data 
+        (not including any view information contained in the current request URL).
+        """
+        assert self.coll_id is not None
+        assert self.curr_typeinfo is not None
+        return self.get_entity_resource_url(
+            self.coll_id,
+            self.curr_typeinfo.get_type_id(),
+            self.src_entity_id or "__unknown_entity__",
+            resource_ref
+            )
+
     # Additonal support functions
 
     def get_view_id(self, type_id, view_id):
@@ -708,17 +734,27 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
+    def get_entity_data_url(self, return_type=None):
+        """
+        Returns a string that can be used as a reference to the entity metadata resource,
+        optionally with a specified type parameter added.
+        """
+        data_ref = self.get_entity_data_ref(return_type=return_type)
+        data_url = self.get_src_entity_resource_url(data_ref)
+        log.debug(
+            "get_entity_data_url: _entityfile %s, data_ref %s, data_url %s"%
+            (self.curr_typeinfo.entityclass._entityfile, data_ref, data_url)
+            )
+        return data_url
+
     def get_entity_data_ref(self, return_type=None):
-        """
-        Returns a string that can be used as a reference to the entity metadata resource
-        relative to an entity URL, optionally with a specified type parameter added.
-        """
         assert self.curr_typeinfo is not None
-        return make_data_ref(
+        data_ref = make_data_ref(
             self.view.get_request_path(), 
             self.curr_typeinfo.entityclass._entityfile, 
             return_type
             )
+        return data_ref
 
     def get_entity_list_ref(self, return_type=None):
         """
@@ -790,8 +826,8 @@ class DisplayInfo(object):
             context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.curr_typeinfo:
             context.update(
-                { 'entity_data_ref':        self.get_entity_data_ref()
-                , 'entity_data_ref_json':   self.get_entity_data_ref("application/json")
+                { 'entity_data_ref':        self.get_entity_data_url()
+                , 'entity_data_ref_json':   self.get_entity_data_url("application/json")
                 })
         if entity_label:
             context.update(

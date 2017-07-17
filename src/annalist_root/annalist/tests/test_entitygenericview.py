@@ -256,6 +256,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         cont_uri = "?continuation_url=%s"%u + "%3Fcontinuation_url=/xyzzy/"
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            entity_base      = "/testsite/c/testcoll/d/testtype/entity1",
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
             default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
             default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri,
@@ -398,7 +399,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow9 = ("""
+        formrow9a = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
                 <span>Choose view</span>
@@ -417,6 +418,18 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                     <input type="submit" name="use_view"      value="Show view" />
                   </div>
                 </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow9b = ("""
+            <div class="row view-value-row">
+              <div class="view-value small-12 columns">
+                <a href="%(entity_base)s/entity_data.jsonld" title="Retrieve underlying data as JSON-LD">
+                  JSON-LD
+                </a>
+                <a href="%(entity_base)s/entity_data.jsonld?type=application/json" title="Retrieve underlying JSON data">
+                  <img src="/static/images/get_the_data_88x31.png" alt="get_the_data">
+                </a>
               </div>
             </div>
             """)%field_vals(width=6)
@@ -443,7 +456,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow8a, html=True)
         self.assertContains(r, formrow8b, html=True)
         self.assertContains(r, formrow8c, html=True)
-        self.assertContains(r, formrow9,  html=True)
+        self.assertContains(r, formrow9a, html=True)
+        self.assertContains(r, formrow9b, html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow10, html=True)
         return

@@ -55,11 +55,12 @@ from annalist.views.entityresource      import EntityResourceAccess
 # /c/<coll-id>/d/                                 default list of records
 # /c/<coll-id>/d/<type-id>/                       default list of records of specified type
 # /c/<coll-id>/d/<type-id>/<entity-id>            default view of identified entity
+#
 # /c/<coll-id>/l/<list-id>/                       specified list of records
 # /c/<coll-id>/l/<list-id>/<type-id>              specified list of records of specified type
 # /c/<coll-id>/v/<view-id>/<type-id>/<entity-id>  specified view of record
 #
-# Suffixes /!new, /!copy, /!edit, /!delete, etc. are used for forms that are opart of the
+# Suffixes /!new, /!copy, /!edit, /!delete, etc. are used for forms that are part of the
 # user interface for editing collections and resources, and do not of themselves identify
 # persistent resources.
 
@@ -167,23 +168,17 @@ urlpatterns = patterns('',
     url(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
                             SiteResourceAccess.as_view(),
                             name='AnnalistSiteResourceAccess'),
-
     url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
                             CollectionResourceAccess.as_view(),
                             name='AnnalistCollectionResourceAccess'),
     url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
-                            EntityResourceAccess.as_view(),
-                            name='AnnalistCollectionResourceAccess'),
 
+    # Entity view forms without 
     url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
-                            name='AnnalistEntityResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
-                            EntityResourceAccess.as_view(),
-                            name='AnnalistCollectionResourceAccess'),
+                            name='AnnalistEntityViewAccess'),
 
     ) # End of urlpatterns
 

@@ -379,6 +379,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     # collection named view metadata access
     def test_get_named_view_metadata(self):
         u = collectiondata_view_resource_url(coll_id="testcoll")
+        log.debug("test_get_named_view_metadata: collectiondata_view_resource_url: %s"%(u,))
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")

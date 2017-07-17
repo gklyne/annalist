@@ -69,7 +69,8 @@ def collectiondata_resource_url(coll_id="testcoll", resource_ref=layout.COLL_MET
     """
     return urlparse.urljoin(
         collectiondata_url(coll_id=coll_id),
-        "%s/%s"%(layout.COLL_BASE_DIR, resource_ref)
+        resource_ref
+        #@@@@@ "%s/%s"%(layout.COLL_BASE_DIR, resource_ref)
         )
 
 def collectiondata_view_url(coll_id="testcoll", action=None):
@@ -103,7 +104,8 @@ def collectiondata_view_resource_url(coll_id="testcoll", resource_ref=layout.COL
     """
     return urlparse.urljoin(
         collectiondata_view_url(coll_id=coll_id, action="view"),
-        "%s/%s"%(layout.COLL_BASE_DIR,resource_ref)
+        resource_ref
+        #@@@@ "%s/%s"%(layout.COLL_BASE_DIR, resource_ref)
         )
 
 #   -----------------------------------------------------------------------------

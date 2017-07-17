@@ -213,7 +213,7 @@ class EntityGenericListView(AnnalistGenericView):
                     message=str(e)+" - see server log for details"
                     )
                 )
-        # log.debug("EntityGenericListView.get listcontext %r"%(listcontext))
+        # log.info("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
         json_redirect_url = make_resource_url("", self.get_request_path(), layout.ENTITY_LIST_FILE)
         return (
