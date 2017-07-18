@@ -25,8 +25,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
     - Enhance create view+list logic to copy previous view+liust as defaults
 - [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
-- [ ] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
-- [ ] BUG: when default view references non-accessible entity: no easy way to reset (not so easy to get to Customize form hence to collection metadata)
+- [.] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
+    - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
+    - needs testing still: check with new installation at dhoxss.annalist.net
+- [ ] BUG: when default view references non-accessible entity: 
+    - no easy way to reset (not so easy to get to Customize form hence to collection metadata)
+    - if default view/list unavailable, revert to default list with error message
 - [ ] BUG: create subtype without login generates unhelpful error response
 - [ ] BUG: display list with no fields generates error
 - [ ] BUG: define view+list with none selected generates invalid list (and unhelpful view?)

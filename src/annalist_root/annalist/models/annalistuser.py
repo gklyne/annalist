@@ -34,6 +34,9 @@ from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
 
+site_default_user_id  = "_site_default_user_perms"
+site_default_user_uri = "annal:User/_default_user_perms"
+
 default_user_id  = "_default_user_perms"
 default_user_uri = "annal:User/_default_user_perms"
 

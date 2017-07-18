@@ -36,6 +36,7 @@ from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
 from annalist.models.annalistuser   import (
     AnnalistUser, 
+    site_default_user_id, site_default_user_uri, 
     default_user_id, default_user_uri, 
     unknown_user_id, unknown_user_uri
     )
@@ -303,7 +304,9 @@ class AnnalistGenericView(ContentNegotiationView):
                 user_perms = parentcoll.get_user_permissions(unknown_user_id, unknown_user_uri)
             else:
                 # Combine user permissions with default-user permissions for collection
-                default_perms = parentcoll.get_user_permissions(default_user_id, default_user_uri)
+                default_perms = parentcoll.get_user_permissions(site_default_user_id, default_user_uri)
+                if not default_perms:
+                    default_perms = parentcoll.get_user_permissions(default_user_id, default_user_uri)
                 user_perms    = parentcoll.get_user_permissions(user_id, user_uri) or default_perms
                 user_perms[ANNAL.CURIE.user_permission] = list(
                     set(user_perms[ANNAL.CURIE.user_permission]) | 

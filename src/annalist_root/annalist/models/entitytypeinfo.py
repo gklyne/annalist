@@ -19,7 +19,7 @@ from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
 from annalist.models.collection     import Collection
-from annalist.models.annalistuser   import AnnalistUser, default_user_id, unknown_user_id
+from annalist.models.annalistuser   import AnnalistUser, site_default_user_id, default_user_id, unknown_user_id
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
@@ -437,7 +437,7 @@ class EntityTypeInfo(object):
         entity_perms_map = self.permissions_map
         # Check for entity-specific permissions
         #
-        # The logic here is currently ad-hoc, but in due courtse coukd be replaced
+        # The logic here is currently ad-hoc, but in due course could be replaced
         # by something more generic
         # log.info(
         #     "@@ get_entity_permissions_map: type_id %s, entity_id %s"%(self.type_id, entity_id)
@@ -445,7 +445,7 @@ class EntityTypeInfo(object):
         if self.type_id == USER_ID:
             # Relax view access requirements for default and unknown user id
             # (Real users require admin rights to view)
-            if entity_id in [default_user_id, unknown_user_id]:
+            if entity_id in [site_default_user_id, default_user_id, unknown_user_id]:
                 entity_perms_map = dict(entity_perms_map)
                 entity_perms_map["view"] = CONFIG_PERMISSIONS["view"]
         return entity_perms_map

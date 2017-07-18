@@ -28,6 +28,11 @@ from django.conf                    import settings
 from utils.ContentNegotiationView   import ContentNegotiationView
 
 from annalist.models.annalistuser   import AnnalistUser
+from annalist.models.annalistuser   import (
+    site_default_user_id, site_default_user_uri, 
+    default_user_id, default_user_uri, 
+    unknown_user_id, unknown_user_uri
+    )
 
 from annalist.views.generic         import AnnalistGenericView
 
@@ -69,8 +74,10 @@ class ProfileView(AnnalistGenericView):
             site_coll  = self.site().site_data_collection()
             user_perms = site_coll.get_user_permissions(user_id, user_uri)
             if not user_perms:
+                # Initialize new user permissions from system defaults
+                # (NOTE: site-specific default permissions are incorporate dynamically)
                 default_perms = site_coll.get_user_permissions(
-                    "_default_user_perms", "annal:User/_default_user_perms"
+                    default_user_id, default_user_uri
                     )
                 new_perms_values = default_perms.get_values()
                 new_perms_values.update(
