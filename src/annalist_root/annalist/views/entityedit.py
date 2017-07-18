@@ -911,7 +911,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         any other response.
 
         Returns the supplied ResponseInfo object, with `None` for the HTTPResponse 
-        valuer of the save completes successfully, otherwise an HTTP response object 
+        value if the save completes successfully, otherwise an HTTP response object 
         that reports the nature of the problem.
         """
         if responseinfo is None:
@@ -1810,7 +1810,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         if task_id == entitytypeinfo.TASK_ID+"/Define_view_list":
             if viewinfo.check_authorization("edit"):
-                return viewinfo.http_response
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals
             base_id        = entityformvals[ANNAL.CURIE.id]
             type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_id
@@ -1868,7 +1868,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_subtype":
             if viewinfo.check_authorization("edit"):
-                return viewinfo.http_response
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals
             type_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.TYPE_ID
@@ -1933,7 +1933,6 @@ class GenericEntityEditView(AnnalistGenericView):
                     more_uri_params
                     )
                 )
-            responseinfo = ResponseInfo()
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_subtype_view_list":
@@ -2035,7 +2034,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_repeat_field":
             if viewinfo.check_authorization("edit"):
-                return viewinfo.http_response
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals (form is a field description)
             field_entity_id          = entityformvals[ANNAL.CURIE.id]
             field_label              = entityformvals[RDFS.CURIE.label]
@@ -2105,7 +2104,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_field_ref":
             if viewinfo.check_authorization("edit"):
-                return viewinfo.http_response
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals (form is a field description)
             field_entity_id       = entityformvals[ANNAL.CURIE.id]
             field_label           = entityformvals[RDFS.CURIE.label]

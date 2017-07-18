@@ -28,10 +28,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [.] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
     - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
     - needs testing still: check with new installation at dhoxss.annalist.net
-- [ ] BUG: when default view references non-accessible entity: 
-    - no easy way to reset (not so easy to get to Customize form hence to collection metadata)
-    - if default view/list unavailable, revert to default list with error message
-- [ ] BUG: create subtype without login generates unhelpful error response
+- [x] BUG: when default view references non-accessible entity: 
+    - if default view/list unavailable, revert to default list
+- [x] BUG: create subtype without login generates unhelpful error response
 - [ ] BUG: display list with no fields generates error
 - [ ] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
 - [ ] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome

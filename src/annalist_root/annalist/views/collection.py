@@ -70,7 +70,7 @@ class CollectionView(AnnalistGenericView):
                 (viewinfo.http_response.status_code, viewinfo.http_response.reason_phrase)
                 )
             return viewinfo.http_response
-        default_view, default_type, default_entity = viewinfo.get_default_view()
+        default_view, default_type, default_entity = viewinfo.get_default_view_type_entity()
         if default_view and default_type and default_entity:
             redirect_uri = self.view_uri(
                 "AnnalistEntityDataView",

@@ -368,7 +368,7 @@ class DisplayInfo(object):
             #     "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
             #     [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
             #     )
-            if not RecordList.exists(self.collection, list_id, altscope="all"):
+            if not self.check_list_id(list_id):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
@@ -402,7 +402,7 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
-            if not RecordView.exists(self.collection, view_id, altscope="all"):
+            if not self.check_view_id(view_id):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
                 log.warning("Collection: %r"%(self.collection))
                 log.warning("Collection._altparent: %r"%(self.collection._altparent))
@@ -516,15 +516,6 @@ class DisplayInfo(object):
                 )
         return self.http_response
 
-    # Additional support functions for collection view
-
-    def get_default_view(self):
-        """
-        Return default view_id, type_id and entity_id to display for collection,
-        or None for any values not defined.
-        """
-        return self.collection.get_default_view()
-
     # Additonal support functions for list views
 
     def get_type_list_id(self, type_id):
@@ -541,6 +532,15 @@ class DisplayInfo(object):
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
 
+    def check_list_id(self, list_id):
+        """
+        Check for existence of list definition: 
+        if it exists, return the supplied list_id, else None.
+        """
+        if list_id and RecordList.exists(self.collection, list_id, altscope="all"):
+            return list_id
+        return None
+
     def get_list_id(self, type_id, list_id):
         """
         Return supplied list_id if defined, otherwise find default list_id for
@@ -549,8 +549,8 @@ class DisplayInfo(object):
         if not self.http_response:
             list_id = (
                 list_id or 
-                self.get_type_list_id(type_id) or
-                self.collection.get_default_list() or
+                self.check_list_id(self.get_type_list_id(type_id)) or
+                self.check_list_id(self.collection.get_default_list()) or
                 ("Default_list" if type_id else "Default_list_all")
                 )
             if not list_id:
@@ -566,6 +566,40 @@ class DisplayInfo(object):
         return extract_entity_id(
             self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
             )
+
+    # Additional support functions for collection view
+
+    def get_default_view_type_entity(self):
+        """
+        Return default view_id, type_id and entity_id to display for collection,
+        or None for any values not defined.
+        """
+        view_id, type_id, entity_id = self.collection.get_default_view()
+        return (self.check_view_id(view_id), type_id, entity_id)
+
+    # Additonal support functions for entity views
+
+    def check_view_id(self, view_id):
+        """
+        Check for existence of view definition: 
+        if it exists, return the supplied view_id, else None.
+        """
+        if view_id and RecordView.exists(self.collection, view_id, altscope="all"):
+            return view_id
+        return None
+
+    def get_view_id(self, type_id, view_id):
+        """
+        Get view id or suitable default using type if defined.
+        """
+        if not self.http_response:
+            view_id = (
+                view_id or 
+                self.check_view_id(self.curr_typeinfo.get_default_view_id())
+                )
+            if not view_id:
+                log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
+        return view_id
 
     def check_collection_entity(self, entity_id, entity_type, msg):
         """
@@ -639,19 +673,6 @@ class DisplayInfo(object):
             )
 
     # Additonal support functions
-
-    def get_view_id(self, type_id, view_id):
-        """
-        Get view id or suitable default using type if defined.
-        """
-        if not self.http_response:
-            view_id = (
-                view_id or 
-                self.curr_typeinfo.get_default_view_id()
-                )
-            if not view_id:
-                log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
-        return view_id
 
     def get_continuation_param(self):
         """
