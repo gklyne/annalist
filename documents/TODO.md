@@ -33,7 +33,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: create subtype without login generates unhelpful error response
 - [x] BUG: display list with no fields generates error
 - [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
-- [ ] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
+- [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
 - [ ] Separate buttons for create list and multiple-value fields (seq vs set)
     - Was: When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
 - [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
