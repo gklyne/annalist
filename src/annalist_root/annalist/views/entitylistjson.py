@@ -112,6 +112,7 @@ class EntityGenericListJsonView(EntityGenericListView):
                 ]
             , ANNAL.CURIE.entity_list:  entityvallist
             })
+        # @@TODO: use render_json here; generalize module (e.g. as entitylistdata) to support different formats
         return_type = "application/ld+json"
         if "type" in listinfo.request_dict:
             return_type = listinfo.request_dict["type"]

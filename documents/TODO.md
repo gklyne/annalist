@@ -43,6 +43,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] When inheriting definitions, also use parent default view if none defined locally.
+- [ ] Turtle rendering
+    - [ ] Replicate JSON-LD rendering functions in generic.py
+    - [ ] Add Turtle redirect calls alongside JSON-LD redirects
+    - [ ] Locate and add logic for Turtle rendering alongside JSON-LD
+        - Entities: see EntityResourceAccess - returns file content and headers (JSON-LD is native).  render_json method not currently used.
+        - Lists: see EntityGenericListJsonView - constructs list and adds headers
+        - Turtle: needs to convert data: new module "EntityTurtle" to catch redirect from EntityEdit; needs to go through same path as "EntityResourceAccess".
 
 (Sub-release?)
 

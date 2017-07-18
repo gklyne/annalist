@@ -624,20 +624,6 @@ class DisplayInfo(object):
                 action=action
                 )
 
-    #@@TODO: remove this
-    # def get_entity_resource_url(self, coll_id, type_id, entity_id, resource_ref):
-    #     """
-    #     Return base URL for specified accessing entity resource data
-    #     """
-    #     base_url = self.view.view_uri(
-    #             "AnnalistEntityAccessView", 
-    #             coll_id=coll_id, 
-    #             type_id=type_id,
-    #             entity_id=entity_id
-    #             )
-    #     return urlparse.urljoin(base_url, resource_ref)
-    #@@
-
     def get_src_entity_resource_url(self, resource_ref):
         """
         Return URL for accessing source entity resource data 
@@ -651,14 +637,6 @@ class DisplayInfo(object):
             self.src_entity_id or "__unknown_src_entity__",
             resource_ref
             )
-        #@@TODO: remove this
-        # return self.get_entity_resource_url(
-        #     self.coll_id,
-        #     self.curr_typeinfo.get_type_id(),
-        #     self.src_entity_id or "__unknown_entity__",
-        #     resource_ref
-        #     )
-        #@@
 
     # Additonal support functions
 
