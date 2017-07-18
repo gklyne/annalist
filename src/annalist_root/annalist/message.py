@@ -186,9 +186,9 @@ VIEW_DESCRIPTION_HEADING    = "Problem with view description"
 VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"
 
 UNKNOWN_TASK_ID             = "Unknown task Id in form response: %(task_id)s"
-TASK_CREATE_VIEW_LIST       = "Created view and list for %(label)s"
+NO_VIEW_OR_LIST_SELECTED	= "Please select an exiting view and/or list as a basis for creating new ones"
+TASK_CREATE_VIEW_LIST       = "Created new view and/or list for %(label)s"
 TASK_CREATE_SUBTYPE         = "Created subtype %(label)s"
-TASK_CREATE_SUBTYPE_VIEW_LIST = "Created subtype view and list for %(label)s"
 TASK_CREATE_REPEAT_FIELD    = "Created repeating-value field '%(field_id)s' for '%(label)s' (check subfield 'Entity type' is blank, or matches repeat field 'Value type')"
 TASK_CREATE_REFERENCE_FIELD = "Created reference to field '%(field_id)s'. (Select value for 'Refer to type' on current display, and re-save. Also check subfield 'Entity type' is blank, or matches referring field 'Value type')"
 

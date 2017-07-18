@@ -31,10 +31,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: when default view references non-accessible entity: 
     - if default view/list unavailable, revert to default list
 - [x] BUG: create subtype without login generates unhelpful error response
-- [ ] BUG: display list with no fields generates error
-- [ ] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
+- [x] BUG: display list with no fields generates error
+- [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
 - [ ] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
-- [ ] BUG(?): delete list view while viewing that list results in error message.  Maybe just improve error message.
 - [ ] Separate buttons for create list and multiple-value fields (seq vs set)
     - Was: When creating a repeat field, distinguish cases for list and set: for set, use entity type for range of repeat field, and '@id' for property.
 - [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
@@ -75,6 +74,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
+- [ ] BUG(?): delete list view while viewing that list results in error message.  Maybe just improve error message.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages

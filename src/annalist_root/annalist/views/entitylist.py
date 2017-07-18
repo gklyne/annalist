@@ -121,11 +121,8 @@ class EntityGenericListView(AnnalistGenericView):
         # NOTE - supplied entity has single field '_list_entities_' (see 'get' below)
         #        entitylist template uses 'fields' from context to display headings
 
-        fieldlistmap = FieldListValueMap('fields',
-            listinfo.collection, 
-            listinfo.recordlist[ANNAL.CURIE.list_fields],
-            None
-            )
+        list_fields = listinfo.recordlist.get(ANNAL.CURIE.list_fields, [])
+        fieldlistmap = FieldListValueMap('fields', listinfo.collection, list_fields, None)
         entitymap.add_map_entry(fieldlistmap)  # For access to field headings
         repeatrows_field_descr = (
             { ANNAL.CURIE.id:                   "List_rows"
@@ -140,7 +137,7 @@ class EntityGenericListView(AnnalistGenericView):
         repeatrows_descr = FieldDescription(
             listinfo.collection, 
             repeatrows_field_descr,
-            field_list=listinfo.recordlist[ANNAL.CURIE.list_fields]
+            field_list=list_fields
             )
         entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
         return entitymap
