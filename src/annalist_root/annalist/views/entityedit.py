@@ -1831,6 +1831,7 @@ class GenericEntityEditView(AnnalistGenericView):
             # log.debug("task/Define_view_list prev_view_id %s"%(prev_view_id,))
             # log.debug("task/Define_view_list prev_list_id %s"%(prev_list_id,))
             # Set up view details (other defaults from sitedata '_initial_values')
+            type_values = { "type_id": base_id, "type_label": type_label }
             if prev_view_id:
                 view_typeinfo = EntityTypeInfo(
                     viewinfo.collection, entitytypeinfo.VIEW_ID
@@ -1838,10 +1839,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 view_entity   = view_typeinfo.get_copy_entity(view_entity_id, prev_view_id)
                 view_entity[ANNAL.CURIE.record_type] = type_uri
                 view_entity.setdefault(RDFS.CURIE.label,   
-                    message.TYPE_VIEW_LABEL%{"type_label": type_label}
+                    message.TYPE_VIEW_LABEL%type_values
                     )
                 view_entity.setdefault(RDFS.CURIE.comment, 
-                    message.TYPE_VIEW_COMMENT%{"type_label": type_label}
+                    message.TYPE_VIEW_COMMENT%type_values
                     )
                 view_entity._save()
             # Set up list details (other defaults from sitedata '_initial_values')
@@ -1851,10 +1852,10 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
                 list_entity   = list_typeinfo.get_copy_entity(list_entity_id, prev_list_id)
                 list_entity.setdefault(RDFS.CURIE.label,   
-                    message.TYPE_LIST_LABEL%{"type_label": type_label}
+                    message.TYPE_LIST_LABEL%type_values
                     )
                 list_entity.setdefault(RDFS.CURIE.comment, 
-                    message.TYPE_LIST_COMMENT%{"type_label": type_label}
+                    message.TYPE_LIST_COMMENT%type_values
                     )
                 list_entity[ANNAL.CURIE.default_view] = view_entity_id
                 list_entity[ANNAL.CURIE.default_type] = type_entity_id
@@ -1904,14 +1905,16 @@ class GenericEntityEditView(AnnalistGenericView):
             sub_type_uri        = base_type_uri and base_type_uri + layout.SUFFIX_SUBTYPE
             sub_type_label      = "@@subtype of " + base_type_label
             sub_type_values     = (
-                { "type_slug":      sub_type_id
-                , "type_uri":       sub_type_uri
-                , "type_label":     sub_type_label
-                , "type_id":        sub_type_entity_id
-                , "type_view_id":   base_view_entity_id
-                , "type_list_id":   base_list_entity_id
+                { "type_id":          sub_type_id
+                , "type_uri":           sub_type_uri
+                , "type_label":         sub_type_label
+                , "type_ref":           sub_type_entity_id
+                , "type_view_id":       base_view_entity_id
+                , "type_list_id":       base_list_entity_id
+                , "base_type_id":       base_type_id
+                , "base_type_label":    base_type_label
                 })
-            sub_type_comment    = message.TYPE_COMMENT%sub_type_values
+            sub_type_comment    = message.SUBTYPE_COMMENT%sub_type_values
             sub_type_supertypes = [{ "@id": base_type_uri }] + base_supertypes
             # Create subtype record, and save
             type_typeinfo = EntityTypeInfo(
