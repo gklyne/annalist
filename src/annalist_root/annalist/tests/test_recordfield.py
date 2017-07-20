@@ -1419,14 +1419,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_repeat_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 message.LIST_FIELD_LABEL%common_vals['field_label']
+            , "rdfs:label":                 message.LIST_FIELD_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
-            , "annal:placeholder":          message.LIST_FIELD_PLACEHOLDER%common_vals['field_label']
+            , "annal:placeholder":          message.LIST_FIELD_PLACEHOLDER%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
             , "annal:field_fields":
@@ -1489,14 +1489,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_list_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 message.LIST_FIELD_LABEL%common_vals['field_label']
+            , "rdfs:label":                 message.LIST_FIELD_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
-            , "annal:placeholder":          message.LIST_FIELD_PLACEHOLDER%common_vals['field_label']
+            , "annal:placeholder":          message.LIST_FIELD_PLACEHOLDER%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
             , "annal:field_fields":
@@ -1558,14 +1558,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_many_field_values = (
             { "annal:id":                   rpt_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 message.MANY_FIELD_LABEL%common_vals['field_label']
+            , "rdfs:label":                 message.MANY_FIELD_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Text"
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
-            , "annal:placeholder":          message.MANY_FIELD_PLACEHOLDER%common_vals['field_label']
+            , "annal:placeholder":          message.MANY_FIELD_PLACEHOLDER%common_vals
             , "annal:repeat_label_add":     "Add %(field_label)s"%common_vals
             , "annal:repeat_label_delete":  "Remove %(field_label)s"%common_vals
             , "annal:field_fields":
@@ -1635,14 +1635,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_ref_field_values = (
             { "annal:id":                   ref_field_id
             , "annal:type":                 "annal:Field"
-            , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals['field_label']
+            , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
             , "annal:field_value_type":     "annal:Field_list"
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
-            , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals['field_label']
+            , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals
             , "annal:field_ref_type":       "Default_type"
             , "annal:field_fields":
               [ { "annal:field_id":         "%(field_typeid)s/%(field_id)s"%common_vals

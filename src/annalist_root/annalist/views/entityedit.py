@@ -1961,11 +1961,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
                 )
-            repeat_field_label       = message.MANY_FIELD_LABEL%field_label
-            repeat_field_comment     = message.MANY_FIELD_COMMENT%field_label
-            repeat_field_placeholder = message.MANY_FIELD_PLACEHOLDER%field_label
-            repeat_field_add         = message.MANY_FIELD_ADD%field_label
-            repeat_field_delete      = message.MANY_FIELD_DELETE%field_label
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            repeat_field_label       = message.MANY_FIELD_LABEL%field_params
+            repeat_field_comment     = message.MANY_FIELD_COMMENT%field_params
+            repeat_field_placeholder = message.MANY_FIELD_PLACEHOLDER%field_params
+            repeat_field_add         = message.MANY_FIELD_ADD%field_params
+            repeat_field_delete      = message.MANY_FIELD_DELETE%field_params
             # Create repeat-field referencing group
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
@@ -2029,11 +2030,12 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
                 )
-            repeat_field_label       = message.LIST_FIELD_LABEL%field_label
-            repeat_field_comment     = message.LIST_FIELD_COMMENT%field_label
-            repeat_field_placeholder = message.LIST_FIELD_PLACEHOLDER%field_label
-            repeat_field_add         = message.LIST_FIELD_ADD%field_label
-            repeat_field_delete      = message.LIST_FIELD_DELETE%field_label
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            repeat_field_label       = message.LIST_FIELD_LABEL%field_params
+            repeat_field_comment     = message.LIST_FIELD_COMMENT%field_params
+            repeat_field_placeholder = message.LIST_FIELD_PLACEHOLDER%field_params
+            repeat_field_add         = message.LIST_FIELD_ADD%field_params
+            repeat_field_delete      = message.LIST_FIELD_DELETE%field_params
             # Create repeat-field referencing group
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
@@ -2097,9 +2099,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list else 
                 ""
                 )
-            ref_field_label       = message.FIELD_REF_LABEL%field_label
-            ref_field_comment     = message.FIELD_REF_COMMENT%field_label
-            ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_label
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            ref_field_label       = message.FIELD_REF_LABEL%field_params
+            ref_field_comment     = message.FIELD_REF_COMMENT%field_params
+            ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_params
             # Create field referencing field
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID

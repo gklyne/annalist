@@ -34,16 +34,14 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: display list with no fields generates error
 - [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
 - [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
-- [.] Separate buttons for create list and multiple-value fields (seq vs set)
+- [x] Separate buttons for create list and multiple-value fields (seq vs set)
     - Was: When creating a repeat field, distinguish cases for list and set: for set, use "set" render type, entity type for range of repeat field, and '@id' for property.
     - See references to "Define_repeat_field" in:
         - [x] data/sitedata/_view/Field_view/view_meta.jsonld
         - [x] views/entityedit.py
         - [x] tests/test_recordfield.py
-        - [ ] data/Annalist_schema/entitydata/Property/task_buttons/entity_data.jsonld
-- [ ] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
-        # <property label>
-        Zero, one or more instances of [<range type label>]($BASE:_type/<range type>).
+        - [x] data/Annalist_schema/entitydata/Property/task_buttons/entity_data.jsonld
+- [x] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
 - [ ] Default type list/view comments: include link to type
 - [ ] Create FAQ for defining subtypes and sub-properties
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")

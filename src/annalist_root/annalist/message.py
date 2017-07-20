@@ -203,23 +203,26 @@ TYPE_VIEW_COMMENT           = "# %(type_label)s view\n\nView entity of type %(ty
 TYPE_LIST_LABEL             = "%(type_label)s list"
 TYPE_LIST_COMMENT           = "# %(type_label)s list\n\nList entities of type %(type_label)s"
 
-MANY_FIELD_LABEL          = "%s (repeating)"
-MANY_FIELD_COMMENT        = "%s (repeating)"
-MANY_FIELD_PLACEHOLDER    = "(Repetition of %s field)"
-MANY_FIELD_ADD            = "Add %s"
-MANY_FIELD_DELETE         = "Remove %s"
+MANY_FIELD_LABEL            = "%(field_label)s (repeating)"
+MANY_FIELD_COMMENT          = (
+    "# %(field_label)s (repeating)\n\n"+
+    "Zero, one or more instances of [%(field_label)s]($BASE:_field/%(field_id)s)."
+    )
+MANY_FIELD_PLACEHOLDER      = "(Zero, one or more %(field_label)s fields)"
+MANY_FIELD_ADD              = "Add %(field_label)s"
+MANY_FIELD_DELETE           = "Remove %(field_label)s"
 
-LIST_FIELD_LABEL          = "%s (sequence)"
-LIST_FIELD_COMMENT        = "%s (sequence)"
-LIST_FIELD_PLACEHOLDER    = "(Sequence of %s fields)"
-LIST_FIELD_ADD            = "Add %s"
-LIST_FIELD_DELETE         = "Remove %s"
+LIST_FIELD_LABEL            = "%(field_label)s (sequence)"
+LIST_FIELD_COMMENT          = (
+    "# %(field_label)s (sequence)\n\n"+
+    "List of [%(field_label)s]($BASE:_field/%(field_id)s) fields."
+    )
+LIST_FIELD_PLACEHOLDER      = "(Sequence of %(field_label)s fields)"
+LIST_FIELD_ADD              = "Add %(field_label)s"
+LIST_FIELD_DELETE           = "Remove %(field_label)s"
 
-# REPEAT_GROUP_LABEL          = "%s"
-# REPEAT_GROUP_COMMENT        = "%s"
-
-FIELD_REF_LABEL             = "%s (ref)"
-FIELD_REF_COMMENT           = "%s (ref)"
-FIELD_REF_PLACEHOLDER       = "(Reference field %s)"
+FIELD_REF_LABEL             = "%(field_label)s (ref)"
+FIELD_REF_COMMENT           = "%(field_label)s (ref)"
+FIELD_REF_PLACEHOLDER       = "(Reference to %(field_label)s field)"
 
 # End.
