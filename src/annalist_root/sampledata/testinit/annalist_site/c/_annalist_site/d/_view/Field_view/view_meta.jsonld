@@ -70,6 +70,20 @@
     }
   ]
 , "annal:edit_task_buttons":
+  [ { "annal:button_id":        "_task/Define_many_field" 
+    , "annal:button_label":     "Define repeat field"
+    , "annal:button_help":      "Define new field that allows zero, one or more occurrences of the current field.  The multiple occurrences are supported through repeated use of the field property URI (as opposed to a list field).  (New set field definitions are created with default values derived from the current field, and may be edited later.)"
+    }
+  , { "annal:button_id":        "_task/Define_list_field" 
+    , "annal:button_label":     "Define list field"
+    , "annal:button_help":      "Define new field that contains an ordered list of values of the current field.  The multiple values are represented using an RDF list structure.  (New list field definitions are created with default values derived from the current field, and may be edited later.)"
+    }
+  , { "annal:button_id":        "_task/Define_field_ref"
+    , "annal:button_label":     "Define field reference"
+    , "annal:button_help":      "Define new field containing a reference to the current field.  (New definitions have default values, and may be edited later.  Additional fields may be added later.)"
+    }
+  ]
+, "annal:orig_task_buttons":
   [ { "annal:button_id":        "_task/Define_repeat_field" 
     , "annal:button_label":     "Define repeat field"
     , "annal:button_help":      "Define new field that repeats the current field.  (New definitions have default values, and may be edited later.  Additional repeated fields may be added later.)"
