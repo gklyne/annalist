@@ -302,7 +302,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         """    <button type="submit" \n"""+
         """            name="%(name)s__new_edit" \n"""+
         """            value="New"\n"""+
-        """            title="Define new %(label)s">\n"""+
+        """            title="Define new or edit %(label)s">\n"""+
         """      <span class="select-edit-button-text">+&#x270D;</span>\n"""+
         """    </button>\n"""+
         """  </div>\n"""+

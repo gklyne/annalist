@@ -81,7 +81,7 @@ edit_select = (
         <button type="submit" 
                 name="{{repeat_prefix}}{{field.field_name}}__new_edit" 
                 value="New"
-                title="Define new {{field.field_label}}"
+                title="Define new or edit {{field.field_label}}"
         >
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>

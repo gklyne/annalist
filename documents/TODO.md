@@ -43,7 +43,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - [x] data/Annalist_schema/entitydata/Property/task_buttons/entity_data.jsonld
 - [x] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
 - [x] Default type list/view and subtype comments: include link to type
-- [ ] Create FAQ for defining subtypes
+- [x] Create FAQ for defining subtypes
 - [ ] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.

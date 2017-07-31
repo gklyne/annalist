@@ -18,3 +18,4 @@ A similar thing works for collection entity listings, where a key "annal:entity_
 
 I'd suggest experimenting with the CURL tool to get a feel for what is available.
 
+@@TODO: generate link headers for accessing data from other views.

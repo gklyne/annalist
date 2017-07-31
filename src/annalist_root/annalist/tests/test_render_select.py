@@ -157,7 +157,7 @@ class SelectRenderingTest(FieldRendererTestSupport):
                 '''    <button type="submit" \n'''+
                 '''            name="%s__new_edit" \n'''+
                 '''            value="New"\n'''+
-                '''            title="Define new %s"\n'''+
+                '''            title="Define new or edit %s"\n'''+
                 '''    >\n'''+
                 '''      <span class="select-edit-button-text">+&#x270D;</span>\n'''+
                 '''    </button>\n'''+
