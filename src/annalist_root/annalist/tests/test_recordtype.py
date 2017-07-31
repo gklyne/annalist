@@ -757,7 +757,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="copytype", 
             orig_id="Default_type", orig_coll="_annalist_site", action="copy", 
-            update="RecordType"
+            update="RecordType",
+            type_uri=" test:type "  # Tests space stripping
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
@@ -768,7 +769,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_record_type_values("copytype", update="RecordType")
+        self._check_record_type_values("copytype", update="RecordType", type_uri="test:type")
         return
 
     def test_post_copy_type_cancel(self):

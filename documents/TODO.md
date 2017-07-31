@@ -45,8 +45,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Default type list/view and subtype comments: include link to type
 - [x] Create FAQ for defining subtypes
 - [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
-- [ ] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
-- [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+- [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [ ] When inheriting definitions, also use parent default view if none defined locally.
 - [ ] Turtle rendering
     - [ ] Replicate JSON-LD rendering functions in generic.py
@@ -58,6 +57,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
+- [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
