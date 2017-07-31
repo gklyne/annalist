@@ -89,7 +89,7 @@ from entity_testlistdata    import recordlist_url
 
 class EntityInheritListViewTest(AnnalistTestCase):
     """
-    Tests for record type edit views
+    Tests for listing entities inherited from parent collection.
     """
 
     def setUp(self):

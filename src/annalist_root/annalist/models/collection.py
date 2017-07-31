@@ -156,6 +156,16 @@ class Collection(Entity):
             log.error(msg)
             raise ValueError(msg)
         self[ANNAL.CURIE.inherit_from] = make_type_entity_id(layout.COLL_TYPEID, altparent.get_id())
+        if not (
+            self.get(ANNAL.CURIE.default_list,        None) or 
+            self.get(ANNAL.CURIE.default_view_type,   None) or 
+            self.get(ANNAL.CURIE.default_view_entity, None)
+            ):
+            # Copy default collection view details from parent if none defined locally
+            self[ANNAL.CURIE.default_list]        = altparent.get(ANNAL.CURIE.default_list,        None)
+            self[ANNAL.CURIE.default_view_id]     = altparent.get(ANNAL.CURIE.default_view_id,     None)
+            self[ANNAL.CURIE.default_view_type]   = altparent.get(ANNAL.CURIE.default_view_type,   None)
+            self[ANNAL.CURIE.default_view_entity] = altparent.get(ANNAL.CURIE.default_view_entity, None)
         return parents
 
     @classmethod
@@ -227,7 +237,7 @@ class Collection(Entity):
 
         cls         is the Collection class object.
         parent      is the parent from which the collection is descended.
-        coll_id    is the local identifier (slug) for the collection.
+        coll_id     is the local identifier (slug) for the collection.
         altscope    if supplied, indicates a scope other than the current collection
                     to search for children.
 

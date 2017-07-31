@@ -125,7 +125,7 @@ class Entity(EntityRoot):
 
     def set_alt_entities(self, altparent):
         """
-        Update the alternative parent for the current collection.
+        Update the alternative parent for the current entity.
 
         Returns a list of parents accessible from the supplied altparent (including itself)
         """

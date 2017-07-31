@@ -6,11 +6,13 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 # Documentation
 
 - [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
+- [ ] Update tutorial
+    - Also cover inheritance of definitions?
+- [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [ ] Update tutorial to cover inheritance of definitions
-- [ ] New demo screencast(s)
-- [ ] Build up corpus of FAQs
+    - Also FAQs?
+- [x] Initial corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 
@@ -25,7 +27,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
     - Enhance create view+list logic to copy previous view+liust as defaults
 - [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
-- [.] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
+- [x] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
     - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
     - needs testing still: check with new installation at dhoxss.annalist.net
 - [x] BUG: when default view references non-accessible entity: 
@@ -46,7 +48,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Create FAQ for defining subtypes
 - [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
-- [ ] When inheriting definitions, also use parent default view if none defined locally.
+- [x] When inheriting definitions, also use parent default view if none defined locally.
 - [ ] Turtle rendering
     - [ ] Replicate JSON-LD rendering functions in generic.py
     - [ ] Add Turtle redirect calls alongside JSON-LD redirects
