@@ -180,7 +180,8 @@ MOVE_FIELD_ERROR            = "Problem with move field up/down request"
 NO_FIELD_SELECTED           = "No field(s) selected"
 
 CREATE_FIELD_ENTITY_ERROR   = "Create new entity error"
-NO_REFER_TO_TYPE			= "Field '%(field_label)s' does not specify a valid 'Refer to type'"
+NO_REFER_TO_TYPE			      = "Field '%(field_label)s' does not specify a valid 'Refer to type'"
+MISSING_FIELD_LABEL         = "(field missing: '%(id)s')"
 
 VIEW_DESCRIPTION_HEADING    = "Problem with view description"
 VIEW_PROPERTY_DUPLICATE     = "Field %(field_id)s repeats use of property %(property_uri)s in view"
