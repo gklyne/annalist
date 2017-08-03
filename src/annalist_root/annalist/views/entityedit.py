@@ -456,8 +456,15 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("form_render.viewcontext['fields'] %r"%(viewcontext['fields'],))        
         # Generate and return form data
+        entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
         return (
-            self.render_html(viewcontext, self.formtemplate) or 
+            self.render_html(
+                viewcontext, self.formtemplate,
+                links=[
+                    { "rel": "canonical"
+                    , "ref": entity_baseurl
+                    }]
+                ) or 
             self.redirect_json(
                 self.get_entity_data_url(
                     coll_id, type_id, entity_id, 
@@ -465,7 +472,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     ),
                 links=[
                     { "rel": "canonical"
-                    , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
+                    , "ref": entity_baseurl
                     }]
                 ) or
             self.redirect_turtle(
@@ -475,7 +482,7 @@ class GenericEntityEditView(AnnalistGenericView):
                     ),
                 links=[
                     { "rel": "canonical"
-                    , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
+                    , "ref": entity_baseurl
                     }]
                 ) or
             self.error(self.error406values())

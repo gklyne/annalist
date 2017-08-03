@@ -442,7 +442,7 @@ class AnnalistGenericView(ContentNegotiationView):
     # HTML rendering
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
-    def render_html(self, resultdata, template_name):
+    def render_html(self, resultdata, template_name, links=[]):
         """
         Construct an HTML response based on supplied data and template name.
 
@@ -477,13 +477,16 @@ class AnnalistGenericView(ContentNegotiationView):
         # log.debug("render_html - data: %r"%(resultdata))
         response = HttpResponse(template.render(context))
         if "entity_data_ref" in resultdata:
-            response["Link"] = "<%(entity_data_ref)s>; rel=alternate"%resultdata
+            alt_link = [ { "ref": resultdata["entity_data_ref"], "rel": "alternate" } ]
+        else:
+            alt_link = []
+        response = self.add_link_header(response, links=alt_link+links)
         return response
 
     # JSON and Turtle content negotiation and redirection
 
     @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
-    def redirect_json(self, jsonref, links={}):
+    def redirect_json(self, jsonref, links=[]):
         """
         Construct a redirect response to access JSON data at the designated URL.
 
@@ -495,11 +498,11 @@ class AnnalistGenericView(ContentNegotiationView):
         otherwise None.
         """
         response = HttpResponseRedirect(jsonref)
-        response = self.add_link_header(response, links)
+        response = self.add_link_header(response, links=links)
         return response
 
     @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
-    def redirect_turtle(self, turtleref, links={}):
+    def redirect_turtle(self, turtleref, links=[]):
         """
         Construct a redirect response to access Turtle data at the designated URL.
 
@@ -511,7 +514,7 @@ class AnnalistGenericView(ContentNegotiationView):
         otherwise None.
         """
         response = HttpResponseRedirect(turtleref)
-        response = self.add_link_header(response, links)
+        response = self.add_link_header(response, links=links)
         return response
 
     # @@TODO: remove these; if necessary, apply content negotiation filters in entityresourceacess.py
@@ -590,7 +593,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #     self.assertIn( (URIRef(s), URIRef(p), o), g)
         #@@
 
-    def add_link_header(self, response, links={}):
+    def add_link_header(self, response, links=[]):
         """
         Add HTTP link header to response, and return the updated response.
 

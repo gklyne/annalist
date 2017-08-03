@@ -56,12 +56,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
         - Site: see SiteResourceAccess
         - Collections: see CollectionResourceAccess
     - [x] Replicate JSON-LD rendering functions in generic.py
-    - [.] Implement render_turtle logic in generic view (skeleton is defined)
-    - [.] Turtle: needs to convert data: new module "EntityTurtle" to handle redirect from EntityEdit; dispatched via same path as "EntityResourceAccess".
+    - [x] Implement Turtle rendering logic in EntityResourceAccess
+    - [x] Rework logic for adding Link headers
     - [x] Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
         - DisplayInfo.get_entity_data_ref uses class metadata file name via EntityTypeInfo.
-    - [ ] In EntityResourceAccess, handle .ttl access via EntityTurtle
-        - Hence rendering always dispatch via EntityResourceAccess
+    - [x] In EntityResourceAccess, handle .ttl access via Turtle renderer
     - [ ] Create test cases for Turtle output (based on JSON-LD test cases?)
     - [ ] Refactor the entity resource rendering logic
         - use common function to handle content negotiation and filename selection

@@ -13,8 +13,12 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import os
+import json
+import StringIO
 import logging
 log = logging.getLogger(__name__)
+
+from rdflib                             import Graph, URIRef, Literal
 
 from django.http                        import HttpResponse
 
@@ -63,15 +67,58 @@ def entity_resource_file(entity, resource_info):
     """
     return entity.resource_file(resource_info["resource_path"])
 
-def json_resource_file(baseurl, entity_values, resource_info):
+def json_resource_file(baseurl, jsondata, resource_info):
     """
     Return a file object that reads out a JSON version of the supplied entity values data. 
     """
+    response_file = StringIO.StringIO()
+    json.dump(jsondata, response_file, indent=2, separators=(',', ': '), sort_keys=True)
+    response_file.seek(0)
+    return response_file
 
-def turtle_resource_file(baseurl, entity_values, resource_info):
+def turtle_resource_file(baseurl, jsondata, resource_info):
     """
     Return a file object that reads out a Turtle version of the supplied entity values data. 
+
+    baseurl     base URL for resolving relative URI references for Turtle output.
+    jsondata    is the data to be formatted and returned.
+    links       is an optional array of link values to be added to the HTTP response
+                (see method add_link_header for description).
     """
+    # log.debug("@@ turtle_resource_file - data: %r"%(jsondata))
+    # log.info("@@ baseurl %s"%(baseurl,))
+    jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
+    response_file = StringIO.StringIO()
+    g = Graph()
+    g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
+    g.serialize(destination=response_file, format='turtle', indent=4)
+    response_file.seek(0)
+    return response_file
+
+        # # Read entity data as JSON-LD
+        # g = Graph()
+        # s = entity1._read_stream()
+        # b = ( "file://" + 
+        #       os.path.join(
+        #         TestBaseDir, 
+        #         layout.SITE_ENTITY_PATH%
+        #           { 'coll_id': self.testcoll.get_id()
+        #           , 'type_id': testdata.get_id()
+        #           , 'id':      entity1.get_id()
+        #           }
+        #         )
+        #     )
+        # # print "***** b: "+repr(b)
+        # # print "***** s: "+s.read()
+        # # s.seek(0)
+        # result = g.parse(source=s, publicID=b+"/", format="json-ld")
+        # # print "*****"+repr(result)
+        # # print("***** g: (entity1)")
+        # # print(g.serialize(format='turtle', indent=4))
+
+
+
+
 
 def make_turtle_resource_info(json_resource):
     """
@@ -148,11 +195,11 @@ class EntityResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
+        entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
         if "resource_access" in resource_info:
             # Use indicated resource access renderer
-            baseurl  = self.get_entity_base_url(coll_id, type_id, entity_id)
             jsondata = entity.get_values()
-            resource_file = resource_info["resource_access"](baseurl, jsondata, resource_info)
+            resource_file = resource_info["resource_access"](entity_baseurl, jsondata, resource_info)
         else:
             # Return resource data direct from storage
             resource_file = entity_resource_file(entity, resource_info)
@@ -174,7 +221,11 @@ class EntityResourceAccess(AnnalistGenericView):
             #         is there a cleaner way?
             if "type" in viewinfo.request_dict:
                 return_type = viewinfo.request_dict["type"]
-            response = self.resource_response(resource_file, return_type)
+            links=[
+                { "rel": "canonical"
+                , "ref": entity_baseurl
+                }]
+            response = self.resource_response(resource_file, return_type, links=links)
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -227,7 +278,7 @@ class EntityResourceAccess(AnnalistGenericView):
                     return f
         return None
 
-    def resource_response(self, resource_file, resource_type):
+    def resource_response(self, resource_file, resource_type, links={}):
         """
         Construct response containing body of referenced resource,
         with supplied resource_type as its content_type
@@ -235,6 +286,7 @@ class EntityResourceAccess(AnnalistGenericView):
         # @@TODO: assumes response can reasonably be held in memory;
         #         consider 'StreamingHttpResponse'?
         response = HttpResponse(content_type=resource_type)
+        response = self.add_link_header(response, links)
         response.write(resource_file.read())
         return response
 
