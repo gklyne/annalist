@@ -136,7 +136,7 @@ urlpatterns = patterns('',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
 
-    # JSON list views
+    # JSON specified list views
     url(r'^c/(?P<coll_id>\w{1,128})/l/entity_list\.jsonld$',
                             EntityGenericListJsonView.as_view(),
                             name='AnnalistEntityJsonListAll'),

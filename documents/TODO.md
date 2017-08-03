@@ -49,13 +49,27 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [x] When inheriting definitions, also use parent default view if none defined locally.
-- [ ] Turtle rendering
-    - [ ] Replicate JSON-LD rendering functions in generic.py
-    - [ ] Add Turtle redirect calls alongside JSON-LD redirects
-    - [ ] Locate and add logic for Turtle rendering alongside JSON-LD
+- [.] Turtle rendering
+    - [x] Locate logic for Turtle rendering alongside JSON-LD
         - Entities: see EntityResourceAccess - returns file content and headers (JSON-LD is native).  render_json method not currently used.
         - Lists: see EntityGenericListJsonView - constructs list and adds headers
-        - Turtle: needs to convert data: new module "EntityTurtle" to catch redirect from EntityEdit; needs to go through same path as "EntityResourceAccess".
+        - Site: see SiteResourceAccess
+        - Collections: see CollectionResourceAccess
+    - [x] Replicate JSON-LD rendering functions in generic.py
+    - [.] Implement render_turtle logic in generic view (skeleton is defined)
+    - [.] Turtle: needs to convert data: new module "EntityTurtle" to handle redirect from EntityEdit; dispatched via same path as "EntityResourceAccess".
+    - [x] Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
+        - DisplayInfo.get_entity_data_ref uses class metadata file name via EntityTypeInfo.
+    - [ ] In EntityResourceAccess, handle .ttl access via EntityTurtle
+        - Hence rendering always dispatch via EntityResourceAccess
+    - [ ] Create test cases for Turtle output (based on JSON-LD test cases?)
+    - [ ] Refactor the entity resource rendering logic
+        - use common function to handle content negotiation and filename selection
+        - (for lists too?)
+    - Lists: ListResourceAccess mirroring EntityResourceAccess?
+    - [ ] Lists: create EntityGenericListTurtleView, similar to EntityGenericListJsonView
+    - [ ] Lists: Add entries to urls.py (or switch to using type param?)
+    - [ ] Lists: Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
 
 (Sub-release?)
 

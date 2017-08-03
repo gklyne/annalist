@@ -765,6 +765,18 @@ class DisplayInfo(object):
             )
         return data_ref
 
+    def get_entity_turtle_ref(self, return_type=None):
+        assert self.curr_typeinfo is not None
+        jsonfile = self.curr_typeinfo.entityclass._entityfile
+        assert jsonfile.endswith(".jsonld")
+        turtlefile = jsonfile[0:-7]+".ttl"
+        data_ref = make_data_ref(
+            self.view.get_request_path(),   # For parameter values
+            turtlefile, 
+            return_type
+            )
+        return data_ref
+
     def get_entity_list_ref(self, return_type=None):
         """
         Returns a string that can be used as a reference to the entity list data

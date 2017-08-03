@@ -409,10 +409,13 @@ class AnnalistGenericView(ContentNegotiationView):
         typeinfo        EntityTypeInfo object for the entity
         action          is the requested action: new, edit, copy, view
 
-        returns an object of the appropriate type.
+        Returns an object of the appropriate type.
 
         If an existing entity is accessed, values are read from storage, 
-        otherwise a new entity object is created but not yet saved.
+
+        If the identified entity does not exist and `action` is "new" then 
+        a new entity is initialized (but not saved), otherwise the entity 
+        value returned is None.
         """
         # log.info(
         #     "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
@@ -420,6 +423,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #     )
         entity = typeinfo.get_entity(entity_id, action)
         if entity is None:
+            # Log diagnostics for missing entity
             parent_id    = typeinfo.entityparent.get_id()
             altparent_id = (
                 typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent 
@@ -476,24 +480,7 @@ class AnnalistGenericView(ContentNegotiationView):
             response["Link"] = "<%(entity_data_ref)s>; rel=alternate"%resultdata
         return response
 
-    # JSON and Turtle rendering
-
-    @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
-    def render_json(self, jsondata, links={}):
-        """
-        Construct a JSON response based on the supplied data.
-
-        jsondata    is the data to be formatted and returned.
-        links       is an optional array of link values to be added to the HTTP response
-                    (see method add_link_header for description).
-        """
-        # log.debug("render_json - data: %r"%(jsondata))
-        response = HttpResponse(
-            json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
-            content_type="application/ld+json"
-            )
-        response = self.add_link_header(response, links)
-        return response
+    # JSON and Turtle content negotiation and redirection
 
     @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
     def redirect_json(self, jsonref, links={}):
@@ -503,27 +490,66 @@ class AnnalistGenericView(ContentNegotiationView):
         jsonref     is the URL from which JSON data may be retrieved.
         links       is an optional array of link values to be added to the HTTP response
                     (see method add_link_header for description).
+
+        Returns an HTTP redirect response object if the current request is for JSON data,
+        otherwise None.
         """
         response = HttpResponseRedirect(jsonref)
         response = self.add_link_header(response, links)
         return response
 
     @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
-    def render_turtle(self, jsondata, links={}):
+    def redirect_turtle(self, turtleref, links={}):
         """
-        Construct a Turtle-formatted response using the supplied data.
+        Construct a redirect response to access Turtle data at the designated URL.
 
-        jsondata    is the data to be formatted and returned.
+        turtleref   is the URL from which JSON turtle may be retrieved.
         links       is an optional array of link values to be added to the HTTP response
                     (see method add_link_header for description).
+
+        Returns an HTTP redirect response object if the current request is for Turtle data,
+        otherwise None.
         """
-        # log.debug("render_turtle - data: %r"%(jsondata))
-        response = HttpResponse(
-            "@@ Turtle renderer not yet implemented -- see test_jsonld_context for using rdflib @@",
-            content_type="text/turtle"
-            )
+        response = HttpResponseRedirect(turtleref)
         response = self.add_link_header(response, links)
         return response
+
+    # @@TODO: remove these; if necessary, apply content negotiation filters in entityresourceacess.py
+
+    # @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
+    # def render_json(self, jsondata, links={}):
+    #     """
+    #     Construct a JSON response based on the supplied data.
+
+    #     jsondata    is the data to be formatted and returned.
+    #     links       is an optional array of link values to be added to the HTTP response
+    #                 (see method add_link_header for description).
+    #     """
+    #     # log.debug("render_json - data: %r"%(jsondata))
+    #     response = HttpResponse(
+    #         json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
+    #         content_type="application/ld+json"
+    #         )
+    #     response = self.add_link_header(response, links)
+    #     return response
+
+    # @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
+    # def render_turtle(self, jsondata, baseurl=None, links={}):
+    #     """
+    #     Construct a Turtle-formatted response using the supplied data.
+
+    #     jsondata    is the data to be formatted and returned.
+    #     baseurl     base URL for resolving relative URI references for Turtle output.
+    #     links       is an optional array of link values to be added to the HTTP response
+    #                 (see method add_link_header for description).
+    #     """
+    #     # log.debug("render_turtle - data: %r"%(jsondata))
+    #     response = HttpResponse(
+    #         "@@ Turtle renderer not yet implemented -- see test_jsonld_context for using rdflib @@",
+    #         content_type="text/turtle"
+    #         )
+    #     response = self.add_link_header(response, links)
+    #     return response
 
         #@@
         #     json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
@@ -563,19 +589,6 @@ class AnnalistGenericView(ContentNegotiationView):
         #     ]):
         #     self.assertIn( (URIRef(s), URIRef(p), o), g)
         #@@
-
-    @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
-    def redirect_turtle(self, turtleref, links={}):
-        """
-        Construct a redirect response to access Turtle data at the designated URL.
-
-        turtleref   is the URL from which JSON data may be retrieved.
-        links       is an optional array of link values to be added to the HTTP response
-                    (see method add_link_header for description).
-        """
-        response = HttpResponseRedirect(turtleref)
-        response = self.add_link_header(response, links)
-        return response
 
     def add_link_header(self, response, links={}):
         """

@@ -468,6 +468,16 @@ class GenericEntityEditView(AnnalistGenericView):
                     , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
                     }]
                 ) or
+            self.redirect_turtle(
+                self.get_entity_data_url(
+                    coll_id, type_id, entity_id, 
+                    viewinfo.get_entity_turtle_ref()
+                    ),
+                links=[
+                    { "rel": "canonical"
+                    , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
+                    }]
+                ) or
             self.error(self.error406values())
             )
 
