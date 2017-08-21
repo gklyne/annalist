@@ -42,7 +42,6 @@ entity_fixed_json_resources = (
                                                     "resource_type": "application/ld+json" }
     , { "resource_name": layout.COLL_PROV_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
                                                     "resource_type": "application/ld+json" }
-    # , { "resource_name": layout.COLL_CONTEXT_FILE,  "resource_dir": ".", "resource_type": "application/ld+json" }
     , { "resource_name": layout.TYPE_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
     , { "resource_name": layout.TYPE_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
     , { "resource_name": layout.LIST_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
@@ -139,14 +138,6 @@ def find_entity_resource(entity, resource_ref):
     fr = find_fixed_resource(entity_fixed_json_resources, resource_ref)
     if fr:
         return fr
-    # for fj in entity_fixed_json_resources:
-    #     if fj["resource_name"] == resource_ref:
-    #         fr = dict(fj, resource_path=os.path.join(fj["resource_dir"]+"/", resource_ref))
-    #         return fr
-    #     ft = make_turtle_resource_info(fj)
-    #     if ft["resource_name"] == resource_ref:
-    #         fr = dict(ft, resource_path=os.path.join(ft["resource_dir"]+"/", resource_ref))
-    #         return fr
     for t, f in entity.enum_fields():
         # log.debug("find_resource: t %s, f %r"%(t,f))
         if isinstance(f, dict):

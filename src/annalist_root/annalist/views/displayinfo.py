@@ -731,11 +731,6 @@ class DisplayInfo(object):
         """
         Update continuation URI to reflect renamed type or entity.
         """
-        # def update_hop(chop):
-        #     return url_update_type_entity_id(chop, 
-        #         old_type_id=old_type_id, new_type_id=new_type_id, 
-        #         old_entity_id=old_entity_id, new_entity_id=new_entity_id
-        #         )
         curi = self.continuation_url
         if curi:
             hops = continuation_url_chain(curi)

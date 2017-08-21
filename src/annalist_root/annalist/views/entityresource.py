@@ -25,8 +25,6 @@ from django.http                        import HttpResponse
 from annalist                           import message
 from annalist                           import layout
 
-# from annalist.models.entitytypeinfo     import EntityTypeInfo
-
 from annalist.models.entityresourceaccess import (
     find_entity_resource,
     entity_resource_file,
@@ -37,106 +35,6 @@ from annalist.models.entityresourceaccess import (
 
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
-
-# Resource info data for built-in entity data
-
-# fixed_json_resources = (
-#     [ { "resource_name": layout.COLL_META_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
-#                                                     "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.COLL_PROV_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
-#                                                     "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.COLL_CONTEXT_FILE,  "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.TYPE_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.TYPE_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.LIST_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.LIST_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.VIEW_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.VIEW_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.GROUP_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.GROUP_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.FIELD_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.FIELD_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.VOCAB_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.VOCAB_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.USER_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.USER_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.ENUM_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.ENUM_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.TYPEDATA_META_FILE, "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.ENTITY_DATA_FILE,   "resource_dir": ".", "resource_type": "application/ld+json" }
-#     , { "resource_name": layout.ENTITY_PROV_FILE,   "resource_dir": ".", "resource_type": "application/ld+json" }
-#     ])
-
-# # Helpter functions
-
-# def entity_resource_file(entity, resource_info):
-#     """
-#     Return a file object that reads out the content of a resource attached to a specified entity.
-#     """
-#     return entity.resource_file(resource_info["resource_path"])
-
-# def json_resource_file(baseurl, jsondata, resource_info):
-#     """
-#     Return a file object that reads out a JSON version of the supplied entity values data. 
-#     """
-#     response_file = StringIO.StringIO()
-#     json.dump(jsondata, response_file, indent=2, separators=(',', ': '), sort_keys=True)
-#     response_file.seek(0)
-#     return response_file
-
-# def turtle_resource_file(baseurl, jsondata, resource_info):
-#     """
-#     Return a file object that reads out a Turtle version of the supplied entity values data. 
-
-#     baseurl     base URL for resolving relative URI references for Turtle output.
-#     jsondata    is the data to be formatted and returned.
-#     links       is an optional array of link values to be added to the HTTP response
-#                 (see method add_link_header for description).
-#     """
-#     # log.debug("@@ turtle_resource_file - data: %r"%(jsondata))
-#     # log.info("@@ baseurl %s"%(baseurl,))
-#     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
-#     response_file = StringIO.StringIO()
-#     g = Graph()
-#     g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
-#     g.serialize(destination=response_file, format='turtle', indent=4)
-#     response_file.seek(0)
-#     return response_file
-
-#         # # Read entity data as JSON-LD
-#         # g = Graph()
-#         # s = entity1._read_stream()
-#         # b = ( "file://" + 
-#         #       os.path.join(
-#         #         TestBaseDir, 
-#         #         layout.SITE_ENTITY_PATH%
-#         #           { 'coll_id': self.testcoll.get_id()
-#         #           , 'type_id': testdata.get_id()
-#         #           , 'id':      entity1.get_id()
-#         #           }
-#         #         )
-#         #     )
-#         # # print "***** b: "+repr(b)
-#         # # print "***** s: "+s.read()
-#         # # s.seek(0)
-#         # result = g.parse(source=s, publicID=b+"/", format="json-ld")
-#         # # print "*****"+repr(result)
-#         # # print("***** g: (entity1)")
-#         # # print(g.serialize(format='turtle', indent=4))
-
-# def make_turtle_resource_info(json_resource):
-#     """
-#     Return Turtle resource description for fixed JSON resource
-#     """
-#     turtle_resource = (
-#         { "resource_name":      json_resource["resource_name"][0:-7]+".ttl"
-#         , "resource_dir":       json_resource["resource_dir"]
-#         , "resource_type":      "text/turtle"
-#         , "resource_access":    turtle_resource_file
-#         })
-#     return turtle_resource
-
-# Entity resource access view
 
 class EntityResourceAccess(AnnalistGenericView):
     """
@@ -246,8 +144,6 @@ class EntityResourceAccess(AnnalistGenericView):
         Assemble display information for entity view request handler
         """
         action                        = "view"
-        #@@ self.site_view_url            = self.view_uri("AnnalistSiteView")
-        #@@ self.collection_view_url      = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = None
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
@@ -257,30 +153,6 @@ class EntityResourceAccess(AnnalistGenericView):
         # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
-
-    # def find_resource(self, entity, resource_ref):
-    #     """
-    #     Return a description for the indicated entity resource, or None
-    #     """
-    #     log.debug(
-    #         "EntityResourceAccess.find_resource %s/%s/%s"%
-    #         (entity.get_type_id(), entity.get_id(), resource_ref)
-    #         )
-    #     for fj in fixed_json_resources:
-    #         if fj["resource_name"] == resource_ref:
-    #             fr = dict(fj, resource_path=os.path.join(fj["resource_dir"]+"/", resource_ref))
-    #             return fr
-    #         ft = make_turtle_resource_info(fj)
-    #         if ft["resource_name"] == resource_ref:
-    #             fr = dict(ft, resource_path=os.path.join(ft["resource_dir"]+"/", resource_ref))
-    #             return fr
-    #     for t, f in entity.enum_fields():
-    #         # log.debug("find_resource: t %s, f %r"%(t,f))
-    #         if isinstance(f, dict):
-    #             if f.get("resource_name", None) == resource_ref:
-    #                 f = dict(f, resource_path=resource_ref)
-    #                 return f
-    #     return None
 
     def resource_response(self, resource_file, resource_type, links={}):
         """

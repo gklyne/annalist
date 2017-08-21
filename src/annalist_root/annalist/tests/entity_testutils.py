@@ -345,14 +345,6 @@ def render_choice_options(
             label = escape(label)
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
-    def _unused_select_option(o):
-        selected = ('' if o != sel else ' selected="selected"')
-        if (placeholder is not None) and (o == ""):
-            return '<option value=""%s>%s</option>'%(selected,placeholder)
-        v = value_dict.get(o, None)
-        # value = ('' if v is None else ' value="%s"'%v)
-        value = ' value="%s"'%(v or o)
-        return '<option%s%s>%s</option>'%(selected,value,o)
     #
     select_template = (
         """<select name="%(name)s"%(select_class)s>\n"""+

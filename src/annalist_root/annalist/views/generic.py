@@ -121,14 +121,6 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id=coll_id, type_id=type_id, entity_id=entity_id
             )
 
-    # @@TODO: remove this (not view dependent logoc - doesn't belong here)
-    def _unused_get_entity_data_url(self, coll_id, type_id, entity_id, resource_ref):
-        """
-        Return URL for data resource associated with the specified entity
-        """
-        base_url = self.get_entity_base_url(coll_id, type_id, entity_id)
-        return urlparse.urljoin(base_url, resource_ref)
-
     def continuation_next(self, request_dict={}, default_cont=None):
         """
         Returns a continuation URL to be used when returning from the current view,
@@ -526,82 +518,6 @@ class AnnalistGenericView(ContentNegotiationView):
         response = HttpResponseRedirect(turtleref)
         response = self.add_link_header(response, links=links)
         return response
-
-    # @@TODO: remove these; if necessary, apply content negotiation filters in entityresourceacess.py
-
-    # @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
-    # def render_json(self, jsondata, links={}):
-    #     """
-    #     Construct a JSON response based on the supplied data.
-
-    #     jsondata    is the data to be formatted and returned.
-    #     links       is an optional array of link values to be added to the HTTP response
-    #                 (see method add_link_header for description).
-    #     """
-    #     # log.debug("render_json - data: %r"%(jsondata))
-    #     response = HttpResponse(
-    #         json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
-    #         content_type="application/ld+json"
-    #         )
-    #     response = self.add_link_header(response, links)
-    #     return response
-
-    # @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
-    # def render_turtle(self, jsondata, baseurl=None, links={}):
-    #     """
-    #     Construct a Turtle-formatted response using the supplied data.
-
-    #     jsondata    is the data to be formatted and returned.
-    #     baseurl     base URL for resolving relative URI references for Turtle output.
-    #     links       is an optional array of link values to be added to the HTTP response
-    #                 (see method add_link_header for description).
-    #     """
-    #     # log.debug("render_turtle - data: %r"%(jsondata))
-    #     response = HttpResponse(
-    #         "@@ Turtle renderer not yet implemented -- see test_jsonld_context for using rdflib @@",
-    #         content_type="text/turtle"
-    #         )
-    #     response = self.add_link_header(response, links)
-    #     return response
-
-        #@@
-        #     json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
-        #@@
-        # entity1  = EntityData.load(testdata, "entity1")
-        #
-        # # Read entity data as JSON-LD
-        # g = Graph()
-        # s = entity1._read_stream()
-        # b = ( "file://" + 
-        #       os.path.join(
-        #         TestBaseDir, 
-        #         layout.SITE_ENTITY_PATH%
-        #           { 'coll_id': self.testcoll.get_id()
-        #           , 'type_id': testdata.get_id()
-        #           , 'id':      entity1.get_id()
-        #           }
-        #         )
-        #     )
-        # # print "***** b: "+repr(b)
-        # # print "***** s: "+s.read()
-        # # s.seek(0)
-        # result = g.parse(source=s, publicID=b+"/", format="json-ld")
-        # # print "*****"+repr(result)
-        # # print("***** g: (entity1)")
-        # # print(g.serialize(format='turtle', indent=4))
-        #
-        # # Check the resulting graph contents
-        # subj        = b #@@ entity1.get_url()
-        # entity_data = entity1.get_values()
-        # for (s, p, o) in (
-        #     [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
-        #     , (subj, RDFS.URI.comment,   Literal(entity_data[RDFS.CURIE.comment])  )
-        #     , (subj, ANNAL.URI.id,       Literal(entity_data[ANNAL.CURIE.id])      )
-        #     , (subj, ANNAL.URI.type_id,  Literal(entity_data[ANNAL.CURIE.type_id]) )
-        #     , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
-        #     ]):
-        #     self.assertIn( (URIRef(s), URIRef(p), o), g)
-        #@@
 
     def add_link_header(self, response, links=[]):
         """

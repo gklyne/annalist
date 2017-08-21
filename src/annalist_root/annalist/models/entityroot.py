@@ -609,20 +609,6 @@ class EntityRoot(object):
                     msgs.APPEND(message.ENTITY_COPY_FILE_ERROR%msg_vals)
         return msgs
 
-    def _unused_entity_files_dirs(self):
-        #@@TODO: abstract logic to work with non-file storage
-        """
-        Iterates over files/resources that are part of the current entity.
-
-        Returns pairs (p,f), where 'p' is a full path name, and 'f' is a filename within the 
-        current entity directory. 
-        """
-        for f in os.listdir(self._entitydir):
-            p = os.path.join(self._entitydir, f)
-            if os.path.exists(p):
-                yield (p, f)
-        return
-
     def _exists_file(self, f):
         #@@TODO: abstract logic to work with non-file storage
         #        Used by 'entitytypeinfo'

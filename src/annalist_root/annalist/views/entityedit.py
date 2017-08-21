@@ -457,7 +457,6 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("form_render.viewcontext['fields'] %r"%(viewcontext['fields'],))        
         # Generate and return form data
-        #@@@@ entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
         entity_baseurl = (
             viewinfo.reqhost + 
             viewinfo.get_src_entity_resource_url("")
@@ -475,12 +474,6 @@ class GenericEntityEditView(AnnalistGenericView):
                      entity_baseurl,
                      viewinfo.get_entity_data_ref()
                      ),
-                #@@@@
-                # self.get_entity_data_url(
-                #     coll_id, type_id, entity_id, 
-                #     viewinfo.get_entity_data_ref()
-                #     ),
-                #@@@@
                 links=[
                     { "rel": "canonical"
                     , "ref": entity_baseurl
@@ -491,12 +484,6 @@ class GenericEntityEditView(AnnalistGenericView):
                      entity_baseurl,
                      viewinfo.get_entity_turtle_ref()
                      ),
-                #@@@@
-                # self.get_entity_data_url(
-                #     coll_id, type_id, entity_id, 
-                #     viewinfo.get_entity_turtle_ref()
-                #     ),
-                #@@@@
                 links=[
                     { "rel": "canonical"
                     , "ref": entity_baseurl

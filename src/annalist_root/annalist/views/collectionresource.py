@@ -123,32 +123,6 @@ class CollectionResourceAccess(AnnalistGenericView):
         viewinfo.check_authorization(action)
         return viewinfo
 
-    # def _unused_find_resource(self, viewinfo, coll, resource_ref):
-    #     """
-    #     Return a description for the indicated collection resource, or None
-    #     """
-    #     # @@TODO: this is a bit ad-hoc; try to work out structure that works more
-    #     #         uniformly for collections, entities, sites, etc.
-    #     #         (Updated so that the code used is similar to entities - still needs factoring)
-    #     fixed_json_resources = (
-    #         [ { "resource_name": layout.COLL_META_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
-    #                                                         "resource_type": "application/ld+json" }
-    #         , { "resource_name": layout.COLL_PROV_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
-    #                                                         "resource_type": "application/ld+json" }
-    #         , { "resource_name": layout.COLL_CONTEXT_FILE,  "resource_dir": layout.COLL_BASE_DIR, 
-    #                                                         "resource_type": "application/ld+json" }
-    #         ])
-    #     # log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
-    #     for fj in fixed_json_resources:
-    #         if fj["resource_name"] == resource_ref:
-    #             fr = dict(fj, resource_path=os.path.join(fj["resource_dir"]+"/", resource_ref))
-    #             return fr
-    #         ft = make_turtle_resource_info(fj)
-    #         if ft["resource_name"] == resource_ref:
-    #             fr = dict(ft, resource_path=os.path.join(ft["resource_dir"]+"/", resource_ref))
-    #             return fr
-    #     return None
-
     def resource_response(self, resource_file, resource_type):
         """
         Construct response containing body of referenced resource,
