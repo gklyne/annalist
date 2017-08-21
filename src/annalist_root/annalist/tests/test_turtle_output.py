@@ -9,7 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import urlparse
 import unittest
-
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -270,6 +270,7 @@ class TurtleOutputTest(AnnalistTestCase):
                     "get_context_mock_dict: uri %s, status_code %d, reason_phrase %s"%
                     (mu, mr.status_code, mr.reason_phrase)
                     )
+                # log.error("".join(traceback.format_stack()))
             self.assertEqual(mr.status_code,   200)
             mock_dict[mock_ref] = mr.content
         # print "***** get_context_mock_dict: mu: %s, mock_dict: %r"%(mu, mock_dict.keys())

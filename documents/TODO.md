@@ -36,6 +36,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] BUG: display list with no fields generates error
 - [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
 - [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
+- [x] BUG: data links for collection metadata are broken (since changes to entity_data_ref?)
 - [x] Separate buttons for create list and multiple-value fields (seq vs set)
     - Was: When creating a repeat field, distinguish cases for list and set: for set, use "set" render type, entity type for range of repeat field, and '@id' for property.
     - See references to "Define_repeat_field" in:
@@ -61,7 +62,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
         - DisplayInfo.get_entity_data_ref uses class metadata file name via EntityTypeInfo.
     - [x] In EntityResourceAccess, handle .ttl access via Turtle renderer
-    - [ ] Create test cases for Turtle output (based on JSON-LD test cases?)
+    - [x] Create test cases for Turtle output (based on JSON-LD test cases?)
+    - [ ] Implement Turtle output for site data view
+    - [ ] Test case for site data view
+    - [ ] Implement Turtle output for collection data view
+    - [ ] Test case for collection data view
     - [ ] Refactor the entity resource rendering logic
         - use common function to handle content negotiation and filename selection
         - (for lists too?)

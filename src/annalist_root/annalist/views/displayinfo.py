@@ -662,15 +662,22 @@ class DisplayInfo(object):
         """
         Return URL for accessing source entity resource data 
         (not including any view information contained in the current request URL).
+
+        Contains special logic for accessing collection and site metadata
         """
         assert self.coll_id is not None
         assert self.curr_typeinfo is not None
-        return self.view.get_entity_data_url(
-            self.coll_id,
-            self.curr_typeinfo.get_type_id(),
-            self.src_entity_id or "__unknown_src_entity__",
-            resource_ref
-            )
+        type_id   = self.curr_typeinfo.get_type_id()
+        if type_id == layout.COLL_TYPEID:
+            entity_id = self.src_entity_id or layout.SITEDATA_ID
+            base_url  = self.view.get_collection_base_url(entity_id)
+        else:
+            entity_id = self.src_entity_id or "__unknown_src_entity__"
+            base_url  = self.view.get_entity_base_url(
+                self.coll_id, type_id,
+                entity_id
+                )
+        return urlparse.urljoin(base_url, resource_ref)
 
     # Additonal support functions
 
@@ -747,6 +754,8 @@ class DisplayInfo(object):
         """
         Returns a string that can be used as a reference to the entity metadata resource,
         optionally with a specified type parameter added.
+
+        Extracts appropriate local reference, and combines with entity URL path.
         """
         data_ref = self.get_entity_data_ref(return_type=return_type)
         data_url = self.get_src_entity_resource_url(data_ref)

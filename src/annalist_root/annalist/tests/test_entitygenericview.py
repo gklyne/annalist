@@ -52,6 +52,7 @@ from entity_testutils       import (
     render_choice_options,
     create_test_user,
     context_view_field,
+    check_default_view_context_fields,
     check_type_view_context_fields
     )
 from entity_testtypedata    import (
@@ -480,6 +481,54 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             type_list="Default_list", type_list_options=self.no_list_id + self.list_options,
             type_aliases=[],
             )
+        return
+
+    # Entity data view
+    def test_get_data_view(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        check_default_view_context_fields(self, r, 
+            action="edit",
+            type_id="testtype",
+            entity_id="entity1", orig_entity_id="entity1",
+            entity_label="Entity testcoll/testtype/entity1",
+            entity_comment="Entity coll testcoll, type testtype, entity entity1",
+            entity_data_ref=entity_url("testcoll", "testtype", entity_id="entity1")+layout.ENTITY_DATA_FILE,
+            view_id="Default_view"
+            )
+        u = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "testtype")
+        self.assertEqual(r.context['entity_id'],        "entity1")
+        self.assertEqual(r.context['orig_id'],          "entity1")
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            u+layout.ENTITY_DATA_FILE
+            )
+        self.assertEqual(
+            r.context['entity_data_ref_json'], 
+            u+layout.ENTITY_DATA_FILE+"?type=application/json"
+            )
+        return
+
+    # Entity data content negotiation
+    def test_get_data_json(self):
+        """
+        Request collection data as JSON-LD
+        """
+        u = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
         return
 
     def test_get_view_no_collection(self):

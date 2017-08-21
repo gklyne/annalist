@@ -322,7 +322,7 @@ class EntityTypeInfo(object):
         self.coll_id         = coll.get_id()
         self.type_id         = type_id
         self.permissions_map = None
-        if type_id == "_coll":
+        if type_id == layout.COLL_TYPEID: # "_coll"
             # NOTE: 
             #
             # This setup defaults to using site permissions for collection operations.

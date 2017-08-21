@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import os
+import urlparse
 import logging
 log = logging.getLogger(__name__)
 
@@ -456,7 +457,11 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("form_render.viewcontext['fields'] %r"%(viewcontext['fields'],))        
         # Generate and return form data
-        entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
+        #@@@@ entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
+        entity_baseurl = (
+            viewinfo.reqhost + 
+            viewinfo.get_src_entity_resource_url("")
+            )
         return (
             self.render_html(
                 viewcontext, self.formtemplate,
@@ -466,20 +471,32 @@ class GenericEntityEditView(AnnalistGenericView):
                     }]
                 ) or 
             self.redirect_json(
-                self.get_entity_data_url(
-                    coll_id, type_id, entity_id, 
-                    viewinfo.get_entity_data_ref()
-                    ),
+                urlparse.urljoin(
+                     entity_baseurl,
+                     viewinfo.get_entity_data_ref()
+                     ),
+                #@@@@
+                # self.get_entity_data_url(
+                #     coll_id, type_id, entity_id, 
+                #     viewinfo.get_entity_data_ref()
+                #     ),
+                #@@@@
                 links=[
                     { "rel": "canonical"
                     , "ref": entity_baseurl
                     }]
                 ) or
             self.redirect_turtle(
-                self.get_entity_data_url(
-                    coll_id, type_id, entity_id, 
-                    viewinfo.get_entity_turtle_ref()
-                    ),
+                urlparse.urljoin(
+                     entity_baseurl,
+                     viewinfo.get_entity_turtle_ref()
+                     ),
+                #@@@@
+                # self.get_entity_data_url(
+                #     coll_id, type_id, entity_id, 
+                #     viewinfo.get_entity_turtle_ref()
+                #     ),
+                #@@@@
                 links=[
                     { "rel": "canonical"
                     , "ref": entity_baseurl

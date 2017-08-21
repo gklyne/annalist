@@ -60,6 +60,7 @@ COLL_BASE_DIR           = "d"
 COLL_ROOT_CONF_OLD_DIR  = "_annalist_collection"
 COLL_BASE_CONF_OLD_DIR  = "../" + COLL_ROOT_CONF_OLD_DIR
 COLL_META_FILE          = "coll_meta.jsonld"
+COLL_META_TURTLE        = "coll_meta.ttl"
 COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_BASE_REF           = COLL_BASE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE

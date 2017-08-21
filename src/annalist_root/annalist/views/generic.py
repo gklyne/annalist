@@ -103,6 +103,15 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
+    def get_collection_base_url(self, coll_id):
+        """
+        Return base URL for specified collection
+        """
+        return self.view_uri(
+            "AnnalistCollectionView", 
+            coll_id=coll_id
+            )
+
     def get_entity_base_url(self, coll_id, type_id, entity_id):
         """
         Return base URL for specified entity
@@ -112,7 +121,8 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id=coll_id, type_id=type_id, entity_id=entity_id
             )
 
-    def get_entity_data_url(self, coll_id, type_id, entity_id, resource_ref):
+    # @@TODO: remove this (not view dependent logoc - doesn't belong here)
+    def _unused_get_entity_data_url(self, coll_id, type_id, entity_id, resource_ref):
         """
         Return URL for data resource associated with the specified entity
         """
