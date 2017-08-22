@@ -93,7 +93,7 @@ class EntityGenericListView(AnnalistGenericView):
         Assemble display information for list view request handlers
         """
         # log.info("list_setup coll_id %s, type_id %s, list_id %s"%(coll_id, type_id, list_id))
-        self.collection_view_url = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+        self.collection_view_url = self.get_collection_view_url(coll_id)
         listinfo = DisplayInfo(self, "list", request_dict, self.collection_view_url)
         listinfo.get_site_info(self.get_request_host())
         listinfo.get_coll_info(coll_id)
@@ -443,6 +443,7 @@ class EntityGenericListView(AnnalistGenericView):
             )
         return list_url
 
+    # @@TODO: redundant: provided by generic view
     def get_collection_base_url(self):
         """
         Return URL used as base for relative references within a collection.

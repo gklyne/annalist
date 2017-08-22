@@ -47,9 +47,13 @@ from init_tests             import init_annalist_test_site, init_annalist_test_c
 from entity_testutils       import (
     site_dir, collection_dir,
     site_view_url, collection_view_url,
+    collection_resource_url,
     collection_entity_view_url,
     collection_create_values,
     create_test_user
+    )
+from entity_testcolldata            import (
+    collectiondata_url
     )
 from entity_testtypedata            import (
     recordtype_url
@@ -321,7 +325,62 @@ class TurtleOutputTest(AnnalistTestCase):
         self.assertIn((subj, URIRef(ANNAL.URI.software_version), software_version), g)
         return
 
-    @unittest.skip("test_http_turtle_collection not implemented")
+
+
+
+
+
+    # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+
+
+
+    # Collection data view
+    def test_get_collection_data_view(self):
+        collection_url = collection_view_url(coll_id="testcoll")
+        u = collectiondata_url(coll_id="testcoll")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
+        self.assertEqual(r.context['entity_id'],        "testcoll")
+        self.assertEqual(r.context['orig_id'],          "testcoll")
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            collection_url+layout.COLL_META_REF
+            )
+        self.assertEqual(
+            r.context['entity_turtle_ref'], 
+            collection_url+layout.COLL_TURTLE_REF
+            )
+        return
+
+    # Collection data content negotiation
+    def test_get_collection_data_turtle(self):
+        """
+        Request collection data as Turtle
+        """
+        collection_url = collection_view_url(coll_id="testcoll")
+        u = collectiondata_url(coll_id="testcoll")
+        r = self.client.get(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+collection_url+layout.COLL_TURTLE_REF)
+        w = collection_url + layout.COLL_BASE_REF
+        mock_resource_dict = self.get_context_mock_dict(w, layout.META_COLL_BASE_REF)
+        with MockHttpDictResources(v, mock_resource_dict):
+            r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        return
+
     def test_http_turtle_collection(self):
         """
         Read new collection data as Turtle, and check resulting RDF triples
@@ -329,18 +388,22 @@ class TurtleOutputTest(AnnalistTestCase):
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
         # Read collection data as Turtle
+        collection_url = collection_view_url(coll_id="testcoll")
+        v = collection_url + layout.COLL_BASE_REF
+        u = TestHostUri + collection_url + layout.COLL_TURTLE_REF
+        mock_resource_dict = self.get_context_mock_dict(v, layout.META_COLL_BASE_REF)
+        with MockHttpDictResources(u, mock_resource_dict):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Parse data as Turtle
         g = Graph()
-        s = self.testcoll._read_stream()
-        b = self.coll_baseurl(self.testcoll.get_id())
-        # print "***** b: "+repr(b)
-        # print "***** s: "+s.read()
-        # s.seek(0)
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(data=r.content, publicID=u, format="turtle")
         # print "*****"+repr(result)
         # print "***** coll:"
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
-        subj      = self.coll_url(self.testcoll.get_id())
+        subj      = TestHostUri + collection_url
         coll_data = self.testcoll._load_values()
         for (s, p, o) in (
             [ (subj, RDFS.URI.label,             Literal(coll_data[RDFS.CURIE.label])       )

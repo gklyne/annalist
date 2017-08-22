@@ -89,12 +89,20 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     links       is an optional array of link values to be added to the HTTP response
                 (see method add_link_header for description).
     """
-    # log.debug("@@ turtle_resource_file - data: %r"%(jsondata))
-    # log.info("@@ baseurl %s"%(baseurl,))
+    log.info("@@@@ turtle_resource_file - baseurl %s"%(baseurl,))
+    log.debug(
+        "@@@@ turtle_resource_file - JSON data: %s"%
+        (json.dumps(
+            jsondata, indent=2, separators=(',', ': '), sort_keys=True
+            ))
+        )
+    log.debug(
+        "@@@@ turtle_resource_file - resource_info: %r"%(resource_info,)
+        )
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
-    response_file = StringIO.StringIO()
     g = Graph()
     g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
+    response_file = StringIO.StringIO()
     g.serialize(destination=response_file, format='turtle', indent=4)
     response_file.seek(0)
     return response_file

@@ -78,6 +78,12 @@ def collection_view_url(coll_id="testcoll"):
 def collection_edit_url(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
+def collection_resource_url(coll_id="testcoll", resource_ref=layout.COLL_META_FILE):
+    return reverse(
+        "AnnalistCollectionResourceAccess", 
+        kwargs={'coll_id': coll_id, 'resource_ref': resource_ref }
+        )
+
 def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None):
     """
     Return URL for entity belonging to some collection.

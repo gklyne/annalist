@@ -103,14 +103,20 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         return reverse(viewname, kwargs=kwargs)
 
-    def get_collection_base_url(self, coll_id):
+    def get_collection_view_url(self, coll_id):
         """
-        Return base URL for specified collection
+        Return view (root) URL for specified collection
         """
         return self.view_uri(
             "AnnalistCollectionView", 
             coll_id=coll_id
             )
+
+    def get_collection_base_url(self, coll_id):
+        """
+        Return base URL for specified collection
+        """
+        return urlparse.urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
 
     def get_entity_base_url(self, coll_id, type_id, entity_id):
         """

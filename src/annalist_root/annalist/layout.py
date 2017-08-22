@@ -65,9 +65,11 @@ COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_BASE_REF           = COLL_BASE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE
 COLL_PROV_REF           = COLL_BASE_REF + COLL_PROV_FILE
+COLL_TURTLE_REF         = COLL_BASE_REF + COLL_META_TURTLE
 META_COLL_REF           = "../"
 META_COLL_BASE_REF      = "./"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
+# COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
 SITE_DIR                = "annalist_site"

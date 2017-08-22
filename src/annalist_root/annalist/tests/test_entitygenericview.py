@@ -425,6 +425,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         formrow9b = ("""
             <div class="row view-value-row">
               <div class="view-value small-12 columns">
+                <a href="%(entity_base)s/entity_data.ttl" title="Retrieve underlying data as Turtle">
+                  Turtle
+                </a>
                 <a href="%(entity_base)s/entity_data.jsonld" title="Retrieve underlying data as JSON-LD">
                   JSON-LD
                 </a>

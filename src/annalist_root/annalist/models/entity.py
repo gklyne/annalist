@@ -67,7 +67,7 @@ class Entity(EntityRoot):
     _entitytypeid   = None
     _entityview     = "%(id)s/"     # Placeholder for testing
     _entitypath     = None          # Relative path from parent to entity (template)
-    _entityfile     = None          # Relative reference to body file from entity
+    _entityfile     = None          # Relative reference to body file from entity base
     _last_id        = None          # Last ID allocated
 
     def __init__(self, parent, entityid, altparent=None):

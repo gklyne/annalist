@@ -60,6 +60,7 @@ class Collection(Entity):
     _entityview     = layout.SITE_COLL_VIEW
     _entitypath     = layout.SITE_COLL_PATH
     _entityfile     = layout.COLL_META_REF
+    # _entityfile     = layout.COLL_META_FILE # @@ try to be consistent; breaks stuff
     _entityref      = layout.META_COLL_REF
     _baseref        = layout.META_COLL_BASE_REF
     _contextref     = layout.COLL_CONTEXT_FILE

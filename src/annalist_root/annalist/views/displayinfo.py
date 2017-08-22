@@ -320,7 +320,7 @@ class DisplayInfo(object):
 
     def update_coll_version(self):
         """
-        Called when an entity has been updatred to also update the data version 
+        Called when an entity has been updated to also update the data version 
         associated with the collection if it was previously created by an older 
         version of Annalist.
         """
@@ -745,41 +745,74 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
-    def get_entity_data_url(self, return_type=None):
+    def get_entity_data_ref(self, name_ext=".jsonld", return_type=None):
+        """
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity using the supplied name extension.
+        """
+        assert self.curr_typeinfo is not None
+        entityfile = self.curr_typeinfo.entityclass._entityfile
+        assert entityfile.endswith(".jsonld")
+        log.info("@@@@ get_entity_data_ref: entityfile "+entityfile)
+        #@@TODO: resolve this hack more cleanly
+        if entityfile.startswith(layout.COLL_BASE_REF):
+            entityfile = entityfile[len(layout.COLL_BASE_REF):]
+        #@@
+        if entityfile.endswith(".jsonld") and name_ext != ".jsonld":
+            entityfile = entityfile[0:-7]+name_ext
+        data_ref = make_data_ref(
+            self.view.get_request_path(),   # For parameter values
+            entityfile, 
+            return_type
+            )
+        log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        return data_ref
+
+    def get_entity_jsonld_ref(self, return_type=None):
+        """
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity, to be returned as JSON-LD data.
+        """
+        jsonld_ref = self.get_entity_data_ref(name_ext=".jsonld", return_type=return_type)
+        return jsonld_ref
+
+    def get_entity_jsonld_url(self, return_type=None):
         """
         Returns a string that can be used as a reference to the entity metadata resource,
         optionally with a specified type parameter added.
 
         Extracts appropriate local reference, and combines with entity URL path.
         """
-        data_ref = self.get_entity_data_ref(return_type=return_type)
+        data_ref = self.get_entity_jsonld_ref(return_type=return_type)
         data_url = self.get_src_entity_resource_url(data_ref)
         log.debug(
-            "get_entity_data_url: _entityfile %s, data_ref %s, data_url %s"%
+            "get_entity_jsonld_url: _entityfile %s, data_ref %s, data_url %s"%
             (self.curr_typeinfo.entityclass._entityfile, data_ref, data_url)
             )
         return data_url
 
-    def get_entity_data_ref(self, return_type=None):
-        assert self.curr_typeinfo is not None
-        data_ref = make_data_ref(
-            self.view.get_request_path(),   # For parameter values
-            self.curr_typeinfo.entityclass._entityfile, 
-            return_type
-            )
-        return data_ref
-
     def get_entity_turtle_ref(self, return_type=None):
-        assert self.curr_typeinfo is not None
-        jsonfile = self.curr_typeinfo.entityclass._entityfile
-        assert jsonfile.endswith(".jsonld")
-        turtlefile = jsonfile[0:-7]+".ttl"
-        data_ref = make_data_ref(
-            self.view.get_request_path(),   # For parameter values
-            turtlefile, 
-            return_type
+        """
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity, to be returned as Turtle data.
+        """
+        turtle_ref = self.get_entity_data_ref(name_ext=".ttl", return_type=return_type)
+        return turtle_ref
+
+    def get_entity_turtle_url(self, return_type=None):
+        """
+        Returns a string that can be used as a reference to the entity metadata resource,
+        optionally with a specified type parameter added.
+
+        Extracts appropriate local reference, and combines with entity URL path.
+        """
+        turtle_ref = self.get_entity_turtle_ref(return_type=return_type)
+        turtle_url = self.get_src_entity_resource_url(turtle_ref)
+        log.debug(
+            "get_entity_turtle_url: _entityfile %s, turtle_ref %s, turtle_url %s"%
+            (self.curr_typeinfo.entityclass._entityfile, turtle_ref, turtle_url)
             )
-        return data_ref
+        return turtle_url
 
     def get_entity_list_ref(self, return_type=None):
         """
@@ -851,8 +884,9 @@ class DisplayInfo(object):
             context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.curr_typeinfo:
             context.update(
-                { 'entity_data_ref':        self.get_entity_data_url()
-                , 'entity_data_ref_json':   self.get_entity_data_url("application/json")
+                { 'entity_data_ref':        self.get_entity_jsonld_url()
+                , 'entity_data_ref_json':   self.get_entity_jsonld_url("application/json")
+                , 'entity_turtle_ref':      self.get_entity_turtle_url()
                 })
         if entity_label:
             context.update(

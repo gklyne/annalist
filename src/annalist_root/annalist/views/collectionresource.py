@@ -82,10 +82,19 @@ class CollectionResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = (
-            coll.resource_file(resource_info["resource_path"]) or
-            viewinfo.site.resource_file(resource_info["resource_path"])
-            )
+        coll_baseurl = viewinfo.reqhost + self.get_collection_base_url(coll_id)
+        log.info("@@@@ coll_baseurl %s, coll_id %s, resource_ref %s"%(coll_baseurl, coll_id, resource_ref))
+        if "resource_access" in resource_info:
+            # Use indicated resource access renderer
+            jsondata      = coll.get_values()
+            resource_file = resource_info["resource_access"](coll_baseurl, jsondata, resource_info)
+        else:
+            # Return resource data direct from storage
+            resource_file = entity_resource_file(coll, resource_info)
+        # resource_file = (
+        #     coll.resource_file(resource_info["resource_path"]) or
+        #     viewinfo.site.resource_file(resource_info["resource_path"])
+        #     )
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
