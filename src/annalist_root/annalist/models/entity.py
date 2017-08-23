@@ -499,6 +499,21 @@ class Entity(EntityRoot):
         log.debug("Entity.path: %s"%(p))
         return p
 
+    @classmethod
+    def meta_resource_name(cls, name_ext=".jsonld"):
+        """
+        Returns a metadata resource (file) name.
+
+        By default, returns the name for JSON-LD data, but if an alternative name extension
+        is profided returns a name with that extension instead.
+        """
+        #@@TODO: type selection should use type identifier rather than extension string?
+        resource_name = cls._entityfile
+        assert resource_name.endswith(".jsonld")
+        if resource_name.endswith(".jsonld") and name_ext != ".jsonld":
+            resource_name = resource_name[0:-7]+name_ext
+        return resource_name
+
     # I/O helper functions (copied from or overriding EntityRoot)
 
     def _children(self, cls, altscope=None):

@@ -83,7 +83,7 @@ class CollectionResourceAccess(AnnalistGenericView):
                     )
                 )
         coll_baseurl = viewinfo.reqhost + self.get_collection_base_url(coll_id)
-        log.info("@@@@ coll_baseurl %s, coll_id %s, resource_ref %s"%(coll_baseurl, coll_id, resource_ref))
+        # log.info("@@@@ coll_baseurl %s, coll_id %s, resource_ref %s"%(coll_baseurl, coll_id, resource_ref))
         if "resource_access" in resource_info:
             # Use indicated resource access renderer
             jsondata      = coll.get_values()

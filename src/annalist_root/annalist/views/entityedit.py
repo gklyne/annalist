@@ -461,34 +461,19 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo.reqhost + 
             viewinfo.get_src_entity_resource_url("")
             )
+        entity_json_url   = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_data_ref())
+        entity_turtle_url = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_turtle_ref())
+        entity_links = [
+            { "rel": "canonical"
+            , "ref": entity_baseurl
+            }]
         return (
-            self.render_html(
-                viewcontext, self.formtemplate,
-                links=[
-                    { "rel": "canonical"
-                    , "ref": entity_baseurl
-                    }]
-                ) or 
-            self.redirect_json(
-                urlparse.urljoin(
-                     entity_baseurl,
-                     viewinfo.get_entity_data_ref()
-                     ),
-                links=[
-                    { "rel": "canonical"
-                    , "ref": entity_baseurl
-                    }]
-                ) or
-            self.redirect_turtle(
-                urlparse.urljoin(
-                     entity_baseurl,
-                     viewinfo.get_entity_turtle_ref()
-                     ),
-                links=[
-                    { "rel": "canonical"
-                    , "ref": entity_baseurl
-                    }]
-                ) or
+            self.render_html(viewcontext, self.formtemplate, links=entity_links)
+            or 
+            self.redirect_json(entity_json_url, links=entity_links)
+            or
+            self.redirect_turtle(entity_turtle_url, links=entity_links)
+            or
             self.error(self.error406values())
             )
 

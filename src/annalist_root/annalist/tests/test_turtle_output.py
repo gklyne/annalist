@@ -284,32 +284,74 @@ class TurtleOutputTest(AnnalistTestCase):
     #   Turtle output tests
     #   -----------------------------------------------------------------------------
 
-    @unittest.skip("test_http_turtle_site not implemented")
+    # Site data view (check data links)
+    def test_get_site_data_view(self):
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
+        self.assertEqual(r.context['entity_id'],        layout.SITEDATA_ID)
+        self.assertEqual(r.context['orig_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            site_url+layout.COLL_META_REF
+            )
+        self.assertEqual(
+            r.context['entity_turtle_ref'], 
+            site_url+layout.COLL_TURTLE_REF
+            )
+        return
+
+    # Collection data content negotiation
+    def test_get_site_data_turtle(self):
+        """
+        Request collection data as Turtle
+        """
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.get(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
+        w = site_url + layout.COLL_BASE_REF
+        mock_resource_dict = self.get_context_mock_dict(w, layout.META_COLL_BASE_REF)
+        with MockHttpDictResources(v, mock_resource_dict):
+            r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        return
+
     def test_http_turtle_site(self):
         """
         Read site data as Turtle, and check resulting RDF triples
         """
-        # Generate site-level JSON-LD context data
-        # self.testsite.generate_site_jsonld_context()
-
-        # Read site data as Turtle
+        # Read collection data as Turtle
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        v = site_url + layout.COLL_BASE_REF
+        u = TestHostUri + site_url + layout.COLL_TURTLE_REF
+        mock_resource_dict = self.get_context_mock_dict(v, layout.META_COLL_BASE_REF)
+        with MockHttpDictResources(u, mock_resource_dict):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Parse data as Turtle
         g = Graph()
-        s = self.testsite.site_data_stream()
-        # b = self.testsite.get_url()
-        b = "file://" + os.path.join(TestBaseDir, layout.SITEDATA_BASE_DIR) + "/"
-        # print "***** b: "+repr(b)
-        # print "***** s: "+repr(s)
-        result = g.parse(source=s, publicID=b, format="json-ld")
+        result = g.parse(data=r.content, publicID=u, format="turtle")
         # print "*****"+repr(result)
         # print "***** site:"
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj             = URIRef(self.testsite.get_url())
-        subj             = URIRef("file://" + TestBaseDir + "/")
-        subj             = URIRef(
-            "file://" + os.path.join(TestBaseDir, layout.SITEDATA_DIR) + "/"
-            )
+        subj             = TestHostUri + site_url
         site_data        = self.testsite.site_data()
         ann_id           = Literal(layout.SITEDATA_ID)
         ann_type         = URIRef(ANNAL.URI.SiteData)
@@ -317,15 +359,51 @@ class TurtleOutputTest(AnnalistTestCase):
         software_version = Literal(annalist.__version_data__)
         label            = Literal(site_data[RDFS.CURIE.label])
         comment          = Literal(site_data[RDFS.CURIE.comment])
-        self.assertIn((subj, URIRef(ANNAL.URI.id),      ann_id),      g)
-        self.assertIn((subj, URIRef(ANNAL.URI.type),    ann_type),    g)
-        self.assertIn((subj, URIRef(ANNAL.URI.type_id), ann_type_id), g)
-        self.assertIn((subj, URIRef(RDFS.URI.label),    label),       g)
-        self.assertIn((subj, URIRef(RDFS.URI.comment),  comment),     g)
-        self.assertIn((subj, URIRef(ANNAL.URI.software_version), software_version), g)
+        for (s, p, o) in (
+            [ (subj, RDFS.URI.label,             label              )
+            , (subj, RDFS.URI.comment,           comment            )
+            , (subj, ANNAL.URI.id,               ann_id             )
+            , (subj, ANNAL.URI.type,             ann_type           )
+            , (subj, ANNAL.URI.type_id,          ann_type_id        )
+            , (subj, ANNAL.URI.software_version, software_version   )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
 
-
+    def test_http_turtle_collection(self):
+        """
+        Read new collection data as Turtle, and check resulting RDF triples
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        # Read collection data as Turtle
+        collection_url = collection_view_url(coll_id="testcoll")
+        v = collection_url + layout.COLL_BASE_REF
+        u = TestHostUri + collection_url + layout.COLL_TURTLE_REF
+        mock_resource_dict = self.get_context_mock_dict(v, layout.META_COLL_BASE_REF)
+        with MockHttpDictResources(u, mock_resource_dict):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Parse data as Turtle
+        g = Graph()
+        result = g.parse(data=r.content, publicID=u, format="turtle")
+        # print "*****"+repr(result)
+        # print "***** coll:"
+        # print(g.serialize(format='turtle', indent=4))
+        # Check the resulting graph contents
+        subj      = TestHostUri + collection_url
+        coll_data = self.testcoll._load_values()
+        for (s, p, o) in (
+            [ (subj, RDFS.URI.label,             Literal(coll_data[RDFS.CURIE.label])       )
+            , (subj, RDFS.URI.comment,           Literal(coll_data[RDFS.CURIE.comment])     )
+            , (subj, ANNAL.URI.id,               Literal(coll_data[ANNAL.CURIE.id])         )
+            , (subj, ANNAL.URI.type_id,          Literal(coll_data[ANNAL.CURIE.type_id])    )
+            , (subj, ANNAL.URI.type,             URIRef(ANNAL.URI.Collection)               )
+            , (subj, ANNAL.URI.software_version, Literal(annalist.__version_data__)         )
+            ]):
+            self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
 
 
 
@@ -416,7 +494,7 @@ class TurtleOutputTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
+    @unittest.skip("test_turtle_enum_list_type_list not implemented")
     def test_turtle_enum_list_type_list(self):
         """
         Read enumeration data as Turtle, and check resulting RDF triples

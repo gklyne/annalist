@@ -745,24 +745,20 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
-    #@@TODO: this logic belongs in Entity class, not here
     def get_entity_data_ref(self, name_ext=".jsonld", return_type=None):
         """
         Returns a relative reference (from entity base) for the metadata for the
         current entity using the supplied name extension.
         """
         assert self.curr_typeinfo is not None
-        entityfile = self.curr_typeinfo.entityclass._entityfile
-        assert entityfile.endswith(".jsonld")
-        log.info("@@@@ get_entity_data_ref: entityfile "+entityfile)
-        if entityfile.endswith(".jsonld") and name_ext != ".jsonld":
-            entityfile = entityfile[0:-7]+name_ext
+        data_ref = self.curr_typeinfo.entityclass.meta_resource_name(name_ext=name_ext)
+        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
         data_ref = make_data_ref(
             self.view.get_request_path(),   # For parameter values
-            entityfile, 
+            data_ref, 
             return_type
             )
-        log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
         return data_ref
 
     def get_entity_jsonld_ref(self, return_type=None):
