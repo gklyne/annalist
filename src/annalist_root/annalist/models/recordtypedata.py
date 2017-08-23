@@ -27,10 +27,11 @@ class RecordTypeData(Entity):
 
     _entitytype     = ANNAL.CURIE.Type_Data
     _entitytypeid   = layout.TYPEDATA_TYPEID
+    _entityroot     = layout.COLL_TYPEDATA_PATH
     _entityview     = layout.COLL_TYPEDATA_VIEW
-    _entitypath     = layout.COLL_TYPEDATA_PATH
+    _entitybase     = ""
     _entityfile     = layout.TYPEDATA_META_FILE
-    _baseref        = layout.TYPEDATA_COLL_BASE_REF
+    _contextbase    = layout.TYPEDATA_COLL_BASE_REF
     _contextref     = layout.TYPEDATA_CONTEXT_FILE
 
     def __init__(self, parent, type_id):

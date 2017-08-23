@@ -745,6 +745,7 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
+    #@@TODO: this logic belongs in Entity class, not here
     def get_entity_data_ref(self, name_ext=".jsonld", return_type=None):
         """
         Returns a relative reference (from entity base) for the metadata for the
@@ -754,10 +755,6 @@ class DisplayInfo(object):
         entityfile = self.curr_typeinfo.entityclass._entityfile
         assert entityfile.endswith(".jsonld")
         log.info("@@@@ get_entity_data_ref: entityfile "+entityfile)
-        #@@TODO: resolve this hack more cleanly
-        if entityfile.startswith(layout.COLL_BASE_REF):
-            entityfile = entityfile[len(layout.COLL_BASE_REF):]
-        #@@
         if entityfile.endswith(".jsonld") and name_ext != ".jsonld":
             entityfile = entityfile[0:-7]+name_ext
         data_ref = make_data_ref(

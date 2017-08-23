@@ -30,8 +30,8 @@ class RecordGroup(EntityData):
 
     _entitytype     = ANNAL.CURIE.Field_group
     _entitytypeid   = layout.GROUP_TYPEID
+    _entityroot     = layout.COLL_GROUP_PATH
     _entityview     = layout.COLL_GROUP_VIEW
-    _entitypath     = layout.COLL_GROUP_PATH
     _entityfile     = layout.GROUP_META_FILE
 
     _deprecation_warning = True

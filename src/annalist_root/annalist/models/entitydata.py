@@ -26,10 +26,11 @@ class EntityData(Entity):
 
     _entitytype     = ANNAL.CURIE.EntityData
     _entitytypeid   = None
+    _entityroot     = layout.TYPEDATA_ENTITY_PATH
     _entityview     = layout.TYPEDATA_ENTITY_VIEW
-    _entitypath     = layout.TYPEDATA_ENTITY_PATH
+    _entitybase     = layout.ENTITY_BASE_REF
     _entityfile     = layout.ENTITY_DATA_FILE
-    _baseref        = layout.ENTITY_COLL_BASE_REF
+    _contextbase    = layout.ENTITY_COLL_BASE_REF
     _contextref     = layout.ENTITY_CONTEXT_FILE
 
     def __init__(self, parent, entity_id):

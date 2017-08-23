@@ -98,7 +98,7 @@ BIBDATA_ID              = "Bibliography_defs"                       # used for t
 #
 # NOTE: definitive entity URIs are *without* trailing "/".
 #       Rediretion to a URI wit the trailing "/" retrieves a representation of the entity,
-#       geberally an HTML form view.  Redirection to other forms is used for alternative
+#       generally an HTML form view.  Redirection to other forms is used for alternative
 #       representations.
 #
 
@@ -223,8 +223,8 @@ TYPEDATA_PROV_FILE      = "type_data_prov.jsonld"           # type data provenan
 COLL_BASE_TYPEDATA_REF  = "%(id)s"                          # ref type data relative to collection base URL
 TYPEDATA_COLL_BASE_REF  = "../"                             # ref collection base from record type data
 TYPEDATA_CONTEXT_FILE   = TYPEDATA_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref collection context file
-COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
 COLL_TYPEDATA_PATH      = "d/%(id)s"                        # dir type data relative to collection root dir
+COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
 
 # Entity data records (these contain user data, organized by record type)
 # Entity data layout information...
@@ -234,6 +234,7 @@ COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
 COLL_ENTITY_PATH        = "d/%(type_id)s/%(id)s"
 SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
 SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
+ENTITY_BASE_REF         = ""
 ENTITY_DATA_FILE        = "entity_data.jsonld"
 ENTITY_DATA_TURTLE      = "entity_data.ttl"
 ENTITY_PROV_FILE        = "entity_prov.jsonld"

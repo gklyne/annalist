@@ -51,6 +51,7 @@ class Site(EntityRoot):
 
     _entitytype     = ANNAL.CURIE.Site
     _entitytypeid   = layout.SITE_TYPEID
+    _entitybase     = layout.SITE_META_PATH
     _entityfile     = layout.SITE_META_FILE
     _entityref      = layout.META_SITE_REF
 

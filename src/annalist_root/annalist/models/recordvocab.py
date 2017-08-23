@@ -27,8 +27,8 @@ class RecordVocab(EntityData):
 
     _entitytype     = ANNAL.CURIE.Vocabulary
     _entitytypeid   = layout.VOCAB_TYPEID
+    _entityroot     = layout.COLL_VOCAB_PATH
     _entityview     = layout.COLL_VOCAB_VIEW
-    _entitypath     = layout.COLL_VOCAB_PATH
     _entityfile     = layout.VOCAB_META_FILE
 
     def __init__(self, parent, vocab_id):

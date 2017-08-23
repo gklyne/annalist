@@ -29,8 +29,8 @@ class RecordView(EntityData):
 
     _entitytype     = ANNAL.CURIE.View
     _entitytypeid   = layout.VIEW_TYPEID
+    _entityroot     = layout.COLL_VIEW_PATH
     _entityview     = layout.COLL_VIEW_VIEW
-    _entitypath     = layout.COLL_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
 
     def __init__(self, parent, view_id):

@@ -35,8 +35,8 @@ class RecordList(EntityData):
 
     _entitytype     = ANNAL.CURIE.List
     _entitytypeid   = layout.LIST_TYPEID
+    _entityroot     = layout.COLL_LIST_PATH
     _entityview     = layout.COLL_LIST_VIEW
-    _entitypath     = layout.COLL_LIST_PATH
     _entityfile     = layout.LIST_META_FILE
 
     def __init__(self, parent, list_id):
