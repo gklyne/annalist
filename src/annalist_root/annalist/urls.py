@@ -26,7 +26,7 @@ from login.auth_django_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
-from annalist.views.entitylistjson      import EntityGenericListJsonView
+from annalist.views.entitylistdata      import EntityListDataView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 
 from annalist.views.siteresource        import SiteResourceAccess
@@ -109,12 +109,12 @@ urlpatterns = patterns('',
                             name='AnnalistEntityAccessView'),
 
     # JSON list views without list_id specified
-    url(r'^c/(?P<coll_id>\w{1,128})/d/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListType'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataType'),
 
     # Redirect type/entity URIs without trailing '/'
     # (Note these cannot match JSON resource names as '.' is not matched here)
@@ -137,15 +137,15 @@ urlpatterns = patterns('',
                             name='AnnalistEntityGenericList'),
 
     # JSON specified list views
-    url(r'^c/(?P<coll_id>\w{1,128})/l/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListType'),
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataType'),
 
     # Specified entity edit/view forms
     url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',

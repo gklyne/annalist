@@ -177,7 +177,7 @@ class EntityGenericListView(AnnalistGenericView):
                     )
             )
         # typeinfo = listinfo.curr_typeinfo
-        base_url = self.get_collection_base_url()
+        base_url = self.get_collection_base_url(listinfo.coll_id)
         list_url = self.get_list_url(
             listinfo.coll_id, listinfo.list_id,
             type_id=listinfo.type_id,
@@ -190,7 +190,7 @@ class EntityGenericListView(AnnalistGenericView):
         # print "@@@@ entityvallist %r"%(entityvallist,)
         # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
         log.info(
-            "EntityGenericListJsonView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
+            "EntityListDataView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
             (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
             )
         jsondata = (
@@ -491,10 +491,10 @@ class EntityGenericListView(AnnalistGenericView):
         return list_url
 
     # @@TODO: redundant: provided by generic view
-    def get_collection_base_url(self):
-        """
-        Return URL used as base for relative references within a collection.
-        """
-        return urlparse.urljoin(self.collection_view_url, layout.COLL_BASE_REF)
+    # def get_collection_base_url(self):
+    #     """
+    #     Return URL used as base for relative references within a collection.
+    #     """
+    #     return urlparse.urljoin(self.collection_view_url, layout.COLL_BASE_REF)
 
 # End.

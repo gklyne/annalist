@@ -42,25 +42,55 @@ entity_fixed_json_resources = (
                                                     "resource_type": "application/ld+json" }
     , { "resource_name": layout.COLL_PROV_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
                                                     "resource_type": "application/ld+json" }
-    , { "resource_name": layout.TYPE_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.TYPE_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.LIST_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.LIST_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.VIEW_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.VIEW_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.GROUP_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.GROUP_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.FIELD_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.FIELD_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.VOCAB_META_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.VOCAB_PROV_FILE,    "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.USER_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.USER_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.ENUM_META_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.ENUM_PROV_FILE,     "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.TYPEDATA_META_FILE, "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.ENTITY_DATA_FILE,   "resource_dir": ".", "resource_type": "application/ld+json" }
-    , { "resource_name": layout.ENTITY_PROV_FILE,   "resource_dir": ".", "resource_type": "application/ld+json" }
+    , { "resource_name": layout.TYPE_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.TYPE_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.LIST_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.LIST_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.VIEW_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.VIEW_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.GROUP_META_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.GROUP_PROV_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.FIELD_META_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.FIELD_PROV_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.VOCAB_META_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.VOCAB_PROV_FILE,    "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.USER_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.USER_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.ENUM_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.ENUM_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.TYPEDATA_META_FILE, "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.ENTITY_DATA_FILE,   "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.ENTITY_PROV_FILE,   "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    ])
+
+entity_list_json_resources = (
+    # [ { "resource_name": layout.COLL_META_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
+    #                                                 "resource_type": "application/ld+json" }
+    # , { "resource_name": layout.COLL_PROV_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
+    #                                                 "resource_type": "application/ld+json" }
+    # , { "resource_name": layout.COLL_CONTEXT_FILE,  "resource_dir": layout.COLL_BASE_DIR, 
+    #                                                 "resource_type": "application/ld+json" }
+    [ { "resource_name": layout.ENTITY_LIST_FILE,   "resource_dir": ".", 
+                                                    "resource_type": "application/ld+json" }
     ])
 
 # Resource access functions
@@ -133,6 +163,7 @@ def find_fixed_resource(fixed_json_resources, resource_ref):
         if ft["resource_name"] == resource_ref:
             fr = dict(ft, resource_path=os.path.join(ft["resource_dir"]+"/", resource_ref))
             return fr
+    log.debug("EntityResourceAccess.find_fixed_resource: %s not found"%(resource_ref))
     return None
 
 def find_entity_resource(entity, resource_ref):
@@ -140,7 +171,7 @@ def find_entity_resource(entity, resource_ref):
     Return a description for the indicated entity resource, or None
     """
     log.debug(
-        "EntityResourceAccess.find_resource %s/%s/%s"%
+        "EntityResourceAccess.find_entity_resource %s/%s/%s"%
         (entity.get_type_id(), entity.get_id(), resource_ref)
         )
     fr = find_fixed_resource(entity_fixed_json_resources, resource_ref)
@@ -153,5 +184,15 @@ def find_entity_resource(entity, resource_ref):
                 f = dict(f, resource_path=resource_ref)
                 return f
     return None
+
+def find_list_resource(type_id, list_id, list_ref):
+    """
+    Return a description for the indicated entity resource, or None
+    """
+    log.debug(
+        "EntityResourceAccess.find_list_resource %s/%s/%s"%
+        (list_id, type_id, list_ref)
+        )
+    return find_fixed_resource(entity_list_json_resources, list_ref)
 
 # End.

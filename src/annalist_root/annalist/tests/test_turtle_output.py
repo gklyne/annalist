@@ -1136,7 +1136,7 @@ class TurtleOutputTest(AnnalistTestCase):
         with SuppressLogging(logging.WARNING):
             r = self.client.get(wrong_json_url)
         self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "NOT FOUND")
+        self.assertEqual(r.reason_phrase, "Not found")
         return
 
 # End.

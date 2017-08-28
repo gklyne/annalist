@@ -127,6 +127,45 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id=coll_id, type_id=type_id, entity_id=entity_id
             )
 
+    def get_list_base_url(self, coll_id, type_id, list_id):
+        """
+        Return base URL for specified list, which is one of:
+
+            .../coll_id/d/
+            .../coll_id/d/type_id/
+            .../coll_id/l/list_id/
+            .../coll_id/l/list_id/type_id/
+        """
+        if list_id is None:
+            if type_id is None:
+                list_url = self.view_uri(
+                    "AnnalistEntityDefaultListAll", 
+                    coll_id=coll_id
+                    )
+            else:
+                list_url = self.view_uri(
+                    "AnnalistEntityDefaultListType", 
+                    coll_id=coll_id, type_id=type_id
+                    )
+        else:
+            list_url = self.view_uri(
+                "AnnalistEntityGenericList", 
+                coll_id=coll_id, list_id=list_id, type_id=type_id
+                )
+        return list_url
+
+    def resource_response(self, resource_file, resource_type, links={}):
+        """
+        Construct response containing body of referenced resource (or list),
+        with supplied resource_type as its content_type
+        """
+        # @@TODO: assumes response can reasonably be held in memory;
+        #         consider 'StreamingHttpResponse'?
+        response = HttpResponse(content_type=resource_type)
+        response = self.add_link_header(response, links)
+        response.write(resource_file.read())
+        return response
+
     def continuation_next(self, request_dict={}, default_cont=None):
         """
         Returns a continuation URL to be used when returning from the current view,

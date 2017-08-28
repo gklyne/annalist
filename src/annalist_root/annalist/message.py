@@ -87,6 +87,8 @@ RESOURCE_NOT_DEFINED        = "Resource %(ref)s is not present for entity %(id)s
 REMOVE_RECORD_TYPE          = "Remove record type %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_LIST          = "Remove record list %(id)s in collection %(coll_id)s"
 REMOVE_RECORD_VIEW          = "Remove record view %(id)s in collection %(coll_id)s"
+LIST_NOT_DEFINED            = "List %(list_id)s/%(list_ref)s is not present for entity type %(type_id)s"
+LIST_NOT_ACCESSED           = "List %(list_id)s/%(list_ref)s not accessed for entity type %(type_id)s"
 
 SITE_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for site"
 SITE_RESOURCE_NOT_EXIST     = "Site resource %(ref)s does not exist"

@@ -69,8 +69,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Implement Turtle output for site data view
     - Lists: ListResourceAccess mirroring EntityResourceAccess?
     - [x] Lists: refactor code to separate data access from rendering
-    - [ ] Lists: create EntityGenericListTurtleView, similar to EntityGenericListJsonView
-    - [ ] Lists: Add entries to urls.py (or switch to using type param?)
+    - [x] Lists: generalize JSON list code to use entityresourceaccess facilities
+    - [x] Lists: Modify urls.py to allow different resource names for different result types
     - [ ] Lists: Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
     - [ ] Refactor the entity resource rendering logic
         - use common function to handle content negotiation and filename selection

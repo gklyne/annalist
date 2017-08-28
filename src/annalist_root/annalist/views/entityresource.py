@@ -106,14 +106,12 @@ class EntityResourceAccess(AnnalistGenericView):
             # Return resource data direct from storage
             resource_file = entity_resource_file(entity, resource_info)
         if resource_file is None:
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RESOURCE_DOES_NOT_EXIST%
-                        { 'id':  entity_label
-                        , 'ref': resource_info["resource_path"]
-                        }
-                    )
-                )
+            msg = (message.RESOURCE_DOES_NOT_EXIST%
+                { 'id':  entity_label
+                , 'ref': resource_info["resource_path"]
+                })
+            log.debug("EntityResourceAccess.get: "+msg)
+            return self.error(dict(self.error404values(), message=msg))
         # Return resource
         try:
             return_type = resource_info["resource_type"]
@@ -153,17 +151,5 @@ class EntityResourceAccess(AnnalistGenericView):
         # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
-
-    def resource_response(self, resource_file, resource_type, links={}):
-        """
-        Construct response containing body of referenced resource,
-        with supplied resource_type as its content_type
-        """
-        # @@TODO: assumes response can reasonably be held in memory;
-        #         consider 'StreamingHttpResponse'?
-        response = HttpResponse(content_type=resource_type)
-        response = self.add_link_header(response, links)
-        response.write(resource_file.read())
-        return response
 
 # End.
