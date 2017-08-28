@@ -67,15 +67,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Implement Turtle output for collection data view
     - [x] Test case for site data view
     - [x] Implement Turtle output for site data view
-    - Lists: ListResourceAccess mirroring EntityResourceAccess?
     - [x] Lists: refactor code to separate data access from rendering
     - [x] Lists: generalize JSON list code to use entityresourceaccess facilities
-    - [x] Lists: Modify urls.py to allow different resource names for different result types
-    - [ ] Lists: Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
-    - [ ] Refactor the entity resource rendering logic
-        - use common function to handle content negotiation and filename selection
-        - for lists too?
-        - see entityedit.form_render and entitylist.get
+    - [x] Lists: modify urls.py to allow different resource names for different result types
+    - [x] Lists: add Turtle redirect calls alongside JSON-LD redirects (entitylist.py, get)
+    - [x] Lists: add test cases for retrieving list data as Turtle
+    - [ ] Test turtle output in browser (check links, etc.)
 
 (Sub-release?)
 

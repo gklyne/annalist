@@ -494,66 +494,51 @@ class TurtleOutputTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
 
-    @unittest.skip("test_turtle_enum_list_type_list not implemented")
-    def test_turtle_enum_list_type_list(self):
+    def test_turtle_enum_list_type_grid(self):
         """
-        Read enumeration data as Turtle, and check resulting RDF triples
+        Read enumeration value as Turtle, and check resulting RDF triples
         """
         # Generate collection JSON-LD context data
         self.testcoll.generate_coll_jsonld_context()
         Enum_list_type = RecordEnumFactory(layout.ENUM_LIST_TYPE_ID, layout.ENUM_LIST_TYPE_ID)
-        list_type_list = Enum_list_type.load(
+        list_type_grid = Enum_list_type.load(
             self.testcoll, "Grid", altscope="all"
             )
-        # Read user data as Turtle
-        g = Graph()
-        s = list_type_list._read_stream()
-        b = urlparse.urljoin(
-                self.collbaseurl,
-                layout.COLL_BASE_ENUM_REF%
-                    { 'type_id': list_type_list.get_type_id()
-                    , 'id': list_type_list.get_id() 
-                    }
-                )
-        # print("***** b: (list_type_list)")
-        # print(repr(b))
-        # print("***** s.read()"+s.read())
-        # s.seek(0)
-        result = g.parse(source=s, publicID=b+"/", format="json-ld")
-        # print "*****"+repr(result)
-        # print("***** g: (list_type_list)")
-        # print(g.serialize(format='turtle', indent=4))
-        # Check the resulting graph contents
-        # @@TODO: currently have to deal here with inconsistency between file and URL layouts
-        subj                = b #@@ list_type_list.get_url()
-        subj                = ( "file://" + 
-              os.path.join(
-                TestBaseDir, 
-                layout.SITEDATA_DIR,        # site-wide data collection
-                layout.COLL_BASE_DIR,       # collection base directory
-                layout.COLL_BASE_ENUM_REF%{ 'type_id': list_type_list.get_type_id(), 'id': list_type_list.get_id() }
-                )
+        # Read enumerated value list data as Turtle
+        type_id = list_type_grid.get_type_id()
+        enum_id = list_type_grid.get_id()
+        v = entity_url(coll_id="testcoll", type_id=type_id, entity_id=enum_id)
+        u = TestHostUri + entity_resource_url(
+            coll_id="testcoll", type_id=type_id, entity_id=enum_id,
+            resource_ref=layout.VOCAB_META_TURTLE
             )
-        list_type_list_data = list_type_list.get_values()
-        list_type_url       = ANNAL.to_uri(list_type_list_data[ANNAL.CURIE.uri])
+        # print("@@@@ v: (list_type_grid)")
+        # print(repr(v))
+        # print("@@@@ u: (list_type_grid)")
+        # print(repr(u))
+        with MockHttpDictResources(u, self.get_context_mock_dict(v)):
+            r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        # Check the resulting graph contents
+        g = Graph()
+        result = g.parse(data=r.content, publicID=u, format="turtle")
+        # print("@@@@ g: (list_type_grid)")
+        # print(g.serialize(format='turtle', indent=4))
+        subj                = TestHostUri + v.rstrip("/")
+        list_type_grid_data = list_type_grid.get_values()
+        list_type_url       = ANNAL.to_uri(list_type_grid_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
             [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.Enum)                            )
             , (subj, RDF.URI.type,          URIRef(ANNAL.URI.Enum_list_type)                  )
-            , (subj, RDFS.URI.label,        Literal(list_type_list_data[RDFS.CURIE.label])    )
-            , (subj, RDFS.URI.comment,      Literal(list_type_list_data[RDFS.CURIE.comment])  )
-            , (subj, ANNAL.URI.id,          Literal(list_type_list_data[ANNAL.CURIE.id])      )
-            , (subj, ANNAL.URI.type_id,     Literal(list_type_list_data[ANNAL.CURIE.type_id]) )
+            , (subj, RDFS.URI.label,        Literal(list_type_grid_data[RDFS.CURIE.label])    )
+            , (subj, RDFS.URI.comment,      Literal(list_type_grid_data[RDFS.CURIE.comment])  )
+            , (subj, ANNAL.URI.id,          Literal(list_type_grid_data[ANNAL.CURIE.id])      )
+            , (subj, ANNAL.URI.type_id,     Literal(list_type_grid_data[ANNAL.CURIE.type_id]) )
             , (subj, ANNAL.URI.uri,         URIRef(list_type_url)                             )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         return
-
-
-
-
-    # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
 
     def test_http_turtle_entity1(self):
         """
@@ -975,43 +960,36 @@ class TurtleOutputTest(AnnalistTestCase):
     #   Entity list content negotiation tests
     #   -----------------------------------------------------------------------------
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def get_list_turtle(self, list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""):
         """
         Return list of entity nodes from Turtle list
         """
         self.testcoll.generate_coll_jsonld_context()
-        r = self.client.get(list_url, HTTP_ACCEPT="application/ld+json")
+        r = self.client.get(list_url, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
-        json_url = r['Location']
-        expect_json_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_FILE)
-        self.assertEqual(json_url, expect_json_url)
-        r = self.client.get(json_url)
+        turtle_url = r['Location']
+        expect_turtle_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_TURTLE)
+        self.assertEqual(turtle_url, expect_turtle_url)
+        with MockHttpDictResources(turtle_url, self.get_context_mock_dict(turtle_url, context_path=context_path)):
+            r = self.client.get(turtle_url)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # print("***** json_url: "+json_url)
-        # print("***** c: (testcoll/_type list)")
+        # print("***** turtle_url: "+turtle_url)
+        # print("***** c: (testcoll/_type list):")
         # print r.content
         g = Graph()
-        with MockHttpDictResources(json_url, self.get_context_mock_dict(json_url, context_path=context_path)):
-            result = g.parse(data=r.content, publicID=json_url, base=json_url, format="json-ld")
-        # print("***** g: (testcoll/_type list)")
-        # print(g.serialize(format='turtle', indent=4))
-        # print("*****")
-        # for t in g.triples((None, None, None)):
-        #     print repr(t)
-        # print("*****")
-        subj = urlparse.urljoin(json_url, subj_ref)
+        result = g.parse(data=r.content, publicID=turtle_url, format="turtle")
+        # Check the resulting graph contents
+        subj = urlparse.urljoin(turtle_url, subj_ref)
         for (s, p, o) in (
             [ (subj, ANNAL.URI.entity_list, None)
             ]):
             self.assertTripleIn( (URIRef(s), URIRef(p), o), g)
         list_head  = g.value(subject=URIRef(subj), predicate=URIRef(ANNAL.URI.entity_list))
         list_items = list(self.scan_rdf_list(g, list_head))
-        return (json_url, list_items)
+        return (turtle_url, list_items)
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_coll_type(self):
         """
         Content negotiate for Turtle version of a list of collection-defined types
@@ -1025,15 +1003,14 @@ class TurtleOutputTest(AnnalistTestCase):
             list_id="Type_list",
             scope=None
             )
-        (json_url, list_items) = self.get_list_json(
+        (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_coll_all(self):
         """
         Content negotiate for Turtle version of a list of collection-defined entities of all types
@@ -1042,17 +1019,16 @@ class TurtleOutputTest(AnnalistTestCase):
         subj_ref = entitydata_list_all_url(
             "testcoll", list_id="Default_list_all", scope=None
             )
-        (json_url, list_items) = self.get_list_json(
+        (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 2)
         self.assertIn(URIRef(t_uri), list_items)
         self.assertIn(URIRef(e1uri), list_items)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_coll_all_list(self):
         """
         Content negotiate for Turtle version of a list of collection-defined entities of all types
@@ -1063,16 +1039,15 @@ class TurtleOutputTest(AnnalistTestCase):
         subj_ref = entitydata_list_all_url(
             "testcoll", list_id="Type_list", scope=None
             )
-        (json_url, list_items) = self.get_list_json(
+        (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_site_type(self):
         """
         Content negotiate for Turtle version of a list of collection-defined types
@@ -1086,7 +1061,7 @@ class TurtleOutputTest(AnnalistTestCase):
             list_id="Type_list",
             scope="all"
             )
-        (json_url, list_items) = self.get_list_json(
+        (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
         # print "@@ "+repr(list_items)
@@ -1094,11 +1069,10 @@ class TurtleOutputTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_site_all_list(self):
         """
         Content negotiate for Turtle version of a list of 
@@ -1110,18 +1084,17 @@ class TurtleOutputTest(AnnalistTestCase):
         subj_ref = entitydata_list_all_url(
             "testcoll", list_id="Type_list", scope="all"
             )
-        (json_url, list_items) = self.get_list_json(
+        (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
         expect_type_ids = get_site_types()
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 
-    @unittest.skip("test_@@@@@@ not implemented")
     def test_http_conneg_turtle_list_coll_wrongname(self):
         """
         This is a test of the regular expression used to access list resources,
@@ -1132,9 +1105,9 @@ class TurtleOutputTest(AnnalistTestCase):
             scope=None
             )
         wrong_name     = layout.ENTITY_LIST_FILE.replace('.', '*')
-        wrong_json_url = make_resource_url(TestHostUri, list_url, wrong_name)
+        wrong_turtle_url = make_resource_url(TestHostUri, list_url, wrong_name)
         with SuppressLogging(logging.WARNING):
-            r = self.client.get(wrong_json_url)
+            r = self.client.get(wrong_turtle_url)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
         return

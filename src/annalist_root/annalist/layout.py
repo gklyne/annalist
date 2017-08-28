@@ -239,6 +239,7 @@ ENTITY_DATA_FILE        = "entity_data.jsonld"
 ENTITY_DATA_TURTLE      = "entity_data.ttl"
 ENTITY_PROV_FILE        = "entity_prov.jsonld"
 ENTITY_LIST_FILE        = "entity_list.jsonld"  # Entity list as JSON resource
+ENTITY_LIST_TURTLE      = "entity_list.ttl"     # Entity list as Turtle resource
 COLL_BASE_ENTITY_REF    = "%(type_id)s/%(id)s"
 ENTITY_COLL_BASE_REF    = "../../"
 #@@ NOTE: @base ignored when loading external context - is this correct?

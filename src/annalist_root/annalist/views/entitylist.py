@@ -259,10 +259,15 @@ class EntityGenericListView(AnnalistGenericView):
                 )
         # log.info("EntityGenericListView.get listcontext %r"%(listcontext))
         # Generate and return form data
-        json_redirect_url = make_resource_url("", self.get_request_path(), layout.ENTITY_LIST_FILE)
+        json_redirect_url   = make_resource_url("", self.get_request_path(), layout.ENTITY_LIST_FILE)
+        turtle_redirect_url = make_resource_url("", self.get_request_path(), layout.ENTITY_LIST_TURTLE)
         return (
-            self.render_html(listcontext, self._entityformtemplate) or 
-            self.redirect_json(json_redirect_url) or
+            self.render_html(listcontext, self._entityformtemplate)
+            or 
+            self.redirect_json(json_redirect_url)
+            or
+            self.redirect_turtle(turtle_redirect_url)
+            or
             self.error(self.error406values())
             )
 
