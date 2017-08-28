@@ -47,7 +47,7 @@ class EntityDeleteConfirmedBaseView(AnnalistGenericView):
         viewinfo = DisplayInfo(self, "delete", request_params, continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(type_id)
+        viewinfo.get_request_type_info(type_id)
         viewinfo.check_authorization("delete")
         if viewinfo.http_response:
             return viewinfo.http_response

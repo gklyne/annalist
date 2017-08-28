@@ -164,7 +164,7 @@ urlpatterns = patterns('',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
 
-    # Additional resource access (context, attachments, etc.)
+    # Named resource access (metadata, context, attachments, etc.)
     url(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
                             SiteResourceAccess.as_view(),
                             name='AnnalistSiteResourceAccess'),
@@ -175,7 +175,7 @@ urlpatterns = patterns('',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
 
-    # Entity view forms without 
+    # Entity resource data access with specified view
     url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityViewAccess'),

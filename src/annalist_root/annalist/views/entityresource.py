@@ -148,7 +148,7 @@ class EntityResourceAccess(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(type_id)
+        viewinfo.get_request_type_info(type_id)
         viewinfo.get_entity_info(action, entity_id)
         # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)

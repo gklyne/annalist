@@ -20,7 +20,10 @@ from annalist                           import layout
 from annalist                           import message
 from annalist.exceptions                import Annalist_Error
 from annalist.identifiers               import RDFS, ANNAL
-from annalist.util                      import split_type_entity_id, extract_entity_id, make_resource_url
+from annalist.util                      import (
+    make_type_entity_id, split_type_entity_id, extract_entity_id,
+    make_resource_url
+    )
 
 import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.collection         import Collection
@@ -97,7 +100,7 @@ class EntityGenericListView(AnnalistGenericView):
         listinfo = DisplayInfo(self, "list", request_dict, self.collection_view_url)
         listinfo.get_site_info(self.get_request_host())
         listinfo.get_coll_info(coll_id)
-        listinfo.get_type_info(type_id)
+        listinfo.get_request_type_info(type_id)
         listinfo.get_list_info(listinfo.get_list_id(listinfo.type_id, list_id))
         listinfo.check_authorization("list")
         return listinfo
@@ -118,7 +121,7 @@ class EntityGenericListView(AnnalistGenericView):
         # 1. 'fields':  (context receives list of field descriptions used to generate row headers)
         # 2. 'entities': (context receives a bound field that displays entry for each entity)
 
-        # NOTE - supplied entity has single field '_list_entities_' (see 'get' below)
+        # NOTE - supplied entity has single field ANNAL.CURIE.entity_list (see 'get' below)
         #        entitylist template uses 'fields' from context to display headings
 
         list_fields = listinfo.recordlist.get(ANNAL.CURIE.list_fields, [])
@@ -132,7 +135,7 @@ class EntityGenericListView(AnnalistGenericView):
                 "displaying and/or editing a record view description"
             , ANNAL.CURIE.field_name:           "List_rows"
             , ANNAL.CURIE.field_render_type:    "RepeatListRow"
-            , ANNAL.CURIE.property_uri:         "_list_entities_"
+            , ANNAL.CURIE.property_uri:         ANNAL.CURIE.entity_list
             })
         repeatrows_descr = FieldDescription(
             listinfo.collection, 
@@ -141,6 +144,65 @@ class EntityGenericListView(AnnalistGenericView):
             )
         entitymap.add_map_entry(FieldValueMap(c="List_rows", f=repeatrows_descr))
         return entitymap
+
+    # Helper functions assemble and return data for list of entities
+
+    def strip_context_values(self, listinfo, entity, base_url):
+        """
+        Return selected values from entity data, 
+        with context reference removed and entity id updated.
+        """
+        # entityvals = entity.get_values()
+        entityvals = get_entity_values(listinfo.curr_typeinfo, entity)
+        entityvals.pop('@context', None)
+        entityref = make_type_entity_id(
+            entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
+            )
+        entityvals['@id'] = base_url+entityref+"/"
+        return entityvals
+
+    def assemble_list_data(self, listinfo, scope, search_for):
+        """
+        Assemble and return a dict structure of JSON data used to generate
+        entity list responses.
+        """
+        # Prepare list and entity IDs for rendering form
+        selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
+        user_perms  = self.get_permissions(listinfo.collection)
+        entity_list = (
+            EntityFinder(listinfo.collection, selector=selector)
+                .get_entities_sorted(
+                    user_perms, type_id=listinfo.type_id, altscope=scope,
+                    context={'list': listinfo.recordlist}, search=search_for
+                    )
+            )
+        # typeinfo = listinfo.curr_typeinfo
+        base_url = self.get_collection_base_url()
+        list_url = self.get_list_url(
+            listinfo.coll_id, listinfo.list_id,
+            type_id=listinfo.type_id,
+            scope=scope,
+            search=search_for
+            )
+        entityvallist = [ self.strip_context_values(listinfo, e, base_url) for e in entity_list ]
+        # print "@@@@ type_id %s"%(listinfo.type_id,)
+        # print "@@@@ entity_list %r"%(entity_list,)
+        # print "@@@@ entityvallist %r"%(entityvallist,)
+        # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
+        log.info(
+            "EntityGenericListJsonView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
+            (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
+            )
+        jsondata = (
+            { '@id':            list_url
+            , '@context': [
+                { "@base":  base_url },
+                base_url+layout.COLL_CONTEXT_FILE
+                ]
+            , ANNAL.CURIE.entity_list:  entityvallist
+            })
+        # print "@@@@ assemble_list_data: jsondata %r"%(jsondata,)
+        return jsondata
 
     # GET
 
@@ -162,29 +224,14 @@ class EntityGenericListView(AnnalistGenericView):
         log.debug("listinfo.list_id %s"%listinfo.list_id)
         # Prepare list and entity IDs for rendering form
         try:
-            selector    = listinfo.recordlist.get_values().get(ANNAL.CURIE.list_entity_selector, "")
-            user_perms  = self.get_permissions(listinfo.collection)
-            # @@TODO: is this context value even usable??
-            entity_list = (
-                EntityFinder(listinfo.collection, selector=selector)
-                    .get_entities_sorted(
-                        user_perms, type_id=type_id, altscope=scope,
-                        context={'list': listinfo.recordlist}, 
-                        search=search_for
-                        )
-                )
-            typeinfo      = listinfo.curr_typeinfo
-            entityvallist = { '_list_entities_': [ get_entity_values(typeinfo, e) for e in entity_list ] }
+            entityvallist = self.assemble_list_data(listinfo, scope, search_for)
             # Set up initial view context
             context_extra_values = (
                 { 'continuation_url':       listinfo.get_continuation_url() or ""
                 , 'continuation_param':     listinfo.get_continuation_param()
                 , 'request_url':            self.get_request_path()
                 , 'scope':                  scope
-                , 'coll_id':                coll_id
-                , 'type_id':                type_id
                 , 'url_type_id':            type_id
-                , 'list_id':                listinfo.list_id
                 , 'url_list_id':            list_id
                 , 'search_for':             search_for
                 , 'list_choices':           self.get_list_choices_field(listinfo)

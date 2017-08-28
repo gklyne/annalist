@@ -252,7 +252,7 @@ class DisplayInfo(object):
         from another collection (via 'orig_coll_id' parameter).
 
         The current type identifier may be different by virtue of the type being
-        renamed in the formdata (via .
+        renamed in the form data (via 'curr_type_id' parameter).
         """
         # log.debug(
         #     "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
@@ -339,12 +339,19 @@ class DisplayInfo(object):
 
     def get_type_info(self, type_id):
         """
-        Check type identifier, and get reference to type information object.
+        Check type identifier, and get a reference to the corresponding type 
+        information object.
+
+        This method may be called to override the type id from the original request
+        URI, and the DisplayInfo 'type_id' value is not updated so that the value
+        from the original request URI is not lost.
+
+        See also method 'get_request_type_info'.
         """
+        # print "@@@@ get_type_info: type_id %s"%(type_id,)
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             if type_id:
-                self.type_id       = type_id
                 self.curr_typeinfo = EntityTypeInfo(self.collection, type_id)
                 self.orig_typeinfo = self.curr_typeinfo
                 if not self.curr_typeinfo.recordtype:
@@ -356,6 +363,14 @@ class DisplayInfo(object):
                             )
                         )
         return self.http_response
+
+    def get_request_type_info(self, type_id):
+        """
+        Save and check type identifier from request URI, and get a reference to 
+        the corresponding type information object.
+        """
+        self.type_id = type_id
+        return self.get_type_info(type_id)
 
     def get_list_info(self, list_id):
         """

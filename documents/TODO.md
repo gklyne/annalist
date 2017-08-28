@@ -68,6 +68,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Test case for site data view
     - [x] Implement Turtle output for site data view
     - Lists: ListResourceAccess mirroring EntityResourceAccess?
+    - [x] Lists: refactor code to separate data access from rendering
     - [ ] Lists: create EntityGenericListTurtleView, similar to EntityGenericListJsonView
     - [ ] Lists: Add entries to urls.py (or switch to using type param?)
     - [ ] Lists: Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
