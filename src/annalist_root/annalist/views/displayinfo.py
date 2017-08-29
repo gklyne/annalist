@@ -822,14 +822,14 @@ class DisplayInfo(object):
             )
         return turtle_url
 
-    def get_entity_list_ref(self, return_type=None):
+    def get_entity_list_ref(self, list_name=layout.ENTITY_LIST_FILE, return_type=None):
         """
         Returns a string that can be used as a reference to the entity list data
         relative to the current list URL.
         """
         return make_data_ref(
             self.view.get_request_path(), 
-            layout.ENTITY_LIST_FILE, 
+            list_name, 
             return_type
             )
 
@@ -887,13 +887,14 @@ class DisplayInfo(object):
                 { 'heading':                self.recordlist[RDFS.CURIE.label]
                 , 'list_label':             self.recordlist[RDFS.CURIE.label]
                 , 'entity_list_ref':        self.get_entity_list_ref()
-                , 'entity_list_ref_json':   self.get_entity_list_ref("application/json")
+                , 'entity_list_ref_json':   self.get_entity_list_ref(return_type="application/json")
+                , 'entity_list_ref_turtle': self.get_entity_list_ref(list_name=layout.ENTITY_LIST_TURTLE)
                 })
             context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.curr_typeinfo:
             context.update(
                 { 'entity_data_ref':        self.get_entity_jsonld_url()
-                , 'entity_data_ref_json':   self.get_entity_jsonld_url("application/json")
+                , 'entity_data_ref_json':   self.get_entity_jsonld_url(return_type="application/json")
                 , 'entity_turtle_ref':      self.get_entity_turtle_url()
                 })
         if entity_label:

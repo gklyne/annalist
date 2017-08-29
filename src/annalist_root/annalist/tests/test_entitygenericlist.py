@@ -14,8 +14,8 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import urlparse
 import unittest
-
 import logging
 log = logging.getLogger(__name__)
 
@@ -473,6 +473,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         curi = continuation_params_url(u)
         field_params = (
             { 'base':           TestBasePath
+            , 'list_base':      urlparse.urlparse(u).path.rstrip("/")
             , 'cont':           uri_params({"continuation_url": curi})
             , 'tooltip1':       "" # 'title="%s"'%r.context['fields'][0]['field_help']
             , 'tooltip2':       "" # 'title="%s"'%r.context['fields'][1]['field_help']
@@ -554,10 +555,27 @@ class EntityGenericListViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_params
+        rowlinks = ("""
+            <div class="row view-value-row">
+              <div class="link-bar small-12 columns">
+                <a href="entity_list.ttl?scope=all" title="Retrieve list data as Turtle">
+                  Turtle
+                </a>
+                <a href="entity_list.jsonld?scope=all" title="Retrieve list data as JSON-LD">
+                  JSON-LD
+                </a>
+                <a href="entity_list.jsonld?scope=all&amp;type=application/json" 
+                   title="Display JSON list data">
+                  <img src="/static/images/get_the_data_88x31.png" alt="get_the_data">
+                </a>
+              </div>
+            </div>
+            """)%field_params
         # log.info("*** r.content: "+r.content) #@@
         self.assertContains(r, rowdata1, html=True)
         self.assertContains(r, rowdata2, html=True)
         self.assertContains(r, rowdata3, html=True)
+        self.assertContains(r, rowlinks, html=True)
         # Test context
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)

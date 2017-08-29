@@ -118,24 +118,28 @@
           </div>
         </div>
 
+        <!-- Close button and data links -->
         <div class="row">
+
           <div class="small-12 medium-6 columns">
             <input type="submit" name="close"           value="Close" />
           </div>
-          <!-- "get the data" button -->
+
+          <!-- "get the data" links and button -->
           <div class="small-12 medium-6 columns text-right medium-up-text-right">
             <div class="row view-value-row">
-              <div class="small-12 columns">
+              <div class="link-bar small-12 columns">
+                <a href="{{entity_list_ref_turtle}}" title="Retrieve list data as Turtle">Turtle</a>
+                <a href="{{entity_list_ref}}" title="Retrieve list data as JSON-LD">JSON-LD</a>
                 <!-- Cf. https://github.com/BetaNYC/getDataButton -->
-                <a href="{{entity_list_ref}}" title="Retrieve underlying data as JSON-LD">JSON-LD</a>
-                <a href="{{entity_list_ref_json}}"  title="Retrieve underlying JSON data">
+                <a href="{{entity_list_ref_json}}"  title="Display JSON list data">
                   <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
                 </a>
               </div>
             </div>
           </div>
-        </div>
 
+        </div>
         <input type="hidden" name="continuation_url"    value="{{continuation_url}}"/>
       </form>
     </div>

@@ -424,14 +424,14 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             """)%field_vals(width=6)
         formrow9b = ("""
             <div class="row view-value-row">
-              <div class="view-value small-12 columns">
+              <div class="link-bar small-12 columns">
                 <a href="%(entity_base)s/entity_data.ttl" title="Retrieve underlying data as Turtle">
                   Turtle
                 </a>
                 <a href="%(entity_base)s/entity_data.jsonld" title="Retrieve underlying data as JSON-LD">
                   JSON-LD
                 </a>
-                <a href="%(entity_base)s/entity_data.jsonld?type=application/json" title="Retrieve underlying JSON data">
+                <a href="%(entity_base)s/entity_data.jsonld?type=application/json" title="Display underlying JSON data">
                   <img src="/static/images/get_the_data_88x31.png" alt="get_the_data">
                 </a>
               </div>

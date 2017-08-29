@@ -50,7 +50,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
 - [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
 - [x] When inheriting definitions, also use parent default view if none defined locally.
-- [.] Turtle rendering
+- [x] Turtle rendering
     - [x] Locate logic for Turtle rendering alongside JSON-LD
         - Entities: see EntityResourceAccess - returns file content and headers (JSON-LD is native).  render_json method not currently used.
         - Lists: see EntityGenericListJsonView - constructs list and adds headers
@@ -72,7 +72,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - [x] Lists: modify urls.py to allow different resource names for different result types
     - [x] Lists: add Turtle redirect calls alongside JSON-LD redirects (entitylist.py, get)
     - [x] Lists: add test cases for retrieving list data as Turtle
-    - [ ] Test turtle output in browser (check links, etc.)
+    - [x] Lists: update template to include Turtle data link and use 'link-bar' styles
+    - [x] Test turtle output in browser (check links, etc.)
 
 (Sub-release?)
 
