@@ -77,6 +77,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
+- [ ] BUG: show warning when accessing collection with missing parent.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
@@ -85,7 +86,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
 - [ ] Login sequence from authz error page does not return to original page viewed
-- [ ] Turtle export option to work around JSON-LD context access problems for now
+- [x] Turtle export option to work around JSON-LD context access problems for now
+
+
+(Sub-release?)
+
 - [ ] update pip to latest version in python environment (for continued testing)
 - [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
@@ -98,7 +103,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
-- [ ] BUG(?): delete list view while viewing that list results in error message.  Maybe just improve error message.
+- [ ] BUG: delete list view while viewing that list results in error message.  Maybe just improve error message.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages

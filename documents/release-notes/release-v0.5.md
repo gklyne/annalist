@@ -5,11 +5,18 @@ Annalist release 0.5.x is a candidate feature-complete minimal viable product fo
 A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.5.2
+## Current release: 0.5.4
 
-This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in version 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
+This release contains some significant changes to simplify workflows used when creating definitons that use structured ontology terms, based on some experiences using Annalist to create CIDOC CRM data.  It also provides options for generating Turtle data output.  There are numerous bug fixes, which are described in the notes below for release 0.5.3.
 
-See the "History" section below for more details .
+Specific visible changes include:
+
+* Turtle data output for entities and entity lists, to make it easier to share Annalist data with other linked data applications.
+* New facility to create a subtype with key values inherited or derived from the parent type.
+* Revised creation of view and list definitions for a type, to work more easily for subtypes.  Fields from existing type view and list definitions, or from the default view and list definitions, are copied into the new definitions created.
+* Changes to help text, diagnostics and other messages.
+
+There is some extensive internal refactoring in the view logic used to generate data outputs, and the links used to access data outputs.
 
 
 ## Status
@@ -83,6 +90,59 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 See also previous release notes:
 
 - [Release 0.1.x](./release-v0.1.md)
+
+
+## Release: 0.5.4
+
+This release contains some significant changes to simplify workflows used when creating definitons that use structured ontology terms, based on some experiences using Annalist to create CIDOC CRM data.  It also provides options for generating Turtle data output.  There are numerous bug fixes, which are described in the notes below for release 0.5.3.
+
+Specific visible changes include:
+
+* Turtle data output for entities and entity lists, to make it easier to share Annalist data with other linked data applications.
+* New facility to create a subtype with key values inherited or derived from the parent type.
+* Revised creation of view and list definitions for a type, to work more easily for subtypes.  Fields from existing type view and list definitions, or from the default view and list definitions, are copied into the new definitions created.
+* Changes to help text, diagnostics and other messages.
+
+There is some extensive internal refactoring in the view logic used to generate data outputs, and the links used to access data outputs.
+
+
+# Version 0.5.3, towards 0.5.4
+
+- [x] BUG: copy entity and Id change (or copy and something) causes errors on save.
+- [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
+- [x] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
+    - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
+- [x] BUG: when default view references non-accessible entity: 
+    - if default view/list unavailable, revert to default list
+- [x] BUG: create subtype without login generates unhelpful error response
+- [x] BUG: display list with no fields generates error
+- [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
+- [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
+    - Changed characters used, but haven't yet been able to retest with Chinese language browser
+- [x] BUG: data links for collection metadata are broken (since changes to entity_data_ref?)
+- [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
+- [x] Make it easier to create subtype + view + list...
+    - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
+    - Enhance create view+list logic to copy previous view+list definitions as defaults
+- [x] Separate buttons for create list- and multiple-value fields (seq vs set)
+- [x] When creating a repeat field, be more helpful in creating the help and tooltip text
+- [x] Default type list/view and subtype comments: include link to type
+- [x] Create FAQ for defining subtypes
+- [x] For missing field definition, improve text and try to include field name referenced
+- [x] Identifier values (URI/CURIE) should have leading/trailing spaces stripped on entry.
+- [x] When inheriting definitions, also use parent collection default view if none defined locally.
+- [x] Turtle rendering
+    - Turtle output generated by parsing JSON-LD and outputing as Turtle using rdflib
+    - Implement Turtle output for entity data views
+    - Implement Turtle output for entity list views
+    - Extensive refactoring of data view logic:
+        - common logic to handle different return types (JSON-LD and Turtle)
+        - common logic for entity and list data.
+        - updated logic for adding "Link" headers to HTTP response
+    - Add Turtle redirect calls alongside JSON-LD redirects
+        - entityedit.py, form_render
+        - entitylist.py, get
+    - Create test cases for Turtle output (based on JSON-LD test cases)
 
 
 # Version 0.5.2

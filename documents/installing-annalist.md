@@ -175,9 +175,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.2.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.4.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.5.2.tar.gz
+        pip install $WORKSPACE/Annalist-0.5.4.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -185,23 +185,23 @@ The following assumes that software is installed under a directory called $WORKS
 
     The output from this command should look something like this:
 
-        (anenv)sasharissa:annalist_root graham$ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.5.0 (test configuration)
+        $ annalist-manager runtest
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.4 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
         INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root
         INFO:annalist_site.settings.runtests:TEST_BASE_URI:   http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DB PATH:         /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/db.sqlite3
-        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist/data/identity_providers/')
-        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.0-py2.7.egg/annalist_root/annalist.log
+        INFO:annalist_site.settings.runtests:DB PATH:         /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/annalist/data/identity_providers/')
+        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.4-py2.7.egg/annalist_root/annalist.log
         INFO:rdflib:RDFLib Version: 4.2.1
         Creating test database for alias 'default'...
-        .........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 649 tests in 255.730s
+        Ran 680 tests in 258.162s
 
         OK
         Destroying test database for alias 'default'...
