@@ -34,8 +34,8 @@ class RecordType(EntityData):
 
     _entitytype     = ANNAL.CURIE.Type
     _entitytypeid   = layout.TYPE_TYPEID
+    _entityroot     = layout.COLL_TYPE_PATH
     _entityview     = layout.COLL_TYPE_VIEW
-    _entitypath     = layout.COLL_TYPE_PATH
     _entityfile     = layout.TYPE_META_FILE
 
     def __init__(self, parent, type_id):

@@ -300,7 +300,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         #log.info("r.context['fields']: %r"%(r.context['fields'],))
         # Common structure
         self.assertEqual(r.context['entity_id'],        list_id)
-        self.assertEqual(r.context['orig_id'],          orig_list_id or list_id)
+        self.assertEqual(r.context['orig_id'],          orig_list_id)
         self.assertEqual(r.context['type_id'],          layout.LIST_TYPEID)
         self.assertEqual(r.context['orig_type'],        layout.LIST_TYPEID)
         self.assertEqual(r.context['coll_id'],          'testcoll')
@@ -867,7 +867,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.LIST_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['orig_id'],          None)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
@@ -898,7 +898,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.LIST_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_list_01")
-        self.assertEqual(r.context['orig_id'],          "Default_list_01")
+        self.assertEqual(r.context['orig_id'],          "Default_list")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
@@ -906,7 +906,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="copy",
             num_fields=2,
-            list_id="Default_list_01",
+            list_id="Default_list_01", orig_list_id="Default_list",
             list_label="List entities",
             list_url=list_url,
             list_uri=None
@@ -950,7 +950,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="edit",
             num_fields=2,
-            list_id="Default_list",
+            list_id="Default_list", orig_list_id="Default_list",
             list_label="List entities",
             list_url=list_url,
             list_uri="annal:display/Default_list"
@@ -997,7 +997,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="edit",
             num_fields=2,
-            list_id="Default_list",
+            list_id="Default_list", orig_list_id="Default_list",
             list_label="List entities",
             list_url=list_url,
             list_uri="annal:display/Default_list"

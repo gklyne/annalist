@@ -376,8 +376,6 @@ div.row > div.columns.view-value > a
     word-wrap: break-word;
 }
 
-
-
 /* Suppress padding for nested column values */
 div.row > div.column.view-value  div.row > div.column.view-value,
 div.row > div.columns.view-value div.row > div.columns.view-value
@@ -873,6 +871,24 @@ div.row div.new-button button span.select-edit-button-text
     line-height: 0.5;
 }
 
+/* Spacing and formatting for links in link bar */
+
+div.row > div.column.link-bar,
+div.row > div.columns.link-bar
+{
+    margin-top:     0rem;
+    margin-bottom:  0rem;
+    padding-top:    0.25rem;
+    padding-bottom: 0.15rem;
+    font-size:      1.00rem;
+}
+
+div.row > div.column.link-bar  > a,
+div.row > div.columns.link-bar > a
+{
+    padding-left:   0.75rem;
+    font-size:      1.00rem;
+}
 
 /*  ------------------------------------------------------------------------- 
 

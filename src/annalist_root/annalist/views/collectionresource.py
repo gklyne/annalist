@@ -17,6 +17,14 @@ from annalist                           import message
 from annalist                           import layout
 
 import annalist.models.entitytypeinfo as entitytypeinfo
+from annalist.models.entityresourceaccess import (
+    collection_fixed_json_resources,
+    find_fixed_resource,
+    entity_resource_file,
+    json_resource_file,
+    turtle_resource_file, 
+    make_turtle_resource_info
+    )
 
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
@@ -63,7 +71,8 @@ class CollectionResourceAccess(AnnalistGenericView):
                 )
 
         # Locate resource
-        resource_info = self.find_resource(viewinfo, coll, resource_ref)
+        resource_info = find_fixed_resource(collection_fixed_json_resources, resource_ref)
+        log.debug("CollectionResourceAccess.get: resource_info %r"%(resource_info,))
         if resource_info is None:
             return self.error(
                 dict(self.error404values(),
@@ -73,10 +82,19 @@ class CollectionResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = (
-            coll.resource_file(resource_info["resource_name"]) or
-            viewinfo.site.resource_file(resource_info["resource_name"])
-            )
+        coll_baseurl = viewinfo.reqhost + self.get_collection_base_url(coll_id)
+        # log.info("@@@@ coll_baseurl %s, coll_id %s, resource_ref %s"%(coll_baseurl, coll_id, resource_ref))
+        if "resource_access" in resource_info:
+            # Use indicated resource access renderer
+            jsondata      = coll.get_values()
+            resource_file = resource_info["resource_access"](coll_baseurl, jsondata, resource_info)
+        else:
+            # Return resource data direct from storage
+            resource_file = entity_resource_file(coll, resource_info)
+        # resource_file = (
+        #     coll.resource_file(resource_info["resource_path"]) or
+        #     viewinfo.site.resource_file(resource_info["resource_path"])
+        #     )
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
@@ -110,23 +128,9 @@ class CollectionResourceAccess(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
+        viewinfo.get_request_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization(action)
         return viewinfo
-
-    def find_resource(self, viewinfo, coll, resource_ref):
-        """
-        Return a description for the indicated collection resource, or None
-        """
-        # @@TODO: this is a bit ad-hoc; try to work out structure that works more
-        #         uniformly for collections, entities, sites, etc.
-        log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
-        if resource_ref == layout.COLL_CONTEXT_FILE:
-            return (
-                { 'resource_type': "application/ld+json"
-                , 'resource_name': layout.COLL_BASE_REF + resource_ref
-                })
-        return None
 
     def resource_response(self, resource_file, resource_type):
         """

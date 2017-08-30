@@ -324,7 +324,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_edit_view=True
             ):
         self.assertEqual(response.context['entity_id'],        view_id)
-        self.assertEqual(response.context['orig_id'],          orig_view_id or view_id)
+        self.assertEqual(response.context['orig_id'],          orig_view_id)
         self.assertEqual(response.context['type_id'],          '_view')
         self.assertEqual(response.context['orig_type'],        '_view')
         self.assertEqual(response.context['coll_id'],          'testcoll')
@@ -476,7 +476,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Common fields 
         self._check_common_view_context_fields(response,
             action=action,
-            view_id="View_view", 
+            view_id="View_view",  orig_view_id="View_view",
             view_label="View definition",
             view_record_type="annal:View",
             view_edit_view=False
@@ -664,7 +664,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['orig_id'],          None)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['edit_view_button'],   False)
@@ -672,7 +672,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Fields initially created
         self._check_default_view_context_fields(r, 
             action="new",
-            view_id="00000001",
+            view_id="00000001", orig_view_id=None,
             view_label="", # default_label("testcoll", layout.VIEW_TYPEID, "00000001"),
             view_record_type="",
             view_url=recordview_url("testcoll", "00000001"),
@@ -694,7 +694,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_view_01")
-        self.assertEqual(r.context['orig_id'],          "Default_view_01")
+        self.assertEqual(r.context['orig_id'],          "Default_view")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['edit_view_button'],   False)
@@ -702,7 +702,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Fields
         self._check_default_view_context_fields(r, 
             action="copy",
-            view_id="Default_view_01",
+            view_id="Default_view_01", orig_view_id="Default_view",
             view_label="Default record view",
             view_url=view_url,
             view_uri=None,
@@ -747,7 +747,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Fields
         self._check_default_view_context_fields(r, 
             action="edit",
-            view_id="Default_view",
+            view_id="Default_view", orig_view_id="Default_view",
             view_label="Default record view",
             view_url=view_url,
             view_uri="annal:display/Default_view",
@@ -1145,7 +1145,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._check_default_view_context_fields(r, 
             action="edit",
             add_field=True,
-            view_id="addfieldview",
+            view_id="addfieldview", orig_view_id="addfieldview",
             view_label=None,
             view_record_type="annal:View",
             )
@@ -1177,7 +1177,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._check_default_view_context_fields(r, 
             action="edit",
             remove_field=True,
-            view_id="removefieldview",
+            view_id="removefieldview", orig_view_id="removefieldview",
             view_label=None,
             view_record_type="annal:View",
             )
@@ -1203,7 +1203,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # Test context
         self._check_default_view_context_fields(r, 
             action="edit",
-            view_id="removefieldview",
+            view_id="removefieldview", orig_view_id="removefieldview",
             view_label=None,
             view_record_type="annal:View",
             )
@@ -1236,7 +1236,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._check_default_view_context_fields(r, 
             action="edit",
             move_up=[2,3],
-            view_id="movefieldview",
+            view_id="movefieldview", orig_view_id="movefieldview",
             view_label=None,
             view_record_type="annal:View",
             )

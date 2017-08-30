@@ -78,11 +78,11 @@ context_authorization_map = (
 
 def make_data_ref(request_url, data_ref, resource_type=None):
     """
-    Returns a URL reference rel.atiove to the suppliued request_url 
-    that can be used as a reference to a data resource based on
-    the supplied request URL, data reference and optional type.
+    Returns a URI reference that can be used as a reference a 
+    data resource based on the supplied request URL, 
+    data resource reference and optional type.
 
-    Scope-repated query parameters from the original request_url are 
+    Scope-related query parameters from the original request_url are 
     preserved, and others are discarded.
     """
     params = scope_params(uri_param_dict(request_url))
@@ -204,6 +204,7 @@ class DisplayInfo(object):
         self.curr_type_id       = None
         self.curr_entity_id     = None
         self.curr_typeinfo      = None
+        self.src_entity_id      = None
         # Type-specific messages
         self.type_messages      = None
         # Default no permissions:
@@ -251,7 +252,7 @@ class DisplayInfo(object):
         from another collection (via 'orig_coll_id' parameter).
 
         The current type identifier may be different by virtue of the type being
-        renamed in the formdata (via .
+        renamed in the form data (via 'curr_type_id' parameter).
         """
         # log.debug(
         #     "@@ DisplaytInfo.set_coll_type_entity_id: %s/%s/%s -> %s/%s"%
@@ -319,7 +320,7 @@ class DisplayInfo(object):
 
     def update_coll_version(self):
         """
-        Called when an entity has been updatred to also update the data version 
+        Called when an entity has been updated to also update the data version 
         associated with the collection if it was previously created by an older 
         version of Annalist.
         """
@@ -338,12 +339,19 @@ class DisplayInfo(object):
 
     def get_type_info(self, type_id):
         """
-        Check type identifier, and get reference to type information object.
+        Check type identifier, and get a reference to the corresponding type 
+        information object.
+
+        This method may be called to override the type id from the original request
+        URI, and the DisplayInfo 'type_id' value is not updated so that the value
+        from the original request URI is not lost.
+
+        See also method 'get_request_type_info'.
         """
+        # print "@@@@ get_type_info: type_id %s"%(type_id,)
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             if type_id:
-                self.type_id       = type_id
                 self.curr_typeinfo = EntityTypeInfo(self.collection, type_id)
                 self.orig_typeinfo = self.curr_typeinfo
                 if not self.curr_typeinfo.recordtype:
@@ -356,6 +364,14 @@ class DisplayInfo(object):
                         )
         return self.http_response
 
+    def get_request_type_info(self, type_id):
+        """
+        Save and check type identifier from request URI, and get a reference to 
+        the corresponding type information object.
+        """
+        self.type_id = type_id
+        return self.get_type_info(type_id)
+
     def get_list_info(self, list_id):
         """
         Retrieve list definition to use for display
@@ -367,7 +383,7 @@ class DisplayInfo(object):
             #     "DisplayInfo.get_list_info: collection.get_alt_entities %r"%
             #     [ c.get_id() for c in  self.collection.get_alt_entities(altscope="all") ]
             #     )
-            if not RecordList.exists(self.collection, list_id, altscope="all"):
+            if not self.check_list_id(list_id):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
                 self.http_response = self.view.error(
                     dict(self.view.error404values(),
@@ -401,7 +417,7 @@ class DisplayInfo(object):
         """
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
-            if not RecordView.exists(self.collection, view_id, altscope="all"):
+            if not self.check_view_id(view_id):
                 log.warning("DisplayInfo.get_view_info: RecordView %s not found"%view_id)
                 log.warning("Collection: %r"%(self.collection))
                 log.warning("Collection._altparent: %r"%(self.collection._altparent))
@@ -438,7 +454,6 @@ class DisplayInfo(object):
             assert self.curr_typeinfo is not None
             self.src_entity_id  = entity_id
             self.curr_entity_id = entity_id
-            self.orig_entity_id = entity_id
             if action in ["new", "copy"]:
                 self.use_entity_id = self.curr_typeinfo.entityclass.allocate_new_id(
                     self.curr_typeinfo.entityparent, base_id=entity_id
@@ -516,15 +531,6 @@ class DisplayInfo(object):
                 )
         return self.http_response
 
-    # Additional support functions for collection view
-
-    def get_default_view(self):
-        """
-        Return default view_id, type_id and entity_id to display for collection,
-        or None for any values not defined.
-        """
-        return self.collection.get_default_view()
-
     # Additonal support functions for list views
 
     def get_type_list_id(self, type_id):
@@ -541,6 +547,15 @@ class DisplayInfo(object):
                 log.warning("DisplayInfo.get_type_list_id no type data for %s"%(type_id))
         return list_id
 
+    def check_list_id(self, list_id):
+        """
+        Check for existence of list definition: 
+        if it exists, return the supplied list_id, else None.
+        """
+        if list_id and RecordList.exists(self.collection, list_id, altscope="all"):
+            return list_id
+        return None
+
     def get_list_id(self, type_id, list_id):
         """
         Return supplied list_id if defined, otherwise find default list_id for
@@ -549,8 +564,8 @@ class DisplayInfo(object):
         if not self.http_response:
             list_id = (
                 list_id or 
-                self.get_type_list_id(type_id) or
-                self.collection.get_default_list() or
+                self.check_list_id(self.get_type_list_id(type_id)) or
+                self.check_list_id(self.collection.get_default_list()) or
                 ("Default_list" if type_id else "Default_list_all")
                 )
             if not list_id:
@@ -566,6 +581,40 @@ class DisplayInfo(object):
         return extract_entity_id(
             self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
             )
+
+    # Additional support functions for collection view
+
+    def get_default_view_type_entity(self):
+        """
+        Return default view_id, type_id and entity_id to display for collection,
+        or None for any values not defined.
+        """
+        view_id, type_id, entity_id = self.collection.get_default_view()
+        return (self.check_view_id(view_id), type_id, entity_id)
+
+    # Additonal support functions for entity views
+
+    def check_view_id(self, view_id):
+        """
+        Check for existence of view definition: 
+        if it exists, return the supplied view_id, else None.
+        """
+        if view_id and RecordView.exists(self.collection, view_id, altscope="all"):
+            return view_id
+        return None
+
+    def get_view_id(self, type_id, view_id):
+        """
+        Get view id or suitable default using type if defined.
+        """
+        if not self.http_response:
+            view_id = (
+                view_id or 
+                self.check_view_id(self.curr_typeinfo.get_default_view_id())
+                )
+            if not view_id:
+                log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
+        return view_id
 
     def check_collection_entity(self, entity_id, entity_type, msg):
         """
@@ -624,20 +673,28 @@ class DisplayInfo(object):
                 action=action
                 )
 
-    # Additonal support functions
+    def get_src_entity_resource_url(self, resource_ref):
+        """
+        Return URL for accessing source entity resource data 
+        (not including any view information contained in the current request URL).
 
-    def get_view_id(self, type_id, view_id):
+        Contains special logic for accessing collection and site metadata
         """
-        Get view id or suitable default using type if defined.
-        """
-        if not self.http_response:
-            view_id = (
-                view_id or 
-                self.curr_typeinfo.get_default_view_id()
+        assert self.coll_id is not None
+        assert self.curr_typeinfo is not None
+        type_id   = self.curr_typeinfo.get_type_id()
+        if type_id == layout.COLL_TYPEID:
+            entity_id = self.src_entity_id or layout.SITEDATA_ID
+            base_url  = self.view.get_collection_base_url(entity_id)
+        else:
+            entity_id = self.src_entity_id or "__unknown_src_entity__"
+            base_url  = self.view.get_entity_base_url(
+                self.coll_id, type_id,
+                entity_id
                 )
-            if not view_id:
-                log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
-        return view_id
+        return urlparse.urljoin(base_url, resource_ref)
+
+    # Additonal support functions
 
     def get_continuation_param(self):
         """
@@ -689,11 +746,6 @@ class DisplayInfo(object):
         """
         Update continuation URI to reflect renamed type or entity.
         """
-        # def update_hop(chop):
-        #     return url_update_type_entity_id(chop, 
-        #         old_type_id=old_type_id, new_type_id=new_type_id, 
-        #         old_entity_id=old_entity_id, new_entity_id=new_entity_id
-        #         )
         curi = self.continuation_url
         if curi:
             hops = continuation_url_chain(curi)
@@ -708,26 +760,76 @@ class DisplayInfo(object):
             self.continuation_url = curi
         return curi
 
-    def get_entity_data_ref(self, return_type=None):
+    def get_entity_data_ref(self, name_ext=".jsonld", return_type=None):
         """
-        Returns a string that can be used as a reference to the entity metadata resource
-        relative to an entity URL, optionally with a specified type parameter added.
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity using the supplied name extension.
         """
         assert self.curr_typeinfo is not None
-        return make_data_ref(
-            self.view.get_request_path(), 
-            self.curr_typeinfo.entityclass._entityfile, 
+        data_ref = self.curr_typeinfo.entityclass.meta_resource_name(name_ext=name_ext)
+        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        data_ref = make_data_ref(
+            self.view.get_request_path(),   # For parameter values
+            data_ref, 
             return_type
             )
+        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        return data_ref
 
-    def get_entity_list_ref(self, return_type=None):
+    def get_entity_jsonld_ref(self, return_type=None):
+        """
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity, to be returned as JSON-LD data.
+        """
+        jsonld_ref = self.get_entity_data_ref(name_ext=".jsonld", return_type=return_type)
+        return jsonld_ref
+
+    def get_entity_jsonld_url(self, return_type=None):
+        """
+        Returns a string that can be used as a reference to the entity metadata resource,
+        optionally with a specified type parameter added.
+
+        Extracts appropriate local reference, and combines with entity URL path.
+        """
+        data_ref = self.get_entity_jsonld_ref(return_type=return_type)
+        data_url = self.get_src_entity_resource_url(data_ref)
+        log.debug(
+            "get_entity_jsonld_url: _entityfile %s, data_ref %s, data_url %s"%
+            (self.curr_typeinfo.entityclass._entityfile, data_ref, data_url)
+            )
+        return data_url
+
+    def get_entity_turtle_ref(self, return_type=None):
+        """
+        Returns a relative reference (from entity base) for the metadata for the
+        current entity, to be returned as Turtle data.
+        """
+        turtle_ref = self.get_entity_data_ref(name_ext=".ttl", return_type=return_type)
+        return turtle_ref
+
+    def get_entity_turtle_url(self, return_type=None):
+        """
+        Returns a string that can be used as a reference to the entity metadata resource,
+        optionally with a specified type parameter added.
+
+        Extracts appropriate local reference, and combines with entity URL path.
+        """
+        turtle_ref = self.get_entity_turtle_ref(return_type=return_type)
+        turtle_url = self.get_src_entity_resource_url(turtle_ref)
+        log.debug(
+            "get_entity_turtle_url: _entityfile %s, turtle_ref %s, turtle_url %s"%
+            (self.curr_typeinfo.entityclass._entityfile, turtle_ref, turtle_url)
+            )
+        return turtle_url
+
+    def get_entity_list_ref(self, list_name=layout.ENTITY_LIST_FILE, return_type=None):
         """
         Returns a string that can be used as a reference to the entity list data
         relative to the current list URL.
         """
         return make_data_ref(
             self.view.get_request_path(), 
-            layout.ENTITY_LIST_FILE, 
+            list_name, 
             return_type
             )
 
@@ -785,13 +887,15 @@ class DisplayInfo(object):
                 { 'heading':                self.recordlist[RDFS.CURIE.label]
                 , 'list_label':             self.recordlist[RDFS.CURIE.label]
                 , 'entity_list_ref':        self.get_entity_list_ref()
-                , 'entity_list_ref_json':   self.get_entity_list_ref("application/json")
+                , 'entity_list_ref_json':   self.get_entity_list_ref(return_type="application/json")
+                , 'entity_list_ref_turtle': self.get_entity_list_ref(list_name=layout.ENTITY_LIST_TURTLE)
                 })
             context['title'] = "%(list_label)s - %(coll_label)s"%context
         if self.curr_typeinfo:
             context.update(
-                { 'entity_data_ref':        self.get_entity_data_ref()
-                , 'entity_data_ref_json':   self.get_entity_data_ref("application/json")
+                { 'entity_data_ref':        self.get_entity_jsonld_url()
+                , 'entity_data_ref_json':   self.get_entity_jsonld_url(return_type="application/json")
+                , 'entity_turtle_ref':      self.get_entity_turtle_url()
                 })
         if entity_label:
             context.update(

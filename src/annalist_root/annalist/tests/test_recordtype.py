@@ -295,7 +295,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             ):
         # Common entity attributes
         self.assertEqual(response.context['entity_id'],        type_id)
-        self.assertEqual(response.context['orig_id'],          orig_type_id or type_id)
+        self.assertEqual(response.context['orig_id'],          orig_type_id)
         self.assertEqual(response.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(response.context['orig_type'],        layout.TYPE_TYPEID)
         self.assertEqual(response.context['coll_id'],          'testcoll')
@@ -434,9 +434,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # log.info(r.content)   #@@
         field_vals = default_fields(
             coll_id="testcoll", type_id=layout.TYPE_TYPEID, entity_id="00000001",
-            default_label="(New type initial values - label)",
+            default_label="",
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
-            default_label_esc="(New type initial values - label)",
+            default_label_esc="",
             default_comment_esc=context_view_field(r.context, 2, 0)['field_value'],
             tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
             tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
@@ -449,7 +449,19 @@ class RecordTypeEditViewTest(AnnalistTestCase):
                 "Define initial view and list definitions for the current type.  "+
                 "(View and list type information and URI are taken from the current type; "+
                 "other fields are taken from the corresponding &#39;_initial_values&#39; record, "+
-                "and may be extended or modified later.)"
+                "and may be extended or modified later.)",
+            button_subtype_tip=
+                "Create a subtype of the current type.  "+
+                "(View and list type identifiers are copied from the current type; "+
+                "the URI of the current type is inserted as a supertype URI of the new type; "+
+                "other fields are taken from the corresponding '_initial_values' record, "+
+                "and may be extended or modified later.)"+
+                "",
+            button_subtype_view_list_tip=
+                "Create a subtype of the current type with associated view and list definitions.  "+
+                "As far as sensible, details are copied and enhanced from the current type and "+
+                "its associated view and list."+
+                ""
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
@@ -533,9 +545,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
-                  <input type="submit" name="Define_view_list" value="Define view+list"
+                  <input type="submit" name="Define_view_list" 
+                         value="Define view+list"
                          title="%(button_view_list_tip)s" />
-                  <input type="submit" name="customize" value="Customize"
+                  <input type="submit" name="Define_subtype" 
+                         value="Define subtype"
+                         title="%(button_subtype_tip)s" />
+                  <input type="submit" name="customize" 
+                         value="Customize"
                          title="Open 'Customize' view for collection 'testcoll'." />
                 </div>
               </div>
@@ -563,15 +580,15 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          "00000001")
+        self.assertEqual(r.context['orig_id'],          None)
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "new")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
         # Fields
         self._check_context_fields(r, 
             action="new",
-            type_id="00000001",
-            type_label="(New type initial values - label)",
+            type_id="00000001", orig_type_id=None,
+            type_label="",
             type_uri="", type_supertype_uris=""
             )
         return
@@ -590,14 +607,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.TYPE_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_type_01")
-        self.assertEqual(r.context['orig_id'],          "Default_type_01")
+        self.assertEqual(r.context['orig_id'],          "Default_type")
         self.assertEqual(r.context['entity_uri'],       None)
         self.assertEqual(r.context['action'],           "copy")
         self.assertEqual(r.context['continuation_url'], "")
         # Fields
         self._check_context_fields(r, 
             action="copy",
-            type_id="Default_type_01",
+            type_id="Default_type_01", orig_type_id="Default_type",
             type_label="Default record",
             type_uri="", type_supertype_uris=""
             )
@@ -638,7 +655,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Fields
         self._check_context_fields(r, 
             action="edit",
-            type_id="Default_type",
+            type_id="Default_type", orig_type_id="Default_type",
             type_label="Default record",
             type_uri="annal:Default_type", type_supertype_uris=""
             )
@@ -740,7 +757,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         f = recordtype_entity_view_form_data(
             type_id="copytype", 
             orig_id="Default_type", orig_coll="_annalist_site", action="copy", 
-            update="RecordType"
+            update="RecordType",
+            type_uri=" test:type "  # Tests space stripping
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
@@ -751,7 +769,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_record_type_values("copytype", update="RecordType")
+        self._check_record_type_values("copytype", update="RecordType", type_uri="test:type")
         return
 
     def test_post_copy_type_cancel(self):
@@ -957,8 +975,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         # Check content of type, view and list
         common_vals = (
-            { 'type_id':      "tasktype"
-            , 'type_label':   "RecordType testcoll/tasktype"
+            { 'type_id':    "tasktype"
+            , 'type_label': "RecordType testcoll/tasktype"
             })
         expect_type_values = (
             { 'annal:type':         "annal:Type"
@@ -969,12 +987,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             })
         expect_view_values = (
             { 'annal:type':         "annal:View"
-            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals['type_label']
+            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals
             })
         expect_list_values = (
             { 'annal:type':         "annal:List"
-            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals['type_label']
+            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals
             , 'annal:default_view': "_view/%(type_id)s"%common_vals
             , 'annal:default_type': "_type/%(type_id)s"%common_vals
             , 'annal:record_type':  "test:%(type_id)s"%common_vals

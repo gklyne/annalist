@@ -64,6 +64,7 @@ catalog-v001.xml
 
 # Logs and databases
 *.log
+*.out
 *.sql
 *.sqlite
 *.sqlite3
@@ -84,6 +85,7 @@ Thumbs.db
 # Project files
 annalist.sublime*
 _old_*
+_unused_*
 /pyenv
 /anenv
 /setupenv

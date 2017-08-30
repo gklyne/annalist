@@ -15,7 +15,9 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.views.fields.render_placement     import get_field_placement_renderer
+from annalist.views.fields.render_placement     import (
+    get_field_placement_renderer, option_body, view_body
+    )
 
 from annalist.tests.field_rendering_support     import FieldRendererTestSupport
 
@@ -32,148 +34,102 @@ class FieldPlacementRenderingTest(FieldRendererTestSupport):
         self._check_value_renderer_results(
             get_field_placement_renderer(),
             context=self.placement_context,
-            expect_rendered_view=
+            expect_rendered_view=view_body(
                 '''<span class="placement-text">'''+
-                '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
-                '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
-                ''' (4/4)</span>''',
-            expect_rendered_edit=
+                    '''....####.... (4/4)'''+
+                    '''</span>'''
+                    ),
+            expect_rendered_edit=option_body(
                 '''<select class="placement-text" name="repeat_prefix_test_field">\n'''+
                 '''  <option value="">(test placeholder)</option>\n'''+
                 '''  <option value="small:0,12">'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (0/12)</option>\n'''+
-                #@@ Label width calculation doesn't work for placements not sub-multiple of 12
-                #@@ (but still OK for columns)
-                # '''  <option value="small:0,12;medium:0,9">'''+
-                #     '''&block;&block;&block;&block;&block;&block;'''+
-                #     '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                #     ''' (0/9)</option>\n'''+
-                # '''  <option value="small:0,12;medium:3,9">'''+
-                #     '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                #     '''&block;&block;&block;&block;&block;&block;'''+
-                #     ''' (3/9)</option>\n'''+
-                # '''  <option value="small:0,12;medium:0,8">'''+
-                #     '''&block;&block;&block;&block;&block;&block;'''+
-                #     '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
-                #     ''' (0/8)</option>\n'''+
-                # '''  <option value="small:0,12;medium:4,8">'''+
-                #     '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
-                #     '''&block;&block;&block;&block;&block;&block;'''+
-                #     ''' (4/8)</option>\n'''+
-                #@@
+                    '''############ (0/12)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:0,6">'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/6)</option>\n'''+
+                    '''######...... (0/6)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:3,6">'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    ''' (3/6)</option>\n'''+
+                    '''...######... (3/6)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:6,6">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (6/6)</option>\n'''+
+                    '''......###### (6/6)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:0,4">'''+
-                    '''&block;&block;&block;&block;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/4)</option>\n'''+
+                    '''####........ (0/4)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:4,4" selected="selected">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
-                    '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (4/4)</option>\n'''+
+                    '''....####.... (4/4)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:8,4">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&block;&block;&block;&block;'''+
-                    ''' (8/4)</option>\n'''+
+                    '''........#### (8/4)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:0,3">'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/3)</option>\n'''+
+                    '''###......... (0/3)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:3,3">'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (3/3)</option>\n'''+
+                    '''...###...... (3/3)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:6,3">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    ''' (6/3)</option>\n'''+
+                    '''......###... (6/3)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:9,3">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    ''' (9/3)</option>\n'''+
+                    '''.........### (9/3)'''+
+                    '''</option>\n'''+
                 # Old right-aligned placement strings
                 '''  <option value="small:0,12;medium:6,6right">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (6/6R)</option>\n'''+
+                    '''......###### (6/6R)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:8,4right">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&block;&block;&block;&block;'''+
-                    ''' (8/4R)</option>\n'''+
+                    '''........#### (8/4R)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,12;medium:9,3right">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    ''' (9/3R)</option>\n'''+
+                    '''.........### (9/3R)'''+
+                    '''</option>\n'''+
                 # Column placement strings affecting all display sizes
                 '''  <option value="small:0,9">'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    ''' (0/9col)</option>\n'''+
+                    '''#########... (0/9col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:3,9">'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (3/9col)</option>\n'''+
+                    '''...######### (3/9col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,8">'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/8col)</option>\n'''+
+                    '''########.... (0/8col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:4,8">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (4/8col)</option>\n'''+
+                    '''....######## (4/8col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,6">'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/6col)</option>\n'''+
+                    '''######...... (0/6col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:3,6">'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    ''' (3/6col)</option>\n'''+
+                    '''...######... (3/6col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:6,6">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&block;&block;&block;&block;&block;&block;'''+
-                    ''' (6/6col)</option>\n'''+
+                    '''......###### (6/6col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,4">'''+
-                    '''&block;&block;&block;&block;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/4col)</option>\n'''+
+                    '''####........ (0/4col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:4,4">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&block;&block;'''+
-                    '''&block;&block;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (4/4col)</option>\n'''+
+                    '''....####.... (4/4col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:8,4">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&block;&block;&block;&block;'''+
-                    ''' (8/4col)</option>\n'''+
+                    '''........#### (8/4col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:0,3">'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (0/3col)</option>\n'''+
+                    '''###......... (0/3col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:3,3">'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    ''' (3/3col)</option>\n'''+
+                    '''...###...... (3/3col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:6,3">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&block;&block;&block;&blk14;&blk14;&blk14;'''+
-                    ''' (6/3col)</option>\n'''+
+                    '''......###... (6/3col)'''+
+                    '''</option>\n'''+
                 '''  <option value="small:9,3">'''+
-                    '''&blk14;&blk14;&blk14;&blk14;&blk14;&blk14;'''+
-                    '''&blk14;&blk14;&blk14;&block;&block;&block;'''+
-                    ''' (9/3col)</option>\n'''+
+                    '''.........### (9/3col)'''+
+                    '''</option>\n'''+
                 '''</select>'''
+                )
             )
         return
 

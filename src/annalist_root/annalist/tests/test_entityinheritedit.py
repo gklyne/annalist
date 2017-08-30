@@ -90,7 +90,8 @@ from entity_testlistdata    import recordlist_url
 
 class EntityInheritListViewTest(AnnalistTestCase):
     """
-    Tests for record type edit views
+    Tests for get/copy/edit entity inherited from parent collection, 
+    including tests of access control restrictions.
     """
 
     def setUp(self):
@@ -119,7 +120,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             "User %s: permissions for %s in collection %s"%
               ( user_id, "Test Subuser", self.testcoll.get_id() ),
             user_permissions)
-        # Block defauklt user access in collection "testcoll"
+        # Block default user access in collection "testcoll"
         user_permissions = []
         user_id          = "_default_user_perms"
         user_uri         = "annal:User/_default_user_perms"

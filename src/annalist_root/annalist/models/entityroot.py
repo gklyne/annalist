@@ -46,21 +46,25 @@ class EntityRoot(object):
     An entity presents at least the following interface:
         cls._entitytype     type of entity (CURIE or URI)
         cls._entitytypeid   local type id (slug) used in local URI construction
-        cls._entityfile     relative path to file where entity body is stored
+        cls._entityfile     name of file where the entity data is stored
         cls._entityref      relative reference to entity from body file
         cls._contextref     relative reference to context from body file
+
         self._entityid      ID of entity; may be None for "root" entities (e.g. site?)
         self._entityurl     URI at which entity is accessed
         self._entitydir     directory where entity is stored
         self._entitybasedir base directory where all data is stored
         self._values        dictionary of values in entity body
+
+    See also 'Entity'
     """
 
     _entitytype     = ANNAL.CURIE.EntityRoot
     _entitytypeid   = None          # To be overridden
+    _entitybase     = None          # To be overridden
     _entityfile     = None          # To be overriden by entity subclasses..
     _entityref      = None          # Relative ref to entity from body file
-    _baseref        = None          # Relative ref to collection base URI from body file
+    _contextbase    = None          # Relative ref to collection base URI from body file
     _contextref     = None          # Relative ref to context file from body file
 
     def __init__(self, entityurl, entityviewurl, entitydir, entitybasedir):
@@ -281,11 +285,21 @@ class EntityRoot(object):
         """
         Return directory and path for current entity body file
         """
-        if not self._entityfile:
-            raise ValueError("Entity._dir_path without defined entity file path")
+        if self._entitybase is None:
+            raise ValueError(
+                "EntityRoot._dir_path without defined entity base reference (%s/%s)"%
+                (self._entitytypeid, self._entityid,)
+                )
+        if self._entityfile is None:
+            raise ValueError(
+                "EntityRoot._dir_path without defined entity file path (%s/%s)"%
+                (self._entitytypeid, self._entityid,)
+                )
         # log.info("    _ EntityRoot._dir_path _entitydir  %s"%(self._entitydir,))
+        # log.info("    _ EntityRoot._dir_path _entitybase %s"%(self._entitybase,))
         # log.info("    _ EntityRoot._dir_path _entityfile %s"%(self._entityfile,))
-        (basedir, filepath) = util.entity_dir_path(self._entitydir, [], self._entityfile)
+        (basedir, filepath) = util.entity_dir_path(self._entitydir, [self._entitybase], self._entityfile)
+        # log.info("    _ EntityRoot._dir_path basedir, filepath %s, %s"%(basedir, filepath))
         return (basedir, filepath)
 
     def _dir_path_uri(self):
@@ -348,6 +362,8 @@ class EntityRoot(object):
         # @@TODO: think about capturing provenance metadata too.
         if not self._entityref:
             raise ValueError("Entity._save without defined entity reference")
+        if not self._contextbase:
+            raise ValueError("Entity._save without defined context base")
         if not self._contextref:
             raise ValueError("Entity._save without defined context reference")
         if not self._values:
@@ -370,10 +386,8 @@ class EntityRoot(object):
         values['@id']      = self._entityref
         values['@type']    = self._get_types(values.get('@type', None))
         values['@context'] = (
-            [ { '@base': self._baseref }
+            [ { '@base': self._contextbase }
             , self._contextref
-            # layout.COLL_CONTEXT_FILE
-            # layout.ENTITY_CONTEXT_PATH + "/" + layout.COLL_CONTEXT_FILE
             ])
         # @TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
@@ -538,8 +552,8 @@ class EntityRoot(object):
         cls         is a subclass of Entity indicating the type of children to
                     iterate over.
         """
-        parent_dir = os.path.dirname(os.path.join(self._entitydir, cls._entitypath or ""))
-        assert "%" not in parent_dir, "_entitypath template variable interpolation may be in filename part only"
+        parent_dir = os.path.dirname(os.path.join(self._entitydir, cls._entityroot or ""))
+        assert "%" not in parent_dir, "_entityroot template variable interpolation may be in filename part only"
         child_files = []
         if os.path.isdir(parent_dir):
             child_files = os.listdir(parent_dir)
@@ -608,20 +622,6 @@ class EntityRoot(object):
                         )
                     msgs.APPEND(message.ENTITY_COPY_FILE_ERROR%msg_vals)
         return msgs
-
-    def _unused_entity_files_dirs(self):
-        #@@TODO: abstract logic to work with non-file storage
-        """
-        Iterates over files/resources that are part of the current entity.
-
-        Returns pairs (p,f), where 'p' is a full path name, and 'f' is a filename within the 
-        current entity directory. 
-        """
-        for f in os.listdir(self._entitydir):
-            p = os.path.join(self._entitydir, f)
-            if os.path.exists(p):
-                yield (p, f)
-        return
 
     def _exists_file(self, f):
         #@@TODO: abstract logic to work with non-file storage

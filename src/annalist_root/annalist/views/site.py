@@ -51,7 +51,7 @@ class SiteView(AnnalistGenericView):
         viewinfo = DisplayInfo(self, "view", {}, None)    # No continuation
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(layout.SITEDATA_ID)
-        viewinfo.get_type_info(entitytypeinfo.COLL_ID)
+        viewinfo.get_request_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization("view")
         if viewinfo.http_response:
             return viewinfo.http_response

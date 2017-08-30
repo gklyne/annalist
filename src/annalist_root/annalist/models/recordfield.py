@@ -30,8 +30,8 @@ class RecordField(EntityData):
 
     _entitytype     = ANNAL.CURIE.Field
     _entitytypeid   = layout.FIELD_TYPEID
+    _entityroot     = layout.COLL_FIELD_PATH
     _entityview     = layout.COLL_FIELD_VIEW
-    _entitypath     = layout.COLL_FIELD_PATH
     _entityfile     = layout.FIELD_META_FILE
 
     def __init__(self, parent, field_id):

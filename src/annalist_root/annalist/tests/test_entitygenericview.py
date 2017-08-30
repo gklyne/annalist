@@ -52,6 +52,7 @@ from entity_testutils       import (
     render_choice_options,
     create_test_user,
     context_view_field,
+    check_default_view_context_fields,
     check_type_view_context_fields
     )
 from entity_testtypedata    import (
@@ -256,6 +257,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         cont_uri = "?continuation_url=%s"%u + "%3Fcontinuation_url=/xyzzy/"
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
+            entity_base      = "/testsite/c/testcoll/d/testtype/entity1",
             entity_url       = "/testsite/c/testcoll/d/testtype/entity1/" + cont_uri,
             default_view_url = "/testsite/c/testcoll/d/_view/Default_view/" + cont_uri,
             default_list_url = "/testsite/c/testcoll/d/_list/Default_list/" + cont_uri,
@@ -266,6 +268,13 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             tooltip5="", # 'title="%s"'%r.context['fields'][4]['field_help'],
             tooltip6="", # 'title="%s"'%r.context['fields'][5]['field_help'],
             tooltip7="", # 'title="%s"'%r.context['fields'][6]['field_help'],
+            button_subtype_tip=
+                "Create a subtype of the current type.  "+
+                "(View and list type identifiers are copied from the current type; "+
+                "the URI of the current type is inserted as a supertype URI of the new type; "+
+                "other fields are taken from the corresponding '_initial_values' record, "+
+                "and may be extended or modified later.)"+
+                "",
             )
         formrow1 = """
             <div class="small-12 medium-6 columns" %(tooltip1)s>
@@ -381,6 +390,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
                   <!-- <input type="submit" name="open_view"    value="View description" /> -->
+                  <input type="submit" name="Define_subtype" value="Define subtype"
+                         title="%(button_subtype_tip)s" />
                   <input type="submit" name="default_view" value="Set default view"
                          title="Select this display as the default view for collection 'testcoll'." />
                   <input type="submit" name="customize"    value="Customize"
@@ -389,7 +400,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow9 = ("""
+        formrow9a = ("""
             <div class="row view-value-row">
               <div class="%(label_classes)s">
                 <span>Choose view</span>
@@ -408,6 +419,21 @@ class GenericEntityViewViewTest(AnnalistTestCase):
                     <input type="submit" name="use_view"      value="Show view" />
                   </div>
                 </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow9b = ("""
+            <div class="row view-value-row">
+              <div class="link-bar small-12 columns">
+                <a href="%(entity_base)s/entity_data.ttl" title="Retrieve underlying data as Turtle">
+                  Turtle
+                </a>
+                <a href="%(entity_base)s/entity_data.jsonld" title="Retrieve underlying data as JSON-LD">
+                  JSON-LD
+                </a>
+                <a href="%(entity_base)s/entity_data.jsonld?type=application/json" title="Display underlying JSON data">
+                  <img src="/static/images/get_the_data_88x31.png" alt="get_the_data">
+                </a>
               </div>
             </div>
             """)%field_vals(width=6)
@@ -434,7 +460,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, formrow8a, html=True)
         self.assertContains(r, formrow8b, html=True)
         self.assertContains(r, formrow8c, html=True)
-        self.assertContains(r, formrow9,  html=True)
+        self.assertContains(r, formrow9a, html=True)
+        self.assertContains(r, formrow9b, html=True)
         # New buttons hidden (for now)
         # self.assertContains(r, formrow10, html=True)
         return
@@ -447,7 +474,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         check_type_view_context_fields(self, r, 
             action="edit",
-            entity_id="entity1", orig_entity_id=None,
+            entity_id="entity1", orig_entity_id="entity1",
             type_id="testtype",
             type_label="Entity testcoll/testtype/entity1",
             type_comment="Entity coll testcoll, type testtype, entity entity1",
@@ -457,6 +484,54 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             type_list="Default_list", type_list_options=self.no_list_id + self.list_options,
             type_aliases=[],
             )
+        return
+
+    # Entity data view
+    def test_get_data_view(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        check_default_view_context_fields(self, r, 
+            action="edit",
+            type_id="testtype",
+            entity_id="entity1", orig_entity_id="entity1",
+            entity_label="Entity testcoll/testtype/entity1",
+            entity_comment="Entity coll testcoll, type testtype, entity entity1",
+            entity_data_ref=entity_url("testcoll", "testtype", entity_id="entity1")+layout.ENTITY_DATA_FILE,
+            view_id="Default_view"
+            )
+        u = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          "testcoll")
+        self.assertEqual(r.context['type_id'],          "testtype")
+        self.assertEqual(r.context['entity_id'],        "entity1")
+        self.assertEqual(r.context['orig_id'],          "entity1")
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            u+layout.ENTITY_DATA_FILE
+            )
+        self.assertEqual(
+            r.context['entity_data_ref_json'], 
+            u+layout.ENTITY_DATA_FILE+"?type=application/json"
+            )
+        return
+
+    # Entity data content negotiation
+    def test_get_data_json(self):
+        """
+        Request collection data as JSON-LD
+        """
+        u = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
         return
 
     def test_get_view_no_collection(self):

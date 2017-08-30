@@ -26,7 +26,7 @@ from login.auth_django_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
-from annalist.views.entitylistjson      import EntityGenericListJsonView
+from annalist.views.entitylistdata      import EntityListDataView
 from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 
 from annalist.views.siteresource        import SiteResourceAccess
@@ -55,11 +55,12 @@ from annalist.views.entityresource      import EntityResourceAccess
 # /c/<coll-id>/d/                                 default list of records
 # /c/<coll-id>/d/<type-id>/                       default list of records of specified type
 # /c/<coll-id>/d/<type-id>/<entity-id>            default view of identified entity
+#
 # /c/<coll-id>/l/<list-id>/                       specified list of records
 # /c/<coll-id>/l/<list-id>/<type-id>              specified list of records of specified type
 # /c/<coll-id>/v/<view-id>/<type-id>/<entity-id>  specified view of record
 #
-# Suffixes /!new, /!copy, /!edit, /!delete, etc. are used for forms that are opart of the
+# Suffixes /!new, /!copy, /!edit, /!delete, etc. are used for forms that are part of the
 # user interface for editing collections and resources, and do not of themselves identify
 # persistent resources.
 
@@ -108,12 +109,12 @@ urlpatterns = patterns('',
                             name='AnnalistEntityAccessView'),
 
     # JSON list views without list_id specified
-    url(r'^c/(?P<coll_id>\w{1,128})/d/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListType'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataType'),
 
     # Redirect type/entity URIs without trailing '/'
     # (Note these cannot match JSON resource names as '.' is not matched here)
@@ -135,16 +136,16 @@ urlpatterns = patterns('',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
 
-    # JSON list views
-    url(r'^c/(?P<coll_id>\w{1,128})/l/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/entity_list\.jsonld$',
-                            EntityGenericListJsonView.as_view(),
-                            name='AnnalistEntityJsonListType'),
+    # JSON specified list views
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataAll'),
+    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+                            EntityListDataView.as_view(),
+                            name='AnnalistEntityListDataType'),
 
     # Specified entity edit/view forms
     url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
@@ -163,27 +164,21 @@ urlpatterns = patterns('',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
 
-    # Additional resource access (context, attachments, etc.)
+    # Named resource access (metadata, context, attachments, etc.)
     url(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
                             SiteResourceAccess.as_view(),
                             name='AnnalistSiteResourceAccess'),
-
     url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
                             CollectionResourceAccess.as_view(),
                             name='AnnalistCollectionResourceAccess'),
     url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
-                            EntityResourceAccess.as_view(),
-                            name='AnnalistCollectionResourceAccess'),
 
+    # Entity resource data access with specified view
     url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
-                            name='AnnalistEntityResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
-                            EntityResourceAccess.as_view(),
-                            name='AnnalistCollectionResourceAccess'),
+                            name='AnnalistEntityViewAccess'),
 
     ) # End of urlpatterns
 

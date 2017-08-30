@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
+import urlparse
 import json
 import markdown
 import traceback
@@ -35,6 +36,7 @@ from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.models.site           import Site
 from annalist.models.annalistuser   import (
     AnnalistUser, 
+    site_default_user_id, site_default_user_uri, 
     default_user_id, default_user_uri, 
     unknown_user_id, unknown_user_uri
     )
@@ -100,6 +102,69 @@ class AnnalistGenericView(ContentNegotiationView):
         Return view URI given view name and any additional arguments
         """
         return reverse(viewname, kwargs=kwargs)
+
+    def get_collection_view_url(self, coll_id):
+        """
+        Return view (root) URL for specified collection
+        """
+        return self.view_uri(
+            "AnnalistCollectionView", 
+            coll_id=coll_id
+            )
+
+    def get_collection_base_url(self, coll_id):
+        """
+        Return base URL for specified collection
+        """
+        return urlparse.urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
+
+    def get_entity_base_url(self, coll_id, type_id, entity_id):
+        """
+        Return base URL for specified entity
+        """
+        return self.view_uri(
+            "AnnalistEntityAccessView", 
+            coll_id=coll_id, type_id=type_id, entity_id=entity_id
+            )
+
+    def get_list_base_url(self, coll_id, type_id, list_id):
+        """
+        Return base URL for specified list, which is one of:
+
+            .../coll_id/d/
+            .../coll_id/d/type_id/
+            .../coll_id/l/list_id/
+            .../coll_id/l/list_id/type_id/
+        """
+        if list_id is None:
+            if type_id is None:
+                list_url = self.view_uri(
+                    "AnnalistEntityDefaultListAll", 
+                    coll_id=coll_id
+                    )
+            else:
+                list_url = self.view_uri(
+                    "AnnalistEntityDefaultListType", 
+                    coll_id=coll_id, type_id=type_id
+                    )
+        else:
+            list_url = self.view_uri(
+                "AnnalistEntityGenericList", 
+                coll_id=coll_id, list_id=list_id, type_id=type_id
+                )
+        return list_url
+
+    def resource_response(self, resource_file, resource_type, links={}):
+        """
+        Construct response containing body of referenced resource (or list),
+        with supplied resource_type as its content_type
+        """
+        # @@TODO: assumes response can reasonably be held in memory;
+        #         consider 'StreamingHttpResponse'?
+        response = HttpResponse(content_type=resource_type)
+        response = self.add_link_header(response, links)
+        response.write(resource_file.read())
+        return response
 
     def continuation_next(self, request_dict={}, default_cont=None):
         """
@@ -286,7 +351,9 @@ class AnnalistGenericView(ContentNegotiationView):
                 user_perms = parentcoll.get_user_permissions(unknown_user_id, unknown_user_uri)
             else:
                 # Combine user permissions with default-user permissions for collection
-                default_perms = parentcoll.get_user_permissions(default_user_id, default_user_uri)
+                default_perms = parentcoll.get_user_permissions(site_default_user_id, default_user_uri)
+                if not default_perms:
+                    default_perms = parentcoll.get_user_permissions(default_user_id, default_user_uri)
                 user_perms    = parentcoll.get_user_permissions(user_id, user_uri) or default_perms
                 user_perms[ANNAL.CURIE.user_permission] = list(
                     set(user_perms[ANNAL.CURIE.user_permission]) | 
@@ -389,10 +456,13 @@ class AnnalistGenericView(ContentNegotiationView):
         typeinfo        EntityTypeInfo object for the entity
         action          is the requested action: new, edit, copy, view
 
-        returns an object of the appropriate type.
+        Returns an object of the appropriate type.
 
         If an existing entity is accessed, values are read from storage, 
-        otherwise a new entity object is created but not yet saved.
+
+        If the identified entity does not exist and `action` is "new" then 
+        a new entity is initialized (but not saved), otherwise the entity 
+        value returned is None.
         """
         # log.info(
         #     "AnnalistGenericView.get_entity id %s, parent %s, action %s, altparent %s"%
@@ -400,6 +470,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #     )
         entity = typeinfo.get_entity(entity_id, action)
         if entity is None:
+            # Log diagnostics for missing entity
             parent_id    = typeinfo.entityparent.get_id()
             altparent_id = (
                 typeinfo.entityaltparent.get_id() if typeinfo.entityaltparent 
@@ -418,7 +489,7 @@ class AnnalistGenericView(ContentNegotiationView):
     # HTML rendering
 
     @ContentNegotiationView.accept_types(["text/html", "application/html", "*/*"])
-    def render_html(self, resultdata, template_name):
+    def render_html(self, resultdata, template_name, links=[]):
         """
         Construct an HTML response based on supplied data and template name.
 
@@ -453,42 +524,47 @@ class AnnalistGenericView(ContentNegotiationView):
         # log.debug("render_html - data: %r"%(resultdata))
         response = HttpResponse(template.render(context))
         if "entity_data_ref" in resultdata:
-            response["Link"] = "<%(entity_data_ref)s>; rel=alternate"%resultdata
+            alt_link = [ { "ref": resultdata["entity_data_ref"], "rel": "alternate" } ]
+        else:
+            alt_link = []
+        response = self.add_link_header(response, links=alt_link+links)
         return response
 
-    # JSON rendering
+    # JSON and Turtle content negotiation and redirection
 
     @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
-    def render_json(self, jsondata, links={}):
+    def redirect_json(self, jsonref, links=[]):
         """
-        Construct a JSON response based on the supplied data.
-
-        jsondata    is the data to be formatted and returned.
-        links       is an optional array of link valuyes to be added to the HTTP response
-                    (see method add_link_header for description).
-        """
-        # log.debug("render_json - data: %r"%(jsondata))
-        response = HttpResponse(
-            json.dumps(jsondata, indent=2, separators=(',', ': '), sort_keys=True),
-            content_type="application/ld+json"
-            )
-        response = self.add_link_header(response, links)
-        return response
-
-    @ContentNegotiationView.accept_types(["application/json", "application/ld+json"])
-    def redirect_json(self, jsonref, links={}):
-        """
-        Construct a redirect response tp access JSON data at the designated URL.
+        Construct a redirect response to access JSON data at the designated URL.
 
         jsonref     is the URL from which JSON data may be retrieved.
-        links       is an optional array of link valuyes to be added to the HTTP response
+        links       is an optional array of link values to be added to the HTTP response
                     (see method add_link_header for description).
+
+        Returns an HTTP redirect response object if the current request is for JSON data,
+        otherwise None.
         """
         response = HttpResponseRedirect(jsonref)
-        response = self.add_link_header(response, links)
+        response = self.add_link_header(response, links=links)
         return response
 
-    def add_link_header(self, response, links={}):
+    @ContentNegotiationView.accept_types(["text/turtle", "application/x-turtle", "text/n3"])
+    def redirect_turtle(self, turtleref, links=[]):
+        """
+        Construct a redirect response to access Turtle data at the designated URL.
+
+        turtleref   is the URL from which JSON turtle may be retrieved.
+        links       is an optional array of link values to be added to the HTTP response
+                    (see method add_link_header for description).
+
+        Returns an HTTP redirect response object if the current request is for Turtle data,
+        otherwise None.
+        """
+        response = HttpResponseRedirect(turtleref)
+        response = self.add_link_header(response, links=links)
+        return response
+
+    def add_link_header(self, response, links=[]):
         """
         Add HTTP link header to response, and return the updated response.
 

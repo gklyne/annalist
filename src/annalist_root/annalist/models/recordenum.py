@@ -27,8 +27,8 @@ class RecordEnumBase(EntityData):
 
     _entitytypeid   = "_enum_base_id"
     _entitytype     = ANNAL.CURIE.Enum
+    _entityroot     = layout.COLL_ENUM_PATH
     _entityview     = layout.COLL_ENUM_VIEW
-    _entitypath     = layout.COLL_ENUM_PATH
     _entityfile     = layout.ENUM_META_FILE
     _entityprov     = layout.ENUM_PROV_FILE
 
@@ -56,7 +56,7 @@ def RecordEnumFactory(name, type_id):
         return
     return type(name, (RecordEnumBase,), 
         { '_entitytypeid':  type_id
-        , '_entitypath':    layout.COLL_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
+        , '_entityroot':    layout.COLL_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
         , '__init__': RecordEnumInit}
         )
 

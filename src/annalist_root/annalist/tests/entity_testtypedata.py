@@ -338,8 +338,9 @@ def recordtype_entity_view_form_data(
         form_data_dict['save']      = "Save"
     if type_uri:
         form_data_dict['Type_uri']                                   = type_uri
-        form_data_dict['Type_supertype_uris__0__Type_supertype_uri'] = type_uri+"/super1"
-        form_data_dict['Type_supertype_uris__1__Type_supertype_uri'] = type_uri+"/super2"
+        type_uri_rstrip = type_uri.rstrip()
+        form_data_dict['Type_supertype_uris__0__Type_supertype_uri'] = type_uri_rstrip+"/super1"
+        form_data_dict['Type_supertype_uris__1__Type_supertype_uri'] = type_uri_rstrip+"/super2"
     return form_data_dict
 
 #   -----------------------------------------------------------------------------

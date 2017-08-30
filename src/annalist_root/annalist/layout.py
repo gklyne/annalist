@@ -60,13 +60,16 @@ COLL_BASE_DIR           = "d"
 COLL_ROOT_CONF_OLD_DIR  = "_annalist_collection"
 COLL_BASE_CONF_OLD_DIR  = "../" + COLL_ROOT_CONF_OLD_DIR
 COLL_META_FILE          = "coll_meta.jsonld"
+COLL_META_TURTLE        = "coll_meta.ttl"
 COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_BASE_REF           = COLL_BASE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE
 COLL_PROV_REF           = COLL_BASE_REF + COLL_PROV_FILE
+COLL_TURTLE_REF         = COLL_BASE_REF + COLL_META_TURTLE
 META_COLL_REF           = "../"
 META_COLL_BASE_REF      = "./"
 COLL_CONTEXT_FILE       = "coll_context.jsonld"
+# COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
 SITE_DIR                = "annalist_site"
@@ -95,7 +98,7 @@ BIBDATA_ID              = "Bibliography_defs"                       # used for t
 #
 # NOTE: definitive entity URIs are *without* trailing "/".
 #       Rediretion to a URI wit the trailing "/" retrieves a representation of the entity,
-#       geberally an HTML form view.  Redirection to other forms is used for alternative
+#       generally an HTML form view.  Redirection to other forms is used for alternative
 #       representations.
 #
 
@@ -104,6 +107,7 @@ TYPE_TYPEID             = "_type"                           # type id, used in U
 TYPE_DIR                = "_type"                           # collection directory in file system
 TYPE_DIR_PREV           = "types"                           # collection directory in file system
 TYPE_META_FILE          = "type_meta.jsonld"                # type metadata file name
+TYPE_META_TURTLE        = "type_meta.ttl"                   # reference type metadata as Turtle
 TYPE_PROV_FILE          = "type_prov.jsonld"                # type provenance file name
 COLL_BASE_TYPE_REF      = TYPE_TYPEID + "/%(id)s"           # ref type relative to collection base URL
 COLL_TYPE_VIEW          = COLL_BASE_REF + COLL_BASE_TYPE_REF + "/"   # ref type view relative to collection entity
@@ -115,6 +119,7 @@ LIST_TYPEID             = "_list"                           # list id, used in U
 LIST_DIR                = "_list"                           # collection directory in file system
 LIST_DIR_PREV           = "lists"                           # collection directory in file system
 LIST_META_FILE          = "list_meta.jsonld"                # list metadata file name
+LIST_META_TURTLE        = "list_meta.ttl"                   # reference list metadata as Turtle
 LIST_PROV_FILE          = "list_prov.jsonld"                # list provenance file name
 COLL_BASE_LIST_REF      = LIST_TYPEID + "/%(id)s"           # ref list relative to collection base URL
 COLL_LIST_VIEW          = COLL_BASE_REF + COLL_BASE_LIST_REF + "/"   # ref list view relative to collection entity
@@ -126,6 +131,7 @@ VIEW_TYPEID             = "_view"                           # type id, used in U
 VIEW_DIR                = "_view"                           # collection directory in file system
 VIEW_DIR_PREV           = "views"                           # previous collection directory
 VIEW_META_FILE          = "view_meta.jsonld"                # view metadata file name
+VIEW_META_TURTLE        = "view_meta.ttl"                   # reference view metadata as turtle
 VIEW_PROV_FILE          = "view_prov.jsonld"                # view provenance file name
 COLL_BASE_VIEW_REF      = VIEW_TYPEID + "/%(id)s"           # ref view relative to collection base URL
 COLL_VIEW_VIEW          = COLL_BASE_REF + COLL_BASE_VIEW_REF + "/"   # ref view relative to collection entity
@@ -148,6 +154,7 @@ FIELD_TYPEID            = "_field"                          # field id, used in 
 FIELD_DIR               = "_field"                          # collection directory in file system
 FIELD_DIR_PREV          = "fields"                          # previous collection directory
 FIELD_META_FILE         = "field_meta.jsonld"               # field metadata file name
+FIELD_META_TURTLE       = "field_meta.ttl"                  # reference field metadata as turtle
 FIELD_PROV_FILE         = "field_prov.jsonld"               # field provenance file name
 COLL_BASE_FIELD_REF     = FIELD_TYPEID + "/%(id)s"          # ref field relative to collection base URL
 COLL_FIELD_VIEW         = COLL_BASE_REF + COLL_BASE_FIELD_REF + "/"  # ref field view relative to collection entity
@@ -159,6 +166,7 @@ USER_TYPEID             = "_user"                           # type id, used in U
 USER_DIR                = "_user"                           # collection directory in file system
 USER_DIR_PREV           = "users"                           # previous collection directory
 USER_META_FILE          = "user_meta.jsonld"                # user metadata file name
+USER_META_TURTLE        = "user_meta.ttl"                   # reference user metadata as turtle
 USER_PROV_FILE          = "user_prov.jsonld"                # user provenance file name
 COLL_BASE_USER_REF      = USER_TYPEID + "/%(id)s"           # ref user relative to collection base URL
 COLL_USER_VIEW          = COLL_BASE_REF + COLL_BASE_USER_REF + "/"   # ref user relative to collection entity
@@ -170,6 +178,7 @@ VOCAB_TYPEID            = "_vocab"                          # vocab id, used in 
 VOCAB_DIR               = "_vocab"                          # collection directory in file system
 VOCAB_DIR_PREV          = "vocabs"                          # previous collection directory
 VOCAB_META_FILE         = "vocab_meta.jsonld"               # vocab metadata file name
+VOCAB_META_TURTLE       = "vocab_meta.ttl"                  # reference vocab metadata as Turtle
 VOCAB_PROV_FILE         = "vocab_prov.jsonld"               # vocab provenance file name
 COLL_BASE_VOCAB_REF     = VOCAB_TYPEID + "/%(id)s"          # ref vocab relative to collection base URL
 COLL_VOCAB_VIEW         = COLL_BASE_REF + COLL_BASE_VOCAB_REF + "/"  # ref vocab view relative to collection entity
@@ -201,6 +210,7 @@ ENUM_VALUE_MODE_DIR_PREV2       = "_enum/Enum_value_mode"
 ENUM_VALUE_TYPE_DIR_PREV2       = "_enum/Enum_value_type"
 
 ENUM_META_FILE          = "enum_meta.jsonld"                # enum metadata file name
+ENUM_META_TURTLE        = "enum_meta.ttl"                   # reference enum metadata as Turtle
 ENUM_PROV_FILE          = "enum_prov.jsonld"                # enum provenance file name
 COLL_BASE_ENUM_REF      = "%(type_id)s/%(id)s"              # ref enum relative to collection base URL
 COLL_ENUM_PATH          = COLL_BASE_REF + "%(type_id)s/%(id)s"
@@ -213,8 +223,8 @@ TYPEDATA_PROV_FILE      = "type_data_prov.jsonld"           # type data provenan
 COLL_BASE_TYPEDATA_REF  = "%(id)s"                          # ref type data relative to collection base URL
 TYPEDATA_COLL_BASE_REF  = "../"                             # ref collection base from record type data
 TYPEDATA_CONTEXT_FILE   = TYPEDATA_COLL_BASE_REF + COLL_CONTEXT_FILE  # ref collection context file
-COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
 COLL_TYPEDATA_PATH      = "d/%(id)s"                        # dir type data relative to collection root dir
+COLL_TYPEDATA_VIEW      = "d/%(id)s/"                       # ref type data view relative to collection entity
 
 # Entity data records (these contain user data, organized by record type)
 # Entity data layout information...
@@ -224,9 +234,12 @@ COLL_ENTITY_VIEW        = "d/%(type_id)s/%(id)s/"
 COLL_ENTITY_PATH        = "d/%(type_id)s/%(id)s"
 SITE_ENTITY_VIEW        = "c/%(coll_id)s/d/%(type_id)s/%(id)s/"
 SITE_ENTITY_PATH        = "c/%(coll_id)s/d/%(type_id)s/%(id)s"
+ENTITY_BASE_REF         = ""
 ENTITY_DATA_FILE        = "entity_data.jsonld"
+ENTITY_DATA_TURTLE      = "entity_data.ttl"
 ENTITY_PROV_FILE        = "entity_prov.jsonld"
 ENTITY_LIST_FILE        = "entity_list.jsonld"  # Entity list as JSON resource
+ENTITY_LIST_TURTLE      = "entity_list.ttl"     # Entity list as Turtle resource
 COLL_BASE_ENTITY_REF    = "%(type_id)s/%(id)s"
 ENTITY_COLL_BASE_REF    = "../../"
 #@@ NOTE: @base ignored when loading external context - is this correct?
@@ -271,9 +284,12 @@ COLL_DIRS_PREV  = map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
 SUFFIX_LIST             = ""
 SUFFIX_VIEW             = ""
 SUFFIX_TYPE             = ""
-SUFFIX_REPEAT           = "_r"
-SUFFIX_REPEAT_P         = "_r"
-SUFFIX_REPEAT_G         = "_r"
+SUFFIX_SUBTYPE          = "_sub"
+SUFFIX_REPEAT           = "_many"
+SUFFIX_REPEAT_P         = "_many"
+SUFFIX_REPEAT_G         = "_many"
+SUFFIX_SEQUENCE         = "_list"
+SUFFIX_SEQUENCE_P       = "_list"
 SUFFIX_MULTI            = "_m"
 SUFFIX_MULTI_P          = "_m"
 SUFFIX_MULTI_G          = "_m"

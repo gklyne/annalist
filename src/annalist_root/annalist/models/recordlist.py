@@ -35,8 +35,8 @@ class RecordList(EntityData):
 
     _entitytype     = ANNAL.CURIE.List
     _entitytypeid   = layout.LIST_TYPEID
+    _entityroot     = layout.COLL_LIST_PATH
     _entityview     = layout.COLL_LIST_VIEW
-    _entitypath     = layout.COLL_LIST_PATH
     _entityfile     = layout.LIST_META_FILE
 
     def __init__(self, parent, list_id):
@@ -76,12 +76,13 @@ class RecordList(EntityData):
             entitydata[fkey] = make_type_entity_id(
                 ftype, extract_entity_id(entitydata[fkey])
                 )
-        for f in entitydata[ANNAL.CURIE.list_fields]:
-            field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
-            if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
-            if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
+        if ANNAL.CURIE.list_fields in entitydata:
+            for f in entitydata[ANNAL.CURIE.list_fields]:
+                field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
+                if field_id == "Field_render":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
+                if field_id == "Field_type":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

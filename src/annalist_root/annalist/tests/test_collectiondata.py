@@ -26,8 +26,8 @@ from django.template                        import Template, Context
 from utils.SuppressLoggingContext           import SuppressLogging
 
 import annalist
-from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist                               import layout
+from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist.util                          import valid_id
 
 from annalist.models.site                   import Site
@@ -128,13 +128,13 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_get_collection_data_form_rendering(self):
-        u = entitydata_edit_url("new", "_annalist_site", "_coll", view_id="Collection_view")
+        u = entitydata_edit_url("new", layout.SITEDATA_ID, layout.COLL_TYPEID, view_id="Collection_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         field_vals = default_fields(
-            coll_id="_annalist_site", 
-            type_id="_coll", 
+            coll_id=layout.SITEDATA_ID, 
+            type_id=layout.COLL_TYPEID, 
             entity_id="00000001", 
             sotware_ver=annalist.__version_data__,
             tooltip1a=context_view_field(r.context, 0, 0)['field_tooltip'],
@@ -297,25 +297,51 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow5b, html=True)
         self.assertContains(r, formrow6a, html=True)
         self.assertContains(r, formrow6b, html=True)
-        self.assertContains(r, formrow7,  html=True)
+        # self.assertContains(r, formrow_viewdata, html=True)
         return
 
-    # collection default view
-    def test_get_default_view(self):
+    # Collection data view
+    def test_get_collection_data_view(self):
+        collection_url = collection_view_url(coll_id="testcoll")
         u = collectiondata_url(coll_id="testcoll")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertEqual(r.context['coll_id'],          "_annalist_site")
-        self.assertEqual(r.context['type_id'],          "_coll")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
         self.assertEqual(r.context['entity_id'],        "testcoll")
         self.assertEqual(r.context['orig_id'],          "testcoll")
         self.assertEqual(r.context['action'],           "view")
         self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            collection_url+layout.COLL_META_REF
+            )
+        self.assertEqual(
+            r.context['entity_data_ref_json'], 
+            collection_url+layout.COLL_META_REF+"?type=application/json"
+            )
         return
 
-    # collection default view metadata access
-    def test_get_default_view_metadata(self):
+    # Collection data content negotiation
+    def test_get_collection_data_json(self):
+        """
+        Request collection data as JSON-LD
+        """
+        collection_url = collection_view_url(coll_id="testcoll")
+        u = collectiondata_url(coll_id="testcoll")
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+collection_url+layout.COLL_META_REF)
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    # Collection data view metadata access
+    def test_get_collection_data_view_metadata(self):
         u = collectiondata_resource_url(coll_id="testcoll")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -326,7 +352,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             , "@type":                  [ "annal:Collection" ]
             , "@context":               [ {"@base": layout.META_COLL_BASE_REF}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
-            , "annal:type_id":          "_coll"
+            , "annal:type_id":          layout.COLL_TYPEID
             , "annal:type":             "annal:Collection"
             , "rdfs:label":             "Collection testcoll"
             , "rdfs:comment":           "Description of Collection testcoll"
@@ -341,8 +367,8 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertEqual(r.context['coll_id'],          "_annalist_site")
-        self.assertEqual(r.context['type_id'],          "_coll")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
         self.assertEqual(r.context['entity_id'],        "testcoll")
         self.assertEqual(r.context['orig_id'],          "testcoll")
         self.assertEqual(r.context['action'],           "view")
@@ -355,8 +381,8 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertEqual(r.context['coll_id'],          "_annalist_site")
-        self.assertEqual(r.context['type_id'],          "_coll")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
         self.assertEqual(r.context['entity_id'],        "testcoll")
         self.assertEqual(r.context['orig_id'],          "testcoll")
         self.assertEqual(r.context['action'],           "edit")
@@ -379,6 +405,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     # collection named view metadata access
     def test_get_named_view_metadata(self):
         u = collectiondata_view_resource_url(coll_id="testcoll")
+        log.debug("test_get_named_view_metadata: collectiondata_view_resource_url: %s"%(u,))
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -388,7 +415,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             , "@type":                  [ "annal:Collection" ]
             , "@context":               [ {"@base": layout.META_COLL_BASE_REF}, "coll_context.jsonld" ]
             , "annal:id":               "testcoll"
-            , "annal:type_id":          "_coll"
+            , "annal:type_id":          layout.COLL_TYPEID
             , "annal:type":             "annal:Collection"
             , "rdfs:label":             "Collection testcoll"
             , "rdfs:comment":           "Description of Collection testcoll"
@@ -420,7 +447,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
-        self.assertEqual(r.context['type_id'],          "_coll")
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
         self.assertEqual(r.context['entity_id'],        "testcoll")
         self.assertEqual(r.context['orig_id'],          "testcoll")
         self.assertEqual(r.context['orig_coll'],        layout.SITEDATA_ID)
@@ -456,7 +483,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             user_name="User copyuser",
             user_uri="mailto:copyuser@example.org",
             user_permissions="VIEW CREATE UPDATE DELETE",
-            orig_coll="_annalist_site"
+            orig_coll=layout.SITEDATA_ID
             )
         u = entitydata_edit_url(
             "copy", "testcoll", "_user", entity_id="_default_user_perms", view_id="User_view"

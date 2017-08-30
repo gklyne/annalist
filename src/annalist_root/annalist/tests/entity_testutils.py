@@ -78,6 +78,12 @@ def collection_view_url(coll_id="testcoll"):
 def collection_edit_url(coll_id="testcoll"):
     return reverse("AnnalistCollectionEditView", kwargs={'coll_id': coll_id})
 
+def collection_resource_url(coll_id="testcoll", resource_ref=layout.COLL_META_FILE):
+    return reverse(
+        "AnnalistCollectionResourceAccess", 
+        kwargs={'coll_id': coll_id, 'resource_ref': resource_ref }
+        )
+
 def collection_entity_view_url(coll_id="testcoll", type_id=None, entity_id=None):
     """
     Return URL for entity belonging to some collection.
@@ -302,7 +308,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         """    <button type="submit" \n"""+
         """            name="%(name)s__new_edit" \n"""+
         """            value="New"\n"""+
-        """            title="Define new %(label)s">\n"""+
+        """            title="Define new or edit %(label)s">\n"""+
         """      <span class="select-edit-button-text">+&#x270D;</span>\n"""+
         """    </button>\n"""+
         """  </div>\n"""+
@@ -345,14 +351,6 @@ def render_choice_options(
             label = escape(label)
         # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
-    def _unused_select_option(o):
-        selected = ('' if o != sel else ' selected="selected"')
-        if (placeholder is not None) and (o == ""):
-            return '<option value=""%s>%s</option>'%(selected,placeholder)
-        v = value_dict.get(o, None)
-        # value = ('' if v is None else ' value="%s"'%v)
-        value = ' value="%s"'%(v or o)
-        return '<option%s%s>%s</option>'%(selected,value,o)
     #
     select_template = (
         """<select name="%(name)s"%(select_class)s>\n"""+
@@ -708,16 +706,29 @@ def check_type_view_context_fields(test, response,
         type_supertype_uris="",
         type_view="Default_view", type_view_options=None,
         type_list="Default_list", type_list_options=None,
-        type_aliases=[]
+        type_aliases=[],
+        type_data_ref=None,
+        view_id="Type_view"
         ):
     # Common entity attributes
+    # if orig_entity_id == "":
+    #     orig_entity_id = entity_id
     test.assertEqual(response.context['entity_id'],        entity_id)
-    test.assertEqual(response.context['orig_id'],          orig_entity_id or entity_id)
+    test.assertEqual(response.context['orig_id'],          orig_entity_id)
     test.assertEqual(response.context['type_id'],          type_id)
     test.assertEqual(response.context['orig_type'],        type_id)
     test.assertEqual(response.context['coll_id'],          'testcoll')
     test.assertEqual(response.context['action'],           action)
-    test.assertEqual(response.context['view_id'],          'Type_view')
+    test.assertEqual(response.context['view_id'],          view_id)
+    if type_data_ref:
+        test.assertEqual(
+            response.context['entity_data_ref'],      
+            type_data_ref
+            )
+        test.assertEqual(
+            response.context['entity_data_ref_json'], 
+            type_data_ref+"?type=application/json"
+            )
     # View fields
     test.assertEqual(len(response.context['fields']), 7)
     f0 = context_view_field(response.context, 0, 0)
@@ -855,6 +866,100 @@ def check_type_view_context_fields(test, response,
         field_placement=    "small-12 columns",
         field_value=        type_aliases,
         options=            type_no_options
+        )
+    return
+
+entity_no_options   = [ FieldChoice('', label="(no options)") ]
+def check_default_view_context_fields(test, response, 
+        action="",
+        entity_id="", orig_entity_id=None,
+        type_id="testtype", type_options=None,
+        entity_label="(?entity_label)",
+        entity_comment="(?entity_comment)",
+        entity_data_ref=None,
+        view_id="Type_view"
+        ):
+    # Common entity attributes
+    # if orig_entity_id == "":
+    #     orig_entity_id = entity_id
+    test.assertEqual(response.context['entity_id'],        entity_id)
+    test.assertEqual(response.context['orig_id'],          orig_entity_id)
+    test.assertEqual(response.context['type_id'],          type_id)
+    test.assertEqual(response.context['orig_type'],        type_id)
+    test.assertEqual(response.context['coll_id'],          'testcoll')
+    test.assertEqual(response.context['action'],           action)
+    test.assertEqual(response.context['view_id'],          view_id)
+    if entity_data_ref:
+        test.assertEqual(
+            response.context['entity_data_ref'],      
+            entity_data_ref
+            )
+        test.assertEqual(
+            response.context['entity_data_ref_json'], 
+            entity_data_ref+"?type=application/json"
+            )
+    # View fields
+    # log.info("@@@@ response.context['fields'] %r"%(response.context['fields'],))
+    test.assertEqual(len(response.context['fields']), 3)
+    f0 = context_view_field(response.context, 0, 0)
+    f1 = context_view_field(response.context, 0, 1)
+    f2 = context_view_field(response.context, 1, 0)
+    f3 = context_view_field(response.context, 2, 0)
+    # 1st field - Id
+    check_context_field(test, f0,
+        field_id=           "Entity_id",
+        field_name=         "entity_id",
+        field_label=        "Id",
+        field_placeholder=  "(entity id)",
+        field_property_uri= "annal:id",
+        field_render_type=  "EntityId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:EntityRef",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        entity_id,
+        options=            entity_no_options
+        )
+    # 2nd field - type id
+    check_context_field(test, f1,
+        field_id=           "Entity_type",
+        field_name=         "entity_type",
+        field_label=        "Type",
+        field_placeholder=  "(type id)",
+        field_property_uri= "annal:type_id",
+        field_render_type=  "EntityTypeId",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:EntityRef",
+        field_placement=    "small-12 medium-6 columns",
+        field_value=        type_id,
+        options=            type_options
+        )
+    # 3rd field - Label
+    check_context_field(test, f2,
+        field_id=           "Entity_label",
+        field_name=         "Entity_label",
+        field_label=        "Label",
+        field_placeholder=  "(label)",
+        field_property_uri= "rdfs:label",
+        field_render_type=  "Text",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Text",
+        field_placement=    "small-12 columns",
+        field_value=        entity_label,
+        options=            entity_no_options
+        )
+    # 4th field - comment
+    check_context_field(test, f3,
+        field_id=           "Entity_comment",
+        field_name=         "Entity_comment",
+        field_label=        "Comment",
+        field_placeholder=  "(description)",
+        field_property_uri= "rdfs:comment",
+        field_render_type=  "Markdown",
+        field_value_mode=   "Value_direct",
+        field_value_type=   "annal:Richtext",
+        field_placement=    "small-12 columns",
+        field_value=        entity_comment,
+        options=            entity_no_options
         )
     return
 

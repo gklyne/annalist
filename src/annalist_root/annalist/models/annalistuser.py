@@ -34,6 +34,9 @@ from annalist                   import util
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
 
+site_default_user_id  = "_site_default_user_perms"
+site_default_user_uri = "annal:User/_default_user_perms"
+
 default_user_id  = "_default_user_perms"
 default_user_uri = "annal:User/_default_user_perms"
 
@@ -44,8 +47,8 @@ class AnnalistUser(EntityData):
 
     _entitytype     = ANNAL.CURIE.User
     _entitytypeid   = layout.USER_TYPEID
+    _entityroot     = layout.COLL_USER_PATH
     _entityview     = layout.COLL_USER_VIEW
-    _entitypath     = layout.COLL_USER_PATH
     _entityfile     = layout.USER_META_FILE
 
     def __init__(self, parent, user_id):

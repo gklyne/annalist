@@ -32,6 +32,7 @@ from entity_testutils import (
     collection_dir, 
     entitydata_list_url_query,
     site_view_url,
+    collection_view_url,
     collection_edit_url,
     collection_entity_view_url,
     site_title,
@@ -704,6 +705,7 @@ def default_fields(
     def_label_esc   = def_label.replace("'", "&#39;")
     def_comment_esc = def_comment.replace("'", "&#39;")
     def_entity_url  = collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    collection_url  = collection_view_url(coll_id).rstrip("/")
     def def_fields(width=12):
         fields = layout_classes(width=width)
         fields.update(
@@ -715,6 +717,7 @@ def default_fields(
             , 'default_label_esc':   def_label_esc
             , 'default_comment_esc': def_comment_esc
             , 'default_entity_url':  def_entity_url
+            , 'collection_url':      collection_url
             })
         if kwargs:
             fields.update(kwargs)

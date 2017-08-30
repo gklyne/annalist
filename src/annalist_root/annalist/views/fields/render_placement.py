@@ -27,6 +27,13 @@ from annalist.views.form_utils.fieldchoice      import FieldChoice
 #
 #   ----------------------------------------------------------------------------
 
+# These symbols don't display will with some languages/fonts (specifically Chinese)
+view_is_occupied  = "&block;"
+view_not_occupied = "&blk14;"
+
+option_is_occupied  = "#"
+option_not_occupied = "."
+
 # Enumerated placement options.
 #
 # '.' and '#' here are placeholders for symbols that will be used to show
@@ -70,8 +77,8 @@ placement_occupancy = OrderedDict(
 
 def option_symbol(occupied):
     return (
-        "&block;" if occupied == "#" else 
-        "&blk14;" if occupied == "." else occupied
+        option_is_occupied  if occupied == "#" else 
+        option_not_occupied if occupied == "." else occupied
         )
 
 def option_body(occupancy):
@@ -79,6 +86,19 @@ def option_body(occupancy):
     Returns an option body string corresponding to a supplied occupancy string
     """
     return "".join([ option_symbol(c) for c in occupancy ])
+
+
+def view_symbol(occupied):
+    return (
+        view_is_occupied  if occupied == "#" else 
+        view_not_occupied if occupied == "." else occupied
+        )
+
+def view_body(occupancy):
+    """
+    Returns an option body string corresponding to a supplied occupancy string
+    """
+    return "".join([ view_symbol(c) for c in occupancy ])
 
 def get_placement_options():
     return [ FieldChoice(o, label=option_body(placement_occupancy[o])) 
@@ -93,7 +113,7 @@ def get_placement_value_option_dict():
 def get_placement_option_value_dict():
     return { option_body(placement_occupancy[o]) : o for o in placement_occupancy }
 
-def placement_display_text(placement, placeholder="(select...)"):
+def placement_opton_text(placement, placeholder="(select...)"):
     if placement in placement_occupancy:
         display_text = option_body(placement_occupancy[placement])
     elif placement == "":
@@ -102,14 +122,8 @@ def placement_display_text(placement, placeholder="(select...)"):
         display_text = placement
     return display_text
 
-def placement_display_span(placement):
-    return (
-        '''<span class="placement-text">%s</span>'''%
-        placement_display_text(placement)
-        )
-
 def placement_option(placement, placeholder, placement_selected="False"):
-    body_text = placement_display_text(placement, placeholder=placeholder)
+    body_text = placement_opton_text(placement, placeholder=placeholder)
     if placement_selected:
         selected = ''' selected="selected"'''
     else:
@@ -118,6 +132,15 @@ def placement_option(placement, placeholder, placement_selected="False"):
         '''<option value="%s"%s>%s</option>'''%
         (placement, selected, body_text)
         )
+
+def placement_display_span(placement):
+    if placement in placement_occupancy:
+        display_text = view_body(placement_occupancy[placement])
+    elif placement == "":
+        display_text = placeholder
+    else:
+        display_text = placement
+    return '''<span class="placement-text">%s</span>'''%display_text
 
 #   ----------------------------------------------------------------------------
 #

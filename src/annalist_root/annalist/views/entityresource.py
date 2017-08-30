@@ -13,15 +13,25 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import os
+import json
+import StringIO
 import logging
 log = logging.getLogger(__name__)
+
+# from rdflib                             import Graph, URIRef, Literal
 
 from django.http                        import HttpResponse
 
 from annalist                           import message
 from annalist                           import layout
 
-from annalist.models.entitytypeinfo     import EntityTypeInfo
+from annalist.models.entityresourceaccess import (
+    find_entity_resource,
+    entity_resource_file,
+    json_resource_file,
+    turtle_resource_file, 
+    make_turtle_resource_info
+    )
 
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
@@ -30,7 +40,15 @@ class EntityResourceAccess(AnnalistGenericView):
     """
     View class for entity resource access
 
-    This view class returns a data resource, not a browser form.
+    This view class returns a data resource, not a browser form, which may be based on the
+    entity data itself (from the internally stored JSON), or the content of an attached
+    data resource (e.g. image, audio, etc.)
+
+    This view may be used as thye target of content negotiation redirects, and no
+    further content negotiation is attempted.  Rather, the URI is expected to reference 
+    the form of the resource to be returned (cf. 'find_resource' function).  This allows links
+    to specific resource formats to be obtained for use by clients that don't have access to
+    set HTTP content negotiation headers.
     """
 
     def __init__(self):
@@ -69,7 +87,7 @@ class EntityResourceAccess(AnnalistGenericView):
                     )
                 )
         # Locate and open resource file
-        resource_info = self.find_resource(viewinfo, entity, resource_ref)
+        resource_info = find_entity_resource(entity, resource_ref)
         if resource_info is None:
             return self.error(
                 dict(self.error404values(),
@@ -79,16 +97,21 @@ class EntityResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = entity.resource_file(resource_info["resource_path"])
+        entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
+        if "resource_access" in resource_info:
+            # Use indicated resource access renderer
+            jsondata = entity.get_values()
+            resource_file = resource_info["resource_access"](entity_baseurl, jsondata, resource_info)
+        else:
+            # Return resource data direct from storage
+            resource_file = entity_resource_file(entity, resource_info)
         if resource_file is None:
-            return self.error(
-                dict(self.error404values(),
-                    message=message.RESOURCE_DOES_NOT_EXIST%
-                        { 'id':  entity_label
-                        , 'ref': resource_info["resource_path"]
-                        }
-                    )
-                )
+            msg = (message.RESOURCE_DOES_NOT_EXIST%
+                { 'id':  entity_label
+                , 'ref': resource_info["resource_path"]
+                })
+            log.debug("EntityResourceAccess.get: "+msg)
+            return self.error(dict(self.error404values(), message=msg))
         # Return resource
         try:
             return_type = resource_info["resource_type"]
@@ -98,7 +121,11 @@ class EntityResourceAccess(AnnalistGenericView):
             #         is there a cleaner way?
             if "type" in viewinfo.request_dict:
                 return_type = viewinfo.request_dict["type"]
-            response = self.resource_response(resource_file, return_type)
+            links=[
+                { "rel": "canonical"
+                , "ref": entity_baseurl
+                }]
+            response = self.resource_response(resource_file, return_type, links=links)
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -115,71 +142,14 @@ class EntityResourceAccess(AnnalistGenericView):
         Assemble display information for entity view request handler
         """
         action                        = "view"
-        #@@ self.site_view_url            = self.view_uri("AnnalistSiteView")
-        #@@ self.collection_view_url      = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
         self.default_continuation_url = None
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(type_id)
+        viewinfo.get_request_type_info(type_id)
         viewinfo.get_entity_info(action, entity_id)
         # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
-
-    def find_resource(self, viewinfo, entity, resource_ref):
-        """
-        Return a description for the indicated entity resource, or None
-        """
-        log.debug(
-            "EntityResourceAccess.find_resource %s/%s/%s"%
-            (entity.get_type_id(), entity.get_id(), resource_ref)
-            )
-        fixed_resources = (
-            [ { "resource_name": layout.COLL_META_FILE,        "resource_dir": layout.COLL_BASE_DIR,     "resource_type": "application/ld+json" }
-            , { "resource_name": layout.COLL_PROV_FILE,        "resource_dir": layout.COLL_BASE_DIR,     "resource_type": "application/ld+json" }
-            , { "resource_name": layout.COLL_CONTEXT_FILE,     "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.TYPE_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.TYPE_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.LIST_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.LIST_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.VIEW_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.VIEW_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.GROUP_META_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.GROUP_PROV_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.FIELD_META_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.FIELD_PROV_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.VOCAB_META_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.VOCAB_PROV_FILE,       "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.USER_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.USER_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.ENUM_META_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.ENUM_PROV_FILE,        "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.TYPEDATA_META_FILE,    "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.ENTITY_DATA_FILE,      "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            , { "resource_name": layout.ENTITY_PROV_FILE,      "resource_dir": ".",                      "resource_type": "application/ld+json" }
-            ])
-        for fr in fixed_resources:
-            if fr["resource_name"] == resource_ref:
-                fr = dict(fr, resource_path=os.path.join(fr["resource_dir"]+"/", resource_ref))
-                return fr
-        for t, f in entity.enum_fields():
-            # log.debug("find_resource: t %s, f %r"%(t,f))
-            if isinstance(f, dict):
-                if f.get("resource_name", None) == resource_ref:
-                    f = dict(f, resource_path=resource_ref)
-                    return f
-        return None
-
-    def resource_response(self, resource_file, resource_type):
-        """
-        Construct response containing body of referenced resource,
-        with supplied resoure_type as its content_type
-        """
-        # @@TODO: assumes response can reasonably be held in memory;
-        #         consider 'StreamingHttpResponse'?
-        response = HttpResponse(content_type=resource_type)
-        response.write(resource_file.read())
-        return response
 
 # End.

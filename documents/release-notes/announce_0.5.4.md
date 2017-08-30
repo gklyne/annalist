@@ -1,12 +1,10 @@
 ## To Google group:
 
-### Announcing Annalist release 0.5.2
+### Announcing Annalist release 0.5.4
 
-I've just released an update (release 0.5.2) of Annalist.
+I've just released an update (release 0.5.4) of Annalist.
 
-This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in release 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
-
-The other technical change is some internal code refactoring to move towards possible per-entity access control (currently implemented on an ad hoc basis for default and unknown user permissions).
+This release simplifies workflows for creating subtype definitons using structured ontology terms, and introduces options for generating Turtle data output.  It also implements numerous bug fixes.
 
 More details can be found in the "History" section of the 
 [latest release notes](https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.5.md), 
@@ -23,15 +21,15 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 ## To research-object, RDS-CREAM and FAST:
 
-== Announcing Annalist release 0.5.2 ==
+== Announcing Annalist release 0.5.4 ==
 
-I've just released an update (0.5.2) of Annalist.  
+I've just released an update (release 0.5.4) of Annalist.
 
-This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in release 0.5.0.  It also contains some minor presentation, help text and documentation enhancements (including an initial set of FAQs).
+This release simplifies workflows for creating subtype definitons using structured ontology terms, and introduces options for generating Turtle data output.  It also implements numerous bug fixes.
 
 The full announcement is at: 
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
-https://groups.google.com/d/msg/annalist-discuss/BBQabaHKudE/3aflgvUHBgAJ
+https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 
 

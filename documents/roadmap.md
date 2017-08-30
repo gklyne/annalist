@@ -1,8 +1,9 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.2.
+Current status: candidate feature-complete minmum viable product, release 0.5.4.
 
-This is mainly a maintenance release that fixes problems introduced in release 0.5.0.
+This is a bug fix and usability enhancement release.
+It also provides Turtle output of RDF data.
 
 
 # V1.0 release
@@ -25,17 +26,6 @@ Especially spreadsheets.  See https://github.com/ninebynine/sds
 (Moved to [issue #32](https://github.com/gklyne/annalist/issues/32))
 
 (Also consider SoLiD, per discussion with TBL)
-
-
-### Alternative formats to support
-
-(cf. AnnalistGenericView)
-
-- Generic renderers, all driven by a supplied entity data dictionary:
-  - HTML
-  - JSON-LD
-  - uri-list
-- but serve native format directly.
 
 
 ## Grid view

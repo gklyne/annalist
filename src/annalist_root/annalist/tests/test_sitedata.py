@@ -35,15 +35,16 @@ from django.test.client         import Client
 
 from bs4                        import BeautifulSoup
 
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.util                  import extract_entity_id
+from annalist                               import layout
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.util                          import extract_entity_id
 
-from annalist.models.site           import Site
-from annalist.models.collection     import Collection
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordview     import RecordView
-from annalist.models.recordfield    import RecordField
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordlist             import RecordList
+from annalist.models.recordview             import RecordView
+from annalist.models.recordfield            import RecordField
 
 from annalist.views.fields.find_renderers   import is_repeat_field_render_type
 from annalist.views.fields.render_placement import get_placement_options
@@ -60,6 +61,13 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_entity_edit_url,
     create_user_permissions, create_test_user
+    )
+from entity_testcolldata    import (
+    collectiondata_url, collectiondata_resource_url,
+    collectiondata_view_url, collectiondata_view_resource_url,
+    collectiondata_value_keys, collectiondata_load_keys,
+    collectiondata_create_values, collectiondata_values, collectiondata_read_values,
+    collectiondata_view_form_data
     )
 from entity_testsitedata    import (
     make_field_choices, no_selection,
@@ -354,6 +362,46 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             colln = "coll%d"%i
             self.assertEqual(tcols[0].a.string,  colln)
             self.assertEqual(tcols[0].a['href'], collection_view_url(colln))
+        return
+
+    # Collection data view
+    def test_get_site_data_view(self):
+        collection_url = collection_view_url(coll_id=layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.context['coll_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['type_id'],          layout.COLL_TYPEID)
+        self.assertEqual(r.context['entity_id'],        layout.SITEDATA_ID)
+        self.assertEqual(r.context['orig_id'],          layout.SITEDATA_ID)
+        self.assertEqual(r.context['action'],           "view")
+        self.assertEqual(r.context['continuation_url'], "")
+        self.assertEqual(
+            r.context['entity_data_ref'],      
+            collection_url+layout.COLL_META_REF
+            )
+        self.assertEqual(
+            r.context['entity_data_ref_json'], 
+            collection_url+layout.COLL_META_REF+"?type=application/json"
+            )
+        return
+
+    # Collection data content negotiation
+    def test_get_site_data_json(self):
+        """
+        Request collection data as JSON-LD
+        """
+        collection_url = collection_view_url(coll_id=layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+collection_url+layout.COLL_META_REF)
+        r = self.client.get(v)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
         return
  
     # Test collection view

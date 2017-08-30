@@ -13,6 +13,7 @@ import collections
 import logging
 log = logging.getLogger(__name__)
 
+from annalist               import message
 from annalist.identifiers   import RDFS, ANNAL
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error, UnexpectedValue_Error
 from annalist.util          import extract_entity_id
@@ -452,14 +453,12 @@ def field_description_from_view_field(collection, field, view_context=None, fiel
                     type selections.
     field_ids_seen  field ids expanded so far, to check for recursive reference.
     """
-    #@@TODO: for resilience, revert this when all tests pass?
-    # field_id    = field.get(ANNAL.CURIE.field_id, "Field_id_missing")
-    #@@
     field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
     recordfield = RecordField.load(collection, field_id, altscope="all")
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
         recordfield = RecordField.load(collection, "Field_missing", altscope="all")
+        recordfield[RDFS.CURIE.label] = message.MISSING_FIELD_LABEL%{ 'id': field_id }
 
     # If field references group, pull in group details
     field_list = recordfield.get(ANNAL.CURIE.field_fields, None)

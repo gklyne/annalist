@@ -61,14 +61,73 @@ class Entity(EntityRoot):
     """
     This is the base class for all entities managed by Annalist as 
     descendents of some other entity.
+
+    ## Entity access paths
+
+    There are several key reference positions in a hierarchical entity structure:
+
+    root            is the root URL for the entity, without a trailing "/", also
+                    used to identify the entity.
+    view            is a URL used to view or retrieve default entity (meta-)data.
+    base            is a base URL for resolving relative references in entity data,
+                    and corresponds to the container where entity data is stored.
+    name            is the URL of the entity metadata resource (filename)
+    prov            is the URL of the entity provenance resource (filename)
+
+    In many cases, the root and base URLs are the same, but they may differ (e.g. for collections).
+
+    These various URLs are constructed from the base URL of the parent entity using the following
+    class variables, which must be defined by all subclasses of "Entity".  Constant strings for
+    the actual values or value formatting templates used are defined in module layout.py.
+
+    _entityroot     is a relative reference from the parent entity base URL to the entity root URL.
+    _entityview     is a relative reference from the parent entity base URL to the entity view
+                    URL.  This is generally _entityroot with a trailing "/" added.
+    _entitybase     is a relative reference from the entity root URL to the entity base URL.
+                    This is an empty string if the root is also the base URI, otherwise it
+                    indicates a sub-container (sub-directory) where entity data is stored.
+    _entityfile     is the resource name (filename) that can be used as a relative reference
+                    from the entity base URL to access the entity metadata file.
+    _entityprov     is the resource name (filename) that can be used as a relative reference
+                    from the entity base URL to access the entity provenance file.
+    _entityref      is a reverse relative reference from the base URL to the entity root URL
+    _contextbase    is a relative reference from the entity base URL to the corresponding
+                    JSON-LD context base URL for the containing collection.
+    _contextref     is a relative reference from the entity base URL to the corresponding
+                    JSON-LD context file URL for the containing collection.
+
+    Other resources attached to an entity identified by names inthe entity metadatra, which
+    are resolved against the entity base URL.
+
+    The following methods are provided to access various entity and content URLs:
+
+    entity.get_root_url()       returns the root URL for 'entity'
+    entity.get_base_url()       returns the base URL for 'entity'
+    entity.get_data_url()       returns the URL for entity metadata as JSON-LD
+    entity.get_data_url(resource_name)
+                                returns the URL for specified resource data
+
+    entityroot.get_view_url()   returns the view URL for 'entity'
     """
+
+    _last_id        = None          # Last ID allocated
 
     _entitytype     = ANNAL.CURIE.Entity
     _entitytypeid   = None
-    _entityview     = "%(id)s/"     # Placeholder for testing
-    _entitypath     = None          # Relative path from parent to entity (template)
-    _entityfile     = None          # Relative reference to body file from entity
-    _last_id        = None          # Last ID allocated
+
+    _entityroot     = "%(id)s"
+    _entityview     = "%(id)s/"
+    _entitybase     = ""
+    _entityfile     = None
+    _entityprov     = None
+
+    _entityref      = None
+    _contextbase    = None
+    _contextref     = None
+
+    # _entitypath     = None          # Relative path from parent to entity (template)
+    # _entityview     = "%(id)s/"     # Placeholder for testing
+    # _entityfile     = None          # Relative reference to body file from entity base
 
     def __init__(self, parent, entityid, altparent=None):
         """
@@ -110,22 +169,48 @@ class Entity(EntityRoot):
         # log.debug("Entity.__init__: entity_id %s, type_id %s"%(self._entityid, self.get_type_id()))
         return
 
-    def get_view_url(self, baseurl=""):
+    def _get_ref_url(self, baseurl, entityurl, urlref):
         """
-        Return URI used to view entity data.  For metadata entities, this may be 
-        different from the URI at which the resource is located, per get_uri().
-        The intent is to provide a URI that works regardless of whether the metadata
-        is stored as site-wide or collection-specific data.
+        Assemble a URL from supplied base URL and reference.
+
+        The entity type id and id may be interpolated as if the supplied reference
+        includes '%(type_id)s' and/or '%(id)s' respectively.
+        """
+        # log.debug("Entity._get_ref_url: baseurl %s, urlref %s"%(baseurl, urlref))
+        if urlref is None:
+            return None
+        rooturl = urlparse.urljoin(baseurl, entityurl)
+        return urlparse.urljoin(
+            rooturl,
+            urlref%({"type_id": self._entitytypeid, "id": self._entityid})
+            )
+
+    def get_root_url(self, baseurl=""):
+        """
+        Return entity root URL.
         """
         # log.debug(
-        #     "Entity.get_view_url: baseurl %s, _entityviewurl %s"%
+        #     "Entity.get_view_url: baseurl %s, _entityrooturl %s"%
         #     (baseurl, self._entityviewurl)
         #     )
-        return urlparse.urljoin(baseurl, self._entityviewurl)
+        return self._get_ref_url(baseurl, self._parent._entityurl, self._entityroot)
+
+    def get_base_url(self, baseurl=""):
+        """
+        Return entity base URL.
+        """
+        return self._get_ref_url(baseurl, self._entityurl, self._entitybase)
+
+    def get_data_url(self, resource_ref=None, baseurl=""):
+        """
+        Return entity data URL.
+        """
+        dataref = resource_ref or self._entityfile
+        return self._get_ref_url(baseurl, self.get_base_url(baseurl=baseurl), dataref)
 
     def set_alt_entities(self, altparent):
         """
-        Update the alternative parent for the current collection.
+        Update the alternative parent for the current entity.
 
         Returns a list of parents accessible from the supplied altparent (including itself)
         """
@@ -389,7 +474,7 @@ class Entity(EntityRoot):
         entityid    is the local identifier (slug) for the entity.
         """
         # log.debug("Entity.relpath: entitytype %s, entityid %s"%(cls._entitytype, entityid))
-        relpath = (cls._entitypath or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
+        relpath = (cls._entityroot or "%(id)s")%{'id': entityid, 'type_id': cls._entitytypeid}
         # log.debug("Entity.relpath: %s"%(relpath))
         return relpath
 
@@ -406,9 +491,28 @@ class Entity(EntityRoot):
         #     (cls._entitytype, parent._entitydir, entityid)
         #     )
         assert cls._entityfile is not None
-        p = util.entity_path(parent._entitydir, [cls.relpath(entityid)], cls._entityfile)
+        p = util.entity_path(
+            parent._entitydir, 
+            [cls.relpath(entityid), cls._entitybase], 
+            cls._entityfile
+            )
         log.debug("Entity.path: %s"%(p))
         return p
+
+    @classmethod
+    def meta_resource_name(cls, name_ext=".jsonld"):
+        """
+        Returns a metadata resource (file) name.
+
+        By default, returns the name for JSON-LD data, but if an alternative name extension
+        is profided returns a name with that extension instead.
+        """
+        #@@TODO: type selection should use type identifier rather than extension string?
+        resource_name = cls._entityfile
+        assert resource_name.endswith(".jsonld")
+        if resource_name.endswith(".jsonld") and name_ext != ".jsonld":
+            resource_name = resource_name[0:-7]+name_ext
+        return resource_name
 
     # I/O helper functions (copied from or overriding EntityRoot)
 

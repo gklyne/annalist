@@ -73,10 +73,11 @@
 
         <div class="small-12 medium-6 columns text-right medium-up-text-right">
           <div class="row view-value-row">
-            <div class="view-value small-12 columns">
-              <!-- Cf. https://github.com/BetaNYC/getDataButton -->
+            <div class="link-bar small-12 columns">
+              <a href="{{entity_turtle_ref}}" title="Retrieve underlying data as Turtle">Turtle</a>
               <a href="{{entity_data_ref}}" title="Retrieve underlying data as JSON-LD">JSON-LD</a>
-              <a href="{{entity_data_ref_json}}" title="Retrieve underlying JSON data">
+              <!-- Cf. https://github.com/BetaNYC/getDataButton -->
+              <a href="{{entity_data_ref_json}}" title="Display underlying JSON data">
                 <img src="{% static 'images/get_the_data_88x31.png' %}" alt="get_the_data">
               </a>
             </div>

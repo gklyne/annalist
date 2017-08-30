@@ -19,7 +19,7 @@ from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import ANNAL, RDF, RDFS
 
 from annalist.models.collection     import Collection
-from annalist.models.annalistuser   import AnnalistUser, default_user_id, unknown_user_id
+from annalist.models.annalistuser   import AnnalistUser, site_default_user_id, default_user_id, unknown_user_id
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
@@ -322,7 +322,7 @@ class EntityTypeInfo(object):
         self.coll_id         = coll.get_id()
         self.type_id         = type_id
         self.permissions_map = None
-        if type_id == "_coll":
+        if type_id == layout.COLL_TYPEID: # "_coll"
             # NOTE: 
             #
             # This setup defaults to using site permissions for collection operations.
@@ -437,7 +437,7 @@ class EntityTypeInfo(object):
         entity_perms_map = self.permissions_map
         # Check for entity-specific permissions
         #
-        # The logic here is currently ad-hoc, but in due courtse coukd be replaced
+        # The logic here is currently ad-hoc, but in due course could be replaced
         # by something more generic
         # log.info(
         #     "@@ get_entity_permissions_map: type_id %s, entity_id %s"%(self.type_id, entity_id)
@@ -445,7 +445,7 @@ class EntityTypeInfo(object):
         if self.type_id == USER_ID:
             # Relax view access requirements for default and unknown user id
             # (Real users require admin rights to view)
-            if entity_id in [default_user_id, unknown_user_id]:
+            if entity_id in [site_default_user_id, default_user_id, unknown_user_id]:
                 entity_perms_map = dict(entity_perms_map)
                 entity_perms_map["view"] = CONFIG_PERMISSIONS["view"]
         return entity_perms_map
@@ -533,6 +533,24 @@ class EntityTypeInfo(object):
         entity = self.get_entity(entity_id)
         if entity is None:
             entity = self.get_entity(entity_id, action="new")
+        return entity
+
+    def get_copy_entity(self, entity_id, copy_entity_id):
+        """
+        Read or create an entity with the indicated entity_id.
+
+        If the identified entity does not already exist, a new entity is created 
+        but not (yet) saved.
+
+        The newly created entity is a copy of 'copy_entity_id'.        
+        """
+        entity_id = extract_entity_id(entity_id)
+        entity    = self.get_entity(entity_id)
+        if entity is None:
+            entity = self._new_entity(entity_id)
+            entity.set_values(
+                self.get_initial_entity_values(entity_id, copy_entity_id=copy_entity_id)
+                )
         return entity
 
     def get_entity_implied_values(self, entity):
@@ -653,7 +671,7 @@ class EntityTypeInfo(object):
                     yield self.get_entity_implied_values(self.get_entity(eid))
         return
 
-    def get_initial_entity_values(self, entity_id):
+    def get_initial_entity_values(self, entity_id, copy_entity_id="_initial_values"):
         """
         Returns an initial value dictionary for the indicated entity.
 
@@ -666,13 +684,15 @@ class EntityTypeInfo(object):
             , RDFS.CURIE.label:     ""
             , RDFS.CURIE.comment:   ""
             })
-        init_entity = self.get_entity("_initial_values")
+        init_entity = self.get_entity(copy_entity_id)
         if init_entity:
             values = init_entity.get_values()
-            values.pop("@id", None)
-            values.pop(ANNAL.CURIE.id,  None)
-            values.pop(ANNAL.CURIE.url, None)
-        values[ANNAL.CURIE.id] = entity_id
+            values.pop("@id",              None)
+            values.pop(ANNAL.CURIE.id,     None)
+            values.pop(ANNAL.CURIE.url,    None)
+        values[ANNAL.CURIE.id]      = entity_id
+        values[RDFS.CURIE.label]    = ""
+        values[RDFS.CURIE.comment]  = ""
         return values
 
     def get_fileobj(self, entity_id, name, typeuri, mimetype, mode):

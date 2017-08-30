@@ -30,6 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 from annalist.models.annalistuser   import (
+    site_default_user_id, site_default_user_uri, 
     default_user_id, default_user_uri, 
     unknown_user_id, unknown_user_uri
     )

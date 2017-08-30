@@ -32,12 +32,13 @@ from init_tests             import init_annalist_test_site, init_annalist_test_c
 
 class TestEntityRootType(EntityRoot):
 
-    _entitytype = "test:EntityRootType"
-    _entitypath = None
-    _entityfile = ".sub/manifest.jsonld"
-    _entityref  = "../"
-    _baseref    = "testrootbase/"
-    _contextref = "../../coll_context.jsonld"
+    _entitytype   = "test:EntityRootType"
+    _entitypath   = None
+    _entitybase   = ".sub/"
+    _entityfile   = "manifest.jsonld"
+    _entityref    = "../"
+    _contextbase  = "testrootbase/"
+    _contextref   = "../../coll_context.jsonld"
 
 
 class EntityRootTest(TestCase):
@@ -163,7 +164,8 @@ class EntityRootTest(TestCase):
     def test_entityroot_subclass(self):
         e = TestEntityRootType(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)
         self.assertEqual(e._entitytype,     "test:EntityRootType")
-        self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
+        self.assertEqual(e._entitybase,     ".sub/")
+        self.assertEqual(e._entityfile,     "manifest.jsonld")
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       None)
         self.assertEqual(e._entityurl,      TestBaseUri+"/")
@@ -191,7 +193,8 @@ class EntityRootTest(TestCase):
         e = TestEntityRootType(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)
         e.set_id("testId")
         self.assertEqual(e._entitytype,     "test:EntityRootType")
-        self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
+        self.assertEqual(e._entitybase,     ".sub/")
+        self.assertEqual(e._entityfile,     "manifest.jsonld")
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       "testId")
         self.assertEqual(e._entityurl,      TestBaseUri+"/")
@@ -272,23 +275,25 @@ class EntityRootTest(TestCase):
 
 class TestEntityType(Entity):
 
-    _entitytype = "test:EntityType"
-    _entitypath = None
-    _entityview = "%(id)s/"
-    _entityfile = ".sub/manifest.jsonld"
-    _entityref  = "../"
-    _baseref    = "testtypebase/"
-    _contextref = "../../coll_context.jsonld"
+    _entitytype   = "test:EntityType"
+    _entityroot   = None
+    _entityview   = "%(id)s/"
+    _entitybase   = ".sub/"
+    _entityfile   = "manifest.jsonld"
+    _entityref    = "../"
+    _contextbase  = "testtypebase/"
+    _contextref   = "../../coll_context.jsonld"
 
 class TestEntityTypeSub(Entity):
 
-    _entitytype = "test:EntityTypeSub"
-    _entitypath = "sub/%(id)s"
-    _entityview = "sub/%(id)s/"
-    _entityfile = ".sub/manifest.jsonld"
-    _entityref  = "../"
-    _baseref    = "testtypesubbase/"
-    _contextref = "../../coll_context.jsonld"
+    _entitytype   = "test:EntityTypeSub"
+    _entityroot   = "sub/%(id)s"
+    _entityview   = "sub/%(id)s/"
+    _entitybase   = ".sub/"
+    _entityfile   = "manifest.jsonld"
+    _entityref    = "../"
+    _contextbase  = "testtypesubbase/"
+    _contextref   = "../../coll_context.jsonld"
 
 class EntityTest(AnnalistTestCase):
     """
@@ -377,6 +382,11 @@ class EntityTest(AnnalistTestCase):
         self.assertEqual(e._entityviewurl,  TestBaseUri+"/testid/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/testid/")
         self.assertEqual(e._values,         None)
+        self.assertEqual(e.get_root_url(),  TestBaseUri+"/testid")
+        self.assertEqual(e.get_view_url(),  TestBaseUri+"/testid/")
+        self.assertEqual(e.get_base_url(),  TestBaseUri+"/testid/")
+        self.assertEqual(e.get_data_url(),  None)
+        self.assertEqual(e.get_data_url("testfile.jsonld"),  TestBaseUri+"/testid/testfile.jsonld")
         return
 
     def test_entity_type_id(self):
@@ -392,13 +402,18 @@ class EntityTest(AnnalistTestCase):
         r = EntityRoot(TestBaseUri, TestBaseUri, TestBaseDir, TestBaseDir)
         e = TestEntityType(r, "testid")
         self.assertEqual(e._entitytype,     "test:EntityType")
-        self.assertEqual(e._entityfile,     ".sub/manifest.jsonld")
+        self.assertEqual(e._entityfile,     "manifest.jsonld")
         self.assertEqual(e._entityref,      "../")
         self.assertEqual(e._entityid,       "testid")
         self.assertEqual(e._entityurl,      TestBaseUri+"/testid/")
         self.assertEqual(e._entitydir,      TestBaseDir+"/testid/")
         self.assertEqual(e._values,         None)
         self.assertEqual(e._dir_path(),     (TestBaseDir+"/testid/.sub", TestBaseDir+"/testid/.sub/manifest.jsonld"))
+        self.assertEqual(e.get_root_url(),  None)
+        self.assertEqual(e.get_view_url(),  TestBaseUri+"/testid/")
+        self.assertEqual(e.get_base_url(),  TestBaseUri+"/testid/.sub/")
+        self.assertEqual(e.get_data_url(),  "http://test.example.com/testsite/testid/.sub/manifest.jsonld")
+        self.assertEqual(e.get_data_url("testfile.jsonld"),  TestBaseUri+"/testid/.sub/testfile.jsonld")
         return
 
     def test_entity_dict(self):

@@ -8,6 +8,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import os
+import urlparse
 import logging
 log = logging.getLogger(__name__)
 
@@ -92,19 +93,6 @@ class GenericEntityEditView(AnnalistGenericView):
         super(GenericEntityEditView, self).__init__()
         return
 
-    def get_entity_base_url(self, coll_id, type_id, entity_id):
-        return self.view_uri(
-            "AnnalistEntityAccessView", 
-            coll_id=coll_id, type_id=type_id, entity_id=entity_id
-            )
-
-    def get_entity_json_url(self, coll_id, type_id, entity_id, resource_ref):
-        return self.view_uri(
-            "AnnalistEntityResourceAccess", 
-            coll_id=coll_id, type_id=type_id, entity_id=entity_id, 
-            resource_ref=resource_ref
-            )
-
     # GET
 
     def get(self, request, 
@@ -160,7 +148,7 @@ class GenericEntityEditView(AnnalistGenericView):
         context_extra_values = (
             { 'request_url':            self.get_request_path()
             , 'url_type_id':            type_id
-            , 'orig_id':                entityvals['entity_id']
+            , 'orig_id':                viewinfo.src_entity_id
             , 'orig_type':              type_id
             , 'orig_coll':              orig_entity_coll_id
             , 'edit_view_enable':       'disabled="disabled"'
@@ -285,14 +273,14 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        self.collection_view_url  = self.view_uri("AnnalistCollectionView", coll_id=coll_id)
+        #@@ self.collection_view_url      = self.get_collection_view_url(coll_id)
         self.default_continuation_url = self.view_uri(
             "AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id
             )
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(coll_id)
-        viewinfo.get_type_info(type_id)
+        viewinfo.get_request_type_info(type_id)
         viewinfo.get_view_info(viewinfo.get_view_id(type_id, view_id))
         viewinfo.get_entity_info(action, entity_id)
         # viewinfo.get_entity_data()
@@ -327,7 +315,7 @@ class GenericEntityEditView(AnnalistGenericView):
         display, except that a "new" action becomes "edit" on the assumption that
         the new entity is saved before the refresh occurs.
 
-        'params', if supplied, is a dioctionary of additional query parameters to be added
+        'params', if supplied, is a dictionary of additional query parameters to be added
         to the resulting URI.
 
         If the entity has been renamed on the submitted form, this is taken into account
@@ -469,18 +457,23 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("form_render.viewcontext['fields'] %r"%(viewcontext['fields'],))        
         # Generate and return form data
+        entity_baseurl = (
+            viewinfo.reqhost + 
+            viewinfo.get_src_entity_resource_url("")
+            )
+        entity_json_url   = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_data_ref())
+        entity_turtle_url = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_turtle_ref())
+        entity_links = [
+            { "rel": "canonical"
+            , "ref": entity_baseurl
+            }]
         return (
-            self.render_html(viewcontext, self.formtemplate) or 
-            self.redirect_json(
-                self.get_entity_json_url(
-                    coll_id, type_id, entity_id, 
-                    viewinfo.get_entity_data_ref()
-                    ),
-                links=[
-                    { "rel": "canonical"
-                    , "ref": self.get_entity_base_url(coll_id, type_id, entity_id)
-                    }]
-                ) or
+            self.render_html(viewcontext, self.formtemplate, links=entity_links)
+            or 
+            self.redirect_json(entity_json_url, links=entity_links)
+            or
+            self.redirect_turtle(entity_turtle_url, links=entity_links)
+            or
             self.error(self.error406values())
             )
 
@@ -924,7 +917,7 @@ class GenericEntityEditView(AnnalistGenericView):
                         any other response.
 
         Returns the supplied ResponseInfo object, with `None` for the HTTPResponse 
-        valuer of the save completes successfully, otherwise an HTTP response object 
+        value if the save completes successfully, otherwise an HTTP response object 
         that reports the nature of the problem.
         """
         if responseinfo is None:
@@ -1822,39 +1815,65 @@ class GenericEntityEditView(AnnalistGenericView):
         #@@------------------------------------------------------
 
         if task_id == entitytypeinfo.TASK_ID+"/Define_view_list":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals
             base_id        = entityformvals[ANNAL.CURIE.id]
             type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_id
             type_label     = entityformvals[RDFS.CURIE.label]
             type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
+            prev_view_id   = entityformvals.get(ANNAL.CURIE.type_view, None)
+            prev_list_id   = entityformvals.get(ANNAL.CURIE.type_list, None)
             view_entity_id = entitytypeinfo.VIEW_ID+"/"+base_id+layout.SUFFIX_VIEW
             list_entity_id = entitytypeinfo.LIST_ID+"/"+base_id+layout.SUFFIX_LIST
             list_selector  = "'%s' in [@type]"%(type_uri) if type_uri else "ALL"
+            if not (prev_view_id or prev_list_id):
+                error_params = self.error_params(
+                    message.NO_VIEW_OR_LIST_SELECTED
+                    )
+                return responseinfo.set_http_response(
+                    HttpResponseRedirect(self.get_form_refresh_uri(viewinfo, params=error_params))
+                    )
+            # log.debug("task/Define_view_list prev_view_id %s"%(prev_view_id,))
+            # log.debug("task/Define_view_list prev_list_id %s"%(prev_list_id,))
             # Set up view details (other defaults from sitedata '_initial_values')
-            view_typeinfo = EntityTypeInfo(
-                viewinfo.collection, entitytypeinfo.VIEW_ID
-                )
-            view_entity   = view_typeinfo.get_create_entity(view_entity_id)
-            view_entity[ANNAL.CURIE.record_type] = type_uri
-            view_entity.setdefault(RDFS.CURIE.label,   message.TYPE_VIEW_LABEL%type_label)
-            view_entity.setdefault(RDFS.CURIE.comment, message.TYPE_VIEW_COMMENT%type_label)
-            view_entity._save()
+            type_values = { "type_id": base_id, "type_label": type_label }
+            if prev_view_id:
+                view_typeinfo = EntityTypeInfo(
+                    viewinfo.collection, entitytypeinfo.VIEW_ID
+                    )
+                view_entity   = view_typeinfo.get_copy_entity(view_entity_id, prev_view_id)
+                view_entity[ANNAL.CURIE.record_type] = type_uri
+                view_entity.setdefault(RDFS.CURIE.label,   
+                    message.TYPE_VIEW_LABEL%type_values
+                    )
+                view_entity.setdefault(RDFS.CURIE.comment, 
+                    message.TYPE_VIEW_COMMENT%type_values
+                    )
+                view_entity._save()
             # Set up list details (other defaults from sitedata '_initial_values')
-            list_typeinfo = EntityTypeInfo(
-                viewinfo.collection, entitytypeinfo.LIST_ID
-                )
-            list_entity   = list_typeinfo.get_create_entity(list_entity_id)
-            list_entity.setdefault(RDFS.CURIE.label,   message.TYPE_LIST_LABEL%type_label)
-            list_entity.setdefault(RDFS.CURIE.comment, message.TYPE_LIST_COMMENT%type_label)
-            list_entity[ANNAL.CURIE.default_view] = view_entity_id
-            list_entity[ANNAL.CURIE.default_type] = type_entity_id
-            list_entity[ANNAL.CURIE.record_type]  = type_uri
-            list_entity[ANNAL.CURIE.display_type] = "List"
-            list_entity[ANNAL.CURIE.list_entity_selector] = list_selector
-            list_entity._save()
+            if prev_list_id:
+                list_typeinfo = EntityTypeInfo(
+                    viewinfo.collection, entitytypeinfo.LIST_ID
+                    )
+                list_entity   = list_typeinfo.get_copy_entity(list_entity_id, prev_list_id)
+                list_entity.setdefault(RDFS.CURIE.label,   
+                    message.TYPE_LIST_LABEL%type_values
+                    )
+                list_entity.setdefault(RDFS.CURIE.comment, 
+                    message.TYPE_LIST_COMMENT%type_values
+                    )
+                list_entity[ANNAL.CURIE.default_view] = view_entity_id
+                list_entity[ANNAL.CURIE.default_type] = type_entity_id
+                list_entity[ANNAL.CURIE.record_type]  = type_uri
+                list_entity[ANNAL.CURIE.display_type] = "List"
+                list_entity[ANNAL.CURIE.list_entity_selector] = list_selector
+                list_entity._save()
             # Update view, list values in type record, and save again
-            entityformvals[ANNAL.CURIE.type_view] = view_entity_id
-            entityformvals[ANNAL.CURIE.type_list] = list_entity_id
+            if prev_view_id:
+                entityformvals[ANNAL.CURIE.type_view] = view_entity_id
+            if prev_list_id:
+                entityformvals[ANNAL.CURIE.type_list] = list_entity_id
             responseinfo = self.save_entity(
                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
                 responseinfo=responseinfo
@@ -1865,7 +1884,80 @@ class GenericEntityEditView(AnnalistGenericView):
             redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
-        elif task_id == entitytypeinfo.TASK_ID+"/Define_repeat_field":
+        elif task_id == entitytypeinfo.TASK_ID+"/Define_subtype":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
+            # Extract info from entityformvals
+            type_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.TYPE_ID
+                )
+            base_type_id        = entityformvals[ANNAL.CURIE.id] or viewinfo.use_entity_id
+            base_type_entity    = type_typeinfo.get_entity(base_type_id)
+            base_type_label     = base_type_entity.get(RDFS.CURIE.label, base_type_id)
+            base_type_uri       = base_type_entity.get(ANNAL.CURIE.uri,  "_coll:"+base_type_id)
+            base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
+            base_view_entity_id = base_type_entity.get(ANNAL.CURIE.type_view, "Default_view")
+            base_list_entity_id = base_type_entity.get(ANNAL.CURIE.type_list, "Default_list")
+            #@@
+            # base_type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
+            # base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_type_id
+            # base_supertypes     = entityformvals[ANNAL.CURIE.supertype_uri]
+            # base_view_entity_id = entityformvals[ANNAL.CURIE.type_view]
+            # base_list_entity_id = entityformvals[ANNAL.CURIE.type_list]
+            #@@
+            # Set up subtype details
+            sub_type_id         = base_type_id+layout.SUFFIX_SUBTYPE
+            sub_type_entity_id  = entitytypeinfo.TYPE_ID+"/"+sub_type_id
+            sub_type_uri        = base_type_uri and base_type_uri + layout.SUFFIX_SUBTYPE
+            sub_type_label      = "@@subtype of " + base_type_label
+            sub_type_values     = (
+                { "type_id":          sub_type_id
+                , "type_uri":           sub_type_uri
+                , "type_label":         sub_type_label
+                , "type_ref":           sub_type_entity_id
+                , "type_view_id":       base_view_entity_id
+                , "type_list_id":       base_list_entity_id
+                , "base_type_id":       base_type_id
+                , "base_type_label":    base_type_label
+                })
+            sub_type_comment    = message.SUBTYPE_COMMENT%sub_type_values
+            sub_type_supertypes = [{ "@id": base_type_uri }] + base_supertypes
+            # Create subtype record, and save
+            type_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.TYPE_ID
+                )
+            sub_type_entity = type_typeinfo.get_create_entity(sub_type_entity_id)
+            sub_type_entity[RDFS.CURIE.label]           = sub_type_label
+            sub_type_entity[RDFS.CURIE.comment]         = sub_type_comment
+            sub_type_entity[ANNAL.CURIE.uri]            = sub_type_uri
+            sub_type_entity[ANNAL.CURIE.supertype_uri]  = sub_type_supertypes           
+            sub_type_entity[ANNAL.CURIE.type_view]      = base_view_entity_id
+            sub_type_entity[ANNAL.CURIE.type_list]      = base_list_entity_id
+            sub_type_entity._save()
+            # Construct response that redirects to view new type entity with message
+            view_uri_params = (
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    entitytypeinfo.TYPE_ID
+                , 'view_id':    "Type_view"
+                , 'entity_id':  sub_type_id
+                , 'action':     "edit"
+                })
+            info_values = self.info_params(
+                message.TASK_CREATE_SUBTYPE%{'label': sub_type_label}
+                )
+            more_uri_params = viewinfo.get_continuation_url_dict()
+            more_uri_params.update(info_values)
+            redirect_uri = (
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                    more_uri_params
+                    )
+                )
+            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
+        elif task_id == entitytypeinfo.TASK_ID+"/Define_many_field":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals (form is a field description)
             field_entity_id          = entityformvals[ANNAL.CURIE.id]
             field_label              = entityformvals[RDFS.CURIE.label]
@@ -1873,19 +1965,86 @@ class GenericEntityEditView(AnnalistGenericView):
             field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
             field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
             repeat_field_id          = field_entity_id    + layout.SUFFIX_REPEAT
-            repeat_group_id          = field_entity_id    + layout.SUFFIX_REPEAT_G
             repeat_property_uri      = field_property_uri + layout.SUFFIX_REPEAT_P
             repeat_entity_type       = (
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
                 )
-            repeat_field_label       = message.REPEAT_FIELD_LABEL%field_label
-            repeat_field_comment     = message.REPEAT_FIELD_COMMENT%field_label
-            repeat_field_placeholder = message.REPEAT_FIELD_PLACEHOLDER%field_label
-            repeat_field_add         = message.REPEAT_FIELD_ADD%field_label
-            repeat_field_delete      = message.REPEAT_FIELD_DELETE%field_label
-            repeat_group_label       = message.REPEAT_GROUP_LABEL%field_label
-            repeat_group_comment     = message.REPEAT_GROUP_COMMENT%field_label
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            repeat_field_label       = message.MANY_FIELD_LABEL%field_params
+            repeat_field_comment     = message.MANY_FIELD_COMMENT%field_params
+            repeat_field_placeholder = message.MANY_FIELD_PLACEHOLDER%field_params
+            repeat_field_add         = message.MANY_FIELD_ADD%field_params
+            repeat_field_delete      = message.MANY_FIELD_DELETE%field_params
+            # Create repeat-field referencing group
+            field_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.FIELD_ID
+                )
+            repeat_field_entity   = field_typeinfo.get_create_entity(repeat_field_id)
+            repeat_field_entity[ANNAL.CURIE.field_render_type] = "Group_Set_Row"
+            repeat_field_entity[ANNAL.CURIE.field_value_mode]  = "Value_direct"
+            if not repeat_field_entity.get(ANNAL.CURIE.field_fields, None):
+                repeat_field_entity[ANNAL.CURIE.field_fields] = (
+                    [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
+                      , ANNAL.CURIE.property_uri:       "@id"
+                      , ANNAL.CURIE.field_placement:    "small:0,12"
+                      }
+                    ])
+            repeat_field_entity.setdefault(RDFS.CURIE.label,                 repeat_field_label)
+            repeat_field_entity.setdefault(RDFS.CURIE.comment,               repeat_field_comment)
+            repeat_field_entity.setdefault(ANNAL.CURIE.placeholder,          repeat_field_placeholder)
+            repeat_field_entity.setdefault(ANNAL.CURIE.property_uri,         repeat_property_uri)
+            repeat_field_entity.setdefault(ANNAL.CURIE.field_entity_type,    repeat_entity_type)
+            repeat_field_entity.setdefault(ANNAL.CURIE.field_value_type,     field_value_type)
+            repeat_field_entity.setdefault(ANNAL.CURIE.field_placement,      "small:0,12")
+            repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_add,     repeat_field_add)
+            repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_delete,  repeat_field_delete)
+            repeat_field_entity._save()
+
+            # Redisplay field view with message
+            info_values = self.info_params(
+                message.TASK_CREATE_MANY_VALUE_FIELD%
+                  {'field_id': repeat_field_id, 'label': field_label}
+                )
+            view_uri_params = (
+                { 'coll_id':    viewinfo.coll_id
+                , 'type_id':    entitytypeinfo.FIELD_ID
+                , 'entity_id':  repeat_field_id
+                , 'view_id':    "Field_view"
+                , 'action':     "edit"
+                })
+            more_uri_params = viewinfo.get_continuation_url_dict()
+            more_uri_params.update(info_values)
+            redirect_uri = (
+                uri_with_params(
+                    self.view_uri("AnnalistEntityEditView", **view_uri_params),
+                    more_uri_params
+                    )
+                )
+            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
+        elif task_id in [entitytypeinfo.TASK_ID+"/Define_repeat_field", entitytypeinfo.TASK_ID+"/Define_list_field"]:
+        # elif task_id == entitytypeinfo.TASK_ID+"/Define_list_field":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
+            # Extract info from entityformvals (form is a field description)
+            field_entity_id          = entityformvals[ANNAL.CURIE.id]
+            field_label              = entityformvals[RDFS.CURIE.label]
+            field_entity_type        = entityformvals[ANNAL.CURIE.field_entity_type] # domain
+            field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
+            field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
+            repeat_field_id          = field_entity_id    + layout.SUFFIX_SEQUENCE
+            repeat_property_uri      = field_property_uri + layout.SUFFIX_SEQUENCE_P
+            repeat_entity_type       = (
+                field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
+                else ""
+                )
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            repeat_field_label       = message.LIST_FIELD_LABEL%field_params
+            repeat_field_comment     = message.LIST_FIELD_COMMENT%field_params
+            repeat_field_placeholder = message.LIST_FIELD_PLACEHOLDER%field_params
+            repeat_field_add         = message.LIST_FIELD_ADD%field_params
+            repeat_field_delete      = message.LIST_FIELD_DELETE%field_params
             # Create repeat-field referencing group
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
@@ -1913,8 +2072,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
             # Redisplay field view with message
             info_values = self.info_params(
-                message.TASK_CREATE_REPEAT_FIELD%
-                  {'field_id': repeat_field_id, 'group_id': repeat_group_id, 'label': field_label}
+                message.TASK_CREATE_LIST_VALUE_FIELD%
+                  {'field_id': repeat_field_id, 'label': field_label}
                 )
             view_uri_params = (
                 { 'coll_id':    viewinfo.coll_id
@@ -1934,6 +2093,8 @@ class GenericEntityEditView(AnnalistGenericView):
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
         elif task_id == entitytypeinfo.TASK_ID+"/Define_field_ref":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
             # Extract info from entityformvals (form is a field description)
             field_entity_id       = entityformvals[ANNAL.CURIE.id]
             field_label           = entityformvals[RDFS.CURIE.label]
@@ -1947,9 +2108,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list else 
                 ""
                 )
-            ref_field_label       = message.FIELD_REF_LABEL%field_label
-            ref_field_comment     = message.FIELD_REF_COMMENT%field_label
-            ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_label
+            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            ref_field_label       = message.FIELD_REF_LABEL%field_params
+            ref_field_comment     = message.FIELD_REF_COMMENT%field_params
+            ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_params
             # Create field referencing field
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
@@ -2303,7 +2465,11 @@ class GenericEntityEditView(AnnalistGenericView):
         #     [ entitytypeinfo.TASK_ID+"/Copy_type_view_list"
         task_ids = (
             [ entitytypeinfo.TASK_ID+"/Define_view_list"
+            , entitytypeinfo.TASK_ID+"/Define_subtype"
+            # , entitytypeinfo.TASK_ID+"/Define_subtype_view_list"
             , entitytypeinfo.TASK_ID+"/Define_repeat_field" 
+            , entitytypeinfo.TASK_ID+"/Define_list_field" 
+            , entitytypeinfo.TASK_ID+"/Define_many_field" 
             , entitytypeinfo.TASK_ID+"/Define_field_ref" 
             , entitytypeinfo.TASK_ID+"/Show_list" 
             ])

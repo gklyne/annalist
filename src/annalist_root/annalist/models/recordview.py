@@ -29,8 +29,8 @@ class RecordView(EntityData):
 
     _entitytype     = ANNAL.CURIE.View
     _entitytypeid   = layout.VIEW_TYPEID
+    _entityroot     = layout.COLL_VIEW_PATH
     _entityview     = layout.COLL_VIEW_VIEW
-    _entitypath     = layout.COLL_VIEW_PATH
     _entityfile     = layout.VIEW_META_FILE
 
     def __init__(self, parent, view_id):
@@ -64,12 +64,13 @@ class RecordView(EntityData):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
-        for f in entitydata[ANNAL.CURIE.view_fields]:
-            field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
-            if field_id == "Field_render":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
-            if field_id == "Field_type":
-                f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
+        if ANNAL.CURIE.view_fields in entitydata:
+            for f in entitydata[ANNAL.CURIE.view_fields]:
+                field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
+                if field_id == "Field_render":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
+                if field_id == "Field_type":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
         # Return result
         return entitydata
 

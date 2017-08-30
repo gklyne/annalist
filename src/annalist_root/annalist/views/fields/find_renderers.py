@@ -17,6 +17,7 @@ from django.conf                import settings
 from render_fieldvalue          import RenderFieldValue
 from render_text                import TextValueMapper
 from render_entityid            import EntityIdValueMapper
+from render_identifier          import IdentifierValueMapper
 from render_placement           import get_field_placement_renderer
 from render_tokenset            import get_field_tokenset_renderer, TokenSetValueMapper
 from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
@@ -114,6 +115,7 @@ _field_value_mappers = (
     , "FileUpload":         FileUploadValueMapper
     , "EntityId":           EntityIdValueMapper
     , "EntityTypeId":       SelectValueMapper
+    , "Identifier":         IdentifierValueMapper
     , "Enum":               SelectValueMapper
     , "Enum_optional":      SelectValueMapper
     , "Enum_choice":        SelectValueMapper
