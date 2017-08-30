@@ -79,10 +79,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] BUG: show warning when accessing collection with missing parent.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+- [ ] Improve performance of mechanisms used for finding sub/superclasses
+    - (working with CIDOC-CRM deeplky nested type hierarchy gets very slow)
+- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
-- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
 - [ ] Login sequence from authz error page does not return to original page viewed
