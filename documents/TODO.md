@@ -17,77 +17,19 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 
 
-# Version 0.5.3, towards 0.5.4
-
-- [x] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
-    - (Workaround: copy, save, then edit Id seems to work OK.)
-    - Related: when copying from parent collection, similar error even if no change to Id.
-- [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
-- [x] Make it easier to create subtype + view + list...
-    - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
-    - Enhance create view+list logic to copy previous view+liust as defaults
-- [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
-- [x] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
-    - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
-    - needs testing still: check with new installation at dhoxss.annalist.net
-- [x] BUG: when default view references non-accessible entity: 
-    - if default view/list unavailable, revert to default list
-- [x] BUG: create subtype without login generates unhelpful error response
-- [x] BUG: display list with no fields generates error
-- [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
-- [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
-- [x] BUG: data links for collection metadata are broken (since changes to entity_data_ref?)
-- [x] Separate buttons for create list and multiple-value fields (seq vs set)
-    - Was: When creating a repeat field, distinguish cases for list and set: for set, use "set" render type, entity type for range of repeat field, and '@id' for property.
-    - See references to "Define_repeat_field" in:
-        - [x] data/sitedata/_view/Field_view/view_meta.jsonld
-        - [x] views/entityedit.py
-        - [x] tests/test_recordfield.py
-        - [x] data/Annalist_schema/entitydata/Property/task_buttons/entity_data.jsonld
-- [x] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
-- [x] Default type list/view and subtype comments: include link to type
-- [x] Create FAQ for defining subtypes
-- [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
-- [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
-- [x] When inheriting definitions, also use parent default view if none defined locally.
-- [x] Turtle rendering
-    - [x] Locate logic for Turtle rendering alongside JSON-LD
-        - Entities: see EntityResourceAccess - returns file content and headers (JSON-LD is native).  render_json method not currently used.
-        - Lists: see EntityGenericListJsonView - constructs list and adds headers
-        - Site: see SiteResourceAccess
-        - Collections: see CollectionResourceAccess
-    - [x] Replicate JSON-LD rendering functions in generic.py
-    - [x] Implement Turtle rendering logic in EntityResourceAccess
-    - [x] Rework logic for adding Link headers
-    - [x] Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
-        - DisplayInfo.get_entity_data_ref uses class metadata file name via EntityTypeInfo.
-    - [x] In EntityResourceAccess, handle .ttl access via Turtle renderer
-    - [x] Create test cases for Turtle output (based on JSON-LD test cases?)
-    - [x] Test case for collection data view
-    - [x] Implement Turtle output for collection data view
-    - [x] Test case for site data view
-    - [x] Implement Turtle output for site data view
-    - [x] Lists: refactor code to separate data access from rendering
-    - [x] Lists: generalize JSON list code to use entityresourceaccess facilities
-    - [x] Lists: modify urls.py to allow different resource names for different result types
-    - [x] Lists: add Turtle redirect calls alongside JSON-LD redirects (entitylist.py, get)
-    - [x] Lists: add test cases for retrieving list data as Turtle
-    - [x] Lists: update template to include Turtle data link and use 'link-bar' styles
-    - [x] Test turtle output in browser (check links, etc.)
-
-(Sub-release?)
+# Version 0.5.5, towards 0.5.6
 
 - [ ] BUG: show warning when accessing collection with missing parent.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+- [ ] Improve performance of mechanisms used for finding sub/superclasses
+    - (working with CIDOC-CRM deeplky nested type hierarchy gets very slow)
+- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
-- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
-- [ ] Login sequence from authz error page does not return to original page viewed
-- [x] Turtle export option to work around JSON-LD context access problems for now
-
+- [ ] Login sequence from authz error page does not always return to original page viewed
 
 (Sub-release?)
 
