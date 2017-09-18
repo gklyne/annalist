@@ -151,6 +151,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                   , FieldChoice(id="_field/Entity_label",       label="Label")
                   , FieldChoice(id="_field/Entity_see_also_r",  label="See also")
                   , FieldChoice(id="_field/Entity_type",        label="Type")
+                  , FieldChoice(id="_field/Entity_uri",         label="Entity URI")
                   ])
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''

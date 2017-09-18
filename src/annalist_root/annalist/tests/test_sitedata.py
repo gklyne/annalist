@@ -1004,6 +1004,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
                                                                                         "annal:Entity_see_also_list" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
+            , [ "_field/Entity_uri",                ["Entity_uri",        "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]

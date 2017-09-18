@@ -5,13 +5,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Documentation
 
-- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] Update tutorial
     - Also cover inheritance of definitions?
 - [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-    - Also FAQs?
+- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [x] Initial corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
@@ -20,13 +19,17 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 # Version 0.5.5, towards 0.5.6
 
 - [ ] BUG: show warning when accessing collection with missing parent.
+- [ ] BUG: define repeat field should use same property URI (without suffix)
+- [x] Add Entity_uri field definition to site data.
+- [ ] Make labels for enumeration/choice render types more usefully descriptive.
+- [ ] New render type for URI reference (or fragment) relative to URI specified in another entity.
+    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
-    - (working with CIDOC-CRM deeplky nested type hierarchy gets very slow)
+    - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
-- [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
 - [ ] Login sequence from authz error page does not always return to original page viewed
@@ -45,7 +48,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
-- [ ] BUG: delete list view while viewing that list results in error message.  Maybe just improve error message.
+- [ ] BUG: delete list view while viewing that list results in error message.
+    - Maybe just improve error message.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages
@@ -135,24 +139,27 @@ Usability notes:
 
 - [ ] In field definition, "Entity type" should be drop-dwon, with subtype logic handling an initial dereference to obtain the type URI.
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
+- [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
+- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
+- [ ] Add menu bar link to display content of collection rather than default
+    - List of types, linked to lists?
+- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
+- [ ] List display paging
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
         - should edits to the current type be saved first?
     - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
+- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
     - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
-    - As an edge case, dopn't worry about this immediately.
-- [ ] Add menu bar link to display content of collection rather than default
-    - List of types, linked to lists?
+    - As an edge case, don't worry about this immediately.
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too?
 - [ ] Consistency checks for references to missing types (e.g. following rename)
-- [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
-- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [x] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies list for CruisingLog
@@ -171,15 +178,13 @@ Usability notes:
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
-- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
-- [ ] List display paging
-- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
 
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
     - [ ] eliminate _field/Field_groupref instances
@@ -190,7 +195,6 @@ Notes for Future TODOs:
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
-
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:

@@ -286,6 +286,7 @@ site_defined_entity_fields = (
     , FieldChoice("_field/Entity_see_also",            label="See also"         )
     , FieldChoice("_field/Entity_see_also_r",          label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )
+    , FieldChoice("_field/Entity_uri",                 label="Entity URI"       )
     ])
 
 site_default_entity_fields = (
