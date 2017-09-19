@@ -17,6 +17,7 @@ NO_ACTION_PERFORMED         = "No action performed"
 NO_SELECTION                = "(No '%(id)s' selected)"
 INPUT_ERROR                 = "Problem with input"
 SYSTEM_ERROR                = "System error"
+DATA_ERROR                  = "Problem with data"
 UNEXPECTED_FORM_DATA        = "Unexpected form data: %r"
 MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
@@ -103,9 +104,10 @@ COLLECTION_REMOVED          = "The following collections were removed: %(ids)s"
 COLLECTION_NEWER_VERSION    = ("Cannot access collection %(id)s, "+
                                "which was created by software version %(ver)s. "+
                                "(Update Annalist server software to use this collection)")
+COLL_PARENT_NOT_EXIST       = "Collection %(id)s references non-existent parent %(parent_id)s"
 COLL_RESOURCE_NOT_DEFINED   = "Resource %(ref)s is not recogized for collection %(id)s"
 COLL_RESOURCE_NOT_EXIST     = "Resource %(ref)s for collection %(id)s does not exist"
-COLL_MIGRATE_DIR_FAILED     = "Collection %s migration %s -> %s failed. (%s)"
+COLL_MIGRATE_DIR_FAILED     = "Collection %(id)s migration %(old_path)s -> %(new_path)s failed. (%(exc)s)"
 
 ANNALIST_USER_ID            = "Problem with user identifier"
 ANNALIST_USER_ID_INVALID    = "The user identifier is missing or not a valid identifier"

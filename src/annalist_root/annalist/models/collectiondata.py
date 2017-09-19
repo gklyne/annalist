@@ -107,7 +107,12 @@ def migrate_collection_dir(coll, prev_dir, curr_dir):
         try:
             os.rename(expand_prev_dir, expand_curr_dir)
         except Exception as e:
-            msg = message.COLL_MIGRATE_DIR_FAILED%(coll.get_id(), prev_dir, curr_dir, e)
+            msg = (message.COLL_MIGRATE_DIR_FAILED%
+                    { "id": coll.get_id()
+                    , "old_path": prev_dir, "new_path": curr_dir
+                    , "exc": e
+                    }
+                )
             # print "@@ "+msg
             log.error("migrate_collection_dir: "+msg)
             errs.append(msg)

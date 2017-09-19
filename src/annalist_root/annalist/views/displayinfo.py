@@ -222,7 +222,10 @@ class DisplayInfo(object):
         self.view_id            = None
         self.recordview         = None
         self.entitydata         = None
+        # Response data
         self.http_response      = None
+        self.info_messages      = []
+        self.error_messages     = []
         return
 
     def set_orig_coll_id(self, orig_coll_id=None):
@@ -316,6 +319,7 @@ class DisplayInfo(object):
                             message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}
                             )
                         )
+                self.add_error_messages(self.collection.get_errors())
         return self.http_response
 
     def update_coll_version(self):
@@ -469,6 +473,8 @@ class DisplayInfo(object):
                     self.perm_coll = c
         return self.http_response
 
+    # Support methods for response generation
+
     def check_authorization(self, action):
         """
         Check authorization.  Return None if all is OK, or HttpResonse object.
@@ -521,7 +527,71 @@ class DisplayInfo(object):
                 self.orig_coll, orig_permissions_map)
         return self.http_response
 
+    def add_info_message(self, message):
+        """
+        Save message to be displayed on successful completion
+        """
+        self.info_messages.append(message)
+        return self.http_response
+
+    def add_error_message(self, message):
+        """
+        Save error message to be displayed on completion of the current operation
+        """
+        self.error_messages.append(message)
+        return self.http_response
+
+    def add_error_messages(self, messages):
+        """
+        Save list of error message to be displayed on completion of the current operation
+        """
+        # print "@@ add_error_messages: > %r"%(messages,)
+        self.error_messages.extend(messages)
+        # print "@@ add_error_messages: < %r"%(self.error_messages,)
+        return self.http_response
+
+    def redirect_response(self, redirect_path, redirect_params={}, action=None):
+        """
+        Return an HTTP redirect response, with information or warning messages as
+        requested incl;uded as parameters.
+
+        redirect_path   the URI base path to redirect to.
+        redirect_params an optional dictionary of parameters to be applied to the 
+                        redirection URI.
+        action          an action that must be authorized if the redirection is to occur,
+                        otherwise an error is reported and the current page redisplayed.
+                        If None or not supplied, no authorization check is performed.
+
+        Returns an HTTP response value.
+        """
+        # @TODO: refactor existing redirect response code (here and in list/edit modules)
+        #        to use this method.  (Look for other instances of HttpResponseRedirect)
+        # print "@@ redirect_response: http_response %r"%(self.http_response,)
+        if not self.http_response:
+            redirect_msg_params = dict(redirect_params)
+            if self.info_messages:
+                redirect_msg_params.extend(self.view.info_params("\n\n".join(self.info_messages)))
+            if self.error_messages:
+                redirect_msg_params.extend(self.view.error_params("\n\n".join(self.error_messages)))
+            # print "@@ redirect_response: redirect_msg_params %r"%(redirect_msg_params,)
+            redirect_uri = (
+                uri_with_params(
+                    redirect_path,
+                    redirect_msg_params,
+                    self.get_continuation_url_dict()
+                    )
+                )
+            self.http_response = (
+                (action and self.check_authorization(action))
+                or
+                HttpResponseRedirect(redirect_uri)
+                )
+        return self.http_response
+
     def report_error(self, message):
+        """
+        Set up error response
+        """
         log.error(message)
         if not self.http_response:
             self.http_response = self.view.error(
@@ -911,6 +981,16 @@ class DisplayInfo(object):
             substituted_text = apply_substitutions(context, self.view.help_markdown)
             context.update(
                 { 'help_markdown':  substituted_text
+                })
+        if self.info_messages:
+            context.update(
+                { "info_head":      message.ACTION_COMPLETED
+                , "info_message":   "\n\n".join(self.info_messages)
+                })
+        if self.error_messages:
+            context.update(
+                { "error_head":     message.DATA_ERROR
+                , "error_message":  "\n\n".join(self.error_messages)
                 })
         return context
 

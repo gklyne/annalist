@@ -422,10 +422,11 @@ class EntityGenericListView(AnnalistGenericView):
                         )
                     )
         if redirect_uri:
-            return (
-                listinfo.check_authorization(action) or
-                HttpResponseRedirect(redirect_uri)
-                )
+            return listinfo.redirect_response(redirect_uri, redirect_params={}, action=action)
+            # return (
+            #     listinfo.check_authorization(action) or
+            #     HttpResponseRedirect(redirect_uri)
+            #     )
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error

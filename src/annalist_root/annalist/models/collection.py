@@ -215,7 +215,12 @@ class Collection(Entity):
                     try:
                         os.rename(old_path, new_path)
                     except Exception as e:
-                        msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, old_path, new_path, e)
+                        msg = (message.COLL_MIGRATE_DIR_FAILED%
+                                { "id": coll_id
+                                , "old_path": old_path, "new_path": new_path
+                                , "exc": e
+                                }
+                            )
                         # print "@@ "+msg
                         log.error("Collection._migrate_collection_config_dir: "+msg)
                         assert False, msg
@@ -224,7 +229,12 @@ class Collection(Entity):
             try:
                 os.rename(coll_conf_old_dir, coll_conf_saved_dir)
             except Exception as e:
-                msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, coll_conf_old_dir, coll_conf_saved_dir, e)
+                msg = (message.COLL_MIGRATE_DIR_FAILED%
+                        { "id": coll_id
+                        , "old_path": coll_conf_old_dir, "new_path": coll_conf_saved_dir
+                        , "exc": e
+                        }
+                    )
                 # print "@@ "+msg
                 log.error("Collection._migrate_collection_config_dir: "+msg)
                 assert False, msg
@@ -263,10 +273,9 @@ class Collection(Entity):
         if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
             parent_coll = Collection.load(parent, parent_coll_id)
             if parent_coll is None:
-                log.warning(
-                    "Collection._set_alt_parent_coll: coll %s references non-existent parent %s"%
-                    (coll_id, parent_coll_id)
-                    )
+                err_msg = message.COLL_PARENT_NOT_EXIST%{"id": coll_id, "parent_id": parent_coll_id}
+                coll.set_error(err_msg)
+                log.warning("Collection._set_alt_parent_coll: "+err_msg)
             else:
                 log.debug(
                     "Collection._set_alt_parent_coll: coll %s references parent %s"%
