@@ -406,8 +406,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'][:len(e)])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     #   -------- copy --------
@@ -445,9 +449,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = error_head="Problem%20with%20input&error_message=No%20data%20record%20selected%20to%20copy"
-        self.assertIn(TestHostUri + u, r['location'])
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message=No%20data%20record%20selected%20to%20copy"
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_copy_type_entity_select_many(self):
@@ -457,8 +464,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_copy_type_entity_no_login(self):
@@ -505,8 +516,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_edit_type_entity_select_many(self):
@@ -516,8 +531,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_edit_type_entity_no_login(self):

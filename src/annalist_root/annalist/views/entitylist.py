@@ -287,74 +287,52 @@ class EntityGenericListView(AnnalistGenericView):
             return HttpResponseRedirect(listinfo.get_continuation_url() or self.collection_view_url)
 
         # Process requested action
-        redirect_uri = None
-        entity_ids   = request.POST.getlist('entity_select')
+        action          = None
+        redirect_path   = None
+        redirect_cont   = listinfo.get_continuation_here()
+        redirect_params = {}
+        entity_ids      = request.POST.getlist('entity_select')
         log.debug("entity_ids %r"%(entity_ids))
         if len(entity_ids) > 1:
-            action = ""
-            redirect_uri = self.check_value_supplied(
-                None, message.TOO_MANY_ENTITIES_SEL,
-                continuation_url=listinfo.get_continuation_url()
-                )
+            listinfo.error_response(message.TOO_MANY_ENTITIES_SEL)
         else:
             entity_type = type_id or listinfo.get_list_type_id()
             entity_id   = None
             if len(entity_ids) == 1:
                 (entity_type, entity_id) = split_type_entity_id(entity_ids[0], entity_type)
             if "new" in request.POST:
-                action = "new"
-                redirect_uri = uri_with_params(
-                    listinfo.get_new_view_uri(coll_id, entity_type), 
-                    {'continuation_url': listinfo.get_continuation_here()}
-                    )
+                action        = "new"
+                redirect_path = listinfo.get_new_view_uri(coll_id, entity_type)
             if "copy" in request.POST:
                 action = "copy"
-                redirect_uri = (
-                    self.check_value_supplied(entity_id, 
-                        message.NO_ENTITY_FOR_COPY, 
-                        continuation_url=listinfo.get_continuation_url()
+                if not entity_id:
+                    listinfo.error_response(message.NO_ENTITY_FOR_COPY)
+                else:
+                    redirect_path = listinfo.get_edit_view_uri(
+                        coll_id, entity_type, entity_id, action
                         )
-                    or
-                    uri_with_params(
-                        listinfo.get_edit_view_uri(
-                            coll_id, entity_type, entity_id, action
-                            ),
-                        {'continuation_url': listinfo.get_continuation_here()}
-                        )
-                    )
             if "edit" in request.POST:
                 action = "edit"
-                redirect_uri = (
-                    self.check_value_supplied(entity_id, 
-                        message.NO_ENTITY_FOR_EDIT,
-                        continuation_url=listinfo.get_continuation_url()
+                if not entity_id:
+                    listinfo.error_response(message.NO_ENTITY_FOR_EDIT)
+                else:
+                    redirect_path = listinfo.get_edit_view_uri(
+                        coll_id, entity_type, entity_id, action
                         )
-                    or
-                    uri_with_params(
-                        listinfo.get_edit_view_uri(
-                            coll_id, entity_type, entity_id, action
-                            ),
-                        {'continuation_url': listinfo.get_continuation_here()}
-                        )
-                    )
             if "delete" in request.POST:
                 action = "delete"
-                redirect_uri = (
-                    self.check_value_supplied(entity_id, 
-                        message.NO_ENTITY_FOR_DELETE,
-                        continuation_url=listinfo.get_continuation_url()
+                if not entity_id:
+                    listinfo.error_response(message.NO_ENTITY_FOR_DELETE)
+                elif not listinfo.entity_exists(entity_id, entity_type):
+                    listinfo.error_response(
+                        message.CANNOT_DELETE_ENTITY%
+                          { "id": entity_id, "type_id": entity_type }
                         )
-                    or
-                    listinfo.check_collection_entity(entity_id, entity_type,
-                        message.SITE_ENTITY_FOR_DELETE%{'id': entity_id}
-                        )
-                    or
-                    self.check_delete_type_values(listinfo,
-                        entity_id, entity_type,
+                elif listinfo.entity_is_type_with_values(entity_id, entity_type):
+                    listinfo.error_response(
                         message.TYPE_VALUES_FOR_DELETE%{'type_id': entity_id}
                         )
-                    )
-                if not redirect_uri:
+                if not listinfo.http_response:
                     # Get user to confirm action before actually doing it
                     confirmed_action_uri = self.view_uri(
                         "AnnalistEntityDataDeleteView", 
@@ -371,14 +349,20 @@ class EntityGenericListView(AnnalistGenericView):
                     if curi:
                         dict_querydict["continuation_url"] = [curi]
                     message_vals = {'id': entity_id, 'type_id': entity_type, 'coll_id': coll_id}
-                    typeinfo = listinfo.curr_typeinfo
-                    if typeinfo is None:
-                        typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
+                    #@@
+                    # typeinfo = listinfo.curr_typeinfo
+                    # if typeinfo is None:
+                    #     typeinfo = EntityTypeInfo(listinfo.collection, entity_type)
+                    #@@
                     return (
-                        self.form_action_auth(
-                            "delete", listinfo.collection, 
-                            typeinfo.get_entity_permissions_map()
-                            ) or
+                        #@@
+                        # self.form_action_auth(
+                        #     "delete", listinfo.collection, 
+                        #     typeinfo.get_entity_permissions_map()
+                        #     )
+                        #@@
+                        listinfo.check_authorization("delete")
+                        or
                         ConfirmView.render_form(request,
                             action_description=     message.REMOVE_ENTITY_DATA%message_vals,
                             confirmed_action_uri=   confirmed_action_uri,
@@ -388,45 +372,58 @@ class EntityGenericListView(AnnalistGenericView):
                             )
                         )
             if "default_view" in request.POST:
-                auth_check = self.form_action_auth("config", listinfo.collection, CONFIG_PERMISSIONS)
+                # auth_check = self.form_action_auth("config", listinfo.collection, CONFIG_PERMISSIONS)
+                auth_check = listinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
                 listinfo.collection.set_default_list(list_id)
-                action = "list"
-                msg    = message.DEFAULT_LIST_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
-                redirect_uri = (
-                    uri_with_params(
-                        self.get_request_path(), 
-                        self.info_params(msg),
-                        listinfo.get_continuation_url_dict()
-                        )
+                listinfo.add_info_message(
+                    message.DEFAULT_LIST_UPDATED%{'coll_id': coll_id, 'list_id': list_id}         
                     )
+                redirect_path, redirect_params = self.redisplay_path_params()
+                #@@
+                # action = "list"
+                # redirect_path = (
+                #     uri_with_params(
+                #         self.get_request_path(), 
+                #         self.info_params(msg),
+                #         listinfo.get_continuation_url_dict()
+                #         )
+                #     )
+                #@@
             if ( ("list_type" in request.POST) or ("list_all"  in request.POST) ):
-                action       = "list"
-                redirect_uri = self.get_list_url(
+                action        = "list"
+                redirect_path = self.get_list_url(
                     coll_id, extract_entity_id(request.POST['list_choice']),
-                    type_id=None if "list_all" in request.POST else type_id,
+                    type_id=None if "list_all" in request.POST else type_id
+                    )
+                redirect_params = dict(
                     scope="all" if "list_scope_all" in request.POST else None,
-                    search=request.POST['search_for'],
-                    query_params=listinfo.get_continuation_url_dict()
+                    search=request.POST['search_for']
                     )
             if "customize" in request.POST:
-                action       = "config"
-                redirect_uri = (
-                    uri_with_params(
-                        self.view_uri(
+                action        = "config"
+                redirect_path = self.view_uri(
                             "AnnalistCollectionEditView", 
                             coll_id=coll_id
                             ),
-                        {'continuation_url': listinfo.get_continuation_here()}
-                        )
+            # @@@@@@@@@@@@@@@@@@@@@@@@@@
+        if redirect_path:
+            if redirect_cont:
+                redirect_params.update(
+                    { "continuation_url": redirect_cont }
                     )
-        if redirect_uri:
-            return listinfo.redirect_response(redirect_uri, redirect_params={}, action=action)
+            listinfo.redirect_response(
+                redirect_path, redirect_params=redirect_params, action=action
+                )
             # return (
             #     listinfo.check_authorization(action) or
             #     HttpResponseRedirect(redirect_uri)
             #     )
+        if listinfo.http_response:
+            return listinfo.http_response
+
+
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error
@@ -453,7 +450,7 @@ class EntityGenericListView(AnnalistGenericView):
         entityvals = { field_description['field_property_uri']: listinfo.list_id }
         return bound_field(field_description, entityvals)
 
-    def check_delete_type_values(self, listinfo, entity_id, entity_type, msg):
+    def _unused_check_delete_type_values(self, listinfo, entity_id, entity_type, msg):
         """
         Checks for attempt to delete type with existing values
 

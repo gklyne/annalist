@@ -249,7 +249,8 @@ class AnnalistGenericView(ContentNegotiationView):
                 )
         return None
 
-    def check_value_supplied(self, val, msg, continuation_url=None, testfn=(lambda v: v)):
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    def _unused_check_value_supplied(self, val, msg, continuation_url=None, testfn=(lambda v: v)):
         """
         Test if a supplied value is specified (not None) and passes a supplied test,
         returning a URI to display a supplied error message if the test fails.
@@ -278,6 +279,7 @@ class AnnalistGenericView(ContentNegotiationView):
                 continuation_url_dict
                 )
         return redirect_uri
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     # Authentication and authorization
     def authenticate(self, continuation_url):

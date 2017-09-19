@@ -502,7 +502,6 @@ class DisplayInfo(object):
             else:
                 # Use site permissions map (some site operations don't have an entity type?)
                 permissions_map = SITE_PERMISSIONS
-
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
             self.http_response = (
@@ -550,6 +549,24 @@ class DisplayInfo(object):
         # print "@@ add_error_messages: < %r"%(self.error_messages,)
         return self.http_response
 
+    def redisplay_path_params(self):
+        """
+        Gathers URL details based on the current request URL that can be used 
+        to construct a URL to redisplay the current page.
+
+        Returns a pair of values:
+
+            redisplay_path, redisplay_params
+
+        Where 'redisplay_path' is the URL path for the current request,
+        and 'redisplay_params' is a selection of request URL parameters that 
+        are used to select data for the current display (see 'scope_params').
+        """
+        redisplay_path   = self.view.get_request_path()
+        redisplay_params = scope_params(uri_param_dict(redisplay_path))
+        redisplay_params.update(self.get_continuation_url_dict())
+        return (redisplay_path, redisplay_params)
+
     def redirect_response(self, redirect_path, redirect_params={}, action=None):
         """
         Return an HTTP redirect response, with information or warning messages as
@@ -570,15 +587,14 @@ class DisplayInfo(object):
         if not self.http_response:
             redirect_msg_params = dict(redirect_params)
             if self.info_messages:
-                redirect_msg_params.extend(self.view.info_params("\n\n".join(self.info_messages)))
+                redirect_msg_params.update(self.view.info_params("\n\n".join(self.info_messages)))
             if self.error_messages:
-                redirect_msg_params.extend(self.view.error_params("\n\n".join(self.error_messages)))
+                redirect_msg_params.update(self.view.error_params("\n\n".join(self.error_messages)))
             # print "@@ redirect_response: redirect_msg_params %r"%(redirect_msg_params,)
             redirect_uri = (
                 uri_with_params(
                     redirect_path,
-                    redirect_msg_params,
-                    self.get_continuation_url_dict()
+                    redirect_msg_params
                     )
                 )
             self.http_response = (
@@ -587,6 +603,17 @@ class DisplayInfo(object):
                 HttpResponseRedirect(redirect_uri)
                 )
         return self.http_response
+
+    def error_response(self, err_msg):
+        """
+        Return an HTTP response that redisplays the current view with an error
+        message displayed.
+
+        err_msg         is the error message to be displayed.
+        """
+        redirect_path, redirect_params = self.redisplay_path_params()
+        self.add_error_message(err_msg)
+        return self.redirect_response(redirect_path, redirect_params=redirect_params)
 
     def report_error(self, message):
         """
@@ -686,7 +713,32 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def check_collection_entity(self, entity_id, entity_type, msg):
+    def entity_exists(self, entity_id, entity_type):
+        """
+        Test a supplied entity is defined in the current collection,
+        returning true or False.
+
+        entity_id           entity id that is to be tested..
+        entity_type         type of entity to test.
+        """
+        typeinfo = self.curr_typeinfo
+        if not typeinfo or typeinfo.get_type_id() != entity_type:
+            typeinfo = EntityTypeInfo(self.collection, entity_type)
+        return typeinfo.entityclass.exists(typeinfo.entityparent, entity_id)
+
+    def entity_is_type_with_values(self, entity_id, entity_type):
+        """
+        Test if indicated entity is a type with values defined.
+        """
+        if entity_type == layout.TYPE_TYPEID:
+            typeinfo = EntityTypeInfo(
+                self.collection, entity_id
+                )
+            return next(typeinfo.enum_entity_ids(), None) is not None
+        return False
+
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    def _unused_check_collection_entity(self, entity_id, entity_type, msg):
         """
         Test a supplied entity_id is defined in the current collection,
         returning a URI to display a supplied error message if the test fails.
@@ -717,6 +769,7 @@ class DisplayInfo(object):
                     )
                 )
         return redirect_uri
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     def get_new_view_uri(self, coll_id, type_id):
         """
