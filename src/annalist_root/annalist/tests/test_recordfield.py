@@ -1543,7 +1543,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
         rpt_field_id  = tgt_field_id + layout.SUFFIX_REPEAT
-        rpt_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REPEAT_P
+        rpt_field_uri = "%(property_uri)s"%(common_vals)
         expect_field_values = (
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"

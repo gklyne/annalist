@@ -1965,7 +1965,7 @@ class GenericEntityEditView(AnnalistGenericView):
             field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
             field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
             repeat_field_id          = field_entity_id    + layout.SUFFIX_REPEAT
-            repeat_property_uri      = field_property_uri + layout.SUFFIX_REPEAT_P
+            repeat_property_uri      = field_property_uri
             repeat_entity_type       = (
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
@@ -1976,7 +1976,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_placeholder = message.MANY_FIELD_PLACEHOLDER%field_params
             repeat_field_add         = message.MANY_FIELD_ADD%field_params
             repeat_field_delete      = message.MANY_FIELD_DELETE%field_params
-            # Create repeat-field referencing group
+            # Create repeat-field referencing original field
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
@@ -2045,7 +2045,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_placeholder = message.LIST_FIELD_PLACEHOLDER%field_params
             repeat_field_add         = message.LIST_FIELD_ADD%field_params
             repeat_field_delete      = message.LIST_FIELD_DELETE%field_params
-            # Create repeat-field referencing group
+            # Create repeat-field referencing original
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
