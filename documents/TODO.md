@@ -19,12 +19,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 # Version 0.5.5, towards 0.5.6
 
 - [ ] BUG: show warning when accessing collection with missing parent.
-    - clean up code in EntityList
-    - clean up code in DisplayInfo
-    - clean up code in CollectionView
     - eliminate AnnalistUserDeleteConfirmedView - I think it's unused
-    - clean up code in test_entitygenericlist
-- [ ] BUG: define repeat field should use same property URI (without suffix)
+    - note that, in some cases, continuation URLs used have changed
+- [ ] BUG: define repeat field task should use same property URI (without suffix)
 - [x] Add Entity_uri field definition to site data.
 - [ ] Make labels for enumeration/choice render types more usefully descriptive.
 - [ ] New render type for URI reference (or fragment) relative to URI specified in another entity.

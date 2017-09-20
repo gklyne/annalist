@@ -824,40 +824,6 @@ class DisplayInfo(object):
             return next(typeinfo.enum_entity_ids(), None) is not None
         return False
 
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    def _unused_check_collection_entity(self, entity_id, entity_type, msg):
-        """
-        Test a supplied entity_id is defined in the current collection,
-        returning a URI to display a supplied error message if the test fails.
-
-        NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for the currently viewed page.
-
-        entity_id           entity id that is required to be defined in the current collection.
-        entity_type         specified type for entity to delete.
-        msg                 message to display if the test fails.
-
-        returns a URI string for use with HttpResponseRedirect to redisplay the 
-        current page with the supplied message, or None if entity id is OK.
-        """
-        # log.info("check_collection_entity: entity_id: %s"%(entity_id))
-        # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
-        # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
-        redirect_uri = None
-        typeinfo     = self.curr_typeinfo
-        if not typeinfo or typeinfo.get_type_id() != entity_type:
-            typeinfo = EntityTypeInfo(self.collection, entity_type)
-        if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
-            redirect_uri = (
-                uri_with_params(
-                    self.view.get_request_path(),
-                    self.view.error_params(msg),
-                    self.get_continuation_url_dict()
-                    )
-                )
-        return redirect_uri
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
     def get_new_view_uri(self, coll_id, type_id):
         """
         Get URI for entity new view from list display

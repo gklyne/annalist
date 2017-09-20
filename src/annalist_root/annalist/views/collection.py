@@ -212,15 +212,6 @@ class CollectionEditView(AnnalistGenericView):
                     , "confirm_completion": message.REMOVE_RECORD_TYPE
                     }
                 )
-            #@@
-            # redirect_uri, http_response = self.item_delete_response(
-            #     coll_id, type_id, 
-            #     message.NO_TYPE_FOR_DELETE, 
-            #     message.REMOVE_RECORD_TYPE, 
-            #     "AnnalistRecordTypeDeleteView",
-            #     viewinfo.get_continuation_url()
-            #     )
-            #@@
         # List views
         list_id = request.POST.get('listlist', None)
         if "list_new" in request.POST:
@@ -253,15 +244,6 @@ class CollectionEditView(AnnalistGenericView):
                     , "confirm_completion": message.REMOVE_RECORD_LIST
                     }
                 )
-            #@@
-            # redirect_uri, http_response = self.item_delete_response(
-            #     coll_id, list_id, 
-            #     message.NO_LIST_FOR_DELETE, 
-            #     message.REMOVE_RECORD_LIST, 
-            #     "AnnalistRecordListDeleteView",
-            #     viewinfo.get_continuation_url()
-            #     )
-            #@@
         # Record views
         view_id = request.POST.get('viewlist', None)
         if "view_new" in request.POST:
@@ -294,15 +276,6 @@ class CollectionEditView(AnnalistGenericView):
                     , "confirm_completion": message.REMOVE_RECORD_VIEW
                     }
                 )
-            #@@
-            # redirect_uri, http_response = self.item_delete_response(
-            #     coll_id, view_id, 
-            #     message.NO_VIEW_FOR_DELETE, 
-            #     message.REMOVE_RECORD_VIEW, 
-            #     "AnnalistRecordViewDeleteView",
-            #     viewinfo.get_continuation_url()
-            #     )
-            #@@
         # Invoke selected view and/or render status response
         if redirect_uri:
             http_response = http_response or HttpResponseRedirect(redirect_uri)
@@ -380,37 +353,5 @@ class CollectionEditView(AnnalistGenericView):
             continuation_here, continuation_url,
             "edit")
         return redirect_uri
-
-    def _unused_item_delete_response(self, 
-            coll_id, entity_id, 
-            no_entity_msg, 
-            confirm_msg, 
-            complete_action_view,
-            continuation_url):
-        redirect_uri  = None
-        http_response = None
-        if entity_id:
-            # Get user to confirm action before actually doing it
-            confirmed_action_uri = self.view_uri(
-                complete_action_view, coll_id=coll_id
-                )
-            message_vals = {'id': entity_id, 'coll_id': coll_id}
-            http_response = (
-                ConfirmView.render_form(self.request,
-                    action_description=     confirm_msg%message_vals,
-                    confirmed_action_uri=   confirmed_action_uri,
-                    action_params=          self.request.POST,
-                    cancel_action_uri=      self.get_request_path(),
-                    title=                  self.site_data()["title"]
-                    )
-                )
-        else:
-            redirect_uri = (
-                self.check_value_supplied(
-                    entity_id, no_entity_msg,
-                    continuation_url
-                    )
-                )
-        return redirect_uri, http_response
 
 # End.
