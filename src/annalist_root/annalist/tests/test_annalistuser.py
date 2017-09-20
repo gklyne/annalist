@@ -595,10 +595,10 @@ class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
         self.assertMatch(r['location'],    
             "^"+TestHostUri+
             collection_edit_url("testcoll")+
-            r"\?info_head=.*&info_message=.*deletetype.*testcoll.*$"
+            r"\?info_head=.*&info_message=.*deleteuser.*testcoll.*$"
             )
         # Confirm deletion
-        self.assertFalse(AnnalistUser.exists(self.testcoll, "deletetype"))
+        self.assertFalse(AnnalistUser.exists(self.testcoll, "deleteuser"))
         return
 
 # End.

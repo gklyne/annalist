@@ -44,6 +44,7 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
+from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.uri_builder     import (
     uri_param_dict,
     scope_params,
@@ -604,7 +605,7 @@ class DisplayInfo(object):
                 )
         return self.http_response
 
-    def error_response(self, err_msg):
+    def display_error_response(self, err_msg):
         """
         Return an HTTP response that redisplays the current view with an error
         message displayed.
@@ -624,6 +625,92 @@ class DisplayInfo(object):
             self.http_response = self.view.error(
                 dict(self.view.error400values(),
                     message=message
+                    )
+                )
+        return self.http_response
+
+    def confirm_delete_entity_response(self, 
+            entity_type_id, entity_id, 
+            complete_action_uri,
+            form_action_field="entity_delete",
+            form_value_field="entity_id",
+            response_messages = {}
+            ):
+        """
+        This method generates a response when the user has requested deletion
+        of an entity from the current collection.  It includes logic to request 
+        confirmation of the requested action before proceeding to actually remove
+        the entity.
+
+        The request for confirmation is handled via class "ConfirmView" (confirm.py),
+        and actual deletion and continuation is performed via the view specified by
+        "complete_action_view", which is typically realized by a subclass of 
+                                "EntityDeleteConfirmedBaseView" (entitydeletebase.py)
+
+        entity_type_id          is the type id of the entity to be deleted.
+        entity_id               is the entity id of the entity to be deleted.
+        complete_action_uri     identifies a view to be invoked by an HTTP POST operation
+                                to complete the entity deletion.
+        form_action_field       names the form field that is used to trigger entity deletion
+                                in the completion view.  Defaults to "entity_delete"
+        form_value_field        names the form field that is used to provide the identifier of
+                                the entity or entities to be deleted.
+        response_messages       is a dictionary of messages to be used to indicate 
+                                various outcomes:
+                                "no_entity" is the entity for deletion is not specified.
+                                "cannot_delete" if entity does not exist or cannot be deleted.
+                                "confirm_completion" to report co,mpletion of entity deletion.
+                                If no message dictionary is provided, or if no value is provided 
+                                for a particular outcome, a default message value will be used.
+                                Messages may use value interpolation for %(type_id)s and %(id)s.
+        """
+        def _get_message(msgid):
+            return response_messages.get(msgid, default_messages.get(msgid)%message_params)
+
+        default_messages = (
+            { "no_entity":          message.NO_ENTITY_FOR_DELETE
+            , "cannot_delete":      message.CANNOT_DELETE_ENTITY
+            , "type_has_values":    message.TYPE_VALUES_FOR_DELETE
+            , "confirm_completion": message.REMOVE_ENTITY_DATA
+            })
+        entity_coll_id = self.collection.get_id()
+        message_params = (
+            { "id":         entity_id
+            , "type_id":    entity_type_id
+            , "coll_id":    entity_coll_id
+            })
+
+        if not entity_id:
+            self.display_error_response(_get_message("no_entity"))
+        elif not self.entity_exists(entity_id, entity_type_id):
+            self.display_error_response(_get_message("cannot_delete"))
+        elif self.entity_is_type_with_values(entity_id, entity_type_id):
+            self.display_error_response(_get_message("type_has_values"))
+
+        if not self.http_response:
+            # Get user to confirm action before actually doing it
+            # log.info(
+            #     "entity_coll_id %s, type_id %s, entity_id %s, confirmed_action_uri %s"%
+            #     (entity_coll_id, entity_type_id, entity_id, confirmed_action_uri)
+            #     )
+            delete_params = dict_querydict(
+                { form_action_field:    ["Delete"]
+                , form_value_field:     [entity_id]
+                , "completion_url":     [self.get_continuation_here()]
+                , "search_for":         [self.request_dict.get('search_for',"")]
+                })
+            curi = self.get_continuation_url()
+            if curi:
+                dict_querydict["continuation_url"] = [curi]
+            return (
+                self.check_authorization("delete")
+                or
+                ConfirmView.render_form(self.view.request,
+                    action_description=     _get_message("confirm_completion"),
+                    action_params=          delete_params,
+                    confirmed_action_uri=   complete_action_uri,
+                    cancel_action_uri=      self.get_continuation_here(),
+                    title=                  self.view.site_data()["title"]
                     )
                 )
         return self.http_response

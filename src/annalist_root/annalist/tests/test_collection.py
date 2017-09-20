@@ -54,9 +54,11 @@ from entity_testtypedata    import (
     recordtype_create_values, recordtype_read_values
     )
 from entity_testviewdata    import (
+    recordview_edit_url,
     recordview_create_values, recordview_read_values,
     )
 from entity_testlistdata    import (
+    recordlist_edit_url,
     recordlist_create_values, recordlist_read_values,
     )
 from entity_testentitydata  import (
@@ -537,8 +539,12 @@ class CollectionEditViewTest(AnnalistTestCase):
         return
 
     def test_post_delete_type(self):
+        # Create empty type
+        empty_type_values = recordtype_create_values("coll1", "type_empty")
+        empty_type        = self.coll1.add_type("type_empty", empty_type_values)
+        # Now try to delete it
         form_data = (
-            { "typelist":   "type1"
+            { "typelist":   "type_empty"
             , "type_delete":  "Delete"
             })
         r = self.client.post(self.edit_url, form_data)
@@ -552,7 +558,20 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['cancel_action'], self.edit_url)
         action_params = json.loads(r.context['action_params'])
         self.assertEqual(action_params['type_delete'], ["Delete"])
-        self.assertEqual(action_params['typelist'],    ["type1"])
+        self.assertEqual(action_params['typelist'],    ["type_empty"])
+        return
+
+    def test_post_delete_type_with_values(self):
+        form_data = (
+            { "typelist":   "type1"
+            , "type_delete":  "Delete"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertIn(self.edit_url+"?",                   r['location'])
+        self.assertIn("error_head=Problem%20with%20input", r['location'])
+        self.assertIn("error_message=",                    r['location'])
         return
 
     def test_post_delete_type_no_selection(self):
@@ -563,8 +582,49 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
-        self.assertMatch(r['location'], TestHostUri+erroruri)
+        self.assertIn(self.edit_url+"?",                   r['location'])
+        self.assertIn("error_head=Problem%20with%20input", r['location'])
+        self.assertIn("error_message=",                    r['location'])
+        return
+
+    def test_post_delete_list(self):
+        # Try to delete list
+        form_data = (
+            { "listlist":   "list1"
+            , "list_delete":  "Delete"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertTemplateUsed(r, "annalist_confirm.html")
+        # Check confirmation form content
+        confirmed_action_uri = recordlist_edit_url("delete", "coll1")
+        self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
+        self.assertEqual(r.context['confirmed_action'], confirmed_action_uri)
+        self.assertEqual(r.context['cancel_action'], self.edit_url)
+        action_params = json.loads(r.context['action_params'])
+        self.assertEqual(action_params['list_delete'], ["Delete"])
+        self.assertEqual(action_params['listlist'],    ["list1"])
+        return
+
+    def test_post_delete_view(self):
+        # Try to delete view
+        form_data = (
+            { "viewlist":   "view1"
+            , "view_delete":  "Delete"
+            })
+        r = self.client.post(self.edit_url, form_data)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertTemplateUsed(r, "annalist_confirm.html")
+        # Check confirmation form content
+        confirmed_action_uri = recordview_edit_url("delete", "coll1")
+        self.assertContains(r, '''<form method="POST" action="'''+TestBasePath+'''/confirm/">''', status_code=200)
+        self.assertEqual(r.context['confirmed_action'], confirmed_action_uri)
+        self.assertEqual(r.context['cancel_action'], self.edit_url)
+        action_params = json.loads(r.context['action_params'])
+        self.assertEqual(action_params['view_delete'], ["Delete"])
+        self.assertEqual(action_params['viewlist'],    ["view1"])
         return
 
     def test_post_migrate(self):

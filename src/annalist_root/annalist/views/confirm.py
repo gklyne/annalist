@@ -71,8 +71,8 @@ class ConfirmView(AnnalistGenericView):
     def render_form(request,
             action_description="Are you sure you want to do that?", # message describing requested action
             action_params={},
-            confirmed_action_uri="/",    # URI to to POST to complete action
-            cancel_action_uri="/",      # URI to dispatch to cancel action
+            confirmed_action_uri="/",       # URI to to POST to complete action
+            cancel_action_uri="/",          # URI to dispatch to cancel action
             title=None):
         """
         Render form that requests a user to confirm an action to be performed and,

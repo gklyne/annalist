@@ -63,7 +63,7 @@ NO_ENTITY_FOR_EDIT          = "No data record selected to edit"
 NO_ENTITY_FOR_DELETE        = "No data record selected to delete"
 CANNOT_DELETE_ENTITY        = "Entity %(id)s of type %(type_id)s not found or cannot be deleted"
 SITE_ENTITY_FOR_DELETE      = "Cannot remove site built-in entity %(id)s of type %(type_id)s, or entity not found"
-TYPE_VALUES_FOR_DELETE      = "Cannot remove type %(type_id)s with existing values"
+TYPE_VALUES_FOR_DELETE      = "Cannot remove type %(id)s with existing values"
 REMOVE_ENTITY_DATA          = "Remove record %(id)s of type %(type_id)s in collection %(coll_id)s"
 
 NO_TYPE_FOR_COPY            = "No record type selected to copy"
