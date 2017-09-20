@@ -33,7 +33,6 @@ from annalist.models.sitedata               import SiteData
 from annalist.models.collection             import Collection
 from annalist.models.annalistuser           import AnnalistUser
 
-from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
 from AnnalistTestCase       import AnnalistTestCase
@@ -547,58 +546,6 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
         self._check_annalist_user_values("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])
-        return
-
-#   -----------------------------------------------------------------------------
-#
-#   ConfirmAnnalistUserDeleteTests tests for completion of record deletion
-#
-#   -----------------------------------------------------------------------------
-
-class ConfirmAnnalistUserDeleteTests(AnnalistTestCase):
-    """
-    Tests for Annalist user deletion on response to confirmation form
-    """
-
-    def setUp(self):
-        init_annalist_test_site()
-        self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        self.user.save()
-        self.client = Client(HTTP_HOST=TestHost)
-        loggedin = self.client.login(username="testuser", password="testpassword")
-        self.assertTrue(loggedin)
-        return
-
-    def tearDown(self):
-        resetSitedata()
-        return
-
-    def test_DeleteConfirmedViewTest(self):
-        self.assertEqual(AnnalistUserDeleteConfirmedView.__name__, "AnnalistUserDeleteConfirmedView", "Check AnnalistUserDeleteConfirmedView class name")
-        return
-
-    # test disabled - this functionality is handled by generic entity delete, and tested accordingly
-    #                 (there is no special-case logic used, e.g. for the configure page.)
-    # @unittest.skip("@@TODO: Delete user not yet implemented")
-    def no_test_post_confirmed_remove_user(self):
-        t = AnnalistUser.create(self.testcoll, "deleteuser", annalistuser_create_values("deleteuser"))
-        self.assertTrue(AnnalistUser.exists(self.testcoll, "deleteuser"))
-        # Submit positive confirmation
-        u = TestHostUri + annalistuser_edit_url("delete", "testcoll")
-        f = annalistuser_delete_confirm_form_data("deleteuser")
-        r = self.client.post(u, f)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertMatch(r['location'],    
-            "^"+TestHostUri+
-            collection_edit_url("testcoll")+
-            r"\?info_head=.*&info_message=.*deleteuser.*testcoll.*$"
-            )
-        # Confirm deletion
-        self.assertFalse(AnnalistUser.exists(self.testcoll, "deleteuser"))
         return
 
 # End.

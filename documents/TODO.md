@@ -18,14 +18,12 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Version 0.5.5, towards 0.5.6
 
-- [ ] BUG: show warning when accessing collection with missing parent.
-    - eliminate AnnalistUserDeleteConfirmedView - I think it's unused
-    - note that, in some cases, continuation URLs used have changed
+- [x] BUG: show warning when accessing collection with missing parent.
+    - The implementation of this fix has involved a significant refactoring of error reporting and entity delete confirmation logic, to use more common code in DisplayInfo.
+    - In some cases, continuation URLs used have changed
 - [ ] BUG: define repeat field task should use same property URI (without suffix)
 - [x] Add Entity_uri field definition to site data.
 - [ ] Make labels for enumeration/choice render types more usefully descriptive.
-- [ ] New render type for URI reference (or fragment) relative to URI specified in another entity.
-    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
@@ -52,6 +50,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] BUG: delete list view while viewing that list results in error message.
     - Maybe just improve error message.
+- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
+    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages
