@@ -993,7 +993,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                           "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_default_view_type",    ["Coll_default_view_type", 
                                                                           "Display text",   "annal:Text"             ] ]
-            , [ "_field/Coll_parent",               ["Coll_parent",       "Optional entity choice",  
+            , [ "_field/Coll_parent",               ["Coll_parent",       "Optional reference to selected entity",  
                                                                                             "annal:EntityRef"        ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 
                                                                           "Display text",   "annal:Text"             ] ]
@@ -1011,7 +1011,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
                                                                                             "annal:Field_list"       ] ]
-            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
+            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional reference to selected or new entity", 
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_help",                ["Field_help",        "Markdown rich text",  "annal:Richtext"    ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
@@ -1019,7 +1020,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_placeholder",         ["Field_placeholder", "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_placement",           ["Field_placement",   "Position/size",  "annal:Placement"        ] ]
             , [ "_field/Field_property",            ["Field_property",    "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_render_type",         ["Field_render_type", "Entity choice",  "annal:EntityRef"        ] ]
+            , [ "_field/Field_render_type",         ["Field_render_type", "Reference to selected entity",  
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"            ] ]
             , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"         ] ]
             , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",     "annal:Text"             ] ]
@@ -1028,11 +1030,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_subfield_property",   ["Field_subfield_property",
                                                                           "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
-                                                                          "Optional entity ref", 
+                                                                          "Optional reference to selected or new entity", 
                                                                                             "annal:Field"            ] ]
             , [ "_field/Field_tooltip",             ["Field_tooltip",     "Multiline text", "annal:Longtext"         ] ]
-            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
-            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
+            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional reference to selected or new entity", 
+                                                                                            "annal:EntityRef"        ] ]
+            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Reference to selected entity",  
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Group_comment",             ["Group_comment"             ] ]
             , [ "_field/Group_field_placement",     ["Group_field_placement"     ] ]

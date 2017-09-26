@@ -23,7 +23,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - In some cases, continuation URLs used have changed
 - [x] BUG: define repeat field task should use same property URI (without suffix)
 - [x] Add Entity_uri field definition to site data.
-- [ ] Make labels for enumeration/choice render types more usefully descriptive.
+- [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)

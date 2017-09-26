@@ -518,7 +518,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Coll_parent/%(cont)s">Coll_parent</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">
+                      Optional reference to selected entity
+                    </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:EntityRef</span>
