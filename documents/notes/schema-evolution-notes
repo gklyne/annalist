@@ -84,7 +84,29 @@ recognized in place of the new one.  When editing a form that uses the new
 property URIs, thenew URIs are added when the form is saved,and the old ones 
 remain as they were.
 
-## Local entity referenmces and permanent entity URIs
+## Local entity references and permanent entity URIs
 
 These should be interchageable, with the permanent URI stored for referencing local entities where available.  This will mean that enumerated value displays must be able to reference entities using permanent URIs (annal:uri) as well as local references.
 
+## Change property URI used for both list/collection values and list/collection members
+
+Example:
+
+    "annal:member": [
+        {
+          "annal:member": "Journal/00000001"
+        }
+
+to be converted to:
+
+    "coll:list_property":
+        {
+          "coll:member_property": "Journal/00000001"
+        }
+
+or:
+
+    "coll:list_property":
+        {
+          "@id": "Journal/00000001"
+        }

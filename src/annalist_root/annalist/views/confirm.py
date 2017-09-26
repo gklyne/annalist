@@ -100,7 +100,7 @@ class ConfirmView(AnnalistGenericView):
 
         Creates a new request object with the original action POST data, and dispatches
         to the appropriate completion view function.  This function should, in turn,
-        return a redirect to an appripriate continuation display.
+        return a redirect to an appropriate continuation display.
 
         If the operation is canceled, then this function returns an HTTP redirect to 
         the "cancel_action" continuation URI.

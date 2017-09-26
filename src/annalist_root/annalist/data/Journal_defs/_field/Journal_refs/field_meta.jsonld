@@ -27,7 +27,7 @@
   "annal:field_value_type": "coll:Journal",
   "annal:id": "Journal_refs",
   "annal:placeholder": "(references to journal entries)",
-  "annal:property_uri": "annal:member",
+  "annal:property_uri": "coll:journal_refs",
   "annal:repeat_label_add": "Add journal reference",
   "annal:repeat_label_delete": "Remove journal reference",
   "annal:tooltip": "References to journal entries",

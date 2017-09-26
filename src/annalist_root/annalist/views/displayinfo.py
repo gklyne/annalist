@@ -645,7 +645,7 @@ class DisplayInfo(object):
         The request for confirmation is handled via class "ConfirmView" (confirm.py),
         and actual deletion and continuation is performed via the view specified by
         "complete_action_view", which is typically realized by a subclass of 
-                                "EntityDeleteConfirmedBaseView" (entitydeletebase.py)
+        "EntityDeleteConfirmedBaseView" (entitydeletebase.py)
 
         entity_type_id          is the type id of the entity to be deleted.
         entity_id               is the entity id of the entity to be deleted.
@@ -693,7 +693,7 @@ class DisplayInfo(object):
             #     "entity_coll_id %s, type_id %s, entity_id %s, confirmed_action_uri %s"%
             #     (entity_coll_id, entity_type_id, entity_id, confirmed_action_uri)
             #     )
-            delete_params = dict_querydict(
+            delete_params = (
                 { form_action_field:    ["Delete"]
                 , form_value_field:     [entity_id]
                 , "completion_url":     [self.get_continuation_here()]
@@ -701,13 +701,13 @@ class DisplayInfo(object):
                 })
             curi = self.get_continuation_url()
             if curi:
-                dict_querydict["continuation_url"] = [curi]
+                delete_params["continuation_url"] = [curi]
             return (
                 self.check_authorization("delete")
                 or
                 ConfirmView.render_form(self.view.request,
                     action_description=     _get_message("confirm_completion"),
-                    action_params=          delete_params,
+                    action_params=          dict_querydict(delete_params),
                     confirmed_action_uri=   complete_action_uri,
                     cancel_action_uri=      self.get_continuation_here(),
                     title=                  self.view.site_data()["title"]

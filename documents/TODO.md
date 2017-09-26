@@ -22,9 +22,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - The implementation of this fix has involved a significant refactoring of error reporting and entity delete confirmation logic, to use more common code in DisplayInfo.
     - In some cases, continuation URLs used have changed
 - [x] BUG: define repeat field task should use same property URI (without suffix)
+- [x] BUG: deleting field definition from "Smoke" collection causes internal errors
+- [ ] BUG: Customize window doesn't return to previous URL?
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+    - Quick fix: define coll: namespace in Resource_defs.  Journal_defs will inherit.
+    - Any change of prefix name will require aliasing or migrating old property names and types.
+    - Option to generate coll: as a local URI ... but this would conflict with URI scheme name syntax.
+    - CURIE spec allows leading "_": suggest auto-generating prefix definitions in context for: _host, _site, _coll, _base (similar to $" substitutions for Markdown").
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
@@ -36,6 +42,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
+- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+    - Error reading context file that itself contains errors, caused by definition errors?
+    - This seems to be the problem.  Need to look into improving context-generation diagnostics.
 - [ ] update pip to latest version in python environment (for continued testing)
 - [ ] update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
