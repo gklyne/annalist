@@ -249,38 +249,6 @@ class AnnalistGenericView(ContentNegotiationView):
                 )
         return None
 
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    def _unused_check_value_supplied(self, val, msg, continuation_url=None, testfn=(lambda v: v)):
-        """
-        Test if a supplied value is specified (not None) and passes a supplied test,
-        returning a URI to display a supplied error message if the test fails.
-
-        NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for the currently viewed page.
-
-        val                 value that is required to be not None and not empty or False
-        msg                 message to display if the value evaluated to False
-        continuation_url    a continuation URL for the resdiplayed page.
-        testfn              is a function to test the value (if not None).  If not specified, 
-                            the default test checks that the value does not evaluate as false
-                            (e.g. is a non-empty string, list or collection).
-
-        returns a URI string for use with HttpResponseRedirect to redisplay the 
-        current page with the supplied message, or None if the value passes the test.
-        """
-        redirect_uri = None
-        continuation_url_dict = {}
-        if continuation_url:
-            continuation_url_dict = {'continuation_url': continuation_url}
-        if (val is None) or not testfn(val):
-            redirect_uri = uri_with_params(
-                self.get_request_path(), 
-                self.error_params(msg),
-                continuation_url_dict
-                )
-        return redirect_uri
-    #@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
     # Authentication and authorization
     def authenticate(self, continuation_url):
         """

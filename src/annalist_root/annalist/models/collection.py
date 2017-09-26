@@ -642,13 +642,15 @@ class Collection(Entity):
         # this is for humane purposes only, and is not technically critical.
         errs              = []
         context           = OrderedDict(
-            { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
-            , ANNAL.CURIE.type:         { "@type":      "@id"   }
+            # { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
+            { ANNAL.CURIE.type:         { "@type":      "@id"   }
             , ANNAL.CURIE.entity_list:  { "@container": "@list" }
             })
         # Collection-local URI prefix
         context.update(
-            { 'coll':           self._entityviewurl
+            { '_site':          self.get_site().get_url()
+            , '_coll':          self.get_url()
+            , '_base':          self.get_url() + layout.COLL_BASE_REF
             })
         # Common import/upload fields
         context.update(

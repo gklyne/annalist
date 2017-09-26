@@ -23,14 +23,16 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - In some cases, continuation URLs used have changed
 - [x] BUG: define repeat field task should use same property URI (without suffix)
 - [x] BUG: deleting field definition from "Smoke" collection causes internal errors
-- [ ] BUG: Customize window doesn't return to previous URL?
+- [x] BUG: Customize window doesn't return to previous URL after data migration.
+- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors that in turn caused Turtle output generation server errors (500).
+    - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
+    - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
-    - Quick fix: define coll: namespace in Resource_defs.  Journal_defs will inherit.
+    - Quick fix: define coll: namespace in Resource_defs.  Journal_defs will inherit.  Already do this, but URI fixed.
     - Any change of prefix name will require aliasing or migrating old property names and types.
-    - Option to generate coll: as a local URI ... but this would conflict with URI scheme name syntax.
-    - CURIE spec allows leading "_": suggest auto-generating prefix definitions in context for: _host, _site, _coll, _base (similar to $" substitutions for Markdown").
+    - CURIE spec allows leading "_": auto-generate prefix definitions in context for: _host, _site, _coll, _base (similar to $" substitutions for Markdown").  Migration of data will be a future exercise.
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).

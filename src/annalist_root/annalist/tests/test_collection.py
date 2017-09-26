@@ -635,8 +635,12 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        completeduri = self.edit_url+r"\?info_head=.*\&info_message=.*"
-        self.assertMatch(r['location'], TestHostUri+completeduri)
+        l1 = TestHostUri+self.edit_url
+        l2 = "info_head=Action%20completed"
+        l3 = "info_message=Migrated%20data%20for%20collection%20coll1"
+        self.assertIn(l1, r['location'])
+        self.assertIn(l2, r['location'])
+        self.assertIn(l3, r['location'])
         return
 
     def test_post_metadata(self):

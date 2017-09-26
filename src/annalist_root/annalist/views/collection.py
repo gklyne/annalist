@@ -28,6 +28,11 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.collectiondata import migrate_coll_data, migrate_coll_config_dirs
 
 from annalist.views.uri_builder     import uri_with_params
+from annalist.views.uri_builder     import (
+    uri_param_dict,
+    scope_params, continuation_params,
+    uri_params, uri_with_params,
+    )
 from annalist.views.displayinfo     import DisplayInfo
 from annalist.views.generic         import AnnalistGenericView
 from annalist.views.confirm         import ConfirmView
@@ -167,8 +172,11 @@ class CollectionEditView(AnnalistGenericView):
                 log.error(msg)
                 http_response = self.error(dict(self.error500values(),message=msg))
             else:
+                # Redisplay current page with completion message
+                viewuri = self.get_request_path()
                 http_response = self.redirect_info(
-                    self.get_request_path(), 
+                    self.get_request_path(),
+                    view_params=continuation_params(uri_param_dict(viewuri)),
                     info_message=message.MIGRATED_COLLECTION_DATA%msg_vals
                     )
             return http_response
