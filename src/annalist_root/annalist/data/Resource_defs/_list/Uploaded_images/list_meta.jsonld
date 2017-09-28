@@ -13,7 +13,7 @@
   "annal:default_view": "_view/Default_view",
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Uploaded_images",
-  "annal:list_entity_selector": "\"coll:Uploaded_image\" in [@type]",
+  "annal:list_entity_selector": "\"resource:Uploaded_image\" in [@type]",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -24,7 +24,7 @@
       "annal:field_placement": "small:3,9"
     }
   ],
-  "annal:record_type": "coll:Uploaded_image",
+  "annal:record_type": "resource:Uploaded_image",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of uploaded images\r\n\r\nPresents a list of images that have been uploaded into the current collection.",

@@ -7,7 +7,7 @@
 , "annal:type":                 "annal:Field"
 , "rdfs:label":                 "Field alias name"
 , "rdfs:comment": 
-    "# Field alias name\r\n\r\nAn alias property URI that accesses the value at some other property URI (see field [Field alias value]($BASE:_field/Type_alias_source))"
+    "# Field alias name\r\n\r\nAn alias property URI that accesses the value at some other source property URI (see field [Field alias value]($BASE:_field/Type_alias_source))"
 , "annal:field_render_type":    "_enum_render_type/Identifier"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Identifier"

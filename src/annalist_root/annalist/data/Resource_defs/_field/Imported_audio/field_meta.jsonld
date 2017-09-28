@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Audio",
   "annal:id": "Imported_audio",
   "annal:placeholder": "(URL of audio to import)",
-  "annal:property_uri": "coll:imported_audio",
+  "annal:property_uri": "resource:imported_audio",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
+  "annal:tooltip": "Field referring to an audio resource in an 'Imported audio clip' (resource:Imported_audio) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Imported audio clip\r\n\r\nField referring to an audio resource in an 'Imported audio clip' (coll:Imported_audio) entity.",
+  "rdfs:comment": "# Imported audio clip\r\n\r\nField referring to an audio resource in an 'Imported audio clip' (resource:Imported_audio) entity.",
   "rdfs:label": "Imported audio clip"
 }

@@ -648,27 +648,27 @@ class Collection(Entity):
             })
         # Collection-local URI prefix
         context.update(
-            { '_site':          self.get_site().get_url()
-            , '_coll':          self.get_url()
-            , '_base':          self.get_url() + layout.COLL_BASE_REF
+            { '_site_':         self.get_site().get_url()
+            , '_coll_':         self.get_url()
+            , '_base_':         self.get_url() + layout.COLL_BASE_REF
             })
         # Common import/upload fields
         context.update(
-            { 'resource_name': "annal:resource_name"
-            , 'resource_type': "annal:resource_type"
+            { 'resource_name':  "annal:resource_name"
+            , 'resource_type':  "annal:resource_type"
             })
         # upload-file fields
         context.update(
-            { 'upload_name':   "annal:upload_name"
-            , 'uploaded_file': "annal:uploaded_file"
-            , 'uploaded_size': "annal:uploaded_size"
+            { 'upload_name':    "annal:upload_name"
+            , 'uploaded_file':  "annal:uploaded_file"
+            , 'uploaded_size':  "annal:uploaded_size"
             })
         # import-resource fields
         context.update(
-            { 'import_name':   "annal:import_name"
+            { 'import_name':    "annal:import_name"
             , 'import_url':    
-              { "@id":   "annal:import_url"
-              , "@type": "@id"
+              { "@id":          "annal:import_url"
+              , "@type":        "@id"
               }
             })
         # Scan vocabs, generate prefix data

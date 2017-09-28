@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Image",
   "annal:id": "Linked_image",
   "annal:placeholder": "(Enter image URL)",
-  "annal:property_uri": "coll:linked_image",
+  "annal:property_uri": "resource:linked_image",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an image resource in a 'Linked image' (coll:Linked_image) entity.",
+  "annal:tooltip": "Field referring to an image resource in a 'Linked image' (resource:Linked_image) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Linked image\r\n\r\nField referring to an image resource in a 'Linked image' (coll:Linked_image) entity.",
+  "rdfs:comment": "# Linked image\r\n\r\nField referring to an image resource in a 'Linked image' (resource:Linked_image) entity.",
   "rdfs:label": "Linked image"
 }

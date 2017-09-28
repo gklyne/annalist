@@ -16,7 +16,7 @@
   "annal:type_id": "_type",
   "annal:type_list": "_list/Included_audio",
   "annal:type_view": "_view/Included_audio",
-  "annal:uri": "coll:Included_audio",
+  "annal:uri": "resource:Included_audio",
   "rdfs:comment": "# Included audio clip\r\n\r\nReference to included (uploaded, imported or linked) audio clip.\r\n\r\nThis type subsumes uploaded, imported and linked audio clips, and can be used in a view definition to present any or all of these.  For a list of audio clips that may be any of these, use field [Included audio clips]($BASE:_field/Included_audio_r/) in a view definition.\r\n",
   "rdfs:label": "Included audio clip (internal type)"
 }

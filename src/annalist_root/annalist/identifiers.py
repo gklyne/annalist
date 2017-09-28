@@ -139,7 +139,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "View_field", "List_field", "Group_field"
     # Value types
     , "Text", "Longtext", "Richtext", "EntityRef", "Identifier"
-    , "Placement", "Image", "Audio", "Vocabulary"
+    , "Placement", "Image", "Audio", "Video", "Vocabulary"
     , "Resource"
     , "Default_type", "Unknown_type"
     # Properties in list JSON

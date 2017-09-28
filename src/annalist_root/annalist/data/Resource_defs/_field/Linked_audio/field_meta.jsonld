@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Audio",
   "annal:id": "Linked_audio",
   "annal:placeholder": "(Enter audio clip URL)",
-  "annal:property_uri": "coll:linked_audio",
+  "annal:property_uri": "resource:linked_audio",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an audio resource in a 'Linked audio clip' (coll:Linked_audio) entity.",
+  "annal:tooltip": "Field referring to an audio resource in a 'Linked audio clip' (resource:Linked_audio) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Linked audio clip\r\n\r\nField referring to an audio resource in a 'Linked audio clip' (coll:Linked_audio) entity.",
+  "rdfs:comment": "# Linked audio clip\r\n\r\nField referring to an audio resource in a 'Linked audio clip' (resource:Linked_audio) entity.",
   "rdfs:label": "Linked audio clip"
 }

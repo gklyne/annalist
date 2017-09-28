@@ -29,18 +29,18 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
-- [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
-    - Quick fix: define coll: namespace in Resource_defs.  Journal_defs will inherit.  Already do this, but URI fixed.
-    - Any change of prefix name will require aliasing or migrating old property names and types.
-    - CURIE spec allows leading "_": auto-generate prefix definitions in context for: _host, _site, _coll, _base (similar to $" substitutions for Markdown").  Migration of data will be a future exercise.
+- [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+    - propose: `resource:...`, `journal:...`
+    - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
+- [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
+- [ ] Login sequence from authz error page does not always return to original page viewed
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+- [ ] Provide renderer that shows calculated supertype transitiuve closure?
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
-- [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
-- [ ] Login sequence from authz error page does not always return to original page viewed
 
 (Sub-release?)
 

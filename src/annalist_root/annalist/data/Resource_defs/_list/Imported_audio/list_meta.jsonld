@@ -13,7 +13,7 @@
   "annal:default_view": "_view/Imported_audio",
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Imported_audio",
-  "annal:list_entity_selector": "'coll:Imported_audio' in [@type]",
+  "annal:list_entity_selector": "'resource:Imported_audio' in [@type]",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -28,7 +28,7 @@
       "annal:field_placement": "small:6,6"
     }
   ],
-  "annal:record_type": "coll:Imported_audio",
+  "annal:record_type": "resource:Imported_audio",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of imported audio clips\r\n\r\nPresents a list of entities that contain audio clips imported from the web.",

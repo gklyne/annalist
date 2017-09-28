@@ -20,7 +20,7 @@
   "annal:field_value_type": "rdfs:Resource",
   "annal:id": "Web_resource",
   "annal:placeholder": "(link to web resource)",
-  "annal:property_uri": "coll:resource",
+  "annal:property_uri": "resource:resource",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
   "annal:tooltip": "Web resource URL (link)",

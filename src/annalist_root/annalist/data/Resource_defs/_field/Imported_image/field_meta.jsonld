@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Image",
   "annal:id": "Imported_image",
   "annal:placeholder": "(URL of image to import)",
-  "annal:property_uri": "coll:imported_image",
+  "annal:property_uri": "resource:imported_image",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an image resource in an 'Imported image' (coll:Imported_image) entity.",
+  "annal:tooltip": "Field referring to an image resource in an 'Imported image' (resource:Imported_image) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Imported image\r\n\r\nField referring to an image resource in an 'Imported image' (coll:Imported_image) entity.",
+  "rdfs:comment": "# Imported image\r\n\r\nField referring to an image resource in an 'Imported image' (resource:Imported_image) entity.",
   "rdfs:label": "Imported image"
 }

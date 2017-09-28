@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Image",
   "annal:id": "Uploaded_image",
   "annal:placeholder": "(Select image to upload)",
-  "annal:property_uri": "coll:uploaded_image",
+  "annal:property_uri": "resource:uploaded_image",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an image resource in an 'Uploaded image' (coll:Uploaded_image) entity.",
+  "annal:tooltip": "Field referring to an image resource in an 'Uploaded image' (resource:Uploaded_image) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Uploaded image\r\n\r\nField referring to an image resource in an 'Uploaded image' (coll:Uploaded_image) entity.",
+  "rdfs:comment": "# Uploaded image\r\n\r\nField referring to an image resource in an 'Uploaded image' (resource:Uploaded_image) entity.",
   "rdfs:label": "Uploaded image"
 }
