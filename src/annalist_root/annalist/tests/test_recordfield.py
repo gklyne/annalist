@@ -827,7 +827,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow11h = """
             <div class="small-12 columns" title="%(tooltip11)s">
-              <div class="row">
+              <div class="grouprow row">
                 <div class="%(group_label_classes)s">
                   <span>Subfields</span>
                 </div>
@@ -887,7 +887,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
         formrow11t = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="grouprow row">
                 <div class="small-12 medium-2 columns">
                   &nbsp;
                 </div>

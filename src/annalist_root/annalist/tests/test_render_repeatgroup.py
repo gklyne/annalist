@@ -301,7 +301,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         formrow2 = """
-            <div class="row">
+            <div class="grouprow row">
               <div class="%(group_label_classes)s">
                 <span>Test repeat field label</span>
               </div>

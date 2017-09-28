@@ -15,6 +15,8 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 
+See also: https://www.divio.com/en/blog/documentation/
+
 
 # Version 0.5.5, towards 0.5.6
 
@@ -32,7 +34,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
     - propose: `resource:...`, `journal:...`
     - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
-- [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
+- [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
 - [ ] Login sequence from authz error page does not always return to original page viewed
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)

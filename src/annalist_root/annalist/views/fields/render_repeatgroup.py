@@ -121,7 +121,7 @@ view_grouprow = (
         """
         <!-- views.fields.render_repeatgroup.view_grouprow -->
         <div class="small-12 columns">
-          <div class="row">
+          <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
             </div>
@@ -143,7 +143,7 @@ view_grouprow = (
         """
         <!-- views.fields.render_repeatgroup.view_grouprow (empty list) -->
         <div class="small-12 columns">
-          <div class="row">
+          <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
             </div>
@@ -156,7 +156,7 @@ view_grouprow = (
     , 'body':
         """
         <div class="small-12 columns">
-          <div class="row">
+          <div class="grouprow row">
             <div class="small-12 medium-2 columns">
               &nbsp;
             </div>
@@ -184,7 +184,7 @@ edit_grouprow = (
         """
         <!-- views.fields.render_repeatgroup.edit_grouprow -->
         <div class="small-12 columns"{{field.field_tooltip_attr|safe}}>
-          <div class="row">
+          <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
               <span>{{field.field_label}}</span>
             </div>
@@ -208,7 +208,7 @@ edit_grouprow = (
     , 'body':
         """
         <div class="small-12 columns">
-          <div class="row">
+          <div class="grouprow row">
             <div class="small-12 medium-2 columns hide-for-small-only">
               &nbsp;
             </div>
@@ -234,7 +234,7 @@ edit_grouprow = (
     , 'tail':
         """
         <div class="small-12 columns">
-          <div class="row">
+          <div class="grouprow row">
             <div class="small-12 medium-2 columns">
               &nbsp;
             </div>
