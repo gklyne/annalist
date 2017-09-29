@@ -245,4 +245,23 @@ FIELD_REF_LABEL             = "%(field_label)s (ref)"
 FIELD_REF_COMMENT           = "%(field_label)s (ref)"
 FIELD_REF_PLACEHOLDER       = "(Reference to %(field_label)s field)"
 
+# Other strings
+
+COLL_README_HEAD            = (
+    "# %(label)s\n\r"+
+    "\n\r"+
+    ""
+    )
+
+COLL_README                 = (
+    "# Annalist collection `%(id)s`\n\r"+
+    "\n\r"+
+    "This directory contains an [Annalist](http://annalist.net) data collection.\n\r"+
+    "\n\r"+
+    "%(heading)s"+
+    "%(comment)s"+
+    "\n\r"+
+    # "\n\r"+
+    "")
+
 # End.

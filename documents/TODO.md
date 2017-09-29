@@ -37,6 +37,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - propose: `resource:...`, `journal:...`
     - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
 - [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
+- [x] Generate README for collection incorporating description from coll-meta (as part of context generation?).
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
@@ -44,7 +45,6 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
-- [ ] Generate README for collection incorporating description from coll-meta (as part of context generation?).
 
 (Sub-release?)
 

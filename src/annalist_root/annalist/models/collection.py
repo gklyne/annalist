@@ -60,8 +60,7 @@ class Collection(Entity):
     _entityview     = layout.SITE_COLL_VIEW
     _entityroot     = layout.SITE_COLL_PATH
     _entitybase     = layout.COLL_BASE_REF
-    # _entityfile     = layout.COLL_META_REF # @@@TODO: wrong now @@@
-    _entityfile     = layout.COLL_META_FILE # @@ try to be consistent; breaks stuff
+    _entityfile     = layout.COLL_META_FILE
     _entityref      = layout.META_COLL_REF
     _contextbase    = layout.META_COLL_BASE_REF
     _contextref     = layout.COLL_CONTEXT_FILE
@@ -630,6 +629,23 @@ class Collection(Entity):
                 }, 
                 context_io, indent=2, separators=(',', ': '), sort_keys=True
                 )
+        # Create collection README.md for human context...
+        if self._values:
+            README_vals = (
+                { "id":         self.get_id()
+                , "label":      self._values.get("rdfs:label", self.get_id())
+                , "heading":    ""
+                , "comment":    self._values.get("rdfs:comment", "")
+                })
+            if not README_vals["comment"].startswith("#"):
+                README_vals["heading"] = message.COLL_README_HEAD%README_vals
+            README_text = message.COLL_README%README_vals
+            with self._metaobj(
+                    layout.META_COLL_REF,
+                    "README.md",
+                    "wt"
+                    ) as readme_io:
+                readme_io.write(README_text)
         return errs
 
     def get_coll_jsonld_context(self):
