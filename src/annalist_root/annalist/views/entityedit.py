@@ -582,7 +582,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                #@@
+                # auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                #@@
+                auth_check = viewinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
                 viewinfo.collection.set_default_view(
@@ -613,7 +616,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             if not responseinfo.has_http_response():
                 responseinfo.set_http_response(
-                    self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                    viewinfo.check_authorization("config")
+                    #@@
+                    # self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                    #@@
                     )
             if not responseinfo.has_http_response():
                 cont_here = viewinfo.get_continuation_here(

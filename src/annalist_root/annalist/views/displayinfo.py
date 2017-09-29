@@ -507,7 +507,10 @@ class DisplayInfo(object):
             # type-based map was provided.
             self.http_response = (
                 self.http_response or 
-                self.view.form_action_auth(action, self.perm_coll, permissions_map)
+                self.view.form_action_auth(
+                    action, self.perm_coll, permissions_map,
+                    continuation_url=self.get_continuation_here()
+                    )
                 )
         if ( (not self.http_response) and 
              (self.orig_coll_id) and 
@@ -524,7 +527,9 @@ class DisplayInfo(object):
             else:
                 orig_permissions_map = SITE_PERMISSIONS
             self.http_response = self.view.form_action_auth("view", 
-                self.orig_coll, orig_permissions_map)
+                self.orig_coll, orig_permissions_map,
+                continuation_url=self.get_continuation_here()
+                )
         return self.http_response
 
     def add_info_message(self, message):
@@ -909,11 +914,13 @@ class DisplayInfo(object):
         Return continuation URL back to the current view.
         """
         # @@TODO: consider merging logic from generic.py, and eliminating method there
-        return self.view.continuation_here(
+        continuation_here = self.view.continuation_here(
             request_dict=self.request_dict,
             default_cont=self.get_continuation_url(),
             base_here=base_here
             )
+        # log.info("DisplayInfo.get_continuation_here: %s"%(continuation_here))
+        return continuation_here
 
     def update_continuation_url(self, 
         old_type_id=None, new_type_id=None, 

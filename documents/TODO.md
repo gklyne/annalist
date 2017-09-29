@@ -26,16 +26,17 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] BUG: define repeat field task should use same property URI (without suffix)
 - [x] BUG: deleting field definition from "Smoke" collection causes internal errors
 - [x] BUG: Customize window doesn't return to previous URL after data migration.
-- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors that in turn caused Turtle output generation server errors (500).
+- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors
+    - These in turn caused Turtle output generation server errors (500).
     - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
     - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
+- [x] BUG: Login sequence from authz error page does not always return to original page viewed
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
     - propose: `resource:...`, `journal:...`
     - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
 - [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
-- [ ] Login sequence from authz error page does not always return to original page viewed
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
@@ -43,14 +44,15 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+- [ ] Generate README for collection incorporating description from coll-meta (as part of context generation?).
 
 (Sub-release?)
 
 - [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
-    - Error reading context file that itself contains errors, caused by definition errors?
-    - This seems to be the problem.  Need to look into improving context-generation diagnostics.
-- [ ] update pip to latest version in python environment (for continued testing)
-- [ ] update Django version used to latest version designated for long term support (1.8?)
+    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
+    - Need to look into improving context-generation diagnostics.
+- [ ] Update pip to latest version in python environment (for continued testing)
+- [ ] Update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.

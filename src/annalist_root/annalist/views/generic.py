@@ -41,7 +41,7 @@ from annalist.models.annalistuser   import (
     unknown_user_id, unknown_user_uri
     )
 
-from annalist.views.uri_builder     import uri_with_params, continuation_params
+from annalist.views.uri_builder     import uri_with_params, continuation_params, uri_params
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -86,15 +86,28 @@ class AnnalistGenericView(ContentNegotiationView):
                       self.site(host=host)._dir_path_uri()[1])
         return self._site_data
 
-    def error(self, values):
+    def error(self, values, continuation_url=None):
         """
         Construct HTTP error response.
 
         This is an application-specific override of a method defined 
         in ContentNegotiationView.
+
+        values      is a dictionary of values to be passed as a context to the
+                    error display page.  Typically, this contains more details
+                    about the error (cf. ContentNegotiationView.errorvalues)
+        continutation_url
+                    is a URL to (re)display when any error is dismissed or has 
+                    otherwise been handled.
         """
+        # log.info(
+        #     "AnnalistGenericView.error: values %r, continuation_url %s"%(values, continuation_url)
+        #     )
         template = loader.get_template('annalist_error.html')
         context  = RequestContext(self.request, values)
+        if continuation_url:
+            context['continuation_url']   = continuation_url
+            context['continuation_param'] = uri_params({ 'continuation_url': continuation_url })
         return HttpResponse(template.render(context), status=values['status'], reason=values['reason'])
 
     def view_uri(self, viewname, **kwargs):
@@ -359,7 +372,7 @@ class AnnalistGenericView(ContentNegotiationView):
         uri_param_val("error_message", "error_head", message.INPUT_ERROR) 
         return messagedata
 
-    def authorize(self, scope, collection):
+    def authorize(self, scope, collection, continuation_url=None):
         """
         Return None if user is authorized to perform the requested operation,
         otherwise appropriate 401 Authorization Required or 403 Forbidden response.
@@ -369,18 +382,21 @@ class AnnalistGenericView(ContentNegotiationView):
                     e.g. "VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", ...
         collection  is the collection to which the requested action is directed,
                     or None if the test is against site-level permissions.
+        continutation_url
+                    is a URL to (re)display when any error is dismissed or has 
+                    otherwise been handled.
         """
         user_id, user_uri = self.get_user_identity()
         coll_id = collection.get_id() if collection else "(site)"
         if not util.valid_id(user_id):
             log.warning("Invalid user_id %s, URI %s"%(user_id, user_uri))
             message="Bad request to %(request_uri)s: invalid user_id: '"+user_id+"'"
-            return self.error(self.error400values(message=message))
+            return self.error(self.error400values(message=message), continuation_url=continuation_url)
         user_perms = self.get_user_permissions(collection, user_id, user_uri)
         if not user_perms:
             log.warning("No user permissions found for user_id %s, URI %s"%(user_id, user_uri))
             log.warning("".join(traceback.format_stack()))
-            return self.error(self.error403values(scope=scope))
+            return self.error(self.error403values(scope=scope), continuation_url=continuation_url)
         # log.info("Authorize %s in %s, %s, %r"%(user_id, coll_id, scope, user_perms[ANNAL.CURIE.user_permission]))
         # user_perms is an AnnalistUser object
         coll_id = collection.get_id() if collection else "(No coll)"
@@ -389,10 +405,10 @@ class AnnalistGenericView(ContentNegotiationView):
                 err = self.error401values(scope=scope)
             else:
                 err = self.error403values(scope=scope)
-            return self.error(err)
+            return self.error(err, continuation_url=continuation_url)
         return None
 
-    def form_action_auth(self, action, auth_collection, perm_required):
+    def form_action_auth(self, action, auth_collection, perm_required, continuation_url=None):
         """
         Check that the requested form action is authorized for the current user.
 
@@ -404,6 +420,9 @@ class AnnalistGenericView(ContentNegotiationView):
                         permissions required to perform the action.  The structure
                         is similar to that of 'action_scope' (below) that provides
                         a fallback mapping.
+        continutation_url
+                        is a URL to (re)display when any error is dismissed or has 
+                        otherwise been handled.
 
         Returns None if the desired action is authorized for the current user, otherwise
         an HTTP response value to return an error condition.
@@ -414,7 +433,7 @@ class AnnalistGenericView(ContentNegotiationView):
             log.warning("form_action_auth: unknown action: %s"%(action))
             log.warning("perm_required: %r"%(perm_required,))
             auth_scope = "UNKNOWN"
-        return self.authorize(auth_scope, auth_collection)
+        return self.authorize(auth_scope, auth_collection, continuation_url=continuation_url)
 
     # Entity access
 

@@ -329,7 +329,9 @@ class EntityGenericListView(AnnalistGenericView):
                     confirmed_deletion_uri
                     )
             if "default_view" in request.POST:
+                #@@
                 # auth_check = self.form_action_auth("config", listinfo.collection, CONFIG_PERMISSIONS)
+                #@@
                 auth_check = listinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
