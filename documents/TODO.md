@@ -41,7 +41,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Improve performance of mechanisms used for finding sub/superclasses
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
 - [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
-- [ ] Provide renderer that shows calculated supertype transitiuve closure?
+- [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
