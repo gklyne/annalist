@@ -38,7 +38,7 @@ class RecordField(EntityData):
         """
         Initialize a new RecordField object, without metadta (yet).
 
-        parent      is the parent collection to which the field belons.
+        parent      is the parent collection to which the field belongs.
         field_id    the local identifier for the record field
         """
         # assert altparent, "RecordField instantiated with no altparent"

@@ -37,7 +37,7 @@ class RecordView(EntityData):
         """
         Initialize a new RecordView object, without metadta (yet).
 
-        parent      is the parent entity from which the view is descended.
+        parent      is the parent collection in which the view is defined.
         view_id     the local identifier for the record view
         """
         super(RecordView, self).__init__(parent, view_id)

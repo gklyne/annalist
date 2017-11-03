@@ -173,7 +173,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "software_version", "meta_comment", "inherit_from"
     , "default_list"
     , "default_view_id", "default_view_type", "default_view_entity"
-    # Deprecated properties - used in entity migration tables
+    # Deprecated properties - used in entity migration
     , "Slug", "RepeatGroup", "RepeatGroupRow" 
     , "options_typeref", "restrict_values", "target_field"
     , "field_target_type", "comment"

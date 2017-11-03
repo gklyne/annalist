@@ -69,7 +69,7 @@ class Closure_Error(Annalist_Error):
     Class for errors raised by closure calculations.
     """
     def __init__(self, value=None, msg="Closure_error"):
-        super(Annalist_Error, self).__init__(value, msg)
+        super(Closure_Error, self).__init__(value, msg)
         return
 
 #   ---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ class ClosureCache(object):
     This class saves information used to calculate transitive closures of a 
     relation in a specified collection.
 
-    In the following descriptions, the relatrion is taken to be defined 
+    In the following descriptions, the relation is taken to be defined 
     over some set values vals from a domain Val.
 
     Core methods:
@@ -111,12 +111,12 @@ class ClosureCache(object):
 
         v2 in fwdClosure(v1) and v3 in fwdClosure(v2) => v3 in fwdClosure(v1)
     """
-    def __init__(self, coll, rel):
+    def __init__(self, coll_id, rel):
         """
         Initialize.
 
-        coll    is collection in which closure is calculated
-        rel     is URI of relation over which closure is calculated
+        coll_id     Id of collection with which relation closure is scoped
+        rel         URI of relation over which closure is calculated
 
         The parameters are priovided for information about the scope of the closure, 
         and do not of themselves affect the actual closure calculations.
@@ -129,17 +129,14 @@ class ClosureCache(object):
         The invariants are all trivially true for an emty value set.
         """
         super(ClosureCache, self).__init__()
-        self._coll      = coll
+        self._coll_id   = coll_id
         self._rel       = rel
         self._fwd_rel   = {}   # Dictonary of direct forward relations in vals: Val -> Val*
         self._rev_rel   = {}   # Dictonary of direct reverse relations in vals: Val -> Val*
         return
 
-    def getCollection(self):
-        return self._coll
-
     def getCollectionId(self):
-        return self._coll.get_id()
+        return self._coll_id
 
     def getRelationURI(self):
         return self._rel
@@ -149,7 +146,7 @@ class ClosureCache(object):
         Add a forward relation between v1 and v2.
 
         Returns True if a new relation is added, False if the relation is already defined
-        or raises an error and leaves the ClosureCache unchangfed if the new relation would 
+        or raises an error and leaves the ClosureCache unchanged if the new relation would 
         violate one of the invariants.
         """
         if v1 == v2:

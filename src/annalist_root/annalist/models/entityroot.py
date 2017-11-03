@@ -400,7 +400,7 @@ class EntityRoot(object):
 
     def _remove(self, type_uri):
         """
-        Remove current entity from Annalist storage.  Requires typ_uri supplied as a 
+        Remove current entity from Annalist storage.  Requires type_uri supplied as a 
         double-check that the expected enytity is being removed.
         """
         d = self._entitydir

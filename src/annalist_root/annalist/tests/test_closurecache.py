@@ -12,17 +12,9 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                    import settings
-# from django.contrib.auth.models import User
-# from django.test                import TestCase
-# from django.test.client         import Client
+from django.conf    import settings
+from tests          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 
-# from bs4                        import BeautifulSoup
-# from miscutils.MockHttpResources import MockHttpFileResources, MockHttpDictResources
-# from annalist.identifiers       import ANNAL
-# from annalist.models.entity     import EntityRoot, Entity
-
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from AnnalistTestCase               import AnnalistTestCase
 
 from annalist.models.site           import Site
@@ -64,14 +56,13 @@ class ClosureCacheTest(AnnalistTestCase):
     def setUp(self):
         self.testsite     = Site(TestBaseUri, TestBaseDir)
         self.testcoll     = Collection(self.testsite, "testcoll")
-        self.closurecache = ClosureCache(self.testcoll, "test:rel")
+        self.closurecache = ClosureCache(self.testcoll.get_id(), "test:rel")
         return
 
     def tearDown(self):
         return
 
     def test_empty_closure(self):
-        self.assertEqual(self.closurecache.getCollection().get_type_id(),  "_coll")
         self.assertEqual(self.closurecache.getCollectionId(),  "testcoll")
         self.assertEqual(self.closurecache.getRelationURI(),   "test:rel")
         self.assertEqual(self.closurecache.getValues(),        set())

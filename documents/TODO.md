@@ -38,9 +38,48 @@ See also: https://www.divio.com/en/blog/documentation/
     - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
 - [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
 - [x] Generate README for collection incorporating description from coll-meta (as part of context generation?).
-- [ ] Improve performance of mechanisms used for finding sub/superclasses
+- [.] Improve performance of mechanisms used for finding type information
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
-- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+    - [x] create CollectionTypeCache
+    - [x] Test suite for CollectionTypeCache
+    - [ ] Update Collection to use CollectionTypeCache
+        - methods add_type, update_type, remove_type, get_type, get_uri_type,
+    - [ ] EntityRoot: add hook "._post_remove_processing"
+    - [ ] RecordType: add hook methods for update/remove type
+    - [ ] CollectionClosure: change method names from camelCase
+    -
+    - See collection.add_type, remove_type, get_type, get_uri_type
+        - .add_type is called by test cases only
+        - .remove_type is called by test cases only
+        - .get_type is called by entitytypeinfo.__init__
+        - collection.get_uri_type is called by entityfinder FieldComparison.get_uri_type_info and .subtype
+    - See collection._load_types, _flush_type, _update_type_cache
+        - _load_type is invoked for pretty much every request
+        - look to create a persistent cache (but need to update when type is updated)
+        - use as hook for creating closure cache
+        - collection.get_uri_type referenced by collection and entityfinder
+    - collection._load_types called by .get_type and .get_uri_type
+    - collection._flush_type called by .remove_type
+    - collection._update_type_cache called by .add_type, .get_type, ._load_types
+    - Note logic in get_type to handle case of type created but not yet cached
+    - Need to focus on reworking methods add_type, update_type, remove_type, get_type, get_uri_type,
+    - Also need to provide hooks for ading/removing types?
+        - entityroot._post_update_processing called on save entity
+        - also want entityroot._post_update_processing called by _remove?  
+        - or new ._post_remove_processing hook?
+- [.] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+    - supertype_uri referenced by:
+        - models.collection: update_entity_types, used by collectiondata for data migration.
+            - (calls get_uri_type; no change needed?)
+        - models.entityfinder (false match; no change needed)
+        - models.entitytypeinfo: get_all_type_uris:
+            - doesn't return closure
+            - extracts all direct supertypes from type description
+        - models.recordtype
+            - (data migration only; no change needed?)
+        - (and various tests)
+    - Created ClosureCache class
+    - Needs to tie in with type information cacheing
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
 - [ ] Create FAQ for defining subproperties

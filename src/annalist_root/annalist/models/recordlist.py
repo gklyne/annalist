@@ -43,7 +43,7 @@ class RecordList(EntityData):
         """
         Initialize a new RecordList object, without metadta (yet).
 
-        parent      is the parent entity from which the list is descended.
+        parent      is the parent collection in which the list is defined.
         list_id     the local identifier for the record list
         altparent   is a site object to search for this new entity,
                     allowing site-wide RecordType values to be found.

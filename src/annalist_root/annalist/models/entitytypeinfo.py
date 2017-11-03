@@ -293,7 +293,6 @@ class EntityTypeInfo(object):
         """
         Set up type attribute values.
 
-        site            current site object @@unused@@
         coll            collection object in which type is used
         type_id         entity type id, which is a collection-defined value,
                         or one of a number of special site-wide built-in types.

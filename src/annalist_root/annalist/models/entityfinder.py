@@ -511,7 +511,7 @@ class FieldComparison(object):
         """
         Return typeinfo corresponding to the supplied type URI
         """
-        t     = self._coll.get_uri_type(type_uri)
+        t = self._coll.get_uri_type(type_uri)
         return t and EntityTypeInfo(self._coll, t.get_id())
 
     def subtype(self, type1_uri, type2_uri):

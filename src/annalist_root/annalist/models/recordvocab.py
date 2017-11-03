@@ -35,7 +35,7 @@ class RecordVocab(EntityData):
         """
         Initialize a new RecordVocab object, without metadata (yet).
 
-        parent      is the parent entity from which the view is descended.
+        parent      is the parent collection in which the namespace is defined.
         vocab_id    the local identifier for the vocabulary; also used as namespace prefix.
         """
         super(RecordVocab, self).__init__(parent, vocab_id)

@@ -40,7 +40,7 @@ class RecordGroup(EntityData):
         """
         Initialize a new RecordGroup object, without metadata (yet).
 
-        parent      is the parent entity from which the field group is descended.
+        parent      is the parent collection in which the group is defined.
         group_id    the local identifier for the field group
         """
         if self._deprecation_warning:
