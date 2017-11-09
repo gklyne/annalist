@@ -13,6 +13,7 @@ import collections
 import logging
 log = logging.getLogger(__name__)
 
+from annalist               import layout
 from annalist               import message
 from annalist.identifiers   import RDFS, ANNAL
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error, UnexpectedValue_Error
@@ -174,7 +175,7 @@ class FieldDescription(object):
             for e in entities:
                 eid = e.get_id()
                 val = e.get_type_entity_id()
-                if eid != "_initial_values":
+                if eid != layout.INITIAL_VALUES_ID:
                     self._field_desc['field_choices'][val] = FieldChoice(
                         val, label=e.get_label(), link=e.get_view_url_path()
                         )

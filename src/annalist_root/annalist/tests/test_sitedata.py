@@ -654,7 +654,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
             [ [ "_list/Default_list",       ["Default_list",        "List entities"                      ] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
             , [ "_list/Enum_list_all",      ["Enum_list_all",       "List enumeration values and types"  ] ]
@@ -769,7 +768,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
             [ [ "_view/Collection_view",    ["Collection_view",     "Collection metadata"   ] ]
             , [ "_view/Default_view",       ["Default_view",        "Default record view"   ] ]
             , [ "_view/Enum_view",          ["Enum_view",           "Enumerated value view" ] ]
@@ -878,7 +876,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             [
-            # [ [ "_group/_initial_values",          ["_initial_values"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -982,7 +979,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
-            # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
             [ [ "_field/Coll_comment",              ["Coll_comment",      "Markdown rich text", 
                                                                                             "annal:Richtext"         ] ]
             , [ "_field/Coll_default_list_id",      ["Coll_default_list_id", 
@@ -1209,7 +1205,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Label")
         trows_expected = (
-            # [ [ "_vocab/_initial_values",          ["_initial_values"] ]
             [ [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
             , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
             , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]

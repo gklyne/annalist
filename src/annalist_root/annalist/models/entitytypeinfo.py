@@ -670,7 +670,7 @@ class EntityTypeInfo(object):
                     yield self.get_entity_implied_values(self.get_entity(eid))
         return
 
-    def get_initial_entity_values(self, entity_id, copy_entity_id="_initial_values"):
+    def get_initial_entity_values(self, entity_id, copy_entity_id=layout.INITIAL_VALUES_ID):
         """
         Returns an initial value dictionary for the indicated entity.
 

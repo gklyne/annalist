@@ -75,7 +75,7 @@ class RecordVocab(EntityData):
 
     def _post_update_processing(self, entitydata, post_update_flags):
         """
-        Default post-update processing.
+        Post-update processing.
 
         This method is called when a RecordVocab entity has been updated.  
 

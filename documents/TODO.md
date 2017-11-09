@@ -42,10 +42,9 @@ See also: https://www.divio.com/en/blog/documentation/
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
     - [x] create CollectionTypeCache
     - [x] Test suite for CollectionTypeCache
-    - [ ] Update Collection to use CollectionTypeCache
-        - methods add_type, update_type, remove_type, get_type, get_uri_type,
-    - [ ] EntityRoot: add hook "._post_remove_processing"
-    - [ ] RecordType: add hook methods for update/remove type
+    - [.] Update Collection to use CollectionTypeCache
+    - [.] EntityRoot: add hook "._post_remove_processing"
+    - [.] RecordType: add hook methods for update/remove type
     - [ ] CollectionClosure: change method names from camelCase
     -
     - See collection.add_type, remove_type, get_type, get_uri_type

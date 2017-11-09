@@ -54,6 +54,7 @@ def initialize_coll_data(src_data_dir, tgt_coll):
                 log.info("- %s -> %s"%(edir, tgt_data_dir))
                 Site.replace_site_data_dir(tgt_coll, edir, expand_entitydata)
     # Generate initial JSON-LD context data
+    tgt_coll.reset_type_cache()
     tgt_coll.generate_coll_jsonld_context()
     return []
 
@@ -144,13 +145,17 @@ def migrate_coll_data(coll):
     Returns list of error message strings, or empty list.
     """
     log.info("Migrate Annalist collection data for %s"%(coll.get_id()))
+    log.info("@@@@ 1 test_subtype_type supertypes %r"%(coll.cache_get_supertypes("test:test_subtype_type")))
     errs = migrate_coll_config_dirs(coll)
     if errs:
         return errs
+    log.info("@@@@ 2 test_subtype_type supertypes %r"%(coll.cache_get_supertypes("test:test_subtype_type")))
     try:
         entityfinder = EntityFinder(coll)
+        log.info("@@@@ 3 test_subtype_type supertypes %r"%(coll.cache_get_supertypes("test:test_subtype_type")))
         for e in entityfinder.get_entities():
             log.info("migrate_coll_data: %s/%s"%(e[ANNAL.CURIE.type_id], e[ANNAL.CURIE.id]))
+            log.info("@@@@ 4 test_subtype_type supertypes %r"%(coll.cache_get_supertypes("test:test_subtype_type")))
             typeinfo = EntityTypeInfo(coll, e[ANNAL.CURIE.type_id])
             e[ANNAL.CURIE.type] = typeinfo.get_type_uri()
             coll.update_entity_types(e)

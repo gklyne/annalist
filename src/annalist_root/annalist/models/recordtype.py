@@ -82,4 +82,22 @@ class RecordType(EntityData):
         """
         return None
 
+    def _post_update_processing(self, entitydata, post_update_flags):
+        """
+        Post-update processing.
+
+        This method is called when an entity has been created or updated.
+        """
+        self.get_parent().cache_add_type(self)
+        return entitydata
+
+    def _post_remove_processing(self, post_update_flags):
+        """
+        Post-remove processing.
+
+        This method is called when an entity has been removed.  
+        """
+        self._parent.cache_remove_type(self.get_id())
+        return
+
 # End.

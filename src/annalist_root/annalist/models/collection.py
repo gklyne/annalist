@@ -31,27 +31,42 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 import annalist
-from annalist                       import layout
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
+from annalist                               import layout
+from annalist                               import message
+from annalist.exceptions                    import Annalist_Error
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.util                          import valid_id, extract_entity_id, make_type_entity_id
 
-from annalist.models.entity         import Entity
-from annalist.models.annalistuser   import AnnalistUser
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordview     import RecordView
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
-from annalist.models.recordvocab    import RecordVocab
-from annalist.models.rendertypeinfo import (
+from annalist.models.entity                 import Entity
+from annalist.models.annalistuser           import AnnalistUser
+from annalist.models.collectiontypecache    import CollectionTypeCache
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordview             import RecordView
+from annalist.models.recordlist             import RecordList
+from annalist.models.recordfield            import RecordField
+from annalist.models.recordgroup            import RecordGroup, RecordGroup_migration
+from annalist.models.recordvocab            import RecordVocab
+from annalist.models.rendertypeinfo         import (
     is_render_type_literal,
     is_render_type_id,
     is_render_type_set,
     is_render_type_list,
     is_render_type_object,
     )
+
+#   ---------------------------------------------------------------------------
+#
+#   Static data for collection data caches
+#
+#   ---------------------------------------------------------------------------
+
+type_cache = CollectionTypeCache()
+
+#   ---------------------------------------------------------------------------
+#
+#   Collection class
+#
+#   ---------------------------------------------------------------------------
 
 class Collection(Entity):
 
@@ -81,11 +96,6 @@ class Collection(Entity):
                 msg = "Collection altparent value must be a Collection (got %r)"%(altparent,)
                 log.error(msg)
                 raise ValueError(msg)
-            # msg = (
-            #     "Collection %s initialised with altparent %s"%
-            #     (coll_id, altparent.get_id())
-            #     )
-            # raise ValueError(msg)
         self._parentsite = parentsite
         self._parentcoll = (
             altparent or
@@ -93,8 +103,10 @@ class Collection(Entity):
             parentsite.site_data_collection()
             )
         super(Collection, self).__init__(parentsite, coll_id, altparent=self._parentcoll)
-        self._types_by_id  = None
-        self._types_by_uri = None
+        #@@@@
+        # self._types_by_id  = None
+        # self._types_by_uri = None
+        #@@@@
         return
 
     def _migrate_values(self, collmetadata):
@@ -341,7 +353,15 @@ class Collection(Entity):
 
     # Record types
 
-    def _update_type_cache(self, type_entity):
+    @classmethod
+    def reset_type_cache(cls):
+        """
+        Used for testing: clear out type cache so tetss don't interfere with each other
+        """
+        type_cache.flush_all()
+        return
+
+    def __update_type_cache(self, type_entity):
         """
         Add single type entity to type cache
         """
@@ -350,7 +370,7 @@ class Collection(Entity):
             self._types_by_uri[type_entity.get_uri()] = type_entity
         return
 
-    def _flush_type(self, type_id):
+    def __flush_type(self, type_id):
         """
         Remove single identified type entity from type cache
         """
@@ -362,32 +382,87 @@ class Collection(Entity):
                 self._types_by_uri.pop(type_uri, None)
         return
 
-    def _load_types(self):
+    def __load_types(self):
         """
         Initialize cache of RecordType entities
         """
-        if not (self._types_by_id and self._types_by_uri):
-            self._types_by_id  = {}
-            self._types_by_uri = {}
+        #@@@TODO: push type loading logic into type cache
+        if not type_cache.collection_has_cache(self):
             for type_id in self._children(RecordType, altscope="all"):
-                t = RecordType.load(self, type_id, altscope="all")
-                self._update_type_cache(t)
+                print "@@ _load_types %s"%(type_id,)
+                if type_id != layout.INITIAL_VALUES_ID:
+                    t = RecordType.load(self, type_id, altscope="all")
+                    type_cache.set_type(self, t)
+        #@@
+        # if not (self._types_by_id and self._types_by_uri):
+        #     self._types_by_id  = {}
+        #     self._types_by_uri = {}
+        #     for type_id in self._children(RecordType, altscope="all"):
+        #         t = RecordType.load(self, type_id, altscope="all")
+        #         self._update_type_cache(t)
+        #@@
         return
 
     def types(self, altscope="all"):
         """
         Generator enumerates and returns record types that may be stored
         """
-        for f in self._children(RecordType, altscope=altscope):
-            log.debug("___ Collection.types: "+f)
-            t = self.get_type(f)
-            if t and t.get_id() != "_initial_values":
-                yield t
+        # self._load_types()
+        #@@
+        # for f in self._children(RecordType, altscope=altscope):
+        #     log.debug("___ Collection.types: "+f)
+        #     t = self.get_type(f)
+        #     if t and t.get_id() != "_initial_values":
+        #         yield t
+        #@@
+        return type_cache.get_all_types(self, altscope=altscope)
+
+    def cache_add_type(self, type_entity):
+        """
+        Add or update type information in type cache.
+        """
+        log.debug("Collection.cache_add_type %s in %s"%(type_entity.get_id(), self.get_id()))
+        log.info("@@@@ cache_add_type supertypes %r"%(type_entity.get(ANNAL.CURIE.supertype_uri,None),))
+        type_cache.remove_type(self, type_entity.get_id())
+        type_cache.set_type(self, type_entity)
         return
+
+    def cache_get_type(self, type_id):
+        """
+        Retrieve type from cache.
+
+        returns type entity if found, otherwise None.
+        """
+        type_cache.get_type(self, type_id)
+        t = type_cache.get_type(self, type_id)
+        # Was it previously created but not cached?
+        if not t and RecordType.exists(self, type_id, altscope="all"):
+            msg = (
+                "Collection.get_type %s present but not cached for collection %s"%
+                (type_id, self.get_id())
+                )
+            log.warning(msg)
+            t = RecordType.load(self, type_id, altscope="all")
+            type_cache.set_type(self, t)
+            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+        return t
+
+    def cache_remove_type(self, type_id):
+        """
+        Remove type from type cache.
+        """
+        type_cache.remove_type(self, type_id)
+        return
+
+    def cache_get_supertypes(self, type_uri):
+        """
+        Return supertypes of supplied type URI.
+        """
+        return [t.get_uri() for t in type_cache.get_type_uri_supertypes(self, type_uri)]
 
     def add_type(self, type_id, type_meta):
         """
-        Add a new record type to the current collection
+        Add a new or updated record type to the current collection
 
         type_id     identifier for the new type, as a string
                     with a form that is valid as URI path segment.
@@ -396,9 +471,14 @@ class Collection(Entity):
 
         Returns a RecordType object for the newly created type.
         """
+        log.debug("Collection.add_type %s in %s"%(type_id, self.get_id()))
         t = RecordType.create(self, type_id, type_meta)
-        if self._types_by_id:
-            self._update_type_cache(t)
+        # type_cache.remove_type(self, type_id)
+        # type_cache.set_type(self, t)
+        #@@
+        # if self._types_by_id:
+        #     self._update_type_cache(t)
+        #@@
         return t
 
     def get_type(self, type_id):
@@ -411,21 +491,15 @@ class Collection(Entity):
         """
         if not valid_id(type_id):
             raise ValueError("Collection %s get_type(%s) invalid id"%(self.get_id(), type_id))
-        self._load_types()
-        t = self._types_by_id.get(type_id, None)
-        # Was it created but not cached?
-        if not t and RecordType.exists(self, type_id, altscope="all"):
-            log.info("___ Collection.get_type: "+type_id)
-            t = RecordType.load(self, type_id, altscope="all")
-            self._update_type_cache(t)
-        return t
+        return self.cache_get_type(type_id)
 
     def get_uri_type(self, type_uri):
         """
         Return type entity corresponding to the supplied type URI
         """
-        self._load_types()
-        t = self._types_by_uri.get(type_uri, None)
+        #@@ self._load_types()
+        t = type_cache.get_type_from_uri(self, type_uri)
+        #@@ t = self._types_by_uri.get(type_uri, None)
         return t
 
     def remove_type(self, type_id):
@@ -436,7 +510,8 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        self._flush_type(type_id)
+        #@@ self._flush_type(type_id)
+        # type_cache.remove_type(self, type_id)
         s = RecordType.remove(self, type_id)
         return s
 
@@ -446,17 +521,29 @@ class Collection(Entity):
         supertypes of the associated type record.
         """
         type_uri = e.get(ANNAL.CURIE.type, None)
-        sts = [type_uri]
-        t   = self.get_uri_type(type_uri)
+        st_uris = [type_uri]
+        t       = self.get_uri_type(type_uri)
         if t:
             assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
-            for st in t.get(ANNAL.CURIE.supertype_uri, []):
-                if isinstance(st, dict):
-                    st = st['@id']
-                if st not in sts:
-                    sts.append(st)
-        # log.info("@@ update_entity_types %r"%(sts,))
-        e['@type'] = sts
+            #@@
+            if type_uri == "test:test_subtype_type":
+                log.info("@@@@ Migrating types for %s/%s/%s"%(self.get_id(), t.get_id(), e.get_id()))
+                log.info("@@@@ Supertypes %r"%(t.get(ANNAL.CURIE.supertype_uri, None),))
+                log.info("@@@@ Cache supertypes %r"%(list(type_cache.get_type_uri_supertypes(self, type_uri)),))
+            #@@
+            for st in type_cache.get_type_uri_supertypes(self, type_uri):
+                st_uri = st.get_uri()
+                if st_uri not in st_uris:
+                    st_uris.append(st_uri)
+            #@@@
+            # for st in t.get(ANNAL.CURIE.supertype_uri, []):
+            #     if isinstance(st, dict):
+            #         st = st['@id']
+            #     if st not in sts:
+            #         sts.append(st)
+            #@@@
+        log.info("@@ update_entity_types type_uri %r, st_uris %r"%(type_uri, st_uris))
+        e['@type'] = st_uris
         return
 
     # Record views
@@ -467,7 +554,7 @@ class Collection(Entity):
         """
         for f in self._children(RecordView, altscope=altscope):
             v = self.get_view(f)
-            if v and v.get_id() != "_initial_values":
+            if v and v.get_id() != layout.INITIAL_VALUES_ID:
                 yield v
         return
 
@@ -515,7 +602,7 @@ class Collection(Entity):
         """
         for f in self._children(RecordList, altscope=altscope):
             l = self.get_list(f)
-            if l and l.get_id() != "_initial_values":
+            if l and l.get_id() != layout.INITIAL_VALUES_ID:
                 yield l
         return
 
@@ -690,7 +777,7 @@ class Collection(Entity):
         # Scan vocabs, generate prefix data
         for v in self.child_entities(RecordVocab, altscope="all"):
             vid = v.get_id()
-            if vid != "_initial_values":
+            if vid != layout.INITIAL_VALUES_ID:
                 context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altscope="all"):

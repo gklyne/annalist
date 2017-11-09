@@ -104,6 +104,7 @@ def init_annalist_test_site():
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)
     testsite.generate_site_jsonld_context()
+    Collection.reset_type_cache()
     # Reset id generator counters
     EntityData._last_id   = 0
     RecordType._last_id   = 0

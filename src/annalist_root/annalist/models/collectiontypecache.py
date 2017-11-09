@@ -12,8 +12,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
-from annalist.identifiers           import ANNAL
+from annalist.identifiers           import ANNAL, RDFS
 
 from annalist.models.closurecache   import ClosureCache
 from annalist.models.recordtype     import RecordType
@@ -52,6 +53,22 @@ class CollectionTypeCacheObject(object):
     NOTE: Type entities are instantiated with respect to a specified collection,
     but the collection objects are transient (regenerated for each request), so
     the cache stores the type values but not the instantiated type entity.
+
+    Two kinds of information are cached:
+
+    1.  type cache: details of all types that are visible to
+        this class, indexed by type id and type URI
+    2.  scope cache: lists of type Ids that are visible in different scopes: used 
+        when returning type enumerations (see method "get_all_types").
+
+    The scope cache is populated by calls to "get_all_types".  When a type is 
+    added to or removed from the type cache, lacking information about the scopes 
+    where it is visible, the scope cache is cleared.
+
+    Scope cvalues currently include "user", "all", "site"; None => "coll".
+    Apart from treating None as collection local scope, the logic in this class
+    treats scope names as opaque identifiers.  The scope logic is embedded mainly
+    in the Entity and EntityRoot class methods "_children".
     """
     def __init__(self, coll_id):
         """
@@ -63,32 +80,91 @@ class CollectionTypeCacheObject(object):
         self._coll_id           = coll_id
         self._types_by_id       = {}
         self._type_ids_by_uri   = {}
+        self._type_ids_by_scope = {}
         self._supertype_closure = ClosureCache(coll_id, ANNAL.CURIE.supertype_uri)
+        return
+
+    def _make_type(self, coll, type_id, type_values):
+        """
+        Internal helper method to construct a type entity given its Id and values.
+
+        Returns None if either Id or values evaluate as Boolean False (i.e. are None or empty).
+        """
+        type_entity = None
+        if type_id and type_values:
+            #@@@TODO: locate parent coll and use that
+            parent_id = type_values["parent_id"]
+            parent    = coll
+            if coll.get_id() != parent_id:
+                for parent in coll.get_alt_entities(altscope="all"):
+                    if parent.get_id() == parent_id:
+                        break
+                else:
+                    msg = (
+                        "Saved parent id %s not found for type %s in collection %s"%
+                        (parent_id, type_id, coll.get_id())
+                        )
+                    log.error(msg)
+                    raise ValueError(msg)
+            type_entity = RecordType._child_init(parent, type_id)
+            type_entity.set_values(type_values["data"])
+        return type_entity
+
+    def _load_type(self, coll, type_entity):
+        """
+        Internal helper method loads type data to cache.
+
+        Returns True if new type was added.
+        """
+        type_id     = type_entity.get_id()
+        type_uri    = type_entity.get_uri()
+        type_parent = type_entity.get_parent().get_id()
+        type_data   = type_entity.get_save_values()
+        add_type    = False
+        if type_id not in self._types_by_id:
+            self._types_by_id[type_id]      = {"parent_id": type_parent, "data": type_data}
+            self._type_ids_by_uri[type_uri] = type_id
+            self._supertype_closure.removeVal(type_uri)
+            # Add relations for supertype references from the new type URI
+            for st_obj in type_data.get(ANNAL.CURIE.supertype_uri, []):
+                st_uri = st_obj["@id"]
+                self._supertype_closure.addRel(type_uri, st_uri)
+            # Also add relations for references *to* the new type URI
+            for sub_id in self._types_by_id:
+                sub_values  = self._types_by_id[sub_id]
+                sub_st_objs = sub_values["data"].get(ANNAL.CURIE.supertype_uri, [])
+                sub_st_uris = [ sub_st_obj["@id"] for sub_st_obj in sub_st_objs ]
+                if type_uri in sub_st_uris:
+                    sub_uri = sub_values["data"].get(ANNAL.CURIE.uri, None)
+                    if sub_uri:
+                        self._supertype_closure.addRel(sub_uri, type_uri)
+            # Finish up, flush scope cache
+            add_type = True
+            self._type_ids_by_scope = {}
+        return add_type
+
+    def _load_types(self, coll):
+        """
+        Initialize cache of RecordType entities, if not already done
+        """
+        if self._types_by_id == {}:
+            for type_id in coll._children(RecordType, altscope="all"):
+                t = RecordType.load(coll, type_id, altscope="all")
+                self._load_type(coll, t)
         return
 
     def get_coll_id(self):
         return self._coll_id
 
-    def is_not_empty(self):
+    def __is_not_empty(self):
         return self._types_by_id != {}
 
-    def set_type(self, type_entity):
+    def set_type(self, coll, type_entity):
         """
         Save a new or updated type definition.
         """
-        type_id     = type_entity.get_id()
-        type_uri    = type_entity.get_uri()
-        type_values = type_entity.get_values()
-        add_type    = False
-        if type_id not in self._types_by_id:
-            self._types_by_id[type_id]      = type_values
-            self._type_ids_by_uri[type_uri] = type_id
-            self._supertype_closure.removeVal(type_uri)
-            for st_obj in type_values[ANNAL.CURIE.supertype_uri]:
-                st_uri = st_obj['@id']
-                self._supertype_closure.addRel(type_uri, st_uri)
-            add_type = True
-        return add_type
+        self._load_types(coll)
+        return self._load_type(coll, type_entity)
 
     def remove_type(self, coll, type_id):
         """
@@ -96,6 +172,7 @@ class CollectionTypeCacheObject(object):
 
         Returns the type entity removed, or None if not found.
         """
+        self._load_types(coll)
         type_values = self._types_by_id.get(type_id, None)
         type_entity = self._make_type(coll, type_id, type_values)
         if type_entity:
@@ -103,6 +180,7 @@ class CollectionTypeCacheObject(object):
             del self._types_by_id[type_id]
             del self._type_ids_by_uri[type_uri]
             self._supertype_closure.removeVal(type_uri)
+            self._type_ids_by_scope = {}
         return type_entity
 
     def get_type(self, coll, type_id):
@@ -112,6 +190,7 @@ class CollectionTypeCacheObject(object):
         Returns a type entity for the supplied type Id, or None 
         if not defined in the current cache object.
         """
+        self._load_types(coll)
         type_values = self._types_by_id.get(type_id, None)
         return self._make_type(coll, type_id, type_values)
 
@@ -122,26 +201,48 @@ class CollectionTypeCacheObject(object):
         Returns a type object for the specified collecion and type URI,
         or None if the type URI does not exist
         """
-        type_id = self._type_ids_by_uri.get(type_uri, None)
-        return self.get_type(coll, type_id)
+        self._load_types(coll)
+        type_id     = self._type_ids_by_uri.get(type_uri, None)
+        log.info("@@@@ get_type_from_uri: type_uri %s, type_id %s"%(type_uri, type_id))
+        type_entity = self.get_type(coll, type_id)
+        return type_entity
 
-    def get_all_types(self, coll):
+    def get_all_types(self, coll, altscope=None):
         """
-        Returns all types currently defined for a collection.
+        Returns a generator of all types currently defined for a collection, which may be 
+        qualified by a specified scope.  See discussion at top of this class.
+
+        NOTE: this method returns only those records that have actually been saved to
+        the collection data storage.
         """
-        for type_id, type_values in self._types_by_id.items():
-            yield self._make_type(coll, type_id, type_values)
+        self._load_types(coll)
+        scope_name = altscope or "coll"     # 'None' designates collection-local scope
+        if scope_name in self._type_ids_by_scope:
+            scope_type_ids = self._type_ids_by_scope[scope_name]
+        else:
+            # Generate scope cache for named scope
+            # print "  @@ generate new scope data"
+            scope_type_ids = []
+            for type_id in coll._children(RecordType, altscope=altscope):
+                if type_id != layout.INITIAL_VALUES_ID:
+                    scope_type_ids.append(type_id)
+            self._type_ids_by_scope[scope_name] = scope_type_ids
+        # Return type generator based on cache (using local copy as generator source)
+        for type_id in scope_type_ids:
+            t = self.get_type(coll, type_id)
+            if t:
+                yield t
         return
 
-    def get_type_uri_supertype_uris(self, type_uri):
+    def _get_type_uri_supertype_uris(self, type_uri):
         """
-        Returns all supertype URIs for a specieid type URI.
+        Returns all supertype URIs for a specified type URI.
         """
         return self._supertype_closure.fwdClosure(type_uri)
 
-    def get_type_uri_subtype_uris(self, type_uri):
+    def _get_type_uri_subtype_uris(self, type_uri):
         """
-        Returns all subtype URIs for a specieid type URI.
+        Returns all subtype URIs for a specified type URI.
         """
         return self._supertype_closure.revClosure(type_uri)
 
@@ -149,7 +250,8 @@ class CollectionTypeCacheObject(object):
         """
         Returns all supertypes for a specieid type URI.
         """
-        for st_uri in self.get_type_uri_supertype_uris(type_uri):
+        self._load_types(coll)
+        for st_uri in self._get_type_uri_supertype_uris(type_uri):
             st = self.get_type_from_uri(coll, st_uri)
             if st:
                 yield st
@@ -159,23 +261,12 @@ class CollectionTypeCacheObject(object):
         """
         Returns all subtypes for a specieid type URI.
         """
-        for st_uri in self.get_type_uri_subtype_uris(type_uri):
+        self._load_types(coll)
+        for st_uri in self._get_type_uri_subtype_uris(type_uri):
             st = self.get_type_from_uri(coll, st_uri)
             if st:
                 yield st
         return
-
-    def _make_type(self, coll, type_id, type_values):
-        """
-        Local helper method to construct a type entity gioven its Id and values.
-
-        Returns None if either Id or values evaluate as Boolean False (i.e. are None or empty).
-        """
-        type_entity = None
-        if type_id and type_values:
-            type_entity = RecordType._child_init(coll, type_id)
-            type_entity.set_values(type_values)
-        return type_entity
 
 #   ---------------------------------------------------------------------------
 # 
@@ -225,19 +316,26 @@ class CollectionTypeCache(object):
         coll        is a collection object for which a cache is removed.
         """
         coll_id = coll.get_id()
-        cache = self._caches.pop(coll_id, None)
-        return (cache is not None) and cache.is_not_empty()
+        cache   = self._caches.pop(coll_id, None)
+        return (cache is not None)
 
-    def collection_has_cache(self, coll):
+    def flush_all(self):
         """
-        Tests whether a cache object exists for the specified collection.
+        Remove all cached data for all collections.
+        """
+        self._caches = {}
+        return
 
-        Note: some access operations create an empty cache object, so this 
-        is considered to be equivalent to no-cache.
-        """
-        coll_id = coll.get_id()
-        cache   = self._caches.get(coll_id, None)
-        return (cache is not None) and cache.is_not_empty()
+    # def collection_has_cache(self, coll):
+    #     """
+    #     Tests whether a cache object exists for the specified collection.
+
+    #     Note: some access operations create an empty cache object, so this 
+    #     is considered to be equivalent to no-cache.
+    #     """
+    #     coll_id = coll.get_id()
+    #     cache   = self._caches.get(coll_id, None)
+    #     return (cache is not None) and cache.is_not_empty()
 
     # Collection type cache alllocation and access methods
 
@@ -246,7 +344,7 @@ class CollectionTypeCache(object):
         Save a new or updated type definition
         """
         type_cache = self._get_cache(coll, CollectionTypeCacheObject)
-        return type_cache.set_type(type_entity)
+        return type_cache.set_type(coll, type_entity)
 
     def remove_type(self, coll, type_id):
         """
@@ -275,12 +373,13 @@ class CollectionTypeCache(object):
         type_cache = self._get_cache(coll, CollectionTypeCacheObject)
         return type_cache.get_type_from_uri(coll, type_uri)
 
-    def get_all_types(self, coll):
+    def get_all_types(self, coll, altscope=None):
         """
-        Returns all types currently defined for a collection.
+        Returns all types currently available for a collection in the indicated scope.
+        Default scope is types defined directly in the indicated collection.
         """
         type_cache = self._get_cache(coll, CollectionTypeCacheObject)
-        return type_cache.get_all_types(coll)
+        return type_cache.get_all_types(coll, altscope=altscope)
 
     def get_type_uri_supertypes(self, coll, type_uri):
         """

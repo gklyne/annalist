@@ -208,6 +208,12 @@ class Entity(EntityRoot):
         dataref = resource_ref or self._entityfile
         return self._get_ref_url(baseurl, self.get_base_url(baseurl=baseurl), dataref)
 
+    def get_parent(self):
+        """
+        Return parent entity
+        """
+        return self._parent
+
     def set_alt_entities(self, altparent):
         """
         Update the alternative parent for the current entity.
@@ -312,7 +318,7 @@ class Entity(EntityRoot):
     def _merge_alt_parent_lists(self, list1, list2):
         """
         Merge a pair of allternative parent lists, preserving depth ordering and where 
-        possible placing entries from the first list ahead of entries from the second listr.
+        possible placing entries from the first list ahead of entries from the second list.
 
         See spike/tree_scan/tree_scan.lhs for algorithm.
 
@@ -533,7 +539,8 @@ class Entity(EntityRoot):
         site_entity_ids = list(itertools.chain.from_iterable(
             ( super(Entity, alt)._children(cls, altscope=altscope) 
               for alt in self.get_alt_entities(altscope=altscope)
-            )))
+            )))     # See https://docs.python.org/2/library/itertools.html#itertools.chain
+        # log.info("@@ Entity._children: coll_entity_ids %r, site_entity_ids %r"%(coll_entity_ids, site_entity_ids))
         # if altscope == "all" and self._altparent:
         #     site_entity_ids = self._altparent._children(cls, altscope=altscope)
         for entity_id in [f for f in site_entity_ids if f not in coll_entity_ids] + coll_entity_ids:
@@ -602,7 +609,7 @@ class Entity(EntityRoot):
 
         Returns the created entity as an instance of the supplied class object.
         """
-        log.debug("Entity.create: entityid %s"%(entityid))
+        log.debug("Entity.create: entityid %s, parentid %s"%(entityid, parent.get_id()))
         e = cls._child_init(parent, entityid)
         e.set_values(entitybody)
         e._save()

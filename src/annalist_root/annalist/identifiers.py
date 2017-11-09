@@ -83,7 +83,7 @@ class Namespace(object):
         """
         # Called for attributes that aren't defined.
         # Placeholder should generate error
-        return self.__dict__[attr]
+        return self.__dict__[name]
 
 def makeNamespace(prefix, baseUri, names):
     """

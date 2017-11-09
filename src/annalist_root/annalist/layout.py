@@ -249,6 +249,7 @@ ENTITY_OLD_DATA_FILE    = "entity-data.jsonld"
 
 # Other symbols
 TASK_TYPEID             = "_task"               # task id
+INITIAL_VALUES_ID       = "_initial_values"     # reserved id used for initial values of new entity
 
 # Lists of directory names for collection migration, etc:
 DATA_DIRS_CURR_PREV = (

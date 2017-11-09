@@ -14,6 +14,7 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
+from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.recordtype     import RecordType
@@ -116,7 +117,7 @@ class EntityFinder(object):
         for e in entitytypeinfo.enum_entities_with_implied_values(
                 user_permissions, altscope=altscope
                 ):
-            if e.get_id() != "_initial_values":
+            if e.get_id() != layout.INITIAL_VALUES_ID:
                 yield e
         return
 
@@ -136,7 +137,7 @@ class EntityFinder(object):
                     )
             es = list(es) #@@ Force strict eval
             for e in es:
-                if e.get_id() != "_initial_values":
+                if e.get_id() != layout.INITIAL_VALUES_ID:
                     yield e
         return
 
@@ -144,10 +145,6 @@ class EntityFinder(object):
         """
         Iterate over all entities of all type ids from a supplied type iterator
         """
-        #@@
-        # types = list(types)
-        # log.info("get_all_types_entities: types %s"%(types,))
-        #@@
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
                 yield e

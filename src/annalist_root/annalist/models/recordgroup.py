@@ -91,7 +91,7 @@ class RecordGroup(EntityData):
 
     def _post_update_processing(self, entitydata, post_update_flags):
         """
-        Default post-update processing.
+        Post-update processing.
 
         This method is called when a RecordGroup entity has been updated.  
 

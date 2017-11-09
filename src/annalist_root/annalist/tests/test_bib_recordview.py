@@ -95,19 +95,19 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
                 )
         self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != "_initial_values"
+                  if fid != layout.INITIAL_VALUES_ID
             ])
         self.field_options_no_bibentry = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != "_initial_values" and not fid.startswith("Bib_")
+                  if fid != layout.INITIAL_VALUES_ID and not fid.startswith("Bib_")
             ])
         self.field_options_bib_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != "_initial_values" and not special_field(fid)
+                  if fid != layout.INITIAL_VALUES_ID and not special_field(fid)
             ])
         self.field_options_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != "_initial_values" and 
+                  if fid != layout.INITIAL_VALUES_ID and 
                       not (fid.startswith("Bib_") or special_field(fid))
             ])
         # log.info(self.field_options_no_bibentry)
