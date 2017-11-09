@@ -92,7 +92,6 @@ class CollectionTypeCacheObject(object):
         """
         type_entity = None
         if type_id and type_values:
-            #@@@TODO: locate parent coll and use that
             parent_id = type_values["parent_id"]
             parent    = coll
             if coll.get_id() != parent_id:
@@ -124,11 +123,11 @@ class CollectionTypeCacheObject(object):
         if type_id not in self._types_by_id:
             self._types_by_id[type_id]      = {"parent_id": type_parent, "data": type_data}
             self._type_ids_by_uri[type_uri] = type_id
-            self._supertype_closure.removeVal(type_uri)
+            self._supertype_closure.remove_val(type_uri)
             # Add relations for supertype references from the new type URI
             for st_obj in type_data.get(ANNAL.CURIE.supertype_uri, []):
                 st_uri = st_obj["@id"]
-                self._supertype_closure.addRel(type_uri, st_uri)
+                self._supertype_closure.add_rel(type_uri, st_uri)
             # Also add relations for references *to* the new type URI
             for sub_id in self._types_by_id:
                 sub_values  = self._types_by_id[sub_id]
@@ -137,7 +136,7 @@ class CollectionTypeCacheObject(object):
                 if type_uri in sub_st_uris:
                     sub_uri = sub_values["data"].get(ANNAL.CURIE.uri, None)
                     if sub_uri:
-                        self._supertype_closure.addRel(sub_uri, type_uri)
+                        self._supertype_closure.add_rel(sub_uri, type_uri)
             # Finish up, flush scope cache
             add_type = True
             self._type_ids_by_scope = {}
@@ -179,7 +178,7 @@ class CollectionTypeCacheObject(object):
             type_uri = type_entity.get_uri()
             del self._types_by_id[type_id]
             del self._type_ids_by_uri[type_uri]
-            self._supertype_closure.removeVal(type_uri)
+            self._supertype_closure.remove_val(type_uri)
             self._type_ids_by_scope = {}
         return type_entity
 
@@ -203,7 +202,6 @@ class CollectionTypeCacheObject(object):
         """
         self._load_types(coll)
         type_id     = self._type_ids_by_uri.get(type_uri, None)
-        log.info("@@@@ get_type_from_uri: type_uri %s, type_id %s"%(type_uri, type_id))
         type_entity = self.get_type(coll, type_id)
         return type_entity
 
@@ -221,7 +219,6 @@ class CollectionTypeCacheObject(object):
             scope_type_ids = self._type_ids_by_scope[scope_name]
         else:
             # Generate scope cache for named scope
-            # print "  @@ generate new scope data"
             scope_type_ids = []
             for type_id in coll._children(RecordType, altscope=altscope):
                 if type_id != layout.INITIAL_VALUES_ID:
@@ -238,13 +235,13 @@ class CollectionTypeCacheObject(object):
         """
         Returns all supertype URIs for a specified type URI.
         """
-        return self._supertype_closure.fwdClosure(type_uri)
+        return self._supertype_closure.fwd_closure(type_uri)
 
     def _get_type_uri_subtype_uris(self, type_uri):
         """
         Returns all subtype URIs for a specified type URI.
         """
-        return self._supertype_closure.revClosure(type_uri)
+        return self._supertype_closure.rev_closure(type_uri)
 
     def get_type_uri_supertypes(self, coll, type_uri):
         """

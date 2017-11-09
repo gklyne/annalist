@@ -354,7 +354,7 @@ class Entity(EntityRoot):
         child entities.  The supplied altscope parameter indicates the scope to be searched.
 
         Currently, only one alternative may be declared, but a list is returned that
-        includes alternatives to the alternatrives available, and to facilitate future 
+        includes alternatives to the alternatives available, and to facilitate future 
         developments supporting multiple inheritance paths.
 
         altscope    if supplied, indicates a scope other than the current entity to

@@ -545,7 +545,7 @@ class EntityRoot(object):
         """
         Default method for post-update processing.
 
-        This method is called when an entity has been updated.  
+        This method is called when an entity has been ceated or updated.  
 
         Individual entity classes may provide their own override methods for this.  
         (e.g. to trigger regeneration of context data when groups, views, fields or 
@@ -559,9 +559,7 @@ class EntityRoot(object):
 
         This method is called when an entity has been removed.  
 
-        Individual entity classes may provide their own override methods for this.  
-        (e.g. to trigger regeneration of context data when groups, views, fields or 
-        vocabulary descriptions are updated.)
+        Individual entity classes may provide their own override methods for this.
         """
         return
 

@@ -42,30 +42,10 @@ See also: https://www.divio.com/en/blog/documentation/
     - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
     - [x] create CollectionTypeCache
     - [x] Test suite for CollectionTypeCache
-    - [.] Update Collection to use CollectionTypeCache
-    - [.] EntityRoot: add hook "._post_remove_processing"
-    - [.] RecordType: add hook methods for update/remove type
-    - [ ] CollectionClosure: change method names from camelCase
-    -
-    - See collection.add_type, remove_type, get_type, get_uri_type
-        - .add_type is called by test cases only
-        - .remove_type is called by test cases only
-        - .get_type is called by entitytypeinfo.__init__
-        - collection.get_uri_type is called by entityfinder FieldComparison.get_uri_type_info and .subtype
-    - See collection._load_types, _flush_type, _update_type_cache
-        - _load_type is invoked for pretty much every request
-        - look to create a persistent cache (but need to update when type is updated)
-        - use as hook for creating closure cache
-        - collection.get_uri_type referenced by collection and entityfinder
-    - collection._load_types called by .get_type and .get_uri_type
-    - collection._flush_type called by .remove_type
-    - collection._update_type_cache called by .add_type, .get_type, ._load_types
-    - Note logic in get_type to handle case of type created but not yet cached
-    - Need to focus on reworking methods add_type, update_type, remove_type, get_type, get_uri_type,
-    - Also need to provide hooks for ading/removing types?
-        - entityroot._post_update_processing called on save entity
-        - also want entityroot._post_update_processing called by _remove?  
-        - or new ._post_remove_processing hook?
+    - [x] Update Collection to use CollectionTypeCache
+    - [x] EntityRoot: add hook "._post_remove_processing"
+    - [x] RecordType: add hook methods for update/remove type
+    - [x] CollectionClosure: change method names from camelCase
 - [.] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
     - supertype_uri referenced by:
         - models.collection: update_entity_types, used by collectiondata for data migration.

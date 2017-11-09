@@ -36,7 +36,7 @@ def remove_direct_rel(rel, v1, v2):
     """
     rel[v1].remove(v2)
     if rel[v1] == set():
-        del rel[v1]     # Maintains consistency of getValues() method
+        del rel[v1]     # Maintains consistency of get_values() method
     return
 
 def get_closure(rel, v):
@@ -88,10 +88,10 @@ class ClosureCache(object):
 
     Core methods:
 
-        addRel      :: Val, Val -> Bool | error
-        removeRel   :: Val, Val -> Bool
-        fwdClosure  :: Val      -> Val*
-        revClosure  :: Val      -> Val*
+        add_rel     :: Val, Val -> Bool | error
+        remove_val  :: Val      -> Bool
+        fwd_closure :: Val      -> Val*
+        rev_closure :: Val      -> Val*
 
     Invariants:
 
@@ -99,17 +99,17 @@ class ClosureCache(object):
 
     D (directed relation graph):
 
-        D1: v not in fwdClosure(v)
-        D2: v not in revClosure(v)
-        D3: v1 not in fwdClosure(v) or v1 not in revClosure(v)
+        D1: v not in fwd_closure(v)
+        D2: v not in rev_closure(v)
+        D3: v1 not in fwd_closure(v) or v1 not in rev_closure(v)
 
     S (symmetry):
 
-        v2 in fwdClosure(v1) <=> v1 in revClosure(v2)
+        v2 in fwd_closure(v1) <=> v1 in rev_closure(v2)
 
     T (transitivity):
 
-        v2 in fwdClosure(v1) and v3 in fwdClosure(v2) => v3 in fwdClosure(v1)
+        v2 in fwd_closure(v1) and v3 in fwd_closure(v2) => v3 in fwd_closure(v1)
     """
     def __init__(self, coll_id, rel):
         """
@@ -135,13 +135,13 @@ class ClosureCache(object):
         self._rev_rel   = {}   # Dictonary of direct reverse relations in vals: Val -> Val*
         return
 
-    def getCollectionId(self):
+    def get_collection_id(self):
         return self._coll_id
 
-    def getRelationURI(self):
+    def get_relation_uri(self):
         return self._rel
 
-    def addRel(self, v1, v2):
+    def add_rel(self, v1, v2):
         """
         Add a forward relation between v1 and v2.
 
@@ -152,7 +152,7 @@ class ClosureCache(object):
         if v1 == v2:
             # Preserve invariant D1 (hence D2 by symmetry)
             raise Closure_Error(value=v1, msg="Attempt to define relation with itself")
-        if v2 in self.revClosure(v1):
+        if v2 in self.rev_closure(v1):
             # Preserve invariant D3
             raise Closure_Error(value=(v1,v2), msg="Attempt to define forward relation for which closure contains reverse ralation")
         if (v1 in self._fwd_rel) and (v2 in self._fwd_rel[v1]):
@@ -163,7 +163,7 @@ class ClosureCache(object):
         add_direct_rel(self._rev_rel, v2, v1)
         return True
 
-    def removeVal(self, v):
+    def remove_val(self, v):
         """
         Remove value from set over which relation is defined.
 
@@ -186,16 +186,16 @@ class ClosureCache(object):
             updated = True
         return updated
 
-    def fwdClosure(self, v):
+    def fwd_closure(self, v):
         """
         Return transitive closure of values v1 for which "v rel v1"
         """
         return get_closure(self._fwd_rel, v)
 
-    def revClosure(self, v):
+    def rev_closure(self, v):
         return get_closure(self._rev_rel, v)
 
-    def getValues(self):
+    def get_values(self):
         """
         Returns the set of values over which the closure is currently defined.
 

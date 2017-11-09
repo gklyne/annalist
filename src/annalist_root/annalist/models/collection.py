@@ -103,10 +103,6 @@ class Collection(Entity):
             parentsite.site_data_collection()
             )
         super(Collection, self).__init__(parentsite, coll_id, altparent=self._parentcoll)
-        #@@@@
-        # self._types_by_id  = None
-        # self._types_by_uri = None
-        #@@@@
         return
 
     def _migrate_values(self, collmetadata):
@@ -356,65 +352,16 @@ class Collection(Entity):
     @classmethod
     def reset_type_cache(cls):
         """
-        Used for testing: clear out type cache so tetss don't interfere with each other
+        Used for testing: clear out type cache so tets don't interfere with each other
+        Could also be used when external application updates data.
         """
         type_cache.flush_all()
-        return
-
-    def __update_type_cache(self, type_entity):
-        """
-        Add single type entity to type cache
-        """
-        if type_entity:
-            self._types_by_id[type_entity.get_id()]   = type_entity
-            self._types_by_uri[type_entity.get_uri()] = type_entity
-        return
-
-    def __flush_type(self, type_id):
-        """
-        Remove single identified type entity from type cache
-        """
-        if self._types_by_id:
-            t = self._types_by_id.get(type_id, None)
-            if t:
-                type_uri = t.get_uri()
-                self._types_by_id.pop(type_id, None)
-                self._types_by_uri.pop(type_uri, None)
-        return
-
-    def __load_types(self):
-        """
-        Initialize cache of RecordType entities
-        """
-        #@@@TODO: push type loading logic into type cache
-        if not type_cache.collection_has_cache(self):
-            for type_id in self._children(RecordType, altscope="all"):
-                print "@@ _load_types %s"%(type_id,)
-                if type_id != layout.INITIAL_VALUES_ID:
-                    t = RecordType.load(self, type_id, altscope="all")
-                    type_cache.set_type(self, t)
-        #@@
-        # if not (self._types_by_id and self._types_by_uri):
-        #     self._types_by_id  = {}
-        #     self._types_by_uri = {}
-        #     for type_id in self._children(RecordType, altscope="all"):
-        #         t = RecordType.load(self, type_id, altscope="all")
-        #         self._update_type_cache(t)
-        #@@
         return
 
     def types(self, altscope="all"):
         """
         Generator enumerates and returns record types that may be stored
         """
-        # self._load_types()
-        #@@
-        # for f in self._children(RecordType, altscope=altscope):
-        #     log.debug("___ Collection.types: "+f)
-        #     t = self.get_type(f)
-        #     if t and t.get_id() != "_initial_values":
-        #         yield t
-        #@@
         return type_cache.get_all_types(self, altscope=altscope)
 
     def cache_add_type(self, type_entity):
@@ -422,7 +369,6 @@ class Collection(Entity):
         Add or update type information in type cache.
         """
         log.debug("Collection.cache_add_type %s in %s"%(type_entity.get_id(), self.get_id()))
-        log.info("@@@@ cache_add_type supertypes %r"%(type_entity.get(ANNAL.CURIE.supertype_uri,None),))
         type_cache.remove_type(self, type_entity.get_id())
         type_cache.set_type(self, type_entity)
         return
@@ -473,12 +419,6 @@ class Collection(Entity):
         """
         log.debug("Collection.add_type %s in %s"%(type_id, self.get_id()))
         t = RecordType.create(self, type_id, type_meta)
-        # type_cache.remove_type(self, type_id)
-        # type_cache.set_type(self, t)
-        #@@
-        # if self._types_by_id:
-        #     self._update_type_cache(t)
-        #@@
         return t
 
     def get_type(self, type_id):
@@ -497,9 +437,7 @@ class Collection(Entity):
         """
         Return type entity corresponding to the supplied type URI
         """
-        #@@ self._load_types()
         t = type_cache.get_type_from_uri(self, type_uri)
-        #@@ t = self._types_by_uri.get(type_uri, None)
         return t
 
     def remove_type(self, type_id):
@@ -510,8 +448,6 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        #@@ self._flush_type(type_id)
-        # type_cache.remove_type(self, type_id)
         s = RecordType.remove(self, type_id)
         return s
 
@@ -526,23 +462,16 @@ class Collection(Entity):
         if t:
             assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
             #@@
-            if type_uri == "test:test_subtype_type":
-                log.info("@@@@ Migrating types for %s/%s/%s"%(self.get_id(), t.get_id(), e.get_id()))
-                log.info("@@@@ Supertypes %r"%(t.get(ANNAL.CURIE.supertype_uri, None),))
-                log.info("@@@@ Cache supertypes %r"%(list(type_cache.get_type_uri_supertypes(self, type_uri)),))
+            # if type_uri == "test:test_subtype_type":
+            #     log.info("@@ Migrating types for %s/%s/%s"%(self.get_id(), t.get_id(), e.get_id()))
+            #     log.info("@@ Supertypes %r"%(t.get(ANNAL.CURIE.supertype_uri, None),))
+            #     log.info("@@ Cache supertypes %r"%(list(type_cache.get_type_uri_supertypes(self, type_uri)),))
             #@@
             for st in type_cache.get_type_uri_supertypes(self, type_uri):
                 st_uri = st.get_uri()
                 if st_uri not in st_uris:
                     st_uris.append(st_uri)
-            #@@@
-            # for st in t.get(ANNAL.CURIE.supertype_uri, []):
-            #     if isinstance(st, dict):
-            #         st = st['@id']
-            #     if st not in sts:
-            #         sts.append(st)
-            #@@@
-        log.info("@@ update_entity_types type_uri %r, st_uris %r"%(type_uri, st_uris))
+        # log.info("@@ update_entity_types type_uri %r, st_uris %r"%(type_uri, st_uris))
         e['@type'] = st_uris
         return
 

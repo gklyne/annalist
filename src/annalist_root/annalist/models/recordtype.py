@@ -88,7 +88,7 @@ class RecordType(EntityData):
 
         This method is called when an entity has been created or updated.
         """
-        self.get_parent().cache_add_type(self)
+        self._parent.cache_add_type(self)
         return entitydata
 
     def _post_remove_processing(self, post_update_flags):
