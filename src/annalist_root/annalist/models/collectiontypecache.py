@@ -205,13 +205,13 @@ class CollectionTypeCacheObject(object):
         type_entity = self.get_type(coll, type_id)
         return type_entity
 
-    def get_all_types(self, coll, altscope=None):
+    def get_all_type_ids(self, coll, altscope=None):
         """
-        Returns a generator of all types currently defined for a collection, which may be 
-        qualified by a specified scope.  See discussion at top of this class.
+        Returns a generator of all type Ids currently defined for a collection, 
+        which may be qualified by a specified scope.
 
-        NOTE: this method returns only those records that have actually been saved to
-        the collection data storage.
+        NOTE: this method returns only those type Ids for which a type record has
+        been saved to the collection data storage.
         """
         self._load_types(coll)
         scope_name = altscope or "coll"     # 'None' designates collection-local scope
@@ -224,31 +224,49 @@ class CollectionTypeCacheObject(object):
                 if type_id != layout.INITIAL_VALUES_ID:
                     scope_type_ids.append(type_id)
             self._type_ids_by_scope[scope_name] = scope_type_ids
-        # Return type generator based on cache (using local copy as generator source)
+        return scope_type_ids
+
+    def get_all_types(self, coll, altscope=None):
+        """
+        Returns a generator of all types currently defined for a collection, which
+        may be qualified by a specified scope.
+
+        NOTE: this method returns only those records that have actually been saved to
+        the collection data storage.
+        """
+        scope_type_ids = self.get_all_type_ids(coll, altscope=altscope)
         for type_id in scope_type_ids:
             t = self.get_type(coll, type_id)
             if t:
                 yield t
         return
 
-    def _get_type_uri_supertype_uris(self, type_uri):
+    def get_type_uri_supertype_uris(self, type_uri):
         """
         Returns all supertype URIs for a specified type URI.
+
+        Returns all supertype URIs, even those for which there 
+        is no defined type entity.
         """
         return self._supertype_closure.fwd_closure(type_uri)
 
-    def _get_type_uri_subtype_uris(self, type_uri):
+    def get_type_uri_subtype_uris(self, type_uri):
         """
         Returns all subtype URIs for a specified type URI.
+
+        Returns all subtype URIs, even those for which there 
+        is no defined type entity.
         """
         return self._supertype_closure.rev_closure(type_uri)
 
     def get_type_uri_supertypes(self, coll, type_uri):
         """
-        Returns all supertypes for a specieid type URI.
+        Returns all supertypes for a specified type URI.
+
+        This method returns only those supertypes that are defined as entities.
         """
         self._load_types(coll)
-        for st_uri in self._get_type_uri_supertype_uris(type_uri):
+        for st_uri in self.get_type_uri_supertype_uris(type_uri):
             st = self.get_type_from_uri(coll, st_uri)
             if st:
                 yield st
@@ -257,9 +275,11 @@ class CollectionTypeCacheObject(object):
     def get_type_uri_subtypes(self, coll, type_uri):
         """
         Returns all subtypes for a specieid type URI.
+
+        This method returns only those subtypes that are defined as entities.
         """
         self._load_types(coll)
-        for st_uri in self._get_type_uri_subtype_uris(type_uri):
+        for st_uri in self.get_type_uri_subtype_uris(type_uri):
             st = self.get_type_from_uri(coll, st_uri)
             if st:
                 yield st
@@ -323,17 +343,6 @@ class CollectionTypeCache(object):
         self._caches = {}
         return
 
-    # def collection_has_cache(self, coll):
-    #     """
-    #     Tests whether a cache object exists for the specified collection.
-
-    #     Note: some access operations create an empty cache object, so this 
-    #     is considered to be equivalent to no-cache.
-    #     """
-    #     coll_id = coll.get_id()
-    #     cache   = self._caches.get(coll_id, None)
-    #     return (cache is not None) and cache.is_not_empty()
-
     # Collection type cache alllocation and access methods
 
     def set_type(self, coll, type_entity):
@@ -391,5 +400,19 @@ class CollectionTypeCache(object):
         """
         type_cache = self._get_cache(coll, CollectionTypeCacheObject)
         return type_cache.get_type_uri_subtypes(coll, type_uri)
+
+    def get_type_uri_supertype_uris(self, coll, type_uri):
+        """
+        Returns all supertypes for a specieid type URI.
+        """
+        type_cache = self._get_cache(coll, CollectionTypeCacheObject)
+        return type_cache.get_type_uri_supertype_uris(type_uri)
+
+    def get_type_uri_subtype_uris(self, coll, type_uri):
+        """
+        Returns all subtypes for a specieid type URI.
+        """
+        type_cache = self._get_cache(coll, CollectionTypeCacheObject)
+        return type_cache.get_type_uri_subtype_uris(type_uri)
 
 # End.

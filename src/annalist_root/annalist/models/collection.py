@@ -400,11 +400,20 @@ class Collection(Entity):
         type_cache.remove_type(self, type_id)
         return
 
-    def cache_get_supertypes(self, type_uri):
+    def cache_get_supertypes(self, type_entity):
         """
         Return supertypes of supplied type URI.
         """
-        return [t.get_uri() for t in type_cache.get_type_uri_supertypes(self, type_uri)]
+        return type_cache.get_type_uri_supertypes(self, type_uri)
+
+    def cache_get_supertype_uris(self, type_uri):
+        """
+        Return supertypes of supplied type URI.
+
+        This returns all supertype URIs declared by the supertypes, even when 
+        there is not corresponding type entity defined.
+        """
+        return type_cache.get_type_uri_supertype_uris(self, type_uri)
 
     def add_type(self, type_id, type_meta):
         """

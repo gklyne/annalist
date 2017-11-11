@@ -397,15 +397,11 @@ class EntityTypeInfo(object):
         """
         Return list of all type URIs for this type
         """
-        types = [self.get_type_uri()]
-        if self.recordtype:
-            supertypes = self.recordtype.get(ANNAL.CURIE.supertype_uri, None)
-            if supertypes:
-                for st in supertypes:
-                    t = st.get('@id', None)
-                    if t:
-                        types.append(t)
-        return types
+        type_uris = None
+        type_uri  = self.get_type_uri()
+        if type_uri:
+            type_uris = [type_uri] + list(self.entitycoll.cache_get_supertype_uris(type_uri))
+        return type_uris
 
     def get_default_view_id(self):
         """
