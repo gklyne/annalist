@@ -360,7 +360,7 @@ class Collection(Entity):
 
     def types(self, altscope="all"):
         """
-        Generator enumerates and returns record types that may be stored
+        Iterator over record types stored in the current collection.
         """
         return type_cache.get_all_types(self, altscope=altscope)
 
@@ -377,7 +377,7 @@ class Collection(Entity):
         """
         Retrieve type from cache.
 
-        returns type entity if found, otherwise None.
+        Returns type entity if found, otherwise None.
         """
         type_cache.get_type(self, type_id)
         t = type_cache.get_type(self, type_id)
@@ -400,11 +400,34 @@ class Collection(Entity):
         type_cache.remove_type(self, type_id)
         return
 
+    def cache_get_all_type_ids(self, altscope="all"):
+        """
+        Iterator over type ids of types stored in the current collection.
+        """
+        return type_cache.get_all_type_ids(self, altscope=altscope)
+
     def cache_get_supertypes(self, type_entity):
         """
         Return supertypes of supplied type URI.
         """
+        type_uri = type_entity.get_uri()
         return type_cache.get_type_uri_supertypes(self, type_uri)
+
+    def cache_get_subtypes(self, type_entity):
+        """
+        Return subtypes of supplied type URI.
+        """
+        type_uri = type_entity.get_uri()
+        return type_cache.get_type_uri_subtypes(self, type_uri)
+
+    def cache_get_subtype_uris(self, type_uri):
+        """
+        Return subtypes of supplied type URI.
+
+        The suplied URI is not itself required to be declared as identifying
+        a defined type entity.
+        """
+        return type_cache.get_type_uri_subtype_uris(self, type_uri)
 
     def cache_get_supertype_uris(self, type_uri):
         """

@@ -379,6 +379,14 @@ class CollectionTypeCache(object):
         type_cache = self._get_cache(coll, CollectionTypeCacheObject)
         return type_cache.get_type_from_uri(coll, type_uri)
 
+    def get_all_type_ids(self, coll, altscope=None):
+        """
+        Returns all types currently available for a collection in the indicated scope.
+        Default scope is types defined directly in the indicated collection.
+        """
+        type_cache = self._get_cache(coll, CollectionTypeCacheObject)
+        return type_cache.get_all_type_ids(coll, altscope=altscope)
+
     def get_all_types(self, coll, altscope=None):
         """
         Returns all types currently available for a collection in the indicated scope.

@@ -142,28 +142,10 @@ class FieldDescription(object):
         # If field references type, pull in copy of type id and link values
         type_ref = self._field_desc['field_ref_type']
         if type_ref:
-            # @@@@@@ DEBUG
-            # if field_id == "Field_subfield_sel":
-            #     log.debug("field_ref_type %(field_ref_type)s, field_ref_restriction(%(field_ref_restriction)s)"%self._field_desc)
-            # @@@@@@ DEBUG
             restrict_values = self._field_desc['field_ref_restriction']
             entity_finder   = EntityFinder(collection, selector=restrict_values)
-            # Determine subtypes of field entity type, if specified
-            # @@TODO: subtype logic here is just pig ugly...
-            #         need context to provide info that can be used to calculate supertypes
-            #         on-the-fly as needed by the field restriction expression.  E.g. include
-            #         collection object in context.
-            if field_entity_type and restrict_values:
-                field_entity_subtypes = (
-                    [ t.get_type_uri()
-                      for t in entity_finder.get_collection_uri_subtypes(field_entity_type, altscope="all")
-                    ])
-                self._field_desc['field_entity_subtypes'] = field_entity_subtypes
-                field_view_context = dict(view_context or {}, subtypes=field_entity_subtypes)
-            else:
-                field_view_context = view_context
             entities        = entity_finder.get_entities_sorted(
-                type_id=type_ref, context=field_view_context, altscope="select"
+                type_id=type_ref, context=view_context, altscope="select"
                 )
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
@@ -179,10 +161,6 @@ class FieldDescription(object):
                     self._field_desc['field_choices'][val] = FieldChoice(
                         val, label=e.get_label(), link=e.get_view_url_path()
                         )
-            # log.debug("FieldDescription: typeref %s: %r"%
-            #     (self._field_desc['field_ref_type'], list(self._field_desc['field_choices'].items()))
-            #     )
-
         # If field references or contains field list, pull in field details
         if field_list:
             if field_id in field_ids_seen:
@@ -203,7 +181,6 @@ class FieldDescription(object):
                 , 'group_field_list':   field_list          # Description from field/group
                 , 'group_field_descs':  group_field_descs   # Resulting field description list
                 })
-
         # log.debug("FieldDescription: %s"%field_id)
         # log.info("FieldDescription._field_desc %r"%(self._field_desc,))
         # log.info("FieldDescription.field_placement %r"%(self._field_desc['field_placement'],))

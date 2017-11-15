@@ -46,9 +46,9 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] EntityRoot: add hook "._post_remove_processing"
     - [x] RecordType: add hook methods for update/remove type
     - [x] CollectionClosure: change method names from camelCase
-- [.] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+- [x] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
     - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
-    - [ ] Review EntityFnder to use collection cache methods.
+    - [xgit add ../..] Review EntityFinder to use collection cache methods.
     - [ ] Look for all uses of _children method?
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
@@ -56,6 +56,7 @@ See also: https://www.divio.com/en/blog/documentation/
         - models.collection: update_entity_types, used by collectiondata for data migration.
             - (calls get_uri_type; no change needed?)
         - models.entityfinder (false match; no change needed)
+            - FieldDescription calls entity_finder.get_collection_uri_subtypes (line 159)
         - models.entitytypeinfo: get_all_type_uris:
             - doesn't return closure
             - extracts all direct supertypes from type description

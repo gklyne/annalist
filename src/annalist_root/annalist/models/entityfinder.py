@@ -66,41 +66,57 @@ class EntityFinder(object):
 
         Each type is returned as a candidate type identifier string
         """
-        for t in self._coll._children(RecordType, altscope=altscope):
-            yield t
-        return
+        #@@
+        # for t in self._coll._children(RecordType, altscope=altscope):
+        #     yield t
+        #@@
+        return self._coll.cache_get_all_type_ids(altscope=altscope)
 
-    def get_collection_subtypes(self, type_id, altscope):
+    def get_collection_subtype_ids(self, supertype_id, altscope):
         """
-        Returns a iterator of `entitytypeinfo` objects for all subtypes
-        of the supplied type in the current collection, including the 
-        identified type itself.
+        Returns a iterator of type ids for all subtypes of the supplied type 
+        accessible in the indicated scope from the current collection, including 
+        the identified type itself.
         """
-        if not valid_id(type_id):
-            log.warning("EntityFinder.get_collection_uri_subtypes: invalid type_id %s"%(type_id,))
-            return []
-        supertypeinfo = EntityTypeInfo(self._coll, type_id)
-        supertypeuri  = supertypeinfo.get_type_uri()
-        if supertypeuri is None:
-            log.warning("EntityFinder.get_collection_uri_subtypes: no type_uri for %s"%(type_id,))
-        return self.get_collection_uri_subtypes(supertypeuri, altscope)
+        if not valid_id(supertype_id):
+            log.warning("EntityFinder.get_collection_subtype_ids: invalid type_id %s"%(supertype_id,))
+            return
+        supertype_info = EntityTypeInfo(self._coll, supertype_id)
+        supertype_uri  = supertype_info.get_type_uri()
+        if supertype_uri is not None:
+            for try_subtype_id in self.get_collection_type_ids(altscope):
+                #@@TODO: eliminate use of 'EntityTypeInfo' here?
+                # try_subtype_info = EntityTypeInfo(self._coll, try_subtype_id)
+                # if try_subtype_info and (supertype_uri in try_subtype_info.get_all_type_uris()):
+                # try_subtype     = try_subtype_info.recordtype
+                try_subtype = self._coll.cache_get_type(try_subtype_id)
+                if try_subtype:
+                    try_subtype_uri = try_subtype.get_uri()
+                    if ( ( supertype_uri == try_subtype_uri ) or
+                         ( supertype_uri in self._coll.cache_get_supertype_uris(try_subtype_uri) ) ):
+                        yield try_subtype_id
+        else:
+            log.warning("EntityFinder.get_collection_subtype_ids: no type_uri for %s"%(supertype_id,))
 
-    def get_collection_uri_subtypes(self, type_uri, altscope=None):
-        """
-        Returns a iterator of `entitytypeinfo` objects for all subtypes
-        of the supplied type in the current collection, including the 
-        identified type itself.
-        """
-        # log.info(
-        #     "@@ EntityFinder.get_collection_uri_subtypes: type_uri %s, altscope=%s"%
-        #     (type_uri, altscope)
-        #     )
-        if type_uri is not None:
-            for tid in self.get_collection_type_ids(altscope):
-                tinfo = EntityTypeInfo(self._coll, tid)
-                if tinfo and (type_uri in tinfo.get_all_type_uris()):
-                    yield tinfo
-        return 
+    #@@TODO: remove this?
+    # def get_collection_uri_subtypes(self, type_uri, altscope=None):
+    #     """
+    #     Returns a iterator of `entitytypeinfo` objects for all subtypes
+    #     of the supplied type in the current collection, including the 
+    #     identified type itself.
+    #     """
+    #     # log.info(
+    #     #     "@@ EntityFinder.get_collection_uri_subtypes: type_uri %s, altscope=%s"%
+    #     #     (type_uri, altscope)
+    #     #     )
+    #     #@@@@
+    #     if type_uri is not None:
+    #         for tid in self.get_collection_type_ids(altscope):
+    #             tinfo = EntityTypeInfo(self._coll, tid)
+    #             if tinfo and (type_uri in tinfo.get_all_type_uris()):
+    #                 yield tinfo
+    #     #@@@@
+    #     return
 
     def get_type_entities(self, type_id, user_permissions, altscope):
         """
@@ -130,9 +146,9 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        # NOTE: consider types from all scopes, then entities from specified scope
-        for entitytypeinfo in self.get_collection_subtypes(type_id, "all"):
-            es = entitytypeinfo.enum_entities_with_implied_values(
+        for subtype_id in self.get_collection_subtype_ids(type_id, "all"):
+            subtype_info = EntityTypeInfo(self._coll, subtype_id)
+            es = subtype_info.enum_entities_with_implied_values(
                     user_permissions, altscope=altscope
                     )
             es = list(es) #@@ Force strict eval
@@ -143,7 +159,7 @@ class EntityFinder(object):
 
     def get_all_types_entities(self, types, user_permissions, altscope):
         """
-        Iterate over all entities of all type ids from a supplied type iterator
+        Iterate over all entities of all types from a supplied type iterator
         """
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
