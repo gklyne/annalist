@@ -1,7 +1,7 @@
 """
 This module is used to cache per-collection type information.
 
-@@NOTE: the current implementation is type-specific, but the intent is that in due 
+NOTE: the current implementation is type-specific, but the intent is that in due 
 course it will be factored into a general value-cache and type-specific logic.
 """
 

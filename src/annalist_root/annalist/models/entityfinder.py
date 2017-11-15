@@ -66,10 +66,6 @@ class EntityFinder(object):
 
         Each type is returned as a candidate type identifier string
         """
-        #@@
-        # for t in self._coll._children(RecordType, altscope=altscope):
-        #     yield t
-        #@@
         return self._coll.cache_get_all_type_ids(altscope=altscope)
 
     def get_collection_subtype_ids(self, supertype_id, altscope):
@@ -85,10 +81,6 @@ class EntityFinder(object):
         supertype_uri  = supertype_info.get_type_uri()
         if supertype_uri is not None:
             for try_subtype_id in self.get_collection_type_ids(altscope):
-                #@@TODO: eliminate use of 'EntityTypeInfo' here?
-                # try_subtype_info = EntityTypeInfo(self._coll, try_subtype_id)
-                # if try_subtype_info and (supertype_uri in try_subtype_info.get_all_type_uris()):
-                # try_subtype     = try_subtype_info.recordtype
                 try_subtype = self._coll.cache_get_type(try_subtype_id)
                 if try_subtype:
                     try_subtype_uri = try_subtype.get_uri()
@@ -97,26 +89,6 @@ class EntityFinder(object):
                         yield try_subtype_id
         else:
             log.warning("EntityFinder.get_collection_subtype_ids: no type_uri for %s"%(supertype_id,))
-
-    #@@TODO: remove this?
-    # def get_collection_uri_subtypes(self, type_uri, altscope=None):
-    #     """
-    #     Returns a iterator of `entitytypeinfo` objects for all subtypes
-    #     of the supplied type in the current collection, including the 
-    #     identified type itself.
-    #     """
-    #     # log.info(
-    #     #     "@@ EntityFinder.get_collection_uri_subtypes: type_uri %s, altscope=%s"%
-    #     #     (type_uri, altscope)
-    #     #     )
-    #     #@@@@
-    #     if type_uri is not None:
-    #         for tid in self.get_collection_type_ids(altscope):
-    #             tinfo = EntityTypeInfo(self._coll, tid)
-    #             if tinfo and (type_uri in tinfo.get_all_type_uris()):
-    #                 yield tinfo
-    #     #@@@@
-    #     return
 
     def get_type_entities(self, type_id, user_permissions, altscope):
         """
@@ -173,15 +145,9 @@ class EntityFinder(object):
         If a type_id is supplied, site data values are included.
         """
         if type_id:
-            #@@
-            # log.info("get_base_entities: type_id %s"%type_id)
-            #@@
             return self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)
         else:
-            #@@
-            # log.info("get_base_entities: all types")
-            #@@
             return self.get_all_types_entities(
                 self.get_collection_type_ids(altscope="all"), user_permissions, altscope
                 )

@@ -48,7 +48,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] CollectionClosure: change method names from camelCase
 - [x] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
     - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
-    - [xgit add ../..] Review EntityFinder to use collection cache methods.
+    - [x] Review EntityFinder to use collection cache methods.
     - [ ] Look for all uses of _children method?
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method

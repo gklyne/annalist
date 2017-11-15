@@ -207,10 +207,8 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
-        # print("@@ Test migrate old configuration from %s"%(coll_conf_old_dir,))
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
-            # print("@@ Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):
                 old_path = os.path.join(coll_conf_old_dir, old_name)
                 if ( ( os.path.isdir(old_path) ) or
@@ -218,7 +216,6 @@ class Collection(Entity):
                    ):
                     log.info("- %s -> %s"%(old_name, coll_base_dir))
                     new_path = os.path.join(coll_base_dir, old_name)
-                    # print ("@@ rename %s -> %s"%(old_path, new_path))
                     try:
                         os.rename(old_path, new_path)
                     except Exception as e:
@@ -228,7 +225,6 @@ class Collection(Entity):
                                 , "exc": e
                                 }
                             )
-                        # print "@@ "+msg
                         log.error("Collection._migrate_collection_config_dir: "+msg)
                         assert False, msg
             # Rename old config dir to avoid triggering this logic again
@@ -242,7 +238,6 @@ class Collection(Entity):
                         , "exc": e
                         }
                     )
-                # print "@@ "+msg
                 log.error("Collection._migrate_collection_config_dir: "+msg)
                 assert False, msg
         return
@@ -493,17 +488,10 @@ class Collection(Entity):
         t       = self.get_uri_type(type_uri)
         if t:
             assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
-            #@@
-            # if type_uri == "test:test_subtype_type":
-            #     log.info("@@ Migrating types for %s/%s/%s"%(self.get_id(), t.get_id(), e.get_id()))
-            #     log.info("@@ Supertypes %r"%(t.get(ANNAL.CURIE.supertype_uri, None),))
-            #     log.info("@@ Cache supertypes %r"%(list(type_cache.get_type_uri_supertypes(self, type_uri)),))
-            #@@
             for st in type_cache.get_type_uri_supertypes(self, type_uri):
                 st_uri = st.get_uri()
                 if st_uri not in st_uris:
                     st_uris.append(st_uri)
-        # log.info("@@ update_entity_types type_uri %r, st_uris %r"%(type_uri, st_uris))
         e['@type'] = st_uris
         return
 
@@ -619,7 +607,6 @@ class Collection(Entity):
         Return the default list to be displayed for the current collection.
         """
         list_id = self.get(ANNAL.CURIE.default_list, None)
-        # print "@@ get_default_list %s"%list_id
         if list_id and not RecordList.exists(self, list_id, altscope="all"):
             log.warning(
                 "Default list %s for collection %s does not exist"%
