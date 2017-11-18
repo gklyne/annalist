@@ -305,15 +305,19 @@ class EntityRoot(object):
         Return directory and path for current entity body file
         """
         if self._entitybase is None:
-            raise ValueError(
+            msg = (
                 "EntityRoot._dir_path without defined entity base reference (%s/%s)"%
                 (self._entitytypeid, self._entityid,)
                 )
+            log.error(msg)
+            raise ValueError(msg)
         if self._entityfile is None:
-            raise ValueError(
+            msg = (
                 "EntityRoot._dir_path without defined entity file path (%s/%s)"%
                 (self._entitytypeid, self._entityid,)
                 )
+            log.error(msg)
+            raise ValueError(msg)
         # log.info("    _ EntityRoot._dir_path _entitydir  %s"%(self._entitydir,))
         # log.info("    _ EntityRoot._dir_path _entitybase %s"%(self._entitybase,))
         # log.info("    _ EntityRoot._dir_path _entityfile %s"%(self._entityfile,))
@@ -380,13 +384,21 @@ class EntityRoot(object):
         """
         # @@TODO: think about capturing provenance metadata too.
         if not self._entityref:
-            raise ValueError("Entity._save without defined entity reference")
+            msg = "Entity._save without defined entity reference"
+            log.error(msg)
+            raise ValueError(msg)
         if not self._contextbase:
-            raise ValueError("Entity._save without defined context base")
+            msg = "Entity._save without defined context base"
+            log.error(msg)
+            raise ValueError(msg)
         if not self._contextref:
-            raise ValueError("Entity._save without defined context reference")
+            msg = "Entity._save without defined context reference"
+            log.error(msg)
+            raise ValueError(msg)
         if not self._values:
-            raise ValueError("Entity._save without defined entity values")
+            msg = "Entity._save without defined entity values"
+            log.error(msg)
+            raise ValueError(msg)
         (body_dir, body_file) = self._dir_path()
         # log.debug("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
         fullpath = os.path.join(settings.BASE_DATA_DIR, "annalist_site", body_file)
@@ -395,10 +407,12 @@ class EntityRoot(object):
             log.error("EntityRoot._save: Failing to create entity at %s"%(fullpath,))
             log.info("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
             log.info("EntityRoot._save: settings.BASE_DATA_DIR %s"%(settings.BASE_DATA_DIR,))
-            raise ValueError(
+            msg = (
                 "Attempt to create entity file outside Annalist site tree (%s)"%
                 fullpath
                 )
+            log.error(msg)
+            raise ValueError(msg)
         # Create directory (if needed) and save data
         util.ensure_dir(body_dir)
         values = self.get_save_values()

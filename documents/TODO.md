@@ -31,6 +31,13 @@ See also: https://www.divio.com/en/blog/documentation/
     - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
     - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
 - [x] BUG: Login sequence from authz error page does not always return to original page viewed
+- [ ] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
+    - 500: Server error
+    - u'frbr:Group_1_entity' - see server log for details
+    - Seems to occur while (re)generating context
+    - Maybe related to removal of a supertype rather than view/list
+- [ ] BUG?: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+- [ ] When generating subtype (task button), don't include supertypes
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
@@ -52,23 +59,13 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Look for all uses of _children method?
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
-    - supertype_uri referenced by:
-        - models.collection: update_entity_types, used by collectiondata for data migration.
-            - (calls get_uri_type; no change needed?)
-        - models.entityfinder (false match; no change needed)
-            - FieldDescription calls entity_finder.get_collection_uri_subtypes (line 159)
-        - models.entitytypeinfo: get_all_type_uris:
-            - doesn't return closure
-            - extracts all direct supertypes from type description
-        - models.recordtype
-            - (data migration only; no change needed?)
-        - (and various tests)
     - [x] Created ClosureCache class
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 
 (Sub-release?)
 
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
+    - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 

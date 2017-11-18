@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import sys
 import os
 import urlparse
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -167,6 +168,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 add_field
                 )
         except Exception as e:
+            # -- This should be redundant, but...
+            log.error("Exception in GenericEntityEditView.get (%r)"%(e))
+            log.error("".join(traceback.format_stack()))
+            # --
             log.exception(str(e))
             response = self.error(
                 dict(self.error500values(),
@@ -259,6 +264,10 @@ class GenericEntityEditView(AnnalistGenericView):
         try:
             response = self.form_response(viewinfo, context_extra_values)
         except Exception as e:
+            # -- This should be redundant, but...
+            log.error("Exception in GenericEntityEditView.post (%r)"%(e))
+            log.error("".join(traceback.format_stack()))
+            # --
             log.exception(str(e))
             response = self.error(
                 dict(self.error500values(),
@@ -1904,13 +1913,6 @@ class GenericEntityEditView(AnnalistGenericView):
             base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
             base_view_entity_id = base_type_entity.get(ANNAL.CURIE.type_view, "Default_view")
             base_list_entity_id = base_type_entity.get(ANNAL.CURIE.type_list, "Default_list")
-            #@@
-            # base_type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
-            # base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_type_id
-            # base_supertypes     = entityformvals[ANNAL.CURIE.supertype_uri]
-            # base_view_entity_id = entityformvals[ANNAL.CURIE.type_view]
-            # base_list_entity_id = entityformvals[ANNAL.CURIE.type_list]
-            #@@
             # Set up subtype details
             sub_type_id         = base_type_id+layout.SUFFIX_SUBTYPE
             sub_type_entity_id  = entitytypeinfo.TYPE_ID+"/"+sub_type_id

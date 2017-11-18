@@ -151,10 +151,14 @@ class ClosureCache(object):
         """
         if v1 == v2:
             # Preserve invariant D1 (hence D2 by symmetry)
-            raise Closure_Error(value=v1, msg="Attempt to define relation with itself")
+            msg = "Attempt to define relation with itself"
+            # log.error(msg)
+            raise Closure_Error(value=v1, msg=msg)
         if v2 in self.rev_closure(v1):
             # Preserve invariant D3
-            raise Closure_Error(value=(v1,v2), msg="Attempt to define forward relation for which closure contains reverse ralation")
+            msg="Attempt to define forward relation for which closure contains reverse relation"            
+            # log.error(msg)
+            raise Closure_Error(value=(v1,v2), msg=msg)
         if (v1 in self._fwd_rel) and (v2 in self._fwd_rel[v1]):
             # Already defined - no change hence invariants preserved
             return False

@@ -142,7 +142,8 @@ class Entity(EntityRoot):
                     installed metadata entites (i.e. types, views, etc.)
         """
         if not util.valid_id(entityid):
-            raise ValueError("Invalid entity identifier: %s"%(entityid))
+            msg = "Invalid entity identifier: %s"%(entityid)
+            raise ValueError(msg)
         relpath = self.relpath(entityid)
         # log.debug(
         #     "@@  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%

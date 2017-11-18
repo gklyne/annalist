@@ -49,9 +49,10 @@ div.row .row {
 */
 
 div.row
-{   /* Outermost row padding */
+{   /* Outermost row padding and max width*/
     margin:  0 0rem;
     padding: 0 0.5rem;
+    max-width: 1280px;
 }
 
 div.row .columns ,

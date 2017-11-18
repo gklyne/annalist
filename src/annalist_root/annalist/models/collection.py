@@ -457,7 +457,9 @@ class Collection(Entity):
         returns a RecordType object for the identified type, or None.
         """
         if not valid_id(type_id):
-            raise ValueError("Collection %s get_type(%s) invalid id"%(self.get_id(), type_id))
+            msg = "Collection %s get_type(%s) invalid id"%(self.get_id(), type_id)
+            log.error(msg)
+            raise ValueError(msg, type_id)
         return self.cache_get_type(type_id)
 
     def get_uri_type(self, type_uri):
@@ -877,7 +879,9 @@ class Collection(Entity):
         elif is_render_type_object(rtype):
             fcontext = {}
         else:
-            raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+            msg = "Unexpected value mode or render type (%s, %s)"%(vmode, rtype)
+            log.error(msg)
+            raise ValueError(msg)
 
         if is_render_type_set(rtype):
             fcontext["@container"] = "@set"

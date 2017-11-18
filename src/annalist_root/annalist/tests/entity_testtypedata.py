@@ -243,7 +243,7 @@ def recordtype_entity_view_context_data(
               })
           , { 'field_id':             'Type_supertype_uris'
             , 'field_name':           'Type_supertype_uris'
-            , 'field_value_type':     'annal:Type_supertype_uri'
+            , 'field_value_type':     'annal:Type_supertype_uris'
             , 'field_label':          'Supertype URIs'
             , 'field_render_type':    'RepeatGroupRow'
             , 'field_value_mode':     'Value_direct'

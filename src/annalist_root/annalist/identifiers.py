@@ -142,6 +142,8 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "Placement", "Image", "Audio", "Video", "Vocabulary"
     , "Resource"
     , "Default_type", "Unknown_type"
+    # Repeat/list group types
+    , "Type_supertype_uri" # @@deprecated?
     # Properties in list JSON
     , "entity_list"
     # Properties in internal entities

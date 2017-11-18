@@ -519,7 +519,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
                     <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">
-                      Optional reference to selected entity
+                      Optional entity reference
                     </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>

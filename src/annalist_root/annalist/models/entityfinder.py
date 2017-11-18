@@ -431,7 +431,8 @@ class EntitySelector(object):
             elif selval['type'] == "literal":
                 return get_literal(selval['value'])
             else:
-                raise ValueError("Unrecognized value type from selector (%s)"%selval['type'])
+                msg = "Unrecognized value type from selector (%s)"%selval['type']
+                raise ValueError(msg)
                 assert False, "Unrecognized value type from selector"
         #
         def match_eq(v1f, v2f):
@@ -458,7 +459,8 @@ class EntitySelector(object):
             return None
         sel = self.parse_selector(selector)
         if not sel:
-            raise ValueError("Unrecognized selector syntax (%s)"%selector)
+            msg = "Unrecognized selector syntax (%s)"%selector
+            raise ValueError(msg)
         v1f = get_val_f(sel['val1'])
         v2f = get_val_f(sel['val2'])
         if sel['comp'] == "==":
@@ -468,7 +470,8 @@ class EntitySelector(object):
         if sel['comp'] == "subtype":
             return match_subtype(v1f, v2f)
         # Drop through: raise error
-        raise ValueError("Unrecognized entity selector (%s)"%selector)
+        msg = "Unrecognized entity selector (%s)"%selector
+        raise ValueError(msg)
 
 #   -------------------------------------------------------------------
 #   FieldComparison
