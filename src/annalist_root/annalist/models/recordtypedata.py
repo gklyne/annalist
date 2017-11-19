@@ -54,7 +54,7 @@ class RecordTypeData(Entity):
 
     # @@TODO remove this method and re-test 
     # (now redundant, handled through Entity class, methdod child_entities)
-    def entities(self):
+    def ___entities(self):
         """
         Generator enumerates and returns records of given type
         """

@@ -1562,7 +1562,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "%(type_uri)s"%common_vals
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.MANY_FIELD_PLACEHOLDER%common_vals

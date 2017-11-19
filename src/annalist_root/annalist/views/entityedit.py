@@ -1978,6 +1978,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
                 )
+            repeat_value_type        = repeat_entity_type
             field_params = { "field_id": field_entity_id, "field_label": field_label }
             repeat_field_label       = message.MANY_FIELD_LABEL%field_params
             repeat_field_comment     = message.MANY_FIELD_COMMENT%field_params
@@ -2003,7 +2004,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_entity.setdefault(ANNAL.CURIE.placeholder,          repeat_field_placeholder)
             repeat_field_entity.setdefault(ANNAL.CURIE.property_uri,         repeat_property_uri)
             repeat_field_entity.setdefault(ANNAL.CURIE.field_entity_type,    repeat_entity_type)
-            repeat_field_entity.setdefault(ANNAL.CURIE.field_value_type,     field_value_type)
+            repeat_field_entity.setdefault(ANNAL.CURIE.field_value_type,     repeat_value_type)
             repeat_field_entity.setdefault(ANNAL.CURIE.field_placement,      "small:0,12")
             repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_add,     repeat_field_add)
             repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_delete,  repeat_field_delete)

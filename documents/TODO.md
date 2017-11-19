@@ -31,13 +31,16 @@ See also: https://www.divio.com/en/blog/documentation/
     - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
     - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
 - [x] BUG: Login sequence from authz error page does not always return to original page viewed
-- [ ] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
+- [x] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
     - 500: Server error
     - u'frbr:Group_1_entity' - see server log for details
     - Seems to occur while (re)generating context
     - Maybe related to removal of a supertype rather than view/list
+    - Or related to copy type then change URI?
+    - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
+    - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
+- [x] BUG: define repeat field: should use base type for value and entity type
 - [ ] BUG?: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
-- [ ] When generating subtype (task button), don't include supertypes
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
@@ -53,13 +56,14 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] EntityRoot: add hook "._post_remove_processing"
     - [x] RecordType: add hook methods for update/remove type
     - [x] CollectionClosure: change method names from camelCase
-- [x] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+- [x] Use transitive closure when locating entities of a designated type (for selecting applicable fields).
     - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
     - [x] Review EntityFinder to use collection cache methods.
     - [ ] Look for all uses of _children method?
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
     - [x] Created ClosureCache class
+- [ ] When generating subtype (task button), don't include supertypes
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 
 (Sub-release?)

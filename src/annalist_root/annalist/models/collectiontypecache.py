@@ -176,8 +176,8 @@ class CollectionTypeCacheObject(object):
         type_entity = self._make_type(coll, type_id, type_values)
         if type_entity:
             type_uri = type_entity.get_uri()
-            del self._types_by_id[type_id]
-            del self._type_ids_by_uri[type_uri]
+            self._types_by_id.pop(type_id, None)
+            self._type_ids_by_uri.pop(type_uri, None)
             self._supertype_closure.remove_val(type_uri)
             self._type_ids_by_scope = {}
         return type_entity
