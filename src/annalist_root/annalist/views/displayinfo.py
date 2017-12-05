@@ -323,6 +323,19 @@ class DisplayInfo(object):
                 self.add_error_messages(self.collection.get_errors())
         return self.http_response
 
+    def flush_collection_caches(self):
+        """
+        Called to flush collection caches so that changes made independentlyu of the caches
+        can be used.
+
+        NOTE: this is currently called by the top-level collection view.  This is a bit of 
+        a hack to ensure that it is always possible for the user to force caches to be flushed,
+        e.g. when type informatiuon is updated in a different tab or by another user.
+        """
+        assert (self.collection is not None)
+        self.collection.flush_collection_caches()
+        return
+
     def update_coll_version(self):
         """
         Called when an entity has been updated to also update the data version 

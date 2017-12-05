@@ -40,7 +40,13 @@ See also: https://www.divio.com/en/blog/documentation/
     - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
     - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
 - [x] BUG: define repeat field: should use base type for value and entity type
+- [ ] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
+    - At minimum, need an easy way to force cache-refresh.
+    - Better: invalidate caches for dependent collections when invalidating parent.
+    - NOTE: type update does not do complete cache flush - maybe it should?
+    - NOTE: collection-level type cache is not currently called anywhere apart from tests
 - [ ] BUG?: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+- [ ] BUG: create subtype of paremnt type, and rename, then attempt to create view+list before saving: generates an error message about <name>_sub already existing.
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
@@ -63,8 +69,12 @@ See also: https://www.divio.com/en/blog/documentation/
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
     - [x] Created ClosureCache class
-- [ ] When generating subtype (task button), don't include supertypes
+- [ ] When rendering link, expand prefix in href if defined in collection
+- [x] When generating subtype (task button), don't include supertypes
 - [ ] Provide renderer that shows calculated supertype transitive closure?
+- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
+    - copied-from field in entity?
+    - task button to move edits back if copied-from is defined?
 
 (Sub-release?)
 

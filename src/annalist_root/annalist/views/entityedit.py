@@ -1910,7 +1910,7 @@ class GenericEntityEditView(AnnalistGenericView):
             base_type_entity    = type_typeinfo.get_entity(base_type_id)
             base_type_label     = base_type_entity.get(RDFS.CURIE.label, base_type_id)
             base_type_uri       = base_type_entity.get(ANNAL.CURIE.uri,  "_coll:"+base_type_id)
-            base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
+            #@@@ base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
             base_view_entity_id = base_type_entity.get(ANNAL.CURIE.type_view, "Default_view")
             base_list_entity_id = base_type_entity.get(ANNAL.CURIE.type_list, "Default_list")
             # Set up subtype details
@@ -1929,7 +1929,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 , "base_type_label":    base_type_label
                 })
             sub_type_comment    = message.SUBTYPE_COMMENT%sub_type_values
-            sub_type_supertypes = [{ "@id": base_type_uri }] + base_supertypes
+            sub_type_supertypes = [{ "@id": base_type_uri }] #@@@ + base_supertypes
             # Create subtype record, and save
             type_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.TYPE_ID

@@ -117,6 +117,13 @@ class Collection(Entity):
             collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
         return collmetadata
 
+    def flush_collection_caches(self):
+        """
+        Flush all caches associated with the current collection
+        """
+        type_cache.flush_cache(self)
+        return
+
     # Site
 
     def get_site(self):

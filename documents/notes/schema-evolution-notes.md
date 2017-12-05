@@ -58,6 +58,13 @@ The main type URI and all supertype URIs are included when
 entities are created or updated, according to their Annalist type.
 
 
+## Renaming a type
+
+(a) need to find all references and update them
+
+(b) On somne systems (e.g, MacOS), renames that only change the case of characters in the type name fail because the file system naming is case-insensitive.  These renames need to be done in two stages.
+
+
 ## Change type URI
 
 Update URI in Annalist type declaration.

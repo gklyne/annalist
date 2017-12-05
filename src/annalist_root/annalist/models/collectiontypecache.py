@@ -334,6 +334,7 @@ class CollectionTypeCache(object):
         """
         coll_id = coll.get_id()
         cache   = self._caches.pop(coll_id, None)
+        log.info("CollectionTypeCache: flushed type cache for collection %s"%(coll_id,))
         return (cache is not None)
 
     def flush_all(self):
@@ -341,6 +342,7 @@ class CollectionTypeCache(object):
         Remove all cached data for all collections.
         """
         self._caches = {}
+        log.info("CollectionTypeCache: flushed type cache for all collections")
         return
 
     # Collection type cache alllocation and access methods
