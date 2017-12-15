@@ -534,24 +534,40 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                   .find_all("div", class_="columns")
             )
         self.assertEqual(thead[0].span.string, "Id")
-        self.assertEqual(thead[1].span.string, "Label")
+        self.assertEqual(thead[1].span.string, "Type URI")
+        self.assertEqual(thead[2].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_coll",             ["_coll",             "Collection"            ] ]
-            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"     ] ]
-            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"     ] ]
-            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"      ] ]
-            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"      ] ]
-            , [ "_type/_field",            ["_field",            "Field"                 ] ]
-            , [ "_type/_group",            ["_group",            "Field group"           ] ]
-            , [ "_type/_list",             ["_list",             "List"                  ] ]
-            , [ "_type/_type",             ["_type",             "Type"                  ] ]
-            , [ "_type/_user",             ["_user",             "User permissions"      ] ]
-            , [ "_type/_view",             ["_view",             "View"                  ] ]
-            , [ "_type/_vocab",            ["_vocab",            "Namespace"             ] ]
-            , [ "_type/Default_type",      ["Default_type",      "Default record"        ] ]
-            , [ "_type/type1",             ["type1",             "RecordType coll1/type1"] ]
-            , [ "_type/type2",             ["type2",             "RecordType coll1/type2"] ]
+            [ [ "_type/_coll",             
+                [ "_coll",             "annal:Collection",       "Collection"            ] ]
+            , [ "_type/_enum_list_type",   
+                [ "_enum_list_type",   "annal:Enum_list_type",   "List display type"     ] ]
+            , [ "_type/_enum_render_type", 
+                [ "_enum_render_type", "annal:Enum_render_type", "Field render type"     ] ]
+            , [ "_type/_enum_value_mode",  
+                [ "_enum_value_mode",  "annal:Enum_value_mode",  "Field value mode"      ] ]
+            , [ "_type/_enum_value_type",  
+                [ "_enum_value_type",  "annal:Enum_value_type",  "Field value type"      ] ]
+            , [ "_type/_field",            
+                [ "_field",            "annal:Field",            "Field"                 ] ]
+            , [ "_type/_group",            
+                [ "_group",            "annal:Field_group",      "Field group"           ] ]
+            , [ "_type/_list",             
+                [ "_list",             "annal:List",             "List"                  ] ]
+            , [ "_type/_type",             
+                [ "_type",             "annal:Type",             "Type"                  ] ]
+            , [ "_type/_user",             
+                [ "_user",             "annal:User",             "User permissions"      ] ]
+            , [ "_type/_view",             
+                [ "_view",             "annal:View",             "View"                  ] ]
+            , [ "_type/_vocab",            
+                [ "_vocab",            "annal:Vocabulary",       "Namespace"             ] ]
+            , [ "_type/Default_type",      
+                [ "Default_type",      "annal:Default_type",     "Default record"        ] ]
+            , [ "_type/type1",             
+                [ "type1",             "(@@no value@@)",         "RecordType coll1/type1"] ]
+            , [ "_type/type2",             
+                [ "type2",             "(@@no value@@)",         "RecordType coll1/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return

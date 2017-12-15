@@ -69,7 +69,7 @@ See also: https://www.divio.com/en/blog/documentation/
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
     - [x] Created ClosureCache class
-- [ ] Show type URIs in type list
+- [x] Show type URIs in type list
 - [ ] When rendering link, expand prefix in href if defined in collection
 - [x] When generating subtype (task button), don't include supertypes
 - [ ] Provide renderer that shows calculated supertype transitive closure?
