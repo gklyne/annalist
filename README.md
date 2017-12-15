@@ -5,9 +5,9 @@ annalist
 
 A free-form web data notebook - "Data management for little guys"
 
-Current status (2017-02-13):  public prototype, released for evaluation and feedback, approachiong feature freeze for a version 1 release.
+Current status (2017-08-30):  public prototype, released for evaluation and feedback, tentative feature freeze for a version 1 release.
 
-For information about the current release, please refer to the [V0.1 release notes](documents/release-notes/release-v0.1.md)
+For information about the current release, please refer to the [V0.5 release notes](documents/release-notes/release-v0.5.md)
 
 NOTE: most recent stable software release is on the Git `master` branch; current development work is on the `develop` branch.
 
@@ -84,9 +84,9 @@ Acknowledgements
 
 Ideas motivating the creation of Annalist arose from discussions with past colleagues in the Zoology department at Oxford University, particularly Dr David Shotton who led the BioImage project, and Dr Helen White-Cooper who patiently explained her processes and data handling needs as a genomic researcher.
 
-David Flanders, formerly of JISC and now at University of Melbourne, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, provided many technical and management lessons that have contributed to the development of Annalist.
+David Flanders, formerly of JISC, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, provided technical and management lessons that have contributed to the development of Annalist.
 
-More recently, work in the European [Wf4Ever project](http://www.wf4ever-project.org), which explored the use of Research Objects to capture details of scientific method along with experimental data, raised many questions about the nature of tools needed to support publication of reproducible and re-usable research data.  The numerous discussions and experiments have informed many of the design ideas and choices that have gone in to Annalist.
+More recently, work with the European [Wf4Ever project](http://www.wf4ever-project.org), EPSRC [Fusing Audio and Semantic Technologies (FAST)](http://www.semanticaudio.ac.uk) and Mellon [Cultures of Knowledge](http://www.culturesofknowledge.org) have provided valuable insights into the nature of tools needed to support publication of reproducible and re-usable research data.  Numerous experiments and discussions with colleagues have informed many of the design ideas and choices that have gone in to Annalist.
 
 ----
 

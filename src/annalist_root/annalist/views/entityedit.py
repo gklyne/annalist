@@ -237,9 +237,12 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'orig_id':            orig_entity_id
             , 'orig_type':          orig_entity_type_id
             , 'orig_coll':          orig_entity_coll_id
+            , 'save_id':            viewinfo.curr_entity_id
+            , 'save_type':          viewinfo.curr_type_id
+            , 'save_coll':          viewinfo.coll_id
             , 'continuation_param': viewinfo.get_continuation_param()
             })
-        message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
+        message_vals = dict(context_extra_values, id=entity_id, type_id=type_id, coll_id=coll_id)
         messages = (
             { 'parent_heading':         typeinfo.entitymessages['parent_heading']%message_vals
             , 'parent_missing':         typeinfo.entitymessages['parent_missing']%message_vals
@@ -1168,7 +1171,7 @@ class GenericEntityEditView(AnnalistGenericView):
             # First save - check for existence
             if save_typeinfo.entity_exists(save_entity_id):
                 log.warning(
-                    "Entity exists (new): %s/%s, orig %s/%s"%
+                    "Entity exists (new): %s/%s"%
                         (save_typeinfo.type_id, save_entity_id)
                     )
                 err_vals = (

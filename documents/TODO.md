@@ -46,7 +46,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - NOTE: type update does not do complete cache flush - maybe it should?
     - NOTE: collection-level type cache is not currently called anywhere apart from tests
 - [ ] BUG?: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
-- [ ] BUG: create subtype of paremnt type, and rename, then attempt to create view+list before saving: generates an error message about <name>_sub already existing.
+- [ ] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.

@@ -56,6 +56,7 @@
     - [ ] src/newkit_to_annalist_dev.sh
     - [ ] src/newkit_to_conina_ubuntu.sh
     - [ ] Docker build scripts and makefiles
+- [ ] Review and update GitHub project README.
 - [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`
 - [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
     - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
