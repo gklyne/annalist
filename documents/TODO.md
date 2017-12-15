@@ -69,9 +69,9 @@ See also: https://www.divio.com/en/blog/documentation/
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
     - [x] Created ClosureCache class
+- [ ] Show type URIs in type list
 - [ ] When rendering link, expand prefix in href if defined in collection
 - [x] When generating subtype (task button), don't include supertypes
-- [ ] Show type URIs in type list
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
     - copied-from field in entity?

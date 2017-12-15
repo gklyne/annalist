@@ -15,8 +15,11 @@
   [ { "annal:field_id":             "_field/Entity_id"
     , "annal:field_placement":      "small:0,3"
     }
+  , { "annal:field_id":         	"_field/Type_uri"
+    , "annal:field_placement":  	"small:3,3"
+    }
   , { "annal:field_id":             "_field/Entity_label"
-    , "annal:field_placement":      "small:3,9"
+    , "annal:field_placement":      "small:6,6"
     }
   ]
 }
