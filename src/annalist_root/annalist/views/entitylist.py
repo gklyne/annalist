@@ -238,6 +238,7 @@ class EntityGenericListView(AnnalistGenericView):
                 , 'default_view_id':        listinfo.recordlist[ANNAL.CURIE.default_view]
                 , 'default_view_enable':    'disabled="disabled"'
                 , 'customize_view_enable':  'disabled="disabled"'
+                , 'collection':             listinfo.collection
                 })
             if listinfo.authorizations['auth_config']:
                 context_extra_values['customize_view_enable'] = ""

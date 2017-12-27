@@ -54,7 +54,7 @@ def initialize_coll_data(src_data_dir, tgt_coll):
                 log.info("- %s -> %s"%(edir, tgt_data_dir))
                 Site.replace_site_data_dir(tgt_coll, edir, expand_entitydata)
     # Generate initial JSON-LD context data
-    tgt_coll.reset_type_cache()
+    tgt_coll.flush_all_caches()
     tgt_coll.generate_coll_jsonld_context()
     return []
 

@@ -30,6 +30,7 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordview     import RecordView
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordfield    import RecordField
+from annalist.models.recordvocab    import RecordVocab
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
@@ -44,6 +45,10 @@ sitedata_target_reset = "all"
 def resetSitedata(scope="all"):
     """
     Set flag to reset site and/or collection data at next test initialization
+
+    (This is really just a performance hack to reduce the amount of file copying performed 
+    for each test.  Tests should run correctly if all site and collection data is reset for 
+    every test, but that causes the tests take much longer to run.)
     """
     global sitedata_target_reset
     if sitedata_target_reset != "all":
@@ -104,13 +109,14 @@ def init_annalist_test_site():
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)
     testsite.generate_site_jsonld_context()
-    Collection.reset_type_cache()
+    Collection.flush_all_caches()
     # Reset id generator counters
     EntityData._last_id   = 0
     RecordType._last_id   = 0
     RecordView._last_id   = 0
     RecordList._last_id   = 0
     RecordField._last_id  = 0
+    RecordVocab._last_id  = 0
     AnnalistUser._last_id = 0
     return testsite
 

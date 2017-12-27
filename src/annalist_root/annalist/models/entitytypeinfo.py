@@ -248,7 +248,7 @@ SITE_PERMISSIONS_MAP = (
     , VIEW_ID:                  SITE_PERMISSIONS
     , GROUP_ID:                 SITE_PERMISSIONS
     , FIELD_ID:                 SITE_PERMISSIONS
-    , VOCAB_ID:                 ADMIN_PERMISSIONS  #@@ CONFIG??
+    , VOCAB_ID:                 SITE_PERMISSIONS
     , '_enum_field_placement':  SITE_PERMISSIONS  
     , '_enum_list_type':        SITE_PERMISSIONS
     , '_enum_render_type':      SITE_PERMISSIONS

@@ -32,6 +32,8 @@ from annalist.models.recordtype     import RecordType
 # 
 #   ---------------------------------------------------------------------------
 
+#@@TODO: rename to Type_Cache_Error..
+
 class Cache_Error(Annalist_Error):
     """
     Class for errors raised by closure calculations.
@@ -65,7 +67,7 @@ class CollectionTypeCacheObject(object):
     added to or removed from the type cache, lacking information about the scopes 
     where it is visible, the scope cache is cleared.
 
-    Scope cvalues currently include "user", "all", "site"; None => "coll".
+    Scope values currently include "user", "all", "site"; None => "coll".
     Apart from treating None as collection local scope, the logic in this class
     treats scope names as opaque identifiers.  The scope logic is embedded mainly
     in the Entity and EntityRoot class methods "_children".

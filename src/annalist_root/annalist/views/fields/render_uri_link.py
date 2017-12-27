@@ -41,6 +41,8 @@ class URILinkValueMapper(RenderBase):
         """
         Decodes a URI string value as a link
         """
+        if isinstance(field_value, (str, unicode)):
+            field_value = field_value.strip()
         return field_value or ""
 
 
@@ -56,7 +58,9 @@ class uri_link_view_renderer(object):
         """
         Render link for viewing.
         """
+        # try:
         linkval = URILinkValueMapper.encode(get_field_view_value(context, ""))
+        log.info("uri_link_view_renderer: linkval %r (orig)"%(linkval,))
         common_prefixes = (
             [ "http://", "https://"
             , "file:///", "file://localhost/", "file://"
@@ -64,9 +68,28 @@ class uri_link_view_renderer(object):
             )
         textval = linkval
         for p in common_prefixes:
-            if linkval.startswith(p):
+            if isinstance(linkval, (str, unicode)) and linkval.startswith(p):
                 textval = linkval[len(p):]
                 break
+        if ":" in linkval:
+            link_pref, link_path = linkval.split(":", 1)
+            if "collection" not in context:
+                log.warning("uri_link_view_renderer: no key 'collection' in context")
+                # log.error("@@@@@@@@@@@@@@@@@@@@@")
+                # for k in context.flatten():
+                #     hidden_fields = (
+                #         [ "fields", "row_bound_fields", "repeat_bound_fields"
+                #         , "help_text", "help_markdown"
+                #         , "forloop", "f", "block", "view_choices"
+                #         , "LANGUAGES"
+                #         ])
+                #     if k not in hidden_fields:
+                #         log.error("    @@@ %s: %r"%(k, context[k]))
+            else:
+                link_vocab = context["collection"].cache_get_vocab(link_pref)
+                if link_vocab:
+                    linkval = link_vocab.get_uri() + link_path
+        log.info("uri_link_view_renderer: linkval %r (final)"%(linkval,))
         return '''<a href="%s" target="_blank">%s</a>'''%(linkval, textval)
 
 class uri_link_edit_renderer(object):

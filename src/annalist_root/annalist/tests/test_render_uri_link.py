@@ -20,20 +20,25 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                                import settings
-# from django.test                                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-# from django.template                            import Context, Template, loader
+from annalist.models.site       import Site
+from annalist.models.collection import Collection
+
+from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from field_rendering_support    import FieldRendererTestSupport
 
 from annalist.views.fields.render_uri_link import (
     get_uri_link_renderer, 
     URILinkValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
-
 class UriLinkRenderingTest(FieldRendererTestSupport):
 
     def setUp(self):
+        init_annalist_test_site()
+        init_annalist_test_coll()
+        self.testsite     = Site(TestBaseUri, TestBaseDir)
+        self.testcoll     = Collection(self.testsite, "testcoll")
         return
 
     def tearDown(self):
@@ -59,8 +64,43 @@ class UriLinkRenderingTest(FieldRendererTestSupport):
             , ("foo://example.com/more",          "foo://example.com/more")
             ])
         test_value_context_renders = (
-            [ (self._make_test_context(linktext),  expect_render(linktext, labeltext))
-                for linktext, labeltext in test_values
+            [ ( self._make_test_context(linktext, coll=self.testcoll)
+              , expect_render(linktext, labeltext)
+              ) for linktext, labeltext in test_values
+            ])
+        renderer = get_uri_link_renderer()
+
+        for render_context, expect_render in test_value_context_renders:
+            # print repr(render_context['field']['field_value'])
+            self._check_value_renderer_results(
+                renderer,
+                context=render_context,
+                expect_rendered_view=expect_render['view'],
+                expect_rendered_edit=expect_render['edit'],
+                collapse_whitespace=True
+                )
+        return
+
+    def test_RenderUriLinkValuePerefix(self):
+        # Test link rendering with prefix expansion
+
+        def expect_render(curietext, linktext, labeltext):
+            render_view = '''<a href="%s" target="_blank">%s</a>'''%(linktext, labeltext)
+            render_edit = (
+                '''<input type="text" size="64" name="repeat_prefix_test_field" '''+
+                       '''placeholder="(test placeholder)" '''+
+                       '''value="%s" />'''
+                )%curietext
+            return {'view': render_view, 'edit': render_edit}
+
+        test_values = (
+            [ ("annal:id",  "http://purl.org/annalist/2014/#id",  "annal:id" )
+            , ("annal:uri", "http://purl.org/annalist/2014/#uri", "annal:uri")
+            ])
+        test_value_context_renders = (
+            [ ( self._make_test_context(curietext, coll=self.testcoll)
+              , expect_render(curietext, linktext, labeltext)
+              ) for curietext, linktext, labeltext in test_values
             ])
         renderer = get_uri_link_renderer()
 

@@ -40,6 +40,7 @@ from annalist.util                          import valid_id, extract_entity_id, 
 from annalist.models.entity                 import Entity
 from annalist.models.annalistuser           import AnnalistUser
 from annalist.models.collectiontypecache    import CollectionTypeCache
+from annalist.models.collectionvocabcache   import CollectionVocabCache
 from annalist.models.recordtype             import RecordType
 from annalist.models.recordview             import RecordView
 from annalist.models.recordlist             import RecordList
@@ -60,7 +61,8 @@ from annalist.models.rendertypeinfo         import (
 #
 #   ---------------------------------------------------------------------------
 
-type_cache = CollectionTypeCache()
+type_cache  = CollectionTypeCache()
+vocab_cache = CollectionVocabCache()
 
 #   ---------------------------------------------------------------------------
 #
@@ -122,6 +124,16 @@ class Collection(Entity):
         Flush all caches associated with the current collection
         """
         type_cache.flush_cache(self)
+        vocab_cache.flush_cache(self)
+        return
+
+    @classmethod
+    def flush_all_caches(self):
+        """
+        Flush all caches associated with all collections
+        """
+        type_cache.flush_all()
+        vocab_cache.flush_all()
         return
 
     # Site
@@ -349,16 +361,51 @@ class Collection(Entity):
             user = None         # URI mismatch: return None.
         return user
 
+    # Vocabulary namespaces
+
+    #@@
+    # @classmethod
+    # def reset_vocab_cache(cls):
+    #     """
+    #     Used for testing: clear out namespace vocabulary cache so tets don't interfere 
+    #     with each other.  Could also be used when external application updates data.
+    #     """
+    #     type_cache.flush_all()
+    #     return
+    #@@
+
+    def cache_get_vocab(self, vocab_id):
+        """
+        Retrieve namespace vocabulary entity for id (namespace prefix) from cache.
+
+        Returns namespace vocabulary entity if found, otherwise None.
+        """
+        vocab_cache.get_vocab(self, vocab_id)
+        t = vocab_cache.get_vocab(self, vocab_id)
+        # Was it previously created but not cached?
+        if not t and RecordType.exists(self, vocab_id, altscope="all"):
+            msg = (
+                "Collection.get_vocab %s present but not cached for collection %s"%
+                (vocab_id, self.get_id())
+                )
+            log.warning(msg)
+            t = RecordType.load(self, vocab_id, altscope="all")
+            vocab_cache.set_vocab(self, t)
+            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+        return t
+
     # Record types
 
-    @classmethod
-    def reset_type_cache(cls):
-        """
-        Used for testing: clear out type cache so tets don't interfere with each other
-        Could also be used when external application updates data.
-        """
-        type_cache.flush_all()
-        return
+    #@@
+    # @classmethod
+    # def reset_type_cache(cls):
+    #     """
+    #     Used for testing: clear out type cache so tets don't interfere with each other
+    #     Could also be used when external application updates data.
+    #     """
+    #     type_cache.flush_all()
+    #     return
+    #@@
 
     def types(self, altscope="all"):
         """
@@ -735,7 +782,8 @@ class Collection(Entity):
         for v in self.child_entities(RecordVocab, altscope="all"):
             vid = v.get_id()
             if vid != layout.INITIAL_VALUES_ID:
-                context[v.get_id()] = v[ANNAL.CURIE.uri]
+                if ANNAL.CURIE.uri in v:
+                    context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altscope="all"):
             view_fields = v.get(ANNAL.CURIE.view_fields, [])

@@ -133,13 +133,13 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Internal IDs for MIME types (see resourcetypes.py)
     , "Metadata", "Type_Data"
     # Entity types
-    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Enum"
+    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Vocabulary", "Enum"
     , "Enum_field_placement", "Enum_list_type", "Enum_render_type", "Enum_value_mode", "Enum_value_type"
     # Group value types
     , "View_field", "List_field", "Group_field"
     # Value types
     , "Text", "Longtext", "Richtext", "EntityRef", "Identifier"
-    , "Placement", "Image", "Audio", "Video", "Vocabulary"
+    , "Placement", "Image", "Audio", "Video"
     , "Resource"
     , "Default_type", "Unknown_type"
     # Repeat/list group types

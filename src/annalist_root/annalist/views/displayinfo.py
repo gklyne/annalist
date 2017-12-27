@@ -1041,7 +1041,7 @@ class DisplayInfo(object):
         must be provided earlier in the form generation process, as elements of the 
         "context_extra_values" dictionary.
 
-        Context values set here do not need to be named in the valuye maop used to
+        Context values set here do not need to be named in the valuye map used to
         create the view context.
         """
         site_url_parts = urlparse.urlsplit(self.site._entityurl)
@@ -1054,8 +1054,9 @@ class DisplayInfo(object):
             , 'type_id':            self.type_id
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
+            , 'collection':         self.collection
             , "SITE":               site_url_parts.path
-            , "HOST":               self.reqhost
+            , "HOST":               self.reqhost            
             })
         context.update(self.authorizations)
         if self.collection:

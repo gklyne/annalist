@@ -70,12 +70,17 @@ See also: https://www.divio.com/en/blog/documentation/
         - Site overrides this method
     - [x] Created ClosureCache class
 - [x] Show type URIs in type list
-- [ ] When rendering link, expand prefix in href if defined in collection
+- [x] When rendering link, expand prefix in href if defined in collection
+    - [x] introduce vocab namespace cache (collectionvocabcache)
+    - [x] test cases for cache
+    - [x] hook in RecordVocab
+    - [x] hook in Collection (and other places where CollectionTypeCache is referenced)
+    - [x] Collection.flush_collection_caches update
+    - [x] update render_uri_link
+- [x] Boolean renderer: not recognizing "Y"; don't need label?
+- [ ] Refactor common logic in collectiontypecache and collectionvocabcache.
 - [x] When generating subtype (task button), don't include supertypes
 - [ ] Provide renderer that shows calculated supertype transitive closure?
-- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
-    - copied-from field in entity?
-    - task button to move edits back if copied-from is defined?
 
 (Sub-release?)
 
@@ -83,6 +88,8 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
+    - copied-from field in entity?
 
 (Sub-release?)
 
