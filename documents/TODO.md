@@ -40,12 +40,15 @@ See also: https://www.divio.com/en/blog/documentation/
     - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
     - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
 - [x] BUG: define repeat field: should use base type for value and entity type
-- [ ] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
+- [x] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
     - At minimum, need an easy way to force cache-refresh.
     - Better: invalidate caches for dependent collections when invalidating parent.
     - NOTE: type update does not do complete cache flush - maybe it should?
     - NOTE: collection-level type cache is not currently called anywhere apart from tests
-- [ ] BUG?: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+    - For now, displaying a default collection view (e.g. from list of collections, or from menu bar) causes all collection caches to be flushed.
+- [x] BUG: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+    - Occurred when corresponding type is defined by multiple parent collections.
+    - Fixed logic in `Entity._children`
 - [ ] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
@@ -65,7 +68,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Use transitive closure when locating entities of a designated type (for selecting applicable fields).
     - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
     - [x] Review EntityFinder to use collection cache methods.
-    - [ ] Look for all uses of _children method?
+    - [x] Look for all uses of _children method?
         - Note method EntityRoot.child_entity_ids: uses _children + Exists
         - Site overrides this method
     - [x] Created ClosureCache class

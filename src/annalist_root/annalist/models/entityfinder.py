@@ -106,6 +106,9 @@ class EntityFinder(object):
                 user_permissions, altscope=altscope
                 ):
             if e.get_id() != layout.INITIAL_VALUES_ID:
+                #@@
+                # log.info("  yield: %s"%(e.get_id(),))
+                #@@
                 yield e
         return
 
@@ -123,7 +126,10 @@ class EntityFinder(object):
             es = subtype_info.enum_entities_with_implied_values(
                     user_permissions, altscope=altscope
                     )
-            es = list(es) #@@ Force strict eval
+            #@@
+            # es = list(es) #@@ Force strict eval
+            # log.info("get_subtype_entities: %r"%([e.get_id() for e in es],))
+            #@@
             for e in es:
                 if e.get_id() != layout.INITIAL_VALUES_ID:
                     yield e
@@ -133,8 +139,14 @@ class EntityFinder(object):
         """
         Iterate over all entities of all types from a supplied type iterator
         """
+        #@@
+        # log.info("@@@@ get_all_types_entities")
+        #@@
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
+                #@@
+                # log.info("get_all_types_entities: type %s/%s"%(t,e.get_id()))
+                #@@
                 yield e
         return
 
@@ -144,14 +156,19 @@ class EntityFinder(object):
 
         If a type_id is supplied, site data values are included.
         """
+        entities = None
         if type_id:
-            return self.get_subtype_entities(type_id, user_permissions, altscope)
+            entities = self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)
         else:
-            return self.get_all_types_entities(
+            entities = self.get_all_types_entities(
                 self.get_collection_type_ids(altscope="all"), user_permissions, altscope
                 )
-        return
+        #@@
+        # entities = list(entities)  #@@ Force strict eval
+        # log.info("get_base_entities: %r"%([(e.get_type_id(), e.get_id()) for e in entities],))
+        #@@
+        return entities
 
     def search_entities(self, entities, search):
         """
@@ -187,6 +204,10 @@ class EntityFinder(object):
             user_permissions, type_id=type_id, altscope=altscope, 
             context=context, search=search
             )
+        #@@
+        # entities = list(entities)  #@@ Force strict eval
+        # log.info("get_entities_sorted: %r"%([e.get_id() for e in entities],))
+        #@@
         return sorted(entities, key=order_entity_key)
 
     @classmethod

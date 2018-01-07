@@ -175,6 +175,9 @@ class EntityGenericListView(AnnalistGenericView):
                     context={'list': listinfo.recordlist}, search=search_for
                     )
             )
+        #@@
+        # log.info("assemble_list_data: %r"%([e.get_id() for e in entity_list],))
+        #@@
         # typeinfo = listinfo.curr_typeinfo
         base_url = self.get_collection_base_url(listinfo.coll_id)
         list_url = self.get_list_url(

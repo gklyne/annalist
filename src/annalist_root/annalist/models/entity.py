@@ -533,18 +533,30 @@ class Entity(EntityRoot):
                     iterate over.
         altscope    if supplied, indicates a scope other than the current entity to
                     search for children.
+
+        @@NOTE:  The logic in this method is intended to return inherited values before
+        values defined in the current collection.  It should probably be re-worked to return 
+        entries in order from all inherited definitions.  The logic here could possibly
+        be simplified to extract all values in the "alt parents" loop, (though the ordering 
+        might be tricky to preserve that way).
         """
         # log.info("@@ Entity._children: parent %s, altscope %s"%(self.get_id(), altscope))
-        coll_entity_ids = list(super(Entity, self)._children(cls, altscope=altscope))
+        coll_entity_ids = list(super(Entity, self)._children(cls, altscope=None))
         alt_parents     = self.get_alt_entities(altscope=altscope)
-        site_entity_ids = list(itertools.chain.from_iterable(
-            ( super(Entity, alt)._children(cls, altscope=altscope) 
-              for alt in self.get_alt_entities(altscope=altscope)
-            )))     # See https://docs.python.org/2/library/itertools.html#itertools.chain
-        # log.info("@@ Entity._children: coll_entity_ids %r, site_entity_ids %r"%(coll_entity_ids, site_entity_ids))
+        # parent_entity_ids = list(itertools.chain.from_iterable(
+        #     ( super(Entity, alt)._children(cls, altscope=altscope) 
+        #       for alt in alt_parents # self.get_alt_entities(altscope=altscope)
+        #     )))     # See https://docs.python.org/2/library/itertools.html#itertools.chain
+        parent_entity_ids = []
+        for alt in alt_parents:
+            for eid in super(Entity, alt)._children(cls, altscope=altscope):
+                # Filter out duplicates
+                if eid not in parent_entity_ids:
+                    parent_entity_ids.append(eid)
+        # log.info("@@ Entity._children: coll_entity_ids %r, parent_entity_ids %r"%(coll_entity_ids, parent_entity_ids))
         # if altscope == "all" and self._altparent:
-        #     site_entity_ids = self._altparent._children(cls, altscope=altscope)
-        for entity_id in [f for f in site_entity_ids if f not in coll_entity_ids] + coll_entity_ids:
+        #     parent_entity_ids = self._altparent._children(cls, altscope=altscope)
+        for entity_id in [f for f in parent_entity_ids if f not in coll_entity_ids] + coll_entity_ids:
             if util.valid_id(entity_id):
                 yield entity_id
         return
