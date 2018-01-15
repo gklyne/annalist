@@ -65,6 +65,11 @@ entities are created or updated, according to their Annalist type.
 (b) On somne systems (e.g, MacOS), renames that only change the case of characters in the type name fail because the file system naming is case-insensitive.  These renames need to be done in two stages.
 
 
+## Rename type, view and list
+
+@@TODO
+
+
 ## Change type URI
 
 Update URI in Annalist type declaration.
@@ -90,9 +95,11 @@ recognized in place of the new one.  When editing a form that uses the new
 property URIs, the new URIs are added when the form is saved, and the old ones 
 remain as they were.
 
+
 ## Local entity references and permanent entity URIs
 
 These should be interchageable, with the permanent URI stored for referencing local entities where available.  This will mean that enumerated value displays must be able to reference entities using permanent URIs (annal:uri) as well as local references.
+
 
 ## Change property URI used for both list/collection values and list/collection members
 
@@ -129,5 +136,6 @@ Pattern matching could be limited to subtrees from an entity node, which could s
 
 This change applied to Performance_defs and Parformances required a lot of effort: class URIs and propery URIs had to be changed in inherited definitions, local definitions and local data.  Changing the namespace URI without changing the prefix is relatively easier: just edit the corresponding namespace definition.
 
-The prefix migration would most easily be invoked by directives added to the namespace definition - that way, the migration could be applied for any collection that references and uses the namespace.
+The prefix migration may most easily be invoked by directives added to the namespace definition - that way, the migration could be applied for any collection that references and uses the namespace.
+
 

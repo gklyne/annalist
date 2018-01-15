@@ -49,7 +49,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] BUG: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
     - Occurred when corresponding type is defined by multiple parent collections.
     - Fixed logic in `Entity._children`
-- [ ] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
+- [x] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
 - [x] Add Entity_uri field definition to site data.
 - [x] Make labels for enumeration/choice render types more usefully descriptive.
 - [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
@@ -83,13 +83,14 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Boolean renderer: not recognizing "Y"; don't need label?
 - [ ] Refactor common logic in collectiontypecache and collectionvocabcache.
 - [x] When generating subtype (task button), don't include supertypes
-- [ ] Provide renderer that shows calculated supertype transitive closure?
 
 (Sub-release?)
 
+- [ ] Allow multiple entity deletes from list display 
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
+- [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
     - copied-from field in entity?

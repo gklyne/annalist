@@ -545,6 +545,15 @@ class DisplayInfo(object):
                 )
         return self.http_response
 
+    #@@TODO: not sure if this will be useful...
+    # def reset_info_messages(self):
+    #     """
+    #     Reset informational messages (for form redisplay)
+    #     """
+    #     self.info_messages      = []
+    #     return
+    #@@
+
     def add_info_message(self, message):
         """
         Save message to be displayed on successful completion
