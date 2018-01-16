@@ -14,6 +14,6 @@
 , "annal:property_uri":         "annal:id"
 , "annal:field_placement":      "small:0,12;medium:0,6"
 , "annal:default_value":        ""
-, "annal:placeholder":          "(entity id)"
+, "annal:placeholder":          "(vocabulary id)"
 , "annal:tooltip":              "A short identifier consisting of letters, digits and '_' characters.  It is recognized as a prefix in CURIEs, and distinguishes this namespace from all others in the same collection."
 }

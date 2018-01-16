@@ -7,7 +7,7 @@ RUN apt-get update -y  && \
     apt-get install -y python python-pip python-virtualenv && \
     apt-get install -y git
 
-RUN pip install annalist==0.5.4
+RUN pip install annalist==0.5.6
 
 VOLUME /annalist_site
 ENV HOME /annalist_site

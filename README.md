@@ -60,7 +60,7 @@ Note that all the active development takes place on the ["develop" branch](https
 Status
 ------
 
-The [release notes](documents/release-notes/release-v0.1.md) give an summary of the current released state of the software.
+The [release notes](documents/release-notes/release-v0.5.md) give an summary of the current released state of the software.
 
 Details of current feature development and status are available in the [TODO list](documents/TODO.md) and [GitHub issues](https://github.com/gklyne/annalist/issues).
 
@@ -84,7 +84,7 @@ Acknowledgements
 
 Ideas motivating the creation of Annalist arose from discussions with past colleagues in the Zoology department at Oxford University, particularly Dr David Shotton who led the BioImage project, and Dr Helen White-Cooper who patiently explained her processes and data handling needs as a genomic researcher.
 
-David Flanders, formerly of JISC, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, provided technical and management lessons that have contributed to the development of Annalist.
+David Flanders, formerly of JISC, provided encouragement and support for the development of software tools to support academic activities, and in particular raising the profile of engineering and management skills needed to create effective software tools for academics.  A previous project, [Shuffl](https://code.google.com/p/shuffl/), conducted under a JISC Rapid Innovation program that he ran, trialled some early ideas that have contributed to the development of Annalist (since migrated to [GitHub](https://github.com/gklyne/shuffl/tree/master) and [GitHub wiki](https://github.com/gklyne/shuffl/blob/wiki/ProjectHome.md)). 
 
 More recently, work with the European [Wf4Ever project](http://www.wf4ever-project.org), EPSRC [Fusing Audio and Semantic Technologies (FAST)](http://www.semanticaudio.ac.uk) and Mellon [Cultures of Knowledge](http://www.culturesofknowledge.org) have provided valuable insights into the nature of tools needed to support publication of reproducible and re-usable research data.  Numerous experiments and discussions with colleagues have informed many of the design ideas and choices that have gone in to Annalist.
 

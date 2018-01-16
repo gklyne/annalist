@@ -5,18 +5,11 @@ Annalist release 0.5.x is a candidate feature-complete minimal viable product fo
 A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.5.4
+## Current release: 0.5.6
 
-This release contains some significant changes to simplify workflows used when creating definitons that use structured ontology terms, based on some experiences using Annalist to create CIDOC CRM data.  It also provides options for generating Turtle data output.  There are numerous bug fixes, which are described in the notes below for release 0.5.3.
+This release primarily addresses some performance issues that were noted when working with complex structures with a deep class hierarchy (specifically, CIDOC CRM).  It introduces a per collection cache for entity type definitions, and precalculated super-/sub- type closures to speed up discovery of subtypes of a desired target type.  It also adds a namespece vocbulary cache, which is used to expand namespace prefixes when rendering Web link fields.  These changes have included some extensive refactoring of the codebase.
 
-Specific visible changes include:
-
-* Turtle data output for entities and entity lists, to make it easier to share Annalist data with other linked data applications.
-* New facility to create a subtype with key values inherited or derived from the parent type.
-* Revised creation of view and list definitions for a type, to work more easily for subtypes.  Fields from existing type view and list definitions, or from the default view and list definitions, are copied into the new definitions created.
-* Changes to help text, diagnostics and other messages.
-
-There is some extensive internal refactoring in the view logic used to generate data outputs, and the links used to access data outputs.
+This release also includes numerous bug fixes, and some small changes to the user interface.
 
 
 ## Status
@@ -92,6 +85,66 @@ See also previous release notes:
 - [Release 0.1.x](./release-v0.1.md)
 
 
+## Release: 0.5.6
+
+This release primarily addresses some performance issues that were noted when working with complex structures with a deep class hierarchy (specifically, CIDOC CRM).  It introduces a per collection cache for entity type definitions, and precalculated super-/sub- type closures to speed up discovery of subtypes of a desired target type.  It also adds a namespece vocbulary cache, which is used to expand namespace prefixes when rendering Web link fields.  These changes have included some extensive refactoring of the codebase.
+
+This release also includes numerous bug fixes, and some small changes to the user interface.
+
+
+## Version 0.5.5, towards 0.5.6
+
+- [x] BUG: show warning when accessing collection with missing parent.
+    - The implementation of this fix has involved a significant refactoring of error reporting and entity delete confirmation logic, to use more common code in DisplayInfo.
+    - In some cases, continuation URLs used have changed
+- [x] BUG: define repeat field task should use same property URI (without suffix)
+- [x] BUG: deleting field definition from "Smoke" collection causes internal errors
+- [x] BUG: Customize window doesn't return to previous URL after data migration.
+- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors
+    - These in turn caused Turtle output generation server errors (500).
+    - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
+    - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
+- [x] BUG: Login sequence from authz error page does not always return to original page viewed
+- [x] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
+    - 500: Server error
+    - u'frbr:Group_1_entity' - see server log for details
+    - Seems to occur while (re)generating context
+    - Maybe related to removal of a supertype rather than view/list
+    - Or related to copy type then change URI?
+    - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
+    - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
+- [x] BUG: define repeat field: should use base type for value and entity type
+- [x] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
+    - At minimum, need an easy way to force cache-refresh.
+    - Better: invalidate caches for dependent collections when invalidating parent.
+    - NOTE: type update does not do complete cache flush - maybe it should?
+    - NOTE: collection-level type cache is not currently called anywhere apart from tests
+    - For now, displaying a default collection view (e.g. from list of collections, or from menu bar) causes all collection caches to be flushed.
+- [x] BUG: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+    - Occurred when corresponding type is defined by multiple parent collections.
+    - Fixed logic in `Entity._children`
+- [x] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Bug is an error in the message rather than a deeper logic problem. 
+- [x] Add Entity_uri field definition to site data.
+- [x] Make labels for enumeration/choice render types more usefully descriptive.
+- [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+- [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
+- [x] Generate README for collection incorporating description from coll-meta (as part of context generation?).
+- [x] Improve performance of mechanisms used for finding type information
+    - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
+    - Create cache and update hooks for type information, including calculation of transitive closure.
+- [x] Use transitive closure when locating entities of a designated type (for selecting applicable fields).
+    - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
+- [x] Show type URIs in type list
+- [x] When rendering link, expand prefix in href if defined in collection
+    - [x] introduce vocab namespace cache (collectionvocabcache)
+    - [x] hook in RecordVocab
+    - [x] hook in Collection (and other places where CollectionTypeCache is referenced)
+    - [x] update render_uri_link
+- [x] Boolean renderer: not recognizing "Y"; don't need label?
+- [x] Refactor common logic in collectiontypecache and collectionvocabcache.
+- [x] When generating subtype (task button), don't include supertypes
+
+
 ## Release: 0.5.4
 
 This release contains some significant changes to simplify workflows used when creating definitons that use structured ontology terms, based on some experiences using Annalist to create CIDOC CRM data.  It also provides options for generating Turtle data output.  There are numerous bug fixes, which are described in the notes below for release 0.5.3.
@@ -106,7 +159,7 @@ Specific visible changes include:
 There is some extensive internal refactoring in the view logic used to generate data outputs, and the links used to access data outputs.
 
 
-# Version 0.5.3, towards 0.5.4
+## Version 0.5.3, towards 0.5.4
 
 - [x] BUG: copy entity and Id change (or copy and something) causes errors on save.
 - [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
@@ -145,14 +198,14 @@ There is some extensive internal refactoring in the view logic used to generate 
     - Create test cases for Turtle output (based on JSON-LD test cases)
 
 
-# Version 0.5.2
+## Version 0.5.2
 
 This is mainly a maintenance release to fix some bugs that were introduced (or first noticed) in version 0.5.0.  It also contains some minor presentation, help text and documentation enhncements (including an initial set of FAQs).
 
 The other technical change is some internal code refactoring to move towards possible per-entity access control (currently implemented on an ad hoc basis for default and unknown user permissions).
 
 
-# Version 0.5.1, towards 0.5.2
+## Version 0.5.1, towards 0.5.2
 
 - [x] BUG: edit collection metadata fails on save with
     - Original form is not providing correct original collection id
@@ -192,7 +245,7 @@ The other technical change is some internal code refactoring to move towards pos
 - [x] Tweak rendering of empty repeat-group
 
 
-# Version 0.5.0
+## Version 0.5.0
 
 This release contains candidate feature-complete functionality for an Annalist V1 software release.  The aim has beemn to complete features that are seen as likely to affect the stored data structures used by Annalist, to minimize future data migration requirements.  The intent is that this release will be used in actual projects to test if it offers minimal viable product functionality for its imntended use.  Meanwhile, planned developments will focus more on documentation, stability, security and performance concerns.
 
