@@ -11,7 +11,7 @@
   ],
   "annal:id": "Imported_image",
   "annal:open_view": true,
-  "annal:record_type": "coll:Imported_image",
+  "annal:record_type": "resource:Imported_image",
   "annal:type": "annal:View",
   "annal:type_id": "_view",
   "annal:view_fields": [

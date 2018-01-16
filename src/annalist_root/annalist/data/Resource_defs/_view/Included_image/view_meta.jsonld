@@ -11,7 +11,7 @@
   ],
   "annal:id": "Included_image",
   "annal:open_view": true,
-  "annal:record_type": "coll:Included_image",
+  "annal:record_type": "resource:Included_image",
   "annal:type": "annal:View",
   "annal:type_id": "_view",
   "annal:view_fields": [

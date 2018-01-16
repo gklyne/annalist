@@ -428,6 +428,8 @@ class JsonldContextTest(AnnalistTestCase):
         # Read type data as JSON-LD
         g = Graph()
         s = type_vocab._read_stream()
+        # print("***** s.read():   (type_vocab)")
+        # print(s.read())
         b = urlparse.urljoin(
                 self.collbaseurl, 
                 layout.COLL_BASE_TYPE_REF%{ 'id': type_vocab.get_id() }

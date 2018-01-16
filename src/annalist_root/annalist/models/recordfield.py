@@ -38,7 +38,7 @@ class RecordField(EntityData):
         """
         Initialize a new RecordField object, without metadta (yet).
 
-        parent      is the parent collection to which the field belons.
+        parent      is the parent collection to which the field belongs.
         field_id    the local identifier for the record field
         """
         # assert altparent, "RecordField instantiated with no altparent"
@@ -182,7 +182,7 @@ class RecordField(EntityData):
 
     def _post_update_processing(self, entitydata, post_update_flags):
         """
-        Default post-update processing.
+        Post-update processing.
 
         This method is called when a RecordField entity has been updated.  
 

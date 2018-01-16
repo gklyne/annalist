@@ -13,7 +13,7 @@
   "annal:default_view": "_view/Imported_image",
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Imported_image",
-  "annal:list_entity_selector": "'coll:Imported_image' in [@type]",
+  "annal:list_entity_selector": "'resource:Imported_image' in [@type]",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -28,7 +28,7 @@
       "annal:field_placement": "small:6,6"
     }
   ],
-  "annal:record_type": "coll:Imported_image",
+  "annal:record_type": "resource:Imported_image",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of imported images\r\n\r\nPresents a list of entities that contain images imported from the web.\r\n",

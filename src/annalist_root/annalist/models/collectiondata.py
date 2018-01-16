@@ -54,6 +54,7 @@ def initialize_coll_data(src_data_dir, tgt_coll):
                 log.info("- %s -> %s"%(edir, tgt_data_dir))
                 Site.replace_site_data_dir(tgt_coll, edir, expand_entitydata)
     # Generate initial JSON-LD context data
+    tgt_coll.flush_all_caches()
     tgt_coll.generate_coll_jsonld_context()
     return []
 
@@ -107,8 +108,12 @@ def migrate_collection_dir(coll, prev_dir, curr_dir):
         try:
             os.rename(expand_prev_dir, expand_curr_dir)
         except Exception as e:
-            msg = message.COLL_MIGRATE_DIR_FAILED%(coll.get_id(), prev_dir, curr_dir, e)
-            # print "@@ "+msg
+            msg = (message.COLL_MIGRATE_DIR_FAILED%
+                    { "id": coll.get_id()
+                    , "old_path": prev_dir, "new_path": curr_dir
+                    , "exc": e
+                    }
+                )
             log.error("migrate_collection_dir: "+msg)
             errs.append(msg)
         # Create type data container for site types (so it can be enumerated later)

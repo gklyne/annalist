@@ -38,11 +38,11 @@
     - git checkout -b release-prep-x.y.z develop
     - git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [ ] Add TODO list to release notes (edit out working notes)
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
 - [ ] Bump data compatibility version if new data is not compatible with older releases
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Reinstall and re-run test suite
+- [ ] Add TODO list to release notes (edit out working notes)
 - [ ] Add release highlights description to release notes (create new release notes file if needed)
 - [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
 - [ ] Review roadmap (`documents/roadmap.md`)
@@ -56,7 +56,11 @@
     - [ ] src/newkit_to_annalist_dev.sh
     - [ ] src/newkit_to_conina_ubuntu.sh
     - [ ] Docker build scripts and makefiles
+- [ ] Review and update GitHub project README.
 - [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`
+- [ ] Regenerate tutorial document
+    - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
+
 - [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
     - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
@@ -72,11 +76,9 @@
         annalist-manager defaultadmin
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
-- [ ] Regenerate tutorial document
-    - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
+
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-
 - [ ] Update and test demo installation on annalist.net
     - [ ] ssh to annalist@annalist.net
     - [ ] `. backup_annalist_site.sh`
@@ -121,13 +123,15 @@
     - On GitHub, create a new release
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
-    - The DOI in the badge should display the new release
+    - The link in the DOI badge should display the new release from Zenodo.
     - It may take a few minutes for the new DOI to resolve.
+
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Re-test
 - [ ] Commit and push changes
+    - message: "Bump development branch release to x.y.z"
 - [ ] Delete release branch
     - `git branch -d release-prep-x.y.z`
 

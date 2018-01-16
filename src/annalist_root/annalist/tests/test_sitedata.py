@@ -534,24 +534,40 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                   .find_all("div", class_="columns")
             )
         self.assertEqual(thead[0].span.string, "Id")
-        self.assertEqual(thead[1].span.string, "Label")
+        self.assertEqual(thead[1].span.string, "Type URI")
+        self.assertEqual(thead[2].span.string, "Label")
 
         trows_expected = (
-            [ [ "_type/_coll",             ["_coll",             "Collection"            ] ]
-            , [ "_type/_enum_list_type",   ["_enum_list_type",   "List display type"     ] ]
-            , [ "_type/_enum_render_type", ["_enum_render_type", "Field render type"     ] ]
-            , [ "_type/_enum_value_mode",  ["_enum_value_mode",  "Field value mode"      ] ]
-            , [ "_type/_enum_value_type",  ["_enum_value_type",  "Field value type"      ] ]
-            , [ "_type/_field",            ["_field",            "Field"                 ] ]
-            , [ "_type/_group",            ["_group",            "Field group"           ] ]
-            , [ "_type/_list",             ["_list",             "List"                  ] ]
-            , [ "_type/_type",             ["_type",             "Type"                  ] ]
-            , [ "_type/_user",             ["_user",             "User permissions"      ] ]
-            , [ "_type/_view",             ["_view",             "View"                  ] ]
-            , [ "_type/_vocab",            ["_vocab",            "Namespace"             ] ]
-            , [ "_type/Default_type",      ["Default_type",      "Default record"        ] ]
-            , [ "_type/type1",             ["type1",             "RecordType coll1/type1"] ]
-            , [ "_type/type2",             ["type2",             "RecordType coll1/type2"] ]
+            [ [ "_type/_coll",             
+                [ "_coll",             "annal:Collection",       "Collection"            ] ]
+            , [ "_type/_enum_list_type",   
+                [ "_enum_list_type",   "annal:Enum_list_type",   "List display type"     ] ]
+            , [ "_type/_enum_render_type", 
+                [ "_enum_render_type", "annal:Enum_render_type", "Field render type"     ] ]
+            , [ "_type/_enum_value_mode",  
+                [ "_enum_value_mode",  "annal:Enum_value_mode",  "Field value mode"      ] ]
+            , [ "_type/_enum_value_type",  
+                [ "_enum_value_type",  "annal:Enum_value_type",  "Field value type"      ] ]
+            , [ "_type/_field",            
+                [ "_field",            "annal:Field",            "Field"                 ] ]
+            , [ "_type/_group",            
+                [ "_group",            "annal:Field_group",      "Field group"           ] ]
+            , [ "_type/_list",             
+                [ "_list",             "annal:List",             "List"                  ] ]
+            , [ "_type/_type",             
+                [ "_type",             "annal:Type",             "Type"                  ] ]
+            , [ "_type/_user",             
+                [ "_user",             "annal:User",             "User permissions"      ] ]
+            , [ "_type/_view",             
+                [ "_view",             "annal:View",             "View"                  ] ]
+            , [ "_type/_vocab",            
+                [ "_vocab",            "annal:Vocabulary",       "Namespace"             ] ]
+            , [ "_type/Default_type",      
+                [ "Default_type",      "annal:Default_type",     "Default record"        ] ]
+            , [ "_type/type1",             
+                [ "type1",             "(@@no value@@)",         "RecordType coll1/type1"] ]
+            , [ "_type/type2",             
+                [ "type2",             "(@@no value@@)",         "RecordType coll1/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -654,7 +670,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            # [ [ "_list/_initial_values",    ["_initial_values",     None] ]
             [ [ "_list/Default_list",       ["Default_list",        "List entities"                      ] ]
             , [ "_list/Default_list_all",   ["Default_list_all",    "List entities with type information"] ]
             , [ "_list/Enum_list_all",      ["Enum_list_all",       "List enumeration values and types"  ] ]
@@ -769,7 +784,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[1].span.string, "Label")
 
         trows_expected = (
-            # [ [ "_view/_initial_values",    ["_initial_values",     None] ]
             [ [ "_view/Collection_view",    ["Collection_view",     "Collection metadata"   ] ]
             , [ "_view/Default_view",       ["Default_view",        "Default record view"   ] ]
             , [ "_view/Enum_view",          ["Enum_view",           "Enumerated value view" ] ]
@@ -878,7 +892,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             [
-            # [ [ "_group/_initial_values",          ["_initial_values"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -982,7 +995,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
         trows_expected = (
             #     Field selector                      Field id             Render type      Value type   Field label (?)
-            # [ [ "_field/_initial_values",           ["_initial_values",   "Short text",    "annal:Text", None       ] ]
             [ [ "_field/Coll_comment",              ["Coll_comment",      "Markdown rich text", 
                                                                                             "annal:Richtext"         ] ]
             , [ "_field/Coll_default_list_id",      ["Coll_default_list_id", 
@@ -993,7 +1005,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                           "Display text",   "annal:Text"             ] ]
             , [ "_field/Coll_default_view_type",    ["Coll_default_view_type", 
                                                                           "Display text",   "annal:Text"             ] ]
-            , [ "_field/Coll_parent",               ["Coll_parent",       "Optional entity choice",  
+            , [ "_field/Coll_parent",               ["Coll_parent",       "Optional entity reference",  
                                                                                             "annal:EntityRef"        ] ]
             , [ "_field/Coll_software_version",     ["Coll_software_version", 
                                                                           "Display text",   "annal:Text"             ] ]
@@ -1004,13 +1016,15 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
                                                                                         "annal:Entity_see_also_list" ] ]
             , [ "_field/Entity_type",               ["Entity_type",       "Entity type Id", "annal:EntityRef"        ] ]
+            , [ "_field/Entity_uri",                ["Entity_uri",        "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
                                                                                             "annal:Field_list"       ] ]
-            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional entity ref", "annal:EntityRef"   ] ]
+            , [ "_field/Field_groupref",            ["Field_groupref",    "Optional/new entity reference", 
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_help",                ["Field_help",        "Markdown rich text",  "annal:Richtext"    ] ]
             , [ "_field/Field_id",                  ["Field_id",          "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Field_label",               ["Field_label",       "Short text",     "annal:Text"             ] ]
@@ -1018,7 +1032,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_placeholder",         ["Field_placeholder", "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_placement",           ["Field_placement",   "Position/size",  "annal:Placement"        ] ]
             , [ "_field/Field_property",            ["Field_property",    "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_render_type",         ["Field_render_type", "Entity choice",  "annal:EntityRef"        ] ]
+            , [ "_field/Field_render_type",         ["Field_render_type", "Required entity reference",  
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_repeat_label_add",    ["Field_repeat_label_add", "Short text", "annal:Text"            ] ]
             , [ "_field/Field_repeat_label_delete", ["Field_repeat_label_delete", "Short text", "annal:Text"         ] ]
             , [ "_field/Field_restrict",            ["Field_restrict",    "Short text",     "annal:Text"             ] ]
@@ -1027,11 +1042,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_subfield_property",   ["Field_subfield_property",
                                                                           "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
-                                                                          "Optional entity ref", 
+                                                                          "Optional/new entity reference", 
                                                                                             "annal:Field"            ] ]
             , [ "_field/Field_tooltip",             ["Field_tooltip",     "Multiline text", "annal:Longtext"         ] ]
-            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional entity ref", "annal:EntityRef"   ] ]
-            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Entity choice",  "annal:EntityRef"        ] ]
+            , [ "_field/Field_typeref",             ["Field_typeref",     "Optional/new entity reference", 
+                                                                                            "annal:EntityRef"        ] ]
+            , [ "_field/Field_value_mode",          ["Field_value_mode",  "Required entity reference",  
+                                                                                            "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Group_comment",             ["Group_comment"             ] ]
             , [ "_field/Group_field_placement",     ["Group_field_placement"     ] ]
@@ -1204,7 +1221,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(thead[0].span.string, "Id")
         self.assertEqual(thead[1].span.string, "Label")
         trows_expected = (
-            # [ [ "_vocab/_initial_values",          ["_initial_values"] ]
             [ [ "_vocab/annal",                    ["annal",    "Vocabulary namespace for Annalist-defined terms"] ]
             , [ "_vocab/owl",                      ["owl",      "OWL ontology namespace"] ]
             , [ "_vocab/rdf",                      ["rdf",      "RDF core namespace"] ]

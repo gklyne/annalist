@@ -328,7 +328,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow5 = """
             <div class="small-12 columns" %(tooltip5)s>
-              <div class="row">
+              <div class="grouprow row">
                 <div class="%(group_label_classes)s">
                   <span>Supertype URIs</span>
                 </div>

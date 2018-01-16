@@ -4,7 +4,7 @@
 
 I've just released an update (release 0.5.4) of Annalist.
 
-This release simplifies workflows for creating subtype definitons using structured ontology terms, and introduces options for generating Turtle data output.  It also implements numerous bug fixes.
+This release simplifies workflows for creating nested subtype definitions, and adds options for generating Turtle data output.  It also implements numerous bug fixes.
 
 More details can be found in the "History" section of the 
 [latest release notes](https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.5.md), 
@@ -25,10 +25,10 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 I've just released an update (release 0.5.4) of Annalist.
 
-This release simplifies workflows for creating subtype definitons using structured ontology terms, and introduces options for generating Turtle data output.  It also implements numerous bug fixes.
+This release simplifies workflows for creating nested subtype definitions, and adds options for generating Turtle data output.  It also implements numerous bug fixes.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/@@@@@@
+https://groups.google.com/d/msg/annalist-discuss/ceYuKGYOBlI/Vua_qlpOAAAJ
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 

@@ -245,12 +245,12 @@ class DataMigrationTest(AnnalistTestCase):
         entity_id = "test_subtype_entity"
         self.check_subtype_data(
             coll_id, type_id, entity_id, 
-            { '@type':      ['test:test_subtype_type', 'annal:EntityData']
+            { '@type':      ["test:test_subtype_type", "annal:EntityData"]
             })
         # Update subtype definition to include supertype reference
-        self.test_subtype_type[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
-        self.test_subtype_type._save()
-        self.testcoll._update_type_cache(self.test_subtype_type)
+        test_subtype_meta = self.test_subtype_type.get_values()
+        test_subtype_meta[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
+        self.testcoll.add_type(type_id, test_subtype_meta)
         # Test migration of updated type information to data
         migrate_coll_data(self.testcoll)
         self.check_subtype_data(
@@ -275,9 +275,9 @@ class DataMigrationTest(AnnalistTestCase):
             , 'annal:type': "test:wrong_type_uri"
             })
         # Update subtype definition to include supertype reference
-        self.test_subtype_type[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
-        self.test_subtype_type._save()
-        self.testcoll._update_type_cache(self.test_subtype_type)
+        test_subtype_meta = self.test_subtype_type.get_values()
+        test_subtype_meta[ANNAL.CURIE.supertype_uri] = [ { "@id": "test:test_supertype_type" } ]
+        self.testcoll.add_type(type_id, test_subtype_meta)
         # Test migration of updated type information to data
         migrate_coll_data(self.testcoll)
         self.check_subtype_data(

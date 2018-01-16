@@ -83,7 +83,7 @@ class Namespace(object):
         """
         # Called for attributes that aren't defined.
         # Placeholder should generate error
-        return self.__dict__[attr]
+        return self.__dict__[name]
 
 def makeNamespace(prefix, baseUri, names):
     """
@@ -133,15 +133,17 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Internal IDs for MIME types (see resourcetypes.py)
     , "Metadata", "Type_Data"
     # Entity types
-    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Enum"
+    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Vocabulary", "Enum"
     , "Enum_field_placement", "Enum_list_type", "Enum_render_type", "Enum_value_mode", "Enum_value_type"
     # Group value types
     , "View_field", "List_field", "Group_field"
     # Value types
     , "Text", "Longtext", "Richtext", "EntityRef", "Identifier"
-    , "Placement", "Image", "Audio", "Vocabulary"
+    , "Placement", "Image", "Audio", "Video"
     , "Resource"
     , "Default_type", "Unknown_type"
+    # Repeat/list group types
+    , "Type_supertype_uri" # @@deprecated?
     # Properties in list JSON
     , "entity_list"
     # Properties in internal entities
@@ -173,7 +175,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "software_version", "meta_comment", "inherit_from"
     , "default_list"
     , "default_view_id", "default_view_type", "default_view_entity"
-    # Deprecated properties - used in entity migration tables
+    # Deprecated properties - used in entity migration
     , "Slug", "RepeatGroup", "RepeatGroupRow" 
     , "options_typeref", "restrict_values", "target_field"
     , "field_target_type", "comment"

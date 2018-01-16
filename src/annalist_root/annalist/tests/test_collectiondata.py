@@ -35,9 +35,6 @@ from annalist.models.sitedata               import SiteData
 from annalist.models.collection             import Collection
 from annalist.models.annalistuser           import AnnalistUser
 
-# from annalist.views.annalistuserdelete      import AnnalistUserDeleteConfirmedView
-# from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
-
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata

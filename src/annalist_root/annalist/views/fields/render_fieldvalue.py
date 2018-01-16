@@ -128,6 +128,30 @@ col_label_edit_value_wrapper_template = col_label_value_wrapper_template(with_to
 #   Helper classes
 #   ------------------------------------------------------------
 
+class WrapValueRenderer(object):
+    """
+    Render class wraps a supplied value renderer for diagnostic purposes
+    """
+    def __init__(self, value_renderer):
+        self.value_renderer   = value_renderer
+        return
+    def render(self, context):
+        try:
+            return self.value_renderer.render(context)
+        except Exception as e:
+            log.exception("Exception in TemplateWrapValueRenderer.value_renderer")
+            ex_type, ex, tb = sys.exc_info()
+            traceback.print_tb(tb)
+            response_parts = (
+                ["Exception in TemplateWrapValueRenderer.value_renderer"]+
+                [repr(e)]+
+                traceback.format_exception(ex_type, ex, tb)+
+                ["***TemplateWrapValueRenderer.value_renderer***"]
+                )
+            del tb
+            raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+            return "\n".join(response_parts)
+
 class TemplateWrapValueRenderer(object):
     """
     Render class combines a value renderer with a wrapper template.
@@ -137,7 +161,7 @@ class TemplateWrapValueRenderer(object):
     """
     def __init__(self, wrapper_template, value_renderer):
         self.compiled_wrapper = Template(wrapper_template)
-        self.value_renderer   = value_renderer
+        self.value_renderer   = WrapValueRenderer(value_renderer)
         return
     def render(self, context):
         with context.push(value_renderer=self.value_renderer):

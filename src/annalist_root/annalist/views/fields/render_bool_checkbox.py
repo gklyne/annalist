@@ -90,7 +90,7 @@ class bool_checkbox_edit_renderer(object):
         val     = get_field_edit_value(context, None)
         boolval = BoolCheckboxValueMapper.decode(val)
         textval = BoolCheckboxValueMapper.encode(val)
-        boolval = textval.lower() in ["yes", "true"]
+        boolval = textval.lower() in ["y", "yes", "t", "true"]
         checked = ''' checked="checked"''' if boolval else ''''''
         with context.push(encoded_field_value=textval, checked=checked):
             result = self._template.render(context)

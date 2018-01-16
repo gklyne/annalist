@@ -10,7 +10,7 @@
     "annal:Field"
   ],
   "annal:default_value": "",
-  "annal:field_entity_type": "coll:Uploaded_image",
+  "annal:field_entity_type": "resource:Uploaded_image",
   "annal:field_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -29,10 +29,10 @@
   "annal:field_ref_type": "_type/Uploaded_image",
   "annal:field_render_type": "_enum_render_type/RefMultifield",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
-  "annal:field_value_type": "coll:Uploaded_image",
+  "annal:field_value_type": "resource:Uploaded_image",
   "annal:id": "Uploaded_image_m",
   "annal:placeholder": "(select image)",
-  "annal:property_uri": "coll:uploaded_image_m",
+  "annal:property_uri": "resource:uploaded_image_m",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
   "annal:tooltip": "Reference to uploaded image fields",

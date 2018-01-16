@@ -5,96 +5,103 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Documentation
 
-- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [ ] Update tutorial
     - Also cover inheritance of definitions?
 - [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-    - Also FAQs?
+- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
 - [x] Initial corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
 
+See also: https://www.divio.com/en/blog/documentation/
 
-# Version 0.5.3, towards 0.5.4
 
-- [x] BUG: copy entity and Id change (or copy and something) causes errors on save. (Id exists, or does not exist, or something like that)
-    - (Workaround: copy, save, then edit Id seems to work OK.)
-    - Related: when copying from parent collection, similar error even if no change to Id.
-- [x] Is there a way to allow multiple literal fields with the same property (cf. crm:P3_has_note)?  YES: use field URI "@value" inthe repeat field definition.
-- [x] Make it easier to create subtype + view + list...
-    - Provide "Create subtype" button and copy view information, supertypes, etc from supertype
-    - Enhance create view+list logic to copy previous view+liust as defaults
-- [x] BUG: When accessing JSON-LD from `.../v/<view-id>/...` form of URL (e.g. `.../c/EMLO_in_CRM_samples/v/Linked_image/Linked_image/image_00000026/`), the relative reference to retrieve the JSON-LD does not work.
-- [x] BUG: software update zaps default user permissions (e.g. CREATE_COLLECTION)
-    - introduced _site_default_user_perms which are consulted in preference to _default_user_perms, but not overridden on update
-    - needs testing still: check with new installation at dhoxss.annalist.net
-- [x] BUG: when default view references non-accessible entity: 
-    - if default view/list unavailable, revert to default list
-- [x] BUG: create subtype without login generates unhelpful error response
-- [x] BUG: display list with no fields generates error
-- [x] BUG: define view+list with none selected generates invalid list (and unhelpful view?)
-- [x] BUG: field pos/size dropdown doesn't display properly on Chinese language Chrome
-- [x] BUG: data links for collection metadata are broken (since changes to entity_data_ref?)
-- [x] Separate buttons for create list and multiple-value fields (seq vs set)
-    - Was: When creating a repeat field, distinguish cases for list and set: for set, use "set" render type, entity type for range of repeat field, and '@id' for property.
-    - See references to "Define_repeat_field" in:
-        - [x] data/sitedata/_view/Field_view/view_meta.jsonld
-        - [x] views/entityedit.py
-        - [x] tests/test_recordfield.py
-        - [x] data/Annalist_schema/entitydata/Property/task_buttons/entity_data.jsonld
-- [x] When creating a repeat field, be more helpful in creating the help and tooltip text (the key here is providing acess to the range type description and link to facilitate subsequent editing).
-- [x] Default type list/view and subtype comments: include link to type
-- [x] Create FAQ for defining subtypes
-- [x] For missing field definition, improve text and try to include field name referenced (search for references to "Field_missing")
-- [x] Fields containing URIs should have leading/trailing spaces stripped on entry (render type "Identifier")
-- [x] When inheriting definitions, also use parent default view if none defined locally.
-- [x] Turtle rendering
-    - [x] Locate logic for Turtle rendering alongside JSON-LD
-        - Entities: see EntityResourceAccess - returns file content and headers (JSON-LD is native).  render_json method not currently used.
-        - Lists: see EntityGenericListJsonView - constructs list and adds headers
-        - Site: see SiteResourceAccess
-        - Collections: see CollectionResourceAccess
-    - [x] Replicate JSON-LD rendering functions in generic.py
-    - [x] Implement Turtle rendering logic in EntityResourceAccess
-    - [x] Rework logic for adding Link headers
-    - [x] Add Turtle redirect calls alongside JSON-LD redirects (entityedit.py, form_render)
-        - DisplayInfo.get_entity_data_ref uses class metadata file name via EntityTypeInfo.
-    - [x] In EntityResourceAccess, handle .ttl access via Turtle renderer
-    - [x] Create test cases for Turtle output (based on JSON-LD test cases?)
-    - [x] Test case for collection data view
-    - [x] Implement Turtle output for collection data view
-    - [x] Test case for site data view
-    - [x] Implement Turtle output for site data view
-    - [x] Lists: refactor code to separate data access from rendering
-    - [x] Lists: generalize JSON list code to use entityresourceaccess facilities
-    - [x] Lists: modify urls.py to allow different resource names for different result types
-    - [x] Lists: add Turtle redirect calls alongside JSON-LD redirects (entitylist.py, get)
-    - [x] Lists: add test cases for retrieving list data as Turtle
-    - [x] Lists: update template to include Turtle data link and use 'link-bar' styles
-    - [x] Test turtle output in browser (check links, etc.)
+# Version 0.5.5, towards 0.5.6
+
+- [x] BUG: show warning when accessing collection with missing parent.
+    - The implementation of this fix has involved a significant refactoring of error reporting and entity delete confirmation logic, to use more common code in DisplayInfo.
+    - In some cases, continuation URLs used have changed
+- [x] BUG: define repeat field task should use same property URI (without suffix)
+- [x] BUG: deleting field definition from "Smoke" collection causes internal errors
+- [x] BUG: Customize window doesn't return to previous URL after data migration.
+- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors
+    - These in turn caused Turtle output generation server errors (500).
+    - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
+    - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
+- [x] BUG: Login sequence from authz error page does not always return to original page viewed
+- [x] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
+    - 500: Server error
+    - u'frbr:Group_1_entity' - see server log for details
+    - Seems to occur while (re)generating context
+    - Maybe related to removal of a supertype rather than view/list
+    - Or related to copy type then change URI?
+    - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
+    - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
+- [x] BUG: define repeat field: should use base type for value and entity type
+- [x] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
+    - At minimum, need an easy way to force cache-refresh.
+    - Better: invalidate caches for dependent collections when invalidating parent.
+    - NOTE: type update does not do complete cache flush - maybe it should?
+    - NOTE: collection-level type cache is not currently called anywhere apart from tests
+    - For now, displaying a default collection view (e.g. from list of collections, or from menu bar) causes all collection caches to be flushed.
+- [x] BUG: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
+    - Occurred when corresponding type is defined by multiple parent collections.
+    - Fixed logic in `Entity._children`
+- [x] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
+- [x] Add Entity_uri field definition to site data.
+- [x] Make labels for enumeration/choice render types more usefully descriptive.
+- [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
+    - propose: `resource:...`, `journal:...`
+    - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
+- [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
+- [x] Generate README for collection incorporating description from coll-meta (as part of context generation?).
+- [x] Improve performance of mechanisms used for finding type information
+    - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
+    - [x] create CollectionTypeCache
+    - [x] Test suite for CollectionTypeCache
+    - [x] Update Collection to use CollectionTypeCache
+    - [x] EntityRoot: add hook "._post_remove_processing"
+    - [x] RecordType: add hook methods for update/remove type
+    - [x] CollectionClosure: change method names from camelCase
+- [x] Use transitive closure when locating entities of a designated type (for selecting applicable fields).
+    - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
+    - [x] Review EntityFinder to use collection cache methods.
+    - [x] Look for all uses of _children method?
+        - Note method EntityRoot.child_entity_ids: uses _children + Exists
+        - Site overrides this method
+    - [x] Created ClosureCache class
+- [x] Show type URIs in type list
+- [x] When rendering link, expand prefix in href if defined in collection
+    - [x] introduce vocab namespace cache (collectionvocabcache)
+    - [x] test cases for cache
+    - [x] hook in RecordVocab
+    - [x] hook in Collection (and other places where CollectionTypeCache is referenced)
+    - [x] Collection.flush_collection_caches update
+    - [x] update render_uri_link
+- [x] Boolean renderer: not recognizing "Y"; don't need label?
+- [x] Refactor common logic in collectiontypecache and collectionvocabcache.
+- [x] When generating subtype (task button), don't include supertypes
 
 (Sub-release?)
 
-- [ ] BUG: show warning when accessing collection with missing parent.
-- [ ] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
-- [ ] Improve performance of mechanisms used for finding sub/superclasses
-    - (working with CIDOC-CRM deeplky nested type hierarchy gets very slow)
-- [ ] No transitive closure calculated when locating entities of a designated type (for selecting applicable fields).
+- [ ] Allow multiple entity deletes from list display 
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
+    - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
-- [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
+- [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
-- [ ] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
-- [ ] Login sequence from authz error page does not return to original page viewed
-- [x] Turtle export option to work around JSON-LD context access problems for now
-
+- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
+    - copied-from field in entity?
 
 (Sub-release?)
 
-- [ ] update pip to latest version in python environment (for continued testing)
-- [ ] update Django version used to latest version designated for long term support (1.8?)
+- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
+    - Need to look into improving context-generation diagnostics.
+- [ ] Update pip to latest version in python environment (for continued testing)
+- [ ] Update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -105,7 +112,10 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 (Sub-release?)
 
-- [ ] BUG: delete list view while viewing that list results in error message.  Maybe just improve error message.
+- [ ] BUG: delete list view while viewing that list results in error message.
+    - Maybe just improve error message.
+- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
+    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages
@@ -195,24 +205,27 @@ Usability notes:
 
 - [ ] In field definition, "Entity type" should be drop-dwon, with subtype logic handling an initial dereference to obtain the type URI.
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
+- [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
+- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Deprecate "Refer to field" field in field view, and "Field reference" value mode. 
+- [ ] Add menu bar link to display content of collection rather than default
+    - List of types, linked to lists?
+- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
+- [ ] List display paging
 - [ ] Task button option to copy type+view+list and update names and URIs
     - problems:
         - how is the new type name defined?  (Also the new view and list.)
         - should edits to the current type be saved first?
     - implementation deferred until save entity logic in `entityedit.py` has been refactored: follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.
+- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 - [ ] If logout results in loss of authorization to view resource, go to collection view?
     - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
-    - As an edge case, dopn't worry about this immediately.
-- [ ] Add menu bar link to display content of collection rather than default
-    - List of types, linked to lists?
+    - As an edge case, don't worry about this immediately.
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too?
 - [ ] Consistency checks for references to missing types (e.g. following rename)
-- [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
-- [ ] Persist item selection to refreshed display when move-up/movedown clicked?
 - [ ] Introduce notion of "Task", based on form, but linked to "script" action.
     - [x] Create a "wizard-like" (or one-form) interface for creating type+list+view set.
         - test by creating contacts/supplies list for CruisingLog
@@ -231,15 +244,13 @@ Usability notes:
             - NOTE: default and initial values behave differently
         - [ ] "view source" record editing (of JSON), with post-entry syntax checking.
 - [ ] Getting type URI/CURIE to match across type/list is too fragile.  Avoid using selector for this unless it's really needed?  In particular, getting the entity type for a field is error-prone.
-- [ ] When creating type, default URI to be based on id entered (e.g. coll:<type-id>?)
-- [ ] List display paging
-- [ ] When generating a view of an enumerated value, push logic for finding link into the renderer, so that availability of field link does not depend on whether field is available for the selected view.  (Try changing entity type of field to random value - can no longer browse to field description from view/group description)
 
 
 Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
     - [ ] eliminate _field/Field_groupref instances
@@ -250,7 +261,6 @@ Notes for Future TODOs:
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
-
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:

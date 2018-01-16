@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 from django.conf                        import settings
 from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
+from annalist                           import layout
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
 from annalist.models.collection         import Collection
@@ -81,7 +82,7 @@ class FieldDescriptionTest(AnnalistTestCase):
     def test_Field_InitialValues(self):
         fd = field_description_from_view_field(
             self.testcoll, 
-            { ANNAL.CURIE.field_id: "_initial_values" }, 
+            { ANNAL.CURIE.field_id: layout.INITIAL_VALUES_ID }, 
             {}
             )
         expect_placement = Placement(
@@ -93,8 +94,8 @@ class FieldDescriptionTest(AnnalistTestCase):
             value   = "small-12 medium-10 columns"
             )
         expect_field_desc = (
-            { "field_id":                   "_initial_values"
-            , "field_name":                 "_initial_values"
+            { "field_id":                   layout.INITIAL_VALUES_ID
+            , "field_name":                 layout.INITIAL_VALUES_ID
             , "field_value_type":           ""
             , "field_label":                ""
             , "field_help":                 ""

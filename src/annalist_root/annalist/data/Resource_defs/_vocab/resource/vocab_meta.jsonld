@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_vocab/resource",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:id": "resource",
+  "annal:type": "annal:Vocabulary",
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://id.annalist.net/resource/",
+  "rdfs:comment": "Vocabulary namespace for terms that are used for types and properties used to describe web and media resources associated with a collection.",
+  "rdfs:label": "Namespace media and web resource references",
+  "rdfs:seeAlso": []
+}

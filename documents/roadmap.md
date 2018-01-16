@@ -1,9 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.4.
+Current status: candidate feature-complete minmum viable product, release 0.5.6.
 
-This is a bug fix and usability enhancement release.
-It also provides Turtle output of RDF data.
+This is a bug fix and performance enhancement release.
 
 
 # V1.0 release
@@ -45,7 +44,7 @@ Alternative form of list view, e.g. for image galeries.
 
 ## Support multiple entity providers
 
-This is an extension of the "Web backend storage" noted above.  An Annalist installation could be able to route entety access requests to different providers using different HTTP-based protocols (e.g. WebDav vs AtomPub), or other more specialized access mechanisms.
+This is an extension of the "Web backend storage" noted above.  An Annalist installation could be able to route entity access requests to different providers using different HTTP-based protocols (e.g. WebDav vs AtomPub), or other more specialized access mechanisms.
 
 
 ## Version management integration

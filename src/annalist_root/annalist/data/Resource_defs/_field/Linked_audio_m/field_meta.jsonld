@@ -10,7 +10,7 @@
     "annal:Field"
   ],
   "annal:default_value": "",
-  "annal:field_entity_type": "coll:Linked_audio",
+  "annal:field_entity_type": "resource:Linked_audio",
   "annal:field_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -29,10 +29,10 @@
   "annal:field_ref_type": "_type/Linked_audio",
   "annal:field_render_type": "_enum_render_type/RefMultifield",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
-  "annal:field_value_type": "coll:Linked_audio",
+  "annal:field_value_type": "resource:Linked_audio",
   "annal:id": "Linked_audio_m",
   "annal:placeholder": "",
-  "annal:property_uri": "coll:linked_audio_m",
+  "annal:property_uri": "resource:linked_audio_m",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
   "annal:tooltip": "Reference Id+label fields of linked audio clip entry",

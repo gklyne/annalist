@@ -17,7 +17,7 @@
 
 <body>
   {% block topmenu %}
-  <nav class="top-bar" data-topbar>
+  <nav class="top-bar hide-on-print" data-topbar>
     <ul class="title-area">
     <li class="name">
       <h1>
@@ -125,7 +125,7 @@
   {% endblock %}
 
   {% if help_text %}
-  <div class="help row">
+  <div class="help hide-on-print row">
     <div class="small-12 columns">
       {{ help_text|safe }}
     </div>
@@ -134,7 +134,7 @@
 
   <div class="footer-bar">
     <div class="row">
-      <div class="medium-6 medium-push-6 columns">
+      <div class="medium-6 medium-push-6 hide-on-print columns">
         <ul class="links">
           <li>
             <a href="/annalist/site/?info_head=About&amp;info_message=About%20page%20TBD">About</a>

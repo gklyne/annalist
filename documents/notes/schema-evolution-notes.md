@@ -36,7 +36,7 @@ migrations that adapt old data for use with updated schemas.
 updated when read and written.  All migrations are defined and applied per type,
 so that they can be easily performed on-access.
 
-    - property migrations are handled through alias fields.
+    - property migrations are (currently) handled through alias fields.
     - some type migrations can be handled as supertypes, others may need updates.
 
 7. Provide collection migration option in annalist-mananager that reads and 
@@ -58,6 +58,18 @@ The main type URI and all supertype URIs are included when
 entities are created or updated, according to their Annalist type.
 
 
+## Renaming a type
+
+(a) need to find all references and update them
+
+(b) On somne systems (e.g, MacOS), renames that only change the case of characters in the type name fail because the file system naming is case-insensitive.  These renames need to be done in two stages.
+
+
+## Rename type, view and list
+
+@@TODO
+
+
 ## Change type URI
 
 Update URI in Annalist type declaration.
@@ -73,18 +85,57 @@ entities are created or updated, according to their Annalist type.
 ## Change property URI
 
 Primary URI definition comes from a Field definition, but this can be
-overridden by Views, Lists and Groups, which should be updated as 
-appropriate.
+overridden by Views and Lists, which should be updated as appropriate.
 
 Property URIs may be referenced by selectors (value restrictions) in 
 Field and List definitions.
 
 Property aliases, defined on a recordtype, can be used to let the old URI be 
 recognized in place of the new one.  When editing a form that uses the new 
-property URIs, thenew URIs are added when the form is saved,and the old ones 
+property URIs, the new URIs are added when the form is saved, and the old ones 
 remain as they were.
 
-## Local entity referenmces and permanent entity URIs
+
+## Local entity references and permanent entity URIs
 
 These should be interchageable, with the permanent URI stored for referencing local entities where available.  This will mean that enumerated value displays must be able to reference entities using permanent URIs (annal:uri) as well as local references.
+
+
+## Change property URI used for both list/collection values and list/collection members
+
+Example:
+
+    "annal:member": [
+        {
+          "annal:member": "Journal/00000001"
+        }
+      ]
+
+to be converted to:
+
+    "coll:list_property": [
+        {
+          "coll:member_property": "Journal/00000001"
+        }
+      ]
+
+or:
+
+    "coll:list_property": [
+        {
+          "@id": "Journal/00000001"
+        }
+      ]
+
+This is (maybe) a particular case of a more general "shape-changing" pattern, in which a query might be used to locate and match properties that need to be re-written.  But how easily are differing-length lists handled by such a query?
+
+Pattern matching could be limited to subtrees from an entity node, which could simplify the descriptions required.
+
+
+## Change namespace prefix
+
+This change applied to Performance_defs and Parformances required a lot of effort: class URIs and propery URIs had to be changed in inherited definitions, local definitions and local data.  Changing the namespace URI without changing the prefix is relatively easier: just edit the corresponding namespace definition.
+
+The prefix migration may most easily be invoked by directives added to the namespace definition - that way, the migration could be applied for any collection that references and uses the namespace.
+
 

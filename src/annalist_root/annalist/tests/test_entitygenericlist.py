@@ -165,7 +165,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), 172)    # Will change with site data
+        self.assertEqual(len(actual_entity_ids), 173)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
@@ -324,7 +324,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 169)    # Will change with site data
+        self.assertEqual(len(entities), 170)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -347,16 +347,20 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.context['type_id'],          "_type")
         # Fields
         head_fields = context_list_head_fields(r.context)
-        self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
+        f2 = context_view_field(r.context, 0, 2)
         # 1st field
         self.assertEqual(f0['field_id'], 'Entity_id')
         self.assertEqual(f0['field_name'], 'entity_id')
         # 2nd field
-        self.assertEqual(f1['field_id'], 'Entity_label')
-        self.assertEqual(f1['field_name'], 'Entity_label')
+        self.assertEqual(f1['field_id'], 'Type_uri')
+        self.assertEqual(f1['field_name'], 'Type_uri')
+        # 3rd field
+        self.assertEqual(f2['field_id'], 'Entity_label')
+        self.assertEqual(f2['field_name'], 'Entity_label')
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
@@ -386,20 +390,22 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-
+        f2 = context_view_field(r.context, 0, 2)
         # 1st field
         self.assertEqual(f0['field_id'], 'Entity_id')
         self.assertEqual(f0['field_name'], 'entity_id')
         # 2nd field
-        self.assertEqual(f1['field_id'], 'Entity_label')
-        self.assertEqual(f1['field_name'], 'Entity_label')
+        self.assertEqual(f1['field_id'], 'Type_uri')
+        self.assertEqual(f1['field_name'], 'Type_uri')
+        # 3rd field
+        self.assertEqual(f2['field_id'], 'Entity_label')
+        self.assertEqual(f2['field_name'], 'Entity_label')
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
-        #@@ self.assertIn('_initial_values', listed_entities)
         type_entities = get_site_types() | {"testtype", "testtype2"}
         self.assertEqual(set(listed_entities.keys()), type_entities)
         return
@@ -519,7 +525,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/%(field_typeid)s/Coll_parent/%(cont)s">Coll_parent</a>
                   </div>
                   <div class="view-value small-4 medium-3 columns" %(tooltip2)s>
-                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">Optional entity choice</a>
+                    <a href="%(base)s/c/testcoll/d/_enum_render_type/Enum_choice_opt/%(cont)s">
+                      Optional entity reference
+                    </a>
                   </div>
                   <div class="view-value small-12 medium-3 columns show-for-medium-up" %(tooltip3)s>
                     <span>annal:EntityRef</span>
@@ -746,8 +754,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'][:len(e)])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     #   -------- copy --------
@@ -804,11 +816,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        c = "continuation_url"
-        e = error_head="Problem%20with%20input&error_message=No%20data%20record%20selected%20to%20copy"
-        self.assertIn(TestHostUri + u, r['location'])
+        c  = "continuation_url"
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         self.assertNotIn(c, r['location'])
-        self.assertIn(e, r['location'])
         return
 
     def test_post_copy_type_entity_select_many(self):
@@ -821,8 +836,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_copy_type_entity_no_login(self):
@@ -873,8 +892,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_edit_type_entity_select_many(self):
@@ -887,8 +910,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
-        self.assertIn(e, r['location'])
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message="
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_edit_type_entity_no_login(self):
@@ -935,10 +962,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         l = r['location']
-        self.assertIn(u, l)
-        self.assertIn("error_head=Problem%20with%20input", l)
-        # Absent entity assumed to be site level
-        self.assertIn("error_message=Cannot%20remove%20site%20built-in%20entity%20sitetype", l)
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message=Entity%20sitetype%20of%20type%20_type%20not%20found%20or%20cannot%20be%20deleted"
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_delete_type_entity_with_values(self):
@@ -947,10 +976,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
-        l = r['location']
-        self.assertIn(u, l)
-        self.assertIn("error_head=Problem%20with%20input", l)
-        self.assertIn("error_message=Cannot%20remove%20type%20testtype%20with%20existing%20values", l)
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message=Cannot%20remove%20type%20testtype%20with%20existing%20values"
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     def test_post_delete_site_entity(self):
@@ -961,10 +992,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u + "?error_head=Problem%20with%20input&error_message="
+        e1 = TestHostUri + u
+        e2 = "error_head=Problem%20with%20input"
+        e3 = "error_message=Entity%20Field_comment%20of%20type%20_field%20not%20found%20or%20cannot%20be%20deleted"
         self.assertIn(e1, r['location'])
-        e2 = "Cannot%20remove%20site%20built-in%20entity%20Field_comment"
         self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
         return
 
     #   -------- close / search / view / default-view / customize--------
@@ -1006,8 +1039,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="View_list")
+        c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
-        self.assertNotIn("continuation_url", r['location'])
+        self.assertIn(c, r['location'])
         return
 
     def test_post_view_all_list(self):
@@ -1019,8 +1053,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="View_list")
+        c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
-        self.assertNotIn("continuation_url", r['location'])
+        self.assertIn(c, r['location'])
         return
 
     def test_post_view_search(self):
@@ -1074,9 +1109,9 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_all_url("testcoll", list_id="Type_list")
-        c = continuation_url_param(collection_edit_url("testcoll"))
+        c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
-        self.assertNotIn("continuation_url", r['location'])
+        self.assertIn(c, r['location'])
         return
 
     def test_post_default_list(self):
@@ -1088,13 +1123,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
+        c = continuation_url_param(collection_view_url("testcoll"))
         h = "info_head=Action%20completed"
-        m = "info_message=.*view.*testcoll.*Type_list"
-        c = continuation_url_param(collection_edit_url("testcoll"))
+        m = "info_message=Default%20list%20view%20for%20collection%20testcoll%20changed%20to%20Type_list"
         self.assertIn(v, r['location'])
+        self.assertIn(c, r['location'])
         self.assertIn(h, r['location'])
-        self.assertMatch(r['location'], m)
-        self.assertNotIn("continuation_url", r['location'])
+        self.assertIn(c, r['location'])
         return
 
     def test_post_customize(self):

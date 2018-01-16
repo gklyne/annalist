@@ -57,7 +57,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
             target_link=None, 
             field_ref_type=None,
             options=None,
-            coll_id="testcoll"
+            coll_id="testcoll", coll=None
         ):
         cd = (
             { 'field':
@@ -71,6 +71,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
               , 'field_view_value':     val
               , 'continuation_param':   "?continuation_url=test_cont"
               }
+            , 'collection':           coll
             , 'repeat_prefix':        repeat_prefix
             , 'HOST':                 TestHostUri
             , 'SITE':                 TestBaseUri

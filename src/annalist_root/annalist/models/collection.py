@@ -31,27 +31,44 @@ log = logging.getLogger(__name__)
 from django.conf import settings
 
 import annalist
-from annalist                       import layout
-from annalist                       import message
-from annalist.exceptions            import Annalist_Error
-from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
+from annalist                               import layout
+from annalist                               import message
+from annalist.exceptions                    import Annalist_Error
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist.util                          import valid_id, extract_entity_id, make_type_entity_id
 
-from annalist.models.entity         import Entity
-from annalist.models.annalistuser   import AnnalistUser
-from annalist.models.recordtype     import RecordType
-from annalist.models.recordview     import RecordView
-from annalist.models.recordlist     import RecordList
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
-from annalist.models.recordvocab    import RecordVocab
-from annalist.models.rendertypeinfo import (
+from annalist.models.entity                 import Entity
+from annalist.models.annalistuser           import AnnalistUser
+from annalist.models.collectiontypecache    import CollectionTypeCache
+from annalist.models.collectionvocabcache   import CollectionVocabCache
+from annalist.models.recordtype             import RecordType
+from annalist.models.recordview             import RecordView
+from annalist.models.recordlist             import RecordList
+from annalist.models.recordfield            import RecordField
+from annalist.models.recordgroup            import RecordGroup, RecordGroup_migration
+from annalist.models.recordvocab            import RecordVocab
+from annalist.models.rendertypeinfo         import (
     is_render_type_literal,
     is_render_type_id,
     is_render_type_set,
     is_render_type_list,
     is_render_type_object,
     )
+
+#   ---------------------------------------------------------------------------
+#
+#   Static data for collection data caches
+#
+#   ---------------------------------------------------------------------------
+
+type_cache  = CollectionTypeCache()
+vocab_cache = CollectionVocabCache()
+
+#   ---------------------------------------------------------------------------
+#
+#   Collection class
+#
+#   ---------------------------------------------------------------------------
 
 class Collection(Entity):
 
@@ -60,8 +77,7 @@ class Collection(Entity):
     _entityview     = layout.SITE_COLL_VIEW
     _entityroot     = layout.SITE_COLL_PATH
     _entitybase     = layout.COLL_BASE_REF
-    # _entityfile     = layout.COLL_META_REF # @@@TODO: wrong now @@@
-    _entityfile     = layout.COLL_META_FILE # @@ try to be consistent; breaks stuff
+    _entityfile     = layout.COLL_META_FILE
     _entityref      = layout.META_COLL_REF
     _contextbase    = layout.META_COLL_BASE_REF
     _contextref     = layout.COLL_CONTEXT_FILE
@@ -82,11 +98,6 @@ class Collection(Entity):
                 msg = "Collection altparent value must be a Collection (got %r)"%(altparent,)
                 log.error(msg)
                 raise ValueError(msg)
-            # msg = (
-            #     "Collection %s initialised with altparent %s"%
-            #     (coll_id, altparent.get_id())
-            #     )
-            # raise ValueError(msg)
         self._parentsite = parentsite
         self._parentcoll = (
             altparent or
@@ -94,8 +105,6 @@ class Collection(Entity):
             parentsite.site_data_collection()
             )
         super(Collection, self).__init__(parentsite, coll_id, altparent=self._parentcoll)
-        self._types_by_id  = None
-        self._types_by_uri = None
         return
 
     def _migrate_values(self, collmetadata):
@@ -109,6 +118,23 @@ class Collection(Entity):
         if collmetadata[ANNAL.CURIE.type_id] == "_collection":
             collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
         return collmetadata
+
+    def flush_collection_caches(self):
+        """
+        Flush all caches associated with the current collection
+        """
+        type_cache.flush_cache(self)
+        vocab_cache.flush_cache(self)
+        return
+
+    @classmethod
+    def flush_all_caches(self):
+        """
+        Flush all caches associated with all collections
+        """
+        type_cache.flush_all()
+        vocab_cache.flush_all()
+        return
 
     # Site
 
@@ -200,10 +226,8 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
-        # print("@@ Test migrate old configuration from %s"%(coll_conf_old_dir,))
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
-            # print("@@ Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):
                 old_path = os.path.join(coll_conf_old_dir, old_name)
                 if ( ( os.path.isdir(old_path) ) or
@@ -211,12 +235,15 @@ class Collection(Entity):
                    ):
                     log.info("- %s -> %s"%(old_name, coll_base_dir))
                     new_path = os.path.join(coll_base_dir, old_name)
-                    # print ("@@ rename %s -> %s"%(old_path, new_path))
                     try:
                         os.rename(old_path, new_path)
                     except Exception as e:
-                        msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, old_path, new_path, e)
-                        # print "@@ "+msg
+                        msg = (message.COLL_MIGRATE_DIR_FAILED%
+                                { "id": coll_id
+                                , "old_path": old_path, "new_path": new_path
+                                , "exc": e
+                                }
+                            )
                         log.error("Collection._migrate_collection_config_dir: "+msg)
                         assert False, msg
             # Rename old config dir to avoid triggering this logic again
@@ -224,8 +251,12 @@ class Collection(Entity):
             try:
                 os.rename(coll_conf_old_dir, coll_conf_saved_dir)
             except Exception as e:
-                msg = message.COLL_MIGRATE_DIR_FAILED%(coll_id, coll_conf_old_dir, coll_conf_saved_dir, e)
-                # print "@@ "+msg
+                msg = (message.COLL_MIGRATE_DIR_FAILED%
+                        { "id": coll_id
+                        , "old_path": coll_conf_old_dir, "new_path": coll_conf_saved_dir
+                        , "exc": e
+                        }
+                    )
                 log.error("Collection._migrate_collection_config_dir: "+msg)
                 assert False, msg
         return
@@ -263,10 +294,9 @@ class Collection(Entity):
         if parent_coll_id and parent_coll_id != layout.SITEDATA_ID:
             parent_coll = Collection.load(parent, parent_coll_id)
             if parent_coll is None:
-                log.warning(
-                    "Collection._set_alt_parent_coll: coll %s references non-existent parent %s"%
-                    (coll_id, parent_coll_id)
-                    )
+                err_msg = message.COLL_PARENT_NOT_EXIST%{"id": coll_id, "parent_id": parent_coll_id}
+                coll.set_error(err_msg)
+                log.warning("Collection._set_alt_parent_coll: "+err_msg)
             else:
                 log.debug(
                     "Collection._set_alt_parent_coll: coll %s references parent %s"%
@@ -331,55 +361,135 @@ class Collection(Entity):
             user = None         # URI mismatch: return None.
         return user
 
+    # Vocabulary namespaces
+
+    #@@
+    # @classmethod
+    # def reset_vocab_cache(cls):
+    #     """
+    #     Used for testing: clear out namespace vocabulary cache so tets don't interfere 
+    #     with each other.  Could also be used when external application updates data.
+    #     """
+    #     type_cache.flush_all()
+    #     return
+    #@@
+
+    def cache_get_vocab(self, vocab_id):
+        """
+        Retrieve namespace vocabulary entity for id (namespace prefix) from cache.
+
+        Returns namespace vocabulary entity if found, otherwise None.
+        """
+        vocab_cache.get_vocab(self, vocab_id)
+        t = vocab_cache.get_vocab(self, vocab_id)
+        # Was it previously created but not cached?
+        if not t and RecordType.exists(self, vocab_id, altscope="all"):
+            msg = (
+                "Collection.get_vocab %s present but not cached for collection %s"%
+                (vocab_id, self.get_id())
+                )
+            log.warning(msg)
+            t = RecordType.load(self, vocab_id, altscope="all")
+            vocab_cache.set_vocab(self, t)
+            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+        return t
+
     # Record types
 
-    def _update_type_cache(self, type_entity):
-        """
-        Add single type entity to type cache
-        """
-        if type_entity:
-            self._types_by_id[type_entity.get_id()]   = type_entity
-            self._types_by_uri[type_entity.get_uri()] = type_entity
-        return
-
-    def _flush_type(self, type_id):
-        """
-        Remove single identified type entity from type cache
-        """
-        if self._types_by_id:
-            t = self._types_by_id.get(type_id, None)
-            if t:
-                type_uri = t.get_uri()
-                self._types_by_id.pop(type_id, None)
-                self._types_by_uri.pop(type_uri, None)
-        return
-
-    def _load_types(self):
-        """
-        Initialize cache of RecordType entities
-        """
-        if not (self._types_by_id and self._types_by_uri):
-            self._types_by_id  = {}
-            self._types_by_uri = {}
-            for type_id in self._children(RecordType, altscope="all"):
-                t = RecordType.load(self, type_id, altscope="all")
-                self._update_type_cache(t)
-        return
+    #@@
+    # @classmethod
+    # def reset_type_cache(cls):
+    #     """
+    #     Used for testing: clear out type cache so tets don't interfere with each other
+    #     Could also be used when external application updates data.
+    #     """
+    #     type_cache.flush_all()
+    #     return
+    #@@
 
     def types(self, altscope="all"):
         """
-        Generator enumerates and returns record types that may be stored
+        Iterator over record types stored in the current collection.
         """
-        for f in self._children(RecordType, altscope=altscope):
-            log.debug("___ Collection.types: "+f)
-            t = self.get_type(f)
-            if t and t.get_id() != "_initial_values":
-                yield t
+        return type_cache.get_all_types(self, altscope=altscope)
+
+    def cache_add_type(self, type_entity):
+        """
+        Add or update type information in type cache.
+        """
+        log.debug("Collection.cache_add_type %s in %s"%(type_entity.get_id(), self.get_id()))
+        type_cache.remove_type(self, type_entity.get_id())
+        type_cache.set_type(self, type_entity)
         return
+
+    def cache_get_type(self, type_id):
+        """
+        Retrieve type from cache.
+
+        Returns type entity if found, otherwise None.
+        """
+        type_cache.get_type(self, type_id)
+        t = type_cache.get_type(self, type_id)
+        # Was it previously created but not cached?
+        if not t and RecordType.exists(self, type_id, altscope="all"):
+            msg = (
+                "Collection.get_type %s present but not cached for collection %s"%
+                (type_id, self.get_id())
+                )
+            log.warning(msg)
+            t = RecordType.load(self, type_id, altscope="all")
+            type_cache.set_type(self, t)
+            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+        return t
+
+    def cache_remove_type(self, type_id):
+        """
+        Remove type from type cache.
+        """
+        type_cache.remove_type(self, type_id)
+        return
+
+    def cache_get_all_type_ids(self, altscope="all"):
+        """
+        Iterator over type ids of types stored in the current collection.
+        """
+        return type_cache.get_all_type_ids(self, altscope=altscope)
+
+    def cache_get_supertypes(self, type_entity):
+        """
+        Return supertypes of supplied type URI.
+        """
+        type_uri = type_entity.get_uri()
+        return type_cache.get_type_uri_supertypes(self, type_uri)
+
+    def cache_get_subtypes(self, type_entity):
+        """
+        Return subtypes of supplied type URI.
+        """
+        type_uri = type_entity.get_uri()
+        return type_cache.get_type_uri_subtypes(self, type_uri)
+
+    def cache_get_subtype_uris(self, type_uri):
+        """
+        Return subtypes of supplied type URI.
+
+        The suplied URI is not itself required to be declared as identifying
+        a defined type entity.
+        """
+        return type_cache.get_type_uri_subtype_uris(self, type_uri)
+
+    def cache_get_supertype_uris(self, type_uri):
+        """
+        Return supertypes of supplied type URI.
+
+        This returns all supertype URIs declared by the supertypes, even when 
+        there is not corresponding type entity defined.
+        """
+        return type_cache.get_type_uri_supertype_uris(self, type_uri)
 
     def add_type(self, type_id, type_meta):
         """
-        Add a new record type to the current collection
+        Add a new or updated record type to the current collection
 
         type_id     identifier for the new type, as a string
                     with a form that is valid as URI path segment.
@@ -388,9 +498,8 @@ class Collection(Entity):
 
         Returns a RecordType object for the newly created type.
         """
+        log.debug("Collection.add_type %s in %s"%(type_id, self.get_id()))
         t = RecordType.create(self, type_id, type_meta)
-        if self._types_by_id:
-            self._update_type_cache(t)
         return t
 
     def get_type(self, type_id):
@@ -402,22 +511,16 @@ class Collection(Entity):
         returns a RecordType object for the identified type, or None.
         """
         if not valid_id(type_id):
-            raise ValueError("Collection %s get_type(%s) invalid id"%(self.get_id(), type_id))
-        self._load_types()
-        t = self._types_by_id.get(type_id, None)
-        # Was it created but not cached?
-        if not t and RecordType.exists(self, type_id, altscope="all"):
-            log.info("___ Collection.get_type: "+type_id)
-            t = RecordType.load(self, type_id, altscope="all")
-            self._update_type_cache(t)
-        return t
+            msg = "Collection %s get_type(%s) invalid id"%(self.get_id(), type_id)
+            log.error(msg)
+            raise ValueError(msg, type_id)
+        return self.cache_get_type(type_id)
 
     def get_uri_type(self, type_uri):
         """
         Return type entity corresponding to the supplied type URI
         """
-        self._load_types()
-        t = self._types_by_uri.get(type_uri, None)
+        t = type_cache.get_type_from_uri(self, type_uri)
         return t
 
     def remove_type(self, type_id):
@@ -428,7 +531,6 @@ class Collection(Entity):
 
         Returns a non-False status code if the type is not removed.
         """
-        self._flush_type(type_id)
         s = RecordType.remove(self, type_id)
         return s
 
@@ -438,17 +540,15 @@ class Collection(Entity):
         supertypes of the associated type record.
         """
         type_uri = e.get(ANNAL.CURIE.type, None)
-        sts = [type_uri]
-        t   = self.get_uri_type(type_uri)
+        st_uris = [type_uri]
+        t       = self.get_uri_type(type_uri)
         if t:
             assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
-            for st in t.get(ANNAL.CURIE.supertype_uri, []):
-                if isinstance(st, dict):
-                    st = st['@id']
-                if st not in sts:
-                    sts.append(st)
-        # log.info("@@ update_entity_types %r"%(sts,))
-        e['@type'] = sts
+            for st in type_cache.get_type_uri_supertypes(self, type_uri):
+                st_uri = st.get_uri()
+                if st_uri not in st_uris:
+                    st_uris.append(st_uri)
+        e['@type'] = st_uris
         return
 
     # Record views
@@ -459,7 +559,7 @@ class Collection(Entity):
         """
         for f in self._children(RecordView, altscope=altscope):
             v = self.get_view(f)
-            if v and v.get_id() != "_initial_values":
+            if v and v.get_id() != layout.INITIAL_VALUES_ID:
                 yield v
         return
 
@@ -507,7 +607,7 @@ class Collection(Entity):
         """
         for f in self._children(RecordList, altscope=altscope):
             l = self.get_list(f)
-            if l and l.get_id() != "_initial_values":
+            if l and l.get_id() != layout.INITIAL_VALUES_ID:
                 yield l
         return
 
@@ -563,7 +663,6 @@ class Collection(Entity):
         Return the default list to be displayed for the current collection.
         """
         list_id = self.get(ANNAL.CURIE.default_list, None)
-        # print "@@ get_default_list %s"%list_id
         if list_id and not RecordList.exists(self, list_id, altscope="all"):
             log.warning(
                 "Default list %s for collection %s does not exist"%
@@ -621,6 +720,23 @@ class Collection(Entity):
                 }, 
                 context_io, indent=2, separators=(',', ': '), sort_keys=True
                 )
+        # Create collection README.md for human context...
+        if self._values:
+            README_vals = (
+                { "id":         self.get_id()
+                , "label":      self._values.get("rdfs:label", self.get_id())
+                , "heading":    ""
+                , "comment":    self._values.get("rdfs:comment", "")
+                })
+            if not README_vals["comment"].startswith("#"):
+                README_vals["heading"] = message.COLL_README_HEAD%README_vals
+            README_text = message.COLL_README%README_vals
+            with self._metaobj(
+                    layout.META_COLL_REF,
+                    "README.md",
+                    "wt"
+                    ) as readme_io:
+                readme_io.write(README_text)
         return errs
 
     def get_coll_jsonld_context(self):
@@ -633,38 +749,41 @@ class Collection(Entity):
         # this is for humane purposes only, and is not technically critical.
         errs              = []
         context           = OrderedDict(
-            { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
-            , ANNAL.CURIE.type:         { "@type":      "@id"   }
+            # { "@base":                  self.get_url() + layout.META_COLL_BASE_REF
+            { ANNAL.CURIE.type:         { "@type":      "@id"   }
             , ANNAL.CURIE.entity_list:  { "@container": "@list" }
             })
         # Collection-local URI prefix
         context.update(
-            { 'coll':           self._entityviewurl
+            { '_site_':         self.get_site().get_url()
+            , '_coll_':         self.get_url()
+            , '_base_':         self.get_url() + layout.COLL_BASE_REF
             })
         # Common import/upload fields
         context.update(
-            { 'resource_name': "annal:resource_name"
-            , 'resource_type': "annal:resource_type"
+            { 'resource_name':  "annal:resource_name"
+            , 'resource_type':  "annal:resource_type"
             })
         # upload-file fields
         context.update(
-            { 'upload_name':   "annal:upload_name"
-            , 'uploaded_file': "annal:uploaded_file"
-            , 'uploaded_size': "annal:uploaded_size"
+            { 'upload_name':    "annal:upload_name"
+            , 'uploaded_file':  "annal:uploaded_file"
+            , 'uploaded_size':  "annal:uploaded_size"
             })
         # import-resource fields
         context.update(
-            { 'import_name':   "annal:import_name"
+            { 'import_name':    "annal:import_name"
             , 'import_url':    
-              { "@id":   "annal:import_url"
-              , "@type": "@id"
+              { "@id":          "annal:import_url"
+              , "@type":        "@id"
               }
             })
         # Scan vocabs, generate prefix data
         for v in self.child_entities(RecordVocab, altscope="all"):
             vid = v.get_id()
-            if vid != "_initial_values":
-                context[v.get_id()] = v[ANNAL.CURIE.uri]
+            if vid != layout.INITIAL_VALUES_ID:
+                if ANNAL.CURIE.uri in v:
+                    context[v.get_id()] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altscope="all"):
             view_fields = v.get(ANNAL.CURIE.view_fields, [])
@@ -815,7 +934,9 @@ class Collection(Entity):
         elif is_render_type_object(rtype):
             fcontext = {}
         else:
-            raise ValueError("Unexpected value mode or render type (%s, %s)"%(vmode, rtype))
+            msg = "Unexpected value mode or render type (%s, %s)"%(vmode, rtype)
+            log.error(msg)
+            raise ValueError(msg)
 
         if is_render_type_set(rtype):
             fcontext["@container"] = "@set"

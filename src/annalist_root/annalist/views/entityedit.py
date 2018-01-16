@@ -9,6 +9,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import sys
 import os
 import urlparse
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
@@ -167,6 +168,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 add_field
                 )
         except Exception as e:
+            # -- This should be redundant, but...
+            log.error("Exception in GenericEntityEditView.get (%r)"%(e))
+            log.error("".join(traceback.format_stack()))
+            # --
             log.exception(str(e))
             response = self.error(
                 dict(self.error500values(),
@@ -232,9 +237,12 @@ class GenericEntityEditView(AnnalistGenericView):
             , 'orig_id':            orig_entity_id
             , 'orig_type':          orig_entity_type_id
             , 'orig_coll':          orig_entity_coll_id
+            , 'save_id':            viewinfo.curr_entity_id
+            , 'save_type':          viewinfo.curr_type_id
+            , 'save_coll':          viewinfo.coll_id
             , 'continuation_param': viewinfo.get_continuation_param()
             })
-        message_vals = {'id': entity_id, 'type_id': type_id, 'coll_id': coll_id}
+        message_vals = dict(context_extra_values, id=entity_id, type_id=type_id, coll_id=coll_id)
         messages = (
             { 'parent_heading':         typeinfo.entitymessages['parent_heading']%message_vals
             , 'parent_missing':         typeinfo.entitymessages['parent_missing']%message_vals
@@ -259,6 +267,10 @@ class GenericEntityEditView(AnnalistGenericView):
         try:
             response = self.form_response(viewinfo, context_extra_values)
         except Exception as e:
+            # -- This should be redundant, but...
+            log.error("Exception in GenericEntityEditView.post (%r)"%(e))
+            log.error("".join(traceback.format_stack()))
+            # --
             log.exception(str(e))
             response = self.error(
                 dict(self.error500values(),
@@ -477,22 +489,46 @@ class GenericEntityEditView(AnnalistGenericView):
             self.error(self.error406values())
             )
 
-    def form_re_render(self, 
+    def form_re_render(self, responseinfo,
             viewinfo, entityvaluemap, entityvals, context_extra_values={}, 
             error_head=None, error_message=None):
         """
-        Returns re-rendering of form with current values and error message displayed.
+        Returns response info object with HTTP response that is a re-rendering of the current form 
+        with current values and error message displayed.
         """
+        #@@ viewinfo.reset_info_messages()
         form_context = self.get_form_display_context(
             viewinfo, entityvaluemap, entityvals, **context_extra_values
             )
         # log.info("********\nform_context %r"%form_context)
+        form_context['info_head']     = None
+        form_context['info_message']  = None
         form_context['error_head']    = error_head
         form_context['error_message'] = error_message
-        return (
-            self.render_html(form_context, self.formtemplate) or 
-            self.error(self.error406values())
+        if error_message:
+            responseinfo.set_response_error(error_head, error_message)
+        responseinfo.set_http_response(
+            self.render_html(form_context, self.formtemplate)
             )
+        if not responseinfo.has_http_response():
+            errorvalues   = self.error406values()
+            http_response = self.error(errorvalues)
+            responseinfo.set_response_error(
+                "%(status)03d: %(reason)s"%errorvalues,
+                errorvalues.message
+                )
+        return responseinfo
+
+        # @@@@@@@@
+        # responseinfo.set_http_response(
+        #     self.render_html(form_context, self.formtemplate) or 
+        #     self.error(self.error406values())
+        #     )
+        # @@@@@@@@
+        # return (
+        #     self.render_html(form_context, self.formtemplate) or 
+        #     self.error(self.error406values())
+        #     )
 
     # @@TODO: refactor form_response to separate methods for each action
     #         form_response should handle initial checking and dispatching.
@@ -582,7 +618,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                #@@
+                # auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                #@@
+                auth_check = viewinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
                 viewinfo.collection.set_default_view(
@@ -613,7 +652,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             if not responseinfo.has_http_response():
                 responseinfo.set_http_response(
-                    self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                    viewinfo.check_authorization("config")
+                    #@@
+                    # self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
+                    #@@
                     )
             if not responseinfo.has_http_response():
                 cont_here = viewinfo.get_continuation_here(
@@ -701,12 +743,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 # Report problem with field definition...
                 err_msg = message.NO_REFER_TO_TYPE%new_enum
                 log.info(err_msg)
-                responseinfo.set_http_response(
-                    self.form_re_render(
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=message.CREATE_FIELD_ENTITY_ERROR,
-                        error_message=err_msg
-                        )
+                self.form_re_render(responseinfo,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=message.CREATE_FIELD_ENTITY_ERROR,
+                    error_message=err_msg
                     )
                 return responseinfo.get_http_response()
             new_typeinfo = EntityTypeInfo(
@@ -799,12 +839,10 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
             else:
                 log.debug("form_response: No field(s) selected for remove_field")
-                responseinfo.set_http_response(
-                    self.form_re_render(
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['remove_field_error'],
-                        error_message=messages['no_field_selected']
-                        )
+                self.form_re_render(responseinfo,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['remove_field_error'],
+                    error_message=messages['no_field_selected']
                     )
             return self.form_refresh_on_success(viewinfo, responseinfo)
 
@@ -817,12 +855,10 @@ class GenericEntityEditView(AnnalistGenericView):
                     )
             else:
                 log.debug("form_response: No field selected for move up/down")
-                responseinfo.set_http_response(
-                    self.form_re_render(
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['move_field_error'],
-                        error_message=messages['no_field_selected']
-                        )
+                self.form_re_render(responseinfo,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['move_field_error'],
+                    error_message=messages['no_field_selected']
                     )
             return self.form_refresh_on_success(viewinfo, responseinfo)
 
@@ -964,32 +1000,26 @@ class GenericEntityEditView(AnnalistGenericView):
         # Check for valid id and type to be saved
         if not valid_id(save_entity_id):
             log.debug("form_response: save_entity_id not valid ('%s')"%save_entity_id)
-            return responseinfo.set_http_response(
-                self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_heading'],
-                    error_message=messages['entity_invalid_id']
-                    )
+            return self.form_re_render(responseinfo,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                error_head=messages['entity_heading'],
+                error_message=messages['entity_invalid_id']
                 )
         if not valid_id(save_type_id):
             log.debug("form_response: save_type_id not valid_id('%s')"%save_type_id)
-            return responseinfo.set_http_response(
-                self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_type_heading'],
-                    error_message=messages['entity_type_invalid']
-                    )
+            return self.form_re_render(responseinfo,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                error_head=messages['entity_type_heading'],
+                error_message=messages['entity_type_invalid']
                 )
 
         # Check original parent exists (still)
         if (action != "new") and (not orig_typeinfo.parent_exists()):
             log.warning("save_entity: original entity parent does not exist")
-            return responseinfo.set_http_response(
-                self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['parent_heading'],
-                    error_message=messages['parent_missing']
-                    )
+            return self.form_re_render(responseinfo,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                error_head=messages['parent_heading'],
+                error_message=messages['parent_missing']
                 )
 
         #@@@@ TO BE REMOVED
@@ -1002,12 +1032,10 @@ class GenericEntityEditView(AnnalistGenericView):
                         "Entity exists: action %s %s/%s, orig %s/%s"%
                             (action, save_type_id, save_entity_id, orig_type_id, orig_entity_id)
                         )
-                    return responseinfo.set_http_response(
-                        self.form_re_render(
-                            viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                            error_head=messages['entity_heading'],
-                            error_message=messages['entity_exists']
-                            )
+                    return self.form_re_render(responseinfo,
+                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                        error_head=messages['entity_heading'],
+                        error_message=messages['entity_exists']
                         )
         else:
             if not orig_typeinfo.entity_exists(save_entity_id, altscope="all"):
@@ -1015,12 +1043,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
                       (save_type_id, save_entity_id, action, entity_renamed)
                     )
-                return responseinfo.set_http_response(
-                    self.form_re_render(
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_not_exists']
-                        )
+                return self.form_re_render(responseinfo,
+                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                    error_head=messages['entity_heading'],
+                    error_message=messages['entity_not_exists']
                     )
         #@@@@
 
@@ -1088,12 +1114,10 @@ class GenericEntityEditView(AnnalistGenericView):
         # Finish up
         if err_vals:
             log.warning("err_vals %r"%(err_vals,))
-            return responseinfo.set_http_response(
-                self.form_re_render(
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=err_vals[0],
-                    error_message=err_vals[1]
-                    )
+            return self.form_re_render(responseinfo,
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                error_head=err_vals[0],
+                error_message=err_vals[1]
                 )
         log.info("Saved %s/%s"%(save_type_id, save_entity_id))
         viewinfo.saved(is_saved=True)
@@ -1153,7 +1177,7 @@ class GenericEntityEditView(AnnalistGenericView):
             # First save - check for existence
             if save_typeinfo.entity_exists(save_entity_id):
                 log.warning(
-                    "Entity exists (new): %s/%s, orig %s/%s"%
+                    "Entity exists (new): %s/%s"%
                         (save_typeinfo.type_id, save_entity_id)
                     )
                 err_vals = (
@@ -1879,7 +1903,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             info_values = self.info_params(
-                message.TASK_CREATE_VIEW_LIST%{'label': type_label}
+                message.TASK_CREATE_VIEW_LIST%{'id': base_id, 'label': type_label}
                 )
             redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
@@ -1895,16 +1919,9 @@ class GenericEntityEditView(AnnalistGenericView):
             base_type_entity    = type_typeinfo.get_entity(base_type_id)
             base_type_label     = base_type_entity.get(RDFS.CURIE.label, base_type_id)
             base_type_uri       = base_type_entity.get(ANNAL.CURIE.uri,  "_coll:"+base_type_id)
-            base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
+            #@@@ base_supertypes     = base_type_entity.get(ANNAL.CURIE.supertype_uri, [])
             base_view_entity_id = base_type_entity.get(ANNAL.CURIE.type_view, "Default_view")
             base_list_entity_id = base_type_entity.get(ANNAL.CURIE.type_list, "Default_list")
-            #@@
-            # base_type_uri       = entityformvals.get(ANNAL.CURIE.uri, None)
-            # base_type_entity_id = entitytypeinfo.TYPE_ID+"/"+base_type_id
-            # base_supertypes     = entityformvals[ANNAL.CURIE.supertype_uri]
-            # base_view_entity_id = entityformvals[ANNAL.CURIE.type_view]
-            # base_list_entity_id = entityformvals[ANNAL.CURIE.type_list]
-            #@@
             # Set up subtype details
             sub_type_id         = base_type_id+layout.SUFFIX_SUBTYPE
             sub_type_entity_id  = entitytypeinfo.TYPE_ID+"/"+sub_type_id
@@ -1921,7 +1938,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 , "base_type_label":    base_type_label
                 })
             sub_type_comment    = message.SUBTYPE_COMMENT%sub_type_values
-            sub_type_supertypes = [{ "@id": base_type_uri }] + base_supertypes
+            sub_type_supertypes = [{ "@id": base_type_uri }] #@@@ + base_supertypes
             # Create subtype record, and save
             type_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.TYPE_ID
@@ -1943,7 +1960,7 @@ class GenericEntityEditView(AnnalistGenericView):
                 , 'action':     "edit"
                 })
             info_values = self.info_params(
-                message.TASK_CREATE_SUBTYPE%{'label': sub_type_label}
+                message.TASK_CREATE_SUBTYPE%{'id': sub_type_id, 'label': sub_type_label}
                 )
             more_uri_params = viewinfo.get_continuation_url_dict()
             more_uri_params.update(info_values)
@@ -1965,18 +1982,19 @@ class GenericEntityEditView(AnnalistGenericView):
             field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
             field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
             repeat_field_id          = field_entity_id    + layout.SUFFIX_REPEAT
-            repeat_property_uri      = field_property_uri + layout.SUFFIX_REPEAT_P
+            repeat_property_uri      = field_property_uri
             repeat_entity_type       = (
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
                 else ""
                 )
+            repeat_value_type        = repeat_entity_type
             field_params = { "field_id": field_entity_id, "field_label": field_label }
             repeat_field_label       = message.MANY_FIELD_LABEL%field_params
             repeat_field_comment     = message.MANY_FIELD_COMMENT%field_params
             repeat_field_placeholder = message.MANY_FIELD_PLACEHOLDER%field_params
             repeat_field_add         = message.MANY_FIELD_ADD%field_params
             repeat_field_delete      = message.MANY_FIELD_DELETE%field_params
-            # Create repeat-field referencing group
+            # Create repeat-field referencing original field
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
@@ -1995,7 +2013,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_entity.setdefault(ANNAL.CURIE.placeholder,          repeat_field_placeholder)
             repeat_field_entity.setdefault(ANNAL.CURIE.property_uri,         repeat_property_uri)
             repeat_field_entity.setdefault(ANNAL.CURIE.field_entity_type,    repeat_entity_type)
-            repeat_field_entity.setdefault(ANNAL.CURIE.field_value_type,     field_value_type)
+            repeat_field_entity.setdefault(ANNAL.CURIE.field_value_type,     repeat_value_type)
             repeat_field_entity.setdefault(ANNAL.CURIE.field_placement,      "small:0,12")
             repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_add,     repeat_field_add)
             repeat_field_entity.setdefault(ANNAL.CURIE.repeat_label_delete,  repeat_field_delete)
@@ -2045,7 +2063,7 @@ class GenericEntityEditView(AnnalistGenericView):
             repeat_field_placeholder = message.LIST_FIELD_PLACEHOLDER%field_params
             repeat_field_add         = message.LIST_FIELD_ADD%field_params
             repeat_field_delete      = message.LIST_FIELD_DELETE%field_params
-            # Create repeat-field referencing group
+            # Create repeat-field referencing original
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )

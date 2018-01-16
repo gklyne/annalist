@@ -22,7 +22,8 @@
         {% endfor %}
       </div>
 
-      <div class="row">
+      <!-- Action buttons -->
+      <div class="row hide-on-print">
         <div class="medium-2 columns show-for-medium-up">
           <div class="row">
             <div class="small-12 columns">
@@ -65,7 +66,7 @@
       </div>
 
       <!-- View options -->
-      <div class="row">
+      <div class="row hide-on-print">
 
         {% with field=view_choices %}
         {% include field.field_render_label_edit %}

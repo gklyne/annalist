@@ -455,6 +455,12 @@ class SiteActionViewTests(AnnalistTestCase):
     def tearDown(self):
         return
 
+    @classmethod
+    def setUpClass(cls):
+        # Remove any collections left behind from previous tests
+        resetSitedata(scope="collections")
+        return
+
     def _conf_data(self, action="confirm"):
         action_values = (
             { 'confirm': "Confirm"
@@ -485,6 +491,11 @@ class SiteActionViewTests(AnnalistTestCase):
         # Confirm collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']
+        #@@ (diagnostic only)
+        if len(colls) != len(init_collection_keys)-2:
+            log.warning("@@ Collection count mismatch: %s != %d"%(len(colls), len(init_collection_keys)-2))
+            log.warning("@@ Collections seen %r"%(colls.keys(),))
+        #@@
         self.assertEqual(len(colls), len(init_collection_keys)-2)
         id = "coll2"
         self.assertEqual(colls[id]["annal:id"],   id)

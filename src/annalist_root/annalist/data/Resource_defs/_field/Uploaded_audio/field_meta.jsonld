@@ -20,12 +20,12 @@
   "annal:field_value_type": "annal:Audio",
   "annal:id": "Uploaded_audio",
   "annal:placeholder": "(Select audio clip to upload)",
-  "annal:property_uri": "coll:uploaded_audio",
+  "annal:property_uri": "resource:uploaded_audio",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
-  "annal:tooltip": "Field referring to an audio resource in an 'Uploaded audio clip' (coll:Uploaded_audio) entity.",
+  "annal:tooltip": "Field referring to an audio resource in an 'Uploaded audio clip' (resource:Uploaded_audio) entity.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Uploaded audio clip\r\n\r\nField referring to an audio resource in an 'Uploaded audio clip' (coll:Uploaded_audio) entity.",
+  "rdfs:comment": "# Uploaded audio clip\r\n\r\nField referring to an audio resource in an 'Uploaded audio clip' (resource:Uploaded_audio) entity.",
   "rdfs:label": "Uploaded audio clip"
 }

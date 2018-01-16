@@ -40,7 +40,7 @@ class RecordGroup(EntityData):
         """
         Initialize a new RecordGroup object, without metadata (yet).
 
-        parent      is the parent entity from which the field group is descended.
+        parent      is the parent collection in which the group is defined.
         group_id    the local identifier for the field group
         """
         if self._deprecation_warning:
@@ -91,7 +91,7 @@ class RecordGroup(EntityData):
 
     def _post_update_processing(self, entitydata, post_update_flags):
         """
-        Default post-update processing.
+        Post-update processing.
 
         This method is called when a RecordGroup entity has been updated.  
 

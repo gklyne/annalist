@@ -827,7 +827,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             """%field_vals(width=12)
         formrow11h = """
             <div class="small-12 columns" title="%(tooltip11)s">
-              <div class="row">
+              <div class="grouprow row">
                 <div class="%(group_label_classes)s">
                   <span>Subfields</span>
                 </div>
@@ -887,7 +887,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
         formrow11t = """
             <div class="small-12 columns">
-              <div class="row">
+              <div class="grouprow row">
                 <div class="small-12 medium-2 columns">
                   &nbsp;
                 </div>
@@ -1543,7 +1543,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
         rpt_field_id  = tgt_field_id + layout.SUFFIX_REPEAT
-        rpt_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REPEAT_P
+        rpt_field_uri = "%(property_uri)s"%(common_vals)
         expect_field_values = (
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
@@ -1562,7 +1562,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
             , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
             , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Text"
+            , "annal:field_value_type":     "%(type_uri)s"%common_vals
             , "annal:property_uri":         rpt_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.MANY_FIELD_PLACEHOLDER%common_vals
@@ -1692,6 +1692,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 label="Type", 
                 link=entity_url("testcoll", "_field", "Entity_type")
                 )
+            , FieldChoice("_field/Entity_uri",
+                label="Entity URI", 
+                link=entity_url("testcoll", "_field", "Entity_uri")
+                )
             , FieldChoice("_field/Field_subfield_placement", 
                 label="Subfield Pos/size", 
                 link=entity_url("testcoll", "_field", "Field_subfield_placement")
@@ -1781,6 +1785,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 label="Type", 
                 link=entity_url("testcoll", "_field", "Entity_type")
                 )
+            , FieldChoice("_field/Entity_uri",
+                label="Entity URI", 
+                link=entity_url("testcoll", "_field", "Entity_uri")
+                )
             ])
         field_fields = (
               [ { 'annal:property_uri':     '@id'
@@ -1860,6 +1868,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , FieldChoice("_field/Entity_type",
                 label="Type", 
                 link=entity_url("testcoll", "_field", "Entity_type")
+                )
+            , FieldChoice("_field/Entity_uri",
+                label="Entity URI", 
+                link=entity_url("testcoll", "_field", "Entity_uri")
                 )
             , FieldChoice("_field/domain", 
                 label="Domain", 

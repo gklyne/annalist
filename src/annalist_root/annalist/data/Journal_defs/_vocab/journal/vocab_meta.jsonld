@@ -5,14 +5,14 @@
     },
     "../../coll_context.jsonld"
   ],
-  "@id": "_vocab/coll",
+  "@id": "_vocab/journal",
   "@type": [
     "annal:Vocabulary"
   ],
-  "annal:id": "coll",
+  "annal:id": "journal",
   "annal:type": "annal:Vocabulary",
   "annal:type_id": "_vocab",
-  "annal:uri": "http://id.annalist.net/coll",
+  "annal:uri": "http://id.annalist.net/journal/",
   "rdfs:comment": "Vocabulary namespace for terms that are defined and used locally by the current collection.\r\n\r\n@@TODO: The Namespace URI here is a placeholder until a suitable permanent URI is chosen.",
   "rdfs:label": "Namespace for local collection terms",
   "rdfs:seeAlso": []

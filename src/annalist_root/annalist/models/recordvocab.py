@@ -35,7 +35,7 @@ class RecordVocab(EntityData):
         """
         Initialize a new RecordVocab object, without metadata (yet).
 
-        parent      is the parent entity from which the view is descended.
+        parent      is the parent collection in which the namespace is defined.
         vocab_id    the local identifier for the vocabulary; also used as namespace prefix.
         """
         super(RecordVocab, self).__init__(parent, vocab_id)
@@ -75,14 +75,24 @@ class RecordVocab(EntityData):
 
     def _post_update_processing(self, entitydata, post_update_flags):
         """
-        Default post-update processing.
+        Post-update processing.
 
         This method is called when a RecordVocab entity has been updated.  
 
         It invokes the containing collection method to regenerate the JSON LD context 
         for the collection to which the entity belongs.
         """
+        self._parent.flush_collection_caches()
         self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
+
+    def _post_remove_processing(self, post_update_flags):
+        """
+        Post-remove processing.
+
+        This method is called when an entity has been removed.  
+        """
+        self._parent.flush_collection_caches()
+        return
 
 # End.

@@ -42,7 +42,7 @@ class RecordType(EntityData):
         """
         Initialize a new RecordType object, without metadta (yet).
 
-        parent      is the parent entity from which the type is descended.
+        parent      is the parent collection in which the type is defined.
         type_id     the local identifier for the record type
         """
         super(RecordType, self).__init__(parent, type_id)
@@ -64,7 +64,8 @@ class RecordType(EntityData):
         be idempotent; i.e.
             x._migrate_values(x._migrate_values(e)) == x._migrate_values(e)
         """
-        # Convert format of supertype URIs to use '@id' in list
+        # Convert representation of supertype URIs to use repeated property instead of 
+        # reference to an RDF list.
         if ANNAL.CURIE.supertype_uris in entitydata:
             if isinstance(entitydata[ANNAL.CURIE.supertype_uris], list):
                 entitydata[ANNAL.CURIE.supertype_uri] = (
@@ -80,5 +81,23 @@ class RecordType(EntityData):
         Override EntityData method
         """
         return None
+
+    def _post_update_processing(self, entitydata, post_update_flags):
+        """
+        Post-update processing.
+
+        This method is called when an entity has been created or updated.
+        """
+        self._parent.cache_add_type(self)
+        return entitydata
+
+    def _post_remove_processing(self, post_update_flags):
+        """
+        Post-remove processing.
+
+        This method is called when an entity has been removed.  
+        """
+        self._parent.cache_remove_type(self.get_id())
+        return
 
 # End.

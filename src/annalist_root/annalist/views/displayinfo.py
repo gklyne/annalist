@@ -44,6 +44,7 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
 from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
+from annalist.views.confirm         import ConfirmView, dict_querydict
 from annalist.views.uri_builder     import (
     uri_param_dict,
     scope_params,
@@ -222,7 +223,10 @@ class DisplayInfo(object):
         self.view_id            = None
         self.recordview         = None
         self.entitydata         = None
+        # Response data
         self.http_response      = None
+        self.info_messages      = []
+        self.error_messages     = []
         return
 
     def set_orig_coll_id(self, orig_coll_id=None):
@@ -316,7 +320,21 @@ class DisplayInfo(object):
                             message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}
                             )
                         )
+                self.add_error_messages(self.collection.get_errors())
         return self.http_response
+
+    def flush_collection_caches(self):
+        """
+        Called to flush collection caches so that changes made independentlyu of the caches
+        can be used.
+
+        NOTE: this is currently called by the top-level collection view.  This is a bit of 
+        a hack to ensure that it is always possible for the user to force caches to be flushed,
+        e.g. when type informatiuon is updated in a different tab or by another user.
+        """
+        assert (self.collection is not None)
+        self.collection.flush_collection_caches()
+        return
 
     def update_coll_version(self):
         """
@@ -469,6 +487,8 @@ class DisplayInfo(object):
                     self.perm_coll = c
         return self.http_response
 
+    # Support methods for response generation
+
     def check_authorization(self, action):
         """
         Check authorization.  Return None if all is OK, or HttpResonse object.
@@ -496,12 +516,14 @@ class DisplayInfo(object):
             else:
                 # Use site permissions map (some site operations don't have an entity type?)
                 permissions_map = SITE_PERMISSIONS
-
             # Previously, default permission map was applied in view.form_action_auth if no 
             # type-based map was provided.
             self.http_response = (
                 self.http_response or 
-                self.view.form_action_auth(action, self.perm_coll, permissions_map)
+                self.view.form_action_auth(
+                    action, self.perm_coll, permissions_map,
+                    continuation_url=self.get_continuation_here()
+                    )
                 )
         if ( (not self.http_response) and 
              (self.orig_coll_id) and 
@@ -518,15 +540,204 @@ class DisplayInfo(object):
             else:
                 orig_permissions_map = SITE_PERMISSIONS
             self.http_response = self.view.form_action_auth("view", 
-                self.orig_coll, orig_permissions_map)
+                self.orig_coll, orig_permissions_map,
+                continuation_url=self.get_continuation_here()
+                )
         return self.http_response
 
+    #@@TODO: not sure if this will be useful...
+    # def reset_info_messages(self):
+    #     """
+    #     Reset informational messages (for form redisplay)
+    #     """
+    #     self.info_messages      = []
+    #     return
+    #@@
+
+    def add_info_message(self, message):
+        """
+        Save message to be displayed on successful completion
+        """
+        self.info_messages.append(message)
+        return self.http_response
+
+    def add_error_message(self, message):
+        """
+        Save error message to be displayed on completion of the current operation
+        """
+        self.error_messages.append(message)
+        return self.http_response
+
+    def add_error_messages(self, messages):
+        """
+        Save list of error message to be displayed on completion of the current operation
+        """
+        # print "@@ add_error_messages: > %r"%(messages,)
+        self.error_messages.extend(messages)
+        # print "@@ add_error_messages: < %r"%(self.error_messages,)
+        return self.http_response
+
+    def redisplay_path_params(self):
+        """
+        Gathers URL details based on the current request URL that can be used 
+        to construct a URL to redisplay the current page.
+
+        Returns a pair of values:
+
+            redisplay_path, redisplay_params
+
+        Where 'redisplay_path' is the URL path for the current request,
+        and 'redisplay_params' is a selection of request URL parameters that 
+        are used to select data for the current display (see 'scope_params').
+        """
+        redisplay_path   = self.view.get_request_path()
+        redisplay_params = scope_params(uri_param_dict(redisplay_path))
+        redisplay_params.update(self.get_continuation_url_dict())
+        return (redisplay_path, redisplay_params)
+
+    def redirect_response(self, redirect_path, redirect_params={}, action=None):
+        """
+        Return an HTTP redirect response, with information or warning messages as
+        requested incl;uded as parameters.
+
+        redirect_path   the URI base path to redirect to.
+        redirect_params an optional dictionary of parameters to be applied to the 
+                        redirection URI.
+        action          an action that must be authorized if the redirection is to occur,
+                        otherwise an error is reported and the current page redisplayed.
+                        If None or not supplied, no authorization check is performed.
+
+        Returns an HTTP response value.
+        """
+        # @TODO: refactor existing redirect response code (here and in list/edit modules)
+        #        to use this method.  (Look for other instances of HttpResponseRedirect)
+        # print "@@ redirect_response: http_response %r"%(self.http_response,)
+        if not self.http_response:
+            redirect_msg_params = dict(redirect_params)
+            if self.info_messages:
+                redirect_msg_params.update(self.view.info_params("\n\n".join(self.info_messages)))
+            if self.error_messages:
+                redirect_msg_params.update(self.view.error_params("\n\n".join(self.error_messages)))
+            # print "@@ redirect_response: redirect_msg_params %r"%(redirect_msg_params,)
+            redirect_uri = (
+                uri_with_params(
+                    redirect_path,
+                    redirect_msg_params
+                    )
+                )
+            self.http_response = (
+                (action and self.check_authorization(action))
+                or
+                HttpResponseRedirect(redirect_uri)
+                )
+        return self.http_response
+
+    def display_error_response(self, err_msg):
+        """
+        Return an HTTP response that redisplays the current view with an error
+        message displayed.
+
+        err_msg         is the error message to be displayed.
+        """
+        redirect_path, redirect_params = self.redisplay_path_params()
+        self.add_error_message(err_msg)
+        return self.redirect_response(redirect_path, redirect_params=redirect_params)
+
     def report_error(self, message):
+        """
+        Set up error response
+        """
         log.error(message)
         if not self.http_response:
             self.http_response = self.view.error(
                 dict(self.view.error400values(),
                     message=message
+                    )
+                )
+        return self.http_response
+
+    def confirm_delete_entity_response(self, 
+            entity_type_id, entity_id, 
+            complete_action_uri,
+            form_action_field="entity_delete",
+            form_value_field="entity_id",
+            response_messages = {}
+            ):
+        """
+        This method generates a response when the user has requested deletion
+        of an entity from the current collection.  It includes logic to request 
+        confirmation of the requested action before proceeding to actually remove
+        the entity.
+
+        The request for confirmation is handled via class "ConfirmView" (confirm.py),
+        and actual deletion and continuation is performed via the view specified by
+        "complete_action_view", which is typically realized by a subclass of 
+        "EntityDeleteConfirmedBaseView" (entitydeletebase.py)
+
+        entity_type_id          is the type id of the entity to be deleted.
+        entity_id               is the entity id of the entity to be deleted.
+        complete_action_uri     identifies a view to be invoked by an HTTP POST operation
+                                to complete the entity deletion.
+        form_action_field       names the form field that is used to trigger entity deletion
+                                in the completion view.  Defaults to "entity_delete"
+        form_value_field        names the form field that is used to provide the identifier of
+                                the entity or entities to be deleted.
+        response_messages       is a dictionary of messages to be used to indicate 
+                                various outcomes:
+                                "no_entity" is the entity for deletion is not specified.
+                                "cannot_delete" if entity does not exist or cannot be deleted.
+                                "confirm_completion" to report co,mpletion of entity deletion.
+                                If no message dictionary is provided, or if no value is provided 
+                                for a particular outcome, a default message value will be used.
+                                Messages may use value interpolation for %(type_id)s and %(id)s.
+        """
+        def _get_message(msgid):
+            return response_messages.get(msgid, default_messages.get(msgid)%message_params)
+
+        default_messages = (
+            { "no_entity":          message.NO_ENTITY_FOR_DELETE
+            , "cannot_delete":      message.CANNOT_DELETE_ENTITY
+            , "type_has_values":    message.TYPE_VALUES_FOR_DELETE
+            , "confirm_completion": message.REMOVE_ENTITY_DATA
+            })
+        entity_coll_id = self.collection.get_id()
+        message_params = (
+            { "id":         entity_id
+            , "type_id":    entity_type_id
+            , "coll_id":    entity_coll_id
+            })
+
+        if not entity_id:
+            self.display_error_response(_get_message("no_entity"))
+        elif not self.entity_exists(entity_id, entity_type_id):
+            self.display_error_response(_get_message("cannot_delete"))
+        elif self.entity_is_type_with_values(entity_id, entity_type_id):
+            self.display_error_response(_get_message("type_has_values"))
+
+        if not self.http_response:
+            # Get user to confirm action before actually doing it
+            # log.info(
+            #     "entity_coll_id %s, type_id %s, entity_id %s, confirmed_action_uri %s"%
+            #     (entity_coll_id, entity_type_id, entity_id, confirmed_action_uri)
+            #     )
+            delete_params = (
+                { form_action_field:    ["Delete"]
+                , form_value_field:     [entity_id]
+                , "completion_url":     [self.get_continuation_here()]
+                , "search_for":         [self.request_dict.get('search_for',"")]
+                })
+            curi = self.get_continuation_url()
+            if curi:
+                delete_params["continuation_url"] = [curi]
+            return (
+                self.check_authorization("delete")
+                or
+                ConfirmView.render_form(self.view.request,
+                    action_description=     _get_message("confirm_completion"),
+                    action_params=          dict_querydict(delete_params),
+                    confirmed_action_uri=   complete_action_uri,
+                    cancel_action_uri=      self.get_continuation_here(),
+                    title=                  self.view.site_data()["title"]
                     )
                 )
         return self.http_response
@@ -616,37 +827,29 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def check_collection_entity(self, entity_id, entity_type, msg):
+    def entity_exists(self, entity_id, entity_type):
         """
-        Test a supplied entity_id is defined in the current collection,
-        returning a URI to display a supplied error message if the test fails.
+        Test a supplied entity is defined in the current collection,
+        returning true or False.
 
-        NOTE: this function works with the generic base template base_generic.html, which
-        is assumed to provide an underlay for the currently viewed page.
-
-        entity_id           entity id that is required to be defined in the current collection.
-        entity_type         specified type for entity to delete.
-        msg                 message to display if the test fails.
-
-        returns a URI string for use with HttpResponseRedirect to redisplay the 
-        current page with the supplied message, or None if entity id is OK.
+        entity_id           entity id that is to be tested..
+        entity_type         type of entity to test.
         """
-        # log.info("check_collection_entity: entity_id: %s"%(entity_id))
-        # log.info("check_collection_entity: entityparent: %s"%(self.entityparent.get_id()))
-        # log.info("check_collection_entity: entityclass: %s"%(self.entityclass))
-        redirect_uri = None
-        typeinfo     = self.curr_typeinfo
+        typeinfo = self.curr_typeinfo
         if not typeinfo or typeinfo.get_type_id() != entity_type:
             typeinfo = EntityTypeInfo(self.collection, entity_type)
-        if not typeinfo.entityclass.exists(typeinfo.entityparent, entity_id):
-            redirect_uri = (
-                uri_with_params(
-                    self.view.get_request_path(),
-                    self.view.error_params(msg),
-                    self.get_continuation_url_dict()
-                    )
+        return typeinfo.entityclass.exists(typeinfo.entityparent, entity_id)
+
+    def entity_is_type_with_values(self, entity_id, entity_type):
+        """
+        Test if indicated entity is a type with values defined.
+        """
+        if entity_type == layout.TYPE_TYPEID:
+            typeinfo = EntityTypeInfo(
+                self.collection, entity_id
                 )
-        return redirect_uri
+            return next(typeinfo.enum_entity_ids(), None) is not None
+        return False
 
     def get_new_view_uri(self, coll_id, type_id):
         """
@@ -733,11 +936,13 @@ class DisplayInfo(object):
         Return continuation URL back to the current view.
         """
         # @@TODO: consider merging logic from generic.py, and eliminating method there
-        return self.view.continuation_here(
+        continuation_here = self.view.continuation_here(
             request_dict=self.request_dict,
             default_cont=self.get_continuation_url(),
             base_here=base_here
             )
+        # log.info("DisplayInfo.get_continuation_here: %s"%(continuation_here))
+        return continuation_here
 
     def update_continuation_url(self, 
         old_type_id=None, new_type_id=None, 
@@ -845,7 +1050,7 @@ class DisplayInfo(object):
         must be provided earlier in the form generation process, as elements of the 
         "context_extra_values" dictionary.
 
-        Context values set here do not need to be named in the valuye maop used to
+        Context values set here do not need to be named in the valuye map used to
         create the view context.
         """
         site_url_parts = urlparse.urlsplit(self.site._entityurl)
@@ -858,8 +1063,9 @@ class DisplayInfo(object):
             , 'type_id':            self.type_id
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
+            , 'collection':         self.collection
             , "SITE":               site_url_parts.path
-            , "HOST":               self.reqhost
+            , "HOST":               self.reqhost            
             })
         context.update(self.authorizations)
         if self.collection:
@@ -911,6 +1117,16 @@ class DisplayInfo(object):
             substituted_text = apply_substitutions(context, self.view.help_markdown)
             context.update(
                 { 'help_markdown':  substituted_text
+                })
+        if self.info_messages:
+            context.update(
+                { "info_head":      message.ACTION_COMPLETED
+                , "info_message":   "\n\n".join(self.info_messages)
+                })
+        if self.error_messages:
+            context.update(
+                { "error_head":     message.DATA_ERROR
+                , "error_message":  "\n\n".join(self.error_messages)
                 })
         return context
 

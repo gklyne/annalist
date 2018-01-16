@@ -11,7 +11,7 @@
   ],
   "annal:id": "Imported_audio",
   "annal:open_view": true,
-  "annal:record_type": "coll:Imported_audio",
+  "annal:record_type": "resource:Imported_audio",
   "annal:type": "annal:View",
   "annal:type_id": "_view",
   "annal:view_fields": [

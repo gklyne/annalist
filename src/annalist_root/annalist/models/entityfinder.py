@@ -14,6 +14,7 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
+from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
 
 from annalist.models.recordtype     import RecordType
@@ -65,41 +66,29 @@ class EntityFinder(object):
 
         Each type is returned as a candidate type identifier string
         """
-        for t in self._coll._children(RecordType, altscope=altscope):
-            yield t
-        return
+        return self._coll.cache_get_all_type_ids(altscope=altscope)
 
-    def get_collection_subtypes(self, type_id, altscope):
+    def get_collection_subtype_ids(self, supertype_id, altscope):
         """
-        Returns a iterator of `entitytypeinfo` objects for all subtypes
-        of the supplied type in the current collection, including the 
-        identified type itself.
+        Returns a iterator of type ids for all subtypes of the supplied type 
+        accessible in the indicated scope from the current collection, including 
+        the identified type itself.
         """
-        if not valid_id(type_id):
-            log.warning("EntityFinder.get_collection_uri_subtypes: invalid type_id %s"%(type_id,))
-            return []
-        supertypeinfo = EntityTypeInfo(self._coll, type_id)
-        supertypeuri  = supertypeinfo.get_type_uri()
-        if supertypeuri is None:
-            log.warning("EntityFinder.get_collection_uri_subtypes: no type_uri for %s"%(type_id,))
-        return self.get_collection_uri_subtypes(supertypeuri, altscope)
-
-    def get_collection_uri_subtypes(self, type_uri, altscope=None):
-        """
-        Returns a iterator of `entitytypeinfo` objects for all subtypes
-        of the supplied type in the current collection, including the 
-        identified type itself.
-        """
-        # log.info(
-        #     "@@ EntityFinder.get_collection_uri_subtypes: type_uri %s, altscope=%s"%
-        #     (type_uri, altscope)
-        #     )
-        if type_uri is not None:
-            for tid in self.get_collection_type_ids(altscope):
-                tinfo = EntityTypeInfo(self._coll, tid)
-                if tinfo and (type_uri in tinfo.get_all_type_uris()):
-                    yield tinfo
-        return 
+        if not valid_id(supertype_id):
+            log.warning("EntityFinder.get_collection_subtype_ids: invalid type_id %s"%(supertype_id,))
+            return
+        supertype_info = EntityTypeInfo(self._coll, supertype_id)
+        supertype_uri  = supertype_info.get_type_uri()
+        if supertype_uri is not None:
+            for try_subtype_id in self.get_collection_type_ids(altscope):
+                try_subtype = self._coll.cache_get_type(try_subtype_id)
+                if try_subtype:
+                    try_subtype_uri = try_subtype.get_uri()
+                    if ( ( supertype_uri == try_subtype_uri ) or
+                         ( supertype_uri in self._coll.cache_get_supertype_uris(try_subtype_uri) ) ):
+                        yield try_subtype_id
+        else:
+            log.warning("EntityFinder.get_collection_subtype_ids: no type_uri for %s"%(supertype_id,))
 
     def get_type_entities(self, type_id, user_permissions, altscope):
         """
@@ -116,7 +105,10 @@ class EntityFinder(object):
         for e in entitytypeinfo.enum_entities_with_implied_values(
                 user_permissions, altscope=altscope
                 ):
-            if e.get_id() != "_initial_values":
+            if e.get_id() != layout.INITIAL_VALUES_ID:
+                #@@
+                # log.info("  yield: %s"%(e.get_id(),))
+                #@@
                 yield e
         return
 
@@ -129,27 +121,32 @@ class EntityFinder(object):
         a value of 'all' means that site-wide entities are included in the listing.
         Otherwise only collection entities are included.        
         """
-        # NOTE: consider types from all scopes, then entities from specified scope
-        for entitytypeinfo in self.get_collection_subtypes(type_id, "all"):
-            es = entitytypeinfo.enum_entities_with_implied_values(
+        for subtype_id in self.get_collection_subtype_ids(type_id, "all"):
+            subtype_info = EntityTypeInfo(self._coll, subtype_id)
+            es = subtype_info.enum_entities_with_implied_values(
                     user_permissions, altscope=altscope
                     )
-            es = list(es) #@@ Force strict eval
+            #@@
+            # es = list(es) #@@ Force strict eval
+            # log.info("get_subtype_entities: %r"%([e.get_id() for e in es],))
+            #@@
             for e in es:
-                if e.get_id() != "_initial_values":
+                if e.get_id() != layout.INITIAL_VALUES_ID:
                     yield e
         return
 
     def get_all_types_entities(self, types, user_permissions, altscope):
         """
-        Iterate over all entities of all type ids from a supplied type iterator
+        Iterate over all entities of all types from a supplied type iterator
         """
         #@@
-        # types = list(types)
-        # log.info("get_all_types_entities: types %s"%(types,))
+        # log.info("@@@@ get_all_types_entities")
         #@@
         for t in types:
             for e in self.get_type_entities(t, user_permissions, altscope):
+                #@@
+                # log.info("get_all_types_entities: type %s/%s"%(t,e.get_id()))
+                #@@
                 yield e
         return
 
@@ -159,20 +156,19 @@ class EntityFinder(object):
 
         If a type_id is supplied, site data values are included.
         """
+        entities = None
         if type_id:
-            #@@
-            # log.info("get_base_entities: type_id %s"%type_id)
-            #@@
-            return self.get_subtype_entities(type_id, user_permissions, altscope)
+            entities = self.get_subtype_entities(type_id, user_permissions, altscope)
             # return self.get_type_entities(type_id, user_permissions, scope)
         else:
-            #@@
-            # log.info("get_base_entities: all types")
-            #@@
-            return self.get_all_types_entities(
+            entities = self.get_all_types_entities(
                 self.get_collection_type_ids(altscope="all"), user_permissions, altscope
                 )
-        return
+        #@@
+        # entities = list(entities)  #@@ Force strict eval
+        # log.info("get_base_entities: %r"%([(e.get_type_id(), e.get_id()) for e in entities],))
+        #@@
+        return entities
 
     def search_entities(self, entities, search):
         """
@@ -208,6 +204,10 @@ class EntityFinder(object):
             user_permissions, type_id=type_id, altscope=altscope, 
             context=context, search=search
             )
+        #@@
+        # entities = list(entities)  #@@ Force strict eval
+        # log.info("get_entities_sorted: %r"%([e.get_id() for e in entities],))
+        #@@
         return sorted(entities, key=order_entity_key)
 
     @classmethod
@@ -452,7 +452,8 @@ class EntitySelector(object):
             elif selval['type'] == "literal":
                 return get_literal(selval['value'])
             else:
-                raise ValueError("Unrecognized value type from selector (%s)"%selval['type'])
+                msg = "Unrecognized value type from selector (%s)"%selval['type']
+                raise ValueError(msg)
                 assert False, "Unrecognized value type from selector"
         #
         def match_eq(v1f, v2f):
@@ -479,7 +480,8 @@ class EntitySelector(object):
             return None
         sel = self.parse_selector(selector)
         if not sel:
-            raise ValueError("Unrecognized selector syntax (%s)"%selector)
+            msg = "Unrecognized selector syntax (%s)"%selector
+            raise ValueError(msg)
         v1f = get_val_f(sel['val1'])
         v2f = get_val_f(sel['val2'])
         if sel['comp'] == "==":
@@ -489,7 +491,8 @@ class EntitySelector(object):
         if sel['comp'] == "subtype":
             return match_subtype(v1f, v2f)
         # Drop through: raise error
-        raise ValueError("Unrecognized entity selector (%s)"%selector)
+        msg = "Unrecognized entity selector (%s)"%selector
+        raise ValueError(msg)
 
 #   -------------------------------------------------------------------
 #   FieldComparison
@@ -511,7 +514,7 @@ class FieldComparison(object):
         """
         Return typeinfo corresponding to the supplied type URI
         """
-        t     = self._coll.get_uri_type(type_uri)
+        t = self._coll.get_uri_type(type_uri)
         return t and EntityTypeInfo(self._coll, t.get_id())
 
     def subtype(self, type1_uri, type2_uri):

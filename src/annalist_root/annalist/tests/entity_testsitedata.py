@@ -286,6 +286,7 @@ site_defined_entity_fields = (
     , FieldChoice("_field/Entity_see_also",            label="See also"         )
     , FieldChoice("_field/Entity_see_also_r",          label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )
+    , FieldChoice("_field/Entity_uri",                 label="Entity URI"       )
     ])
 
 site_default_entity_fields = (
@@ -625,10 +626,10 @@ site_field_types = (
     , FieldChoice("_enum_render_type/EntityId",         label="Entity Id"                    )
     , FieldChoice("_enum_render_type/EntityRef",        label="Local entity ref"             )
     , FieldChoice("_enum_render_type/EntityTypeId",     label="Entity type Id"               )
-    , FieldChoice("_enum_render_type/Enum",             label="Required entity ref"          )
-    , FieldChoice("_enum_render_type/Enum_choice",      label="Entity choice"                )
-    , FieldChoice("_enum_render_type/Enum_choice_opt",  label="Optional entity choice"       )
-    , FieldChoice("_enum_render_type/Enum_optional",    label="Optional entity ref"          )
+    , FieldChoice("_enum_render_type/Enum",             label="Required/new entity reference")
+    , FieldChoice("_enum_render_type/Enum_choice",      label="Required entity reference"    )
+    , FieldChoice("_enum_render_type/Enum_choice_opt",  label="Optional entity reference"    )
+    , FieldChoice("_enum_render_type/Enum_optional",    label="Optional/new entity reference")
     , FieldChoice("_enum_render_type/FileUpload",       label="File upload"                  )
     , FieldChoice("_enum_render_type/Group_Seq",        label="Field group sequence"         )
     , FieldChoice("_enum_render_type/Group_Seq_Row",    label="Field group sequence as table")
