@@ -81,7 +81,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Collection.flush_collection_caches update
     - [x] update render_uri_link
 - [x] Boolean renderer: not recognizing "Y"; don't need label?
-- [ ] Refactor common logic in collectiontypecache and collectionvocabcache.
+- [x] Refactor common logic in collectiontypecache and collectionvocabcache.
 - [x] When generating subtype (task button), don't include supertypes
 
 (Sub-release?)
