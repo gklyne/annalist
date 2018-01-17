@@ -1198,8 +1198,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with remove field(s) request</h3>")
-        self.assertContains(r, "<p>No field(s) selected</p>")
+        self.assertContains(r, """<h3>Problem with remove field(s) request</h3>""")
+        self.assertContains(r, """<p class="messages">No field(s) selected</p>""")
         # Test context
         self._check_default_view_context_fields(r, 
             action="edit",

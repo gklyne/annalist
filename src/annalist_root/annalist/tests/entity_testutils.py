@@ -28,7 +28,10 @@ from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.uri_builder                 import uri_params, uri_with_params
+from annalist.views.uri_builder     import (
+    uri_quote_param,
+    uri_params, uri_with_params
+    )
 from annalist.views.fields.bound_field          import bound_field, get_entity_values
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
@@ -37,6 +40,31 @@ from annalist.views.form_utils.fielddescription import FieldDescription
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
+
+
+#   -----------------------------------------------------------------------------
+#
+#   Message formatting functions
+#
+#   -----------------------------------------------------------------------------
+
+def make_message(msg_format, coll_id="testcoll", **kwargs):
+        """
+        Combine supplied message format string with keyword parameters to build
+        a message text.
+        """
+        msg_vals = dict(kwargs, coll_id=coll_id)
+        msg_text = msg_format%msg_vals
+        return msg_text
+
+def make_quoted_message(msg_format, coll_id="testcoll", **kwargs):
+        """
+        Combine supplied message format string with keyword parameters to build
+        a message text, then apply URL quoting to return the message as it will 
+        appear as a URL parameter.
+        """
+        msg_text = make_message(msg_format, coll_id=coll_id, **kwargs)
+        return uri_quote_param(msg_text)
 
 #   -----------------------------------------------------------------------------
 #

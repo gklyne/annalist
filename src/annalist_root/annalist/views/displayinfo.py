@@ -403,30 +403,36 @@ class DisplayInfo(object):
             #     )
             if not self.check_list_id(list_id):
                 log.warning("DisplayInfo.get_list_info: RecordList %s not found"%list_id)
+                msg1 = message.RECORD_LIST_NOT_EXISTS%{'id': list_id, 'coll_id': self.coll_id}
+                self.add_error_message(msg1)
+                list_id = self.get_list_id(self.type_id, None)
+                msg2 = message.DISPLAY_ALTERNATIVE_LIST%{'id': list_id, 'coll_id': self.coll_id}
+                self.add_error_message(msg2)
+                #@@
+                # self.http_response = self.view.error(
+                #     dict(self.view.error404values(),
+                #         message=message.RECORD_LIST_NOT_EXISTS%(
+                #             {'id': list_id, 'coll_id': self.coll_id})
+                #         )
+                #     )
+                #@@
+            self.list_id    = list_id
+            self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
+            if "@error" in self.recordlist:
                 self.http_response = self.view.error(
-                    dict(self.view.error404values(),
-                        message=message.RECORD_LIST_NOT_EXISTS%(
-                            {'id': list_id, 'coll_id': self.coll_id})
+                    dict(self.view.error500values(),
+                        message=message.RECORD_LIST_LOAD_ERROR%(
+                            { 'id':       list_id
+                            , 'file':     self.recordlist["@error"]
+                            , 'message':  self.recordlist["@message"]
+                            })
                         )
                     )
-            else:
-                self.list_id    = list_id
-                self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
-                if "@error" in self.recordlist:
-                    self.http_response = self.view.error(
-                        dict(self.view.error500values(),
-                            message=message.RECORD_LIST_LOAD_ERROR%(
-                                { 'id':       list_id
-                                , 'file':     self.recordlist["@error"]
-                                , 'message':  self.recordlist["@message"]
-                                })
-                            )
-                        )
-                elif self.type_id is None and self.curr_typeinfo is None:
-                    self.get_type_info(
-                        extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
-                        )
-                # log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
+            elif self.type_id is None and self.curr_typeinfo is None:
+                self.get_type_info(
+                    extract_entity_id(self.recordlist[ANNAL.CURIE.default_type])
+                    )
+            # log.debug("DisplayInfo.get_list_info: %r"%(self.recordlist.get_values()))
         return self.http_response
 
     def get_view_info(self, view_id):
@@ -440,25 +446,31 @@ class DisplayInfo(object):
                 log.warning("Collection: %r"%(self.collection))
                 log.warning("Collection._altparent: %r"%(self.collection._altparent))
                 # log.warning("\n".join(traceback.format_stack()))
+                msg1 = message.RECORD_VIEW_NOT_EXISTS%{'id': view_id, 'coll_id': self.coll_id}
+                self.add_error_message(msg1)
+                view_id = self.get_view_id(self.type_id, None)
+                msg2 = message.DISPLAY_ALTERNATIVE_VIEW%{'id': view_id, 'coll_id': self.coll_id}
+                self.add_error_message(msg2)
+                #@@
+                # self.http_response = self.view.error(
+                #     dict(self.view.error404values(),
+                #         message=message.RECORD_VIEW_NOT_EXISTS%(
+                #             {'id': view_id, 'coll_id': self.coll_id})
+                #         )
+                #     )
+                #@@
+            self.view_id    = view_id
+            self.recordview = RecordView.load(self.collection, view_id, altscope="all")
+            if "@error" in self.recordview:
                 self.http_response = self.view.error(
-                    dict(self.view.error404values(),
-                        message=message.RECORD_VIEW_NOT_EXISTS%(
-                            {'id': view_id, 'coll_id': self.coll_id})
+                    dict(self.view.error500values(),
+                        message=message.RECORD_VIEW_LOAD_ERROR%(
+                            { 'id':       list_id
+                            , 'file':     self.recordview["@error"]
+                            , 'message':  self.recordview["@message"]
+                            })
                         )
                     )
-            else:
-                self.view_id    = view_id
-                self.recordview = RecordView.load(self.collection, view_id, altscope="all")
-                if "@error" in self.recordview:
-                    self.http_response = self.view.error(
-                        dict(self.view.error500values(),
-                            message=message.RECORD_VIEW_LOAD_ERROR%(
-                                { 'id':       list_id
-                                , 'file':     self.recordview["@error"]
-                                , 'message':  self.recordview["@message"]
-                                })
-                            )
-                        )
                 # log.debug("DisplayInfo.get_view_info: %r"%(self.recordview.get_values()))
         return self.http_response
 
@@ -549,6 +561,7 @@ class DisplayInfo(object):
     # def reset_info_messages(self):
     #     """
     #     Reset informational messages (for form redisplay)
+    #     cf. entityedit.form_re_render
     #     """
     #     self.info_messages      = []
     #     return
@@ -598,7 +611,7 @@ class DisplayInfo(object):
     def redirect_response(self, redirect_path, redirect_params={}, action=None):
         """
         Return an HTTP redirect response, with information or warning messages as
-        requested incl;uded as parameters.
+        requested included as parameters.
 
         redirect_path   the URI base path to redirect to.
         redirect_params an optional dictionary of parameters to be applied to the 
@@ -780,7 +793,7 @@ class DisplayInfo(object):
                 ("Default_list" if type_id else "Default_list_all")
                 )
             if not list_id:
-                log.warning("get_list_id: %s, type_id %s"%(list_id, type_id))
+                log.warning("get_list_id failure: %s, type_id %s"%(list_id, type_id))
         return list_id
 
     def get_list_view_id(self):
@@ -1121,12 +1134,12 @@ class DisplayInfo(object):
         if self.info_messages:
             context.update(
                 { "info_head":      message.ACTION_COMPLETED
-                , "info_message":   "\n\n".join(self.info_messages)
+                , "info_message":   "\n".join(self.info_messages)
                 })
         if self.error_messages:
             context.update(
                 { "error_head":     message.DATA_ERROR
-                , "error_message":  "\n\n".join(self.error_messages)
+                , "error_message":  "\n".join(self.error_messages)
                 })
         return context
 

@@ -1648,13 +1648,13 @@ class GenericEntityEditView(AnnalistGenericView):
         details to be displayed as a pair of values for the message 
         heading and the message body.
         """
-        log.info(
-            "rename_entity old: %s/%s, new: %s/%s, vals: %r"%
-              ( old_typeinfo.type_id, old_entity_id, 
-                new_typeinfo.type_id, new_entity_id, 
-                entity_values
-              )
-            )
+        # log.info(
+        #     "rename_entity old: %s/%s, new: %s/%s, vals: %r"%
+        #       ( old_typeinfo.type_id, old_entity_id, 
+        #         new_typeinfo.type_id, new_entity_id, 
+        #         entity_values
+        #       )
+        #     )
         # _new_entity just constructs a new object of the appropriate class
         old_entity = old_typeinfo._new_entity(old_entity_id)
         new_entity = new_typeinfo.create_entity(new_entity_id, entity_values)

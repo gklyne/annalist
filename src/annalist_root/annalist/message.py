@@ -23,6 +23,9 @@ MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
 CREATED_COLLECTION_ID       = "Created new collection: '%(coll_id)s'"
 NO_COLLECTION_METADATA      = "Metadata not found for collection '%(id)s'"
+CONFIRM_REQUESTED_ACTION    = """Confirm requested action"""
+ARE_YOU_SURE                = """Are you sure?"""
+CONFIRM_OR_CANCEL           = """Click "Confirm" to continue, or "Cancel" to abort operation"""
 
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
 INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"
@@ -131,6 +134,7 @@ RECORD_LIST_EXISTS          = "Record list %(save_id)s in collection %(save_coll
 RECORD_LIST_NOT_EXISTS      = "Record list %(id)s in collection %(coll_id)s does not exist"
 RECORD_LIST_REMOVED         = "Record list %(id)s in collection %(coll_id)s was removed"
 RECORD_LIST_LOAD_ERROR      = "Error loading list '%(id)s', file %(file)s: %(message)s"
+DISPLAY_ALTERNATIVE_LIST    = "Displaying alternative list '%(id)s'"
 
 RECORD_VIEW_ID              = "Problem with record view identifier"
 RECORD_VIEW_ID_INVALID      = "The record view identifier is missing or not a valid identifier"
@@ -139,6 +143,7 @@ RECORD_VIEW_EXISTS          = "Record view %(save_id)s in collection %(save_coll
 RECORD_VIEW_NOT_EXISTS      = "Record view %(id)s in collection %(coll_id)s does not exist"
 RECORD_VIEW_REMOVED         = "Record view %(id)s in collection %(coll_id)s was removed"
 RECORD_VIEW_LOAD_ERROR      = "Error loading view '%(id)s', file %(file)s: %(message)s"
+DISPLAY_ALTERNATIVE_VIEW    = "Displaying alternative view '%(id)s'"
 
 RECORD_GROUP_ID             = "Problem with field group identifier"
 RECORD_GROUP_ID_INVALID     = "The field group identifier is missing or not a valid identifier"

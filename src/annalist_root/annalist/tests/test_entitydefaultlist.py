@@ -36,6 +36,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir, 
     collection_edit_url,
     continuation_url_param,
@@ -557,17 +558,15 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
-        msg_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    "testtype"
-            , "id":         "entity1"
-            })
-        msg_text = message.REMOVE_ENTITY_DATA%msg_vals
-        self.assertContains(r, msg_text + ": Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="testtype", 
+            id="entity1"
+            )
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r,
-            '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
+            '<input type="hidden" name="confirmed_action" value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
             html=True
             )
         self.assertEqual(r.context['action_description'], msg_text)
@@ -586,18 +585,16 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
         # print "**********"
         # print r.content
         # print "**********"
-        msg_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    "testtype"
-            , "id":         "entity1"
-            })
-        msg_text = message.REMOVE_ENTITY_DATA%msg_vals
-        self.assertContains(r, msg_text + ": Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="testtype", 
+            id="entity1"
+            )
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r, 
             '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
             html=True

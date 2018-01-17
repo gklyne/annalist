@@ -20,20 +20,20 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.7, towards 0.5.8
 
+- [x] BUG: delete list view while viewing that list results in obscure error message.
+    - Improve error handling to use alternative list/view definition
+- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
+    - Need to look into improving context-generation diagnostics.
 - [x] Fix some test cases that were failing due to message text changes.
     - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
-- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+- [ ] Review message text; update more tests to expect text defined in messages module.
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
 
 (Sub-release?)
 
-- [ ] BUG: delete list view while viewing that list results in error message.
-    - Maybe just improve error message.
-- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
-    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
-    - Need to look into improving context-generation diagnostics.
 - [ ] Update pip to latest version in python environment (for continued testing)
 - [ ] Update Django version used to latest version designated for long term support (1.8?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
@@ -191,6 +191,8 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+    - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
@@ -237,8 +239,8 @@ Notes for Future TODOs:
         - longer term, this might be a high-level graphical display (like PROV diag.)
         - use this to think about linking to alternative displays
 - [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
-- [ ] From view of list definition, link to show list itself
-    - Beside "Show view" button, add "Show list"?
+- [x] From view of list definition, link to show list itself
+    - Added "Show this list" task button
 - [ ] Embedded code expansion in help text, and maybe other Markdown:
     - [x] {{site}} base URL for site
     - [x] {{coll}} base url for collection
@@ -294,7 +296,7 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
-- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility forthat collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
+- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility for that collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
     - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
 
 

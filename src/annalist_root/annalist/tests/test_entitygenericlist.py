@@ -53,6 +53,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     entitydata_list_url_query,
     site_view_url,
@@ -687,11 +688,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", layout.FIELD_TYPEID, list_id="no_list")
         with SuppressLogging(logging.WARNING):
             r = self.client.get(u)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, 
             "Record list no_list in collection testcoll does not exist", 
-            status_code=404
+            status_code=200
             )
         return
 
@@ -943,12 +944,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Confirm requested action</h3>")
-        msg_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    "_type"
-            , "id":         "testtypedelete"
-            })
-        msg_text = message.REMOVE_ENTITY_DATA%msg_vals
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="_type", 
+            id="testtypedelete"
+            )
         self.assertContains(r, msg_text + ": Are you sure?")
         self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
         self.assertContains(r,
@@ -973,13 +972,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         l = r['location']
         e1 = TestHostUri + u
-        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
-        err_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    "_type"
-            , "id":         "sitetype"
-            })
-        e3 = "error_message=%s"%(uri_quote_param(message.CANNOT_DELETE_ENTITY%err_vals),)
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.CANNOT_DELETE_ENTITY, 
+                type_id="_type",
+                id="sitetype"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -992,13 +989,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         e1 = TestHostUri + u
-        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
-        err_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    "_type"
-            , "id":         "testtype"
-            })
-        e3 = "error_message=%s"%(uri_quote_param(message.TYPE_VALUES_FOR_DELETE%err_vals),)
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.TYPE_VALUES_FOR_DELETE, 
+                type_id="_type",
+                id="testtype"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -1013,13 +1008,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
-        err_vals = (
-            { "coll_id":    "testcoll"
-            , "type_id":    layout.FIELD_TYPEID
-            , "id":         "Field_comment"
-            })
-        e3 = "error_message=%s"%(uri_quote_param(message.CANNOT_DELETE_ENTITY%err_vals),)
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.CANNOT_DELETE_ENTITY, 
+                type_id=layout.FIELD_TYPEID,
+                id="Field_comment"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -1149,12 +1142,10 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         c = continuation_url_param(collection_view_url("testcoll"))
-        h = "info_head=%s"%(uri_quote_param(message.ACTION_COMPLETED),)
-        msg_vals = (
-            { "coll_id":    "testcoll"
-            , "list_id":    "Type_list"
-            })
-        m = "info_message=%s"%(uri_quote_param(message.DEFAULT_LIST_UPDATED%msg_vals),)
+        h = "info_head="    + uri_quote_param(message.ACTION_COMPLETED)
+        m = "info_message=" + make_quoted_message(message.DEFAULT_LIST_UPDATED, 
+                list_id="Type_list"
+                )
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self.assertIn(h, r['location'])

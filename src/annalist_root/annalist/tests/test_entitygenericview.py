@@ -535,7 +535,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     def test_get_view_no_collection(self):
-        u = entitydata_edit_url("view", "no_collection", "_field", entity_id="entity1", view_id="Type_view")
+        u = entitydata_edit_url("view", "no_collection", "testtype", entity_id="entity1", view_id="Type_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
@@ -552,12 +552,12 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     def test_get_view_no_view(self):
-        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="entity1", view_id="no_view")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1", view_id="no_view")
         with SuppressLogging(logging.WARNING):
             r = self.client.get(u)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=404)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=200)
         return
 
     def test_get_view_no_entity(self):
