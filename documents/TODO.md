@@ -20,7 +20,6 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.7, towards 0.5.8
 
-- [ ] Allow multiple entity deletes from list display 
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
@@ -48,6 +47,12 @@ See also: https://www.divio.com/en/blog/documentation/
 
 - [ ] BUG: delete list view while viewing that list results in error message.
     - Maybe just improve error message.
+- [ ] Allow multiple entity deletes from list display 
+    - views.entitylist > post - allow and handle multiple ids for delete operation
+    - views.displayinfo > confirm_delete_entity_response - handle multiple values, including in message
+    - message.REMOVE_ENTITY_DATA - also provide message for multiple entities
+    - views.entitydelete - pass list rather than single entityid; use different form value name
+    - views.entitydeletebase - update to handle list of entity ids, including for confirmation message.  May need to separate failures from successes?
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...

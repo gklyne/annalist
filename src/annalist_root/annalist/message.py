@@ -58,13 +58,13 @@ MIGRATE_COLLECTION_ERROR    = "Error(s) occurred while migrating collection data
 MIGRATED_COLLECTION_DATA    = "Migrated data for collection %(id)s"
 
 TOO_MANY_ENTITIES_SEL       = "Too many items selected"
-NO_ENTITY_FOR_COPY          = "No data record selected to copy"
-NO_ENTITY_FOR_EDIT          = "No data record selected to edit"
-NO_ENTITY_FOR_DELETE        = "No data record selected to delete"
+NO_ENTITY_FOR_COPY          = "No entity selected to copy"
+NO_ENTITY_FOR_EDIT          = "No entity selected to edit"
+NO_ENTITY_FOR_DELETE        = "No entity selected to delete"
 CANNOT_DELETE_ENTITY        = "Entity %(id)s of type %(type_id)s not found or cannot be deleted"
 SITE_ENTITY_FOR_DELETE      = "Cannot remove site built-in entity %(id)s of type %(type_id)s, or entity not found"
 TYPE_VALUES_FOR_DELETE      = "Cannot remove type %(id)s with existing values"
-REMOVE_ENTITY_DATA          = "Remove record %(id)s of type %(type_id)s in collection %(coll_id)s"
+REMOVE_ENTITY_DATA          = "Remove entity %(id)s of type %(type_id)s in collection %(coll_id)s"
 
 NO_TYPE_FOR_COPY            = "No record type selected to copy"
 NO_TYPE_FOR_EDIT            = "No record type selected to edit"

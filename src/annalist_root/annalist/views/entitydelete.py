@@ -41,6 +41,9 @@ class EntityDataDeleteConfirmedView(EntityDeleteConfirmedBaseView):
         log.debug("EntityDataDeleteConfirmedView.post: %r"%(request.POST))
         if "entity_delete" in request.POST:
             return self.complete_remove_entity(
+                # NOTE about QueryDict:
+                # request.POST['entity_id'] returns a single value 
+                # - the last one provided if multiple values are present
                 coll_id, type_id, request.POST['entity_id'], 
                 self.view_uri("AnnalistEntityDefaultListAll", coll_id=coll_id), 
                 request.POST.dict()

@@ -27,7 +27,7 @@ I've just released an update (release 0.5.6) of Annalist.
 
 This is mainly a performance and bug-fix maintenance release.
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/ceYuKGYOBlI/Vua_qlpOAAAJ
+https://groups.google.com/d/msg/annalist-discuss/9k1TUHdaNe4/JauuGxDYAAAJ
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 
