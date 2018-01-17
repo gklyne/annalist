@@ -510,7 +510,7 @@ def download_url_to_fileobj(url, fileobj=None):
         r.close()
     return (resource_url, resource_type)
 
-# Update MIME typesreturned by open_url when opening a file
+# Update MIME types returned by open_url when opening a file
 # @@TODO: unify logic with resourcetypes module, and do all MIME type wrangling there
 import mimetypes
 mimetypes.init()

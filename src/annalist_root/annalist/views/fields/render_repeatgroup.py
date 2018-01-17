@@ -413,7 +413,7 @@ class RenderRepeatGroup(object):
     # class RenderModeRepeatGroup(object):
     #     """
     #     Render class for a repeated field group that renders according to the "render_mode"
-    #     value inthe supplied context.
+    #     value in the supplied context.
     #     """
     #     def __init__(self, baserenderer):
     #         self._baserenderer = baserenderer

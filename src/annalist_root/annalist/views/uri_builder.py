@@ -20,6 +20,12 @@ unreserved  = "-._~"
 # subset of above safe in query string (no "?", "&" or #")
 query_safe  = re.sub('[?&#]', '', gen_delims + sub_delims + unreserved)
 
+def uri_quote_param(pval):
+    """
+    Apply escaping to a supplied query parameter value for inclusion in a URI.
+    """
+    return urllib.quote(pval, query_safe)
+
 def uri_base(uri):
     """
     Get the base URI from the supplied URI by removing any parameters and/or fragments.
@@ -72,7 +78,7 @@ def uri_params(*param_dicts, **param_dict):
         pval = uri_param_dict[pnam]
         if pval:
             # log.info("pnam %s, pval %s, uri_param_dict %r"%(pnam, pval, uri_param_dict))
-            uri_param_str += next_sep + pnam + "=" + urllib.quote(pval, query_safe)
+            uri_param_str += next_sep + pnam + "=" + uri_quote_param(pval)
             next_sep = "&"
     return uri_param_str
 

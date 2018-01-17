@@ -20,16 +20,17 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.7, towards 0.5.8
 
+- [x] Fix some test cases that were failing due to message text changes.
+    - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
+- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties
-- [ ] Provide renderer that shows calculated supertype transitive closure?
-- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
-- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
-    - copied-from field in entity?
 
 (Sub-release?)
 
+- [ ] BUG: delete list view while viewing that list results in error message.
+    - Maybe just improve error message.
 - [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
     - Error reading bad context file, caused by Annalist data errors, which have been fixed.
     - Need to look into improving context-generation diagnostics.
@@ -45,14 +46,6 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
-- [ ] BUG: delete list view while viewing that list results in error message.
-    - Maybe just improve error message.
-- [ ] Allow multiple entity deletes from list display 
-    - views.entitylist > post - allow and handle multiple ids for delete operation
-    - views.displayinfo > confirm_delete_entity_response - handle multiple values, including in message
-    - message.REMOVE_ENTITY_DATA - also provide message for multiple entities
-    - views.entitydelete - pass list rather than single entityid; use different form value name
-    - views.entitydeletebase - update to handle list of entity ids, including for confirmation message.  May need to separate failures from successes?
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
@@ -142,6 +135,15 @@ Data collection definitions:
 
 Usability notes:
 
+- [ ] Provide renderer that shows calculated supertype transitive closure?
+- [ ] Allow multiple entity deletes from list display 
+    - views.entitylist > post - allow and handle multiple ids for delete operation
+    - views.displayinfo > confirm_delete_entity_response - handle multiple values, including in message
+    - message.REMOVE_ENTITY_DATA - also provide message for multiple entities
+    - views.entitydelete - pass list rather than single entityid; use different form value name
+    - views.entitydeletebase - update to handle list of entity ids, including for confirmation message.  May need to separate failures from successes?
+- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
+    - copied-from field in entity?
 - [ ] In field definition, "Entity type" should be drop-dwon, with subtype logic handling an initial dereference to obtain the type URI.
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
