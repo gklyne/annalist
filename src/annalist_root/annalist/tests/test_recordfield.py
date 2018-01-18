@@ -57,6 +57,7 @@ from entity_testfielddata   import (
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
     )
 from entity_testutils       import (
+    make_message, make_quoted_message,
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
@@ -1053,10 +1054,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.info(r.content)
         err_label = error_label("testcoll", layout.FIELD_TYPEID, "fieldnone")
-        self.assertContains(r, 
-            "<p>Entity %s does not exist</p>"%(err_label), 
-            status_code=404
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.FIELD_TYPEID, 
+            id="fieldnone", 
+            label=err_label
             )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit_field_fields(self):
@@ -1182,7 +1185,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context
         expect_context = recordfield_entity_view_context_data(action="new")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -1194,7 +1197,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
@@ -1246,7 +1249,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         expect_context = recordfield_entity_view_context_data(action="copy")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
@@ -1261,7 +1264,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         expect_context = recordfield_entity_view_context_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
             )
@@ -1337,7 +1340,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(action="edit", update="Updated entity")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -1358,7 +1361,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfieldid", orig_id="orig_field_id", action="edit"

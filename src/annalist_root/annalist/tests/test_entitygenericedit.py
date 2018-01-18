@@ -23,6 +23,7 @@ from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist                       import message
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.site           import Site
@@ -41,6 +42,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     collection_create_values,
     site_dir, collection_dir, 
     continuation_url_param,
@@ -440,7 +442,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        msg_text = make_message(message.COLLECTION_NOT_EXISTS, id="no_collection")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_view_no_type(self):
@@ -449,7 +452,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Record type no_type in collection testcoll does not exist", status_code=404)
+        msg_text = make_message(message.RECORD_TYPE_NOT_EXISTS, id="no_type")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_view_no_view(self):
@@ -458,7 +462,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=200)
+        msg_text = make_message(message.RECORD_VIEW_NOT_EXISTS, id="no_view")
+        self.assertContains(r, msg_text)
         return
 
     def test_get_edit_no_entity(self):
@@ -470,7 +475,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
         err_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%err_label, status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, id="entitynone", label=err_label)
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

@@ -18,19 +18,20 @@ import markdown
 import logging
 log = logging.getLogger(__name__)
 
-from django.conf                        import settings
-from django.db                          import models
-from django.http                        import QueryDict
-from django.contrib.auth.models         import User
-from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
-from django.test.client                 import Client
+from django.conf                            import settings
+from django.db                              import models
+from django.http                            import QueryDict
+from django.contrib.auth.models             import User
+from django.test                            import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test.client                     import Client
 
-from annalist.identifiers               import RDF, RDFS, ANNAL
-from annalist                           import layout
-from annalist.models.site               import Site
-from annalist.models.sitedata           import SiteData
-from annalist.models.collection         import Collection
-from annalist.models.recordlist         import RecordList
+from annalist.identifiers                   import RDF, RDFS, ANNAL
+from annalist                               import layout
+from annalist                               import message
+from annalist.models.site                   import Site
+from annalist.models.sitedata               import SiteData
+from annalist.models.collection             import Collection
+from annalist.models.recordlist             import RecordList
 
 from annalist.views.displayinfo             import apply_substitutions
 from annalist.views.recordlistdelete        import RecordListDeleteConfirmedView
@@ -40,6 +41,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -924,7 +926,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.LIST_TYPEID, "nolist")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.LIST_TYPEID, 
+            id="nolist", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -969,7 +976,12 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.LIST_TYPEID, "nolist")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.LIST_TYPEID, 
+            id="nolist", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, List_view
@@ -1047,7 +1059,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID))
         # Test context
         self._check_list_view_context_fields(r, 
             action="new",
@@ -1068,7 +1080,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID,))
         # Test context
         self._check_list_view_context_fields(r, 
             action="new",
@@ -1128,8 +1140,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
-
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID,))
         # Test context
         self._check_list_view_context_fields(r, 
             action="copy",
@@ -1152,7 +1163,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID,))
         # Test context
         self._check_list_view_context_fields(r, 
             action="copy",
@@ -1239,7 +1250,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID,))
         # Test context
         self._check_list_view_context_fields(r, 
             action="edit",
@@ -1268,7 +1279,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record list identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_LIST_ID,))
         # Test context
         self._check_list_view_context_fields(r, 
             action="edit",

@@ -130,7 +130,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 })
             return self.error(
                 dict(self.error404values(),
-                    message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
+                    message=message.ENTITY_DOES_NOT_EXIST%
+                        { 'type_id': viewinfo.type_id
+                        , 'id':      viewinfo.src_entity_id
+                        , 'label':   entity_label
+                        }
                     )
                 )
         # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))

@@ -29,7 +29,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - Added logic to flag error and add details to output.
 - [x] Fix some test cases that were failing due to message text changes.
     - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
-- [ ] Review message text; update more tests to expect text defined in messages module.
+- [x] Review message text; update more tests to expect text as defined in messages module.
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
 - [ ] Create FAQ for defining subproperties

@@ -48,22 +48,22 @@ from tests import (
 #
 #   -----------------------------------------------------------------------------
 
-def make_message(msg_format, coll_id="testcoll", **kwargs):
+def make_message(msg_format, coll_id="testcoll", type_id="testtype", **kwargs):
         """
         Combine supplied message format string with keyword parameters to build
         a message text.
         """
-        msg_vals = dict(kwargs, coll_id=coll_id)
+        msg_vals = dict(kwargs, coll_id=coll_id, type_id=type_id)
         msg_text = msg_format%msg_vals
         return msg_text
 
-def make_quoted_message(msg_format, coll_id="testcoll", **kwargs):
+def make_quoted_message(msg_format, coll_id="testcoll", type_id="testtype", **kwargs):
         """
         Combine supplied message format string with keyword parameters to build
         a message text, then apply URL quoting to return the message as it will 
         appear as a URL parameter.
         """
-        msg_text = make_message(msg_format, coll_id=coll_id, **kwargs)
+        msg_text = make_message(msg_format, coll_id=coll_id, type_id=type_id, **kwargs)
         return uri_quote_param(msg_text)
 
 #   -----------------------------------------------------------------------------

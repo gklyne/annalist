@@ -669,7 +669,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        msg_text = make_message(message.COLLECTION_NOT_EXISTS, id="no_collection")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_list_no_type(self):
@@ -678,10 +679,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, 
-            "Record type no_type in collection testcoll does not exist", 
-            status_code=404
-            )
+        msg_text  = make_message(message.RECORD_TYPE_NOT_EXISTS, id="no_type")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_list_no_list(self):
@@ -690,10 +689,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, 
-            "Record list no_list in collection testcoll does not exist", 
-            status_code=200
-            )
+        msg_text  = make_message(message.RECORD_LIST_NOT_EXISTS, id="no_list")
+        self.assertContains(r, msg_text, status_code=200)
         return
 
     #   -----------------------------------------------------------------------------
@@ -943,13 +940,13 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
         msg_text = make_message(message.REMOVE_ENTITY_DATA, 
             type_id="_type", 
             id="testtypedelete"
             )
-        self.assertContains(r, msg_text + ": Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r,
             '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', 
             html=True

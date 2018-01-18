@@ -83,7 +83,11 @@ class EntityResourceAccess(AnnalistGenericView):
         if entity is None:
             return self.error(
                 dict(self.error404values(),
-                    message=message.ENTITY_DOES_NOT_EXIST%{'id': entity_label}
+                    message=message.ENTITY_DOES_NOT_EXIST%
+                        { 'type_id': viewinfo.type_id
+                        , 'id':      viewinfo.src_entity_id
+                        , 'label':   entity_label
+                        }
                     )
                 )
         # Locate and open resource file

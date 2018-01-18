@@ -44,6 +44,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -631,7 +632,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.TYPE_TYPEID, 
+            id="notype", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -672,7 +678,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.TYPE_TYPEID, 
+            id="notype", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
@@ -720,7 +731,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="new",
@@ -739,7 +750,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="new",
@@ -799,7 +810,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="copy",
@@ -820,7 +831,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="copy",
@@ -915,7 +926,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context for re-rendered form
         self._check_context_fields(r, 
             action="edit",
@@ -941,7 +952,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="edit",
