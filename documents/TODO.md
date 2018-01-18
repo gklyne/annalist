@@ -22,9 +22,11 @@ See also: https://www.divio.com/en/blog/documentation/
 
 - [x] BUG: delete list view while viewing that list results in obscure error message.
     - Improve error handling to use alternative list/view definition
-- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+- [x] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
     - Error reading bad context file, caused by Annalist data errors, which have been fixed.
     - Need to look into improving context-generation diagnostics.
+    - Also caused by trailing spoace on URL: need to check valid URLs; can catch errors?
+    - Added logic to flag error and add details to output.
 - [x] Fix some test cases that were failing due to message text changes.
     - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
 - [ ] Review message text; update more tests to expect text defined in messages module.
@@ -126,6 +128,7 @@ Technical debt:
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
+- [ ] Turtle serialization error: currently returns diagnostiuc in data returned; would be better to (also) signal problem via HTTP return code.
 
 
 Data collection definitions:

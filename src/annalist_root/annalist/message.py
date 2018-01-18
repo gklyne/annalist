@@ -26,6 +26,8 @@ NO_COLLECTION_METADATA      = "Metadata not found for collection '%(id)s'"
 CONFIRM_REQUESTED_ACTION    = """Confirm requested action"""
 ARE_YOU_SURE                = """Are you sure?"""
 CONFIRM_OR_CANCEL           = """Click "Confirm" to continue, or "Cancel" to abort operation"""
+TURTLE_SERIALIZE_ERROR      = """Problem generating Turtle serialization from data"""
+TURTLE_SERIALIZE_REASON     = """Internal description of error"""
 
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
 INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"

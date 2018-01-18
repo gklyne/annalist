@@ -112,7 +112,7 @@ def json_resource_file(baseurl, jsondata, resource_info):
 
 def turtle_resource_file(baseurl, jsondata, resource_info):
     """
-    Return a file object that reads out a Turtle version of the supplied entity values data. 
+    Return a file object that reads out a Turtle version of the supplied entity values data.
 
     baseurl     base URL for resolving relative URI references for Turtle output.
     jsondata    is the data to be formatted and returned.
@@ -123,7 +123,16 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     g = Graph()
     g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
     response_file = StringIO.StringIO()
-    g.serialize(destination=response_file, format='turtle', indent=4)
+    try:
+        g.serialize(destination=response_file, format='turtle', indent=4)
+    except Exception as e:
+        reason = str(e)
+        log.warning(message.TURTLE_SERIALIZE_ERROR)
+        log.info(reason)
+        response_file.write("\n\n***** ERROR ****\n\n")
+        response_file.write(message.TURTLE_SERIALIZE_ERROR)
+        response_file.write("\n\n%s:\n\n"%message.TURTLE_SERIALIZE_REASON)
+        response_file.write(reason)
     response_file.seek(0)
     return response_file
 
