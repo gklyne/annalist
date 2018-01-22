@@ -40,7 +40,7 @@ from annalist.models.collectiontypecache    import CollectionTypeCache
 
 class CollectionTypeCacheTest(AnnalistTestCase):
     """
-    Tests for transitive closure calculations in CollectionTypeCache class.
+    Tests for collection type and supertype cache classes.
     """
 
     def setUp(self):

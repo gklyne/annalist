@@ -111,14 +111,15 @@ class CollectionEntityCacheObject(object):
             entity.set_values(entity_values["data"])
         return entity
 
-    def _load_entity(self, coll, entity):
+    def _load_entity(self, coll, entity, entity_uri=None):
         """
         Internal helper method loads entity data to cache.
 
         Returns True if new entity was added.
         """
         entity_id     = entity.get_id()
-        entity_uri    = entity.get_uri()
+        if not entity_uri:
+            entity_uri    = entity.get_uri()
         entity_parent = entity.get_parent().get_id()
         entity_data   = entity.get_save_values()
         add_entity    = False

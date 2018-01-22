@@ -31,7 +31,19 @@ See also: https://www.divio.com/en/blog/documentation/
     - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
 - [x] Review message text; update more tests to expect text as defined in messages module.
 - [ ] Introduce superproperty/ies field and button to create subproperty field definition
+    - [x] Collection methods to access field definitions (model on types)
+    - [x] Cache classes for fields (model on types)
+    - [x] RecordField hook to update collection cache
+    - [x] Test cases for new classes and methods
+    - [x] Update collection to use field cache
+    - [x] Update cache flush logic where used
+    - [ ] Test suite provide default property URIs 
+    - [ ] RecordField accesses should use collecton cache
+    - [ ] Field definition to include superproperty URI list
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
+    - [ ] Add "define subproperty" task button to field definition.
+    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used)
+    - [ ] 'superproperty_uri' details in generated context (collection type, etc.)  Or is this picked up automatically when there are new `superpropery_uris` field definitions?
 - [ ] Create FAQ for defining subproperties
 
 (Sub-release?)
@@ -106,6 +118,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
+- [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings

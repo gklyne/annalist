@@ -132,27 +132,41 @@ def recordfield_load_keys(field_uri=False):
     return recordfield_value_keys(field_uri=field_uri) | {'@id', '@type', '@context'}
 
 def recordfield_create_values(coll_id="testcoll", field_id="testfield", 
+        property_uri=None, superproperty_uris=None,
         render_type="_enum_render_type/Text", 
         value_mode="_enum_value_mode/Value_direct",
         update="Field"):
     """
     Entity values used when creating a record field entity
     """
-    return (
+    # if not property_uri:
+    #   property_uri = "test_property:" + field_id
+    d = (
         { 'rdfs:label':                 "%s %s/_field/%s"%(update, coll_id, field_id)
         , 'rdfs:comment':               "%s help for %s in collection %s"%(update, field_id, coll_id)
         , 'annal:field_render_type':    render_type
         , 'annal:field_value_mode':     value_mode
         , 'annal:tooltip':              "%s tooltip for %s in collection %s"%(update, field_id, coll_id)
         })
+    if property_uri:
+        d.update(
+            { 'annal:property_uri':         property_uri
+            })
+    if superproperty_uris:
+        d.update(
+            { 'annal:superproperty_uri':    [ {"@id": u} for u in superproperty_uris ]
+            })
+    return d
 
 def recordfield_values(
         coll_id="testcoll", field_id="testfield", field_uri=None,
+        property_uri=None, superproperty_uris=None,
         render_type="_enum_render_type/Text", 
         value_mode="_enum_value_mode/Value_direct",
         update="Field", hosturi=TestHostUri):
     d = recordfield_create_values(
         coll_id, field_id, 
+        property_uri=property_uri, superproperty_uris=superproperty_uris,
         render_type=render_type, value_mode=value_mode, 
         update=update
         ).copy()
@@ -168,8 +182,13 @@ def recordfield_values(
 
 def recordfield_read_values(
         coll_id="testcoll", field_id="testfield",
+        property_uri=None, superproperty_uris=None,
         update="Field", hosturi=TestHostUri):
-    d = recordfield_values(coll_id, field_id, update=update, hosturi=hosturi).copy()
+    d = recordfield_values(
+        coll_id, field_id, 
+        property_uri=property_uri, superproperty_uris=superproperty_uris,
+        update=update, hosturi=hosturi
+        ).copy()
     d.update(
         { '@id':            layout.COLL_BASE_FIELD_REF%{'id': field_id}
         , '@type':          ["annal:Field"]

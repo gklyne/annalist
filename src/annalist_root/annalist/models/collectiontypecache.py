@@ -1,8 +1,5 @@
 """
 This module is used to cache per-collection type information.
-
-NOTE: the current implementation is type-specific, but the intent is that in due 
-course it will be factored into a general value-cache and type-specific logic.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -75,8 +72,8 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
 
     def _drop_entity(self, coll, type_id):
         """
-        Override methoid that drops entity from cache, to also remove references
-        from the supertype cl;osure cache.
+        Override method that drops entity from cache, to also remove references
+        from the supertype closure cache.
 
         Returns the type entity removed, or None if not found.
         """
@@ -119,7 +116,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
 
     def get_type_uri_subtypes(self, coll, type_uri):
         """
-        Returns all subtypes for a specieid type URI.
+        Returns all subtypes for a specified type URI.
 
         This method returns only those subtypes that are defined as entities.
         """
