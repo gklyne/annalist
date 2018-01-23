@@ -110,6 +110,7 @@ def recordfield_init_keys(field_uri=False):
         , 'annal:url'
         , 'rdfs:label'
         , 'rdfs:comment'
+        , 'annal:property_uri'
         , 'annal:field_render_type'
         , 'annal:field_value_mode'
         , 'annal:tooltip'
@@ -120,8 +121,7 @@ def recordfield_init_keys(field_uri=False):
 
 def recordfield_value_keys(field_uri=False):
     return (recordfield_init_keys(field_uri=field_uri) |
-        { 'annal:property_uri'
-        , 'annal:field_entity_type'
+        { 'annal:field_entity_type'
         , 'annal:field_value_type'
         , 'annal:field_placement'
         , 'annal:placeholder'
@@ -139,8 +139,8 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
     """
     Entity values used when creating a record field entity
     """
-    # if not property_uri:
-    #   property_uri = "test_property:" + field_id
+    if not property_uri:
+      property_uri = "test_property:" + field_id
     d = (
         { 'rdfs:label':                 "%s %s/_field/%s"%(update, coll_id, field_id)
         , 'rdfs:comment':               "%s help for %s in collection %s"%(update, field_id, coll_id)

@@ -37,7 +37,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Test cases for new classes and methods
     - [x] Update collection to use field cache
     - [x] Update cache flush logic where used
-    - [ ] Test suite provide default property URIs 
+    - [x] Test suite provide default property URIs 
     - [ ] RecordField accesses should use collecton cache
     - [ ] Field definition to include superproperty URI list
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
