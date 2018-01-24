@@ -142,7 +142,7 @@ class RecordEnumTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections") #@@checkme@@
         return
 
     def test_RecordEnumTest(self):
@@ -187,7 +187,7 @@ class RecordEnumTest(AnnalistTestCase):
                 )
             )
         self.assertEqual(e._values,         None)
-        resetSitedata()
+        resetSitedata(scope="collections") #@@checkme@@
         return
 
     def test_recordenum1_data(self):

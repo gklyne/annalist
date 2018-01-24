@@ -63,7 +63,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Support methods
@@ -93,7 +93,8 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
             { "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Test repeat field label"
             , "rdfs:comment":               "Test repeat field comment"
-            , "annal:field_render_type":    "RepeatGroupRow"
+            , "annal:field_render_type":    "Group_Seq_Row"
+            , "annal:field_value_mode":     "Value_direct"
             , "annal:field_value_type":     "annal:Field_group"
             , "annal:field_entity_type":    "test:testtype"
             , "annal:placeholder":          "(test repeat field)"
@@ -152,7 +153,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(f1['field_label'],        "Test repeat field label")
         self.assertEqual(f1['field_render_type'],  "Group_Seq_Row")
         self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        self.assertEqual(f1['field_value_type'],  "annal:Field_group")
+        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
         self.assertEqual(f1['group_field_list'],   repeat_fields)
         self.assertEqual(f1['group_label'],        "Test repeat field label")
         self.assertEqual(f1['group_add_label'],    "Add group")

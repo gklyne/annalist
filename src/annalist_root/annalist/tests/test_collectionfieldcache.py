@@ -128,10 +128,11 @@ class CollectionFieldCacheTest(AnnalistTestCase):
 
     def test_singleton_cache(self):
         self.assertEqual(self.get_coll_property_uris(self.testcoll1), set())
-        # NOTE: if the 'set_field' call also causes cache initialization, 
-        # the created type record is discovered on disk, and the set_field call returns 'False'.
         self.create_field_record(self.testcoll1, self.field1)
-        self.assertTrue(self.fieldcache.set_field(self.testcoll1, self.field1))
+        # NOTE: the 'set_field' call also causes cache initialization of all fields, 
+        # including the created field record which is discovered on disk, and the subsequent 
+        # set_field call returns 'False'.
+        self.assertFalse(self.fieldcache.set_field(self.testcoll1, self.field1))
         self.assertFalse(self.fieldcache.set_field(self.testcoll1, self.field1))
         self.assertEqual(self.get_coll_field_uri(self.testcoll1, "field1"),      "test:field1")
         self.assertEqual(self.get_coll_field(self.testcoll1,     "field2"),      None)

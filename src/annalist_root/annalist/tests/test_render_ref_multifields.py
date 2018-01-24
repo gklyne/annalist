@@ -71,7 +71,7 @@ class RefMultifieldTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Support methods
@@ -188,7 +188,7 @@ class RefMultifieldTest(AnnalistTestCase):
             { "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Repeat image reference"
             , "rdfs:comment":               "Repeat image reference field comment"
-            , "annal:field_render_type":    "RepeatGroupRow"
+            , "annal:field_render_type":    "Group_Seq_Row"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_value_type":     "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"

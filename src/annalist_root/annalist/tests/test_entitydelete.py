@@ -58,7 +58,7 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections") #@@checkme@@
         return
 
     def test_CollectionActionViewTest(self):

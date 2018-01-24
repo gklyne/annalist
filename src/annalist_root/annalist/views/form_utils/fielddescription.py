@@ -19,7 +19,7 @@ from annalist.identifiers   import RDFS, ANNAL
 from annalist.exceptions    import Annalist_Error, EntityNotFound_Error, UnexpectedValue_Error
 from annalist.util          import extract_entity_id
 
-from annalist.models.recordfield            import RecordField
+# from annalist.models.recordfield            import RecordField
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
@@ -432,10 +432,12 @@ def field_description_from_view_field(collection, field, view_context=None, fiel
     field_ids_seen  field ids expanded so far, to check for recursive reference.
     """
     field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
-    recordfield = RecordField.load(collection, field_id, altscope="all")
+    # recordfield = RecordField.load(collection, field_id, altscope="all")
+    recordfield = collection.get_field(field_id)
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
-        recordfield = RecordField.load(collection, "Field_missing", altscope="all")
+        # recordfield = RecordField.load(collection, "Field_missing", altscope="all")
+        recordfield = collection.get_field("Field_missing")
         recordfield[RDFS.CURIE.label] = message.MISSING_FIELD_LABEL%{ 'id': field_id }
 
     # If field references group, pull in group details

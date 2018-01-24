@@ -103,7 +103,7 @@ class EntityEditDupFieldTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections") #@@checkme@@
         return
 
     #   -----------------------------------------------------------------------------

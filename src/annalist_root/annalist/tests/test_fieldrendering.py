@@ -66,7 +66,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def _get_repeatgroup_context(self):

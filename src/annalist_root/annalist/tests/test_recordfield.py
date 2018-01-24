@@ -134,7 +134,7 @@ class RecordFieldTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_RecordFieldTest(self):
@@ -302,7 +302,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

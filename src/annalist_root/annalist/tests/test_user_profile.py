@@ -45,7 +45,7 @@ class UserProfileTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # @@checkme@@ resetSitedata(scope="all")
         return
 
     def test_UserProfileTest(self):

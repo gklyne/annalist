@@ -234,7 +234,7 @@ class LinkedRecordTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Utility functions

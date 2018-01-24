@@ -154,7 +154,7 @@ class ImageReferenceTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Utility functions

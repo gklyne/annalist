@@ -30,9 +30,7 @@ from annalist.util                      import (
 
 import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids, CONFIG_PERMISSIONS
-from annalist.models.recordtype         import RecordType
 from annalist.models.recordview         import RecordView
-from annalist.models.recordfield        import RecordField
 from annalist.models.recordtypedata     import RecordTypeData
 from annalist.models.entitydata         import EntityData
 

@@ -69,7 +69,7 @@ class FieldDescriptionTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_FieldDescriptionTest(self):

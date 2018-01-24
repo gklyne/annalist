@@ -142,12 +142,12 @@ class EntityInheritListViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

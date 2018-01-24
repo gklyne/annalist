@@ -128,7 +128,7 @@ class CollectionTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_CollectionTest(self):
@@ -455,7 +455,7 @@ class CollectionEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_CollectionEditViewTest(self):

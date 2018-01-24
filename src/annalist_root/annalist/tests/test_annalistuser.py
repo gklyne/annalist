@@ -101,7 +101,7 @@ class AnnalistUserTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_AnnalistUserTest(self):
@@ -224,7 +224,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     #   -----------------------------------------------------------------------------

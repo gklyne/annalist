@@ -152,7 +152,7 @@ class Collection(Entity):
         """
         Return parent object for accessing site data.
         """
-        return self._parentcoll
+        return self._parentsite.site_data_collection()
 
     # Alternate collections handling
 
@@ -522,7 +522,7 @@ class Collection(Entity):
 
         type_id     local identifier for the type to remove.
 
-        Returns a non-False status code if the type is not removed.
+        Returns None on success, or a non-False status code if the type is not removed.
         """
         s = RecordType.remove(self, type_id)
         return s
@@ -587,7 +587,7 @@ class Collection(Entity):
 
         view_id     local identifier for the view to remove.
 
-        Returns a non-False status code if the view is not removed.
+        Returns None on success, or a non-False status code if the view is not removed.
         """
         s = RecordView.remove(self, view_id)
         return s
@@ -655,7 +655,7 @@ class Collection(Entity):
 
         list_id     local identifier for the list to remove.
 
-        Returns a non-False status code if the list is not removed.
+        Returns None on success, or a non-False status code if the list is not removed.
         """
         s = RecordList.remove(self, list_id)
         return s
@@ -819,7 +819,7 @@ class Collection(Entity):
 
         field_id     local identifier for the field to remove.
 
-        Returns a non-False status code if the field is not removed.
+        Returns None on success, or a non-False status code if the field is not removed.
         """
         s = RecordField.remove(self, field_id)
         return s

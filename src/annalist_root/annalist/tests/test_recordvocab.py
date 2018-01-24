@@ -121,7 +121,7 @@ class RecordVocabTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_RecordVocabTest(self):
@@ -222,7 +222,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # @@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

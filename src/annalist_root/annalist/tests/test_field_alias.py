@@ -104,7 +104,7 @@ class FieldAliasTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     def test_view_field_alias(self):

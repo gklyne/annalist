@@ -37,11 +37,8 @@ from annalist.models.entitytypeinfo import (
     )
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
-from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.recordlist     import RecordList
 from annalist.models.recordview     import RecordView
-from annalist.models.recordfield    import RecordField
-from annalist.models.recordvocab    import RecordVocab
 from annalist.models.annalistuser   import default_user_id, unknown_user_id
 
 from annalist.views.confirm         import ConfirmView, dict_querydict

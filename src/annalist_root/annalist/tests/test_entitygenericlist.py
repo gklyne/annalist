@@ -136,7 +136,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     #   -----------------------------------------------------------------------------

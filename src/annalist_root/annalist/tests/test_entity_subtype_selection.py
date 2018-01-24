@@ -125,7 +125,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     #   -----------------------------------------------------------------------------

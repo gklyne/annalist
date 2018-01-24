@@ -92,7 +92,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     #   -----------------------------------------------------------------------------

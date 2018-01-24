@@ -38,7 +38,8 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Update collection to use field cache
     - [x] Update cache flush logic where used
     - [x] Test suite provide default property URIs 
-    - [ ] RecordField accesses should use collecton cache
+    - [x] RecordField accesses should use collecton cache
+    - [x] Cacheing site values separately: no need to flush as they don't change
     - [ ] Field definition to include superproperty URI list
     - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
     - [ ] Add "define subproperty" task button to field definition.
