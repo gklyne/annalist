@@ -486,6 +486,7 @@ def context_bind_fields(context):
     so that all field values can be tested.
     """
     # bound_context = Context(context.flatten()) # Doesn't work for ContextList used for tests
+    # Flatten values from context
     context_vals  = {}
     for k in context.keys():
         context_vals[k] = context[k]

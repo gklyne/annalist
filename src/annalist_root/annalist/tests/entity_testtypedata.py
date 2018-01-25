@@ -245,7 +245,7 @@ def recordtype_entity_view_context_data(
             , 'field_name':           'Type_supertype_uris'
             , 'field_value_type':     'annal:Type_supertype_uris'
             , 'field_label':          'Supertype URIs'
-            , 'field_render_type':    'RepeatGroupRow'
+            , 'field_render_type':    'Group_Seq_Row'
             , 'field_value_mode':     'Value_direct'
             , 'field_placement':      get_placement_classes('small:0,12')
             # , 'field_value':        (Supplied separately)

@@ -50,6 +50,8 @@ from entity_testutils       import (
     collection_entity_view_url,
     collection_create_values,
     create_test_user,
+    render_select_options,
+    render_choice_options,
     context_view_field,
     context_bind_fields,
     check_context_field, check_context_field_value,
@@ -439,10 +441,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
             default_label_esc="",
             default_comment_esc=context_view_field(r.context, 2, 0)['field_value'],
-            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip1=context_view_field(r.context,  0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context,  1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context,  2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context,  3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context,  4, 0)['field_tooltip'],
+            tooltip6col1=context_view_field(r.context, 5, 0)['field_tooltip'],
+            tooltip6col2=context_view_field(r.context, 5, 1)['field_tooltip'],
+            tooltip7=context_view_field(r.context,  6, 0)['field_tooltip'],
             button_save_tip="Save values and return to previous view.",
             button_view_tip="Save values and switch to entity view.",
             button_cancel_tip="Discard unsaved changes and return to previous view.",
@@ -522,7 +528,151 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow5a = """
+        # Supertypes
+        type_supertype_uris_placeholder = (
+            "(Supertype URIs or CURIEs)"
+            )
+        formrow5head = """
+            <div class="small-12 columns" title="%(tooltip5)s">
+              <div class="grouprow row">
+                <div class="group-label small-12 medium-2 columns">
+                  <span>Supertype URIs</span>
+                </div>
+                <div class="small-12 medium-10 columns hide-for-small-only">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 columns">
+                          <span>Supertype URI</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow5tail = """
+            <div class="small-12 columns">
+              <div class="grouprow row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Type_supertype_uris__remove"
+                             value="Remove supertype URI" />
+                      <input type="submit" name="Type_supertype_uris__add"
+                             value="Add supertype URI" />
+                      <input type="submit" name="Type_supertype_uris__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Type_supertype_uris__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        # Default view, list
+        formrow6col1 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip6col1)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default view</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_select_options(
+                    "Type_view", "Default view",
+                    [ FieldChoice('', label="(view id)") ] + get_site_views_linked("testcoll"),
+                    "_view/Default_view", placeholder="(view id)")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow6col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip6col2)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default list</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_select_options(
+                    "Type_list", "Default list",
+                    [ FieldChoice('', label="(list id)") ] + get_site_lists_linked("testcoll"),
+                    "_list/Default_list", placeholder="(list id)")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        # Field aliases...
+        type_aliases_placeholder = (
+            "(field aliases)"
+            )
+        formrow7head = """
+            <div class="small-12 columns" title="%(tooltip7)s">
+              <div class="grouprow row">
+                <div class="group-label small-12 medium-2 columns">
+                  <span>Field aliases</span>
+                </div>
+                <div class="small-12 medium-10 columns hide-for-small-only">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 medium-6 columns">
+                          <span>Field alias name</span>
+                        </div>
+                        <div class="view-label col-head small-12 medium-6 columns">
+                          <span>Field alias value</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow7tail = """
+            <div class="small-12 columns">
+              <div class="grouprow row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Type_aliases__remove"
+                             value="Remove alias" />
+                      <input type="submit" name="Type_aliases__add"
+                             value="Add alias" />
+                      <input type="submit" name="Type_aliases__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Type_aliases__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        formrow8a = """
             <div class="%(space_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -531,7 +681,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=2)
-        formrow5b = """
+        formrow8b = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
@@ -542,7 +692,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
-        formrow5c = """
+        formrow8c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
@@ -560,13 +710,19 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info(r.content)   #@@
-        self.assertContains(r, formrow1, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5a, html=True)
-        self.assertContains(r, formrow5b, html=True)
-        self.assertContains(r, formrow5c, html=True)
+        self.assertContains(r, formrow1,     html=True)
+        self.assertContains(r, formrow2,     html=True)
+        self.assertContains(r, formrow3,     html=True)
+        self.assertContains(r, formrow4,     html=True)
+        self.assertContains(r, formrow5head, html=True)
+        self.assertContains(r, formrow5tail, html=True)
+        self.assertContains(r, formrow6col1, html=True)
+        self.assertContains(r, formrow6col2, html=True)
+        self.assertContains(r, formrow7head, html=True)
+        self.assertContains(r, formrow7tail, html=True)
+        self.assertContains(r, formrow8a,    html=True)
+        self.assertContains(r, formrow8b,    html=True)
+        self.assertContains(r, formrow8c,    html=True)
         return
 
     def test_get_new(self):
