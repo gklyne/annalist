@@ -351,7 +351,7 @@ site_bibentry_fields = (
     , FieldChoice("_field/Bib_year",                   label="Year"                )
     ])
 
-site_field_fields = (
+site_defined_field_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Field_default",              label="Default value"       )
     , FieldChoice("_field/Field_entity_type",          label="Entity type"         )
@@ -369,11 +369,18 @@ site_field_fields = (
     , FieldChoice("_field/Field_repeat_label_add",     label="Add value label"     )
     , FieldChoice("_field/Field_repeat_label_delete",  label="Remove value label"  )
     , FieldChoice("_field/Field_restrict",             label="Value restriction"   )
+    , FieldChoice("_field/Field_superproperty_uri",    label="Superproperty URI"   )
+    , FieldChoice("_field/Field_superproperty_uris",   label="Superproperty URIs"  )
     , FieldChoice("_field/Field_tooltip",              label="Tooltip"             )
     , FieldChoice("_field/Field_typeref",              label="Refer to type"       )
     , FieldChoice("_field/Field_value_mode",           label="Value mode"          )
     , FieldChoice("_field/Field_value_type",           label="Value type"          )
     ])  
+
+site_field_fields = (
+    [ fc for fc in site_defined_field_fields if 
+      fc.id not in {"_field/Field_superproperty_uri"} ]
+    )
 
 site_field_subfield_fields = (
     [ FieldChoice("_field/_initial_values")
@@ -384,7 +391,7 @@ site_field_subfield_fields = (
 
 site_field_all_fields = (
     [ FieldChoice("_field/_initial_values")] 
-    + sorted(site_field_fields[1:] + site_field_subfield_fields[1:])
+    + sorted(site_defined_field_fields[1:] + site_field_subfield_fields[1:])
     )
 
 site_defined_group_fields = (

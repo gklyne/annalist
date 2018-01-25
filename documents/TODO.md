@@ -40,11 +40,12 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Test suite provide default property URIs 
     - [x] RecordField accesses should use collecton cache
     - [x] Cacheing site values separately: no need to flush as they don't change
-    - [ ] Field definition to include superproperty URI list
-    - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
+    - [.] Field definition to include superproperty URI list
+    - [ ] When selecting data element to display in a field, look for subproperties as well as the specified field property.
     - [ ] Add "define subproperty" task button to field definition.
     - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used)
     - [ ] 'superproperty_uri' details in generated context (collection type, etc.)  Or is this picked up automatically when there are new `superpropery_uris` field definitions?
+    - [ ] Are per-type field aliases still needed?
 - [ ] Create FAQ for defining subproperties
 
 (Sub-release?)

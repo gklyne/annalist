@@ -1044,6 +1044,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Field_subfield_sel",        ["Field_subfield_sel",
                                                                           "Optional/new entity reference", 
                                                                                             "annal:Field"            ] ]
+            , [ "_field/Field_superproperty_uri",   ["Field_superproperty_uri",
+                                                                          "Identifier",     "annal:Identifier"       ] ]
+            , [ "_field/Field_superproperty_uris",  ["Field_superproperty_uris",
+                                                                          "Field group sequence as table",
+                                                                                            "annal:Field_superproperty_uri" ] ]
             , [ "_field/Field_tooltip",             ["Field_tooltip",     "Multiline text", "annal:Longtext"         ] ]
             , [ "_field/Field_typeref",             ["Field_typeref",     "Optional/new entity reference", 
                                                                                             "annal:EntityRef"        ] ]
@@ -1153,6 +1158,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_label"
             , "_field/Field_help"
             , "_field/Field_property"
+            # , "_field/Field_superproperty_uri"
+            # , "_field/Field_superproperty_uris"
             , "_field/Field_placement"
             , "_field/Field_value_type"
             , "_field/Field_value_mode"
