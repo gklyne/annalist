@@ -38,13 +38,12 @@ from annalist.views.uri_builder         import uri_base, uri_with_params
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.responseinfo        import ResponseInfo
 from annalist.views.generic             import AnnalistGenericView
-
-from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 
-from annalist.views.fields.bound_field  import bound_field, get_entity_values
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
+from annalist.views.fields.bound_field          import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -370,7 +369,6 @@ class GenericEntityEditView(AnnalistGenericView):
         Creates an entity/value map table in the current object incorporating
         information from the form field definitions for an indicated view.
         """
-        # Locate and read view description
         entitymap = EntityValueMap(baseentityvaluemap)
         # log.debug(
         #     "GenericEntityEditView.get_view_entityvaluemap entityview: %r"%

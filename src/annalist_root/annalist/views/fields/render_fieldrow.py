@@ -43,7 +43,7 @@ view_fieldrow = (
         # """@@  field: {{field}}\n"""+
         # """@@  row_bound_fields: {{row_bound_fields}}\n"""+
         """    {% for f in row_bound_fields %}"""+
-        """      {% include f.field_render_mode with field=f %}"""+
+        """      {% include f.render.mode with field=f %}"""+
         """    {% endfor %}"""+
         """  </div>\n"""+
         """</div>\n"""
@@ -61,7 +61,7 @@ view_fieldrow = (
 #         """<div class="small-12 columns">\n"""+
 #         """  <div class="view-fieldrow row">\n"""+
 #         """    {% for f in row_bound_fields %}"""+
-#         """      {% include f.field_render_mode with field=f %}"""+
+#         """      {% include f.render.mode with field=f %}"""+
 #         """    {% endfor %}"""+
 #         """  </div>\n"""+
 #         """</div>\n"""

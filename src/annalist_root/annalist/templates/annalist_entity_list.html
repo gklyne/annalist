@@ -47,7 +47,7 @@
               <div class="view-label small-12 medium-3 columns">
                 <span>List</span>
               </div>
-              {% include field.field_render_edit %}
+              {% include field.render.edit %}
             </div>
           </div>
           {% endwith %}
@@ -96,7 +96,7 @@
         <!-- - - - - -  table data - - - - - -->
         <div class="table row">
           <div class="small-12 columns">
-            {% include List_rows.field_render_view with field=List_rows %}
+            {% include List_rows.render.view with field=List_rows %}
           </div>
         </div>
         <!-- - - - - -  table ends - - - - - -->

@@ -6,7 +6,7 @@ and generates context values to drive rendering of that field in a form.
 The template used is expected to iterate over the fields and render each one, e.g.:
 
     {% for field in fields %}
-    {% include field.field_render_label_edit %}
+    {% include field.render.label_edit %}
     {% endfor %}
 
 The iterated values of `field` provide additional values for the field rendering template,
@@ -84,7 +84,14 @@ class FieldValueMap(object):
             # log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             # log.info("@@ FieldValueMap.map_form_to_entity e:%s, i:%s"%(self.e, self.i))
             v = formvals.get(self.i, None)
-            self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
+            k = self.e
+            # if k not in entityvals:
+            #     # If value is defined using subproperty URI, use that instead
+            #     for sp in self.f.get_field_subproperty_uris():
+            #         if sp in entityvals:
+            #             k = sp
+            #             break
+            self.f['field_value_mapper'].decode_store(v, entityvals, k)
         return entityvals
 
     def map_form_to_entity_repeated_item(self, formvals, entityvals, prefix):

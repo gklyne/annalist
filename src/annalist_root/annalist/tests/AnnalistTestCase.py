@@ -16,7 +16,7 @@ from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/top
 from annalist.models.entitytypeinfo             import EntityTypeInfo
 
 from annalist.views.fields.bound_field          import bound_field
-from annalist.views.form_utils.fielddescription import FieldDescription
+from annalist.views.fields.field_description    import FieldDescription
 
 class AnnalistTestCase(TestCase):
     """

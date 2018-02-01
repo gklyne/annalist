@@ -37,47 +37,33 @@ from annalist.views.fields.render_fieldvalue    import (
 col_head_view = (
     { 'head':
         """\n"""+
-        """<!-- views.fields.render_ref_multifield.col_head_view head (mode:{{render_mode}}) -->\n"""
+        """<!-- views.fields.render_ref_multifield.col_head_view head (mode: {{render_mode}}) -->\n"""
     , 'body':
-        """<!-- views.fields.render_ref_multifield.col_head_view body (mode:{{render_mode}}) -->\n"""+
+        """<!-- views.fields.render_ref_multifield.col_head_view body (mode: {{render_mode}}) -->\n"""+
         """<div class="view-grouprow col-head row">\n"""+
         """  {% for f in group_bound_fields %}"""+
-        """    {% include f.field_render_mode with field=f %}"""+
+        """    {% include f.render.mode with field=f %}"""+
         """  {% endfor %}"""+
-        """</div>\n"""
+        """</div>\n"""+
+        """<!-- views.fields.render_ref_multifield.col_head_view body (end) -->\n"""+
+        """"""
     , 'tail':
-        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode:{{render_mode}}) -->\n"""
+        """<!-- views.fields.render_ref_multifield.col_head_view tail (mode: {{render_mode}}) -->\n"""
     })
 
 view_multifield = (
     { 'head':
         """\n"""+
-        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->\n"""
+        """<!-- views.fields.render_ref_multifield.view_multifield head (mode: {{render_mode}}) -->\n"""
     , 'body':
-        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->\n"""+
+        """<!-- views.fields.render_ref_multifield.view_multifield body (mode: {{render_mode}}) -->\n"""+
         """<div class="view-grouprow row">\n"""+
         """  {% for f in group_bound_fields %}"""+
-        """    {% include f.field_render_mode with field=f %}"""+
+        """    {% include f.render.mode with field=f %}"""+
         """  {% endfor %}"""+
         """</div>\n"""
     , 'tail':
-        """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
-        """
-    })
-
-_alt_view_multifield = (
-    { 'head':
-        """\n"""+
-        """<!-- views.fields.render_ref_multifield.view_multifield head (mode:{{render_mode}}) -->\n"""
-    , 'body':
-        """<!-- views.fields.render_ref_multifield.view_multifield body (mode:{{render_mode}}) -->\n"""+
-        """<div class="view-grouprow row">\n"""+
-        """  {% for f in group_bound_fields %}"""+
-        """    {% include f.field_render_colview with field=f %}"""+
-        """  {% endfor %}"""+
-        """</div>\n"""
-    , 'tail':
-        """<!-- views.fields.render_ref_multifield.view_multifield tail (mode:{{render_mode}})-->
+        """<!-- views.fields.render_ref_multifield.view_multifield tail (mode: {{render_mode}}) -->
         """
     })
 
@@ -129,13 +115,13 @@ class RenderMultiFields_label(object):
             context['field']
             )
     try:
-        # log.info("RenderMultiFields_label.render field: %r"%(context['field'],))
+        # log.info("@@@ RenderMultiFields_label.render field: %r"%(context['field'],))
         # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
-        group_fields = [ f for f in group_field_descs ]
+        group_fields = [ bound_field(f, {}) for f in group_field_descs ]
         group_dict = (
             { 'group_bound_fields':  group_fields
             })
-        # log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
+        log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
         with context.push(group_dict):
             response_parts = [self._template_head.render(context)]
             response_parts.append(self._template_body.render(context))

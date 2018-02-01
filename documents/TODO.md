@@ -42,10 +42,74 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Cacheing site values separately: no need to flush as they don't change
     - [x] Field definition to include superproperty URI list
     - [ ] When selecting data element to display in a field, look for subproperties as well as the specified field property.
+        - [.] Add subproperty discovery logic to bound_field
+            - Logic added but not tested
+        - It appears that the logic for this should be in 'bound_field'
+        - All other code seems to be concerned with creating a bound field object.
+        - The collection (and hence field cache) is available via the bound FieldDescription.
+        - What about saving field value?: need to remember property URI used?
+            - fieldvaluemap.map_form_to_entity passes property URI to value mapper decode_store method
+            - fieldvaluemap.map_entity_to_context just passes the field description to bound_field constructor.  (Level imbalance here?)
+    - [.] Review abstractions and interactions around:
+        - [x] bound_field, add:
+            - [x] 'render' (ref field_renderer)
+            - [x] 'value_mapper'
+        - [x] New field_renderer object accessed by bound_field for field rendering
+        - [.] Rework field rendering logic to use new structure
+        - [.] Remove rendering methods from field description.
+        - [ ] bound_field access to FieldDecription: use methods not dictionary
+        - [ ] Eliminate render mode logic in render_fieldvalue (now handled with less complication by field_renderer)?
+        - bound_field - field-directed accesses and updates appplied to a specific entity
+        - FieldDefinition - definition of field, bound to collection
+            - also accessible as a dictionary (rather breaks abstraction)
+            - currently has logic spread unevenly over bound_field and FieldDefinition
+        - EntityValueMap 
+            - Handles entity->context and form->entity mapping for a complete entity view.
+            - methods:
+                - add_map_entry
+                - map_value_to_context
+                - map_form_data_to_values
+            - invoked by entitiedit via get_view_entityvaluemap
+            - invoked by entitylist via get_list_entityvaluemap
+                - (has some ad-hoc logic to construct a list definition)
+        - FieldValueMap, FieldListValueMap, FieldRowValueMap, RepeatValuesMap, SimpleValueMap 
+            - Handles entity->context and form->entity mapping for parts of an entity view
+            - methods: 
+                - map_entity_to_context
+                - map_form_to_entity
+                - map_form_to_entity_repeated_item
+                - get_structure_description (for diagnostics only?)
+            - module 'fieldlistvaluemap' also has logic for organizing fields in rows
+        - Dependency graph, avoiding loops:
+            -- FieldDescription
+            -> FieldRenderer
+            -> find_renderers
+            -> render_repeatgroup.RenderRepeatGroup
+            -> render_fieldvalue, bound_field
+            - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
+        - It seems I want to remove renderer references from field descriptions to bound_field.  Which of the following refer to via bare Field Descriptions???
+            - field_render_label used by several internal and external templates
+            - field_render_view used by annalist_entity_list.html and template in render_repeatgroup.py
+            - field_render_edit used by annalist_entity_list.html
+            - field_render_label_view used by annalist_entity_view.html and template in  render_repeatgroup.py
+            - field_render_label_edit used by 4 internal and external templates
+            - field_render_colhead used by 3 templates in render_repeatgroup.py
+            - field_render_colhead_view used by 1 template in render_repeatgroup.py
+            - field_render_colhead_edit used by 1 template in render_repeatgroup.py
+            - field_render_colview used by templates in render_ref_multifields.py and render_repeatgroup.py
+            - field_render_coledit used by 1 template in render_repeatgroup.py
+            - field_render_mode used by template in render_fieldrow.py and 2 in render_ref_multifields.py
+            - field_value_mapper used by fieldvaluemap.py
+            ---
+            - render_repeatgroup.py :133 :199 :274 :302
+
+    - [ ] Add test case for subproperty access
     - [ ] Add "define subproperty" task button to field definition.
-    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used)
+    - [ ] Add test case for "define subproperty" task button
+    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used?)
     - [ ] 'superproperty_uris' details in generated context (collection type, etc.)  Or is this picked up automatically when there are new `superpropery_uris` field definitions?
     - [ ] Are per-type field aliases still needed?
+- [ ] Add property hierarchy to CIDOC CRM definitions
 - [ ] Create FAQ for defining subproperties
 
 (Sub-release?)

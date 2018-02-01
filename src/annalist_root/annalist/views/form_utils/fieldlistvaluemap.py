@@ -19,7 +19,7 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
 from annalist.views.form_utils.fieldrowvaluemap import FieldRowValueMap
 from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
 from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap

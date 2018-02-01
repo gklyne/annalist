@@ -542,7 +542,7 @@ class RefMultifieldTest(AnnalistTestCase):
               <span>Repeat image reference</span>
             </div>
             """
-        # Note two grou wrappers here: one for repeat and one for multifield ref...
+        # Note two group wrappers here: one for repeat and one for multifield ref...
         formrow2b = """
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">

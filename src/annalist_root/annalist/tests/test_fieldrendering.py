@@ -24,8 +24,7 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
 from annalist.models.collection         import Collection
 
-from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
-
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup

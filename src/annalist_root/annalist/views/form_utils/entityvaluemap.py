@@ -85,7 +85,7 @@ class EntityValueMap(object):
         Map data from form response to entity data.  
 
         Returns a deep copy of the supplied `entityvals` updated with values from
-        then form.  Values not mentioned in the form data are not updated.
+        the form.  Values not mentioned in the form data are not updated.
         """
         # log.debug("map_form_data_to_values: form_data %r, entityvals %r"%(form_data, entityvals))
         values = copy.deepcopy(entityvals) or {}

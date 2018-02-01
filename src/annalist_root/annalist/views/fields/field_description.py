@@ -23,6 +23,7 @@ from annalist.util          import extract_entity_id
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entityfinder           import EntityFinder
 
+from annalist.views.fields.field_renderer   import FieldRenderer
 from annalist.views.fields.find_renderers   import (
     is_repeat_field_render_type,
     get_label_renderer,
@@ -66,7 +67,6 @@ class FieldDescription(object):
         various field attributes.
 
         collection      is a collection from which data is being rendered.
-                        Used when generating enumerated values.
         recordfield     is a RecordField value or dictionary containing details of
                         the field for which a descriptor is constructed.
         view_context    is a dictionary of additional values that may be used in assembling
@@ -124,18 +124,8 @@ class FieldDescription(object):
             , 'group_delete_label':         None
             , 'group_field_list':           None
             , 'group_field_descs':          None
-            , 'field_render_label':         get_label_renderer(        field_render_type, field_value_mode)
-            , 'field_render_view':          get_view_renderer(         field_render_type, field_value_mode)
-            , 'field_render_edit':          get_edit_renderer(         field_render_type, field_value_mode)
-            , 'field_render_label_view':    get_label_view_renderer(   field_render_type, field_value_mode)
-            , 'field_render_label_edit':    get_label_edit_renderer(   field_render_type, field_value_mode)
-            , 'field_render_colhead':       get_col_head_renderer(     field_render_type, field_value_mode)
-            , 'field_render_colhead_view':  get_col_head_view_renderer(field_render_type, field_value_mode)
-            , 'field_render_colhead_edit':  get_col_head_edit_renderer(field_render_type, field_value_mode)
-            , 'field_render_colview':       get_col_view_renderer(     field_render_type, field_value_mode)
-            , 'field_render_coledit':       get_col_edit_renderer(     field_render_type, field_value_mode)
-            , 'field_render_mode':          get_mode_renderer(         field_render_type, field_value_mode)
-            , 'field_value_mapper':         get_value_mapper(field_render_type)
+            , 'field_renderer':             FieldRenderer(field_render_type, field_value_mode)
+            , 'field_value_mapper':         get_value_mapper(field_render_type) # Used by fieldvaluemap.py
             })
         self._field_suffix_index  = 0    # No dup
         self._field_suffix        = ""
@@ -234,6 +224,12 @@ class FieldDescription(object):
         properties[1].add(self._field_desc['field_property_uri'])
         return properties
 
+    def get_field_id(self):
+        """
+        Returns the field identifier
+        """
+        return self._field_desc['field_id']
+
     def get_field_name(self):
         """
         Returns form field name to be used for the described field
@@ -261,6 +257,14 @@ class FieldDescription(object):
         Returns form field property URI to be used for the described field
         """
         return self._field_desc['field_property_uri']
+
+    def get_field_subproperty_uris(self):
+        """
+        Returns list of possible subproperty URIs for the described field
+        """
+        property_uri     = self.get_field_property_uri()
+        subproperty_uris = self._collection.cache_get_subproperty_uris(property_uri)
+        return subproperty_uris
 
     def group_ref(self):
         """
@@ -353,8 +357,8 @@ class FieldDescription(object):
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
             "  , 'type_ref': %r"%(self._field_desc["field_ref_type"])+
-            "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
-            "  , 'group_list': %r"%(self._field_desc["group_field_list"])+
+            # "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
+            # "  , 'group_list': %r"%(self._field_desc["group_field_list"])+
             # "  , 'group_descs': %r"%(self._field_desc["group_field_descs"])+
             "  })"
             )

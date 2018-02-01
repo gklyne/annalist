@@ -32,10 +32,10 @@ from annalist.views.uri_builder     import (
     uri_quote_param,
     uri_params, uri_with_params
     )
+from annalist.views.fields.field_description    import FieldDescription
 from annalist.views.fields.bound_field          import bound_field, get_entity_values
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
-from annalist.views.form_utils.fielddescription import FieldDescription
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir

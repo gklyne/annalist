@@ -81,7 +81,7 @@ class UriLinkRenderingTest(FieldRendererTestSupport):
                 )
         return
 
-    def test_RenderUriLinkValuePerefix(self):
+    def test_RenderUriLinkValuePrefix(self):
         # Test link rendering with prefix expansion
 
         def expect_render(curietext, linktext, labeltext):

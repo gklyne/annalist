@@ -42,23 +42,14 @@ label_template = (
     """<span>{{field.field_label|default:"&nbsp;"}}</span>"""
     )
 
-_unused_col_head_template = (
-    """<div class="view-label col-head {{field.field_placement.field}}">"""+
-    """  <span>{{field.field_label}}</span>"""+
-    """</div>"""
-    )
-
 no_tooltip   = ""
 with_tooltip = "{{field.field_tooltip_attr|safe}}"
 
 # Renderer wrapper templates
 
-# @@TODO: change label rendering to use wrapper via TemplateWrapValueRenderer
-#         save renderer for label in class init, based on (reduced) label_template (above)
-
 # Wrap field label
 label_wrapper_template = ( 
-    # """<!-- label_wrapper_template ({{field.field_render_type}}) -->"""+
+    # """<!-- label_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
     """<div class="view-label {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     "</div>"""
@@ -67,7 +58,7 @@ label_wrapper_template = (
 # Wrap bare value (e.g. column value)
 def value_wrapper_template(tooltip):
     return ( 
-        # """<!-- value_wrapper_template ({{field.field_render_type}}) -->"""+
+        # """<!-- value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
         """<div class="view-value {{field.field_placement.field}}"%s>\n"""+
         """  {%% include value_renderer %%}\n"""+
         """</div>"""
@@ -79,7 +70,7 @@ edit_value_wrapper_template = value_wrapper_template(with_tooltip)
 # Wrap value and include label
 def label_value_wrapper_template(tooltip):
     return (
-        # """<!-- label_value_wrapper_template ({{field.field_render_type}}) -->"""+
+        # """<!-- label_value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
         """<div class="{{field.field_placement.field}}"%s>\n"""+
         """  <div class="row view-value-row">\n"""+
         """    <div class="view-label {{field.field_placement.label}}">\n"""+
@@ -97,7 +88,7 @@ label_edit_value_wrapper_template = label_value_wrapper_template(with_tooltip)
 
 # Wrap field label with column heading styling
 col_head_wrapper_template = ( 
-    # """<!-- col_head_wrapper_template ({{field.field_render_type}}) -->"""+
+    # """<!-- col_head_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
     """<div class="view-label col-head {{field.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
@@ -106,7 +97,7 @@ col_head_wrapper_template = (
 # Wrap value with column value styling; include label on small displays only
 def col_label_value_wrapper_template(tooltip):
     return ( 
-        # """<!-- col_label_value_wrapper_template ({{field.field_render_type}}) -->"""+
+        # """<!-- col_label_value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
         """<div class="{{field.field_placement.field}}"%s>\n"""+
         """  <div class="row show-for-small-only">\n"""+
         """    <div class="view-label small-12 columns">\n"""+
@@ -139,14 +130,14 @@ class WrapValueRenderer(object):
         try:
             return self.value_renderer.render(context)
         except Exception as e:
-            log.exception("Exception in TemplateWrapValueRenderer.value_renderer")
+            log.exception("Exception in WrapValueRenderer.value_renderer")
             ex_type, ex, tb = sys.exc_info()
             traceback.print_tb(tb)
             response_parts = (
-                ["Exception in TemplateWrapValueRenderer.value_renderer"]+
+                ["Exception in WrapValueRenderer.value_renderer"]+
                 [repr(e)]+
                 traceback.format_exception(ex_type, ex, tb)+
-                ["***TemplateWrapValueRenderer.value_renderer***"]
+                ["***WrapValueRenderer.value_renderer***"]
                 )
             del tb
             raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
@@ -214,7 +205,7 @@ class RenderFieldValue(object):
     Renderer constructor for an entity value field.
   
     Given simple rendering templates for a display and editing an entity value
-    fields, this class will construct new rendferers for using those values in
+    fields, this class will construct new renderers for using those values in
     different contexts:
   
       * label_view: labeled value display, not editable
@@ -228,7 +219,6 @@ class RenderFieldValue(object):
 
     The various renderers returned require `context['field']` to contain a 
     `bound_field` value corresponding to the value and field to be displayed.
-    (In the case of the `label` renderer, the field description is enough.)
     """
 
     def __init__(self, render_type,
@@ -249,14 +239,13 @@ class RenderFieldValue(object):
                         displaying column headings when viewing an entity.
         col_head_edit_renderer
                         if supplied, overrides the renderer normally used for 
-                        displaying column headings when viewing an entity.
+                        displaying column headings when editing an entity.
         view_template   is a template string that formats a field value
         edit_template   is a template string that formats a field value in a
                         form control that allows the value to be edited
         view_file       is the name of a template file that formats a field value
         edit_file       is the name of a template file that formats a field value
                         in an editable form control
-
 
         Methods provided return composed renderers for a variety of contexts.
         """
@@ -318,6 +307,7 @@ class RenderFieldValue(object):
         Returns a renderer object that renders whatever is required for the 
         current value of "render_mode" in the view context.
         """
+        #@@TODO: remove this and add simplified logic in bound_renderer
         if self._renderers is None:
             # Create dictionary of renderers for render_mode
             self._renderers = (
@@ -513,6 +503,7 @@ def get_template(templatefile, failmsg="no template filename supplied"):
 
 # Helper functions for accessing values from context
 
+# @@TODO: this seems redundant, and only used once.  Use context.get()?
 def get_context_value(context, key, default):
     if key in context:
         return context[key]
