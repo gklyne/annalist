@@ -329,19 +329,6 @@ def get_col_view_renderer(field_render_type, field_value_mode):
     log.debug("get_col_view_renderer: %s not found"%field_render_type)
     return "field/annalist_item_none.html"
 
-def get_mode_renderer(field_render_type, field_value_mode):
-    """
-    Returns a renderer for the indicated render type that renders a field using the
-    current render_mode (used for nested renderers which can be invoked in different 
-    view contexts).
-    """
-    renderer = get_field_base_renderer(field_render_type)
-    if not renderer:
-        # Default to simple text for unknown renderer type
-        log.debug("get_mode_renderer: %s not found"%field_render_type)
-        renderer = get_field_base_renderer("Text")
-    return renderer.render_mode()
-
 def get_value_mapper(field_render_type):
     """
     Returns a value mapper class instance (with encode and decode methods) 

@@ -232,6 +232,11 @@ def recordfield_entity_view_context_data(
         label="small-4 columns",
         value="small-8 columns"
         )
+    # @@TODO: re-work context structure used for testing so that field definitions present
+    #         as an included dictionary, not as direct dictionary elements of bound_field.
+    #         I'm not sure how extensive a re-work this would be, but there's an opportunity
+    #         here to rationalize the test framework; e.g. define field desription values once
+    #         and re-use, rather than duplicate values here.
     context_dict = (
         { "title":              "%s - Field definition - Collection %s"%(field_label, coll_id)
         , 'heading':            "Field definition"

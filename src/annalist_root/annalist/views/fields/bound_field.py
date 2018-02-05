@@ -230,7 +230,7 @@ class bound_field(object):
             return self._field_description["field_renderer"]
         elif name == "value_mapper":
             return self._field_description["field_value_mapper"]
-        elif name == "field_description":
+        elif name in ["field_description", "description"]:
             return self._field_description
         elif name == "field_value_key":
             return self._key
@@ -241,12 +241,14 @@ class bound_field(object):
         elif name == "copy":
             return self.__copy__
         # @@TODO: try to eliminate these pass-through references to field_description
-        #         (Prefer explicit reference to '.field_description')
+        #         (Prefer explicit reference to 'field.field_description' or 'field.description')
+        # @@NOTE: the test suite currently assumes field_description values appearing directly as
+        #         members of bound_field; e.g. see entity_testfieldvalue comments about line 235.
         elif name in (
-            [ "row_field_descs"
-            , "View_fields"
-            , "List_fields"
-            , "group_field_descs"
+            [ "row_field_descs"         # render_fieldrow and tests
+            # , "View_fields"
+            # , "List_fields"
+            , "group_field_descs"       # render_ref_multifields, render_repeatgroup, and tests
             , "field_id"
             , "field_name"
             , "field_type"
@@ -265,10 +267,12 @@ class bound_field(object):
             , "field_property_uri"
             , "field_placement"
             , "field_placeholder"
-            , "field_tooltip"
+            # , "field_tooltip"
             , "field_default_value"
             ]):
             return self._field_description.get(name, "@@bound_field.%s@@"%(name))
+        elif name == "test_value_here":
+            assert False, "@@@@ Accessing bound_field.%s"%(name,)
         log.info("@@bound_field[%s] -> %r"%(name, self._field_description.get(name, "@@no field_description["+name+"]")))
         return "@@bound_field.%s@@"%(name)
 
@@ -285,18 +289,13 @@ class bound_field(object):
             for altkey in subproperty_uris:
                 field_val = self._entityvals[altkey]
                 break
-        #@@
-        # Tried without this logic, and the only test to fail was a bound_field doctest.
-        # Apparent intent is to provide default values for entity, but it's not clear if
-        # this predates the default value logic below.
-        # It appears to be used for 'get_view_choices_field' and 'get_list_choices_field'
-        # to insert current display selection.
+        # Allow field value to be provided via `context_extra_values` if not in entity.
+        # (Currently used for 'get_view_choices_field' and 'get_list_choices_field'
+        # to insert current display selection.)
         if field_val is None and self._extras and self._key in self._extras:
             field_val = self._extras[self._key]
-        #@@
+        # If no value present, use default from field definition, or blank value
         if field_val is None:
-            # Return default value, or empty string.
-            # Used to populate form field value when no value supplied, or provide per-field default
             field_val = self._field_description.get('field_default_value', None)
             if field_val is None:
                 field_val = ""

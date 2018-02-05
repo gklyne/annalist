@@ -40,8 +40,6 @@ view_fieldrow = (
         """<!-- views.fields.render_fieldrow.view_fieldrow body (mode:{{render_mode}}) -->\n"""+
         """<div class="small-12 columns">\n"""+
         """  <div class="view-fieldrow row">\n"""+
-        # """@@  field: {{field}}\n"""+
-        # """@@  row_bound_fields: {{row_bound_fields}}\n"""+
         """    {% for f in row_bound_fields %}"""+
         """      {% include f.render.mode with field=f %}"""+
         """    {% endfor %}"""+

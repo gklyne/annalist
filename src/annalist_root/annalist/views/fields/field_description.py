@@ -26,17 +26,6 @@ from annalist.models.entityfinder           import EntityFinder
 from annalist.views.fields.field_renderer   import FieldRenderer
 from annalist.views.fields.find_renderers   import (
     is_repeat_field_render_type,
-    get_label_renderer,
-    get_view_renderer,
-    get_edit_renderer, 
-    get_label_view_renderer,
-    get_label_edit_renderer, 
-    get_col_head_renderer, 
-    get_col_head_view_renderer, 
-    get_col_head_edit_renderer, 
-    get_col_view_renderer,
-    get_col_edit_renderer,
-    get_mode_renderer,
     get_value_mapper
     )
 from annalist.views.fields.render_placement import (

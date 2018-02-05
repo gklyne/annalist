@@ -390,37 +390,6 @@ class RenderRepeatGroup(object):
             del tb
         return "".join(response_parts)
 
-    def render_mode(self):
-        """
-        Returns a renderer object that renders whatever is required for the 
-        current value of "render_mode" in the view context.
-        """
-        return self
-
-    #@@
-    # class RenderModeRepeatGroup(object):
-    #     """
-    #     Render class for a repeated field group that renders according to the "render_mode"
-    #     value in the supplied context.
-    #     """
-    #     def __init__(self, baserenderer):
-    #         self._baserenderer = baserenderer
-    #         return
-    #     def render(self, context):
-    #         """
-    #         Renders a repeat group according to render_mode.
-    #         """
-    #         value_list = context['field']['field_value']
-    #         mode       = context['render_mode']
-    #         if mode in ["col_head", "col_head_view", "col_head_edit"]:
-    #             # Render row headings
-    #         elif mode in ["col_view", "col_edit"]:
-    #             # render row value
-    #         else
-    #             response = self._baserenderer.render(context)
-    #         return response
-    #@@
-
 
 #   ------------------------------------------------------------
 #   Repeat group renderer factory class and functions

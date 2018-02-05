@@ -300,50 +300,6 @@ class RenderFieldValue(object):
             (self._render_type, self._view_renderer, self._edit_renderer)
             )
 
-    # Helpers
-
-    def render_mode(self):
-        """
-        Returns a renderer object that renders whatever is required for the 
-        current value of "render_mode" in the view context.
-        """
-        #@@TODO: remove this and add simplified logic in bound_renderer
-        if self._renderers is None:
-            # Create dictionary of renderers for render_mode
-            self._renderers = (
-                { "view":           self.view
-                , "edit":           self.edit
-                , "label_view":     self.label_view
-                , "label_edit":     self.label_edit
-                , "col_head":       self.col_head
-                , "col_head_view":  self.col_head_view
-                , "col_head_edit":  self.col_head_edit
-                , "col_view":       self.col_view
-                , "col_edit":       self.col_edit
-                })       
-        _renderers = self._renderers
-        class _renderer(object):
-            def __init__(self):
-                pass
-            def render(self, context):
-                try:
-                    m = context['render_mode']
-                    r = _renderers[m]()
-                    return r.render(context)
-                except Exception as e:
-                    log.exception("Exception in render_fieldvalue.render_mode.render")
-                    ex_type, ex, tb = sys.exc_info()
-                    traceback.print_tb(tb)
-                    response_parts = (
-                        ["Exception in render_fieldvalue.render_mode.render"]+
-                        [repr(e)]+
-                        traceback.format_exception(ex_type, ex, tb)+
-                        ["***render_fieldvalue.render_mode.render***"]
-                        )
-                    del tb
-                    return "\n".join(response_parts)
-        return _renderer()
-
     # Template access functions
 
     def label(self):

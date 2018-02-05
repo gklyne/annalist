@@ -12,7 +12,6 @@ log = logging.getLogger(__name__)
 import traceback
 
 from annalist.views.fields.find_renderers   import (
-    is_repeat_field_render_type,
     get_label_renderer,
     get_view_renderer,
     get_edit_renderer, 
@@ -23,7 +22,6 @@ from annalist.views.fields.find_renderers   import (
     get_col_head_edit_renderer, 
     get_col_view_renderer,
     get_col_edit_renderer,
-    get_mode_renderer,
     get_value_mapper
     )
 

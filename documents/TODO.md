@@ -55,9 +55,9 @@ See also: https://www.divio.com/en/blog/documentation/
             - [x] 'render' (ref field_renderer)
             - [x] 'value_mapper'
         - [x] New field_renderer object accessed by bound_field for field rendering
-        - [.] Rework field rendering logic to use new structure
-        - [.] Remove rendering methods from field description.
-        - [ ] bound_field access to FieldDecription: use methods not dictionary
+        - [x] Rework field rendering logic to use new structure
+        - [x] Remove rendering methods from field description.
+        - [.] bound_field access to FieldDecription: use methods not dictionary
         - [ ] Eliminate render mode logic in render_fieldvalue (now handled with less complication by field_renderer)?
         - bound_field - field-directed accesses and updates appplied to a specific entity
         - FieldDefinition - definition of field, bound to collection
