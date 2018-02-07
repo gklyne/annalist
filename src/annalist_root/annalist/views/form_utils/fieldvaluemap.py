@@ -85,12 +85,12 @@ class FieldValueMap(object):
             # log.info("@@ FieldValueMap.map_form_to_entity e:%s, i:%s"%(self.e, self.i))
             v = formvals.get(self.i, None)
             k = self.e
-            # if k not in entityvals:
-            #     # If value is defined using subproperty URI, use that instead
-            #     for sp in self.f.get_field_subproperty_uris():
-            #         if sp in entityvals:
-            #             k = sp
-            #             break
+            if k not in entityvals:
+                # If value is defined using subproperty URI, use that instead
+                for sp in self.f.get_field_subproperty_uris():
+                    if sp in entityvals:
+                        k = sp
+                        break
             self.f['field_value_mapper'].decode_store(v, entityvals, k)
         return entityvals
 
@@ -99,20 +99,16 @@ class FieldValueMap(object):
         Extra helper method used when mapping repeated field items to repeated entity values.
         The field name extracted is constructed using the supplied prefix string.
 
-        Returns None if the prefixed value does not exist, which may be used as a loop
-        termination condition.
-
-        @@TODO: bring this in line with other modules (e.g. FieldListValueMap), i.e.
-        Returns the dictionary of repeated field values found using the supplied prefix
-        (which evaluates as False if fields using the supplied prefix are not found).
+        Returns the supplied entityvals dictionary extended with the new field value
+        found using the supplied prefix.  (If an empty dictionary is supplied, this 
+        evaluates as False if no such field is found.)
         """
         if self.e:
             # log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))
             v = formvals.get(prefix+self.i, None)
             if v is not None:
                 self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
-                return v
-        return None
+        return entityvals
 
     def get_structure_description(self):
         return (

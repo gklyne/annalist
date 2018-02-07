@@ -130,10 +130,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def _create_entity_data(self, entity_id, update="Entity"):
         "Helper function creates entity data with supplied entity_id"
+        type_uri = "test:testtype"
         e = EntityData.create(self.testdata, entity_id, 
             entitydata_create_values(
                 entity_id, update=update, coll_id="testcoll", type_id="testtype",
-                type_uri="test:testtype"
+                type_uri=type_uri, supertype_uris=[type_uri+"/super1", type_uri+"/super2"],
                 )
             )
         return e
@@ -152,7 +153,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_view_url(""), TestHostUri + entity_url("testcoll", type_id, entity_id))
         if type_uri is None:
             type_uri = "test:"+type_id
-        v = entitydata_values(entity_id, type_id=type_id, update=update, type_uri=type_uri)
+        v = entitydata_values(
+            entity_id, type_id=type_id, update=update, 
+            type_uri=type_uri, supertype_uris=[type_uri+"/super1", type_uri+"/super2"]
+            )
         if update_dict:
             v.update(update_dict)
             for k in update_dict:

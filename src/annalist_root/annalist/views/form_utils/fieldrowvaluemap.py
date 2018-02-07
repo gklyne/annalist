@@ -115,8 +115,9 @@ class FieldRowValueMap(object):
         set of fields.  The field names extracted are constructed using the supplied 
         prefix string.
 
-        Returns a dictionary of repeated field values found using the supplied prefix
-        (which evaluates as False if fields using the supplied prefix are not found)
+        Returns the supplied entityvals dictionary extended with repeated field values 
+        found using the supplied prefix.  (If an empty dictionary is supplied, this 
+        evaluates as False if no fields using the supplied prefix are found.)
         """
         for f in self.fm:
             f.map_form_to_entity_repeated_item(formvals, entityvals, prefix)

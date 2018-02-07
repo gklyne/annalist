@@ -86,7 +86,7 @@ test_upload_file_view_create_values = (
     , 'rdfs:label':                 "test_upload_view label"
     , 'rdfs:comment':               "test_upload_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -108,7 +108,7 @@ test_upload_image_view_create_values = (
     , 'rdfs:label':                 "test_upload_image_view label"
     , 'rdfs:comment':               "test_upload_image_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -130,7 +130,7 @@ test_reference_view_create_values = (
     , 'rdfs:label':                 "test_reference_view label"
     , 'rdfs:comment':               "test_reference_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -152,7 +152,7 @@ test_image_ref_view_create_values = (
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -174,7 +174,7 @@ test_image_view_create_values = (
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"

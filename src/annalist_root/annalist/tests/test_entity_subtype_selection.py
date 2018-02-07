@@ -155,7 +155,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
             , 'rdfs:label':         "Test view label"
             , 'rdfs:comment':       "Test view comment"
             , 'annal:record_type':  record_type
-            , 'annal:add_field':    True
+            #@@ , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -175,7 +175,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
             , "rdfs:comment":                   "Type reference field comment"
             , "annal:field_render_type":        "_enum_render_type/Enum_choice"
             , "annal:field_value_mode":         "_enum_value_mode/Value_direct"
-            , "annal:field_entity_type":        "test:ref_type"
+            # , "annal:field_entity_type":        "test:ref_type"
             , "annal:placeholder":              "(ref type field)"
             , "annal:property_uri":             "test:ref_type"
             , "annal:field_placement":          "small:0,12;medium:0,6"

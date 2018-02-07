@@ -187,13 +187,16 @@ def entitydata_load_keys(entity_uri=False):
 
 def entitydata_create_values(
         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
-        entity_uri=None, type_uri=None, hosturi=TestHostUri,
+        entity_uri=None, type_uri=None, supertype_uris=None,
+        hosturi=TestHostUri,
         extra_fields=None):
     """
     Data used when creating entity test data
     """
     if type_uri is not None:
-        types = [type_uri, type_uri+"/super1", type_uri+"/super2", entitydata_type(type_id)]
+        types = [type_uri, entitydata_type(type_id)]
+        if supertype_uris is not None:
+            types = types + supertype_uris
     else:
         types = [entity_url(coll_id, "_type", type_id), entitydata_type(type_id)]
     # log.info('entitydata_create_values: types %r'%(types,)) 
@@ -226,13 +229,15 @@ def entitydata_values(
         entity_id, update="Entity", 
         coll_id="testcoll", type_id="testtype", 
         entity_uri=None,
-        type_uri=None, hosturi=TestHostUri
+        type_uri=None, supertype_uris=None, 
+        hosturi=TestHostUri
         ):
     # type_uri = entity_url(coll_id, "_type", type_id)
     dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
         entity_id, update=update, coll_id=coll_id, type_id=type_id, 
-        entity_uri=entity_uri, type_uri=type_uri, hosturi=hosturi
+        entity_uri=entity_uri, type_uri=type_uri, supertype_uris=supertype_uris,
+        hosturi=hosturi
         ).copy() #@@ copy needed here?
     d.update(
         { '@id':            "%s/%s"%(type_id, entity_id)

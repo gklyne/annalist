@@ -162,11 +162,11 @@ class GenericEntityEditView(AnnalistGenericView):
             context_extra_values['edit_view_enable']      = ""
             context_extra_values['default_view_enable']   = ""
             context_extra_values['customize_view_enable'] = ""
-        add_field = request.GET.get('add_field', None)
+        add_field = request.GET.get('add_field', None) #@@ redundant?
         try:
             response = self.form_render(
                 viewinfo, entity, entityvals, context_extra_values, 
-                add_field
+                add_field #@@ remove param
                 )
         except Exception as e:
             # -- This should be redundant, but...
@@ -439,6 +439,7 @@ class GenericEntityEditView(AnnalistGenericView):
         return upd_entityvals
 
     def form_render(self, viewinfo, entity, entityvals, context_extra_values, add_field):
+        #@@ remove add_field?
         """
         Returns an HTTP response that renders a view of an entity, 
         using supplied entity data

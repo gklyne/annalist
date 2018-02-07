@@ -129,7 +129,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , 'rdfs:label':         "Test view label"
             , 'rdfs:comment':       "Test view comment"
             , 'annal:record_type':  "img_type"
-            , 'annal:add_field':    True
+            # , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -149,7 +149,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , 'rdfs:label':         "Test rptimg view label"
             , 'rdfs:comment':       "Test rptimg view comment"
             , 'annal:record_type':  "img_type"
-            , 'annal:add_field':    True
+            # , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"

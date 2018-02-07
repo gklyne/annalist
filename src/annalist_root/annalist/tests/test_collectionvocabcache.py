@@ -54,10 +54,6 @@ class CollectionVocabCacheTest(AnnalistTestCase):
         self.vocab1.set_values(
             entitydata_create_values("vocab1", type_id="_vocab", entity_uri="test:vocab1")
             )
-        # def entitydata_create_values(
-        #         entity_id, update="Entity", coll_id="testcoll", type_id="testtype", 
-        #         entity_uri=None, type_uri=None, hosturi=TestHostUri,
-        #         extra_fields=None):
         self.vocab2       = RecordVocab(self.testcoll1_a, "vocab2")
         self.vocab2.set_values(
             entitydata_create_values("vocab2", type_id="_vocab", entity_uri="test:vocab2")

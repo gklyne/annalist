@@ -41,9 +41,10 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] RecordField accesses should use collecton cache
     - [x] Cacheing site values separately: no need to flush as they don't change
     - [x] Field definition to include superproperty URI list
-    - [ ] When selecting data element to display in a field, look for subproperties as well as the specified field property.
-        - [.] Add subproperty discovery logic to bound_field
-            - Logic added but not tested
+    - [x] When selecting data element to display in a field, look for subproperties as well as the specified field property.
+        - [x] Add subproperty discovery logic to bound_field
+        - [x] Update fieldvaluemap.map_form_to_entity so it looks for subproperty to update.
+        - [x] Update field mappers to make 'map_form_to_entity_repeated_item' implementations more consistent.
         - It appears that the logic for this should be in 'bound_field'
         - All other code seems to be concerned with creating a bound field object.
         - The collection (and hence field cache) is available via the bound FieldDescription.
@@ -57,53 +58,9 @@ See also: https://www.divio.com/en/blog/documentation/
         - [x] New field_renderer object accessed by bound_field for field rendering
         - [x] Rework field rendering logic to use new structure
         - [x] Remove rendering methods from field description.
-        - [.] bound_field access to FieldDecription: use methods not dictionary
-        - [ ] Eliminate render mode logic in render_fieldvalue (now handled with less complication by field_renderer)?
-        - bound_field - field-directed accesses and updates appplied to a specific entity
-        - FieldDefinition - definition of field, bound to collection
-            - also accessible as a dictionary (rather breaks abstraction)
-            - currently has logic spread unevenly over bound_field and FieldDefinition
-        - EntityValueMap 
-            - Handles entity->context and form->entity mapping for a complete entity view.
-            - methods:
-                - add_map_entry
-                - map_value_to_context
-                - map_form_data_to_values
-            - invoked by entitiedit via get_view_entityvaluemap
-            - invoked by entitylist via get_list_entityvaluemap
-                - (has some ad-hoc logic to construct a list definition)
-        - FieldValueMap, FieldListValueMap, FieldRowValueMap, RepeatValuesMap, SimpleValueMap 
-            - Handles entity->context and form->entity mapping for parts of an entity view
-            - methods: 
-                - map_entity_to_context
-                - map_form_to_entity
-                - map_form_to_entity_repeated_item
-                - get_structure_description (for diagnostics only?)
-            - module 'fieldlistvaluemap' also has logic for organizing fields in rows
-        - Dependency graph, avoiding loops:
-            -- FieldDescription
-            -> FieldRenderer
-            -> find_renderers
-            -> render_repeatgroup.RenderRepeatGroup
-            -> render_fieldvalue, bound_field
-            - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
-        - It seems I want to remove renderer references from field descriptions to bound_field.  Which of the following refer to via bare Field Descriptions???
-            - field_render_label used by several internal and external templates
-            - field_render_view used by annalist_entity_list.html and template in render_repeatgroup.py
-            - field_render_edit used by annalist_entity_list.html
-            - field_render_label_view used by annalist_entity_view.html and template in  render_repeatgroup.py
-            - field_render_label_edit used by 4 internal and external templates
-            - field_render_colhead used by 3 templates in render_repeatgroup.py
-            - field_render_colhead_view used by 1 template in render_repeatgroup.py
-            - field_render_colhead_edit used by 1 template in render_repeatgroup.py
-            - field_render_colview used by templates in render_ref_multifields.py and render_repeatgroup.py
-            - field_render_coledit used by 1 template in render_repeatgroup.py
-            - field_render_mode used by template in render_fieldrow.py and 2 in render_ref_multifields.py
-            - field_value_mapper used by fieldvaluemap.py
-            ---
-            - render_repeatgroup.py :133 :199 :274 :302
-
-    - [ ] Add test case for subproperty access
+        - [x] bound_field access to FieldDecription: use methods not dictionary
+        - [x] Eliminate render mode logic in render_fieldvalue (now handled with less complication by field_renderer)?
+    - [x] Add test cases for subproperty access
     - [ ] Add "define subproperty" task button to field definition.
     - [ ] Add test case for "define subproperty" task button
     - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used?)
@@ -114,8 +71,18 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
+- [ ] bound_field access to FieldDecription: use methods not dictionary
+    - [ ] Update test case context checking (see bound_field holding comments)
+- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ] Remove corresponding special case code in bound_field.
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
+- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] Update pip to latest version in python environment (for continued testing)
-- [ ] Update Django version used to latest version designated for long term support (1.8?)
+- [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -139,27 +106,19 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ] Remove corresponding special case code in bound_field.
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
-- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] *delete views: rationalize into single view?
-- [ ] performance tuning
-    - [ ] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
-    - [ ] look into entity cacheing (esp. RecordType) for performance improvement
+- [.] performance tuning
+    - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
+    - [x] look into entity cacheing (esp. RecordType) for performance improvement
         - partly done per-collection - is this enough?
     - [ ] Re-think access to entities and types:
-        - [ ] There is repeated reading of RecordType values in EntityFinder
+        - [x] There is repeated reading of RecordType values in EntityFinder
               (cf. collection.types() and EntityTypeInfo constructor; also URI access)
-        - [ ] Need more direct way to locate type (and other entities?) by URI
+        - [x] Need more direct way to locate type (and other entities?) by URI
         - [ ] Review common mechanism to retrieve URI for entity?  
               (Current mechanism fixes use of annal:uri for all entities; maybe OK)
-        - [ ] Think about how to optimize retrieval of subtypes/supertypes
-        - [ ] Do special case for types, or more generic caching approach?
+        - [x] Think about how to optimize retrieval of subtypes/supertypes
+        - [x] Do special case for types, or more generic caching approach?
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
@@ -188,6 +147,10 @@ Technical debt:
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
+    - [ ] update 'models'
+    - [ ] update 'views'
+    - [ ] update 'tests'
+    - [ ] update 'annalist-manager'
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
 - [ ] review view URL returned for entities found with alternative parentage:
@@ -204,15 +167,50 @@ Technical debt:
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
+- [ ] Review field mapping modules in views/form_utils to be more readable and consistent
+    - Start with 'fieldvaluemap', look for comments in code
+    - Notes:
+        - EntityValueMap 
+            - Handles entity->context and form->entity mapping for a complete entity view.
+            - methods:
+                - add_map_entry
+                - map_value_to_context
+                - map_form_data_to_values
+            - invoked by entitiedit via get_view_entityvaluemap
+            - invoked by entitylist via get_list_entityvaluemap
+                - (has some ad-hoc logic to construct a list definition)
+        - FieldValueMap, FieldListValueMap, FieldRowValueMap, RepeatValuesMap, SimpleValueMap 
+            - Handles entity->context and form->entity mapping for parts of an entity view
+            - methods: 
+                - map_entity_to_context
+                - map_form_to_entity
+                - map_form_to_entity_repeated_item
+                - get_structure_description (for diagnostics only?)
+            - module 'fieldlistvaluemap' also has logic for organizing fields in rows
+- [ ] Tidy up FieldDescription and usage
+    - Notes:
+        - FieldDefinition - definition of field, bound to collection
+            - also accessible as a dictionary (rather breaks abstraction)
+            - currently has logic spread unevenly over bound_field and FieldDefinition
+        - Dependency graph, avoiding loops:
+            -- FieldDescription
+            -> FieldRenderer
+            -> find_renderers
+            -> render_repeatgroup.RenderRepeatGroup
+            -> render_fieldvalue, bound_field
+            - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
-- [ ] Turtle serialization error: currently returns diagnostiuc in data returned; would be better to (also) signal problem via HTTP return code.
-
+- [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
+- [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
 
 Data collection definitions:
 
-- [ ] VoID, DCAT, PROV, CRM
+- [ ] VoID
+- [ ] DCAT
+- [ ] PROV
+- [x] CRM
 
 
 Usability notes:
