@@ -51,27 +51,27 @@ See also: https://www.divio.com/en/blog/documentation/
         - What about saving field value?: need to remember property URI used?
             - fieldvaluemap.map_form_to_entity passes property URI to value mapper decode_store method
             - fieldvaluemap.map_entity_to_context just passes the field description to bound_field constructor.  (Level imbalance here?)
-    - [.] Review abstractions and interactions around:
+    - [x] Review abstractions and interactions around:
         - [x] bound_field, add:
             - [x] 'render' (ref field_renderer)
             - [x] 'value_mapper'
         - [x] New field_renderer object accessed by bound_field for field rendering
         - [x] Rework field rendering logic to use new structure
-        - [x] Remove rendering methods from field description.
+        - [x] Remove rendering methods from field description
         - [x] bound_field access to FieldDecription: use methods not dictionary
-        - [x] Eliminate render mode logic in render_fieldvalue (now handled with less complication by field_renderer)?
+        - [x] Eliminate render mode logic in render_fieldvalue
     - [x] Add test cases for subproperty access
-    - [ ] Add "define subproperty" task button to field definition.
-    - [ ] Add test case for "define subproperty" task button
-    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actualy used?)
+    - [x] Add test cases for subproperty list field access/update (with subproperty values)
+    - [x] Add "define subproperty" task button to field definition.
+    - [x] Add test case for "define subproperty" task button
+    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actually used?)
     - [ ] 'superproperty_uris' details in generated context (collection type, etc.)  Or is this picked up automatically when there are new `superpropery_uris` field definitions?
-    - [ ] Are per-type field aliases still needed?
 - [ ] Add property hierarchy to CIDOC CRM definitions
 - [ ] Create FAQ for defining subproperties
 
 (Sub-release?)
 
-- [ ] bound_field access to FieldDecription: use methods not dictionary
+- [ ] Bound_field access to FieldDecription: use methods not dictionary
     - [ ] Update test case context checking (see bound_field holding comments)
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
     - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
@@ -98,6 +98,10 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages
+- [ ] With implementation of subproperties, are per-type field aliases still needed?
+    - Possible per-type subproperties?
+    - Maybe use these for property updates rather than looking for existing property usage?
+    - Is this an issue?  Need some experience here.
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?

@@ -255,6 +255,21 @@ class FieldDescription(object):
         subproperty_uris = self._collection.cache_get_subproperty_uris(property_uri)
         return subproperty_uris
 
+    def get_field_value_key(self, entityvals):
+        """
+        Return field value key used in current entity.
+
+        This takes account of possible use of subproperties of the property URI
+        specified in the field description.  If the declared property URI is not 
+        present in the entity, and a subproperty URI is present, then that 
+        subproperty URI is returned.  Otherwise the declared property URI is returned.
+        """
+        if self.get_field_property_uri() not in entityvals:
+            for altkey in self.get_field_subproperty_uris():
+                if altkey in entityvals:
+                    return altkey
+        return self.get_field_property_uri()
+
     def group_ref(self):
         """
         If the field itself contains or uses a group of fields, returns an
@@ -340,15 +355,15 @@ class FieldDescription(object):
 
     def __repr1__(self):
         return (
-            "FieldDescription("+
+            "FieldDescription(\n"+
             "  { 'field_id': %r\n"%(self._field_desc["field_id"])+
             "  , 'field_name': %r\n"%(self.get_field_name())+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
-            "  , 'type_ref': %r"%(self._field_desc["field_ref_type"])+
-            # "  , 'group_ref': %r"%(self._field_desc["field_group_ref"])+
-            # "  , 'group_list': %r"%(self._field_desc["group_field_list"])+
-            # "  , 'group_descs': %r"%(self._field_desc["group_field_descs"])+
+            "  , 'type_ref': %r\n"%(self._field_desc["field_ref_type"])+
+            # "  , 'group_ref': %r\n"%(self._field_desc["field_group_ref"])+
+            # "  , 'group_list': %r\n"%(self._field_desc["group_field_list"])+
+            "  , 'group_descs': %r\n"%(self._field_desc["group_field_descs"])+
             "  })"
             )
 

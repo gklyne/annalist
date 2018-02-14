@@ -190,6 +190,10 @@ class FieldListValueMap(object):
     """
     Define an entry to be added to an entity view value mapping table,
     corresponding to a list of field descriptions.
+
+    Used by 'entityedit' and 'entitylist' to create a list field mappers used to 
+    generate an entity view or list respectively.  Also called recursively when
+    generating a mapping for a repeated field.
     """
 
     def __init__(self, c, coll, fields, view_context):

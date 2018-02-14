@@ -113,6 +113,7 @@ def recordfield_init_keys(field_uri=False):
         , 'annal:property_uri'
         , 'annal:field_render_type'
         , 'annal:field_value_mode'
+        , 'annal:field_value_type'
         , 'annal:tooltip'
         ])
     if field_uri:
@@ -135,10 +136,13 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
         property_uri=None, superproperty_uris=None,
         render_type="_enum_render_type/Text", 
         value_mode="_enum_value_mode/Value_direct",
+        value_type="annal:Text",
+        entity_type_uri=None,
         update="Field"):
     """
     Entity values used when creating a record field entity
     """
+    # print("@@@@ recordfield_create_values property_uri: "+str(property_uri))
     if not property_uri:
       property_uri = "test_property:" + field_id
     d = (
@@ -146,28 +150,37 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
         , 'rdfs:comment':               "%s help for %s in collection %s"%(update, field_id, coll_id)
         , 'annal:field_render_type':    render_type
         , 'annal:field_value_mode':     value_mode
+        , 'annal:field_value_type':     value_type
         , 'annal:tooltip':              "%s tooltip for %s in collection %s"%(update, field_id, coll_id)
         })
     if property_uri:
         d.update(
-            { 'annal:property_uri':         property_uri
+            { 'annal:property_uri':     property_uri
             })
     if superproperty_uris:
         d.update(
-            { 'annal:superproperty_uri':    [ {"@id": u} for u in superproperty_uris ]
+            { 'annal:superproperty_uri': [ {"@id": u} for u in superproperty_uris ]
+            })
+    if entity_type_uri:
+        d.update(
+            { 'annal:field_entity_type': entity_type_uri
             })
     return d
 
 def recordfield_values(
         coll_id="testcoll", field_id="testfield", field_uri=None,
         property_uri=None, superproperty_uris=None,
+        entity_type_uri=None,
         render_type="_enum_render_type/Text", 
         value_mode="_enum_value_mode/Value_direct",
+        value_type="annal:Text",
         update="Field", hosturi=TestHostUri):
+    # print("@@@@ recordfield_values property_uri: "+str(property_uri))
     d = recordfield_create_values(
         coll_id, field_id, 
         property_uri=property_uri, superproperty_uris=superproperty_uris,
-        render_type=render_type, value_mode=value_mode, 
+        render_type=render_type, value_mode=value_mode, value_type=value_type,
+        entity_type_uri=None,
         update=update
         ).copy()
     d.update(
@@ -183,10 +196,16 @@ def recordfield_values(
 def recordfield_read_values(
         coll_id="testcoll", field_id="testfield",
         property_uri=None, superproperty_uris=None,
+        render_type="_enum_render_type/Text", 
+        value_mode="_enum_value_mode/Value_direct",
+        value_type="annal:Text",
+        entity_type_uri=None,
         update="Field", hosturi=TestHostUri):
     d = recordfield_values(
         coll_id, field_id, 
         property_uri=property_uri, superproperty_uris=superproperty_uris,
+        entity_type_uri=entity_type_uri,
+        render_type=render_type, value_mode=value_mode, value_type=value_type,
         update=update, hosturi=hosturi
         ).copy()
     d.update(
@@ -548,7 +567,7 @@ def recordfield_entity_view_form_data(
         coll_id="testcoll", 
         field_label=None,
         render_type="Text", value_mode="Value_direct",
-        entity_type=None, property_uri=None, value_type=None,
+        entity_type=None, property_uri=None, value_type="annal:Text",
         field_placement="",
         action=None, cancel=None, task=None,
         update="Field"):

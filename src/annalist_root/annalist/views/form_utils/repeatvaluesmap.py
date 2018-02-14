@@ -52,18 +52,40 @@ class RepeatValuesMap(FieldValueMap):
 
     def map_form_to_entity(self, formvals, entityvals):
         # log.info(repr(formvals))
-        prefix_template = self.i+"__%d__"
-        prefix_n        = 0
-        repeatvals      = []
+        prefix_template  = self.i+"__%d__"
+        prefix_n         = 0
+        repeat_vals      = []
+        field_key        = self.f.get_field_value_key(entityvals)
+        previous_vals    = entityvals.get(field_key,[])
         while True:
-            vals          = {}
-            prefix        = prefix_template%prefix_n
-            updated_vals  = self.fieldlist.map_form_to_entity_repeated_item(formvals, vals, prefix)
+            #@@ 
+            #   The following logic works, but sometimes yields unexpected results:
+            #   Specifically, when the original data has more fields than the form,
+            #   the additional old fields were copied over into the result.
+            #
+            #   For now, we live with the restriction that fields within repeated 
+            #   fields cannot propagate subproperty values used; i.e. when editing, 
+            #   subproperties used in the data are replaced by the superproeprty from
+            #   the repeated field definition.  In practice, this may not be a problem,
+            #   as the cases of repeated fields with subproperties are generally associated
+            #   with special JSON-LD keys like '@id' or '@value'
+            #
+            # Extract previous values in same position to be updated
+            # This ad-hocery is used to try and preserve property URIs used 
+            # within the list, so that subproperties (where used) are preserved.
+            # if len(previous_vals) > prefix_n:
+            #     vals     = previous_vals[prefix_n]
+            # else:
+            #     vals     = {}
+            #@@
+            vals         = {}
+            prefix       = prefix_template%prefix_n
+            updated_vals = self.fieldlist.map_form_to_entity_repeated_item(formvals, vals, prefix)
             if not updated_vals:
                 break
-            repeatvals.append(updated_vals)
+            repeat_vals.append(updated_vals)
             prefix_n += 1
-        entityvals[self.e] = repeatvals
+        entityvals[field_key] = repeat_vals
         return entityvals
 
     def get_structure_description(self):

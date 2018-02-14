@@ -258,9 +258,15 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_record_type(self, type_id, entity_id="testentity"):
+    def _create_record_type(self, type_id, type_uri=None, entity_id="testentity"):
         "Helper function creates record type entry with supplied type_id"
-        t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
+        t = RecordType.create(
+            self.testcoll, type_id, 
+            recordtype_create_values(
+                type_id=type_id,
+                type_uri=type_uri
+                )
+            )
         d = RecordTypeData.create(self.testcoll, type_id, {})
         e = EntityData.create(d, entity_id, {})
         return (t, d, e)
@@ -1169,6 +1175,46 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)
         self.check_entity_values(layout.VIEW_TYPEID, "%(type_id)s"%common_vals, expect_view_values)
         self.check_entity_values(layout.LIST_TYPEID, "%(type_id)s"%common_vals, expect_list_values)
+        return
+
+    def test_define_subtype_task(self):
+        # Create new type
+        self._create_record_type("tasktype", type_uri="test:tasktype")
+        self._check_record_type_values("tasktype")
+        # Post define subtype
+        f = recordtype_entity_view_form_data(
+            type_id="tasktype",
+            type_uri="test:tasktype",
+            task="Define_subtype"
+            )
+        u = entitydata_edit_url(
+            "view", "testcoll", layout.TYPE_TYPEID, entity_id="tasktype", view_id="Type_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        subtype_id = "tasktype" + layout.SUFFIX_SUBTYPE
+        self.assertIn(
+            "/testsite/c/testcoll/v/Type_view/_type/%s/"%(subtype_id,), 
+            r['location']
+            )
+        self.assertEqual(r.content,       "")
+        # Check content of type record
+        common_vals = (
+            { 'coll_id':    "testcoll"
+            , 'type_id':    "tasktype"
+            , 'subtype_id': subtype_id
+            , 'type_label': "RecordType testcoll/tasktype"
+            })
+        expect_type_values = (
+            { 'annal:type':             "annal:Type"
+            , 'rdfs:label':             "@@subtype of RecordType %(coll_id)s/%(type_id)s"%common_vals
+            , 'annal:uri':              "test:%(subtype_id)s"%common_vals
+            , 'annal:supertype_uri':    [{'@id': "test:%(type_id)s"%common_vals}]
+            , 'annal:type_view':        "_view/Default_view"%common_vals
+            , 'annal:type_list':        "_list/Default_list"%common_vals
+            })
+        self.check_entity_values(layout.TYPE_TYPEID, "%(subtype_id)s"%common_vals, expect_type_values)
         return
 
 #   -----------------------------------------------------------------------------

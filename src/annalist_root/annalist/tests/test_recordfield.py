@@ -309,17 +309,23 @@ class RecordFieldEditViewTest(AnnalistTestCase):
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_view_data(self, field_id, update="Field"):
+    def _create_view_data(self, field_id, property_uri=None, type_uri=None, update="Field"):
         "Helper function creates view data with supplied field_id"
         e = RecordField.create(self.testcoll, field_id, 
-            recordfield_create_values(field_id=field_id, update=update)
+            recordfield_create_values(
+                field_id=field_id, 
+                property_uri=property_uri, 
+                entity_type_uri=type_uri,
+                update=update
+                )
             )
         return e    
 
-    def _check_view_data_values(self, field_id, 
+    def _check_view_data_values(self, field_id,
         update="Field", 
         parent=None, 
-        property_uri=None
+        property_uri=None,
+        type_uri=None
         ):
         "Helper function checks content of form-updated record type entry with supplied field_id"
         self.assertTrue(RecordField.exists(self.testcoll, field_id, altscope="all"))
@@ -328,7 +334,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_id(), field_id)
         self.assertEqual(e.get_url(), u)
         self.assertEqual(e.get_view_url_path(), recordfield_url("testcoll", field_id))
-        v = recordfield_values(field_id=field_id, update=update, property_uri=property_uri)
+        # print("@@@@ _check_view_data_values property_uri: "+str(property_uri))
+        v = recordfield_values(
+            field_id=field_id, 
+            property_uri=property_uri, 
+            entity_type_uri=type_uri,
+            update=update
+            )
+        # print("@@@@ v: "+repr(v))
         check_field_record(self, e,
             field_id=           field_id,
             field_ref=          layout.COLL_BASE_FIELD_REF%{'id': field_id},
@@ -491,7 +504,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         check_context_field(self, f_Field_superproperty_uris,
             field_id=           "Field_superproperty_uris",
             field_name=         "Field_superproperty_uris",
-            field_property_uri= "annal:superproperty_uris",
+            field_property_uri= "annal:superproperty_uri",
             field_render_type=  "Group_Seq_Row",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Field_superproperty_uri",
@@ -1602,7 +1615,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Create new field entity
         self._create_view_data("taskmanyfield")
         self._check_view_data_values("taskmanyfield")
-        # Post define repeat field
+        # Post define multi-value field
         f = recordfield_entity_view_form_data(
             field_id="taskmanyfield",
             field_label="Test many field",
@@ -1619,7 +1632,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # Check content of type, view and list
+        # Check content of field
         common_vals = (
             { 'coll_id':        "testcoll"
             , 'field_id':       "taskmanyfield"
@@ -1677,7 +1690,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , 'property_uri':   "test:ref_prop"
             , 'field_typeid':   layout.FIELD_TYPEID
             })
-        # Create new type
+        # Create new field
         self._create_view_data(common_vals["field_id"])
         self._check_view_data_values(common_vals["field_id"])
         # Post define field reference
@@ -1740,6 +1753,69 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
         self.check_entity_values(layout.FIELD_TYPEID, ref_field_id, expect_ref_field_values)
+        return
+
+    def test_define_subproperty_field_task(self):
+        common_vals = (
+            { 'coll_id':            "testcoll"
+            , 'field_id':           "basefield"
+            , 'field_label':        "Test subproperty field"
+            , 'type_uri':           "test:subprop_field"
+            , 'property_uri':       "test:prop"
+            , 'subfield_id':        "basefield"+layout.SUFFIX_SUBPROPERTY
+            , 'subfield_label':     "@@ Subfield of Field testcoll/_field/basefield (basefield)@@"
+            , 'subproperty_uri':    "test:prop_subproperty"
+            , 'field_typeid':       layout.FIELD_TYPEID
+            })
+        # Create new field
+        self._create_view_data(
+            common_vals["field_id"], 
+            property_uri=common_vals["property_uri"], 
+            type_uri=common_vals["type_uri"]
+            )
+        self._check_view_data_values(
+            common_vals["field_id"], 
+            property_uri=common_vals["property_uri"], 
+            type_uri=common_vals["type_uri"]
+            )
+        # Post define field reference
+        f = recordfield_entity_view_form_data(
+            field_id=common_vals["field_id"],
+            entity_type=common_vals["type_uri"],
+            task="Define_subproperty_field"
+            )
+        u = entitydata_edit_url("view", "testcoll", 
+            type_id=layout.FIELD_TYPEID, view_id="Field_view", 
+            entity_id=common_vals["field_id"]
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = entitydata_edit_url(action="edit", 
+            coll_id="testcoll", type_id=layout.FIELD_TYPEID, 
+            entity_id=common_vals["subfield_id"], 
+            view_id="Field_view"
+            )
+        self.assertIn(v, r['location'])
+        w = "Created%%20field%%20%(subfield_id)s"%common_vals
+        self.assertIn(w, r['location'])
+        # Check content of new field
+        expect_subfield_values = (
+            { "annal:id":                   common_vals["subfield_id"]
+            , "annal:type":                 "annal:Field"
+            , "rdfs:label":                 common_vals["subfield_label"]
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+            , "annal:field_entity_type":    common_vals["type_uri"]
+            , "annal:field_value_type":     "annal:Text"
+            , "annal:property_uri":         common_vals["subproperty_uri"]
+            , "annal:superproperty_uri":    [ {"@id": common_vals["property_uri"]} ]
+            # , "annal:field_placement":      "small:0,12"
+            })
+        self.check_entity_values(
+            layout.FIELD_TYPEID, common_vals["subfield_id"], expect_subfield_values
+            )
         return
 
     #   -------- Test subfields with different selection types --------

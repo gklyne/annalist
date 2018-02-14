@@ -77,20 +77,14 @@ class FieldValueMap(object):
 
         self.i is the form value key for the value to save.
 
-        self.e is the entity property URI that receives the field value, or None if no 
+        self.e is the declared entity property URI for the field value, or None if no 
         value is saved for this field.
         """
         if self.e:
             # log.debug("FieldValueMap.map_form_to_entity %s, %r"%(self.e, formvals))
             # log.info("@@ FieldValueMap.map_form_to_entity e:%s, i:%s"%(self.e, self.i))
+            k = self.f.get_field_value_key(entityvals)
             v = formvals.get(self.i, None)
-            k = self.e
-            if k not in entityvals:
-                # If value is defined using subproperty URI, use that instead
-                for sp in self.f.get_field_subproperty_uris():
-                    if sp in entityvals:
-                        k = sp
-                        break
             self.f['field_value_mapper'].decode_store(v, entityvals, k)
         return entityvals
 
@@ -105,9 +99,10 @@ class FieldValueMap(object):
         """
         if self.e:
             # log.debug("FieldValueMap.map_form_to_entity_repeated_item %s, %r"%(self.e, formvals))
+            k = self.f.get_field_value_key(entityvals)
             v = formvals.get(prefix+self.i, None)
             if v is not None:
-                self.f['field_value_mapper'].decode_store(v, entityvals, self.e)
+                self.f['field_value_mapper'].decode_store(v, entityvals, k)
         return entityvals
 
     def get_structure_description(self):

@@ -278,7 +278,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         <button type="submit" 
                 name="foo__new_edit" 
                 value="New"
-                title="Define new foo_label">
+                title="Define new or edit foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
@@ -298,7 +298,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         <button type="submit" 
                 name="foo__new_edit" 
                 value="New"
-                title="Define new foo_label">
+                title="Define new or edit foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
@@ -465,6 +465,9 @@ def context_field_map(context):
     return "\n".join(response)
 
 def context_view_field(context, rownum, colnum):
+    """
+    Returns bound_field object corresponding to a given row&column in a view
+    """
     row = context['fields'][rownum]
     if 'row_field_descs' in row:
         # Pick column from row
@@ -478,6 +481,24 @@ def context_view_field(context, rownum, colnum):
         extras      = context['fields'][rownum]['context_extra_values']
         field       = bound_field(field, entity_vals, context_extra_values=extras) 
     return field
+
+def context_view_repeat_fields(context, repeat_bound_field):
+    """
+    Returns a list of lists of bound fields corresponding to 
+    the items of a repeated value display field.
+
+    Result is indexed by [row][field] to get individual bound fields
+    """
+    field_descs = repeat_bound_field.description['group_field_descs']
+    extras      = repeat_bound_field['context_extra_values']
+    bound_rows  = []
+    for row_vals in repeat_bound_field.field_value:
+        r = []
+        for field_desc in field_descs:
+            f = bound_field(field_desc, row_vals, context_extra_values=extras)
+            r.append(f)
+        bound_rows.append(r)
+    return bound_rows
 
 def context_bind_fields(context):
     """
@@ -530,7 +551,7 @@ def context_list_head_fields(context):
 
 def context_list_item_fields(context, entity):
     """
-    Returns indicated field to be displayed as a bound_field value
+    Returns all list fields to be displayed as a list of bound_field values
     """
     # log.info(context['List_rows'])
     if 'List_rows' in context:
