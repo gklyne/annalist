@@ -389,7 +389,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             field_label=        "Supertype URIs",
             field_placeholder=  type_supertype_uris_placeholder,
             field_property_uri= "annal:supertype_uri",
-            field_render_type=  "Group_Seq_Row",
+            field_render_type=  "Group_Set_Row",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Type_supertype_uri",
             field_value=        type_supertype_uris,

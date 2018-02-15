@@ -505,7 +505,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_id=           "Field_superproperty_uris",
             field_name=         "Field_superproperty_uris",
             field_property_uri= "annal:superproperty_uri",
-            field_render_type=  "Group_Seq_Row",
+            field_render_type=  "Group_Set_Row",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Field_superproperty_uri",
             field_value=        field_superproperty_uris,
@@ -2080,7 +2080,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               ])
         self._check_context_fields(r, 
             field_id="domain_r",
-            field_render_type="Group_Seq_Row",
+            field_render_type="Group_Set_Row",
             field_type="rdf:Property",
             field_entity_type="rdf:Property",
             field_label="Domains",

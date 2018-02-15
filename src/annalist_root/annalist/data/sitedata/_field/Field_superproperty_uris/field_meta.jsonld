@@ -6,7 +6,7 @@
 , "annal:uri":                  "annal:fields/Field_superproperty_uris"
 , "rdfs:label":                 "Superproperty URIs"
 , "rdfs:comment":               "# Superproperty URIs\r\n\r\nReferences to URIs/CURIEs of superproperties.  There may be zero, one or more such superproperties."
-, "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+, "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:Field_superproperty_uri"
 , "annal:field_entity_type":    "annal:Field"

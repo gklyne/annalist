@@ -64,10 +64,8 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Add test cases for subproperty list field access/update (with subproperty values)
     - [x] Add "define subproperty" task button to field definition.
     - [x] Add test case for "define subproperty" task button
-    - [ ] Add rdfs:subPropertyOf declarations to data responses (preferably, only those declarations that relate to properties actually used?)
-    - [ ] 'superproperty_uris' details in generated context (collection type, etc.)  Or is this picked up automatically when there are new `superpropery_uris` field definitions?
-- [ ] Add property hierarchy to CIDOC CRM definitions
-- [ ] Create FAQ for defining subproperties
+- [x] Add property hierarchy to CIDOC CRM definitions
+- [x] Create FAQ for defining subproperties
 
 (Sub-release?)
 
@@ -275,6 +273,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
     - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
