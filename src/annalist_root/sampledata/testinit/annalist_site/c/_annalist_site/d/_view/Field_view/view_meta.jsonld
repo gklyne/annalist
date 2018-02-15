@@ -26,6 +26,9 @@
   , { "annal:field_id":         "_field/Field_placement"
     , "annal:field_placement":  "small:0,12;medium:6,6"
     }
+  , { "annal:field_id":         "_field/Field_superproperty_uris"
+    , "annal:field_placement":  "small:0,12"
+    }
   , { "annal:field_id":         "_field/Field_value_type"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
@@ -63,6 +66,12 @@
     , "annal:field_placement":  "small:0,12"
     }
   ]
+, "annal:view_task_buttons":
+  [ { "annal:button_id":        "_task/Define_subproperty_field" 
+    , "annal:button_label":     "Define subproperty field"
+    , "annal:button_help":      "Create a new field whose property URI is a subproperty of the current fields property.  (The URI of the current field property] is inserted as a superproperty URI of the new field.)"
+    }
+  ]
 , "annal:edit_task_buttons":
   [ { "annal:button_id":        "_task/Define_many_field" 
     , "annal:button_label":     "Define repeat field"
@@ -71,16 +80,6 @@
   , { "annal:button_id":        "_task/Define_list_field" 
     , "annal:button_label":     "Define list field"
     , "annal:button_help":      "Define new field that contains an ordered list of values of the current field.  The multiple values are represented using an RDF list structure.  (New list field definitions are created with default values derived from the current field, and may be edited later.)"
-    }
-  , { "annal:button_id":        "_task/Define_field_ref"
-    , "annal:button_label":     "Define field reference"
-    , "annal:button_help":      "Define new field containing a reference to the current field.  (New definitions have default values, and may be edited later.  Additional fields may be added later.)"
-    }
-  ]
-, "annal:orig_task_buttons":
-  [ { "annal:button_id":        "_task/Define_repeat_field" 
-    , "annal:button_label":     "Define repeat field"
-    , "annal:button_help":      "Define new field that repeats the current field.  (New definitions have default values, and may be edited later.  Additional repeated fields may be added later.)"
     }
   , { "annal:button_id":        "_task/Define_field_ref"
     , "annal:button_label":     "Define field reference"

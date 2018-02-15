@@ -30,7 +30,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Fix some test cases that were failing due to message text changes.
     - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
 - [x] Review message text; update more tests to expect text as defined in messages module.
-- [ ] Introduce superproperty/ies field and button to create subproperty field definition
+- [x] Introduce superproperty/ies field and button to create subproperty field definition
     - [x] Collection methods to access field definitions (model on types)
     - [x] Cache classes for fields (model on types)
     - [x] RecordField hook to update collection cache

@@ -10,7 +10,7 @@
     "annal:Collection"
   ],
   "annal:id": "coll1",
-  "annal:software_version": "0.5.5",
+  "annal:software_version": "0.5.7",
   "annal:type": "annal:Collection",
   "annal:type_id": "_coll",
   "rdfs:comment": "Description of Collection coll1",

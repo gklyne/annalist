@@ -752,7 +752,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     <div class="small-11 columns">
                       <div class="edit-grouprow col-head row">
                         <div class="view-label col-head small-12 columns">
-                          <span>Superpropery URI</span>
+                          <span>Superproperty URI</span>
                         </div>
                       </div>
                     </div>
