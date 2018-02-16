@@ -69,6 +69,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
+- [ ] Type/field caching: flush in Customize page; try to be more selective about what collections are flushed
 - [ ] Bound_field access to FieldDecription: use methods not dictionary
     - [ ] Update test case context checking (see bound_field holding comments)
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
@@ -125,7 +126,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
-- [ ] Review nomenclature, especially labels, for all site data
+- [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [ ] Provide content for the links in the page footer
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
