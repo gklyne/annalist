@@ -75,10 +75,12 @@ class CollectionView(AnnalistGenericView):
                 (viewinfo.http_response.status_code, viewinfo.http_response.reason_phrase)
                 )
             return viewinfo.http_response
-        # Flush caches and regenerate JSON-LD context when invoking top-level view of collection
-        viewinfo.flush_collection_caches()
-        viewinfo.collection.generate_coll_jsonld_context()
+        #@@
+        # # Flush caches and regenerate JSON-LD context when invoking top-level view of collection
+        # viewinfo.flush_collection_caches()
+        # viewinfo.collection.generate_coll_jsonld_context()
         # Select and display view of collection
+        #@@
         default_view, default_type, default_entity = viewinfo.get_default_view_type_entity()
         if default_view and default_type and default_entity:
             redirect_uri = self.view_uri(
@@ -141,6 +143,11 @@ class CollectionEditView(AnnalistGenericView):
         viewinfo = self.collection_edit_setup(coll_id, "view", request.GET.dict())
         if viewinfo.http_response:
             return viewinfo.http_response
+        # Flush caches and regenerate JSON-LD context when 
+        # invoking collection customize view
+        viewinfo.flush_collection_caches()
+        viewinfo.collection.generate_coll_jsonld_context()
+        # Generate customize page view
         self.help_markdown = viewinfo.collection.get(RDFS.CURIE.comment, None)
         return (
             self.render_html(resultdata(viewinfo), 'annalist_collection_edit.html') or 

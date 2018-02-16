@@ -20,7 +20,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.9, towards 0.5.10
 
-- [ ] Type/field caching: flush in Customize page; try to be more selective about what collections are flushed
+- [x] Flush collection caches on loading customize page rather than view page
 - [ ] Bound_field access to FieldDecription: use methods not dictionary
     - [ ] Update test case context checking (see bound_field holding comments)
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
