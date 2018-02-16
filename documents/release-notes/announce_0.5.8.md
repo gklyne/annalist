@@ -25,7 +25,7 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 I've just released an update (release 0.5.8) of Annalist.
 
-This mainly adds support for sub/superproperty URI relations declared in view field definitions.
+This mainly adds support for sub/superproperty URI relations declared in view field definitions.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some aspects of data evolution.
 
 The full announcement is at: 
 https://groups.google.com/d/msg/annalist-discuss/9k1TUHdaNe4/JauuGxDYAAAJ
