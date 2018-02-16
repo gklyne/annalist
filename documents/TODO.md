@@ -18,56 +18,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 See also: https://www.divio.com/en/blog/documentation/
 
 
-# Version 0.5.7, towards 0.5.8
-
-- [x] BUG: delete list view while viewing that list results in obscure error message.
-    - Improve error handling to use alternative list/view definition
-- [x] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
-    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
-    - Need to look into improving context-generation diagnostics.
-    - Also caused by trailing spoace on URL: need to check valid URLs; can catch errors?
-    - Added logic to flag error and add details to output.
-- [x] Fix some test cases that were failing due to message text changes.
-    - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
-- [x] Review message text; update more tests to expect text as defined in messages module.
-- [x] Introduce superproperty/ies field and button to create subproperty field definition
-    - [x] Collection methods to access field definitions (model on types)
-    - [x] Cache classes for fields (model on types)
-    - [x] RecordField hook to update collection cache
-    - [x] Test cases for new classes and methods
-    - [x] Update collection to use field cache
-    - [x] Update cache flush logic where used
-    - [x] Test suite provide default property URIs 
-    - [x] RecordField accesses should use collecton cache
-    - [x] Cacheing site values separately: no need to flush as they don't change
-    - [x] Field definition to include superproperty URI list
-    - [x] When selecting data element to display in a field, look for subproperties as well as the specified field property.
-        - [x] Add subproperty discovery logic to bound_field
-        - [x] Update fieldvaluemap.map_form_to_entity so it looks for subproperty to update.
-        - [x] Update field mappers to make 'map_form_to_entity_repeated_item' implementations more consistent.
-        - It appears that the logic for this should be in 'bound_field'
-        - All other code seems to be concerned with creating a bound field object.
-        - The collection (and hence field cache) is available via the bound FieldDescription.
-        - What about saving field value?: need to remember property URI used?
-            - fieldvaluemap.map_form_to_entity passes property URI to value mapper decode_store method
-            - fieldvaluemap.map_entity_to_context just passes the field description to bound_field constructor.  (Level imbalance here?)
-    - [x] Review abstractions and interactions around:
-        - [x] bound_field, add:
-            - [x] 'render' (ref field_renderer)
-            - [x] 'value_mapper'
-        - [x] New field_renderer object accessed by bound_field for field rendering
-        - [x] Rework field rendering logic to use new structure
-        - [x] Remove rendering methods from field description
-        - [x] bound_field access to FieldDecription: use methods not dictionary
-        - [x] Eliminate render mode logic in render_fieldvalue
-    - [x] Add test cases for subproperty access
-    - [x] Add test cases for subproperty list field access/update (with subproperty values)
-    - [x] Add "define subproperty" task button to field definition.
-    - [x] Add test case for "define subproperty" task button
-- [x] Add property hierarchy to CIDOC CRM definitions
-- [x] Create FAQ for defining subproperties
-
-(Sub-release?)
+# Version 0.5.9, towards 0.5.10
 
 - [ ] Type/field caching: flush in Customize page; try to be more selective about what collections are flushed
 - [ ] Bound_field access to FieldDecription: use methods not dictionary
