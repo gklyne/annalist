@@ -1,8 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.6.
+Current status: candidate feature-complete minmum viable product, release 0.5.8.
 
-This is a bug fix and performance enhancement release.
+This release adds super- and sub-property URI support, changes to some message text, and a few bug fixes.
 
 
 # V1.0 release

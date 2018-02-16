@@ -28,7 +28,7 @@
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
-- [x] Tag unstable release version on develop branch (e.g. "release-0.1.37")
+- [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
     - `git tag -a release-x.y.z`
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
