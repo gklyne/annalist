@@ -101,6 +101,7 @@
 - [ ] Commit changes ("Preparing release x.y.z")
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
+    - `git tag -ln` to check previous tags
     - `git tag -a release-x.y.z`
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
