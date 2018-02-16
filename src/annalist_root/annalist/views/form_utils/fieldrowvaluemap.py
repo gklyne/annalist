@@ -21,39 +21,9 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
 from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
 from annalist.views.fields.bound_field          import bound_field
-
-# from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap
-# from annalist.views.fields.render_placement     import (
-#     Placement, LayoutOptions,
-#     make_field_width, make_field_offset, make_field_display,
-#     )
-
-#@@
-# #   ----------------------------------------------------------------------------
-# #
-# #   FieldRowValueMap field description data
-# #
-# #   ----------------------------------------------------------------------------
-
-# row_field_data = (
-#     { "annal:id":                   "Field_row"
-#     , "rdfs:label":                 ""
-#     , "annal:field_render_type":    "FieldRow"
-#     , "annal:field_value_mode":     "Value_direct"
-#     })
-
-# row_placement = Placement(
-#         width=make_field_width(sw=12, mw=12, lw=12),
-#         offset=make_field_offset(so=0, mo=0, lo=0),
-#         display=make_field_display(sd=True, md=True, ld=True),
-#         field="small-12 columns",
-#         label="small-4 columns",
-#         value="small-8 columns"
-#         )
-#@@
 
 #   ----------------------------------------------------------------------------
 #
@@ -145,8 +115,9 @@ class FieldRowValueMap(object):
         set of fields.  The field names extracted are constructed using the supplied 
         prefix string.
 
-        Returns a dictionary of repeated field values found using the supplied prefix
-        (which evaluates as False if fields using the supplied prefix are not found)
+        Returns the supplied entityvals dictionary extended with repeated field values 
+        found using the supplied prefix.  (If an empty dictionary is supplied, this 
+        evaluates as False if no fields using the supplied prefix are found.)
         """
         for f in self.fm:
             f.map_form_to_entity_repeated_item(formvals, entityvals, prefix)

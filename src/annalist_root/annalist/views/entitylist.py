@@ -37,14 +37,14 @@ from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.confirm             import ConfirmView, dict_querydict
 from annalist.views.generic             import AnnalistGenericView
 
-from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
 from annalist.views.entityvaluemap      import EntityValueMap
 from annalist.views.simplevaluemap      import SimpleValueMap, StableValueMap
 from annalist.views.fieldlistvaluemap   import FieldListValueMap
 from annalist.views.fieldvaluemap       import FieldValueMap
 from annalist.views.repeatvaluesmap     import RepeatValuesMap
 
-from annalist.views.fields.bound_field  import bound_field, get_entity_values
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
+from annalist.views.fields.bound_field          import bound_field, get_entity_values
 
 #   -------------------------------------------------------------------------------------------
 #

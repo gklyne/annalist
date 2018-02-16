@@ -19,7 +19,7 @@ from django.conf                        import settings
 
 from annalist.identifiers               import RDFS, ANNAL
 
-from annalist.views.form_utils.fielddescription import FieldDescription, field_description_from_view_field
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
 from annalist.views.form_utils.fieldrowvaluemap import FieldRowValueMap
 from annalist.views.form_utils.fieldvaluemap    import FieldValueMap
 from annalist.views.form_utils.repeatvaluesmap  import RepeatValuesMap
@@ -190,6 +190,10 @@ class FieldListValueMap(object):
     """
     Define an entry to be added to an entity view value mapping table,
     corresponding to a list of field descriptions.
+
+    Used by 'entityedit' and 'entitylist' to create a list field mappers used to 
+    generate an entity view or list respectively.  Also called recursively when
+    generating a mapping for a repeated field.
     """
 
     def __init__(self, c, coll, fields, view_context):
@@ -277,8 +281,9 @@ class FieldListValueMap(object):
         set of fields.  The field names extracted are constructed using the supplied 
         prefix string.
 
-        Returns a dictionary of repeated field values found using the supplied prefix.
-        (which evaluates as False if fields using the supplied prefix are not found)
+        Returns the supplied entityvals dictionary extended with repeated field values 
+        found using the supplied prefix.  (If an empty dictionary is supplied, this 
+        evaluates as False if no fields using the supplied prefix are found.)
         """
         for f in self.fm:
             f.map_form_to_entity_repeated_item(formvals, entityvals, prefix)

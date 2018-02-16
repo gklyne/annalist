@@ -69,7 +69,7 @@ test_image_ref_view_create_values = (
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -154,7 +154,7 @@ class ImageReferenceTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Utility functions

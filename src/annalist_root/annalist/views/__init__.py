@@ -15,10 +15,4 @@ if 'DJANGO_SETTINGS_MODULE' not in os.environ:
 # Allow modules from form_utils to be imported from annalist.views
 __path__.append(os.path.join(os.path.dirname(__file__), "form_utils"))
 
-# from annalist.views.form_utils import (
-#     fielddescription,
-#     entityvaluemap, fieldvaluemap,
-#     fieldlistvaluemap, repeatvaluesmap, simplevaluemap
-#     )
-
 # End.

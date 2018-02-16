@@ -57,6 +57,7 @@ from entity_testfielddata   import (
     recordfield_entity_view_context_data, recordfield_entity_view_form_data
     )
 from entity_testutils       import (
+    make_message, make_quoted_message,
     collection_entity_view_url,
     collection_create_values,
     render_select_options,
@@ -133,7 +134,7 @@ class RecordFieldTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_RecordFieldTest(self):
@@ -301,21 +302,31 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_view_data(self, field_id, update="Field"):
+    def _create_view_data(self, field_id, property_uri=None, type_uri=None, update="Field"):
         "Helper function creates view data with supplied field_id"
         e = RecordField.create(self.testcoll, field_id, 
-            recordfield_create_values(field_id=field_id, update=update)
+            recordfield_create_values(
+                field_id=field_id, 
+                property_uri=property_uri, 
+                entity_type_uri=type_uri,
+                update=update
+                )
             )
         return e    
 
-    def _check_view_data_values(self, field_id, update="Field", parent=None):
+    def _check_view_data_values(self, field_id,
+        update="Field", 
+        parent=None, 
+        property_uri=None,
+        type_uri=None
+        ):
         "Helper function checks content of form-updated record type entry with supplied field_id"
         self.assertTrue(RecordField.exists(self.testcoll, field_id, altscope="all"))
         e = RecordField.load(self.testcoll, field_id, altscope="all")
@@ -323,7 +334,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_id(), field_id)
         self.assertEqual(e.get_url(), u)
         self.assertEqual(e.get_view_url_path(), recordfield_url("testcoll", field_id))
-        v = recordfield_values(field_id=field_id, update=update)
+        # print("@@@@ _check_view_data_values property_uri: "+str(property_uri))
+        v = recordfield_values(
+            field_id=field_id, 
+            property_uri=property_uri, 
+            entity_type_uri=type_uri,
+            update=update
+            )
+        # print("@@@@ v: "+repr(v))
         check_field_record(self, e,
             field_id=           field_id,
             field_ref=          layout.COLL_BASE_FIELD_REF%{'id': field_id},
@@ -357,6 +375,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_placeholder="(?field_placeholder)",
             field_property="(?field_property)",
             field_placement="(?field_placement)",
+            field_superproperty_uris=[],
             field_tooltip=None,
             field_default="",
             field_typeref="",
@@ -368,7 +387,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_restrict=""
             ):
         r = response
-        self.assertEqual(len(r.context['fields']), 13)
+        self.assertEqual(len(r.context['fields']), 14)
         f_Field_id                  = context_view_field(r.context,  0, 0)
         f_Field_render_type         = context_view_field(r.context,  0, 1)
 
@@ -376,20 +395,21 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f_Field_help                = context_view_field(r.context,  2, 0)
         f_Field_property            = context_view_field(r.context,  3, 0)
         f_Field_placement           = context_view_field(r.context,  3, 1)
+        f_Field_superproperty_uris  = context_view_field(r.context,  4, 0)
 
-        f_Field_value_type          = context_view_field(r.context,  4, 0)
-        f_Field_value_mode          = context_view_field(r.context,  4, 1)
-        f_Field_entity_type         = context_view_field(r.context,  5, 0)
+        f_Field_value_type          = context_view_field(r.context,  5, 0)
+        f_Field_value_mode          = context_view_field(r.context,  5, 1)
+        f_Field_entity_type         = context_view_field(r.context,  6, 0)
 
-        f_Field_typeref             = context_view_field(r.context,  6, 0)
-        f_Field_fieldref            = context_view_field(r.context,  6, 1)
-        f_Field_default             = context_view_field(r.context,  7, 0)
-        f_Field_placeholder         = context_view_field(r.context,  8, 0)
-        f_Field_tooltip             = context_view_field(r.context,  9, 0)
-        f_Field_fields              = context_view_field(r.context, 10, 0)
-        f_Field_repeat_label_add    = context_view_field(r.context, 11, 0)
-        f_Field_repeat_label_delete = context_view_field(r.context, 11, 1)
-        f_Field_restrict            = context_view_field(r.context, 12, 0)
+        f_Field_typeref             = context_view_field(r.context,  7, 0)
+        f_Field_fieldref            = context_view_field(r.context,  7, 1)
+        f_Field_default             = context_view_field(r.context,  8, 0)
+        f_Field_placeholder         = context_view_field(r.context,  9, 0)
+        f_Field_tooltip             = context_view_field(r.context, 10, 0)
+        f_Field_fields              = context_view_field(r.context, 11, 0)
+        f_Field_repeat_label_add    = context_view_field(r.context, 12, 0)
+        f_Field_repeat_label_delete = context_view_field(r.context, 12, 1)
+        f_Field_restrict            = context_view_field(r.context, 13, 0)
         check_context_field(self, f_Field_id,
             field_id=           "Field_id",
             field_name=         "entity_id",
@@ -479,6 +499,16 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Placement",
             field_value=        field_placement,
+            options=            self.no_options
+            )
+        check_context_field(self, f_Field_superproperty_uris,
+            field_id=           "Field_superproperty_uris",
+            field_name=         "Field_superproperty_uris",
+            field_property_uri= "annal:superproperty_uri",
+            field_render_type=  "Group_Set_Row",
+            field_value_mode=   "Value_direct",
+            field_value_type=   "annal:Field_superproperty_uri",
+            field_value=        field_superproperty_uris,
             options=            self.no_options
             )
         check_context_field(self, f_Field_typeref,
@@ -594,24 +624,25 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             tooltip3=context_view_field(r.context,     2, 0)['field_tooltip'], # Help
             tooltip4a=context_view_field(r.context,    3, 0)['field_tooltip'], # Property
             tooltip4b=context_view_field(r.context,    3, 1)['field_tooltip'], # Placement
-            tooltip5a=context_view_field(r.context,    4, 0)['field_tooltip'], # Value type
-            tooltip5b=context_view_field(r.context,    4, 1)['field_tooltip'], # Value mode
-            tooltip6=context_view_field(r.context,     5, 0)['field_tooltip'], # Entity type URI
-            tooltip7a=context_view_field(r.context,    6, 0)['field_tooltip'], # Typeref
-            tooltip7b=context_view_field(r.context,    6, 1)['field_tooltip'], # Fieldref
-            tooltip8=context_view_field(r.context,     7, 0)['field_tooltip'], # default
-            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # Placeholder
-            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # Tooltip
-            tooltip11=context_view_field(r.context,   10, 0)['field_tooltip'], # Subfields
-            tooltip11f1=context_view_field(r.context, 10, 0).
+            tooltip5=context_view_field(r.context,     4, 0)['field_tooltip'], # Superproperty URIs
+            tooltip6a=context_view_field(r.context,    5, 0)['field_tooltip'], # Value type
+            tooltip6b=context_view_field(r.context,    5, 1)['field_tooltip'], # Value mode
+            tooltip7=context_view_field(r.context,     6, 0)['field_tooltip'], # Entity type URI
+            tooltip8a=context_view_field(r.context,    7, 0)['field_tooltip'], # Typeref
+            tooltip8b=context_view_field(r.context,    7, 1)['field_tooltip'], # Fieldref
+            tooltip9=context_view_field(r.context,     8, 0)['field_tooltip'], # default
+            tooltip10=context_view_field(r.context,    9, 0)['field_tooltip'], # Placeholder
+            tooltip11=context_view_field(r.context,   10, 0)['field_tooltip'], # Tooltip
+            tooltip12=context_view_field(r.context,   11, 0)['field_tooltip'], # Subfields
+            tooltip12f1=context_view_field(r.context, 11, 0).
                        _field_description['group_field_descs'][0]['field_tooltip'],
-            tooltip11f2=context_view_field(r.context, 10, 0).
+            tooltip12f2=context_view_field(r.context, 11, 0).
                        _field_description['group_field_descs'][1]['field_tooltip'],
-            tooltip11f3=context_view_field(r.context, 10, 0).
+            tooltip12f3=context_view_field(r.context, 11, 0).
                        _field_description['group_field_descs'][2]['field_tooltip'],
-            tooltip12a=context_view_field(r.context,  11, 0)['field_tooltip'], # Add
-            tooltip12b=context_view_field(r.context,  11, 1)['field_tooltip'], # Delete
-            tooltip13=context_view_field(r.context,   12, 0)['field_tooltip'], # Restriction
+            tooltip13a=context_view_field(r.context,  12, 0)['field_tooltip'], # Add
+            tooltip13b=context_view_field(r.context,  12, 1)['field_tooltip'], # Delete
+            tooltip14=context_view_field(r.context,   13, 0)['field_tooltip'], # Restriction
             )
         formrow1col1 = """
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
@@ -707,8 +738,57 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow5col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip5a)s">
+        formrow5head = """
+            <div class="small-12 columns" title="%(tooltip5)s">
+              <div class="grouprow row">
+                <div class="group-label small-12 medium-2 columns">
+                  <span>Superproperty URIs</span>
+                </div>
+                <div class="small-12 medium-10 columns hide-for-small-only">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 columns">
+                          <span>Superproperty URI</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow5tail = """
+            <div class="small-12 columns">
+              <div class="grouprow row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Field_superproperty_uris__remove"
+                             value="Remove superproperty URI" />
+                      <input type="submit" name="Field_superproperty_uris__add"
+                             value="Add superproperty URI" />
+                      <input type="submit" name="Field_superproperty_uris__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Field_superproperty_uris__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        formrow6col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip6a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
               <span>Value type</span>
@@ -721,8 +801,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow5col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip5b)s">
+        formrow6col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip6b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Value mode</span>
@@ -738,8 +818,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow6col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip6)s">
+        formrow7col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip7)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Entity type</span>
@@ -752,8 +832,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow7col1 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip7a)s">
+        formrow8col1 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip8a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to type</span>
@@ -771,8 +851,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow7col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip7b)s">
+        formrow8col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip8b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Refer to field</span>
@@ -784,8 +864,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow8 = """
-            <div class="small-12 columns" title="%(tooltip8)s">
+        formrow9 = """
+            <div class="small-12 columns" title="%(tooltip9)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Default value</span>
@@ -798,8 +878,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow9 = """
-            <div class="small-12 columns" title="%(tooltip9)s">
+        formrow10 = """
+            <div class="small-12 columns" title="%(tooltip10)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Placeholder</span>
@@ -811,8 +891,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow10 = """
-            <div class="small-12 columns" title="%(tooltip10)s">
+        formrow11 = """
+            <div class="small-12 columns" title="%(tooltip11)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                     <span>Tooltip</span>
@@ -825,8 +905,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow11h = """
-            <div class="small-12 columns" title="%(tooltip11)s">
+        formrow12h = """
+            <div class="small-12 columns" title="%(tooltip12)s">
               <div class="grouprow row">
                 <div class="%(group_label_classes)s">
                   <span>Subfields</span>
@@ -855,7 +935,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=12)
 
-        # formrow11b1c = """
+        # formrow12b1c = """
         #     <div class="small-1 columns checkbox-in-edit-padding">
         #       <input type="checkbox" class="select-box right" 
         #              name="View_fields__select_fields"
@@ -863,8 +943,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         #     </div>        
         #     """
 
-        # formrow11b1f1 = ("""
-        #     <div class="small-12 medium-4 columns" title="%(tooltip11b1f1)s">
+        # formrow12b1f1 = ("""
+        #     <div class="small-12 medium-4 columns" title="%(tooltip12b1f1)s">
         #       <div class="row show-for-small-only">
         #         <div class="view-label small-12 columns">
         #           <span>Field id</span>
@@ -885,7 +965,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         #     </div>
         #     """)%field_vals(width=4)
 
-        formrow11t = """
+        formrow12t = """
             <div class="small-12 columns">
               <div class="grouprow row">
                 <div class="small-12 medium-2 columns">
@@ -911,8 +991,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow12col1 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip12a)s">
+        formrow13col1 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip13a)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Add value label</span>
@@ -925,8 +1005,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow12col2 = """
-            <div class="small-12 medium-6 columns" title="%(tooltip12b)s">
+        formrow13col2 = """
+            <div class="small-12 medium-6 columns" title="%(tooltip13b)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Remove value label</span>
@@ -939,8 +1019,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-        formrow13 = """
-            <div class="small-12 columns" title="%(tooltip13)s">
+        formrow14 = """
+            <div class="small-12 columns" title="%(tooltip14)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
                   <span>Value restriction</span>
@@ -960,19 +1040,21 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow3,      html=True)    # Comment/help
         self.assertContains(r, formrow4col1,  html=True)    # Property URI
         self.assertContains(r, formrow4col2,  html=True)    # Placement
-        self.assertContains(r, formrow5col1,  html=True)    # Value type
-        self.assertContains(r, formrow5col2,  html=True)    # Value mode
-        self.assertContains(r, formrow6col1,  html=True)    # Entity type
-        self.assertContains(r, formrow7col1,  html=True)    # Ref type (enum)
-        self.assertContains(r, formrow7col2,  html=True)    # Ref field
-        self.assertContains(r, formrow8,      html=True)    # Default
-        self.assertContains(r, formrow9,      html=True)    # Placeholder
-        self.assertContains(r, formrow10,     html=True)    # Tooltip
-        self.assertContains(r, formrow11h,    html=True)    # Field list headers
-        self.assertContains(r, formrow11t,    html=True)    # Field list tail (buttons)
-        self.assertContains(r, formrow12col1, html=True)    # Add field label
-        self.assertContains(r, formrow12col2, html=True)    # Delete field label
-        self.assertContains(r, formrow13,     html=True)    # Restriction
+        self.assertContains(r, formrow5head,  html=True)    # Superproperty URIs heading
+        self.assertContains(r, formrow5tail,  html=True)    # Superproperty URIs buttons
+        self.assertContains(r, formrow6col1,  html=True)    # Value type
+        self.assertContains(r, formrow6col2,  html=True)    # Value mode
+        self.assertContains(r, formrow7col1,  html=True)    # Entity type
+        self.assertContains(r, formrow8col1,  html=True)    # Ref type (enum)
+        self.assertContains(r, formrow8col2,  html=True)    # Ref field
+        self.assertContains(r, formrow9,      html=True)    # Default
+        self.assertContains(r, formrow10,      html=True)   # Placeholder
+        self.assertContains(r, formrow11,     html=True)    # Tooltip
+        self.assertContains(r, formrow12h,    html=True)    # Field list headers
+        self.assertContains(r, formrow12t,    html=True)    # Field list tail (buttons)
+        self.assertContains(r, formrow13col1, html=True)    # Add field label
+        self.assertContains(r, formrow13col2, html=True)    # Delete field label
+        self.assertContains(r, formrow14,     html=True)    # Restriction
         return
 
     def test_get_new(self):
@@ -1053,10 +1135,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.info(r.content)
         err_label = error_label("testcoll", layout.FIELD_TYPEID, "fieldnone")
-        self.assertContains(r, 
-            "<p>Entity %s does not exist</p>"%(err_label), 
-            status_code=404
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.FIELD_TYPEID, 
+            id="fieldnone", 
+            label=err_label
             )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit_field_fields(self):
@@ -1133,7 +1217,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_new_field(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
-        f = recordfield_entity_view_form_data(field_id="newfield", action="new")
+        f = recordfield_entity_view_form_data(
+            field_id="newfield", action="new",
+            property_uri="test:new_prop",
+            )
         u = entitydata_edit_url("new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view")
         r = self.client.post(u, f)
         # print r.content
@@ -1143,12 +1230,15 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # NOTE: Location header must be absolute URI
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check new entity data created
-        self._check_view_data_values("newfield")
+        self._check_view_data_values("newfield", property_uri="test:new_prop")
         return
 
     def test_post_new_field_no_continuation(self):
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
-        f = recordfield_entity_view_form_data(field_id="newfield", action="new")
+        f = recordfield_entity_view_form_data(
+            field_id="newfield", action="new",
+            property_uri="test:new_prop",
+            )
         f['continuation_url'] = ""
         u = entitydata_edit_url("new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view")
         r = self.client.post(u, f)
@@ -1159,7 +1249,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # NOTE: Location header must be absolute URI
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check new entity data created
-        self._check_view_data_values("newfield")
+        self._check_view_data_values("newfield", property_uri="test:new_prop")
         return
 
     def test_post_new_field_cancel(self):
@@ -1182,7 +1272,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context
         expect_context = recordfield_entity_view_context_data(action="new")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -1194,7 +1284,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
@@ -1209,7 +1299,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
 
     def test_post_copy_entity(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
-        f = recordfield_entity_view_form_data(field_id="copyfield", action="copy")
+        f = recordfield_entity_view_form_data(
+            field_id="copyfield", action="copy",
+            property_uri="test:copy_prop",
+            )
         u = entitydata_edit_url("copy", "testcoll", 
             type_id=layout.FIELD_TYPEID, view_id="Field_view", entity_id="Entity_type"
             )
@@ -1219,12 +1312,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that new record type exists
-        self._check_view_data_values("copyfield")
+        self._check_view_data_values("copyfield", property_uri="test:copy_prop")
         return
 
     def test_post_copy_entity_cancel(self):
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
-        f = recordfield_entity_view_form_data(field_id="copyfield", action="copy", cancel="Cancel")
+        f = recordfield_entity_view_form_data(
+            field_id="copyfield", action="copy", cancel="Cancel"
+            )
         u = entitydata_edit_url("copy", "testcoll", 
             type_id=layout.FIELD_TYPEID, view_id="Field_view", entity_id="Entity_type"
             )
@@ -1246,7 +1341,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         expect_context = recordfield_entity_view_context_data(action="copy")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
@@ -1261,7 +1356,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         expect_context = recordfield_entity_view_context_data(
             field_id="!badentity", orig_id="orig_field_id", action="copy"
             )
@@ -1274,7 +1369,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._create_view_data("editfield")
         self._check_view_data_values("editfield")
         f = recordfield_entity_view_form_data(
-            field_id="editfield", action="edit", update="Updated entity"
+            field_id="editfield", action="edit", 
+            property_uri="test:edit_prop",
+            update="Updated entity"
             )
         u = entitydata_edit_url("edit", "testcoll",
             type_id=layout.FIELD_TYPEID, view_id="Field_view", entity_id="editfield"
@@ -1284,7 +1381,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
-        self._check_view_data_values("editfield", update="Updated entity")
+        self._check_view_data_values("editfield", 
+            property_uri="test:edit_prop", 
+            update="Updated entity"
+            )
         return
 
     def test_post_edit_entity_new_id(self):
@@ -1292,7 +1392,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self._check_view_data_values("editfieldid1")
         # Now post edit form submission with different values and new id
         f = recordfield_entity_view_form_data(
-            field_id="editfieldid2", orig_id="editfieldid1", action="edit"
+            field_id="editfieldid2", orig_id="editfieldid1", action="edit",
+            property_uri="test:edit_prop"
             )
         u = entitydata_edit_url("edit", "testcoll", 
             type_id=layout.FIELD_TYPEID, view_id="Field_view", entity_id="editfieldid1"
@@ -1304,7 +1405,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that new record type exists and old does not
         self.assertFalse(RecordField.exists(self.testcoll, "editfieldid1"))
-        self._check_view_data_values("editfieldid2")
+        self._check_view_data_values("editfieldid2", property_uri="test:edit_prop")
         return
 
     def test_post_edit_entity_cancel(self):
@@ -1337,7 +1438,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(action="edit", update="Updated entity")
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -1358,7 +1459,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record field identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_FIELD_ID))
         # Test context for re-rendered form
         expect_context = recordfield_entity_view_context_data(
             field_id="!badfieldid", orig_id="orig_field_id", action="edit"
@@ -1514,7 +1615,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Create new field entity
         self._create_view_data("taskmanyfield")
         self._check_view_data_values("taskmanyfield")
-        # Post define repeat field
+        # Post define multi-value field
         f = recordfield_entity_view_form_data(
             field_id="taskmanyfield",
             field_label="Test many field",
@@ -1531,7 +1632,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
-        # Check content of type, view and list
+        # Check content of field
         common_vals = (
             { 'coll_id':        "testcoll"
             , 'field_id':       "taskmanyfield"
@@ -1589,7 +1690,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , 'property_uri':   "test:ref_prop"
             , 'field_typeid':   layout.FIELD_TYPEID
             })
-        # Create new type
+        # Create new field
         self._create_view_data(common_vals["field_id"])
         self._check_view_data_values(common_vals["field_id"])
         # Post define field reference
@@ -1652,6 +1753,69 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             })
         self.check_entity_values(layout.FIELD_TYPEID, tgt_field_id, expect_field_values)
         self.check_entity_values(layout.FIELD_TYPEID, ref_field_id, expect_ref_field_values)
+        return
+
+    def test_define_subproperty_field_task(self):
+        common_vals = (
+            { 'coll_id':            "testcoll"
+            , 'field_id':           "basefield"
+            , 'field_label':        "Test subproperty field"
+            , 'type_uri':           "test:subprop_field"
+            , 'property_uri':       "test:prop"
+            , 'subfield_id':        "basefield"+layout.SUFFIX_SUBPROPERTY
+            , 'subfield_label':     "@@ Subfield of Field testcoll/_field/basefield (basefield)@@"
+            , 'subproperty_uri':    "test:prop_subproperty"
+            , 'field_typeid':       layout.FIELD_TYPEID
+            })
+        # Create new field
+        self._create_view_data(
+            common_vals["field_id"], 
+            property_uri=common_vals["property_uri"], 
+            type_uri=common_vals["type_uri"]
+            )
+        self._check_view_data_values(
+            common_vals["field_id"], 
+            property_uri=common_vals["property_uri"], 
+            type_uri=common_vals["type_uri"]
+            )
+        # Post define field reference
+        f = recordfield_entity_view_form_data(
+            field_id=common_vals["field_id"],
+            entity_type=common_vals["type_uri"],
+            task="Define_subproperty_field"
+            )
+        u = entitydata_edit_url("view", "testcoll", 
+            type_id=layout.FIELD_TYPEID, view_id="Field_view", 
+            entity_id=common_vals["field_id"]
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.content,       "")
+        v = entitydata_edit_url(action="edit", 
+            coll_id="testcoll", type_id=layout.FIELD_TYPEID, 
+            entity_id=common_vals["subfield_id"], 
+            view_id="Field_view"
+            )
+        self.assertIn(v, r['location'])
+        w = "Created%%20field%%20%(subfield_id)s"%common_vals
+        self.assertIn(w, r['location'])
+        # Check content of new field
+        expect_subfield_values = (
+            { "annal:id":                   common_vals["subfield_id"]
+            , "annal:type":                 "annal:Field"
+            , "rdfs:label":                 common_vals["subfield_label"]
+            , "annal:field_render_type":    "_enum_render_type/Text"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+            , "annal:field_entity_type":    common_vals["type_uri"]
+            , "annal:field_value_type":     "annal:Text"
+            , "annal:property_uri":         common_vals["subproperty_uri"]
+            , "annal:superproperty_uri":    [ {"@id": common_vals["property_uri"]} ]
+            # , "annal:field_placement":      "small:0,12"
+            })
+        self.check_entity_values(
+            layout.FIELD_TYPEID, common_vals["subfield_id"], expect_subfield_values
+            )
         return
 
     #   -------- Test subfields with different selection types --------
@@ -1737,7 +1901,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete="Remove selected field(s)"
             )
         # Access and check selectable options for subfield id
-        f_Field_fields          = context_view_field(r.context, 10, 0)
+        f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
         actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
         # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
@@ -1810,7 +1974,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete="Remove link"
             )
         # Access and check selectable options for subfield id
-        f_Field_fields          = context_view_field(r.context, 10, 0)
+        f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.group_field_descs[0]
         actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
@@ -1916,7 +2080,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               ])
         self._check_context_fields(r, 
             field_id="domain_r",
-            field_render_type="Group_Seq_Row",
+            field_render_type="Group_Set_Row",
             field_type="rdf:Property",
             field_entity_type="rdf:Property",
             field_label="Domains",
@@ -1928,7 +2092,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             field_repeat_label_delete="Remove domain"
             )
         # Access and check selectable options for domain field
-        f_Field_fields = context_view_field(r.context, 10, 0)
+        f_Field_fields = context_view_field(r.context, 11, 0)
         f_domain_field = f_Field_fields.group_field_descs[0]
         actual_domain_choices = f_domain_field["field_choices"].values()
         self.assertEqual(actual_domain_choices, expect_domain_choices)

@@ -61,6 +61,10 @@ from entity_testlistdata    import (
     recordlist_edit_url,
     recordlist_create_values, recordlist_read_values,
     )
+from entity_testfielddata import (
+    recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
+    recordfield_create_values, recordfield_values, recordfield_read_values,
+    )
 from entity_testentitydata  import (
     entitydata_list_all_url
     )
@@ -83,9 +87,10 @@ from entity_testcolldata    import (
 #
 #   -----------------------------------------------------------------------------
 
-site_types = get_site_types()
-site_views = get_site_views()
-site_lists = get_site_lists()
+site_types  = get_site_types()
+site_views  = get_site_views()
+site_lists  = get_site_lists()
+site_fields = get_site_fields()
 
 class CollectionTest(AnnalistTestCase):
     """
@@ -99,18 +104,22 @@ class CollectionTest(AnnalistTestCase):
         self.testcoll     = Collection(self.testsite, "testcoll")
         self.coll1        = collection_values("coll1")
         self.testcoll_add = collection_create_values("testcoll")
-        self.type1_add    = recordtype_create_values("testcoll", "type1")
-        self.type1        = recordtype_read_values("testcoll", "type1")
-        self.type2_add    = recordtype_create_values("testcoll", "type2")
-        self.type2        = recordtype_read_values("testcoll", "type2")
-        self.view1_add    = recordview_create_values("testcoll", "view1")
-        self.view1        = recordview_read_values("testcoll", "view1")
-        self.view2_add    = recordview_create_values("testcoll", "view2")
-        self.view2        = recordview_read_values("testcoll", "view2")
-        self.list1_add    = recordlist_create_values("testcoll", "list1")
-        self.list1        = recordlist_read_values("testcoll", "list1")
-        self.list2_add    = recordlist_create_values("testcoll", "list2")
-        self.list2        = recordlist_read_values("testcoll", "list2")
+        self.type1_add    = recordtype_create_values("testcoll",  "type1")
+        self.type1        = recordtype_read_values("testcoll",    "type1")
+        self.type2_add    = recordtype_create_values("testcoll",  "type2")
+        self.type2        = recordtype_read_values("testcoll",    "type2")
+        self.view1_add    = recordview_create_values("testcoll",  "view1")
+        self.view1        = recordview_read_values("testcoll",    "view1")
+        self.view2_add    = recordview_create_values("testcoll",  "view2")
+        self.view2        = recordview_read_values("testcoll",    "view2")
+        self.list1_add    = recordlist_create_values("testcoll",  "list1")
+        self.list1        = recordlist_read_values("testcoll",    "list1")
+        self.list2_add    = recordlist_create_values("testcoll",  "list2")
+        self.list2        = recordlist_read_values("testcoll",    "list2")
+        self.field1_add   = recordfield_create_values("testcoll", "field1")
+        self.field1       = recordfield_read_values("testcoll",   "field1")
+        self.field2_add   = recordfield_create_values("testcoll", "field2")
+        self.field2       = recordfield_read_values("testcoll",   "field2")
         return
 
     def tearDown(self):
@@ -119,7 +128,7 @@ class CollectionTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_CollectionTest(self):
@@ -240,18 +249,18 @@ class CollectionTest(AnnalistTestCase):
 
     def test_add_view(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        viewnames = { t.get_id() for t in self.testcoll.views() }
+        viewnames = { v.get_id() for v in self.testcoll.views() }
         self.assertEqual(viewnames, site_views)
-        t1 = self.testcoll.add_view("view1", self.view1_add)
-        t2 = self.testcoll.add_view("view2", self.view2_add)
-        viewnames = { t.get_id() for t in self.testcoll.views() }
+        v1 = self.testcoll.add_view("view1", self.view1_add)
+        v2 = self.testcoll.add_view("view2", self.view2_add)
+        viewnames = { v.get_id() for v in self.testcoll.views() }
         self.assertEqual(viewnames, {"view1", "view2"}|site_views)
         return
 
     def test_get_view(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        t1 = self.testcoll.add_view("view1", self.view1_add)
-        t2 = self.testcoll.add_view("view2", self.view2_add)
+        v1 = self.testcoll.add_view("view1", self.view1_add)
+        v2 = self.testcoll.add_view("view2", self.view2_add)
         self.assertKeysMatch(self.testcoll.get_view("view1").get_values(), self.view1)
         self.assertKeysMatch(self.testcoll.get_view("view2").get_values(), self.view2)
         self.assertDictionaryMatch(self.testcoll.get_view("view1").get_values(), self.view1)
@@ -260,14 +269,14 @@ class CollectionTest(AnnalistTestCase):
 
     def test_remove_view(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        t1 = self.testcoll.add_view("view1", self.view1_add)
-        t2 = self.testcoll.add_view("view2", self.view2_add)
-        viewnames = { t.get_id() for t in self.testcoll.views() }
+        v1 = self.testcoll.add_view("view1", self.view1_add)
+        v2 = self.testcoll.add_view("view2", self.view2_add)
+        viewnames = { v.get_id() for v in self.testcoll.views() }
         self.assertEqual(viewnames, {"view1", "view2"}|site_views)
         self.testcoll.remove_view("view1")
-        viewnames = { t.get_id() for t in self.testcoll.views() }
+        viewnames = { v.get_id() for v in self.testcoll.views() }
         self.assertEqual(viewnames, {"view2"}|site_views)
-        viewnames = { t.get_id() for t in self.testcoll.views(altscope=None) }
+        viewnames = { v.get_id() for v in self.testcoll.views(altscope=None) }
         self.assertEqual(viewnames, {"view2"})
         return
 
@@ -275,33 +284,66 @@ class CollectionTest(AnnalistTestCase):
 
     def test_add_list(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        listnames = { t.get_id() for t in self.testcoll.lists() }
+        listnames = { l.get_id() for l in self.testcoll.lists() }
         self.assertEqual(listnames, site_lists)
-        t1 = self.testcoll.add_list("list1", self.list1_add)
-        t2 = self.testcoll.add_list("list2", self.list2_add)
-        listnames = { t.get_id() for t in self.testcoll.lists() }
+        l1 = self.testcoll.add_list("list1", self.list1_add)
+        l2 = self.testcoll.add_list("list2", self.list2_add)
+        listnames = { l.get_id() for l in self.testcoll.lists() }
         self.assertEqual(listnames, {"list1", "list2"}|site_lists)
-        listnames = { t.get_id() for t in self.testcoll.lists(altscope=None) }
+        listnames = { l.get_id() for l in self.testcoll.lists(altscope=None) }
         self.assertEqual(listnames, {"list1", "list2"})
         return
 
     def test_get_list(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        t1 = self.testcoll.add_list("list1", self.list1_add)
-        t2 = self.testcoll.add_list("list2", self.list2_add)
+        l1 = self.testcoll.add_list("list1", self.list1_add)
+        l2 = self.testcoll.add_list("list2", self.list2_add)
         self.assertDictionaryMatch(self.testcoll.get_list("list1").get_values(), self.list1)
         self.assertDictionaryMatch(self.testcoll.get_list("list2").get_values(), self.list2)
         return
 
     def test_remove_list(self):
         self.testsite.add_collection("testcoll", self.testcoll_add)
-        t1 = self.testcoll.add_list("list1", self.list1_add)
-        t2 = self.testcoll.add_list("list2", self.list2_add)
-        listnames = { t.get_id() for t in self.testcoll.lists() }
+        l1 = self.testcoll.add_list("list1", self.list1_add)
+        l2 = self.testcoll.add_list("list2", self.list2_add)
+        listnames = { l.get_id() for l in self.testcoll.lists() }
         self.assertEqual(listnames, {"list1", "list2"}|site_lists)
         self.testcoll.remove_list("list1")
-        listnames = { t.get_id() for t in self.testcoll.lists() }
+        listnames = { l.get_id() for l in self.testcoll.lists() }
         self.assertEqual(listnames, {"list2"}|site_lists)
+        return
+
+    # View/list fields
+
+    def test_add_field(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        fieldnames = { f.get_id() for f in self.testcoll.fields() }
+        self.assertEqual(fieldnames, site_fields)
+        f1 = self.testcoll.add_field("field1", self.field1_add)
+        f2 = self.testcoll.add_field("field2", self.field2_add)
+        fieldnames = { f.get_id() for f in self.testcoll.fields() }
+        self.assertEqual(fieldnames, {"field1", "field2"}|site_fields)
+        return
+
+    def test_get_field(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        f1 = self.testcoll.add_field("field1", self.field1_add)
+        f2 = self.testcoll.add_field("field2", self.field2_add)
+        self.assertDictionaryMatch(self.testcoll.get_field("field1").get_values(), self.field1)
+        self.assertDictionaryMatch(self.testcoll.get_field("field2").get_values(), self.field2)
+        return
+
+    def test_remove_field(self):
+        self.testsite.add_collection("testcoll", self.testcoll_add)
+        f1 = self.testcoll.add_field("field1", self.field1_add)
+        f2 = self.testcoll.add_field("field2", self.field2_add)
+        fieldnames = { f.get_id() for f in self.testcoll.fields() }
+        self.assertEqual(fieldnames, {"field1", "field2"}|site_fields)
+        self.testcoll.remove_field("field1")
+        fieldnames =  { f.get_id() for f in self.testcoll.fields() }
+        self.assertEqual(fieldnames, {"field2"}|site_fields)
+        fieldnames =  { f.get_id() for f in self.testcoll.fields(altscope=None) }
+        self.assertEqual(fieldnames, {"field2"})
         return
 
     # Alternative parent setting
@@ -413,7 +455,7 @@ class CollectionEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_CollectionEditViewTest(self):

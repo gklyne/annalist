@@ -18,7 +18,7 @@
 
       <div class="row">
         {% for field in fields %}
-        {% include field.field_render_label_view %}
+        {% include field.render.label_view %}
         {% endfor %}
       </div>
 
@@ -69,7 +69,7 @@
       <div class="row hide-on-print">
 
         {% with field=view_choices %}
-        {% include field.field_render_label_edit %}
+        {% include field.render.label_edit %}
         {% endwith %}
 
         <div class="small-12 medium-6 columns text-right medium-up-text-right">

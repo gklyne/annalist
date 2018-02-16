@@ -18,90 +18,70 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 See also: https://www.divio.com/en/blog/documentation/
 
 
-# Version 0.5.5, towards 0.5.6
+# Version 0.5.7, towards 0.5.8
 
-- [x] BUG: show warning when accessing collection with missing parent.
-    - The implementation of this fix has involved a significant refactoring of error reporting and entity delete confirmation logic, to use more common code in DisplayInfo.
-    - In some cases, continuation URLs used have changed
-- [x] BUG: define repeat field task should use same property URI (without suffix)
-- [x] BUG: deleting field definition from "Smoke" collection causes internal errors
-- [x] BUG: Customize window doesn't return to previous URL after data migration.
-- [x] BUG: `Journal_refs` field in `Journal_defs` collection was causing context generation errors
-    - These in turn caused Turtle output generation server errors (500).
-    - Changed property URI `annal:member` to `coll:Journal_refs` for field `Journal_defs`
-    - This may affect collections that use this field (e.g. `IG_Philadelphia_Project`).
-- [x] BUG: Login sequence from authz error page does not always return to original page viewed
-- [x] BUG: changing view and/or list from default values causes 500 Server Error; but nothing shows in log; e.g.
-    - 500: Server error
-    - u'frbr:Group_1_entity' - see server log for details
-    - Seems to occur while (re)generating context
-    - Maybe related to removal of a supertype rather than view/list
-    - Or related to copy type then change URI?
-    - Tracked down to removal of type URI->Id entty in CollectionTypeCache.remove_type
-    - Replaced `del` dictionary entry with `.pop()` operation so no error if the key missing.
-- [x] BUG: define repeat field: should use base type for value and entity type
-- [x] BUG: editing details of parent collection in another browser tab can leave inhertiting collection view "stuck" with old cached values.
-    - At minimum, need an easy way to force cache-refresh.
-    - Better: invalidate caches for dependent collections when invalidating parent.
-    - NOTE: type update does not do complete cache flush - maybe it should?
-    - NOTE: collection-level type cache is not currently called anywhere apart from tests
-    - For now, displaying a default collection view (e.g. from list of collections, or from menu bar) causes all collection caches to be flushed.
-- [x] BUG: in 'cgreenhalgh_annalist_performance_archive', linked audio example is displayed twice in list, but only one instance exists.  Something similar happens if example linked image is created.
-    - Occurred when corresponding type is defined by multiple parent collections.
-    - Fixed logic in `Entity._children`
-- [x] BUG: create subtype of parent type, and rename, then attempt to create view+list before saving: generates an error message, e.g. "Record type meld_Motivation_sub in collection MELD_Climb_performance already exists".  It's possible it's because the new name already exists, but the old one is reported here. Looks like a labelling error in message rather than a deeper logic error. 
-- [x] Add Entity_uri field definition to site data.
-- [x] Make labels for enumeration/choice render types more usefully descriptive.
-- [x] Review form of URI used for Resource_defs internal types (coll: namespace?).  Add built-in support to generate prefix mapping in context.
-    - propose: `resource:...`, `journal:...`
-    - Any change of prefix name will require aliasing or migrating old property names and types.  How to manage this?
-- [x] Improve styling for printed form of Annalist pages (currently it looks a mess: uses small-screen layout)
-- [x] Generate README for collection incorporating description from coll-meta (as part of context generation?).
-- [x] Improve performance of mechanisms used for finding type information
-    - (working with CIDOC-CRM deeply nested type hierarchy gets very slow)
-    - [x] create CollectionTypeCache
-    - [x] Test suite for CollectionTypeCache
-    - [x] Update Collection to use CollectionTypeCache
-    - [x] EntityRoot: add hook "._post_remove_processing"
-    - [x] RecordType: add hook methods for update/remove type
-    - [x] CollectionClosure: change method names from camelCase
-- [x] Use transitive closure when locating entities of a designated type (for selecting applicable fields).
-    - [x] Update EntityTypeInfo (get_all_type_uris) to use collection cache methods.
-    - [x] Review EntityFinder to use collection cache methods.
-    - [x] Look for all uses of _children method?
-        - Note method EntityRoot.child_entity_ids: uses _children + Exists
-        - Site overrides this method
-    - [x] Created ClosureCache class
-- [x] Show type URIs in type list
-- [x] When rendering link, expand prefix in href if defined in collection
-    - [x] introduce vocab namespace cache (collectionvocabcache)
-    - [x] test cases for cache
-    - [x] hook in RecordVocab
-    - [x] hook in Collection (and other places where CollectionTypeCache is referenced)
-    - [x] Collection.flush_collection_caches update
-    - [x] update render_uri_link
-- [x] Boolean renderer: not recognizing "Y"; don't need label?
-- [x] Refactor common logic in collectiontypecache and collectionvocabcache.
-- [x] When generating subtype (task button), don't include supertypes
-
-(Sub-release?)
-
-- [ ] Allow multiple entity deletes from list display 
-- [ ] Introduce superproperty/ies field and button to create subproperty field definition
-    - [ ] When selecting data element to display in a field, look for subproperties as well as specified property.
-- [ ] Create FAQ for defining subproperties
-- [ ] Provide renderer that shows calculated supertype transitive closure?
-- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
-- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
-    - copied-from field in entity?
-
-(Sub-release?)
-
-- [ ] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+- [x] BUG: delete list view while viewing that list results in obscure error message.
+    - Improve error handling to use alternative list/view definition
+- [x] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
     - Error reading bad context file, caused by Annalist data errors, which have been fixed.
     - Need to look into improving context-generation diagnostics.
+    - Also caused by trailing spoace on URL: need to check valid URLs; can catch errors?
+    - Added logic to flag error and add details to output.
+- [x] Fix some test cases that were failing due to message text changes.
+    - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
+- [x] Review message text; update more tests to expect text as defined in messages module.
+- [x] Introduce superproperty/ies field and button to create subproperty field definition
+    - [x] Collection methods to access field definitions (model on types)
+    - [x] Cache classes for fields (model on types)
+    - [x] RecordField hook to update collection cache
+    - [x] Test cases for new classes and methods
+    - [x] Update collection to use field cache
+    - [x] Update cache flush logic where used
+    - [x] Test suite provide default property URIs 
+    - [x] RecordField accesses should use collecton cache
+    - [x] Cacheing site values separately: no need to flush as they don't change
+    - [x] Field definition to include superproperty URI list
+    - [x] When selecting data element to display in a field, look for subproperties as well as the specified field property.
+        - [x] Add subproperty discovery logic to bound_field
+        - [x] Update fieldvaluemap.map_form_to_entity so it looks for subproperty to update.
+        - [x] Update field mappers to make 'map_form_to_entity_repeated_item' implementations more consistent.
+        - It appears that the logic for this should be in 'bound_field'
+        - All other code seems to be concerned with creating a bound field object.
+        - The collection (and hence field cache) is available via the bound FieldDescription.
+        - What about saving field value?: need to remember property URI used?
+            - fieldvaluemap.map_form_to_entity passes property URI to value mapper decode_store method
+            - fieldvaluemap.map_entity_to_context just passes the field description to bound_field constructor.  (Level imbalance here?)
+    - [x] Review abstractions and interactions around:
+        - [x] bound_field, add:
+            - [x] 'render' (ref field_renderer)
+            - [x] 'value_mapper'
+        - [x] New field_renderer object accessed by bound_field for field rendering
+        - [x] Rework field rendering logic to use new structure
+        - [x] Remove rendering methods from field description
+        - [x] bound_field access to FieldDecription: use methods not dictionary
+        - [x] Eliminate render mode logic in render_fieldvalue
+    - [x] Add test cases for subproperty access
+    - [x] Add test cases for subproperty list field access/update (with subproperty values)
+    - [x] Add "define subproperty" task button to field definition.
+    - [x] Add test case for "define subproperty" task button
+- [x] Add property hierarchy to CIDOC CRM definitions
+- [x] Create FAQ for defining subproperties
+
+(Sub-release?)
+
+- [ ] Type/field caching: flush in Customize page; try to be more selective about what collections are flushed
+- [ ] Bound_field access to FieldDecription: use methods not dictionary
+    - [ ] Update test case context checking (see bound_field holding comments)
+- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ] Remove corresponding special case code in bound_field.
+- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
+- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] Update pip to latest version in python environment (for continued testing)
-- [ ] Update Django version used to latest version designated for long term support (1.8?)
+- [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
@@ -112,13 +92,15 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
-- [ ] BUG: delete list view while viewing that list results in error message.
-    - Maybe just improve error message.
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
     - Get some experience with initial solution; (previous release)
     - Test cases for subtype creation stages
+- [ ] With implementation of subproperties, are per-type field aliases still needed?
+    - Possible per-type subproperties?
+    - Maybe use these for property updates rather than looking for existing property usage?
+    - Is this an issue?  Need some experience here.
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
@@ -127,32 +109,24 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ] Remove corresponding special case code in bound_field.
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
-- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
 - [ ] *delete views: rationalize into single view?
-- [ ] performance tuning
-    - [ ] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
-    - [ ] look into entity cacheing (esp. RecordType) for performance improvement
+- [.] performance tuning
+    - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
+    - [x] look into entity cacheing (esp. RecordType) for performance improvement
         - partly done per-collection - is this enough?
     - [ ] Re-think access to entities and types:
-        - [ ] There is repeated reading of RecordType values in EntityFinder
+        - [x] There is repeated reading of RecordType values in EntityFinder
               (cf. collection.types() and EntityTypeInfo constructor; also URI access)
-        - [ ] Need more direct way to locate type (and other entities?) by URI
+        - [x] Need more direct way to locate type (and other entities?) by URI
         - [ ] Review common mechanism to retrieve URI for entity?  
               (Current mechanism fixes use of annal:uri for all entities; maybe OK)
-        - [ ] Think about how to optimize retrieval of subtypes/supertypes
-        - [ ] Do special case for types, or more generic caching approach?
+        - [x] Think about how to optimize retrieval of subtypes/supertypes
+        - [x] Do special case for types, or more generic caching approach?
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
-- [ ] Review nomenclature, especially labels, for all site data
+- [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [ ] Provide content for the links in the page footer
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
@@ -172,9 +146,14 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
+- [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
+    - [ ] update 'models'
+    - [ ] update 'views'
+    - [ ] update 'tests'
+    - [ ] update 'annalist-manager'
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
 - [ ] review view URL returned for entities found with alternative parentage:
@@ -191,18 +170,63 @@ Technical debt:
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
 - [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
+- [ ] Review field mapping modules in views/form_utils to be more readable and consistent
+    - Start with 'fieldvaluemap', look for comments in code
+    - Notes:
+        - EntityValueMap 
+            - Handles entity->context and form->entity mapping for a complete entity view.
+            - methods:
+                - add_map_entry
+                - map_value_to_context
+                - map_form_data_to_values
+            - invoked by entitiedit via get_view_entityvaluemap
+            - invoked by entitylist via get_list_entityvaluemap
+                - (has some ad-hoc logic to construct a list definition)
+        - FieldValueMap, FieldListValueMap, FieldRowValueMap, RepeatValuesMap, SimpleValueMap 
+            - Handles entity->context and form->entity mapping for parts of an entity view
+            - methods: 
+                - map_entity_to_context
+                - map_form_to_entity
+                - map_form_to_entity_repeated_item
+                - get_structure_description (for diagnostics only?)
+            - module 'fieldlistvaluemap' also has logic for organizing fields in rows
+- [ ] Tidy up FieldDescription and usage
+    - Notes:
+        - FieldDefinition - definition of field, bound to collection
+            - also accessible as a dictionary (rather breaks abstraction)
+            - currently has logic spread unevenly over bound_field and FieldDefinition
+        - Dependency graph, avoiding loops:
+            -- FieldDescription
+            -> FieldRenderer
+            -> find_renderers
+            -> render_repeatgroup.RenderRepeatGroup
+            -> render_fieldvalue, bound_field
+            - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
-
+- [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
+- [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
 
 Data collection definitions:
 
-- [ ] VoID, DCAT, PROV, CRM
+- [ ] VoID
+- [ ] DCAT
+- [ ] PROV
+- [x] CRM
 
 
 Usability notes:
 
+- [ ] Provide renderer that shows calculated supertype transitive closure?
+- [ ] Allow multiple entity deletes from list display 
+    - views.entitylist > post - allow and handle multiple ids for delete operation
+    - views.displayinfo > confirm_delete_entity_response - handle multiple values, including in message
+    - message.REMOVE_ENTITY_DATA - also provide message for multiple entities
+    - views.entitydelete - pass list rather than single entityid; use different form value name
+    - views.entitydeletebase - update to handle list of entity ids, including for confirmation message.  May need to separate failures from successes?
+- [ ] Would be nice to have an easy way to move an edited inherited definition back to the parent collection
+    - copied-from field in entity?
 - [ ] In field definition, "Entity type" should be drop-dwon, with subtype logic handling an initial dereference to obtain the type URI.
 - [ ] Select+"edit" from list display uses list-defined view, not entity type view as when hyperlink is clicked
 - [ ] Simplified field-definition interface? (hide confusing detail; use javascript to hide/expose fields based on selection from simple enumeration of field types?)
@@ -250,6 +274,9 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
+- [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
+    - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Final elimination of RecordGroup (field group) entities
     - [ ] Remove class RecordGroup
@@ -296,8 +323,8 @@ Notes for Future TODOs:
         - longer term, this might be a high-level graphical display (like PROV diag.)
         - use this to think about linking to alternative displays
 - [ ] Extend/alternative view-text field to combine data from multiple fields (per template)
-- [ ] From view of list definition, link to show list itself
-    - Beside "Show view" button, add "Show list"?
+- [x] From view of list definition, link to show list itself
+    - Added "Show this list" task button
 - [ ] Embedded code expansion in help text, and maybe other Markdown:
     - [x] {{site}} base URL for site
     - [x] {{coll}} base url for collection
@@ -353,7 +380,7 @@ Notes for Future TODOs:
 - [ ] git/github integration
     - [ ] annalist-manager options to load/save collection using git (assuming git is installed)
     - [ ] internal options to save history in per-collection git repo
-- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility forthat collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
+- [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility for that collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
     - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
 
 

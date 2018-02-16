@@ -30,6 +30,68 @@ from annalist.views.uri_builder             import (
     )
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
+# -----------------------------------------------------------------------------
+# Field description for doctests (avoids circular imports via FieldDescription)
+# -----------------------------------------------------------------------------
+
+class MockFieldDescription(object):
+    """
+    Simplified field description for local testing.
+    (Somehow, can't get it working with real FieldDescription...)
+    """
+
+    def __init__(self, coll, recordfield):
+        self._field_desc = recordfield
+        return
+
+    def __copy__(self):
+        """
+        Shallow copy of self.
+        """
+        cls = self.__class__
+        result = cls.__new__(cls)
+        result._field_desc = self._field_desc
+        return result
+
+    def __repr__(self):
+        return repr(self._field_desc)
+
+    def get(self, name, default):
+        return self._field_desc.get(name, default)
+
+    def get_field_id(self):
+        """
+        Returns the field identifier
+        """
+        return self._field_desc['field_id']
+
+    def get_field_name(self):
+        """
+        Returns form field name to be used for the described field
+        """
+        return self.get('field_name', self.get_field_id())
+
+    def get_field_property_uri(self):
+        """
+        Returns form field property URI to be used for the described field
+        """
+        return self._field_desc['field_property_uri']
+
+    def get_field_subproperty_uris(self):
+        """
+        Returns list of possible subproperty URIs for the described field
+        """
+        return self._field_desc.get('field_subproperty_uris', [])
+
+    def get_field_value_key(self, entityvals):
+        """
+        Returns field value key for use in supplied entity values instance
+        """
+        return self.get_field_property_uri()
+
+# -----------------------------------------------------------------------------
+# Bound field
+# -----------------------------------------------------------------------------
 
 class bound_field(object):
     """
@@ -48,22 +110,27 @@ class bound_field(object):
 
     See also: http://docs.python.org/2/reference/datamodel.html#slots
 
+    --- from annalist.views.fields.field_description import FieldDescription
+
+    >>> coll = None
     >>> entity = EntityRoot("entityuri", "entityuri", "entitydir", "entitydir")
     >>> entity.set_id("testentity")
     >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
-    >>> field_foo_desc = {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"}
+    >>> field_foo_desc = MockFieldDescription(coll, {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"})
     >>> field_foo = bound_field(field_foo_desc, entity)
+    >>> field_foo._key
+    'foo'
     >>> field_foo.field_type
     'foo_type'
     >>> field_foo.field_value
     'foo_val'
-    >>> field_bar_desc = {"field_id": "bar_id", "field_property_uri": "bar", "field_type": "bar_type"}
+    >>> field_bar_desc = MockFieldDescription(coll, {"field_id": "bar_id", "field_property_uri": "bar", "field_type": "bar_type"})
     >>> field_bar = bound_field(field_bar_desc, entity)
     >>> field_bar.field_type
     'bar_type'
     >>> field_bar.field_value
     'bar_val'
-    >>> field_def_desc = {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"}
+    >>> field_def_desc = MockFieldDescription(coll, {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"})
     >>> entityvals = entity.get_values()
     >>> entityvals['entity_id']      = entity.get_id()
     >>> entityvals['entity_type_id'] = entity.get_type_id()
@@ -104,9 +171,9 @@ class bound_field(object):
         self._field_description = field_description
         self._entityvals        = entityvals
         self._targetvals        = None
-        self._key               = self._field_description['field_property_uri']
+        self._key               = field_description.get_field_property_uri()
         self._extras            = context_extra_values
-        eid = entityvals.get('entity_id', "@@bound_field.__init__@@")
+        # eid = entityvals.get('entity_id', "@@bound_field.__init__@@")
         # log.log(settings.TRACE_FIELD_VALUE,
         #     "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
         #     (field_description['field_id'], eid, self._key, self['field_value'])
@@ -137,6 +204,8 @@ class bound_field(object):
 
         There are also a number of other special cases handled here as needed to 
         support internally-generated hyperlinks and internal system logic.
+
+        @@TODO: remove automagical retrieval of attributes from field description.
         """
         # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
@@ -148,6 +217,8 @@ class bound_field(object):
             return self._entityvals
         elif name in ["field_value", "field_edit_value"]:
             return self.get_field_value()
+        elif name == "field_value_key":
+            return self.get_field_value_key()
         elif name == "field_value_link":
             return self.get_field_link()
         elif name == "field_help":
@@ -174,7 +245,12 @@ class bound_field(object):
             return self.get_continuation_url()
         elif name == "continuation_param":
             return self.get_continuation_param()
-        elif name == "field_description":
+
+        elif name == "render":
+            return self._field_description["field_renderer"]
+        elif name == "value_mapper":
+            return self._field_description["field_value_mapper"]
+        elif name in ["field_description", "description"]:
             return self._field_description
         elif name == "field_value_key":
             return self._key
@@ -184,30 +260,75 @@ class bound_field(object):
             return self.get_field_options()
         elif name == "copy":
             return self.__copy__
-        #@@
-        # elif name == "field_placeholder":
-        #     return self._field_description.get('field_placeholder', "@@bound_field.field_placeholder@@")
-        #@@
-        else:
-            # log.info("bound_field[%s] -> %r"%(name, self._field_description[name]))
+        # @@TODO: try to eliminate these pass-through references to field_description
+        #         (Prefer explicit reference to 'field.field_description' or 'field.description')
+        # @@NOTE: the test suite currently assumes field_description values appearing directly as
+        #         members of bound_field; e.g. see entity_testfieldvalue comments about line 235.
+        elif name in (
+            [ "row_field_descs"         # render_fieldrow and tests
+            # , "View_fields"
+            # , "List_fields"
+            , "group_field_descs"       # render_ref_multifields, render_repeatgroup, and tests
+            , "field_id"
+            , "field_name"
+            , "field_type"
+            , "field_label"
+            , "field_comment"
+            , "group_id"
+            , "group_label"
+            , "group_field_list"
+            , "group_delete_label"
+            , "group_add_label"
+            , "field_render_type"
+            , "field_value_mode"
+            , "field_value_type"
+            , "field_ref_type"
+            , "field_ref_field"
+            , "field_property_uri"
+            , "field_placement"
+            , "field_placeholder"
+            # , "field_tooltip"
+            , "field_default_value"
+            ]):
             return self._field_description.get(name, "@@bound_field.%s@@"%(name))
+        elif name == "test_value_here":
+            assert False, "@@@@ Accessing bound_field.%s"%(name,)
+        log.info("@@bound_field[%s] -> %r"%(name, self._field_description.get(name, "@@no field_description["+name+"]")))
+        return "@@bound_field.%s@@"%(name)
 
     def get_field_value(self):
         """
         Return field value corresponding to key from field description.
         """
-        field_val = None
-        if self._key in self._entityvals:
-            field_val = self._entityvals[self._key]
-        elif self._extras and self._key in self._extras:
+        field_key = self.get_field_value_key()
+        field_val = self._entityvals.get(field_key, None)
+        # Allow field value to be provided via `context_extra_values` if not in entity.
+        # (Currently used for 'get_view_choices_field' and 'get_list_choices_field'
+        # to insert current display selection.)
+        if field_val is None and self._extras and self._key in self._extras:
             field_val = self._extras[self._key]
+        # If no value present, use default from field definition, or blank value
         if field_val is None:
-            # Return default value, or empty string.
-            # Used to populate form field value when no value supplied, or provide per-field default
             field_val = self._field_description.get('field_default_value', None)
             if field_val is None:
                 field_val = ""
         return field_val
+
+    def get_field_value_key(self):
+        """
+        Return field value key used in current entity.
+
+        This takes account of possible use of subproperties of the property URI
+        specified in the field description.  If the declared property URI is not 
+        present in the entity, and a subproperty URI is present, then that 
+        subproperty URI is returned.  Otherwise the declared property URI is returned.
+        """
+        # if self._key not in self._entityvals:
+        #     subproperty_uris = self._field_description.get_field_subproperty_uris()
+        #     for altkey in subproperty_uris:
+        #         if altkey in self._entityvals:
+        #             return altkey
+        return self._field_description.get_field_value_key(self._entityvals)
 
     def get_field_link(self):
         # Return link corresponding to field value that is a selection from an enumeration of entities
@@ -373,10 +494,6 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
-        #@@
-        # options = self._field_description['field_choice_labels']  # OrderedDict
-        # options = options.values() if options is not None else ["(no options)"]
-        #@@
         options = self._field_description['field_choices']      # OrderedDict
         options = ( options.values() if options is not None else 
                     [ FieldChoice('', label="(no options)") ]
@@ -399,6 +516,7 @@ class bound_field(object):
         yield "field_edit_value"
         yield "field_view_value"
         yield "field_value"
+        yield "field_value_key"
         yield "field_value_link"
         yield "field_value_link_continuation"
         yield "field_help"
@@ -424,6 +542,12 @@ class bound_field(object):
 
     def __repr__(self):
         return self.fullrepr()
+
+    def __str__(self):
+        return self.shortrepr()
+
+    def __unicode__(self):
+        return self.shortrepr()
 
     def shortrepr(self):
         return (
@@ -462,6 +586,10 @@ class bound_field(object):
             "<li>field_description: %r</li>"%(self._field_description,)+
             "</ul>"
             )
+
+# -----------------------------------------------------------------------------
+# Helper functions
+# -----------------------------------------------------------------------------
 
 def get_entity_values(typeinfo=None, entity=None, entity_id=None, action="view"):
     """

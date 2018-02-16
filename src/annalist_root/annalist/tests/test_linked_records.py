@@ -80,7 +80,7 @@ testsrc_view_create_values = (
     , 'rdfs:label':                 "testsrc_view label"
     , 'rdfs:comment':               "testsrc_view comment"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -102,7 +102,7 @@ testtgt_view_create_values = (
     , 'rdfs:label':                 "testtgt_view label"
     , 'rdfs:comment':               "testtgt_view commemnt"
     , 'annal:record_type':          ""
-    , 'annal:add_field':            "yes"
+    # , 'annal:add_field':            "yes"
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -234,7 +234,7 @@ class LinkedRecordTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Utility functions

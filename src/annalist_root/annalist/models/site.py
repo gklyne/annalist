@@ -83,7 +83,7 @@ class Site(EntityRoot):
         """
         Iterates over candidate child identifiers that are possible instances of an 
         indicated class.  The supplied class is used to determine a subdirectory to 
-        be scanned.  As a spoecial case, the children are iterated only in a special 
+        be scanned.  As a special case, the children are iterated only in a special 
         `altscope` called "site".
 
         cls         is a subclass of Entity indicating the type of children to

@@ -74,6 +74,7 @@ class CollectionEntityCacheObject(object):
         super(CollectionEntityCacheObject, self).__init__()
         self._coll_id             = coll_id
         self._entity_cls          = entity_cls
+        self._site_cache          = None
         self._type_id             = entity_cls._entitytypeid
         self._entities_by_id      = {}
         self._entity_ids_by_uri   = {}
@@ -111,14 +112,15 @@ class CollectionEntityCacheObject(object):
             entity.set_values(entity_values["data"])
         return entity
 
-    def _load_entity(self, coll, entity):
+    def _load_entity(self, coll, entity, entity_uri=None):
         """
         Internal helper method loads entity data to cache.
 
         Returns True if new entity was added.
         """
         entity_id     = entity.get_id()
-        entity_uri    = entity.get_uri()
+        if not entity_uri:
+            entity_uri    = entity.get_uri()
         entity_parent = entity.get_parent().get_id()
         entity_data   = entity.get_save_values()
         add_entity    = False
@@ -131,11 +133,15 @@ class CollectionEntityCacheObject(object):
 
     def _load_entities(self, coll):
         """
-        Initialize cache of entities, if not already done
+        Initialize cache of entities, if not already done.
+
+        NOTE: site level entitites are cached separately by the collection cache 
+        manager, and merged separately.  Hence "nosite" scope here.
         """
+        scope_name = "nosite" if self._site_cache else "all"
         if self._entities_by_id == {}:
-            for entity_id in coll._children(self._entity_cls, altscope="all"):
-                t = self._entity_cls.load(coll, entity_id, altscope="all")
+            for entity_id in coll._children(self._entity_cls, altscope=scope_name):
+                t = self._entity_cls.load(coll, entity_id, altscope=scope_name)
                 self._load_entity(coll, t)
         return
 
@@ -154,6 +160,10 @@ class CollectionEntityCacheObject(object):
             self._entity_ids_by_scope = {}
         return entity
 
+    def set_site_cache(self, site_cache):
+        self._site_cache = site_cache
+        return
+
     def get_coll_id(self):
         return self._coll_id
 
@@ -161,6 +171,9 @@ class CollectionEntityCacheObject(object):
         """
         Save a new or updated entity definition.
         """
+        # @@TODO:
+        # The return value is of no use here, as it is
+        # preempted by the call of _load_entities
         self._load_entities(coll)
         return self._load_entity(coll, entity)
 
@@ -170,7 +183,7 @@ class CollectionEntityCacheObject(object):
 
         Returns the entity removed, or None if not found.
         """
-        self._load_entities(coll)
+        self._load_entities(coll)       # @@TODO: is this needed?
         return self._drop_entity(coll, entity_id)
 
     def get_entity(self, coll, entity_id):
@@ -182,7 +195,12 @@ class CollectionEntityCacheObject(object):
         """
         self._load_entities(coll)
         entity_values = self._entities_by_id.get(entity_id, None)
-        return self._make_entity(coll, entity_id, entity_values)
+        if entity_values:
+            return self._make_entity(coll, entity_id, entity_values)
+        # If not in collection cache, look for value in site cache:
+        if self._site_cache:
+            return self._site_cache.get_entity(coll.get_site_data(), entity_id)
+        return None
 
     def get_entity_from_uri(self, coll, entity_uri):
         """
@@ -193,8 +211,15 @@ class CollectionEntityCacheObject(object):
         """
         self._load_entities(coll)
         entity_id = self._entity_ids_by_uri.get(entity_uri, None)
-        entity    = self.get_entity(coll, entity_id)
-        return entity
+        if entity_id:
+            entity    = self.get_entity(coll, entity_id)
+            return entity
+        # If not in collection cache, look for value in site cache:
+        if self._site_cache:
+            return self._site_cache.get_entity_from_uri(
+                coll.get_site_data(), entity_uri
+                )
+        return None
 
     def get_all_entity_ids(self, coll, altscope=None):
         """
@@ -238,6 +263,8 @@ class CollectionEntityCacheObject(object):
 # 
 #   ---------------------------------------------------------------------------
 
+site_cache_by_type_id = {}
+
 class CollectionEntityCache(object):
     """
     This class manages multiple-collection cache objects
@@ -256,6 +283,11 @@ class CollectionEntityCache(object):
         self._entity_cls = entity_cls
         self._type_id    = entity_cls._entitytypeid
         self._caches     = {}
+        if self._type_id not in site_cache_by_type_id:
+            site_cache_by_type_id[self._type_id] = (
+                self._cache_cls(layout.SITEDATA_ID, self._entity_cls)
+                )
+        self._site_cache = site_cache_by_type_id[self._type_id]
         return
 
     # Generic collection cache alllocation and access methods
@@ -271,7 +303,9 @@ class CollectionEntityCache(object):
         coll_id = coll.get_id()
         if coll_id not in self._caches.keys():
             # Create and save new cache object
-            self._caches[coll_id] = self._cache_cls(coll_id, self._entity_cls)
+            coll_cache = self._cache_cls(coll_id, self._entity_cls)
+            coll_cache.set_site_cache(self._site_cache)
+            self._caches[coll_id] = coll_cache
         return self._caches[coll_id]
 
     def flush_cache(self, coll):

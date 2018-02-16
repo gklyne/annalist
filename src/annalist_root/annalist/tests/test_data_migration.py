@@ -220,7 +220,7 @@ class DataMigrationTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     # Utility functions

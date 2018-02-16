@@ -44,11 +44,14 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
     collection_create_values,
     create_test_user,
+    render_select_options,
+    render_choice_options,
     context_view_field,
     context_bind_fields,
     check_context_field, check_context_field_value,
@@ -122,7 +125,7 @@ class RecordTypeTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_RecordTypeTest(self):
@@ -248,16 +251,22 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
     #   Helpers
     #   -----------------------------------------------------------------------------
 
-    def _create_record_type(self, type_id, entity_id="testentity"):
+    def _create_record_type(self, type_id, type_uri=None, entity_id="testentity"):
         "Helper function creates record type entry with supplied type_id"
-        t = RecordType.create(self.testcoll, type_id, recordtype_create_values(type_id=type_id))
+        t = RecordType.create(
+            self.testcoll, type_id, 
+            recordtype_create_values(
+                type_id=type_id,
+                type_uri=type_uri
+                )
+            )
         d = RecordTypeData.create(self.testcoll, type_id, {})
         e = EntityData.create(d, entity_id, {})
         return (t, d, e)
@@ -380,7 +389,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             field_label=        "Supertype URIs",
             field_placeholder=  type_supertype_uris_placeholder,
             field_property_uri= "annal:supertype_uri",
-            field_render_type=  "Group_Seq_Row",
+            field_render_type=  "Group_Set_Row",
             field_value_mode=   "Value_direct",
             field_value_type=   "annal:Type_supertype_uri",
             field_value=        type_supertype_uris,
@@ -438,10 +447,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             default_comment=context_view_field(r.context, 2, 0)['field_value'],
             default_label_esc="",
             default_comment_esc=context_view_field(r.context, 2, 0)['field_value'],
-            tooltip1=context_view_field(r.context, 0, 0)['field_tooltip'],
-            tooltip2=context_view_field(r.context, 1, 0)['field_tooltip'],
-            tooltip3=context_view_field(r.context, 2, 0)['field_tooltip'],
-            tooltip4=context_view_field(r.context, 3, 0)['field_tooltip'],
+            tooltip1=context_view_field(r.context,  0, 0)['field_tooltip'],
+            tooltip2=context_view_field(r.context,  1, 0)['field_tooltip'],
+            tooltip3=context_view_field(r.context,  2, 0)['field_tooltip'],
+            tooltip4=context_view_field(r.context,  3, 0)['field_tooltip'],
+            tooltip5=context_view_field(r.context,  4, 0)['field_tooltip'],
+            tooltip6col1=context_view_field(r.context, 5, 0)['field_tooltip'],
+            tooltip6col2=context_view_field(r.context, 5, 1)['field_tooltip'],
+            tooltip7=context_view_field(r.context,  6, 0)['field_tooltip'],
             button_save_tip="Save values and return to previous view.",
             button_view_tip="Save values and switch to entity view.",
             button_cancel_tip="Discard unsaved changes and return to previous view.",
@@ -521,7 +534,151 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=12)
-        formrow5a = """
+        # Supertypes
+        type_supertype_uris_placeholder = (
+            "(Supertype URIs or CURIEs)"
+            )
+        formrow5head = """
+            <div class="small-12 columns" title="%(tooltip5)s">
+              <div class="grouprow row">
+                <div class="group-label small-12 medium-2 columns">
+                  <span>Supertype URIs</span>
+                </div>
+                <div class="small-12 medium-10 columns hide-for-small-only">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 columns">
+                          <span>Supertype URI</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow5tail = """
+            <div class="small-12 columns">
+              <div class="grouprow row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Type_supertype_uris__remove"
+                             value="Remove supertype URI" />
+                      <input type="submit" name="Type_supertype_uris__add"
+                             value="Add supertype URI" />
+                      <input type="submit" name="Type_supertype_uris__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Type_supertype_uris__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        # Default view, list
+        formrow6col1 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip6col1)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default view</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_select_options(
+                    "Type_view", "Default view",
+                    [ FieldChoice('', label="(view id)") ] + get_site_views_linked("testcoll"),
+                    "_view/Default_view", placeholder="(view id)")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        formrow6col2 = ("""
+            <div class="small-12 medium-6 columns" title="%(tooltip6col2)s">
+              <div class="row view-value-row">
+                <div class="%(label_classes)s">
+                  <span>Default list</span>
+                </div>
+                <div class="%(input_classes)s">
+                """+
+                  render_select_options(
+                    "Type_list", "Default list",
+                    [ FieldChoice('', label="(list id)") ] + get_site_lists_linked("testcoll"),
+                    "_list/Default_list", placeholder="(list id)")+
+                """
+                </div>
+              </div>
+            </div>
+            """)%field_vals(width=6)
+        # Field aliases...
+        type_aliases_placeholder = (
+            "(field aliases)"
+            )
+        formrow7head = """
+            <div class="small-12 columns" title="%(tooltip7)s">
+              <div class="grouprow row">
+                <div class="group-label small-12 medium-2 columns">
+                  <span>Field aliases</span>
+                </div>
+                <div class="small-12 medium-10 columns hide-for-small-only">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <div class="edit-grouprow col-head row">
+                        <div class="view-label col-head small-12 medium-6 columns">
+                          <span>Field alias name</span>
+                        </div>
+                        <div class="view-label col-head small-12 medium-6 columns">
+                          <span>Field alias value</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """%field_vals(width=12)
+        formrow7tail = """
+            <div class="small-12 columns">
+              <div class="grouprow row">
+                <div class="small-12 medium-2 columns">
+                  &nbsp;
+                </div>
+                <div class="group-buttons small-12 medium-10 columns">
+                  <div class="row">
+                    <div class="small-1 columns">
+                      &nbsp;
+                    </div>
+                    <div class="small-11 columns">
+                      <input type="submit" name="Type_aliases__remove"
+                             value="Remove alias" />
+                      <input type="submit" name="Type_aliases__add"
+                             value="Add alias" />
+                      <input type="submit" name="Type_aliases__up"
+                             value="Move &#x2b06;" />
+                      <input type="submit" name="Type_aliases__down"
+                             value="Move &#x2b07;" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """
+        formrow8a = """
             <div class="%(space_classes)s">
               <div class="row">
                 <div class="small-12 columns">
@@ -530,7 +687,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=2)
-        formrow5b = """
+        formrow8b = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_left_classes)s">
@@ -541,7 +698,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=4)
-        formrow5c = """
+        formrow8c = """
             <div class="%(button_wide_classes)s">
               <div class="row">
                 <div class="%(button_r_med_up_classes)s">
@@ -559,13 +716,19 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             </div>
             """%field_vals(width=6)
         # log.info(r.content)   #@@
-        self.assertContains(r, formrow1, html=True)
-        self.assertContains(r, formrow2, html=True)
-        self.assertContains(r, formrow3, html=True)
-        self.assertContains(r, formrow4, html=True)
-        self.assertContains(r, formrow5a, html=True)
-        self.assertContains(r, formrow5b, html=True)
-        self.assertContains(r, formrow5c, html=True)
+        self.assertContains(r, formrow1,     html=True)
+        self.assertContains(r, formrow2,     html=True)
+        self.assertContains(r, formrow3,     html=True)
+        self.assertContains(r, formrow4,     html=True)
+        self.assertContains(r, formrow5head, html=True)
+        self.assertContains(r, formrow5tail, html=True)
+        self.assertContains(r, formrow6col1, html=True)
+        self.assertContains(r, formrow6col2, html=True)
+        self.assertContains(r, formrow7head, html=True)
+        self.assertContains(r, formrow7tail, html=True)
+        self.assertContains(r, formrow8a,    html=True)
+        self.assertContains(r, formrow8b,    html=True)
+        self.assertContains(r, formrow8c,    html=True)
         return
 
     def test_get_new(self):
@@ -631,7 +794,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.TYPE_TYPEID, 
+            id="notype", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -672,7 +840,12 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.TYPE_TYPEID, 
+            id="notype", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
@@ -720,7 +893,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="new",
@@ -739,7 +912,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="new",
@@ -799,7 +972,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="copy",
@@ -820,7 +993,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="copy",
@@ -915,7 +1088,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context for re-rendered form
         self._check_context_fields(r, 
             action="edit",
@@ -941,7 +1114,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record type identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_TYPE_ID,))
         # Test context
         self._check_context_fields(r, 
             action="edit",
@@ -1002,6 +1175,46 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)
         self.check_entity_values(layout.VIEW_TYPEID, "%(type_id)s"%common_vals, expect_view_values)
         self.check_entity_values(layout.LIST_TYPEID, "%(type_id)s"%common_vals, expect_list_values)
+        return
+
+    def test_define_subtype_task(self):
+        # Create new type
+        self._create_record_type("tasktype", type_uri="test:tasktype")
+        self._check_record_type_values("tasktype")
+        # Post define subtype
+        f = recordtype_entity_view_form_data(
+            type_id="tasktype",
+            type_uri="test:tasktype",
+            task="Define_subtype"
+            )
+        u = entitydata_edit_url(
+            "view", "testcoll", layout.TYPE_TYPEID, entity_id="tasktype", view_id="Type_view"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "FOUND")
+        subtype_id = "tasktype" + layout.SUFFIX_SUBTYPE
+        self.assertIn(
+            "/testsite/c/testcoll/v/Type_view/_type/%s/"%(subtype_id,), 
+            r['location']
+            )
+        self.assertEqual(r.content,       "")
+        # Check content of type record
+        common_vals = (
+            { 'coll_id':    "testcoll"
+            , 'type_id':    "tasktype"
+            , 'subtype_id': subtype_id
+            , 'type_label': "RecordType testcoll/tasktype"
+            })
+        expect_type_values = (
+            { 'annal:type':             "annal:Type"
+            , 'rdfs:label':             "@@subtype of RecordType %(coll_id)s/%(type_id)s"%common_vals
+            , 'annal:uri':              "test:%(subtype_id)s"%common_vals
+            , 'annal:supertype_uri':    [{'@id': "test:%(type_id)s"%common_vals}]
+            , 'annal:type_view':        "_view/Default_view"%common_vals
+            , 'annal:type_list':        "_list/Default_list"%common_vals
+            })
+        self.check_entity_values(layout.TYPE_TYPEID, "%(subtype_id)s"%common_vals, expect_type_values)
         return
 
 #   -----------------------------------------------------------------------------

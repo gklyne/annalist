@@ -22,7 +22,7 @@
   "annal:field_ref_field": "",
   "annal:field_ref_restriction": "",
   "annal:field_ref_type": "",
-  "annal:field_render_type": "_enum_render_type/Group_Seq_Row",
+  "annal:field_render_type": "_enum_render_type/Group_Set_Row",
   "annal:field_value_mode": "_enum_value_mode/Value_direct",
   "annal:field_value_type": "rdf:Property",
   "annal:id": "subpropertyOf_r",

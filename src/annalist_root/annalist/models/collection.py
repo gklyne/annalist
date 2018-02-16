@@ -40,6 +40,7 @@ from annalist.util                          import valid_id, extract_entity_id, 
 from annalist.models.entity                 import Entity
 from annalist.models.annalistuser           import AnnalistUser
 from annalist.models.collectiontypecache    import CollectionTypeCache
+from annalist.models.collectionfieldcache   import CollectionFieldCache
 from annalist.models.collectionvocabcache   import CollectionVocabCache
 from annalist.models.recordtype             import RecordType
 from annalist.models.recordview             import RecordView
@@ -62,6 +63,7 @@ from annalist.models.rendertypeinfo         import (
 #   ---------------------------------------------------------------------------
 
 type_cache  = CollectionTypeCache()
+field_cache = CollectionFieldCache()
 vocab_cache = CollectionVocabCache()
 
 #   ---------------------------------------------------------------------------
@@ -124,6 +126,7 @@ class Collection(Entity):
         Flush all caches associated with the current collection
         """
         type_cache.flush_cache(self)
+        field_cache.flush_cache(self)
         vocab_cache.flush_cache(self)
         return
 
@@ -133,6 +136,7 @@ class Collection(Entity):
         Flush all caches associated with all collections
         """
         type_cache.flush_all()
+        field_cache.flush_all()
         vocab_cache.flush_all()
         return
 
@@ -148,7 +152,7 @@ class Collection(Entity):
         """
         Return parent object for accessing site data.
         """
-        return self._parentcoll
+        return self._parentsite.site_data_collection()
 
     # Alternate collections handling
 
@@ -363,17 +367,6 @@ class Collection(Entity):
 
     # Vocabulary namespaces
 
-    #@@
-    # @classmethod
-    # def reset_vocab_cache(cls):
-    #     """
-    #     Used for testing: clear out namespace vocabulary cache so tets don't interfere 
-    #     with each other.  Could also be used when external application updates data.
-    #     """
-    #     type_cache.flush_all()
-    #     return
-    #@@
-
     def cache_get_vocab(self, vocab_id):
         """
         Retrieve namespace vocabulary entity for id (namespace prefix) from cache.
@@ -457,21 +450,21 @@ class Collection(Entity):
 
     def cache_get_supertypes(self, type_entity):
         """
-        Return supertypes of supplied type URI.
+        Return supertypes of supplied type.
         """
         type_uri = type_entity.get_uri()
         return type_cache.get_type_uri_supertypes(self, type_uri)
 
     def cache_get_subtypes(self, type_entity):
         """
-        Return subtypes of supplied type URI.
+        Return subtypes of supplied type.
         """
         type_uri = type_entity.get_uri()
         return type_cache.get_type_uri_subtypes(self, type_uri)
 
     def cache_get_subtype_uris(self, type_uri):
         """
-        Return subtypes of supplied type URI.
+        Return subtype URIs of supplied type URI.
 
         The suplied URI is not itself required to be declared as identifying
         a defined type entity.
@@ -480,7 +473,7 @@ class Collection(Entity):
 
     def cache_get_supertype_uris(self, type_uri):
         """
-        Return supertypes of supplied type URI.
+        Return supertype URIs of supplied type URI.
 
         This returns all supertype URIs declared by the supertypes, even when 
         there is not corresponding type entity defined.
@@ -529,7 +522,7 @@ class Collection(Entity):
 
         type_id     local identifier for the type to remove.
 
-        Returns a non-False status code if the type is not removed.
+        Returns None on success, or a non-False status code if the type is not removed.
         """
         s = RecordType.remove(self, type_id)
         return s
@@ -594,10 +587,30 @@ class Collection(Entity):
 
         view_id     local identifier for the view to remove.
 
-        Returns a non-False status code if the view is not removed.
+        Returns None on success, or a non-False status code if the view is not removed.
         """
         s = RecordView.remove(self, view_id)
         return s
+
+    def set_default_view(self, view_id, type_id, entity_id):
+        """
+        Set and save the default list to be displayed for the current collection.
+        """
+        self[ANNAL.CURIE.default_view_id]     = view_id
+        self[ANNAL.CURIE.default_view_type]   = type_id
+        self[ANNAL.CURIE.default_view_entity] = entity_id
+        self._save()
+        return
+
+    def get_default_view(self):
+        """
+        Return the default view id, type and entity to be displayed for the current collection.
+        """
+        view_id   = self.get(ANNAL.CURIE.default_view_id,     None)
+        type_id   = self.get(ANNAL.CURIE.default_view_type,   None)
+        entity_id = self.get(ANNAL.CURIE.default_view_entity, None)
+        log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
+        return (view_id, type_id, entity_id) 
 
     # Record lists
 
@@ -642,7 +655,7 @@ class Collection(Entity):
 
         list_id     local identifier for the list to remove.
 
-        Returns a non-False status code if the list is not removed.
+        Returns None on success, or a non-False status code if the list is not removed.
         """
         s = RecordList.remove(self, list_id)
         return s
@@ -671,25 +684,145 @@ class Collection(Entity):
             list_id = None
         return list_id 
 
-    def set_default_view(self, view_id, type_id, entity_id):
+    # View (and list) fields and properties
+
+    #@@
+    # @classmethod
+    # def reset_field_cache(cls):
+    #     """
+    #     Used for testing: clear out field cache so tets don't interfere with each 
+    #     other.  Could also be used when external application updates data.
+    #     """
+    #     field_cache.flush_all()
+    #     return
+    #@@
+
+    def fields(self, altscope="all"):
         """
-        Set and save the default list to be displayed for the current collection.
+        Iterator over view fields stored in the current collection.
         """
-        self[ANNAL.CURIE.default_view_id]     = view_id
-        self[ANNAL.CURIE.default_view_type]   = type_id
-        self[ANNAL.CURIE.default_view_entity] = entity_id
-        self._save()
+        return field_cache.get_all_fields(self, altscope=altscope)
+
+    def cache_add_field(self, field_entity):
+        """
+        Add or update field information in field cache.
+        """
+        log.debug("Collection.cache_add_field %s in %s"%(field_entity.get_id(), self.get_id()))
+        field_cache.remove_field(self, field_entity.get_id())
+        field_cache.set_field(self, field_entity)
         return
 
-    def get_default_view(self):
+    def cache_get_field(self, field_id):
         """
-        Return the default view id, type and entity to be displayed for the current collection.
+        Retrieve field from cache.
+
+        Returns field entity if found, otherwise None.
         """
-        view_id   = self.get(ANNAL.CURIE.default_view_id,     None)
-        type_id   = self.get(ANNAL.CURIE.default_view_type,   None)
-        entity_id = self.get(ANNAL.CURIE.default_view_entity, None)
-        log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
-        return (view_id, type_id, entity_id) 
+        field_cache.get_field(self, field_id)
+        t = field_cache.get_field(self, field_id)
+        # Was it previously created but not cached?
+        if not t and RecordField.exists(self, field_id, altscope="all"):
+            msg = (
+                "Collection.get_field %s present but not cached for collection %s"%
+                (field_id, self.get_id())
+                )
+            log.warning(msg)
+            t = RecordField.load(self, field_id, altscope="all")
+            field_cache.set_field(self, t)
+        return t
+
+    def cache_remove_field(self, field_id):
+        """
+        Remove field from field cache.
+        """
+        field_cache.remove_field(self, field_id)
+        return
+
+    def cache_get_all_field_ids(self, altscope="all"):
+        """
+        Iterator over field ids of fields stored in the current collection.
+        """
+        return field_cache.get_all_field_ids(self, altscope=altscope)
+
+    def cache_get_subproperty_fields(self, field_entity):
+        """
+        Return fields that use subproperties of supplied field's property URI.
+        """
+        property_uri = field_entity.get_property_uri()
+        return field_cache.get_subproperty_fields(self, property_uri)
+
+    def cache_get_superproperty_fields(self, field_entity):
+        """
+        Return fields that use superproperties of supplied field's property URI.
+        """
+        property_uri = field_entity.get_property_uri()
+        return field_cache.get_superproperty_fields(self, property_uri)
+
+    def cache_get_subproperty_uris(self, property_uri):
+        """
+        Return subproperty URIs of supplied property URI.
+
+        The suplied URI is not itself required to be declared as used by
+        a defined field entity.
+        """
+        return field_cache.get_subproperty_uris(self, property_uri)
+
+    def cache_get_superproperty_uris(self, property_uri):
+        """
+        Return superproperty URIs of supplied property URI.
+
+        This returns all superproperty URIs declared by the field, and any
+        fields that use the superproperty URIs, even when there is no 
+        corresponding field definition.
+        """
+        return field_cache.get_superproperty_uris(self, property_uri)
+
+    def add_field(self, field_id, field_meta):
+        """
+        Add a new or updated record field to the current collection
+
+        field_id    identifier for the new field, as a string
+                    with a form that is valid as URI path segment.
+        field_meta  a dictionary providing additional information about
+                    the field to be created.
+
+        Returns a RecordField object for the newly created field.
+        """
+        log.debug("Collection.add_field %s in %s"%(field_id, self.get_id()))
+        f = RecordField.create(self, field_id, field_meta)
+        return f
+
+    def get_field(self, field_id):
+        """
+        Retrieve identified field description
+
+        field_id    local identifier for the field to retrieve.
+
+        returns a RecordField object for the identified field, or None.
+        """
+        if not valid_id(field_id):
+            msg = "Collection %s get_field(%s) invalid id"%(self.get_id(), field_id)
+            log.error(msg)
+            raise ValueError(msg, field_id)
+        return self.cache_get_field(field_id)
+
+    def get_uri_field(self, property_uri):
+        """
+        Return field entity corresponding to the supplied property URI
+        """
+        t = field_cache.get_field_from_property_uri(self, property_uri)
+        return t
+
+    def remove_field(self, field_id):
+        """
+        Remove identified field description
+
+        field_id     local identifier for the field to remove.
+
+        Returns None on success, or a non-False status code if the field is not removed.
+        """
+        s = RecordField.remove(self, field_id)
+        return s
 
     # JSON-LD context data
 

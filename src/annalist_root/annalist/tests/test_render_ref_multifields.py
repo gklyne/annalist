@@ -71,7 +71,7 @@ class RefMultifieldTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     # Support methods
@@ -129,7 +129,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , 'rdfs:label':         "Test view label"
             , 'rdfs:comment':       "Test view comment"
             , 'annal:record_type':  "img_type"
-            , 'annal:add_field':    True
+            # , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -149,7 +149,7 @@ class RefMultifieldTest(AnnalistTestCase):
             , 'rdfs:label':         "Test rptimg view label"
             , 'rdfs:comment':       "Test rptimg view comment"
             , 'annal:record_type':  "img_type"
-            , 'annal:add_field':    True
+            # , 'annal:add_field':    True
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -188,7 +188,7 @@ class RefMultifieldTest(AnnalistTestCase):
             { "annal:type":                 "annal:Field"
             , "rdfs:label":                 "Repeat image reference"
             , "rdfs:comment":               "Repeat image reference field comment"
-            , "annal:field_render_type":    "RepeatGroupRow"
+            , "annal:field_render_type":    "Group_Seq_Row"
             , "annal:field_value_mode":     "Value_direct"
             , "annal:field_value_type":     "annal:Field_group"
             , "annal:placeholder":          "(repeat image field)"
@@ -542,7 +542,7 @@ class RefMultifieldTest(AnnalistTestCase):
               <span>Repeat image reference</span>
             </div>
             """
-        # Note two grou wrappers here: one for repeat and one for multifield ref...
+        # Note two group wrappers here: one for repeat and one for multifield ref...
         formrow2b = """
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">

@@ -47,6 +47,12 @@ class RecordField(EntityData):
         # log.debug("RecordField %s"%(field_id))
         return
 
+    def get_property_uri(self):
+        """
+        Return field's property URI
+        """
+        return self.get(ANNAL.CURIE.property_uri, "@@undefined_property_uri@@")
+
     def _migrate_filenames(self):
         """
         Override EntityData method
@@ -184,12 +190,25 @@ class RecordField(EntityData):
         """
         Post-update processing.
 
-        This method is called when a RecordField entity has been updated.  
+        This method is called when a RecordField entity has been created or updated.  
 
         It invokes the containing collection method to regenerate the JSON LD context 
         for the collection to which the field belongs.
         """
+        self._parent.cache_add_field(self)
         self._parent.generate_coll_jsonld_context(flags=post_update_flags)
         return entitydata
+
+    def _post_remove_processing(self, post_update_flags):
+        """
+        Post-remove processing.
+
+        This method is called when a RecordField entity has been removed.  
+        """
+        self._parent.cache_remove_field(self.get_id())
+        return
+
+
+
 
 # End.

@@ -88,7 +88,7 @@
   {% if info_message %}
   <div data-alert class="alert-box radius">
     <h3>{{info_head}}</h3>
-    <p>{{info_message}}</p>
+    <p class="messages">{{info_message}}</p>
     <a href="#" class="close">&times;</a>
   </div>
   {% endif %}
@@ -96,7 +96,7 @@
   {% if done_message %}
   <div data-alert class="alert-box success radius">
     <h3>{{done_head}}</h3>
-    <p>{{done_message}}</p>
+    <p class="messages">{{done_message}}</p>
     <a href="#" class="close">&times;</a>
   </div>
   {% endif %}
@@ -105,7 +105,7 @@
   <div data-alert class="alert-box warning radius">
     <h3>{{error_head}}</h3>
     <p>
-      <p>{{error_message}}</p>
+      <p class="messages">{{error_message}}</p>
       <a href="#" class="close">&times;</a>
     </p>
   </div>

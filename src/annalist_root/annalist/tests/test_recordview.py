@@ -26,6 +26,7 @@ from django.test.client                 import Client
 
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
+from annalist                           import message
 from annalist.models.site               import Site
 from annalist.models.sitedata           import SiteData
 from annalist.models.collection         import Collection
@@ -40,6 +41,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -112,7 +114,7 @@ class RecordViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_RecordViewTest(self):
@@ -263,7 +265,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        # resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -722,7 +724,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.VIEW_TYPEID, "noview")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.VIEW_TYPEID, 
+            id="noview", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -767,7 +774,12 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         err_label = error_label("testcoll", layout.VIEW_TYPEID, "noview")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(err_label), status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+            type_id=layout.VIEW_TYPEID, 
+            id="noview", 
+            label=err_label
+            )
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, View_view
@@ -865,7 +877,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="new",
@@ -885,7 +897,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Check context
         self._check_default_view_context_fields(r, 
             action="new",
@@ -945,7 +957,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="copy",
@@ -965,7 +977,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="copy",
@@ -1057,7 +1069,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="edit",
@@ -1082,7 +1094,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with record view identifier</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.RECORD_VIEW_ID,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="edit",
@@ -1198,8 +1210,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Problem with remove field(s) request</h3>")
-        self.assertContains(r, "<p>No field(s) selected</p>")
+        self.assertContains(r, "<h3>%s</h3>"%(message.REMOVE_FIELD_ERROR,))
+        self.assertContains(r, """<p class="messages">%s</p>"""%(message.NO_FIELD_SELECTED,))
         # Test context
         self._check_default_view_context_fields(r, 
             action="edit",

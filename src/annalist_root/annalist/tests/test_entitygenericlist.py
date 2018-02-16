@@ -29,6 +29,7 @@ from django.test.client             import Client
 from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist                       import layout
+from annalist                       import message
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist.util                  import extract_entity_id
 
@@ -40,14 +41,19 @@ from annalist.models.entitydata     import EntityData
 from annalist.models.entityfinder   import EntityFinder
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from annalist.views.uri_builder             import uri_params, uri_with_params, continuation_params_url
-from annalist.views.entitylist              import EntityGenericListView
+from annalist.views.uri_builder     import (
+    uri_quote_param,
+    uri_params, uri_with_params, 
+    continuation_params_url
+    )
+from annalist.views.entitylist      import EntityGenericListView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir,
     entitydata_list_url_query,
     site_view_url,
@@ -130,7 +136,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     #   -----------------------------------------------------------------------------
@@ -165,7 +171,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), 173)    # Will change with site data
+        self.assertEqual(len(actual_entity_ids), 175)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
@@ -324,7 +330,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 170)    # Will change with site data
+        self.assertEqual(len(entities), 172)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -663,7 +669,8 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        msg_text = make_message(message.COLLECTION_NOT_EXISTS, id="no_collection")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_list_no_type(self):
@@ -672,22 +679,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, 
-            "Record type no_type in collection testcoll does not exist", 
-            status_code=404
-            )
+        msg_text  = make_message(message.RECORD_TYPE_NOT_EXISTS, id="no_type")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_list_no_list(self):
         u = entitydata_list_type_url("testcoll", layout.FIELD_TYPEID, list_id="no_list")
         with SuppressLogging(logging.WARNING):
             r = self.client.get(u)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, 
-            "Record list no_list in collection testcoll does not exist", 
-            status_code=404
-            )
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        msg_text  = make_message(message.RECORD_LIST_NOT_EXISTS, id="no_list")
+        self.assertContains(r, msg_text, status_code=200)
         return
 
     #   -----------------------------------------------------------------------------
@@ -755,7 +758,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -818,7 +821,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         c  = "continuation_url"
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -837,7 +840,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -893,7 +896,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -911,7 +914,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -937,15 +940,18 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
-        self.assertContains(r, "Remove record testtypedelete of type _type in collection testcoll: Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="_type", 
+            id="testtypedelete"
+            )
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r,
             '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/_type/!delete_confirmed"/>', 
             html=True
             )
-        self.assertEqual(r.context['action_description'], 
-            'Remove record testtypedelete of type _type in collection testcoll')
+        self.assertEqual(r.context['action_description'], msg_text)
         self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/_type/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
@@ -963,8 +969,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         l = r['location']
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
-        e3 = "error_message=Entity%20sitetype%20of%20type%20_type%20not%20found%20or%20cannot%20be%20deleted"
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.CANNOT_DELETE_ENTITY, 
+                type_id="_type",
+                id="sitetype"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -977,8 +986,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
-        e3 = "error_message=Cannot%20remove%20type%20testtype%20with%20existing%20values"
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.TYPE_VALUES_FOR_DELETE, 
+                type_id="_type",
+                id="testtype"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -993,8 +1005,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
-        e3 = "error_message=Entity%20Field_comment%20of%20type%20_field%20not%20found%20or%20cannot%20be%20deleted"
+        e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
+        e3 = "error_message=" + make_quoted_message(message.CANNOT_DELETE_ENTITY, 
+                type_id=layout.FIELD_TYPEID,
+                id="Field_comment"
+                )
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -1124,12 +1139,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         v = TestHostUri + entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         c = continuation_url_param(collection_view_url("testcoll"))
-        h = "info_head=Action%20completed"
-        m = "info_message=Default%20list%20view%20for%20collection%20testcoll%20changed%20to%20Type_list"
+        h = "info_head="    + uri_quote_param(message.ACTION_COMPLETED)
+        m = "info_message=" + make_quoted_message(message.DEFAULT_LIST_UPDATED, 
+                list_id="Type_list"
+                )
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self.assertIn(h, r['location'])
-        self.assertIn(c, r['location'])
+        self.assertIn(m, r['location'])
         return
 
     def test_post_customize(self):

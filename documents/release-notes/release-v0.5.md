@@ -5,11 +5,11 @@ Annalist release 0.5.x is a candidate feature-complete minimal viable product fo
 A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.5.6
+## Current release: 0.5.8
 
-This release primarily addresses some performance issues that were noted when working with complex structures with a deep class hierarchy (specifically, CIDOC CRM).  It introduces a per collection cache for entity type definitions, and precalculated super-/sub- type closures to speed up discovery of subtypes of a desired target type.  It also adds a namespece vocbulary cache, which is used to expand namespace prefixes when rendering Web link fields.  These changes have included some extensive refactoring of the codebase.
+This release primarily adds support for sub/superproperty URI relations declared in field definitions, and adds logic to access entity values using subproperties of a specified field property URI.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some kinds of data evolution.  These changes have prompted some further codebase refactoring.
 
-This release also includes numerous bug fixes, and some small changes to the user interface.
+This release also includes numerous bug fixes, and changes to some messages.
 
 
 ## Status
@@ -83,6 +83,55 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 See also previous release notes:
 
 - [Release 0.1.x](./release-v0.1.md)
+
+
+## Release: 0.5.8
+
+This release primarily adds support for sub/superproperty URI relations declared in field definitions, and adds logic to access entity values using subproperties of a specified field property URI.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some kinds of data evolution.  These changes have prompted some further codebase refactoring.
+
+This release also includes numerous bug fixes, and changes to some messages.
+
+
+# Version 0.5.7, towards 0.5.8
+
+- [x] BUG: delete list view while viewing that list results in obscure error message.
+    - Improve error handling to use alternative list/view definition
+- [x] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
+    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
+    - Also caused by trailing spoace on URL: need to check valid URLs; can catch errors?
+    - Added logic to flag error and add details to output.
+- [x] Fix some test cases that were failing due to message text changes.
+    - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
+- [x] Review message text; update more tests to expect text as defined in messages module.
+- [x] Introduce superproperty/ies field and button to create subproperty field definition
+    - [x] Collection methods to access field definitions (model on types)
+    - [x] Cache classes for fields (model on types)
+    - [x] RecordField hook to update collection cache
+    - [x] Test cases for new classes and methods
+    - [x] Update collection to use field cache
+    - [x] Update cache flush logic where used
+    - [x] Test suite provide default property URIs 
+    - [x] RecordField accesses should use collecton cache
+    - [x] Cacheing site values separately: no need to flush as they don't change
+    - [x] Field definition to include superproperty URI list
+    - [x] When selecting data element to display in a field, look for subproperties as well as the specified field property.
+        - [x] Add subproperty discovery logic to bound_field
+        - [x] Update fieldvaluemap.map_form_to_entity so it looks for subproperty to update.
+        - [x] Update field mappers to make 'map_form_to_entity_repeated_item' implementations more consistent.
+    - [x] Review abstractions and interactions around:
+        - [x] bound_field, add:
+            - [x] 'render' (ref field_renderer)
+            - [x] 'value_mapper'
+        - [x] New field_renderer object accessed by bound_field for field rendering
+        - [x] Rework field rendering logic to use new structure
+        - [x] Remove rendering methods from field description
+        - [x] Eliminate render mode logic in render_fieldvalue
+    - [x] Add test cases for subproperty access
+    - [x] Add test cases for subproperty list field access/update (with subproperty values)
+    - [x] Add "define subproperty" task button to field definition.
+    - [x] Add test case for "define subproperty" task button
+- [x] Add property hierarchy to CIDOC CRM definitions (https://github.com/gklyne/CIDOC_CRM_core_defs)
+- [x] Create FAQ for defining subproperties
 
 
 ## Release: 0.5.6

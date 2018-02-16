@@ -23,9 +23,15 @@ MISSING_COLLECTION_ID       = "Missing identifier for new collection"
 INVALID_COLLECTION_ID       = "Invalid identifier for new collection: '%(coll_id)s'"
 CREATED_COLLECTION_ID       = "Created new collection: '%(coll_id)s'"
 NO_COLLECTION_METADATA      = "Metadata not found for collection '%(id)s'"
+CONFIRM_REQUESTED_ACTION    = """Confirm requested action"""
+ARE_YOU_SURE                = """Are you sure?"""
+CONFIRM_OR_CANCEL           = """Click "Confirm" to continue, or "Cancel" to abort operation"""
+ACTION_COMPLETED            = """Action completed"""
+TURTLE_SERIALIZE_ERROR      = """Problem generating Turtle serialization from data"""
+TURTLE_SERIALIZE_REASON     = """Internal description of error"""
 
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
-INVALID_TYPE_CHANGE         = "Change of record type to or from '_type' is not supported"
+INVALID_TYPE_CHANGE         = "Change of entity type to or from '_type' is not supported"
 INVALID_TYPE_RENAME         = "Renaming of Annalist built-in types is not supported"
 CREATE_ENTITY_FAILED        = "Problem creating/updating entity %s/%s (see log for more info)"
 RENAME_ENTITY_FAILED        = "Problem renaming entity %s/%s to %s/%s (see log for more info)"
@@ -58,21 +64,21 @@ MIGRATE_COLLECTION_ERROR    = "Error(s) occurred while migrating collection data
 MIGRATED_COLLECTION_DATA    = "Migrated data for collection %(id)s"
 
 TOO_MANY_ENTITIES_SEL       = "Too many items selected"
-NO_ENTITY_FOR_COPY          = "No data record selected to copy"
-NO_ENTITY_FOR_EDIT          = "No data record selected to edit"
-NO_ENTITY_FOR_DELETE        = "No data record selected to delete"
+NO_ENTITY_FOR_COPY          = "No entity selected to copy"
+NO_ENTITY_FOR_EDIT          = "No entity selected to edit"
+NO_ENTITY_FOR_DELETE        = "No entity selected to delete"
 CANNOT_DELETE_ENTITY        = "Entity %(id)s of type %(type_id)s not found or cannot be deleted"
 SITE_ENTITY_FOR_DELETE      = "Cannot remove site built-in entity %(id)s of type %(type_id)s, or entity not found"
 TYPE_VALUES_FOR_DELETE      = "Cannot remove type %(id)s with existing values"
-REMOVE_ENTITY_DATA          = "Remove record %(id)s of type %(type_id)s in collection %(coll_id)s"
+REMOVE_ENTITY_DATA          = "Remove entity %(id)s of type %(type_id)s in collection %(coll_id)s"
 
-NO_TYPE_FOR_COPY            = "No record type selected to copy"
-NO_TYPE_FOR_EDIT            = "No record type selected to edit"
-NO_TYPE_FOR_DELETE          = "No record type selected to delete"
+NO_TYPE_FOR_COPY            = "No entity type selected to copy"
+NO_TYPE_FOR_EDIT            = "No entity type selected to edit"
+NO_TYPE_FOR_DELETE          = "No entity type selected to delete"
 
-NO_VIEW_FOR_COPY            = "No record view selected to copy"
-NO_VIEW_FOR_EDIT            = "No record view selected to edit"
-NO_VIEW_FOR_DELETE          = "No record view selected to delete"
+NO_VIEW_FOR_COPY            = "No entity view selected to copy"
+NO_VIEW_FOR_EDIT            = "No entity view selected to edit"
+NO_VIEW_FOR_DELETE          = "No entity view selected to delete"
 
 NO_LIST_FOR_COPY            = "No list view selected to copy"
 NO_LIST_FOR_EDIT            = "No list view selected to edit"
@@ -81,14 +87,14 @@ NO_LIST_FOR_DELETE          = "No list view selected to delete"
 ENTITY_MESSAGE_LABEL        = "%(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DEFAULT_LABEL        = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
 ENTITY_DEFAULT_COMMENT      = ""    # "Entity %(type_id)s/%(entity_id)s in collection %(coll_id)s"
-ENTITY_DOES_NOT_EXIST       = "Entity %(id)s does not exist"
-ENTITY_COPY_FILE_ERROR      = "Failed to copy file %(file)s while copying entity %(src_id)s to %(id)%"
+ENTITY_DOES_NOT_EXIST       = "Entity %(type_id)s/%(id)s (%(label)s) does not exist"
+ENTITY_COPY_FILE_ERROR      = "Failed to copy file %(file)s while copying entity %(id)% to %(src_id)s"
 
 RESOURCE_DOES_NOT_EXIST     = "Resource %(ref)s for entity %(id)s does not exist"
 RESOURCE_NOT_DEFINED        = "Resource %(ref)s is not present for entity %(id)s"
-REMOVE_RECORD_TYPE          = "Remove record type %(id)s in collection %(coll_id)s"
-REMOVE_RECORD_LIST          = "Remove record list %(id)s in collection %(coll_id)s"
-REMOVE_RECORD_VIEW          = "Remove record view %(id)s in collection %(coll_id)s"
+REMOVE_RECORD_TYPE          = "Remove entity type %(id)s in collection %(coll_id)s"
+REMOVE_RECORD_VIEW          = "Remove entity view %(id)s in collection %(coll_id)s"
+REMOVE_RECORD_LIST          = "Remove list %(id)s in collection %(coll_id)s"
 LIST_NOT_DEFINED            = "List %(list_id)s/%(list_ref)s is not present for entity type %(type_id)s"
 LIST_NOT_ACCESSED           = "List %(list_id)s/%(list_ref)s not accessed for entity type %(type_id)s"
 
@@ -117,28 +123,30 @@ ANNALIST_USER_EXISTS        = "User %(save_id)s in collection %(save_coll)s alre
 ANNALIST_USER_NOT_EXISTS    = "User %(id)s in collection %(coll_id)s does not exist"
 ANNALIST_USER_REMOVED       = "User %(id)s in collection %(coll_id)s was removed"
 
-RECORD_TYPE_ID              = "Problem with record type identifier"
-RECORD_TYPE_ID_INVALID      = "The record type identifier is missing or not a valid identifier"
-RECORD_TYPE_LABEL           = "Record type %(id)s in collection %(coll_id)s"
-RECORD_TYPE_EXISTS          = "Record type %(save_id)s in collection %(save_coll)s already exists"
-RECORD_TYPE_NOT_EXISTS      = "Record type %(id)s in collection %(coll_id)s does not exist"
-RECORD_TYPE_REMOVED         = "Record type %(id)s in collection %(coll_id)s was removed"
+RECORD_TYPE_ID              = "Problem with entity type identifier"
+RECORD_TYPE_ID_INVALID      = "The entity type identifier is missing or not a valid identifier"
+RECORD_TYPE_LABEL           = "Entity type %(id)s in collection %(coll_id)s"
+RECORD_TYPE_EXISTS          = "Entity type %(save_id)s in collection %(save_coll)s already exists"
+RECORD_TYPE_NOT_EXISTS      = "Entity type %(id)s in collection %(coll_id)s does not exist"
+RECORD_TYPE_REMOVED         = "Entity type %(id)s in collection %(coll_id)s was removed"
 
-RECORD_LIST_ID              = "Problem with record list identifier"
-RECORD_LIST_ID_INVALID      = "The record list identifier is missing or not a valid identifier"
-RECORD_LIST_LABEL           = "Record list %(id)s in collection %(coll_id)s"
-RECORD_LIST_EXISTS          = "Record list %(save_id)s in collection %(save_coll)s already exists"
-RECORD_LIST_NOT_EXISTS      = "Record list %(id)s in collection %(coll_id)s does not exist"
-RECORD_LIST_REMOVED         = "Record list %(id)s in collection %(coll_id)s was removed"
-RECORD_LIST_LOAD_ERROR      = "Error loading list '%(id)s', file %(file)s: %(message)s"
-
-RECORD_VIEW_ID              = "Problem with record view identifier"
-RECORD_VIEW_ID_INVALID      = "The record view identifier is missing or not a valid identifier"
-RECORD_VIEW_LABEL           = "Record view %(id)s in collection %(coll_id)s"
-RECORD_VIEW_EXISTS          = "Record view %(save_id)s in collection %(save_coll)s already exists"
-RECORD_VIEW_NOT_EXISTS      = "Record view %(id)s in collection %(coll_id)s does not exist"
-RECORD_VIEW_REMOVED         = "Record view %(id)s in collection %(coll_id)s was removed"
+RECORD_VIEW_ID              = "Problem with entity view identifier"
+RECORD_VIEW_ID_INVALID      = "The entity view identifier is missing or not a valid identifier"
+RECORD_VIEW_LABEL           = "Entity view %(id)s in collection %(coll_id)s"
+RECORD_VIEW_EXISTS          = "Entity view %(save_id)s in collection %(save_coll)s already exists"
+RECORD_VIEW_NOT_EXISTS      = "Entity view %(id)s in collection %(coll_id)s does not exist"
+RECORD_VIEW_REMOVED         = "Entity view %(id)s in collection %(coll_id)s was removed"
 RECORD_VIEW_LOAD_ERROR      = "Error loading view '%(id)s', file %(file)s: %(message)s"
+DISPLAY_ALTERNATIVE_VIEW    = "Displaying alternative view '%(id)s'"
+
+RECORD_LIST_ID              = "Problem with list identifier"
+RECORD_LIST_ID_INVALID      = "The list identifier is missing or not a valid identifier"
+RECORD_LIST_LABEL           = "List %(id)s in collection %(coll_id)s"
+RECORD_LIST_EXISTS          = "List %(save_id)s in collection %(save_coll)s already exists"
+RECORD_LIST_NOT_EXISTS      = "List %(id)s in collection %(coll_id)s does not exist"
+RECORD_LIST_REMOVED         = "List %(id)s in collection %(coll_id)s was removed"
+RECORD_LIST_LOAD_ERROR      = "Error loading list '%(id)s', file %(file)s: %(message)s"
+DISPLAY_ALTERNATIVE_LIST    = "Displaying alternative list '%(id)s'"
 
 RECORD_GROUP_ID             = "Problem with field group identifier"
 RECORD_GROUP_ID_INVALID     = "The field group identifier is missing or not a valid identifier"
@@ -147,12 +155,12 @@ RECORD_GROUP_EXISTS         = "Field group %(save_id)s in collection %(save_coll
 RECORD_GROUP_NOT_EXISTS     = "Field group %(id)s in collection %(coll_id)s does not exist"
 RECORD_GROUP_REMOVED        = "Field group %(id)s in collection %(coll_id)s was removed"
 
-RECORD_FIELD_ID             = "Problem with record field identifier"
-RECORD_FIELD_ID_INVALID     = "The record field identifier is missing or not a valid identifier"
-RECORD_FIELD_LABEL          = "Record field %(id)s in collection %(coll_id)s"
-RECORD_FIELD_EXISTS         = "Record field %(save_id)s in collection %(save_coll)s already exists"
-RECORD_FIELD_NOT_EXISTS     = "Record field %(id)s in collection %(coll_id)s does not exist"
-RECORD_FIELD_REMOVED        = "Record field %(id)s in collection %(coll_id)s was removed"
+RECORD_FIELD_ID             = "Problem with view field identifier"
+RECORD_FIELD_ID_INVALID     = "The view field identifier is missing or not a valid identifier"
+RECORD_FIELD_LABEL          = "View field %(id)s in collection %(coll_id)s"
+RECORD_FIELD_EXISTS         = "View field %(save_id)s in collection %(save_coll)s already exists"
+RECORD_FIELD_NOT_EXISTS     = "View field %(id)s in collection %(coll_id)s does not exist"
+RECORD_FIELD_REMOVED        = "View field %(id)s in collection %(coll_id)s was removed"
 
 RECORD_VOCAB_ID             = "Problem with vocabulary identifier"
 RECORD_VOCAB_ID_INVALID     = "The vocabulary namespace identifier is missing or not a valid identifier"
@@ -195,6 +203,7 @@ UNKNOWN_TASK_ID             	= "Unknown task Id in form response: %(task_id)s"
 NO_VIEW_OR_LIST_SELECTED		  = "Please select an exiting view and/or list as a basis for creating new ones"
 TASK_CREATE_VIEW_LIST       	= "Created new view and/or list for type %(id)s (%(label)s)"
 TASK_CREATE_SUBTYPE         	= "Created subtype %(id)s (%(label)s)"
+TASK_CREATE_SUBFIELD          = "Created field %(id)s (%(label)s) using subproperty of %(base_uri)s."
 TASK_CREATE_MANY_VALUE_FIELD 	= "Created repeating value field '%(field_id)s' for '%(label)s' (check subfield 'Entity type' is blank, or matches repeat field 'Value type')"
 TASK_CREATE_LIST_VALUE_FIELD 	= "Created sequence of values field '%(field_id)s' for '%(label)s' (check subfield 'Entity type' is blank, or matches repeat field 'Value type')"
 TASK_CREATE_REFERENCE_FIELD 	= "Created reference to field '%(field_id)s'. (Select value for 'Refer to type' on current display, and re-save. Also check subfield 'Entity type' is blank, or matches referring field 'Value type')"
@@ -205,10 +214,21 @@ TASK_CREATE_REFERENCE_FIELD 	= "Created reference to field '%(field_id)s'. (Sele
 #     "# %(type_label)s\n\n"+
 #     "Entity type [%(type_label)s]($BASE:_type/%(type_id)s)."
 #     )
+
 SUBTYPE_COMMENT             = (
     "# %(type_label)s\n\n"+
     "Entity type [%(type_label)s]($BASE:_type/%(type_id)s), "+
     "subtype of [%(base_type_label)s]($BASE:_type/%(base_type_id)s)."
+    )
+
+SUBFIELD_LABEL               = (
+    "@@ Subfield of %(base_field_label)s (%(base_field_id)s)@@"
+    )
+SUBFIELD_COMMENT             = (
+    "# %(field_label)s\n\n"+
+    "Field [%(field_label)s]($BASE:_field/%(field_id)s), "+
+    "using property uri %(field_prop_uri)s, "+
+    "subproperty of [%(base_field_label)s]($BASE:_field/%(base_field_id)s)."
     )
 
 TYPE_VIEW_LABEL             = "%(type_label)s view"

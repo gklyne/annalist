@@ -23,6 +23,7 @@ from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist                       import message
 
 from annalist.models.entitytypeinfo import EntityTypeInfo
 from annalist.models.site           import Site
@@ -41,6 +42,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     collection_create_values,
     site_dir, collection_dir, 
     continuation_url_param,
@@ -116,7 +118,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     #   -----------------------------------------------------------------------------
@@ -202,12 +204,10 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         v = TestHostUri + u
         self.assertIn(v, r['location'])
-        ih = "info_head=Action%20completed"
-        im = (
-            "info_message="+
-            "Default%20view%20for%20collection%20testcoll%20changed%20to%20"+
-            "Default_view/testtype/entitydefaultview"
-            )
+        ih = "info_head=" + make_quoted_message(message.ACTION_COMPLETED)
+        im = "info_message=" + make_quoted_message(message.DEFAULT_VIEW_UPDATED,
+            view_id="Default_view",
+            entity_id="entitydefaultview")
         self.assertIn(ih, r['location'])
         self.assertIn(im, r['location'])
         # Get collection root and check redirect to entity view
@@ -535,11 +535,12 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     def test_get_view_no_collection(self):
-        u = entitydata_edit_url("view", "no_collection", "_field", entity_id="entity1", view_id="Type_view")
+        u = entitydata_edit_url("view", "no_collection", "testtype", entity_id="entity1", view_id="Type_view")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Collection no_collection does not exist", status_code=404)
+        msg_text = make_message(message.COLLECTION_NOT_EXISTS, id="no_collection")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_view_no_type(self):
@@ -548,16 +549,18 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   404)
         self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Record type no_type in collection testcoll does not exist", status_code=404)
+        msg_text  = make_message(message.RECORD_TYPE_NOT_EXISTS, id="no_type")
+        self.assertContains(r, msg_text, status_code=404)
         return
 
     def test_get_view_no_view(self):
-        u = entitydata_edit_url("edit", "testcoll", "_field", entity_id="entity1", view_id="no_view")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1", view_id="no_view")
         with SuppressLogging(logging.WARNING):
             r = self.client.get(u)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "Record view no_view in collection testcoll does not exist", status_code=404)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        msg_text = make_message(message.RECORD_VIEW_NOT_EXISTS, id="no_view")
+        self.assertContains(r, msg_text)
         return
 
     def test_get_view_no_entity(self):
@@ -569,7 +572,8 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
         err_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%err_label, status_code=404)
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, id="entitynone", label=err_label)
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------
@@ -603,9 +607,6 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         c = continuation_url_param(u, prev_cont=l)
         self.assertIn(e, r['location'])
         self.assertIn(c, r['location'])
-        # 'http://test.example.com/testsite/c/testcoll/v/Default_view/testtype/entityview/!edit
-        #   ?continuation_url=/testsite/c/testcoll/v/Default_view/testtype/entityview/!view
-        #   %3Fcontinuation_url=/testsite/c/testcoll/d/testtype/'
         return
 
     def test_post_view_entity_copy(self):

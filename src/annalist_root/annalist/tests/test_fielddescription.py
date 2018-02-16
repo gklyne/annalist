@@ -21,9 +21,8 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
 from annalist.models.collection         import Collection
 
-from annalist.views.fielddescription    import FieldDescription, field_description_from_view_field
-
 from annalist.views.form_utils.fieldchoice      import FieldChoice
+from annalist.views.fields.field_description    import FieldDescription, field_description_from_view_field
 from annalist.views.fields.render_fieldvalue    import TemplateWrapValueRenderer, ModeWrapValueRenderer
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_placement     import (
@@ -69,7 +68,7 @@ class FieldDescriptionTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="collections")
         return
 
     def test_FieldDescriptionTest(self):
@@ -240,12 +239,6 @@ class FieldDescriptionTest(AnnalistTestCase):
             })
         self.assertDictionaryMatch(fd, expect_field_desc)
         self.assertEqual(fd["field_render_type"], "Group_Seq_Row")
-        # self.assertEqual(fd["field_render_colhead"], "field/annalist_head_any.html")
-        # self.assertEqual(fd["field_render_colview"], "field/annalist_item_none.html")
-        self.assertIsInstance(fd["field_render_colhead"], ModeWrapValueRenderer)
-        self.assertIsInstance(fd["field_render_colview"], ModeWrapValueRenderer)
-        self.assertIsInstance(fd["field_render_view"], ModeWrapValueRenderer)
-        self.assertIsInstance(fd["field_render_edit"], ModeWrapValueRenderer)
         expect_group_details = (
             { "group_id":           "View_fields"
             , "group_label":        "Fields"

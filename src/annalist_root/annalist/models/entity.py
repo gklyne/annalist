@@ -277,7 +277,10 @@ class Entity(EntityRoot):
                         inheriting user permissions with other configuration data.
                     "site" - site-level only: used for listing collections; by default, 
                         collections are not included in enumerations of entities. 
-                        (See EntityRoot. and Site._children methods)
+                        (See EntityRoot. and Site._children method)
+                    "nosite" - collection-level only: used for listing entities from just
+                        collections.  Used when cacheing data, where site data is assumed 
+                        to be invariant, hence no need to re-load.
         """
         altparents = self._local_find_alt_parents()     # Class-specific local alternative discovery
         #@@
@@ -299,7 +302,10 @@ class Entity(EntityRoot):
                         log.error(msg)
                         raise ValueError(msg)
                     elif ( (altscope == "all") or (altscope == "select") or
-                           (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
+                           ((altscope == "user")   and (p.get_id() == layout.SITEDATA_ID)) or
+                           ((altscope == "nosite") and (p.get_id() != layout.SITEDATA_ID))
+                           ):
+                           # (altscope == "user") and (self._altparent.get_id() == layout.SITEDATA_ID)):
                         altp.append(p)
                     altp.extend(p._find_alt_parents(altscope=altscope, parents_seen=parents_seen+[p]))
                     altparent_lists.append(altp)

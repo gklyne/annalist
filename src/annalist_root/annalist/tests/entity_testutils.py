@@ -28,15 +28,43 @@ from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
 
-from annalist.views.uri_builder                 import uri_params, uri_with_params
+from annalist.views.uri_builder     import (
+    uri_quote_param,
+    uri_params, uri_with_params
+    )
+from annalist.views.fields.field_description    import FieldDescription
 from annalist.views.fields.bound_field          import bound_field, get_entity_values
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
-from annalist.views.form_utils.fielddescription import FieldDescription
 
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
+
+
+#   -----------------------------------------------------------------------------
+#
+#   Message formatting functions
+#
+#   -----------------------------------------------------------------------------
+
+def make_message(msg_format, coll_id="testcoll", type_id="testtype", **kwargs):
+        """
+        Combine supplied message format string with keyword parameters to build
+        a message text.
+        """
+        msg_vals = dict(kwargs, coll_id=coll_id, type_id=type_id)
+        msg_text = msg_format%msg_vals
+        return msg_text
+
+def make_quoted_message(msg_format, coll_id="testcoll", type_id="testtype", **kwargs):
+        """
+        Combine supplied message format string with keyword parameters to build
+        a message text, then apply URL quoting to return the message as it will 
+        appear as a URL parameter.
+        """
+        msg_text = make_message(msg_format, coll_id=coll_id, type_id=type_id, **kwargs)
+        return uri_quote_param(msg_text)
 
 #   -----------------------------------------------------------------------------
 #
@@ -250,7 +278,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         <button type="submit" 
                 name="foo__new_edit" 
                 value="New"
-                title="Define new foo_label">
+                title="Define new or edit foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
@@ -270,7 +298,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
         <button type="submit" 
                 name="foo__new_edit" 
                 value="New"
-                title="Define new foo_label">
+                title="Define new or edit foo_label">
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>
       </div>
@@ -437,6 +465,9 @@ def context_field_map(context):
     return "\n".join(response)
 
 def context_view_field(context, rownum, colnum):
+    """
+    Returns bound_field object corresponding to a given row&column in a view
+    """
     row = context['fields'][rownum]
     if 'row_field_descs' in row:
         # Pick column from row
@@ -451,6 +482,24 @@ def context_view_field(context, rownum, colnum):
         field       = bound_field(field, entity_vals, context_extra_values=extras) 
     return field
 
+def context_view_repeat_fields(context, repeat_bound_field):
+    """
+    Returns a list of lists of bound fields corresponding to 
+    the items of a repeated value display field.
+
+    Result is indexed by [row][field] to get individual bound fields
+    """
+    field_descs = repeat_bound_field.description['group_field_descs']
+    extras      = repeat_bound_field['context_extra_values']
+    bound_rows  = []
+    for row_vals in repeat_bound_field.field_value:
+        r = []
+        for field_desc in field_descs:
+            f = bound_field(field_desc, row_vals, context_extra_values=extras)
+            r.append(f)
+        bound_rows.append(r)
+    return bound_rows
+
 def context_bind_fields(context):
     """
     Fields in field rows are late bound so entity values do not appear in
@@ -458,6 +507,7 @@ def context_bind_fields(context):
     so that all field values can be tested.
     """
     # bound_context = Context(context.flatten()) # Doesn't work for ContextList used for tests
+    # Flatten values from context
     context_vals  = {}
     for k in context.keys():
         context_vals[k] = context[k]
@@ -501,7 +551,7 @@ def context_list_head_fields(context):
 
 def context_list_item_fields(context, entity):
     """
-    Returns indicated field to be displayed as a bound_field value
+    Returns all list fields to be displayed as a list of bound_field values
     """
     # log.info(context['List_rows'])
     if 'List_rows' in context:
@@ -815,7 +865,7 @@ def check_type_view_context_fields(test, response,
         field_label=        "Supertype URIs",
         field_placeholder=  type_supertype_uris_placeholder,
         field_property_uri= "annal:supertype_uri",
-        field_render_type=  "Group_Seq_Row",
+        field_render_type=  "Group_Set_Row",
         field_value_mode=   "Value_direct",
         field_value_type=   "annal:Type_supertype_uri",
         field_value=        type_supertype_uris,

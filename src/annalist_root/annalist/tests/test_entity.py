@@ -55,7 +55,7 @@ class EntityRootTest(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_EntityRootTest(self):
@@ -309,7 +309,7 @@ class EntityTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     #   ----------------------------------------

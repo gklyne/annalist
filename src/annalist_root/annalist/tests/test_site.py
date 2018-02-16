@@ -86,7 +86,7 @@ class SiteTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_SiteTest(self):
@@ -221,7 +221,7 @@ class SiteViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        resetSitedata(scope="all")
         return
 
     def test_SiteViewTest(self):
@@ -243,7 +243,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         # self.assertEqual(r.content, "???")
         self.assertContains(r, """<h3>Error</h3>""", html=True)
-        self.assertContains(r, """<p>Error presented</p>""", html=True)
+        self.assertContains(r, """<p class="messages">Error presented</p>""", html=True)
         return
 
     def test_get_info(self):
@@ -251,7 +251,7 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, """<h3>Information</h3>""", html=True)
-        self.assertContains(r, """<p>Information presented</p>""", html=True)
+        self.assertContains(r, """<p class="messages">Information presented</p>""", html=True)
         return
 
     def test_get_home(self):

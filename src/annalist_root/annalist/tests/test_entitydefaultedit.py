@@ -21,6 +21,8 @@ from django.test.client             import Client
 
 from annalist.identifiers           import RDF, RDFS, ANNAL
 from annalist                       import layout
+from annalist                       import message
+
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordtype     import RecordType
@@ -34,6 +36,7 @@ from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir, 
     collection_edit_url,
     collection_create_values,
@@ -105,7 +108,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        #@@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -384,8 +387,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<title>Annalist error</title>", status_code=404)
         self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
         # log.debug(r.content)
-        def_label = error_label("testcoll", "testtype", "entitynone")
-        self.assertContains(r, "<p>Entity %s does not exist</p>"%(def_label), status_code=404)
+        err_label = error_label("testcoll", "testtype", "entitynone")
+        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, id="entitynone", label=err_label)
+        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

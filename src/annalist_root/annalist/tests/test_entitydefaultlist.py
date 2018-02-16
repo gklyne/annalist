@@ -20,6 +20,7 @@ from django.test                    import TestCase # cf. https://docs.djangopro
 from django.test.client             import Client
 
 from annalist                       import layout
+from annalist                       import message
 from annalist.identifiers           import RDF, RDFS, ANNAL
 
 from annalist.models.site           import Site
@@ -28,13 +29,14 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from annalist.views.uri_builder             import uri_params, uri_with_params
+from annalist.views.uri_builder             import uri_params, uri_with_params, uri_quote_param
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
 from entity_testutils       import (
+    make_message, make_quoted_message,
     site_dir, collection_dir, 
     collection_edit_url,
     continuation_url_param,
@@ -117,7 +119,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        resetSitedata()
+        #@@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -407,7 +409,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -450,8 +452,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
-        e3 = "error_message=No%20data%20record%20selected%20to%20copy"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
+        e3 = "error_message=%s"%(uri_quote_param(message.NO_ENTITY_FOR_COPY),)
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
         self.assertIn(e3, r['location'])
@@ -465,7 +467,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -517,7 +519,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -532,7 +534,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "FOUND")
         self.assertEqual(r.content,       "")
         e1 = TestHostUri + u
-        e2 = "error_head=Problem%20with%20input"
+        e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
         self.assertIn(e2, r['location'])
@@ -556,15 +558,18 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
-        self.assertContains(r, "Remove record entity1 of type testtype in collection testcoll: Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="testtype", 
+            id="entity1"
+            )
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r,
-            '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
+            '<input type="hidden" name="confirmed_action" value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
             html=True
             )
-        self.assertEqual(r.context['action_description'], 
-            'Remove record entity1 of type testtype in collection testcoll')
+        self.assertEqual(r.context['action_description'], msg_text)
         self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/testtype/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 
@@ -580,18 +585,21 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "<h3>Confirm requested action</h3>")
+        self.assertContains(r, "<h3>%s</h3>"%message.CONFIRM_REQUESTED_ACTION)
         # print "**********"
         # print r.content
         # print "**********"
-        self.assertContains(r, "Remove record entity1 of type testtype in collection testcoll: Are you sure?")
-        self.assertContains(r, 'Click "Confirm" to continue, or "Cancel" to abort operation')
+        msg_text = make_message(message.REMOVE_ENTITY_DATA, 
+            type_id="testtype", 
+            id="entity1"
+            )
+        self.assertContains(r, msg_text + ": " + message.ARE_YOU_SURE)
+        self.assertContains(r, message.CONFIRM_OR_CANCEL)
         self.assertContains(r, 
             '<input type="hidden" name="confirmed_action"  value="/testsite/c/testcoll/d/testtype/!delete_confirmed"/>',
             html=True
             )
-        self.assertEqual(r.context['action_description'], 
-            'Remove record entity1 of type testtype in collection testcoll')
+        self.assertEqual(r.context['action_description'], msg_text)
         self.assertEqual(r.context['confirmed_action'], 
             '/testsite/c/testcoll/d/testtype/!delete_confirmed')
         self.assertEqual(r.context['action_params'], 

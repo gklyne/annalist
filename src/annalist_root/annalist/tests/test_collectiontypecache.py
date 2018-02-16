@@ -40,7 +40,7 @@ from annalist.models.collectiontypecache    import CollectionTypeCache
 
 class CollectionTypeCacheTest(AnnalistTestCase):
     """
-    Tests for transitive closure calculations in CollectionTypeCache class.
+    Tests for collection type and supertype cache classes.
     """
 
     def setUp(self):
@@ -144,10 +144,13 @@ class CollectionTypeCacheTest(AnnalistTestCase):
 
     def test_singleton_cache(self):
         self.assertEqual([t.get_uri() for t in self.typecache.get_all_types(self.testcoll1_a)], [])
-        # NOTE: if the 'set_type' call also causes cache initialization, 
-        # the created type record is discovered on disk, and the set_type call returns 'False'.
+        # NOTE: if the 'set_type' call also causes cache initialization of all types, 
+        # including the created type record which is discovered on disk, and the subsequent 
+        # set_type call returns 'False'.
         self.create_type_record(self.testcoll1_a, self.type1)
-        self.assertTrue(self.typecache.set_type(self.testcoll1_a, self.type1))
+        self.assertFalse(self.typecache.set_type(self.testcoll1_a, self.type1))
+        # self.assertIsNone(self.testcoll1_a.remove_type("type1"))
+        self.assertFalse(self.typecache.set_type(self.testcoll1_a, self.type1))
         self.assertFalse(self.typecache.set_type(self.testcoll1_b, self.type1))
         self.assertEqual(self.typecache.get_type(self.testcoll1_a, "type1").get_uri(), "test:type1")
         self.assertEqual(self.typecache.get_type(self.testcoll1_b, "type1").get_uri(), "test:type1")
@@ -246,7 +249,10 @@ class CollectionTypeCacheTest(AnnalistTestCase):
 
     def test_get_all_types_scope_all(self):
         self.create_test_type_entities()
-        type_ids = set(t.get_id() for t in self.typecache.get_all_types(self.testcoll1_a, altscope="all"))
+        type_ids = set(
+            t.get_id() 
+            for t in self.typecache.get_all_types(self.testcoll1_a, altscope="all")
+            )
         self.assertEqual(type_ids, self.expect_all_type_ids)
         # type_ids = set(t.get_id() for t in self.typecache.get_all_types(self.testcoll1_b, altscope="all"))
         # self.assertEqual(type_ids, self.expect_all_type_ids)
