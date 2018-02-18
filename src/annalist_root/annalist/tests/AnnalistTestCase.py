@@ -92,6 +92,8 @@ class AnnalistTestCase(TestCase):
                             "Key %s: %r != %r"%(k, set(actual_dict[k]), set(expect_dict[k]))
                             )
                     else:
+                        # NOTE: this logic tests for expected list being a leading sublist of 
+                        # the actual list.  Thus, an empty epected list macthes any actual list.
                         for i in range(len(expect_dict[k])):
                             # if i >= len(actual_dict[k]):
                             #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
@@ -111,7 +113,7 @@ class AnnalistTestCase(TestCase):
                                     prefix+"Key %s[%d]: %r != %r"%(k, i, actual_dict[k], expect_dict[k])
                                     )
                 else:
-                    self.fail("Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
+                    self.fail(prefix+"Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
             elif isinstance(expect_dict[k],dict):
                 self.assertDictionaryMatch(
                     actual_dict[k], expect_dict[k], 

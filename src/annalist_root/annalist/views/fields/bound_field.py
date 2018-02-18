@@ -515,6 +515,7 @@ class bound_field(object):
         yield "entity_type_link_continuation"
         yield "field_edit_value"
         yield "field_view_value"
+        yield "field_description"
         yield "field_value"
         yield "field_value_key"
         yield "field_value_link"
