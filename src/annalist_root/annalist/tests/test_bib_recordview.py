@@ -72,7 +72,7 @@ from entity_testsitedata    import (
 
 #   -----------------------------------------------------------------------------
 #
-#   RecordView edit view tests
+#   BibEntryView edit view tests
 #
 #   -----------------------------------------------------------------------------
 
@@ -218,7 +218,7 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
                 <div class="view-value small-12 columns">
                 """+
                   render_select_options(
-                    "View_fields__0__Field_id", "Field id",
+                    "View_fields__0__View_field_sel", "Field id",
                     no_selection("(field sel)") + get_site_bibentry_fields_sorted(),
                     layout.FIELD_TYPEID+"/Entity_id",
                     placeholder="(field sel)"
@@ -248,6 +248,13 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
 
     # Test view rendering of BibEntry_view: field selectors should include Bib_* fields
     def test_get_recordview_edit_bibentry(self):
+        # coll_id      = "testcoll"
+        # type_id      = layout.VIEW_TYPEID
+        # entity_id    = "BibEntry_view"
+        # view_label   = "@@@BibEntry_view_label"
+        # entity_label = "%s/%s/%s"%(coll_id, type_id, entity_id)
+        # entity_descr = "coll %s, type %s, entity %s"%(coll_id, type_id, entity_id)
+        # Retrieve view form
         u = entitydata_edit_url(
             "edit", "testcoll", layout.VIEW_TYPEID, entity_id="BibEntry_view", 
             view_id="View_view"
@@ -313,14 +320,15 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         # NOTE: context['fields'][i]['field_id'] comes from FieldDescription instance via
         #       bound_field, so type prefix is stripped.  This does not apply to the field
         #       ids actually coming from the view form.
-        self.assertEqual(r.context['fields'][5]['field_id'],           'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_name'],         'View_fields')
-        self.assertEqual(r.context['fields'][5]['field_label'],        'Fields')
-        self.assertEqual(r.context['fields'][5]['field_property_uri'], "annal:view_fields")
-        self.assertEqual(r.context['fields'][5]['field_value_mode'],   "Value_direct")
-        self.assertEqual(r.context['fields'][5]['field_value_type'],  "annal:View_field")
-        self.assertEqual(r.context['fields'][5]['field_value'],        expect_field_data)
-        self.assertEqual(r.context['fields'][5]['options'],            self.no_options)
+        f5 = r.context['fields'][5]
+        self.assertEqual(f5.description['field_id'],           'View_fields')
+        self.assertEqual(f5.description['field_name'],         'View_fields')
+        self.assertEqual(f5.description['field_label'],        'Fields')
+        self.assertEqual(f5.description['field_property_uri'], "annal:view_fields")
+        self.assertEqual(f5.description['field_value_mode'],   "Value_direct")
+        self.assertEqual(f5.description['field_value_type'],   "annal:View_field")
+        self.assertEqual(f5['field_value'],                    expect_field_data)
+        self.assertEqual(f5['options'],                        self.no_options)
         return
 
     #   -----------------------------------------------------------------------------

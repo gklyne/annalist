@@ -22,15 +22,41 @@ See also: https://www.divio.com/en/blog/documentation/
 
 - [x] Flush collection caches on loading customize page rather than view page
 - [ ] Bound_field access to FieldDecription: use methods not dictionary
-    - [ ] Update test case context checking (see bound_field holding comments)
+    - [.] Update test case context checking (see bound_field holding comments)
+    - [x] Use 'entity_testfielddesc' methods in `entity_testtypedata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testviewdata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testvocabdata`
+    - [x] various test modules _check_context_fields use 'entity_testfielddesc' methods
+        - [x] test_recordtype.py
+        - [x] test_recordfield.py
+        - [x] test_recordvocab.py
+        - [x] test_recordlist.py, entity_testlistdata
+        - [x] test_recordview.py, entity_testviewdata
+    - [ ] rename entitydata_context_data to default_view_context_data
+    - [ ] rename recordtype_entity_view_context_data to type_view_context_data
+    - [ ] _etc._
+    - [ ] View_field_sel change label to "Field ref".  Change field name too.
+    - [ ] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
+    - [ ] replace <field>.description['field_id'] with .field_id
+    - [ ] replace <field>.description['field_name'] with .field_name
+    - [ ] replace <field>.description['field_label'] with .field_label
+- [.] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
+- [ ] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
     - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
+    - [ ] The continuation URL will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
     - [ ] Remove corresponding special case code in bound_field.
+- [ ] Rename "annal:record_type" -> "annal:list_entity_type" (for list target type)
+- [ ] In entityedit, context 'record_type' looks wrong.  see comment ~line 64 
+- [ ] Consider getting rid of "annal:record_type"; rename use in View and List
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
-- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+- [x] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+    - NO: it is varied in form data for multiple occurrences of the same field id 
+
+(Sub-release?)
+
 - [ ] Update pip to latest version in python environment (for continued testing)
 - [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)

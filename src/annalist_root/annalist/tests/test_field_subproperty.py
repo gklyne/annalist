@@ -389,13 +389,13 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 2)
         # Check id field for sanity
         f1 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f1['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_property_uri'], ANNAL.CURIE.id)
+        self.assertEqual(f1.description['field_id'],           "Entity_id")
+        self.assertEqual(f1.description['field_property_uri'], ANNAL.CURIE.id)
         self.assertEqual(f1['field_value'], self.testentity_data[ANNAL.CURIE.id])
         # Check superproperty field value
         f2 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f2['field_id'], 'Test_sup_field')
-        self.assertEqual(f2['field_property_uri'], "test:superprop_uri")
+        self.assertEqual(f2.description['field_id'],           "Test_sup_field")
+        self.assertEqual(f2.description['field_property_uri'], "test:superprop_uri")
         self.assertEqual(f2['field_value'], self.testentity_data["test:subprop_uri"])
         return
 
@@ -493,13 +493,13 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 2)
         # Check id field for sanity
         f1 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f1['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_property_uri'], ANNAL.CURIE.id)
+        self.assertEqual(f1.description['field_id'],           "Entity_id")
+        self.assertEqual(f1.description['field_property_uri'], ANNAL.CURIE.id)
         self.assertEqual(f1['field_value'], self.testsetentity_data[ANNAL.CURIE.id])
         # Check superproperty field value
         f2    = context_view_field(r.context, 1, 0)
-        self.assertEqual(f2['field_id'], 'Test_sup_set')
-        self.assertEqual(f2['field_property_uri'], "test:superprop_uri")
+        self.assertEqual(f2.description['field_id'],           "Test_sup_set")
+        self.assertEqual(f2.description['field_property_uri'], "test:superprop_uri")
         f2rfs = context_view_repeat_fields(r.context, f2)
         self.assertEqual(f2rfs[0][0].field_value, "Test field 1 value")
         self.assertEqual(f2rfs[1][0].field_value, "Test field 2 value")
@@ -583,13 +583,13 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 2)
         # Check id field for sanity
         f1 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f1['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_property_uri'], ANNAL.CURIE.id)
+        self.assertEqual(f1.description['field_id'],           "Entity_id")
+        self.assertEqual(f1.description['field_property_uri'], ANNAL.CURIE.id)
         self.assertEqual(f1['field_value'], self.testlistentity_data[ANNAL.CURIE.id])
         # Check superproperty field value
         f2    = context_view_field(r.context, 1, 0)
-        self.assertEqual(f2['field_id'], 'Test_sup_list')
-        self.assertEqual(f2['field_property_uri'], "test:superprop_list_uri")
+        self.assertEqual(f2.description['field_id'],           "Test_sup_list")
+        self.assertEqual(f2.description['field_property_uri'], "test:superprop_list_uri")
         f2rfs = context_view_repeat_fields(r.context, f2)
         self.assertEqual(f2rfs[0][0].field_value, "Test field 1 value")
         self.assertEqual(f2rfs[1][0].field_value, "Test field 2 value")

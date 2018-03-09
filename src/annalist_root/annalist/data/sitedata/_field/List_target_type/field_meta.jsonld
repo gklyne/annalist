@@ -14,6 +14,6 @@
 , "annal:property_uri":         "annal:record_type"
 , "annal:field_placement":      "small:0,12"
 , "annal:default_value":        ""
-, "annal:placeholder":          "(record type URI/CURIE displayed by list)"
+, "annal:placeholder":          "(entity type URI/CURIE displayed by list)"
 , "annal:tooltip":              "Type (URI or CURIE) of entity displayed by this list. Used to determine field choices appropriate to this list."
 }

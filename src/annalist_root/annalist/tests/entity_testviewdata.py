@@ -8,6 +8,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import urlparse
+import copy
+from collections import OrderedDict
 
 import logging
 log = logging.getLogger(__name__)
@@ -21,17 +23,19 @@ from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
+from annalist.views.form_utils.fieldchoice  import FieldChoice
 from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
+from entity_testfielddesc       import get_field_description, get_bound_field
+from entity_testentitydata      import entitydata_list_type_url
 from entity_testutils           import (
     collection_dir, 
     site_title, 
     collection_entity_view_url,
     context_field_row
     )
-from entity_testentitydata      import entitydata_list_type_url
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -215,122 +219,305 @@ def recordview_values_add_field(view_data,
 #
 #   -----------------------------------------------------------------------------
 
+default_view_fields_list = (
+    [ { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/Entity_id"
+      # , ANNAL.CURIE.property_uri:       ANNAL.CURIE.id
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:0,6"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/Entity_type"
+      # , ANNAL.CURIE.property_uri:       ANNAL.CURIE.type_id
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:6,6"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/Entity_label"
+      # , ANNAL.CURIE.property_uri:       RDFS.CURIE.label
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/Entity_comment"
+      # , ANNAL.CURIE.property_uri:       RDFS.CURIE.comment
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    ])
+
+view_view_fields_list = (
+    [
+      { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+'/View_id'
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.id
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:0,6"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_label"
+      , ANNAL.CURIE.property_uri:       RDFS.CURIE.label
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_comment"
+      , ANNAL.CURIE.property_uri:       RDFS.CURIE.comment
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_target_type"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.record_type
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_edit_view"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.open_view
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:0,6"
+      }
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_fields"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.view_fields
+      , ANNAL.CURIE.field_placement:    "small:0,12"
+      }
+    ])
+
+# Field list within a view_fields field of a view display
+# (this is confusingly, but unavoidably, self-referential)
+group_field_list = (
+    [ { ANNAL.CURIE.field_id:           "_field/View_field_sel"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.field_id
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:0,4"
+      }
+    , { ANNAL.CURIE.field_id:           "_field/View_field_property"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.property_uri
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:4,4"
+      }
+    , { ANNAL.CURIE.field_id:           "_field/View_field_placement"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.field_placement
+      , ANNAL.CURIE.field_placement:    "small:0,12;medium:8,4"
+      }
+    ])
+
+#@@REMOVE??
+# def __unused__recordview_view_field_list_context_data(
+#         coll_id="testcoll", view_id="", orig_id=None,
+#         view_fields=default_view_fields_list,
+#         **field_value_args
+#     ):
+#     """
+#     Construct a field list as it appears in the display context for
+#     a view, given a supplied list of field description references.
+#
+#     field_value_args is either a dictionary-like structure in which field 
+#     values are indexed by their corresponding property URIs, or by their
+#     corresponding field identifiers.
+#     """
+#     context_view_fields = view_fields.copy()
+#     for i in range(len(context_view_fields)):
+#         # Copty dictionary so original is not updated
+#         fdesc = context_view_fields[i].copy()
+#         fval = Nonecontext_view_fields
+#         furi = view_fields[ANNAL.CURIE.property_uri]
+#         if furi in fdesc:
+#             fval = fdesc[furi]
+#         fid  = view_fields[ANNAL.CURIE.field_id]
+#         if fid in fdesc:
+#             fval = fdesc[fid]
+#         if fval is not None:
+#             fdesc["field_value"] = fval
+#             context_view_fields[i]  = fdesc
+#     return context_view_fields
+
 def recordview_entity_view_context_data(
-        coll_id="testcoll", view_id="", orig_id=None, view_ids=[],
+        coll_id="testcoll", view_id="", orig_id=None,
         action=None, 
-        target_record_type="annal:View",
+        view_uri=None,
+        view_label=None,
+        view_descr=None,
+        view_record_type="annal:Default_type",
+        view_edit_view=True,
+        view_fields=None, 
         add_field=None, remove_field=None, move_up=None, move_down=None,
-        update="RecordView"
+        field_choices=None,
+        update="RecordView",
+        continuation_url=None
     ):
-    if view_id:
-        view_label = "%s %s/%s"%(update, coll_id, view_id)
-        view_descr = "%s help for %s in collection %s"%(update, view_id, coll_id)
-    else:
-        view_label = "%s data ... (%s/%s)"%(update, coll_id, view_id)
-        view_descr = "%s description ... (%s/%s)"%(update, coll_id, view_id)
+    if view_label is None:
+        #@@TODO: use same format for both; change form data too
+        if view_id:
+            view_label = "%s %s/%s"%(update, coll_id, view_id)
+        else:
+            view_label = "%s data ... (%s/)"%(update, coll_id)
+
+    #@@REMOVE
+    # if view_id:
+    #     view_label = "%s %s/%s"%(update, coll_id, view_id)
+    #     view_descr = "%s help for %s in collection %s"%(update, view_id, coll_id)
+    # else:
+    #     view_label = "%s data ... (%s/%s)"%(update, coll_id, view_id)
+    #     view_descr = "%s description ... (%s/%s)"%(update, coll_id, view_id)
+
     # Target record fields listed in the view description
-    view_fields = (
-          [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
-            , 'annal:field_placement':  "small:0,12;medium:0,6"
-            }
-          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_type"
-            , 'annal:field_placement':  "small:0,12;medium:6,6"
-            }
-          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_label"
-            , 'annal:property_uri':     "rdfs:label"
-            , 'annal:field_placement':  "small:0,12"
-            }
-          , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_comment"
-            , 'annal:property_uri':     "rdfs:comment"
-            # , 'annal:field_placement':  field3_placement
-            }
-          ])
-    # NOTE: context['fields'][i]['field_id'] comes from FieldDescription instance via
-    #       bound_field, so type prefix is stripped.  This does not apply to the field
-    #       ids actually coming from the view form.
+    if view_fields is None:
+        view_fields = default_view_fields_list
+        #@@REMOVE
+        # view_fields = (
+        #       [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
+        #         , 'annal:field_placement':  "small:0,12;medium:0,6"
+        #         }
+        #       , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_type"
+        #         , 'annal:field_placement':  "small:0,12;medium:6,6"
+        #         }
+        #       , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_label"
+        #         , 'annal:property_uri':     "rdfs:label"
+        #         , 'annal:field_placement':  "small:0,12"
+        #         }
+        #       , { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_comment"
+        #         , 'annal:property_uri':     "rdfs:comment"
+        #         # , 'annal:field_placement':  field3_placement
+        #         }
+        #       ])
+    if continuation_url is None:
+        continuation_url = entitydata_list_type_url(coll_id, layout.VIEW_TYPEID)
+    view_heading = "View definition"
+    view_title   = (
+        "%s - %s - Collection %s"%(view_label, view_heading, coll_id) if view_label
+        else
+        "%s - Collection %s"%(view_heading, coll_id)
+        )
+
+
+    view_fields = copy.deepcopy(view_fields) # Prevents testing Heisenbugs
+    bound_view_fields = get_bound_field("View_fields", view_fields)
+    # print "@@@@@ bound_view_fields\n"+repr(bound_view_fields)
+    if field_choices is not None:
+        # Add field choices to field definitions...
+        bound_view_fields['description']['group_field_list'] = group_field_list
+        group_field_descs = (
+            [ get_field_description(f[ANNAL.CURIE.field_id]) 
+              for f in group_field_list 
+            ])
+        fcs = OrderedDict()
+        for fid in field_choices:
+            fref      = layout.FIELD_TYPEID + "/" + fid
+            fdesc     = get_field_description(fid)
+            fc        = FieldChoice(fref, 
+                label=fdesc['field_label'],
+                link=TestBasePath+"/c/"+coll_id+"/d/"+fref+"/"
+                )
+            fcs[fref] = fc
+        group_field_descs[0]['field_choices'] = fcs
+        bound_view_fields['description']['group_field_descs'] = group_field_descs
+        # for v in bound_view_fields:
+        #     v['description']['field_choices'] = fcs
+
+
+
     context_dict = (
-        { 'title':              "%s - View definition - Collection %s"%(view_label, coll_id)
-        , 'heading':            "View definition"
+        { 'title':              view_title
+        , 'heading':            view_heading
         , 'coll_id':            coll_id
-        , 'type_id':            '_view'
-        , 'orig_id':            'orig_view_id'
-        , 'record_type':        'annal:View'
+        , 'type_id':            layout.VIEW_TYPEID
+        , 'orig_id':            orig_id #@@@ or 'orig_view_id'
+        , 'view_id':            'View_view'
+        , 'entity_id':          view_id or ""
+        , 'orig_id':            orig_id
+        , 'orig_type':          layout.VIEW_TYPEID
+        # , 'record_type':        'annal:View' #@@reinstate later when logic fixed?
+        , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
-              { 'field_id':           'View_id'               # fields[0]
-              , 'field_name':         'entity_id'
-              , 'field_value_type':   'annal:EntityRef'
-              , 'field_label':        'View Id'
-              , 'field_render_type':  '_enum_render_type/EntityId'
-              , 'field_value_mode':   '_enum_value_mode/Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("View_id",           view_id),                # 0 (0,0)
+              )
           , context_field_row(
-              { 'field_id':           'View_label'            # fields[1]
-              , 'field_name':         'View_label'
-              , 'field_value_type':   'annal:Text'
-              , 'field_label':        'Label'
-              , 'field_render_type':  '_enum_render_type/Text'
-              , 'field_value_mode':   '_enum_value_mode/Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        view_label
-              , 'options':            []
-              })
+              get_bound_field("View_label",        view_label)              # 1 (1,0)
+              )
           , context_field_row(
-              { 'field_id':           'View_comment'          # fields[2]
-              , 'field_name':         'View_comment'
-              , 'field_label':        'Help'
-              , 'field_value_type':   'annal:Richtext'
-              , 'field_render_type':  '_enum_render_type/Markdown'
-              , 'field_value_mode':   '_enum_value_mode/Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        view_descr
-              , 'options':            []
-              })
+              get_bound_field("View_comment",      view_descr)              # 2 (2,0)
+              )
           , context_field_row(
-              { 'field_id':           'View_target_type'      # fields[3]
-              , 'field_name':         'View_target_type'
-              , 'field_value_type':   'annal:Identifier'
-              , 'field_label':        'View entity type'
-              , 'field_render_type':  '_enum_render_type/Identifier'
-              , 'field_value_mode':   '_enum_value_mode/Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        target_record_type
-              , 'options':            []
-              })
+              get_bound_field("View_target_type",  view_record_type)        # 3 (3,0)
+              )
           , context_field_row(
-              { 'field_id':           'View_edit_view'        # fields[4]
-              , 'field_name':         'View_edit_view'
-              , 'field_value_type':   'annal:Boolean'
-              , 'field_label':        'Editable view?'
-              , 'field_render_type':  '_enum_render_type/CheckBox'
-              , 'field_value_mode':   '_enum_value_mode/Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              , 'field_value':        True
-              , 'options':            []
-              })
-          , { "field_id":           'View_fields'           # fields[5]
-            , 'field_name':         'View_fields'
-            , 'field_value_type':   'annal:Field_group'
-            , 'field_label':        'Fields'
-            , 'field_render_type':  '_enum_render_type/Group_Seq_Row'
-            , 'field_value_mode':   '_enum_value_mode/Value_direct'
-            , 'field_placement':    get_placement_classes('small:0,12')
-            , 'field_value':        view_fields
-            , 'options':            []
-            }
+              get_bound_field("View_edit_view",    view_edit_view)          # 4 (4,0)
+              )
+          # , get_bound_field("View_fields",         view_fields)             # 5 (5, 0)
+          , bound_view_fields  # 5 (5, 0)
           ]
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         })
-    if view_id:
-        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = view_id
-        context_dict['fields'][1]['row_field_descs'][0]['field_value'] = view_label
-        context_dict['fields'][2]['row_field_descs'][0]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
-        context_dict['orig_id']     = view_id
-    if orig_id:
-        context_dict['orig_id']     = orig_id
+
+    #@@REMOVE
+    # context_dict = (
+    #     { 'title':              "%s - View definition - Collection %s"%(view_label, coll_id)
+    #     , 'heading':            "View definition"
+    #     , 'coll_id':            coll_id
+    #     , 'type_id':            '_view'
+    #     , 'orig_id':            'orig_view_id'
+    #     , 'record_type':        'annal:View'
+    #     , 'fields':
+    #       [ context_field_row(
+    #           { 'field_id':           'View_id'               # fields[0]
+    #           , 'field_name':         'entity_id'
+    #           , 'field_value_type':   'annal:EntityRef'
+    #           , 'field_label':        'View Id'
+    #           , 'field_render_type':  '_enum_render_type/EntityId'
+    #           , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #           , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+    #           # , 'field_value':      (Supplied separately)
+    #           , 'options':            []
+    #           })
+    #       , context_field_row(
+    #           { 'field_id':           'View_label'            # fields[1]
+    #           , 'field_name':         'View_label'
+    #           , 'field_value_type':   'annal:Text'
+    #           , 'field_label':        'Label'
+    #           , 'field_render_type':  '_enum_render_type/Text'
+    #           , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #           , 'field_placement':    get_placement_classes('small:0,12')
+    #           , 'field_value':        view_label
+    #           , 'options':            []
+    #           })
+    #       , context_field_row(
+    #           { 'field_id':           'View_comment'          # fields[2]
+    #           , 'field_name':         'View_comment'
+    #           , 'field_label':        'Help'
+    #           , 'field_value_type':   'annal:Richtext'
+    #           , 'field_render_type':  '_enum_render_type/Markdown'
+    #           , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #           , 'field_placement':    get_placement_classes('small:0,12')
+    #           , 'field_value':        view_descr
+    #           , 'options':            []
+    #           })
+    #       , context_field_row(
+    #           { 'field_id':           'View_target_type'      # fields[3]
+    #           , 'field_name':         'View_target_type'
+    #           , 'field_value_type':   'annal:Identifier'
+    #           , 'field_label':        'View entity type'
+    #           , 'field_render_type':  '_enum_render_type/Identifier'
+    #           , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #           , 'field_placement':    get_placement_classes('small:0,12')
+    #           , 'field_value':        target_record_type
+    #           , 'options':            []
+    #           })
+    #       , context_field_row(
+    #           { 'field_id':           'View_edit_view'        # fields[4]
+    #           , 'field_name':         'View_edit_view'
+    #           , 'field_value_type':   'annal:Boolean'
+    #           , 'field_label':        'Editable view?'
+    #           , 'field_render_type':  '_enum_render_type/CheckBox'
+    #           , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #           , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+    #           , 'field_value':        True
+    #           , 'options':            []
+    #           })
+    #       , { "field_id":           'View_fields'           # fields[5]
+    #         , 'field_name':         'View_fields'
+    #         , 'field_value_type':   'annal:Field_group'
+    #         , 'field_label':        'Fields'
+    #         , 'field_render_type':  '_enum_render_type/Group_Seq_Row'
+    #         , 'field_value_mode':   '_enum_value_mode/Value_direct'
+    #         , 'field_placement':    get_placement_classes('small:0,12')
+    #         , 'field_value':        view_fields
+    #         , 'options':            []
+    #         }
+    #       ]
+    #     , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
+    #     })
+    # if view_id:
+    #     context_dict['fields'][0]['row_field_descs'][0]['field_value'] = view_id
+    #     context_dict['fields'][1]['row_field_descs'][0]['field_value'] = view_label
+    #     context_dict['fields'][2]['row_field_descs'][0]['field_value'] = '%s help for %s in collection %s'%(update, view_id, coll_id)
+    #     context_dict['orig_id']     = view_id
+    # if orig_id:
+    #     context_dict['orig_id']     = orig_id
+
+    if view_uri:
+        context_dict['entity_uri']  = view_uri
     if action:  
         context_dict['action']      = action
     if add_field:
@@ -375,23 +562,23 @@ def recordview_entity_view_form_data(
         , 'record_type':        'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
-        , 'View_fields__0__Field_id':           layout.FIELD_TYPEID+"/Entity_id"
-        , 'View_fields__0__Field_placement':    "small:0,12;medium:0,6"
-        , 'View_fields__1__Field_id':           layout.FIELD_TYPEID+"/Entity_type"
-        , 'View_fields__1__Field_placement':    "small:0,12;medium:6,6"
-        , 'View_fields__2__Field_id':           layout.FIELD_TYPEID+"/Entity_label"
-        , 'View_fields__2__Field_property':     "rdfs:label"
-        , 'View_fields__2__Field_placement':    "small:0,12"
-        , 'View_fields__3__Field_id':           layout.FIELD_TYPEID+"/Entity_comment"
-        , 'View_fields__3__Field_property':     "rdfs:comment"
-        , 'View_fields__3__Field_placement':    field3_placement
+        , 'View_fields__0__View_field_sel':          layout.FIELD_TYPEID+"/Entity_id"
+        , 'View_fields__0__View_field_placement':    "small:0,12;medium:0,6"
+        , 'View_fields__1__View_field_sel':          layout.FIELD_TYPEID+"/Entity_type"
+        , 'View_fields__1__View_field_placement':    "small:0,12;medium:6,6"
+        , 'View_fields__2__View_field_sel':          layout.FIELD_TYPEID+"/Entity_label"
+        , 'View_fields__2__View_field_property':     "rdfs:label"
+        , 'View_fields__2__View_field_placement':    "small:0,12"
+        , 'View_fields__3__View_field_sel':          layout.FIELD_TYPEID+"/Entity_comment"
+        , 'View_fields__3__View_field_property':     "rdfs:comment"
+        , 'View_fields__3__View_field_placement':    field3_placement
         })
     if extra_field:
         # Insert extra field with supplied Id
-        form_data_dict['View_fields__4__Field_id']        = layout.FIELD_TYPEID+"/"+extra_field
-        form_data_dict['View_fields__4__Field_placement'] = "small:0,12"
+        form_data_dict['View_fields__4__View_field_sel']       = layout.FIELD_TYPEID+"/"+extra_field
+        form_data_dict['View_fields__4__View_field_placement'] = "small:0,12"
         if extra_field_uri:
-            form_data_dict['View_fields__4__Field_property'] = extra_field_uri
+            form_data_dict['View_fields__4__View_field_property'] = extra_field_uri
     if view_id is not None:
         form_data_dict['entity_id']     = view_id
     if view_id:

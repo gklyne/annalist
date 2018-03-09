@@ -258,7 +258,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field0_desc = (
             { "field_id":                   "View_field_sel"
-            , "field_name":                 "Field_id"
+            , "field_name":                 "View_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
             , "field_label":                "Field id"
             , "field_render_type":          "Enum_optional"
@@ -278,7 +278,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field1_desc = (
             { "field_id":                   "View_field_property"
-            , "field_name":                 "Field_property"
+            , "field_name":                 "View_field_property"
             , "field_value_type":           ANNAL.CURIE.Identifier
             , "field_label":                "Property URI"
             , "field_render_type":          "Identifier"
@@ -298,7 +298,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field2_desc = (
             { "field_id":                   "View_field_placement"
-            , "field_name":                 "Field_placement"
+            , "field_name":                 "View_field_placement"
             , "field_value_type":           ANNAL.CURIE.Placement
             , "field_label":                "Position/size"
             , "field_render_type":          "Placement"

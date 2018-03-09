@@ -22,6 +22,103 @@ from annalist.views.fields.render_placement import Placement, get_placement_clas
 from annalist.tests.tests                   import TestHost, TestHostUri, TestBasePath, TestBaseUri
 from annalist.tests.AnnalistTestCase        import AnnalistTestCase
 
+
+class TestBoundField(object):
+
+    def __init__(self, field_dict,
+            target_value=None, 
+            field_link=None, 
+            target_link=None, 
+            field_ref_type=None,
+            options=None,
+            continuation_url="test_cont"
+        ):
+        self._field = dict(field_dict)
+        if field_ref_type is not None:
+            self._field['description']['field_ref_type'] = field_ref_type
+        if target_value is not None:
+            self._field['target_value'] = target_value
+        if field_link is not None:
+            self._field['field_value_link']               = field_link
+            self._field['field_value_link_continuation']  = field_link+"?continuation_url="+continuation_url
+        if target_link is not None:
+            self._field['target_value_link']              = target_link
+            self._field['target_value_link_continuation'] = target_link+"?continuation_url="+continuation_url
+        if options is not None:
+            self._field['options'] = options
+        return
+
+    def __getattr__(self, name):
+        # if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
+        #     return self.value.get(name, "")
+        # elif name == "entity_value":
+        #     return self.value
+        # elif name == "field_value_key":
+        #     return self._key
+        if name == "_field":
+            return self._field
+        elif name in ["description"]:
+            return self._field["description"]
+        elif name == "field_id":
+            return self._field["description"].get("field_id", None)
+        elif name == "field_name":
+            return self._field["description"].get("field_name", None)
+        elif name == "field_tooltip_attr":
+            return ""
+        elif name in ["field_value", "field_edit_value"]:
+            return self._field["target_value"]
+        elif name == "field_value_link":
+            return self._field["field_value_link"]
+        elif name == "options":
+            return self._field["options"]
+        # elif name == "context_extra_values":
+        #     return self._extras
+        attr = "@@TestBoundField.%s@@"%(name,)
+        return attr
+
+    # Define methods to facilitate access to values using dictionary operations
+    # on the FieldDescription object
+
+    def keys(self):
+        """
+        Return collection metadata value keys
+        """
+        return self._field.keys()
+
+    def items(self):
+        """
+        Return collection metadata value fields
+        """
+        return self._field.items()
+
+    def get(self, k, default):
+        """
+        Equivalent to dict.get() function
+        """
+        return self[k] if self._field and k in self._field else default
+
+    def __getitem__(self, k):
+        """
+        Allow direct indexing to access collection metadata value fields
+        """
+        return self._field[k]
+
+    def __setitem__(self, k, v):
+        """
+        Allow direct indexing to update collection metadata value fields
+        """
+        self._field[k] = v
+        return
+
+    def __iter__(self):
+        """
+        Iterator over dictionary keys
+        """
+        for k in self._field:
+            yield k
+        return
+
+
 #   -----------------------------------------------------------------------------
 #
 #   Field renderer tests support
@@ -45,8 +142,8 @@ class FieldRendererTestSupport(AnnalistTestCase):
             rendered = re.sub(r'\s+', " ", rendered).strip()
             expected = re.sub(r'\s+', " ", expected).strip()
         if rendered != expected:
-            print "rendered "+rendered
-            print "expected "+expected
+            log.info("rendered "+rendered)
+            log.info("expected "+expected)
         self.assertEqual(rendered, expected)
         return
 
@@ -59,18 +156,32 @@ class FieldRendererTestSupport(AnnalistTestCase):
             options=None,
             coll_id="testcoll", coll=None
         ):
+        fd = (
+            { 'field_placement':      get_placement_classes("small:0,12")
+            , 'field_name':           "test_field"
+            , 'field_label':          "test label"
+            , 'field_value':          val
+            , 'field_edit_value':     val
+            , 'target_value':         val     # Mimics bound_field default behaviour
+            , 'field_view_value':     val
+            , 'continuation_param':   "?continuation_url=test_cont"
+            , 'description':
+                { 'field_id':             "test_field"
+                , 'field_name':           "test_field"
+                , 'field_label':          "test label"
+                , 'field_placement':      get_placement_classes("small:0,12")
+                , 'field_placeholder':    "(test placeholder)"
+                }
+            })
         cd = (
-            { 'field':
-              { 'field_placement':      get_placement_classes("small:0,12")
-              , 'field_name':           "test_field"
-              , 'field_label':          "test label"
-              , 'field_placeholder':    "(test placeholder)"
-              , 'field_value':          val
-              , 'field_edit_value':     val
-              , 'target_value':         val     # Mimics bound_field default behaviour
-              , 'field_view_value':     val
-              , 'continuation_param':   "?continuation_url=test_cont"
-              }
+            { 'field': TestBoundField(fd,
+                            target_value=target_value, 
+                            field_link=field_link, 
+                            target_link=target_link, 
+                            field_ref_type=field_ref_type,
+                            options=options,
+                            continuation_url="test_cont"
+                            )
             , 'collection':           coll
             , 'repeat_prefix':        repeat_prefix
             , 'HOST':                 TestHostUri
@@ -78,18 +189,18 @@ class FieldRendererTestSupport(AnnalistTestCase):
             , 'COLL':                 TestBaseUri+"/c/"+coll_id+"/"
             , 'BASE':                 TestBasePath+"/c/"+coll_id+"/d/"
             })
-        if target_value is not None:
-            cd['field']['target_value'] = target_value
-        if field_link is not None:
-            cd['field']['field_value_link']              = field_link
-            cd['field']['field_value_link_continuation'] = field_link+"?continuation_url=test_cont"
-        if target_link is not None:
-            cd['field']['target_value_link']              = target_link
-            cd['field']['target_value_link_continuation'] = target_link+"?continuation_url=test_cont"
-        if field_ref_type is not None:
-            cd['field']['field_ref_type'] = field_ref_type
-        if options is not None:
-            cd['field']['options'] = options
+        # if target_value is not None:
+        #     cd['field']['target_value'] = target_value
+        # if field_link is not None:
+        #     cd['field']['field_value_link']              = field_link
+        #     cd['field']['field_value_link_continuation'] = field_link+"?continuation_url=test_cont"
+        # if target_link is not None:
+        #     cd['field']['target_value_link']              = target_link
+        #     cd['field']['target_value_link_continuation'] = target_link+"?continuation_url=test_cont"
+        # if field_ref_type is not None:
+        #     cd['field']['field_ref_type'] = field_ref_type
+        # if options is not None:
+        #     cd['field']['options'] = options
         return Context(cd)
 
     def _check_value_renderer_results(self,

@@ -45,7 +45,8 @@ from entity_testutils       import (
     collection_create_values,
     create_user_permissions,
     create_test_user,
-    context_view_field
+    context_view_field,
+    context_field
     )
 from entity_testuserdata    import (
     annalistuser_dir,
@@ -273,12 +274,12 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'label': "small-12 medium-2 columns"
             , 'value': "small-12 medium-10 columns"
             })
-        field = (
+        field = context_field(
             { 'field_placement':    field_placement
             , 'field_label':        "Permissions"
             , 'field_placeholder':  "(user permissions)"
             , 'field_name':         "User_permissions"
-            , 'field_edit_value':   ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_value':        ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             })
         context  = Context({'field': field})
         rendered = get_field_tokenset_renderer().label_edit().render(context)
@@ -303,15 +304,15 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             , 'label': "small-12 medium-2 columns"
             , 'value': "small-12 medium-10 columns"
             })
-        field = (
+        field = context_field(
             { 'field_placement':        field_placement
             , 'field_label':            "Permissions"
             , 'field_placeholder':      "(user permissions)"
             , 'field_name':             "User_permissions"
-            , 'field_edit_value':       ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
+            , 'field_value':            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
             , 'field_render_object':    get_field_tokenset_renderer().label_edit()
             })
-        template = Template("{% include field.field_render_object %}")
+        template = Template("{% include field.description.field_render_object %}")
         context  = Context({ 'render_object': get_field_tokenset_renderer().label_edit(), 'field': field})
         rendered = template.render(context)
         rendered = re.sub(r'\s+', " ", rendered)

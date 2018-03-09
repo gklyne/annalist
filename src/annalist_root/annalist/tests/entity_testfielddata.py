@@ -223,23 +223,29 @@ def recordfield_read_values(
 #   -----------------------------------------------------------------------------
 
 def recordfield_entity_view_context_data(
-        coll_id="testcoll", field_id=None, orig_id=None, type_ids=[],
+        coll_id="testcoll", field_id=None, orig_id=None,
+        continuation_url=None,
         field_label=None,
-        field_value_type="annal:Text",
         field_render_type="Text",
         field_value_mode="Value_direct",
+        field_entity_type="",
+        field_value_type="annal:Text",
         field_property="",
         field_placement="",
         field_superproperty_uris=None,
         field_placeholder="",
         field_tooltip=None,
-        field_fields=[],
+        field_default=None,
+        field_typeref=None,
+        field_fieldref=None,
+        field_viewref=None,
+        field_fields=None,
         field_repeat_label_add="Add",
         field_repeat_label_delete="Remove",
-        field_entity_type="",
+        field_restrict=None,
         action=None, update="Field"
     ):
-    if not field_label:
+    if field_label is None:
         if field_id:
             field_label = "%s %s/_field/%s"%(update, coll_id, field_id)
         else:
@@ -252,18 +258,16 @@ def recordfield_entity_view_context_data(
         label="small-4 columns",
         value="small-8 columns"
         )
-    # @@TODO: re-work context structure used for testing so that field definitions present
-    #         as an included dictionary, not as direct dictionary elements of bound_field.
-    #         I'm not sure how extensive a re-work this would be, but there's an opportunity
-    #         here to rationalize the test framework; e.g. define field desription values once
-    #         and re-use, rather than duplicate values here.
+    if field_label:
+        title = "%s - Field definition - Collection %s"%(field_label, coll_id)
+    else:
+        title = "Field definition - Collection %s"%(coll_id)
     context_dict = (
-        { "title":              "%s - Field definition - Collection %s"%(field_label, coll_id)
+        { "title":              title
         , 'heading':            "Field definition"
         , 'coll_id':            coll_id
         , 'type_id':            "_field"
-        , 'orig_id':            "orig_field_id"
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
+        # , 'orig_id':            "orig_field_id"
         , 'fields':
           [ context_field_row(
               get_bound_field("Field_id", field_id),                        # 0 (0,0)
@@ -288,11 +292,11 @@ def recordfield_entity_view_context_data(
               get_bound_field("Field_entity_type", field_entity_type)       # 9 (6,0)
               )
           , context_field_row(
-              get_bound_field("Field_typeref"),                             # 10 (7,0)
-              get_bound_field("Field_fieldref")                             # 11 (7,1)
+              get_bound_field("Field_typeref", field_typeref),              # 10 (7,0)
+              get_bound_field("Field_fieldref", field_fieldref)             # 11 (7,1)
               )
           , context_field_row(
-              get_bound_field("Field_default")                              # 12 (8,0)
+              get_bound_field("Field_default", field_default)               # 12 (8,0)
               )
           , context_field_row(
               get_bound_field("Field_placeholder", field_placeholder)       # 13 (9,0)
@@ -308,16 +312,18 @@ def recordfield_entity_view_context_data(
                                                                             # 17 (12,1)
               )
           , context_field_row(
-              get_bound_field("Field_restrict")                             # 18 (18,0)
+              get_bound_field("Field_restrict", field_restrict)             # 18 (18,0)
               )
           ]
         })
-    if field_id:
-        context_dict['orig_id']     = field_id
-    if orig_id:
+    if orig_id is not None:
         context_dict['orig_id']     = orig_id
     if action:  
         context_dict['action']      = action
+    if continuation_url is None:
+        context_dict['continuation_url'] = entitydata_list_type_url(coll_id, "_field")
+    else:
+        context_dict['continuation_url'] = continuation_url
     return context_dict
 
 def recordfield_entity_view_form_data(

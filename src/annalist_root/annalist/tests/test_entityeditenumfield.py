@@ -447,7 +447,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         f = recordview_entity_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", update="Updated RecordView",
-            new_enum="View_fields__3__Field_id__new_edit"
+            new_enum="View_fields__3__View_field_sel__new_edit"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", "_view", 

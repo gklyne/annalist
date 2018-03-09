@@ -435,17 +435,52 @@ def create_test_user(
 #
 #   -----------------------------------------------------------------------------
 
+def context_field(field_desc):
+    """
+    Return a bound_field like object corresponding to suppliedfield details.
+    The supplied parameter is a dictonary of field descriptiopn values, with a
+    small number of additional keys recognized as setting values of the bound_field.
+    """
+    copy_field_desc  = field_desc.copy()
+    entity_value     = copy_field_desc.pop('entity_value',     None)
+    field_value      = copy_field_desc.pop('field_value',      None)
+    field_edit_value = copy_field_desc.pop('field_edit_value', None)
+    field_view_value = copy_field_desc.pop('field_view_value', None)
+    field_options    = copy_field_desc.pop('field_options',    None)
+    field = (
+        { 'description':  copy_field_desc 
+        })
+    if field_value is not None:
+        field['field_value']      = field_value
+        field['field_edit_value'] = field_value
+        field['field_view_value'] = field_value
+    if field_edit_value is not None:
+        field['field_edit_value'] = field_edit_value
+    if field_view_value is not None:
+        field['field_view_value'] = field_view_value
+    if entity_value is not None:
+        field['entity_value'] = entity_value
+    if field_options is not None:
+        field['options'] = field_options
+    return field
+
 def context_field_row(*fields):
-    row = (
+    """
+    Return a FieldDescription like object for a displayed row of fields
+    in a view context.
+
+    *fields      is a sequence of bound field like obects
+    """
+    field_row = context_field(
         { 'field_id':           "Row_fields"
         , 'field_name':         "Row_fields"
         , 'field_label':        "Fields in row"
         , 'field_value_mode':   "Value_direct"
         , 'field_render_type':  "FieldRow"
         , 'field_placement':    get_placement_classes('small:0,12')
-        , 'row_field_descs':    list(fields)
+        , 'row_field_descs':    fields
         })
-    return row
+    return field_row
 
 def context_field_map(context):
     fields = context['fields']
@@ -469,9 +504,9 @@ def context_view_field(context, rownum, colnum):
     Returns bound_field object corresponding to a given row&column in a view
     """
     row = context['fields'][rownum]
-    if 'row_field_descs' in row:
+    if 'row_field_descs' in row.description:
         # Pick column from row
-        field = row['row_field_descs'][colnum]
+        field = row.description['row_field_descs'][colnum]
     else:
         # Field is not row-wrapped
         field = row
@@ -514,20 +549,24 @@ def context_bind_fields(context):
     bound_context = Context(context_vals)
     bound_rows    = []
     for row in context['fields']:
-        if 'row_field_descs' in row:
+        row_description = row['description']
+        if 'row_field_descs' in row_description:
             entity_vals = row['entity_value']
             extras      = row['context_extra_values']
             bound_cols  = []
-            for field in row['row_field_descs']:
+            for field in row_description['row_field_descs']:
+                b_field = field
                 if isinstance(field, FieldDescription):
                     # fields in row are late-bound, so create a binding now
-                    field       = bound_field(field, entity_vals, context_extra_values=extras) 
-                bound_cols.append(field)
+                    b_field = bound_field(field, entity_vals, context_extra_values=extras) 
+                bound_cols.append(b_field)
             bound_row = row.copy()
             bound_row._field_description['row_field_descs'] = bound_cols
+            # print "@@@@ bound_row: "+repr(bound_row)
         else:
             bound_row = row
         bound_rows.append(bound_row)
+    # print "@@@@ bound_rows[0]['description']['row_field_descs'][0]:\n"+repr(bound_rows[0]['description']['row_field_descs'][0])
     bound_context['fields'] = bound_rows
     return bound_context
 
@@ -545,7 +584,7 @@ def context_list_entities(context):
 
 def context_list_head_fields(context):
     """
-    Returns unbound field description used for accessing header information.
+    Returns field description used for accessing header information.
     """
     return context['fields']
 
@@ -555,7 +594,7 @@ def context_list_item_fields(context, entity):
     """
     # log.info(context['List_rows'])
     if 'List_rows' in context:
-        fds = context['List_rows']['group_field_descs']
+        fds = context['List_rows'].description['group_field_descs']
         return [ bound_field(fd, entity) for fd in fds ]
     elif 'fields' in entity:
         return entity['fields']
@@ -568,7 +607,7 @@ def context_list_item_field(context, entity, fid):
     """
     # log.info(context['List_rows'])
     if 'List_rows' in context:
-        fd = context['List_rows']['group_field_descs'][fid]
+        fd = context['List_rows'].description['group_field_descs'][fid]
         return bound_field(fd, entity)
     elif 'fields' in entity:
         return entity['fields'][fid]
@@ -631,17 +670,17 @@ def check_context_field(test, context_field,
 
     This function allows certain variations for robustness of tests.
     """
-    test.assertEqual(context_field['field_id'],   field_id)
-    test.assertEqual(context_field['field_name'], field_name)
+    test.assertEqual(context_field.description['field_id'],   field_id)
+    test.assertEqual(context_field.description['field_name'], field_name)
     if field_label:
-        test.assertEqual(context_field['field_label'], field_label)
+        test.assertEqual(context_field.description['field_label'], field_label)
     if field_placeholder:
-        test.assertEqual(context_field['field_placeholder'], field_placeholder)
+        test.assertEqual(context_field.description['field_placeholder'], field_placeholder)
     if field_property_uri:
-        test.assertEqual(context_field['field_property_uri'], field_property_uri)
-    test.assertEqual(extract_entity_id(context_field['field_render_type']), field_render_type)
-    test.assertEqual(extract_entity_id(context_field['field_value_mode']),  field_value_mode)
-    test.assertEqual(context_field['field_value_type'],                     field_value_type)
+        test.assertEqual(context_field.description['field_property_uri'], field_property_uri)
+    test.assertEqual(extract_entity_id(context_field.description['field_render_type']), field_render_type)
+    test.assertEqual(extract_entity_id(context_field.description['field_value_mode']),  field_value_mode)
+    test.assertEqual(context_field.description['field_value_type'],                     field_value_type)
     if options:
         if set(context_field['options']) != set(options):
             log.info("@@ Options expected: %r"%(context_field['options'],))
@@ -649,7 +688,7 @@ def check_context_field(test, context_field,
             log.info("@@ context_field:    %r"%(context_field,))
         test.assertEqual(set(context_field['options']), set(options))
     if field_placement:
-        test.assertEqual(context_field['field_placement'].field, field_placement)
+        test.assertEqual(context_field.description['field_placement'].field, field_placement)
     check_context_field_value(test, context_field, 
         field_value_type=field_value_type, 
         field_value=field_value
@@ -663,7 +702,7 @@ def check_context_list_field_value(test, context_field,
     Check field value according to type in context
     """
     check_context_field_value(test, context_field,
-        field_value_type=context_field['field_value_type'],
+        field_value_type=context_field.description['field_value_type'],
         field_value=field_value
         )
     return
@@ -674,7 +713,7 @@ def check_field_list_context_fields(test, response, field_entities):
     """
     head_fields = context_list_head_fields(response.context)
     test.assertEqual(len(head_fields), 1)       # One row of 4 cols..
-    test.assertEqual(len(head_fields[0]['row_field_descs']), 4)
+    test.assertEqual(len(head_fields[0].description['row_field_descs']), 4)
     f0 = context_view_field(response.context, 0, 0)
     f1 = context_view_field(response.context, 0, 1)
     f2 = context_view_field(response.context, 0, 2)
@@ -737,12 +776,12 @@ def check_field_list_context_fields(test, response, field_entities):
                 # Expected field entity found in context data, check details...
                 for fid in range(4):
                     item_field = item_fields[fid]
-                    head_field = head_fields[0]['row_field_descs'][fid]
+                    head_field = head_fields[0].description['row_field_descs'][fid]
                     for fkey in (
                             'field_id', 'field_name', 'field_label', 
                             'field_property_uri', 'field_render_type',
                             'field_placement', 'field_value_type'):
-                        test.assertEqual(item_field[fkey], head_field[fkey])
+                        test.assertEqual(item_field.description[fkey], head_field[fkey])
                     # Check listed field values
                     check_context_list_field_value(test, item_field, f[fid])
                 break

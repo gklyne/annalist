@@ -84,7 +84,7 @@ def get_padding_field_desc(pad_s, pad_m, pad_l):
         )
     return pad_desc
 
-def next_field(pos_prev, offset, width, display):
+def next_field_pad(pos_prev, offset, width, display):
     """
     Local helper calculates padding required for a given previous position,
     field offset and field width.
@@ -135,9 +135,9 @@ def get_padding_desc(position, field_desc):
     #     "@@ get_padding_desc: prev %r, next %r, width %r"%
     #     (position, placement.offset, placement.width)
     #     )
-    next_rows, pad_s, next_s = next_field(position.s, placement.offset.s, placement.width.s, placement.display.s)
-    next_rowm, pad_m, next_m = next_field(position.m, placement.offset.m, placement.width.m, placement.display.m)
-    next_rowl, pad_l, next_l = next_field(position.l, placement.offset.l, placement.width.l, placement.display.l)
+    next_rows, pad_s, next_s = next_field_pad(position.s, placement.offset.s, placement.width.s, placement.display.s)
+    next_rowm, pad_m, next_m = next_field_pad(position.m, placement.offset.m, placement.width.m, placement.display.m)
+    next_rowl, pad_l, next_l = next_field_pad(position.l, placement.offset.l, placement.width.l, placement.display.l)
     pos_next = LayoutOptions(s=next_s, m=next_m, l=next_l)
     pad_desc = get_padding_field_desc(pad_s, pad_m, pad_l)
     # log.info(
@@ -174,7 +174,9 @@ class RowData(object):
     def flush(self, map_field_row):
         if self._fields:
             # Context name: cf. FieldListValueMap.map_entity_to_context
-            row_values_map  = FieldRowValueMap("_fieldlistvaluemap_", self._coll, self._fields, self._view)
+            row_values_map  = FieldRowValueMap("_fieldlistvaluemap_", 
+                self._coll, self._fields, self._view
+                )
             map_field_row.append(row_values_map)
         self._pos    = LayoutOptions(s=0, m=0, l=0)
         self._fields = []

@@ -65,8 +65,8 @@ class text_edit_renderer(object):
         """
         responsetemplate = Template("""
             <!-- views/fields/render_text.py:text_edit_renderer -->
-            <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" 
-                   placeholder="{{field.field_placeholder}}"
+            <input type="text" size="64" name="{{repeat_prefix}}{{field.description.field_name}}" 
+                   placeholder="{{field.description.field_placeholder}}"
                    value="{{field.field_value}}" />
             """)
         responsebody = responsetemplate.render(context)

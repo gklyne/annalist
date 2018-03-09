@@ -58,8 +58,9 @@ from entity_testviewdata    import (
     recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
-    recordview_entity_view_context_data, recordview_entity_view_form_data, 
-    # recordview_view_context_data, recordview_view_form_data, 
+    recordview_entity_view_context_data, 
+    default_view_fields_list, view_view_fields_list,
+    recordview_entity_view_form_data, 
     recordview_delete_confirm_form_data
     )
 from entity_testentitydata  import (
@@ -223,29 +224,35 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
         self.no_options = [ FieldChoice('', label="(no options)") ]
         def special_field(fid):
-            return ( 
+            return (
+                fid == "Entity_see_also" or 
                 fid.startswith("Field_") or 
                 fid.startswith("List_") or
                 fid.startswith("Type_") or
                 fid.startswith("View_") or
-                fid.startswith("User_")
+                fid.startswith("User_") or
+                fid.startswith("Coll_") or
+                fid.startswith("Vocab_") or
+                fid.startswith("Enum_") or
+                fid.startswith("Group_") or
+                False
                 )
         self.field_options    = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != layout.INITIAL_VALUES_ID
+              if fid != layout.INITIAL_VALUES_ID
             ])
         self.field_options_no_bibentry = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != layout.INITIAL_VALUES_ID and not fid.startswith("Bib_")
+              if fid != layout.INITIAL_VALUES_ID and not fid.startswith("Bib_")
             ])
         self.field_options_bib_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != layout.INITIAL_VALUES_ID and not special_field(fid)
+              if fid != layout.INITIAL_VALUES_ID and not special_field(fid)
             ])
         self.field_options_no_special = sorted(
             [ fid for fid in self.testcoll.child_entity_ids(RecordField, altscope="all") 
-                  if fid != layout.INITIAL_VALUES_ID and 
-                      not (fid.startswith("Bib_") or special_field(fid))
+              if fid != layout.INITIAL_VALUES_ID and 
+                  not ((fid.startswith("Bib_") or special_field(fid)))
             ])
         # log.info(self.field_options_no_bibentry)
         # For checking Location: header values...
@@ -318,6 +325,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return t
 
     # Check context values common to all view fields
+    #@@REMOVE (when references below replaced)
     def _check_common_view_context_fields(self, response, 
             action="",
             view_id="(?view_id)", orig_view_id=None,
@@ -395,7 +403,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             field_value=        view_record_type,
             options=            self.no_options
             )
-        # 5th field - add field
+        # 5th field - editable view option
         check_context_field(self, f4,
             field_id=           "View_edit_view",
             field_name=         "View_edit_view",
@@ -411,14 +419,41 @@ class RecordViewEditViewTest(AnnalistTestCase):
     # Check context values for view using default record view
     def _check_default_view_context_fields(self, response, 
             action="",
-            add_field=None, remove_field=None, move_up=None, move_down=None,
-            view_id="(?view_id)", orig_view_id=None, 
+            view_id="(?view_id)", orig_view_id=None,
+            view_uri=None, 
             view_label="(?view_label)",
+            view_descr=None,
             view_record_type="(?view_record_type)",
-            view_uri="(?view_uri)",         # Unused?
-            view_url="(?view_url)",         # Unused?
-            field_options=None              # Unused?
+            view_edit_view=True,
+            view_fields=None, field_choices=None,
+            add_field=None, remove_field=None, 
+            move_up=None, move_down=None,
+            update="RecordView",
+            continuation_url=None
             ):
+        expect_context = recordview_entity_view_context_data(
+            coll_id="testcoll", view_id=view_id, orig_id=orig_view_id,
+            action=action,
+            view_uri=view_uri,
+            view_label=view_label,
+            view_descr=view_descr,
+            view_record_type=view_record_type,
+            view_edit_view=view_edit_view,
+            view_fields=view_fields, field_choices=field_choices,
+            add_field=add_field, remove_field=remove_field, 
+            move_up=move_up, move_down=move_down,
+            update=update,
+            continuation_url=continuation_url
+            )
+        actual_context = context_bind_fields(response.context)
+        # print "@@@@@@@ actual:\n"+repr(actual_context['fields'][5]['description']['group_field_descs'][0]['field_choices'])
+        # print "@@@@@@@ expect:\n"+repr(expect_context['fields'][5]['description']['group_field_descs'][0]['field_choices'])
+        self.assertEqual(len(response.context['fields']), 6)
+        self.assertDictionaryMatch(actual_context, expect_context)
+
+
+
+        #@@REMOVE
         # Common fields 
         self._check_common_view_context_fields(response,
             action=action,
@@ -483,6 +518,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_record_type="annal:View",
             view_edit_view=False
             )
+
+
+
+
+
         # 6th field - field list
         f5 = context_view_field(response.context, 5, 0)
         expect_field_data = (
@@ -506,6 +546,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
               , 'annal:field_id':        layout.FIELD_TYPEID+'/View_fields'
               }
             ])
+
+
         if num_fields == 7:
             # New blank field, if selected
             expect_field_data.append(
@@ -634,7 +676,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
                 <div class="view-value small-12 columns">
                 """+
                   render_select_options(
-                    "View_fields__0__Field_id", "Field id",
+                    "View_fields__0__View_field_sel", "Field id",
                     no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
                     layout.FIELD_TYPEID+"/Entity_id",
                     placeholder="(field sel)"
@@ -660,9 +702,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        view_url = collection_entity_view_url(
-            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="00000001"
-            )
+        # view_url = collection_entity_view_url(
+        #     coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="00000001"
+        #     )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "00000001")
@@ -677,8 +719,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="00000001", orig_view_id=None,
             view_label="", # default_label("testcoll", layout.VIEW_TYPEID, "00000001"),
             view_record_type="",
-            view_url=recordview_url("testcoll", "00000001"),
-            field_options = self.field_options_no_special
+            # view_url=recordview_url("testcoll", "00000001"),
+            field_choices=self.field_options_no_special,
+            continuation_url="/xyzzy/"
             )
         return
 
@@ -690,9 +733,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(
-            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="Default_view"
-            )
+        # view_url = collection_entity_view_url(
+        #     coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="Default_view"
+        #     )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_view_01")
@@ -706,10 +749,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="copy",
             view_id="Default_view_01", orig_view_id="Default_view",
             view_label="Default record view",
-            view_url=view_url,
+            # view_url=view_url,
             view_uri=None,
             view_record_type="",
-            field_options=self.field_options_no_special
+            field_choices=self.field_options_no_special,
+            continuation_url=""
             )
         return
 
@@ -740,9 +784,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(
-            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="Default_view"
-            )
+        # view_url = collection_entity_view_url(
+        #     coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="Default_view"
+        #     )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Default_view")
@@ -756,10 +800,11 @@ class RecordViewEditViewTest(AnnalistTestCase):
             action="edit",
             view_id="Default_view", orig_view_id="Default_view",
             view_label="Default record view",
-            view_url=view_url,
+            # view_url=view_url,
             view_uri="annal:display/Default_view",
             view_record_type="",
-            field_options=self.field_options_no_special
+            field_choices=self.field_options_no_special,
+            continuation_url=""
             )
         return
 
@@ -792,9 +837,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(
-            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="View_view"
-            )
+        # view_url = collection_entity_view_url(
+        #     coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="View_view"
+        #     )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "View_view")
@@ -816,9 +861,9 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context (values read from test data fixture)
-        view_url = collection_entity_view_url(
-            coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="View_view"
-            )
+        # view_url = collection_entity_view_url(
+        #     coll_id="testcoll", type_id=layout.VIEW_TYPEID, entity_id="View_view"
+        #     )
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.VIEW_TYPEID)
         self.assertEqual(r.context['entity_id'],        "View_view")
@@ -964,6 +1009,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="", orig_view_id="Default_view",
             view_label=None,
             view_record_type="annal:View",
+            update="Updated RecordView"
             )
         return
 
@@ -984,6 +1030,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="!badview", orig_view_id="Default_view",
             view_label=None,
             view_record_type="annal:View",
+            update="Updated RecordView"
             )
         return
 
@@ -1076,6 +1123,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="", orig_view_id="editview",
             view_label=None,
             view_record_type="annal:View",
+            update="Updated RecordView"
             )
         # Check original data is unchanged
         self._check_recordview_values("editview")
@@ -1101,6 +1149,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_id="!badview", orig_view_id="editview",
             view_label=None,
             view_record_type="annal:View",
+            update="Updated RecordView"
             )
         # Check original data is unchanged
         self._check_recordview_values("editview")

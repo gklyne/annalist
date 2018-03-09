@@ -283,7 +283,7 @@ class LinkedRecordTest(AnnalistTestCase):
         # print "@@ head_fields: "+repr(head_fields)
         self.assertEqual(len(entities),    2)
         self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 3)
         entity_values = (
             (entities[0], "testsrc1", "testtgt1"), 
             (entities[1], "testsrc2", "testtgt2")

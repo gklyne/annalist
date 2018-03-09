@@ -15,9 +15,11 @@ from collections    import OrderedDict, namedtuple
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
-    get_context_value, get_context_field_value, 
+    get_context_value, 
+    get_context_field_value, 
     get_field_edit_value,
-    get_field_view_value    
+    get_field_view_value,
+    get_context_field_description_value
     )
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
@@ -169,10 +171,10 @@ class placement_edit_renderer(object):
         """
         repeat_prefix     = get_context_value(context, 'repeat_prefix', "")
         placement         = get_field_edit_value(context, "")
-        field_name        = get_context_field_value(
+        field_name        = get_context_field_description_value(
             context, 'field_name', "_unknown_"
             )
-        field_placeholder = get_context_field_value(
+        field_placeholder = get_context_field_description_value(
             context, 'field_placeholder', "small:0,12"
             )
         option_elem = placement_option(

@@ -246,7 +246,7 @@ def get_view_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if not renderer:
         # Default to simple text for unknown renderer type
-        log.warning("get_view_renderer: %s not found"%field_render_type)
+        log.warning("get_view_renderer: '%s' not found"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.view()
 
@@ -258,7 +258,7 @@ def get_label_edit_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if not renderer:
         # Default to simple text for unknown renderer type
-        log.warning("get_label_edit_renderer: %s not found"%field_render_type)
+        log.warning("get_label_edit_renderer: '%s' not found"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.label_edit()
 
@@ -270,7 +270,7 @@ def get_label_view_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if not renderer:
         # Default to simple text for unknown renderer type
-        log.warning("get_label_view_renderer: %s not found"%field_render_type)
+        log.warning("get_label_view_renderer: '%s' not found"%field_render_type)
         renderer = get_field_base_renderer("Text")
     return renderer.label_view()
 
@@ -282,7 +282,7 @@ def get_col_head_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.col_head()
-    log.debug("get_col_head_renderer: %s not found"%field_render_type)
+    log.debug("get_col_head_renderer: '%s' not found"%field_render_type)
     return "field/annalist_head_any.html"
 
 def get_col_head_view_renderer(field_render_type, field_value_mode):
@@ -293,7 +293,7 @@ def get_col_head_view_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.col_head_view()
-    log.debug("get_col_head_view_renderer: %s not found"%field_render_type)
+    log.debug("get_col_head_view_renderer: '%s' not found"%field_render_type)
     return "field/annalist_head_any.html"
 
 def get_col_head_edit_renderer(field_render_type, field_value_mode):
@@ -304,7 +304,7 @@ def get_col_head_edit_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.col_head_edit()
-    log.debug("get_col_head_edit_renderer: %s not found"%field_render_type)
+    log.debug("get_col_head_edit_renderer: '%s' not found"%field_render_type)
     return "field/annalist_head_any.html"
 
 def get_col_edit_renderer(field_render_type, field_value_mode):
@@ -315,7 +315,7 @@ def get_col_edit_renderer(field_render_type, field_value_mode):
     renderer = get_field_edit_renderer(field_render_type, field_value_mode)
     if renderer:
         return renderer.col_edit()
-    log.debug("get_col_edit_renderer: %s not found"%field_render_type)
+    log.debug("get_col_edit_renderer: '%s' not found"%field_render_type)
     return "field/annalist_item_none.html"
 
 def get_col_view_renderer(field_render_type, field_value_mode):
@@ -326,7 +326,7 @@ def get_col_view_renderer(field_render_type, field_value_mode):
     renderer = get_field_base_renderer(field_render_type)
     if renderer:
         return renderer.col_view()
-    log.debug("get_col_view_renderer: %s not found"%field_render_type)
+    log.debug("get_col_view_renderer: '%s' not found"%field_render_type)
     return "field/annalist_item_none.html"
 
 def get_value_mapper(field_render_type):

@@ -256,7 +256,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
             self.check_select_field(
-                tcols[0], "View_fields__%d__Field_id"%i, 
+                tcols[0], "View_fields__%d__View_field_sel"%i, 
                 expect_field_choices, expect_fields[i]
                 )
         return

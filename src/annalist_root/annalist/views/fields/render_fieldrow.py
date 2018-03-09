@@ -102,8 +102,8 @@ class RenderFieldRow(object):
     Renders multiple fields in a row
 
     `context`   is a dictionary-like object that provides information for the
-                rendering operation.  `context['row_bound_fields']` provides a
-                list of bound fields to be rendered.
+                rendering operation.  `context['row_bound_fields']` is et up
+                to provide a list of bound fields to be rendered.
 
     returns a string that is incorporated into the resulting web page.
     """
@@ -112,7 +112,7 @@ class RenderFieldRow(object):
     # log.info("RenderFieldRow.render field: %r"%(context['field'],))
     # log.info("RenderFieldRow.render descs: %r"%(context['field']['row_bound_fields'],))
     try:
-        row_field_descs = context['field']['row_field_descs']
+        row_field_descs = context['field'].description['row_field_descs']
         entity_vals     = context['field']['entity_value']
         extras          = context['field']['context_extra_values']
         row_bound_fields = [

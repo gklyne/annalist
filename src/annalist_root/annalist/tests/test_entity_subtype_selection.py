@@ -228,11 +228,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.description['field_id'], "Entity_id")
+        self.assertEqual(f1.description['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (
@@ -257,11 +257,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.description['field_id'], "Entity_id")
+        self.assertEqual(f1.description['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = []
@@ -283,11 +283,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.description['field_id'], "Entity_id")
+        self.assertEqual(f1.description['field_id'], "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (

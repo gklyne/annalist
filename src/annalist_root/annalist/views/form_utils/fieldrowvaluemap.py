@@ -44,9 +44,8 @@ class FieldRowValueMap(object):
 
         c               name of field used for this value in display context
         coll            is a collection from which data is being rendered.
-        field_descs     list of field descriptions from a view definition, each
-                        of which is a dictionary with the field description from 
-                        a view or list description.
+        field_descs     list of field descriptions derived from a view definition, 
+                        each of which is a FieldDescription object.
         view_context    is a dictionary of additional values that may be used in
                         assembling values to be used when rendering the fields.
 
@@ -76,8 +75,9 @@ class FieldRowValueMap(object):
             )
         # @@TODO: Review this: consider passing in bare field descriptions from view, and
         #         adapting or using a variant of field_description_from_view_field to populate 
-        #         'row_field_descs' in field cescription.  This would be more in line with
+        #         'row_field_descs' in field description.  This would be more in line with
         #         treatment of ref_multifield fields.
+        #@@@@@@@@@@@@@@@@@@@@@@@@@
         self.rd['row_field_descs'] = self.fd
         return
 
@@ -91,7 +91,7 @@ class FieldRowValueMap(object):
         Add row of fields to display context.
 
         The context returned uses a single field with a special renderer that 
-        handles expansion of contained fields, wrapped ibn markup that presents 
+        handles expansion of contained fields, wrapped in markup that presents 
         the data as a new row.
         """
         rowcontext = bound_field(

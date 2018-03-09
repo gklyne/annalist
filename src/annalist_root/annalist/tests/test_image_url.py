@@ -171,14 +171,14 @@ class ImageReferenceTest(AnnalistTestCase):
         # Check display context
         self.assertEqual(len(r.context['fields']), 4)
         f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0.field_id,     "Entity_id")
-        self.assertEqual(f0.field_value,  "test1")
+        self.assertEqual(f0.field_id,           "Entity_id")
+        self.assertEqual(f0.field_value,        "test1")
         f1 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f1.field_id,     "Entity_label")
-        self.assertEqual(f1.field_value,  "test_ref_image label")
+        self.assertEqual(f1.field_id,           "Entity_label")
+        self.assertEqual(f1.field_value,        "test_ref_image label")
         f2 = context_view_field(r.context, 2, 0)
-        self.assertEqual(f2.field_id,     "Entity_comment")
-        self.assertEqual(f2.field_value,  "test_ref_image comment")
+        self.assertEqual(f2.field_id,           "Entity_comment")
+        self.assertEqual(f2.field_value,        "test_ref_image comment")
         f3 = context_view_field(r.context, 3, 0)
         basepath = TestBasePath + "/c/testcoll/d/testreftype/"
         # print "\n*****\n"+repr(f3)+"\n*****\n"

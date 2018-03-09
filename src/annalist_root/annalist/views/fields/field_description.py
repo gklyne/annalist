@@ -251,8 +251,10 @@ class FieldDescription(object):
         """
         Returns list of possible subproperty URIs for the described field
         """
-        property_uri     = self.get_field_property_uri()
-        subproperty_uris = self._collection.cache_get_subproperty_uris(property_uri)
+        subproperty_uris = []
+        if self._collection is not None:
+            property_uri     = self.get_field_property_uri()
+            subproperty_uris = self._collection.cache_get_subproperty_uris(property_uri)
         return subproperty_uris
 
     def get_field_value_key(self, entityvals):
@@ -360,10 +362,9 @@ class FieldDescription(object):
             "  , 'field_name': %r\n"%(self.get_field_name())+
             "  , 'field_render_type': %r\n"%(self._field_desc["field_render_type"])+
             "  , 'field_property_uri': %r\n"%(self.get_field_property_uri())+
-            "  , 'type_ref': %r\n"%(self._field_desc["field_ref_type"])+
-            # "  , 'group_ref': %r\n"%(self._field_desc["field_group_ref"])+
-            # "  , 'group_list': %r\n"%(self._field_desc["group_field_list"])+
-            "  , 'group_descs': %r\n"%(self._field_desc["group_field_descs"])+
+            "  , 'field_ref_type': %r\n"%(self._field_desc["field_ref_type"])+
+            "  , 'group_field_list': %r\n"%(self._field_desc["group_field_list"])+
+            "  , 'group_field_descs': %r\n"%(self._field_desc["group_field_descs"])+
             "  })"
             )
 
@@ -422,7 +423,9 @@ class FieldDescription(object):
             yield k
         return
 
-def field_description_from_view_field(collection, field, view_context=None, field_ids_seen=[]):
+def field_description_from_view_field(
+    collection, field, view_context=None, field_ids_seen=[]
+    ):
     """
     Returns a field description value created using information from
     a field reference in a view description record (i.e. a dictionary

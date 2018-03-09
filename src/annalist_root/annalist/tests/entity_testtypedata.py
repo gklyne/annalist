@@ -26,6 +26,7 @@ from annalist.views.fields.render_placement import (
     )
 
 from entity_testentitydata      import entitydata_list_type_url
+from entity_testfielddesc       import get_field_description, get_bound_field
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -181,107 +182,154 @@ def recordtype_read_values(
 
 def recordtype_entity_view_context_data(
         coll_id="testcoll", type_id="", orig_id=None, type_ids=[],
-        action=None, update="RecordType",
-        type_uri=None, supertype_uris=None #@@ need to deal with these.
+        action=None,
+        type_label=None,
+        type_descr=None,
+        type_uri=None,
+        type_supertype_uris=[],
+        type_view="_view/Default_view",
+        type_list="_list/Default_list",
+        type_aliases="",
+        update="RecordType",
+        continuation_url=None
     ):
-    if type_id:
-        type_label = "%s %s/%s"%(update, coll_id, type_id)
-        type_descr = "%s help for %s in collection %s"%(update, type_id, coll_id)
-    else:
-        type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
-        type_descr = "%s description ... (%s/%s)"%(update, coll_id, type_id)
+    if type_uri is None:
+        type_uri = ""
+        if type_id:
+            type_uri = recordtype_url(coll_id=coll_id, type_id=type_id)
+    if type_label is None:
+        if type_id:
+            type_label = "%s %s/%s"%(update, coll_id, type_id)
+        else:
+            type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
+    if type_uri is None:
+       type_uri = recordtype_url(coll_id=coll_id, type_id=type_id)
+    if continuation_url is None:
+        continuation_url = entitydata_list_type_url(coll_id, layout.TYPE_TYPEID)
+    view_label = "Type definition"
+    view_title = (
+        "%s - %s - Collection %s"%(type_label, view_label, coll_id) if type_label
+        else
+        "%s - Collection %s"%(view_label, coll_id)
+        )
     context_dict = (
-        { 'title':              "%s - Type definition - Collection %s"%(type_label, coll_id)
-        , 'heading':            "Type definition"
+        { 'title':              view_title
+        , 'heading':            view_label
         , 'coll_id':            coll_id
-        , 'type_id':            '_type'
-        , 'orig_id':            'orig_type_id'
+        , 'type_id':            layout.TYPE_TYPEID
+        , 'view_id':            'Type_view'
+        , 'entity_id':          type_id or ""
+        , 'orig_id':            orig_id
+        , 'orig_type':          layout.TYPE_TYPEID
+        , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
-              { 'field_id':           'Type_id'
-              , 'field_name':         'entity_id'
-              , 'field_value_type':   'annal:EntityRef'
-              , 'field_label':        'Type Id'
-              , 'field_render_type':  'EntityId'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("Type_id",           type_id),                # 0 (0,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_label'
-              , 'field_name':         'Type_label'
-              , 'field_value_type':   'annal:Text'
-              , 'field_label':        'Label'
-              , 'field_render_type':  'Text'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        type_label
-              , 'options':            []
-              })
+              get_bound_field("Type_label",        type_label)              # 1 (1,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_comment'
-              , 'field_name':         'Type_comment'
-              , 'field_label':        'Comment'
-              , 'field_value_type':   'annal:Richtext'
-              , 'field_render_type':  'Markdown'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        type_descr
-              , 'options':            []
-              })
+              get_bound_field("Type_comment",      type_descr)              # 2 (2,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_uri'
-              , 'field_name':         'Type_uri'
-              , 'field_value_type':   'annal:Identifier'
-              , 'field_label':        'Type URI'
-              , 'field_render_type':  'Identifier'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
-          , { 'field_id':             'Type_supertype_uris'
-            , 'field_name':           'Type_supertype_uris'
-            , 'field_value_type':     'annal:Type_supertype_uris'
-            , 'field_label':          'Supertype URIs'
-            , 'field_render_type':    'Group_Set_Row'
-            , 'field_value_mode':     'Value_direct'
-            , 'field_placement':      get_placement_classes('small:0,12')
-            # , 'field_value':        (Supplied separately)
-            , 'options':              []
-            }
+              get_bound_field("Type_uri",          type_uri),               # 3 (3,0)
+              )
+          , get_bound_field("Type_supertype_uris", type_supertype_uris)     # 4 (4)  
           , context_field_row(
-              { 'field_id':           'Type_view'
-              , 'field_name':         'Type_view'
-              , 'field_value_type':   'annal:View'
-              , 'field_label':        'Default view'
-              , 'field_render_type':  'Enum_optional'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              },
-              { 'field_id':           'Type_list'
-              , 'field_name':         'Type_list'
-              , 'field_value_type':   'annal:List'
-              , 'field_label':        'Default list'
-              , 'field_render_type':  'Enum_optional'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("Type_view",         type_view),              # 5 (5,0)
+              get_bound_field("Type_list",         type_list)               # 6 (5,1)
+              )
+          , get_bound_field("Type_aliases",        type_aliases)            # 7 (6)
           ]
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
+
+          #@@REMOVE
+          # [ context_field_row(
+          #     { 'field_id':           'Type_id'
+          #     , 'field_name':         'entity_id'
+          #     , 'field_value_type':   'annal:EntityRef'
+          #     , 'field_label':        'Type Id'
+          #     , 'field_render_type':  'EntityId'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+          #     # , 'field_value':      (Supplied separately)
+          #     , 'options':            []
+          #     })
+          # , context_field_row(
+          #     { 'field_id':           'Type_label'
+          #     , 'field_name':         'Type_label'
+          #     , 'field_value_type':   'annal:Text'
+          #     , 'field_label':        'Label'
+          #     , 'field_render_type':  'Text'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12')
+          #     , 'field_value':        type_label
+          #     , 'options':            []
+          #     })
+          # , context_field_row(
+          #     { 'field_id':           'Type_comment'
+          #     , 'field_name':         'Type_comment'
+          #     , 'field_label':        'Comment'
+          #     , 'field_value_type':   'annal:Richtext'
+          #     , 'field_render_type':  'Markdown'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12')
+          #     , 'field_value':        type_descr
+          #     , 'options':            []
+          #     })
+          # , context_field_row(
+          #     { 'field_id':           'Type_uri'
+          #     , 'field_name':         'Type_uri'
+          #     , 'field_value_type':   'annal:Identifier'
+          #     , 'field_label':        'Type URI'
+          #     , 'field_render_type':  'Identifier'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12')
+          #     # , 'field_value':      (Supplied separately)
+          #     , 'options':            []
+          #     })
+          # , { 'field_id':             'Type_supertype_uris'
+          #   , 'field_name':           'Type_supertype_uris'
+          #   , 'field_value_type':     'annal:Type_supertype_uris'
+          #   , 'field_label':          'Supertype URIs'
+          #   , 'field_render_type':    'Group_Set_Row'
+          #   , 'field_value_mode':     'Value_direct'
+          #   , 'field_placement':      get_placement_classes('small:0,12')
+          #   # , 'field_value':        (Supplied separately)
+          #   , 'options':              []
+          #   }
+          # , context_field_row(
+          #     { 'field_id':           'Type_view'
+          #     , 'field_name':         'Type_view'
+          #     , 'field_value_type':   'annal:View'
+          #     , 'field_label':        'Default view'
+          #     , 'field_render_type':  'Enum_optional'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
+          #     # , 'field_value':      (Supplied separately)
+          #     , 'options':            []
+          #     },
+          #     { 'field_id':           'Type_list'
+          #     , 'field_name':         'Type_list'
+          #     , 'field_value_type':   'annal:List'
+          #     , 'field_label':        'Default list'
+          #     , 'field_render_type':  'Enum_optional'
+          #     , 'field_value_mode':   'Value_direct'
+          #     , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
+          #     # , 'field_value':      (Supplied separately)
+          #     , 'options':            []
+          #     })
+          # ]
+
         })
-    if type_id:
-        type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = type_id
-        context_dict['fields'][3]['row_field_descs'][0]['field_value'] = type_url or ""
-        context_dict['orig_id']     = type_id
-    if orig_id:
-        context_dict['orig_id']     = orig_id
+    #@@REMOVE
+    # if type_id:
+    #     type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
+    #     context_dict['fields'][0]['row_field_descs'][0]['field_value'] = type_id
+    #     context_dict['fields'][3]['row_field_descs'][0]['field_value'] = type_url or ""
+    #     context_dict['orig_id']     = type_id
+    # if orig_id:
+    #     context_dict['orig_id']     = orig_id
     if action:  
         context_dict['action']      = action
     return context_dict

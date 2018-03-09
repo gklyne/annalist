@@ -160,13 +160,13 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Unbound field descriptions
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 3)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
         f2 = context_view_field(r.context, 0, 2)
-        self.assertEqual(f0['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_id'], 'Entity_type')
-        self.assertEqual(f2['field_id'], 'Entity_label')
+        self.assertEqual(f0.description['field_id'], 'Entity_id')
+        self.assertEqual(f1.description['field_id'], 'Entity_type')
+        self.assertEqual(f2.description['field_id'], 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
         if len(entities) != 213:
@@ -190,33 +190,19 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 3)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 3)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
         f2 = context_view_field(r.context, 0, 2)
         # 1st field
-        self.assertEqual(f0['field_id'], 'Entity_id')
-        self.assertEqual(f0['field_name'], 'entity_id')
+        self.assertEqual(f0.description['field_id'],   'Entity_id')
+        self.assertEqual(f0.description['field_name'], 'entity_id')
         # 2nd field
-        self.assertEqual(f1['field_id'], 'Type_uri')
-        self.assertEqual(f1['field_name'], 'Type_uri')
+        self.assertEqual(f1.description['field_id'],   'Type_uri')
+        self.assertEqual(f1.description['field_name'], 'Type_uri')
         # 3rd field
-        self.assertEqual(f2['field_id'], 'Entity_label')
-        self.assertEqual(f2['field_name'], 'Entity_label')
-
-
-        # self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        # self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
-        # # 1st field
-        # f0 = context_view_field(r.context, 0, 0)
-        # self.assertEqual(f0['field_id'], 'Entity_id')
-        # self.assertEqual(f0['field_name'], 'entity_id')
-        # # 2nd field
-        # f1 = context_view_field(r.context, 0, 1)
-        # self.assertEqual(f1['field_id'], 'Entity_label')
-        # self.assertEqual(f1['field_name'], 'Entity_label')
-
-
+        self.assertEqual(f2.description['field_id'],   'Entity_label')
+        self.assertEqual(f2.description['field_name'], 'Entity_label')
         # Entities
         entities   = context_list_entities(r.context)
         listed_entities = { e['entity_id']: e for e in entities }
@@ -334,7 +320,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 4 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 4)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 4)
         return
 
     def test_get_fields_list_search(self):
@@ -359,15 +345,15 @@ class EntityInheritListViewTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 4 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 4)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 4)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
         f2 = context_view_field(r.context, 0, 2)
         f3 = context_view_field(r.context, 0, 3)
-        self.assertEqual(f0['field_id'], 'Entity_id')
-        self.assertEqual(f1['field_id'], 'Field_render_type')
-        self.assertEqual(f2['field_id'], 'Field_value_type')
-        self.assertEqual(f3['field_id'], 'Entity_label')
+        self.assertEqual(f0.description['field_id'], 'Entity_id')
+        self.assertEqual(f1.description['field_id'], 'Field_render_type')
+        self.assertEqual(f2.description['field_id'], 'Field_value_type')
+        self.assertEqual(f3.description['field_id'], 'Entity_label')
         # Entities
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 36)
@@ -400,12 +386,12 @@ class EntityInheritListViewTest(AnnalistTestCase):
                 if item_fields[0]['field_value'] == f[0]:
                     for fid in range(3):
                         item_field = item_fields[fid]
-                        head_field = head_fields[0]['row_field_descs'][fid]
+                        head_field = head_fields[0].description['row_field_descs'][fid]
                         for fkey in (
                                 'field_id', 'field_name', 'field_label', 
                                 'field_property_uri', 'field_render_type',
                                 'field_placement', 'field_value_type'):
-                            self.assertEqual(item_field[fkey], head_field[fkey])
+                            self.assertEqual(item_field.description[fkey], head_field[fkey])
                         check_context_list_field_value(self, item_field, f[fid])
                     break
             else:

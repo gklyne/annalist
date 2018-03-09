@@ -34,17 +34,24 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
+from annalist.views.form_utils.fieldchoice  import FieldChoice
+
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testfielddesc   import get_field_description, get_bound_field
 from entity_testutils       import (
     collection_create_values,
     continuation_url_param,
     create_test_user,
-    context_view_field
+    context_view_field,
+    context_bind_fields,
+    context_field_row
     )
 from entity_testtypedata    import (
-    recordtype_create_values, 
+    recordtype_url,
+    recordtype_edit_url,
+    recordtype_create_values,
     )
 from entity_testviewdata    import (
     recordview_url, 
@@ -55,10 +62,62 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys,
     entitydata_create_values, entitydata_values, entitydata_values_add_field, 
-    # entitydata_default_view_form_data,
+    entitydata_context_data,
     entitydata_form_data, entitydata_form_add_field,
     default_comment
     )
+from entity_testsitedata    import (
+    get_site_types, get_site_types_sorted, get_site_types_linked,
+    get_site_lists, get_site_lists_sorted,
+    get_site_list_types, get_site_list_types_sorted,
+    get_site_views, get_site_views_sorted,
+    get_site_field_groups, get_site_field_groups_sorted, 
+    get_site_fields, get_site_fields_sorted, 
+    get_site_field_types, get_site_field_types_sorted, 
+    )
+
+#   -----------------------------------------------------------------------------
+#
+#   Helper function to buiold tyest context value
+#
+#   -----------------------------------------------------------------------------
+
+def entitydata_dupfield_view_context_data(
+        entity_id=None, orig_id=None, 
+        coll_id="testcoll", type_id="testtype", 
+        type_ref=None, type_choices=None, type_ids=[],
+        entity_label=None,
+        entity_descr=None,
+        entity_descr2=None,
+        entity_descr3=None,
+        action=None, update="Entity", view_label="RecordView testcoll/DupField_view",
+        continuation_url=None
+    ):
+    context_dict = entitydata_context_data(
+        entity_id=entity_id, orig_id=orig_id, 
+        coll_id=coll_id, type_id=type_id, 
+        type_ref=type_ref, type_choices=type_choices, type_ids=type_ids,
+        entity_label=entity_label, entity_descr=entity_descr,
+        action=action, update=update, view_label=view_label,
+        continuation_url=continuation_url
+        )
+    context_dict['fields'].append(
+        context_field_row(
+            get_bound_field("Entity_comment", entity_descr2, 
+                name="Entity_comment__2",
+                prop_uri="rdfs:comment__2"
+                )
+            )
+        )
+    context_dict['fields'].append(
+        context_field_row(
+            get_bound_field("Entity_comment", entity_descr3, 
+                name="Entity_comment__3",
+                prop_uri="rdfs:comment_alt"
+                )
+            )
+        )
+    return context_dict
 
 #   -----------------------------------------------------------------------------
 #
@@ -71,11 +130,14 @@ class EntityEditDupFieldTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        self.testcoll = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
-        self.testtype = RecordType.create(self.testcoll, "testtype", recordtype_create_values("testtype"))
+        self.testcoll = Collection.create(self.testsite, "testcoll", 
+            collection_create_values("testcoll")
+            )
+        self.testtype = RecordType.create(self.testcoll, "testtype", 
+            recordtype_create_values("testcoll", "testtype")
+            )
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-
-        # Create view with duplicate field id
+        # Create view with repeated field id
         self.viewdata = recordview_create_values(view_id="DupField_view")
         recordview_values_add_field(
             self.viewdata, 
@@ -89,7 +151,12 @@ class EntityEditDupFieldTest(AnnalistTestCase):
             field_placement="small:0,12"
             )
         self.testview = RecordView.create(self.testcoll, "DupField_view", self.viewdata)
-
+        # Other data
+        self.type_ids = get_site_types_linked("testcoll")
+        self.type_ids.append(FieldChoice("_type/testtype", 
+                label="RecordType testcoll/testtype",
+                link=recordtype_url("testcoll", "testtype")
+            ))
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -172,37 +239,21 @@ class EntityEditDupFieldTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertContains(r, "Collection testcoll")
         # Check display context
+        expect_context = entitydata_dupfield_view_context_data(
+            coll_id="testcoll", type_id="testtype", 
+            entity_id="entitydupfield", orig_id=None,
+            type_ref="testtype", type_choices=self.type_ids,
+            entity_label="Entity testcoll/testtype/entitydupfield",
+            entity_descr="Entity coll testcoll, type testtype, entity entitydupfield",
+            entity_descr2="Comment field 2",
+            entity_descr3="Comment field 3",
+            action="edit", 
+            update="Entity",
+            continuation_url=""
+            )
         self.assertEqual(len(r.context['fields']), 5)
-        f3  = context_view_field(r.context, 2, 0)
-        f4  = context_view_field(r.context, 3, 0)
-        f5  = context_view_field(r.context, 4, 0)        
-        # 4th field - 1st comment
-        comment_value = "Entity coll testcoll, type testtype, entity entitydupfield"
-        self.assertEqual(f3['field_id'], 'Entity_comment')
-        self.assertEqual(f3['field_name'], 'Entity_comment')
-        self.assertEqual(f3['field_label'], 'Comment')
-        self.assertEqual(f3['field_property_uri'], "rdfs:comment")
-        self.assertEqual(f3['field_placement'].field, "small-12 columns")
-        self.assertEqual(f3['field_value'], comment_value)
-        # 5th field - 2nd comment
-        comment2_value = "Comment field 2"
-        self.assertEqual(f4['field_id'], 'Entity_comment')
-        self.assertEqual(f4['field_name'], 'Entity_comment__2')
-        self.assertEqual(f4['field_label'], 'Comment')
-        self.assertEqual(f4['field_property_uri'], "rdfs:comment__2")
-        self.assertEqual(f4['field_placement'].field, "small-12 columns")
-        self.assertEqual(f4['field_value'], comment2_value)
-        # 6th field - 3rd comment
-        comment2_value = "Comment field 3"
-        self.assertEqual(f5['field_id'], 'Entity_comment')
-        self.assertEqual(f5['field_name'], 'Entity_comment__3')
-        self.assertEqual(f5['field_label'], 'Comment')
-        self.assertEqual(f5['field_property_uri'], "rdfs:comment_alt")
-        self.assertEqual(f5['field_placement'].field, "small-12 columns")
-        self.assertEqual(f5['field_value'], comment2_value)
-        return
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
 
     def test_dup_field_update(self):
         # Create entity with duplicate fields
