@@ -45,7 +45,7 @@ from entity_testtypedata    import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_specified_view_context_data,
+    specified_view_context_data,
     default_fields
     )
 
@@ -281,7 +281,7 @@ class RefMultifieldTest(AnnalistTestCase):
                     )
                 )
             ])
-        context_dict = entitydata_specified_view_context_data(
+        context_dict = specified_view_context_data(
             coll_id="testcoll", type_id="ref_type", 
             view_id="Test_refimg_view", view_heading="Test view label",
             entity_id=entity_id,
@@ -308,7 +308,7 @@ class RefMultifieldTest(AnnalistTestCase):
                 placement="small:0,12;medium:6,6"
                 )
             ])
-        context_dict = entitydata_specified_view_context_data(
+        context_dict = specified_view_context_data(
             coll_id="testcoll", type_id="ref_type", 
             view_id="Test_rptimg_view", view_heading="Test rptimg view label",
             entity_id=entity_id,
@@ -342,40 +342,6 @@ class RefMultifieldTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 1)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-        #@@REMOVE
-        # r = response
-        # # Check render context
-        # self.assertEqual(r.context['coll_id'],      "testcoll")
-        # self.assertEqual(r.context['type_id'],      "ref_type")
-        # self.assertEqual(r.context['entity_id'],    "Test_ref_entity")
-        # self.assertEqual(r.context['action'],       "view")
-        # # Fields
-        # # print "@@ field map:\bn"+context_field_map(r.context)
-        # self.assertEqual(len(r.context['fields']), 1)
-        # # 1st field - Id
-        # f0 = context_view_field(r.context, 0, 0)
-        # self.assertEqual(f0.description['field_id'],            "Entity_id")
-        # self.assertEqual(f0.description['field_name'],          "entity_id")
-        # self.assertEqual(f0.description['field_label'],         "Id")
-        # self.assertEqual(f0.description['field_value'],         "Test_ref_entity")
-        # # 2nd field - multifield group
-        # f1 = context_view_field(r.context, 0, 1)
-        # self.assertEqual(f1.description['field_id'],            "Test_refimg_field")
-        # self.assertEqual(f1.description['field_name'],          "Test_refimg_field")
-        # self.assertEqual(f1.description['field_label'],         "Image reference")
-        # self.assertEqual(f1.description['field_render_type'],   "RefMultifield")
-        # self.assertEqual(f1.description['field_value_mode'],    "Value_entity")
-        # self.assertEqual(f1.description['field_value_type'],    "annal:Field_group")
-        # field_list = (
-        #     [ { "annal:field_id":   "Test_comment" }
-        #     , { "annal:field_id":   "Test_image"}
-        #     ])
-        # self.assertEqual(f1.description['group_field_list'],    field_list)
-        # self.assertEqual(f1.description['group_label'],         "Image reference")
-        # self.assertEqual(f1.description['field_property_uri'],  "test:ref_image")
-        # self.assertEqual(f1.field_value,                        "Test_img_entity")
-        #@@
 
         # Test rendered result
         field_vals = default_fields(
@@ -471,39 +437,6 @@ class RefMultifieldTest(AnnalistTestCase):
         self.assertEqual(len(response.context['fields']), 1)
         self.assertDictionaryMatch(actual_context, expect_context)
 
-        #@@REMOVE
-        # r = response
-        # # Check render context
-        # self.assertEqual(r.context['coll_id'],      "testcoll")
-        # self.assertEqual(r.context['type_id'],      "ref_type")
-        # self.assertEqual(r.context['entity_id'],    "Test_ref_entity")
-        # self.assertEqual(r.context['action'],       "edit")
-        # # Fields
-        # self.assertEqual(len(r.context['fields']), 1)
-        # # 1st field - Id
-        # f0 = context_view_field(r.context, 0, 0)
-        # self.assertEqual(f0['field_id'],            "Entity_id")
-        # self.assertEqual(f0['field_name'],          "entity_id")
-        # self.assertEqual(f0['field_label'],         "Id")
-        # self.assertEqual(f0['field_value'],         "Test_ref_entity")
-        # # 2nd field - multifield group
-        # f1 = context_view_field(r.context, 0, 1)
-        # self.assertEqual(f1['field_id'],            "Test_refimg_field")
-        # self.assertEqual(f1['field_name'],          "Test_refimg_field")
-        # self.assertEqual(f1['field_label'],         "Image reference")
-        # self.assertEqual(f1['field_render_type'],   "RefMultifield")
-        # self.assertEqual(f1['field_value_mode'],    "Value_entity")
-        # self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        # field_list = (
-        #     [ { "annal:field_id":   "Test_comment" }
-        #     , { "annal:field_id":   "Test_image"}
-        #     ])
-        # self.assertEqual(f1['group_field_list'],    field_list)
-        # self.assertEqual(f1['group_label'],         "Image reference")
-        # self.assertEqual(f1['field_property_uri'],  "test:ref_image")
-        # self.assertEqual(f1['field_value'],         "Test_img_entity")
-        #@@
-
         # Test rendered result
         f0 = context_view_field(response.context, 0, 0)
         f1 = context_view_field(response.context, 0, 1)
@@ -577,37 +510,6 @@ class RefMultifieldTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 2)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-        #@@REMOVE
-        # f0 = context_view_field(response.context, 0, 0)
-        # f1 = context_view_field(response.context, 1, 0)
-        # r = response
-        # # Check render context
-        # self.assertEqual(r.context['coll_id'],      "testcoll")
-        # self.assertEqual(r.context['type_id'],      "ref_type")
-        # self.assertEqual(r.context['entity_id'],    "Test_rpt_entity")
-        # self.assertEqual(r.context['action'],       "view")
-        # # Fields
-        # self.assertEqual(len(r.context['fields']), 2)
-        # # 1st field - Id
-        # self.assertEqual(f0['field_id'],            "Entity_id")
-        # self.assertEqual(f0['field_name'],          "entity_id")
-        # self.assertEqual(f0['field_label'],         "Id")
-        # self.assertEqual(f0['field_value'],         "Test_rpt_entity")
-        # # 2nd field - multifield group
-        # self.assertEqual(f1['field_id'],            "Test_rptref_field")
-        # self.assertEqual(f1['field_name'],          "Test_rptref_field")
-        # self.assertEqual(f1['field_label'],         "Repeat image reference")
-        # self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        # field_list = (
-        #     [ { "annal:field_id":   "Test_refimg_field" }
-        #     ])
-        # self.assertEqual(f1['group_field_list'],    field_list)
-        # self.assertEqual(f1['group_label'],         "Repeat image reference")
-        # self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
-        # self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
 
         # Test rendered result
         field_vals    = default_fields(
@@ -757,37 +659,6 @@ class RefMultifieldTest(AnnalistTestCase):
 
         f0 = context_view_field(response.context, 0, 0)
         f1 = context_view_field(response.context, 1, 0)
-
-        #@@REMOVE
-        # r = response
-        # # Check render context
-        # self.assertEqual(r.context['coll_id'],      "testcoll")
-        # self.assertEqual(r.context['type_id'],      "ref_type")
-        # self.assertEqual(r.context['entity_id'],    "Test_rpt_entity")
-        # self.assertEqual(r.context['action'],       "edit")
-        # # Fields
-        # self.assertEqual(len(r.context['fields']), 2)
-        # # 1st field - Id
-        # f0 = context_view_field(r.context, 0, 0)
-        # self.assertEqual(f0['field_id'],            "Entity_id")
-        # self.assertEqual(f0['field_name'],          "entity_id")
-        # self.assertEqual(f0['field_label'],         "Id")
-        # self.assertEqual(f0['field_value'],         "Test_rpt_entity")
-        # # 2nd field - multifield group
-        # f1 = context_view_field(r.context, 1, 0)
-        # self.assertEqual(f1['field_id'],            "Test_rptref_field")
-        # self.assertEqual(f1['field_name'],          "Test_rptref_field")
-        # self.assertEqual(f1['field_label'],         "Repeat image reference")
-        # self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        # field_list = (
-        #     [ { "annal:field_id":   "Test_refimg_field" }
-        #     ])
-        # self.assertEqual(f1['group_field_list'],    field_list)
-        # self.assertEqual(f1['group_label'],         "Repeat image reference")
-        # self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
-        # self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
 
         # Test rendered result
         field_vals    = default_fields(

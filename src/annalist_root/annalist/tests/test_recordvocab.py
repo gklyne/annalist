@@ -58,8 +58,8 @@ from entity_testvocabdata    import (
     recordvocab_coll_url, recordvocab_url, recordvocab_edit_url,
     recordvocab_value_keys, recordvocab_load_keys, 
     recordvocab_create_values, recordvocab_values, recordvocab_read_values,
-    recordvocab_entity_view_context_data, 
-    recordvocab_entity_view_form_data, # recordvocab_delete_confirm_form_data
+    vocab_view_context_data, 
+    vocab_view_form_data, # recordvocab_delete_confirm_form_data
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
@@ -269,100 +269,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             update="RecordVocab",
             continuation_url=None
             ):
-        #@@REMOVE
-        # Common entity attributes
-        # self.assertEqual(response.context['entity_id'],    vocab_id or "")
-        # self.assertEqual(response.context['orig_id'],      orig_vocab_id)
-        # self.assertEqual(response.context['type_id'],      layout.VOCAB_TYPEID)
-        # self.assertEqual(response.context['orig_type'],    layout.VOCAB_TYPEID)
-        # self.assertEqual(response.context['coll_id'],      'testcoll')
-        # self.assertEqual(response.context['action'],       action)
-        # self.assertEqual(response.context['view_id'],      'Vocab_view')
-        # View fields
-        # self.assertEqual(len(response.context['fields']), 5)
-        # f0 = context_view_field(response.context, 0, 0)
-        # f1 = context_view_field(response.context, 1, 0)
-        # f2 = context_view_field(response.context, 2, 0)
-        # f3 = context_view_field(response.context, 3, 0)
-        # f4 = context_view_field(response.context, 4, 0)
-        # # 1st field - Id
-        # check_context_field(self, f0,
-        #     field_id=           "Vocab_id",
-        #     field_name=         "entity_id",
-        #     field_label=        "Prefix",
-        #     field_placeholder=  "(vocabulary id)",
-        #     field_property_uri= "annal:id",
-        #     field_render_type=  "EntityId",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        vocab_id,
-        #     options=            self.no_options
-        #     )
-        # # 2nd field - Label
-        # check_context_field(self, f1,
-        #     field_id=           "Entity_label",
-        #     field_name=         "Entity_label",
-        #     field_label=        "Label",
-        #     field_placeholder=  "(label)",
-        #     field_property_uri= "rdfs:label",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_placement=    "small-12 columns",
-        #     field_value=        vocab_label,
-        #     options=            self.no_options
-        #     )
-        # # 3rd field - comment
-        # vocab_comment_placeholder = (
-        #     "(description)"
-        #     )
-        # check_context_field(self, f2,
-        #     field_id=           "Entity_comment",
-        #     field_name=         "Entity_comment",
-        #     field_label=        "Comment",
-        #     field_placeholder=  vocab_comment_placeholder,
-        #     field_property_uri= "rdfs:comment",
-        #     field_render_type=  "Markdown",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Richtext",
-        #     field_placement=    "small-12 columns",
-        #     options=            self.no_options
-        #     )
-        # # 4th field - URI
-        # vocab_uri_placeholder = (
-        #     "(Vocabulary namespace URI)"
-        #     )
-        # check_context_field(self, f3,
-        #     field_id=           "Vocab_uri",
-        #     field_name=         "Vocab_uri",
-        #     field_label=        "Vocabulary URI",
-        #     field_placeholder=  vocab_uri_placeholder,
-        #     field_property_uri= "annal:uri",
-        #     field_render_type=  "URILink",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        vocab_uri,
-        #     options=            self.no_options
-        #     )
-        # # 5th field - see also
-        # see_also_placeholder = (
-        #     "(Links to further information)"
-        #     )
-        # check_context_field(self, f4,
-        #     field_id=           "Entity_see_also_r",
-        #     field_name=         "Entity_see_also_r",
-        #     field_label=        "See also",
-        #     field_placeholder=  see_also_placeholder,
-        #     field_property_uri= "rdfs:seeAlso",
-        #     field_render_type=  "Group_Set_Row",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Entity_see_also_list",
-        #     field_value=        [{"@id": v} for v in vocab_seealso],
-        #     options=            self.no_options
-        #     )
-        #@@
-        expect_context = recordvocab_entity_view_context_data(
+        expect_context = vocab_view_context_data(
             coll_id="testcoll", vocab_id=vocab_id, orig_id=orig_vocab_id, action=action, 
             vocab_label=vocab_label,
             vocab_descr=vocab_descr,
@@ -695,7 +602,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_post_new_vocab(self):
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="newvocab", action="new",
             vocab_uri="test:newvocab",
             update="RecordVocab"
@@ -713,7 +620,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_post_new_vocab_cancel(self):
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="newvocab", action="new", cancel="Cancel", update="Updated RecordVocab"
             )
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
@@ -727,7 +634,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_vocab_missing_id(self):
-        f = recordvocab_entity_view_form_data(action="new", update="RecordVocab")
+        f = vocab_view_form_data(action="new", update="RecordVocab")
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
         r = self.client.post(u, f)
         # print r.content
@@ -745,7 +652,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_vocab_invalid_id(self):
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="!badvocab", orig_id="orig_vocab_id", action="new", update="RecordVocab"
             )
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
@@ -767,7 +674,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_post_copy_vocab(self):
         self.assertFalse(RecordVocab.exists(self.testcoll, "copyvocab"))
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="copyvocab", 
             orig_id="annal", orig_coll="_annalist_site", action="copy", 
             update="RecordVocab",
@@ -787,7 +694,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_post_copy_vocab_cancel(self):
         self.assertFalse(RecordVocab.exists(self.testcoll, "copyvocab"))
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="copyvocab", orig_id="annal", action="copy", cancel="Cancel", update="RecordVocab"
             )
         u = entitydata_edit_url(
@@ -803,7 +710,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_vocab_missing_id(self):
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             action="copy", update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
@@ -822,7 +729,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_vocab_invalid_id(self):
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="!badvocab", orig_id="Default_vocab", action="copy", update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
@@ -845,7 +752,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
     def test_post_edit_vocab(self):
         self._create_record_vocab("editvocab")
         self._check_record_vocab_values("editvocab")
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="editvocab", orig_id="editvocab", 
             action="edit", update="Updated RecordVocab"
             )
@@ -862,7 +769,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
     def test_post_edit_vocab_cancel(self):
         self._create_record_vocab("editvocab")
         self._check_record_vocab_values("editvocab")
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="editvocab", orig_id="editvocab", 
             action="edit", cancel="Cancel", update="Updated RecordVocab"
             )
@@ -882,7 +789,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self._create_record_vocab("editvocab")
         self._check_record_vocab_values("editvocab")
         # Form post with ID missing
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             action="edit", update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
@@ -906,7 +813,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self._create_record_vocab("editvocab")
         self._check_record_vocab_values("editvocab")
         # Form post with invalid ID
-        f = recordvocab_entity_view_form_data(
+        f = vocab_view_form_data(
             vocab_id="!badvocab", orig_id="editvocab", action="edit", update="Updated RecordVocab"
             )
         u = entitydata_edit_url(

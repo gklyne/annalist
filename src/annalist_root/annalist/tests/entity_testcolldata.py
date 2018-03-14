@@ -171,7 +171,7 @@ def collectiondata_read_values(coll_id="testcoll", coll_label=None, coll_descr=N
 #
 #   -----------------------------------------------------------------------------
 
-def collectiondata_view_form_data(
+def coll_view_form_data(
         coll_id="testcoll",
         coll_label=None,
         coll_descr=None,

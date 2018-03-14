@@ -55,9 +55,6 @@ from entity_testviewdata    import (
     recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
-    recordview_entity_view_context_data, recordview_entity_view_form_data, 
-    # recordview_view_context_data, recordview_view_form_data, 
-    recordview_delete_confirm_form_data
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,

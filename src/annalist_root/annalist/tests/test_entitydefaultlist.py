@@ -60,7 +60,7 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    entitydata_delete_confirm_form_data,
     entitylist_form_data
     )
 from entity_testsitedata    import (
@@ -150,10 +150,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertContains(r, '<h2 class="page-heading">List entities with type information</h2>', html=True)
         self.assertMatch(r.content, r'<input.type="hidden".name="continuation_url".+value="/xyzzy/"/>')
         cont = uri_params({"continuation_url": u})
-        # cont = ""
-        # print "@@ "+repr(r.context['fields'][0]['field_help'])
-        # print "@@ "+repr(r.context['fields'][1]['field_help'])
-        # print "@@ "+repr(r.context['fields'][2]['field_help'])
         tooltip1 = "" # 'title="%s"'%r.context['fields'][0]['field_help']
         tooltip2 = "" # 'title="%s"'%r.context['fields'][1]['field_help']
         tooltip3 = "" # 'title="%s"'%r.context['fields'][2]['field_help']
@@ -186,8 +182,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 }
             )
         # log.info(r.content)
-        # self.assertContains(r, rowdata, html=True)
+        self.assertContains(r, rowdata, html=True)
+
         # Test context
+        #@@TODO: use new function to create list context for comparison,
+        #        like entity view context tests, rather than pick out the fields.
+        #
         # self.assertEqual(r.context['title'],            site_title())
         self.assertEqual(r.context['title'],            "List entities with type information - Collection testcoll")
         self.assertEqual(r.context['coll_id'],          "testcoll")
@@ -196,8 +196,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(set(list_choices.options),    set(self.list_ids))
         self.assertEqual(list_choices['field_value'],   "Default_list_all")
         self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-
-        # Unbound field descriptions
+        # Field descriptions
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
         self.assertEqual(len(head_fields[0].description['row_field_descs']), 3)
@@ -208,21 +207,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertDictionaryMatch(f0, 
             get_bound_field("Entity_id", "", placement="small:0,3")
             )
-
-        #@@REMOVE
-        # self.assertEqual(f0['field_id'],            'Entity_id')
-        # self.assertEqual(f0['field_name'],          'entity_id')
-        # self.assertEqual(f0['field_label'],         'Id')
-        # self.assertEqual(f0['field_placeholder'],   "(entity id)")
-        # self.assertEqual(f0['field_property_uri'],  "annal:id")
-        # self.assertEqual(f0['field_render_type'],   "EntityId")
-        # self.assertEqual(f0['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f0['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f0['field_placement'].field, "small-3 columns")
-        # self.assertEqual(f0['field_value'],         "")
-        # self.assertEqual(f0['entity_type_id'],      "")
-        #@@
-
         #  2nd field
         self.assertDictionaryMatch(f1, 
             get_bound_field("Entity_type", "", 
@@ -230,40 +214,10 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                 options=self.type_ids
                 )
             )
-
-        #@@REMOVE
-        # self.assertEqual(f1['field_id'],            'Entity_type')
-        # self.assertEqual(f1['field_name'],          'entity_type')
-        # self.assertEqual(f1['field_label'],         'Type')
-        # self.assertEqual(f1['field_placeholder'],   "(type id)")
-        # self.assertEqual(f1['field_property_uri'],  "annal:type_id")
-        # self.assertEqual(f1['field_render_type'],   "EntityTypeId")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f1['field_placement'].field, "small-2 columns")
-        # self.assertEqual(f1['field_value'],         "")
-        # self.assertEqual(f1['entity_type_id'],      "")
-        #@@
-
         # 3rd field
         self.assertDictionaryMatch(f2, 
             get_bound_field("Entity_label", "", placement="small:5,7")
             )
-
-        #@@REMOVE
-        # self.assertEqual(f2['field_id'],            'Entity_label')
-        # self.assertEqual(f2['field_name'],          'Entity_label')
-        # self.assertEqual(f2['field_label'],         'Label')
-        # self.assertEqual(f2['field_placeholder'],   "(label)")
-        # self.assertEqual(f2['field_property_uri'],  "rdfs:label")
-        # self.assertEqual(f2['field_render_type'],   "Text")
-        # self.assertEqual(f2['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f2['field_value_type'],    "annal:Text")
-        # self.assertEqual(f2['field_placement'].field, "small-7 columns")
-        # self.assertEqual(f2['field_value'],         "")
-        # self.assertEqual(f2['entity_type_id'],      "")
-        #@@
-
         # Entities and bound fields
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 6)
@@ -291,7 +245,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                     self.assertEqual(item_field.description[fkey], head_field[fkey])
                 # Check row field values
                 fkey = field_keys[fid]
-                # print "@@@@ test_get_default_all_list: item_field %r"%(item_field,)
                 self.assertEqual(item_field['field_value'],    entity_fields[eid][fkey])
                 self.assertEqual(item_field['entity_type_id'], entity_fields[eid]['entity_type_id'])
         return
@@ -348,44 +301,12 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        # 1st field
-
         self.assertDictionaryMatch(f0, 
             get_bound_field("Entity_id", "", placement="small:0,3")
             )
-
-        ##@@REMOVE
-        # self.assertEqual(f0['field_id'],            'Entity_id')
-        # self.assertEqual(f0['field_name'],          'entity_id')
-        # self.assertEqual(f0['field_label'],         'Id')
-        # self.assertEqual(f0['field_placeholder'],   "(entity id)")
-        # self.assertEqual(f0['field_property_uri'],  "annal:id")
-        # self.assertEqual(f0['field_render_type'],   "EntityId")
-        # self.assertEqual(f0['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f0['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f0['field_placement'].field, "small-3 columns")
-        # self.assertEqual(f0['field_value'],         "")
-        ##@@
-
-        # 2nd field
-
         self.assertDictionaryMatch(f1, 
             get_bound_field("Entity_label", "", placement="small:3,9")
             )
-
-        ##@@REMOVE
-        # self.assertEqual(f1['field_id'],            'Entity_label')
-        # self.assertEqual(f1['field_name'],          'Entity_label')
-        # self.assertEqual(f1['field_label'],         'Label')
-        # self.assertEqual(f1['field_placeholder'],   "(label)")
-        # self.assertEqual(f1['field_property_uri'],  "rdfs:label")
-        # self.assertEqual(f1['field_render_type'],   "Text")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],    "annal:Text")
-        # self.assertEqual(f1['field_placement'].field, "small-9 columns")
-        # self.assertEqual(f1['field_value'],         "")
-        ##@@
-
         # Entities
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 3)

@@ -29,7 +29,6 @@ from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-#@@ from annalist.views.defaultedit             import EntityDefaultEditView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
 from AnnalistTestCase       import AnnalistTestCase
@@ -56,8 +55,9 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_list_type_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
-    entitydata_recordtype_view_form_data,
+    default_view_context_data, 
+    default_view_form_data, entitydata_delete_confirm_form_data,
+    recordtype_zzz_view_form_data,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
@@ -70,113 +70,6 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-
-#   -----------------------------------------------------------------------------
-#
-#   Helper function to generate context value for testing
-#   @@TODO: move this to a suppport module where it can be re-used
-#
-#   -----------------------------------------------------------------------------
-
-#@@REMOVE
-
-def __unused_default_view_context_data(
-        coll_id="testcoll", type_it="testtype", entity_id=None, orig_id=None, type_ids=[],
-        field_label=None,
-        field_value_type="annal:Text",
-        field_render_type="Text",
-        field_value_mode="Value_direct",
-        field_property="",
-        field_placement="",
-        field_superproperty_uris=None,
-        field_placeholder="",
-        field_tooltip=None,
-        field_fields=[],
-        field_repeat_label_add="Add",
-        field_repeat_label_delete="Remove",
-        field_entity_type="",
-        action=None, update="Field"
-    ):
-    if not field_label:
-        if field_id:
-            field_label = "%s %s/_field/%s"%(update, coll_id, field_id)
-        else:
-            field_label = "%s data ... (testcoll/_field)"%(update)
-    padding_placement = Placement(
-        width=make_field_width(sw=0, mw=6, lw=6),
-        offset=make_field_offset(so=0, mo=0, lo=0),
-        display=make_field_display(sd=False, md=True, ld=True),
-        field="hide-for-small-only medium-6 large-6 columns",
-        label="small-4 columns",
-        value="small-8 columns"
-        )
-    # @@TODO: re-work context structure used for testing so that field definitions present
-    #         as an included dictionary, not as direct dictionary elements of bound_field.
-    #         I'm not sure how extensive a re-work this would be, but there's an opportunity
-    #         here to rationalize the test framework; e.g. define field desription values once
-    #         and re-use, rather than duplicate values here.
-    context_dict = (
-        { "title":              "%s - Field definition - Collection %s"%(field_label, coll_id)
-        , 'heading':            "Field definition"
-        , 'coll_id':            coll_id
-        , 'type_id':            "_field"
-        , 'orig_id':            "orig_field_id"
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
-        , 'fields':
-          [ context_field_row(
-              get_bound_field("Field_id", field_id),                        # 0 (0,0)
-              get_bound_field("Field_render_type", field_render_type)       # 1 (0,1)
-              )
-          , context_field_row(
-              get_bound_field("Field_label", field_label)                   # 2 (1,0)
-              )
-          , context_field_row(
-              get_bound_field("Field_help")                                 # 3 (2,0)
-              )
-          , context_field_row(
-              get_bound_field("Field_property", field_property),            # 4 (3,0)
-              get_bound_field("Field_placement", field_placement)           # 5 (3,1)
-              )
-          , get_bound_field('Field_superproperty_uris', field_superproperty_uris)
-          , context_field_row(
-              get_bound_field("Field_value_type", field_value_type),        # 7 (5,0)
-              get_bound_field("Field_value_mode", field_value_mode)         # 8 (5,1)
-              )
-          , context_field_row(
-              get_bound_field("Field_entity_type", field_entity_type)       # 9 (6,0)
-              )
-          , context_field_row(
-              get_bound_field("Field_typeref"),                             # 10 (7,0)
-              get_bound_field("Field_fieldref")                             # 11 (7,1)
-              )
-          , context_field_row(
-              get_bound_field("Field_default")                              # 12 (8,0)
-              )
-          , context_field_row(
-              get_bound_field("Field_placeholder", field_placeholder)       # 13 (9,0)
-              )
-          , context_field_row(
-              get_bound_field("Field_tooltip", field_tooltip)               # 14 (10,0)
-              )
-          , get_bound_field("Field_fields", field_fields)                   # 15 (11,0)
-          , context_field_row(
-              get_bound_field("Field_repeat_label_add", field_repeat_label_add),
-                                                                            # 16 (12,0)
-              get_bound_field("Field_repeat_label_delete", field_repeat_label_delete)
-                                                                            # 17 (12,1)
-              )
-          , context_field_row(
-              get_bound_field("Field_restrict")                             # 18 (18,0)
-              )
-          ]
-        })
-    if field_id:
-        context_dict['orig_id']     = field_id
-    if orig_id:
-        context_dict['orig_id']     = orig_id
-    if action:  
-        context_dict['action']      = action
-    return context_dict
 
 #   -----------------------------------------------------------------------------
 #
@@ -251,12 +144,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
     #   Form rendering tests
     #   -----------------------------------------------------------------------------
-
-    #@@
-    # def test_EntityDefaultEditView(self):
-    #     self.assertEqual(EntityDefaultEditView.__name__, "EntityDefaultEditView", "Check EntityDefaultEditView class name")
-    #     return
-    #@@
 
     def test_get_form_rendering(self):
         u = entitydata_edit_url("new", "testcoll", "testtype")
@@ -346,8 +233,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             coll_id="testcoll", type_id="testtype", entity_id="00000001", orig_id=None,
             type_ref="testtype", type_choices=self.type_ids,
             entity_label="",
@@ -358,73 +244,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             )
         self.assertEqual(len(r.context['fields']), 3) # 4 fields over 3 rows
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
-
-        #@@REMOVE
-        view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="00000001")
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['entity_id'],        "00000001")
-        self.assertEqual(r.context['orig_id'],          None)
-        self.assertEqual(r.context['action'],           "new")
-        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        # Fields
-        # self.assertEqual(len(r.context['fields']), 3)
-        # f0  = context_view_field(r.context, 0, 0)
-        # f1  = context_view_field(r.context, 0, 1)
-        # f2  = context_view_field(r.context, 1, 0)
-        # f3  = context_view_field(r.context, 2, 0)
-        # # 1st fieldtttff
-        # self.assertEqual(f0.description['field_id'],            'Entity_id')
-        # self.assertEqual(f0.description['field_name'],          'entity_id')
-        # self.assertEqual(f0.description['field_label'],         'Id')
-        # self.assertEqual(f0.description['field_placeholder'],   "(entity id)")
-        # self.assertEqual(f0.description['field_property_uri'],  "annal:id")
-        # self.assertEqual(f0.description['field_render_type'],   "EntityId")
-        # self.assertEqual(f0.description['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f0.description['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f0.field_value,                        "00000001")
-        # self.assertEqual(f0.entity_type_id,                     "testtype")
-        # self.assertEqual(f0.options,                            self.no_options)
-        # # 2nd field
-        # self.assertEqual(f1['field_id'],            'Entity_type')
-        # self.assertEqual(f1['field_name'],          'entity_type')
-        # self.assertEqual(f1['field_label'],         'Type')
-        # self.assertEqual(f1['field_placeholder'],   "(type id)")
-        # self.assertEqual(f1['field_property_uri'],  "annal:type_id")
-        # self.assertEqual(f1['field_render_type'],   "EntityTypeId")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f1.field_value,            "testtype")
-        # self.assertEqual(f1['field_value'],         "testtype")
-        # self.assertEqual(f1['entity_type_id'],      "testtype")
-        # self.assertEqual(set(f1['options']),        set(self.type_ids))
-        # # 3rd field
-        # field_label_value = default_label("testcoll", "testtype", "00000001")
-        # self.assertEqual(f2['field_id'],            'Entity_label')
-        # self.assertEqual(f2['field_name'],          'Entity_label')
-        # self.assertEqual(f2['field_label'],         'Label')
-        # self.assertEqual(f2['field_placeholder'],   "(label)")
-        # self.assertEqual(f2['field_property_uri'],  "rdfs:label")
-        # self.assertEqual(f2['field_render_type'],   "Text")
-        # self.assertEqual(f2['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f2['field_value_type'],    "annal:Text")
-        # self.assertEqual(f2['field_value'],         field_label_value)
-        # self.assertEqual(f2['entity_type_id'],      "testtype")
-        # self.assertEqual(f2['options'],             self.no_options)
-        # # 4th field
-        # field_comment_value = default_comment("testcoll", "testtype", "00000001")
-        # self.assertEqual(f3['field_id'],            'Entity_comment')
-        # self.assertEqual(f3['field_name'],          'Entity_comment')
-        # self.assertEqual(f3['field_label'],         'Comment')
-        # self.assertEqual(f3['field_placeholder'],   "(description)")
-        # self.assertEqual(f3['field_property_uri'],  "rdfs:comment")
-        # self.assertEqual(f3['field_render_type'],   "Markdown")
-        # self.assertEqual(f3['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f3['field_value_type'],    "annal:Richtext")
-        # self.assertEqual(f3['field_value'],         field_comment_value)
-        # self.assertEqual(f3['entity_type_id'],      "testtype")
-        # self.assertEqual(f3['options'],             self.no_options)
-        #@@
         return
 
     def test_get_edit(self):
@@ -435,17 +254,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # log.info(r.content)
         self.assertContains(r, "<title>Entity testcoll/testtype/entity1 - Default record view - Collection testcoll</title>")
         # Test context
-        #@@REMOVE
-        view_url = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "testtype")
-        self.assertEqual(r.context['entity_id'],        "entity1")
-        self.assertEqual(r.context['orig_id'],          "entity1")
-        self.assertEqual(r.context['action'],           "edit")
-        self.assertEqual(r.context['continuation_url'], "/xyzzy/")
-        #@@
-
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             coll_id="testcoll", type_id="testtype", entity_id="entity1", 
             type_ref="testtype", type_choices=self.type_ids,
             entity_label="Entity testcoll/testtype/entity1",
@@ -456,65 +265,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             )
         self.assertEqual(len(r.context['fields']), 3) # 4 fields over 3 rows
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
- 
-        #@@REMOVE
-        # self.assertEqual(len(r.context['fields']), 3)
-        # f0  = context_view_field(r.context, 0, 0)
-        # f1  = context_view_field(r.context, 0, 1)
-        # f2  = context_view_field(r.context, 1, 0)
-        # f3  = context_view_field(r.context, 2, 0)
-        # # 1st field
-        # self.assertEqual(f0['field_id'],            'Entity_id')
-        # self.assertEqual(f0['field_name'],          'entity_id')
-        # self.assertEqual(f0['field_label'],         'Id')
-        # self.assertEqual(f0['field_placeholder'],   "(entity id)")
-        # self.assertEqual(f0['field_property_uri'],  "annal:id")
-        # self.assertEqual(f0['field_render_type'],   "EntityId")
-        # self.assertEqual(f0['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f0['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f0['field_value'],         "entity1")
-        # self.assertEqual(f0['options'],             self.no_options)
-        # # 2nd field
-        # self.assertEqual(f1['field_id'],            'Entity_type')
-        # self.assertEqual(f1['field_name'],          'entity_type')
-        # self.assertEqual(f1['field_label'],         'Type')
-        # self.assertEqual(f1['field_placeholder'],   "(type id)")
-        # self.assertEqual(f1['field_property_uri'],  "annal:type_id")
-        # self.assertEqual(f1['field_render_type'],   "EntityTypeId")
-        # self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f1['field_value_type'],    "annal:EntityRef")
-        # self.assertEqual(f1['field_value'],         "testtype")
-        # self.assertEqual(set(f1['options']),        set(self.type_ids))
-        # # 3rd field
-        # field_label_value = (
-        #     "Entity testcoll/testtype/entity1"
-        #     )
-        # self.assertEqual(f2['field_id'],            'Entity_label')
-        # self.assertEqual(f2['field_name'],          'Entity_label')
-        # self.assertEqual(f2['field_label'],         'Label')
-        # self.assertEqual(f2['field_placeholder'],   "(label)")
-        # self.assertEqual(f2['field_property_uri'],  "rdfs:label")
-        # self.assertEqual(f2['field_render_type'],   "Text")
-        # self.assertEqual(f2['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f2['field_value_type'],    "annal:Text")
-        # self.assertEqual(f2['field_value'],         field_label_value)
-        # self.assertEqual(f2['options'],             self.no_options)
-        # # 4th field
-        # field_comment_value = (
-        #     "Entity coll testcoll, type testtype, entity entity1"
-        #     )
-        # self.assertEqual(f3['field_id'],            'Entity_comment')
-        # self.assertEqual(f3['field_name'],          'Entity_comment')
-        # self.assertEqual(f3['field_label'],         'Comment')
-        # self.assertEqual(f3['field_placeholder'],   "(description)")
-        # self.assertEqual(f3['field_property_uri'],  "rdfs:comment")
-        # self.assertEqual(f3['field_render_type'],   "Markdown")
-        # self.assertEqual(f3['field_value_mode'],    "Value_direct")
-        # self.assertEqual(f3['field_value_type'],    "annal:Richtext")
-        # self.assertEqual(f3['field_value'],         field_comment_value)
-        # self.assertEqual(f3['options'],             self.no_options)
-        #@@
-
         return
 
     def test_get_edit_not_exists(self):
@@ -538,7 +288,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     def test_post_new_entity(self):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", action="new")
+        f = default_view_form_data(entity_id="newentity", action="new")
         u = entitydata_edit_url("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -551,7 +301,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     def test_post_new_entity_cancel(self):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", action="new", cancel="Cancel")
+        f = default_view_form_data(entity_id="newentity", action="new", cancel="Cancel")
         u = entitydata_edit_url("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -563,14 +313,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_entity_missing_id(self):
-        f = entitydata_form_data(action="new")
+        f = default_view_form_data(action="new", entity_id="")
         u = entitydata_edit_url("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             coll_id="testcoll", type_id="testtype", 
             entity_id="", orig_id="orig_entity_id",
             type_ref="", type_choices=self.type_ids,
@@ -581,7 +331,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_entity_invalid_id(self):
-        f = entitydata_form_data(
+        f = default_view_form_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="new"
             )
         u = entitydata_edit_url("new", "testcoll", "testtype")
@@ -590,28 +340,20 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context
-        expect_context = entitydata_context_data(
-            entity_id="!badentity", orig_id="orig_entity_id", action="new"
-            )
-        #@@
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             coll_id="testcoll", type_id="testtype", 
             entity_id="!badentity", orig_id="orig_entity_id",
             type_ref="_type/testtype", type_choices=self.type_ids,
             action="new"
             )
-        #@@REMOVE
-        bound_context = context_bind_fields(r.context)
-        #@@
-        bound_context = r.context
-        self.assertDictionaryMatch(bound_context, expect_context)
+        self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_new_entity_default_type(self):
         # Checks logic related to creating a new recorddata entity in collection 
         # for type defined in site data
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", type_id="Default_type", action="new")
+        f = default_view_form_data(entity_id="newentity", type_id="Default_type", action="new")
         u = entitydata_edit_url("new", "testcoll", "Default_type")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -630,7 +372,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Checks logic for creating an entity which may require creation of new recorddata
         # Create new type
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = entitydata_recordtype_view_form_data(
+        f = recordtype_zzz_view_form_data(
             coll_id="testcoll", type_id="_type", entity_id="newtype",
             action="new"
             )
@@ -643,7 +385,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
-        f = entitydata_form_data(entity_id="newentity", type_id="newtype", action="new")
+        f = default_view_form_data(entity_id="newentity", type_id="newtype", action="new")
         u = entitydata_edit_url("new", "testcoll", "newtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -658,7 +400,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     def test_post_copy_entity(self):
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
-        f = entitydata_form_data(entity_id="copytype", action="copy")
+        f = default_view_form_data(entity_id="copytype", action="copy")
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -671,7 +413,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     def test_post_copy_entity_cancel(self):
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
-        f = entitydata_form_data(entity_id="copytype", action="copy", cancel="Cancel")
+        f = default_view_form_data(entity_id="copytype", action="copy", cancel="Cancel")
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -683,13 +425,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_entity_missing_id(self):
-        f = entitydata_form_data(action="copy")
+        f = default_view_form_data(action="copy", entity_id="")
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             action="copy", orig_id="orig_entity_id",
             type_ref="", type_choices=self.type_ids
             )
@@ -697,13 +439,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_entity_invalid_id(self):
-        f = entitydata_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="copy")
+        f = default_view_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="copy")
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             action="copy", entity_id="!badentity", orig_id="orig_entity_id",
             type_ref="_type/testtype", type_choices=self.type_ids
             )
@@ -715,7 +457,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     def test_post_edit_entity(self):
         self._create_entity_data("entityedit")
         self._check_entity_data_values("entityedit")
-        f  = entitydata_form_data(entity_id="entityedit", action="edit", update="Updated entity")
+        f  = default_view_form_data(entity_id="entityedit", action="edit", update="Updated entity")
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -729,7 +471,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("entityeditid1")
         e1 = self._check_entity_data_values("entityeditid1")
         # Now post edit form submission with different values and new id
-        f  = entitydata_form_data(entity_id="entityeditid2", orig_id="entityeditid1", action="edit")
+        f  = default_view_form_data(entity_id="entityeditid2", orig_id="entityeditid1", action="edit")
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -750,7 +492,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
         self.assertFalse(RecordTypeData.exists(self.testcoll, "newtype"))
         # Now post edit form submission with new type id
-        f = entitydata_form_data(
+        f = default_view_form_data(
             entity_id="entityedittype", orig_id="entityedittype", 
             type_id="newtype", orig_type="testtype",
             action="edit")
@@ -772,7 +514,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Post from cancelled edit form
-        f = entitydata_form_data(entity_id="edittype", action="edit", cancel="Cancel", update="Updated entity")
+        f = default_view_form_data(entity_id="edittype", action="edit", cancel="Cancel", update="Updated entity")
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -787,14 +529,14 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Form post with ID missing
-        f = entitydata_form_data(action="edit", update="Updated entity")
+        f = default_view_form_data(action="edit", entity_id="", update="Updated entity")
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context for re-rendered form
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             action="edit", update="Updated entity",
             orig_id="orig_entity_id",
             type_ref="", type_choices=self.type_ids
@@ -809,7 +551,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Form post with ID malformed
-        f = entitydata_form_data(
+        f = default_view_form_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="edit"
             )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
@@ -818,7 +560,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context for re-rendered form
-        expect_context = entitydata_context_data(
+        expect_context = default_view_context_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="edit",
             type_ref="_type/testtype", type_choices=self.type_ids
             )

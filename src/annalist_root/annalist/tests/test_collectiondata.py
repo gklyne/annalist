@@ -57,10 +57,10 @@ from entity_testcolldata    import (
     collectiondata_view_url, collectiondata_view_resource_url,
     collectiondata_value_keys, collectiondata_load_keys,
     collectiondata_create_values, collectiondata_values, collectiondata_read_values,
-    collectiondata_view_form_data
+    coll_view_form_data
     )
 from entity_testuserdata    import (
-    annalistuser_view_form_data
+    user_view_form_data
     )
 
 
@@ -389,7 +389,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
     # collection named view edit post update
     def test_post_named_edit(self):
         u = collectiondata_view_url(coll_id="testcoll", action="edit")
-        f = collectiondata_view_form_data(coll_id="testcoll", action="edit")
+        f = coll_view_form_data(coll_id="testcoll", action="edit")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "FOUND")
@@ -453,7 +453,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         orig_coll = r.context['orig_coll']
         # Assemble and POST form data to =updated collection metadata
         new_label = "Updated collection metadata"
-        f = collectiondata_view_form_data(
+        f = coll_view_form_data(
             coll_id="testcoll", 
             action="edit", 
             coll_label=new_label,
@@ -474,7 +474,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         # The main purpose of this test is to check that user permissions are 
         # saved properly
         self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
-        f = annalistuser_view_form_data(
+        f = user_view_form_data(
             action="copy", orig_id="_default_user_perms",
             user_id="copyuser",
             user_name="User copyuser",

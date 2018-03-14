@@ -53,7 +53,7 @@ from entity_testuserdata    import (
     annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
-    annalistuser_view_form_data,
+    user_view_form_data,
     annalistuser_delete_confirm_form_data
     )
 from entity_testentitydata  import (
@@ -500,7 +500,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     def test_post_edit_user(self):
         # The main purpose of this test is to check that user permissions are saved properly
         self.assertFalse(AnnalistUser.exists(self.testcoll, "edituser"))
-        f = annalistuser_view_form_data(
+        f = user_view_form_data(
             action="edit", orig_id="_default_user_perms", orig_coll="_annalist_site",
             user_id="edituser",
             user_name="User edituser",
@@ -527,7 +527,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
     def test_post_copy_user(self):
         # The main purpose of this test is to check that user permissions are saved properly
         self.assertFalse(AnnalistUser.exists(self.testcoll, "copyuser"))
-        f = annalistuser_view_form_data(
+        f = user_view_form_data(
             action="copy", orig_id="_default_user_perms", orig_coll="_annalist_site",
             user_id="copyuser",
             user_name="User copyuser",

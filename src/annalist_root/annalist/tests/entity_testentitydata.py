@@ -268,7 +268,7 @@ def entitydata_values(
 #
 #   -----------------------------------------------------------------------------
 
-def entitydata_specified_view_context_data(
+def specified_view_context_data(
         coll_id="testcoll", type_id="testtype", 
         view_id="Default_view", view_heading="Default record view",
         entity_id=None, orig_id=None,
@@ -343,7 +343,7 @@ def entitydata_specified_view_context_data(
 #
 #   -----------------------------------------------------------------------------
 
-def entitydata_context_data(
+def default_view_context_data(
         entity_id=None, orig_id=None, 
         coll_id="testcoll", type_id="testtype", 
         type_ref=None, type_choices=None, type_ids=[],
@@ -376,8 +376,6 @@ def entitydata_context_data(
         entitydata_list_type_url("testcoll", type_id)
         )
     view_title = (
-        # "%s - Collection %s"%(view_label, coll_id) if action == "new"
-        # else 
         "%s - %s - Collection %s"%(entity_label, view_label, coll_id) if entity_label
         else
         "%s - Collection %s"%(view_label, coll_id)
@@ -402,53 +400,6 @@ def entitydata_context_data(
         , 'orig_id':            orig_id
         , 'fields':             view_fields
         , 'continuation_url':   continuation_url
-        #@@REMOVE
-        # , 'fields':
-        #   [ context_field_row(
-        #       { 'field_label':        'Id'
-        #       , 'field_id':           'Entity_id'
-        #       , 'field_name':         'entity_id'
-        #       , 'field_render_type':  'EntityId'
-        #       , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-        #       , 'field_value_mode':   'Value_direct'
-        #       , 'field_value_type':   "annal:EntityRef"
-        #       , 'field_value':        entity_id
-        #       , 'field_options':      []
-        #       },
-        #       { 'field_label':        'Type'
-        #       , 'field_id':           'Entity_type'
-        #       , 'field_name':         'entity_type'
-        #       , 'field_render_type':  'EntityTypeId'
-        #       , 'field_value_type':   "annal:EntityRef"
-        #       , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-        #       , 'field_value_mode':   'Value_direct'
-        #       , 'field_value':        type_ref
-        #       , 'field_options':      []
-        #       })
-        #   , context_field_row(
-        #       { 'field_label':        'Label'
-        #       , 'field_id':           'Entity_label'
-        #       , 'field_name':         'Entity_label'
-        #       , 'field_render_type':  'Text'
-        #       , 'field_placement':    get_placement_classes('small:0,12')
-        #       , 'field_value_mode':   'Value_direct'
-        #       , 'field_value_type':   "annal:Text"
-        #       , 'field_value':        entity_label
-        #       , 'field_options':      []
-        #       })
-        #   , context_field_row(
-        #       { 'field_label':        'Comment'
-        #       , 'field_id':           'Entity_comment'
-        #       , 'field_name':         'Entity_comment'
-        #       , 'field_render_type':  'Markdown'
-        #       , 'field_placement':    get_placement_classes('small:0,12')
-        #       , 'field_value_mode':   'Value_direct'
-        #       , 'field_value_type':   "annal:Richtext"
-        #       , 'field_value':        entity_descr
-        #       , 'field_options':      []
-        #       })
-        #   ]
-        #@@
         })
     if orig_id:
         context_dict['orig_id']     = orig_id
@@ -494,50 +445,7 @@ def entitydata_context_add_field(
         })
     return context_dict
 
-def entitydata_form_data(
-        entity_id="", orig_id=None, 
-        type_id="testtype", orig_type=None,
-        coll_id="testcoll", orig_coll=None,
-        action=None, cancel=None, close=None, edit=None, copy=None, 
-        update="Entity"
-        ):
-    form_data_dict = (
-        { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
-        , 'orig_id':            'orig_entity_id'
-        , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
-        })
-    if entity_id is not None:
-        form_data_dict['entity_id']       = entity_id
-    if entity_id:
-        form_data_dict['entity_id']       = entity_id
-        form_data_dict['entity_type']     = "_type/"+type_id
-        form_data_dict['Entity_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-        form_data_dict['orig_id']         = entity_id
-        form_data_dict['orig_type']       = type_id
-        form_data_dict['orig_coll']       = coll_id
-    if orig_id:
-        form_data_dict['orig_id']         = orig_id
-    if orig_type:
-        form_data_dict['orig_type']       = orig_type
-    if orig_coll:
-        form_data_dict['orig_coll']       = orig_coll
-    if action:
-        form_data_dict['action']          = action
-    if cancel:
-        form_data_dict['cancel']          = "Cancel"
-    elif close:
-        form_data_dict['close']           = "Close"
-    elif edit:
-        form_data_dict['edit']            = "Edit"
-    elif copy:
-        form_data_dict['copy']            = "Copy"
-    else:
-        form_data_dict['save']            = 'Save'
-    return form_data_dict
-
-def entitydata_default_view_form_data(
+def default_view_form_data(
         coll_id="testcoll", orig_coll=None,
         type_id="testtype", orig_type=None,
         entity_id=None, orig_id=None, 
@@ -547,19 +455,17 @@ def entitydata_default_view_form_data(
         new_view=None, new_field=None, new_type=None, 
         new_enum=None, do_import=None
         ):
-    #@@TODO: check overlap with entitydata_form_data?
-    #        looks like this is most;y a superset: 
-    #        try relacing references to entitydata_form_data
-    #
-    # log.info("entitydata_default_view_form_data: entity_id %s"%(entity_id))
+    # log.info("default_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Entity_label':       '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Entity_comment':     '%s description ... (%s/%s)'%(update, coll_id, type_id)
         , 'orig_id':            'orig_entity_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
         })
-    if entity_id:
+    if entity_id is not None:
+        # Allow setting to blank string...
         form_data_dict['entity_id']       = entity_id
+    if entity_id:
         form_data_dict['entity_type']     = "_type/"+type_id
         form_data_dict['Entity_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
@@ -647,7 +553,7 @@ def entitydata_delete_confirm_form_data(entity_id=None, search=None):
 
 # Used in test_entitygenericedit - move?
 
-def entitydata_recordtype_view_context_data(
+def recordtype_zzz_view_context_data(
         entity_id=None, orig_id=None, coll_id="testcoll", type_id="testtype", type_uri=None, type_ids=[],
         action=None, update="Entity", view_label="Type definition"
     ):
@@ -683,80 +589,15 @@ def entitydata_recordtype_view_context_data(
         context_dict['orig_id']     = orig_id
     if action:  
         context_dict['action']      = action
-
-    # if continuation_url is None:
-    #     context_dict['continuation_url'] = entitydata_list_type_url(coll_id, "_field")
-    # else:
-    #     context_dict['continuation_url'] = continuation_url
-
-    # context_dict = (
-    #     { 'title':              "%s - %s - Collection %s"%(entity_label, view_label, coll_id)
-    #     , 'heading':            view_label
-    #     , 'coll_id':            coll_id
-    #     , 'type_id':            type_id
-    #     , 'orig_id':            'orig_entity_id'
-    #     , 'fields':
-    #       [ context_field_row(
-    #           { 'field_label':        'Type Id'
-    #           , 'field_name':         'entity_id'
-    #           , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-    #           , 'field_id':           'Type_id'
-    #           , 'field_value_mode':   'Value_direct'
-    #           , 'field_value_type':   'annal:EntityRef'
-    #           , 'options':            []
-    #           })
-    #       , context_field_row(
-    #           { 'field_label':        'Label'
-    #           , 'field_name':         'Type_label'
-    #           , 'field_placement':    get_placement_classes('small:0,12')
-    #           , 'field_id':           'Type_label'
-    #           , 'field_value_mode':   'Value_direct'
-    #           , 'field_value_type':   'annal:Text'
-    #           , 'field_value':        entity_label
-    #           , 'options':            []
-    #           })
-    #       , context_field_row(
-    #           { 'field_label':        'Comment'
-    #           , 'field_name':         'Type_comment'
-    #           , 'field_placement':    get_placement_classes('small:0,12')
-    #           , 'field_id':           'Type_comment'
-    #           , 'field_value_mode':   'Value_direct'
-    #           , 'field_value_type':   'annal:Richtext'
-    #           , 'field_value':        entity_descr
-    #           , 'options':            []
-    #           })
-    #       , context_field_row(
-    #           { 'field_label':        'Type URI'
-    #           , 'field_name':         'Type_uri'
-    #           , 'field_placement':    get_placement_classes('small:0,12')
-    #           , 'field_id':           'Type_uri'
-    #           , 'field_value_mode':   'Value_direct'
-    #           , 'field_value_type':   'annal:Identifier'
-    #           , 'field_value':        ""
-    #           , 'options':            []
-    #           })
-    #       ]
-    #     , 'continuation_url':   entitydata_list_type_url(coll_id, type_id)
-    #     })
-    # if entity_id:
-    #     context_dict['fields'][0]['row_field_descs'][0]['field_value'] = entity_id
-    #     context_dict['orig_id']                  = entity_id
-    # if type_uri:
-    #     context_dict['fields'][3]['row_field_descs'][0]['field_value'] = type_uri
-    # if orig_id:
-    #     context_dict['orig_id']     = orig_id
-    # if action:  
-    #     context_dict['action']      = action
-
     return context_dict
 
-def entitydata_recordtype_view_form_data(
+def recordtype_zzz_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id="", orig_id=None, 
         action=None, cancel=None, update="Entity",
         add_view_field=None, open_view=None, customize=None):
-    # log.info("entitydata_recordtype_view_form_data: entity_id %s"%(entity_id))
+    # log.info("type_view_form_data: entity_id %s"%(entity_id))
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)

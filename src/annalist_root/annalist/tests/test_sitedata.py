@@ -67,7 +67,6 @@ from entity_testcolldata    import (
     collectiondata_view_url, collectiondata_view_resource_url,
     collectiondata_value_keys, collectiondata_load_keys,
     collectiondata_create_values, collectiondata_values, collectiondata_read_values,
-    collectiondata_view_form_data
     )
 from entity_testsitedata    import (
     make_field_choices, no_selection,

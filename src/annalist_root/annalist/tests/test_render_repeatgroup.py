@@ -41,7 +41,7 @@ from entity_testtypedata    import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_specified_view_context_data,
+    specified_view_context_data,
     default_fields
     )
 
@@ -141,7 +141,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
                 group_delete_label=label_delete,
                 )
             ])
-        context_dict = entitydata_specified_view_context_data(
+        context_dict = specified_view_context_data(
             coll_id="testcoll", type_id="testtype", 
             view_id="testview", view_heading="Test view label",
             entity_id=entity_id,
@@ -180,44 +180,9 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         self.assertEqual(len(response.context['fields']), 2)
         self.assertDictionaryMatch(actual_context, expect_context)
 
+        # Test rendered result
         f0 = context_view_field(response.context, 0, 0)
         f1 = context_view_field(response.context, 1, 0)
-
-        #@@REMOVE
-        # r = response
-        # Test rendered values
-        # self.assertEqual(r.context['coll_id'],          "testcoll")
-        # self.assertEqual(r.context['type_id'],          "testtype")
-        # self.assertEqual(r.context['entity_id'],        "00000001")
-        # self.assertEqual(r.context['action'],           "new")
-        # # Fields
-        # self.assertEqual(len(r.context['fields']), 2)
-        # # 1st field - Id
-        # f0 = context_view_field(r.context, 0, 0)
-        # self.assertEqual(f0['field_id'], 'Entity_id')
-        # self.assertEqual(f0['field_name'], 'entity_id')
-        # self.assertEqual(f0['field_label'], 'Id')
-        # self.assertEqual(f0['field_value'], "00000001")
-        # # 2nd field - repeat group
-        # f1 = context_view_field(r.context, 1, 0)
-        # repeat_fields = (
-        #     [ { "annal:field_id":   "Entity_comment" }
-        #     ])
-        # self.assertEqual(f1['field_id'],           "Test_repeat_field")
-        # self.assertEqual(f1['field_name'],         "Test_repeat_field")
-        # self.assertEqual(f1['field_label'],        "Test repeat field label")
-        # self.assertEqual(f1['field_render_type'],  "Group_Seq_Row")
-        # self.assertEqual(f1['field_value_mode'],   "Value_direct")
-        # self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        # self.assertEqual(f1['group_field_list'],   repeat_fields)
-        # self.assertEqual(f1['group_label'],        "Test repeat field label")
-        # self.assertEqual(f1['group_add_label'],    "Add group")
-        # self.assertEqual(f1['group_delete_label'], "Remove group")
-        # self.assertEqual(f1['field_property_uri'], "test:repeat_fields")
-        # self.assertEqual(len(f1['field_value']),   0)
-        # self.assertEqual(f1['field_value'],        "") #@@ Really?
-
-        # Test rendered result
         field_vals = default_fields(
             coll_id="testcoll", type_id="testtype", entity_id="00000001",
             tooltip1=f0['field_tooltip'],
@@ -303,41 +268,6 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 2)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-        #@@REMOVE
-        # f0 = context_view_field(response.context, 0, 0)
-        # f1 = context_view_field(response.context, 1, 0)
-        # Test rendered values
-        # self.assertEqual(r.context['coll_id'],          "testcoll")
-        # self.assertEqual(r.context['type_id'],          "testtype")
-        # self.assertEqual(r.context['entity_id'],        "00000001")
-        # self.assertEqual(r.context['action'],           "new")
-        # # Fields
-        # self.assertEqual(len(r.context['fields']), 2)
-        # # 1st field - Id
-        # i = 0
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_id'], 'Entity_id')
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_name'], 'entity_id')
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_label'], 'Id')
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_value'], "00000001")
-        # # 2nd field - repeat group
-        # i = 1
-        # repeat_fields = (
-        #     [ { "annal:field_id":   "Entity_comment" }
-        #     ])
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_id'],           "testrepeatfield")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_name'],         "testrepeatfield")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_label'],        "Test repeat field label")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_render_type'],  "Group_Seq_Row")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_value_mode'],   "Value_direct")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_value_type'],   "annal:Field_group")
-        # self.assertEqual(context_view_field(r.context, i, 0)['group_field_list'],   repeat_fields)
-        # self.assertEqual(context_view_field(r.context, i, 0)['group_label'],        "Test repeat field label")
-        # self.assertEqual(context_view_field(r.context, i, 0)['group_add_label'],    "Add testrepeatfield")
-        # self.assertEqual(context_view_field(r.context, i, 0)['group_delete_label'], "Remove testrepeatfield")
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_property_uri'], "test:repeat_fields")
-        # self.assertEqual(len(context_view_field(r.context, i, 0)['field_value']), 0)
-        # self.assertEqual(context_view_field(r.context, i, 0)['field_value'], "") #@@ Really?
         return
 
     def test_RenderRepeatGroup_view_no_values(self):

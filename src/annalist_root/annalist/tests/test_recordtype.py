@@ -63,8 +63,8 @@ from entity_testtypedata    import (
     recordtype_coll_url, recordtype_url, recordtype_edit_url,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
-    recordtype_entity_view_context_data, 
-    recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
+    type_view_form_data, recordtype_delete_confirm_form_data,
+    type_view_context_data, 
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
@@ -309,7 +309,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             update="RecordType",
             continuation_url=None
             ):
-        expect_context = recordtype_entity_view_context_data(
+        expect_context = type_view_context_data(
             coll_id="testcoll", type_id=type_id, orig_id=orig_type_id,
             action=action,
             type_ids=type_ids,
@@ -326,137 +326,6 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 7)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-
-        #@@REMOVE
-        # # Common entity attributes
-        # self.assertEqual(response.context['entity_id'],        type_id)
-        # self.assertEqual(response.context['orig_id'],          orig_type_id)
-        # self.assertEqual(response.context['type_id'],          layout.TYPE_TYPEID)
-        # self.assertEqual(response.context['orig_type'],        layout.TYPE_TYPEID)
-        # self.assertEqual(response.context['coll_id'],          'testcoll')
-        # self.assertEqual(response.context['action'],           action)
-        # self.assertEqual(response.context['view_id'],          'Type_view')
-        # # View fields
-        # self.assertEqual(len(response.context['fields']), 7)
-        # f0 = context_view_field(response.context, 0, 0)
-        # f1 = context_view_field(response.context, 1, 0)
-        # f2 = context_view_field(response.context, 2, 0)
-        # f3 = context_view_field(response.context, 3, 0)
-        # f4 = context_view_field(response.context, 4, 0)
-        # f5 = context_view_field(response.context, 5, 0)
-        # f6 = context_view_field(response.context, 5, 1)
-        # # 1st field - Id
-        # check_context_field(self, f0,
-        #     field_id=           "Type_id",
-        #     field_name=         "entity_id",
-        #     field_label=        "Type Id",
-        #     field_placeholder=  "(type id)",
-        #     field_property_uri= "annal:id",
-        #     field_render_type=  "EntityId",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        type_id,
-        #     options=            self.no_options
-        #     )
-        # # 2nd field - Label
-        # check_context_field(self, f1,
-        #     field_id=           "Type_label",
-        #     field_name=         "Type_label",
-        #     field_label=        "Label",
-        #     field_placeholder=  "(label)",
-        #     field_property_uri= "rdfs:label",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_placement=    "small-12 columns",
-        #     field_value=        type_label,
-        #     options=            self.no_options
-        #     )
-        # # 3rd field - comment
-        # type_comment_placeholder = (
-        #     "(type description)"
-        #     )
-        # check_context_field(self, f2,
-        #     field_id=           "Type_comment",
-        #     field_name=         "Type_comment",
-        #     field_label=        "Comment",
-        #     field_placeholder=  type_comment_placeholder,
-        #     field_property_uri= "rdfs:comment",
-        #     field_render_type=  "Markdown",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Richtext",
-        #     field_placement=    "small-12 columns",
-        #     options=            self.no_options
-        #     )
-        # # 4th field - URI
-        # type_uri_placeholder = (
-        #     "(Type URI or CURIE)"
-        #     )
-        # check_context_field(self, f3,
-        #     field_id=           "Type_uri",
-        #     field_name=         "Type_uri",
-        #     field_label=        "Type URI",
-        #     field_placeholder=  type_uri_placeholder,
-        #     field_property_uri= "annal:uri",
-        #     field_render_type=  "Identifier",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        type_uri,
-        #     options=            self.no_options
-        #     )
-        # # 5th field - Supertype URIs
-        # type_supertype_uris_placeholder = (
-        #     "(Supertype URIs or CURIEs)"
-        #     )
-        # check_context_field(self, f4,
-        #     field_id=           "Type_supertype_uris",
-        #     field_name=         "Type_supertype_uris",
-        #     field_label=        "Supertype URIs",
-        #     field_placeholder=  type_supertype_uris_placeholder,
-        #     field_property_uri= "annal:supertype_uri",
-        #     field_render_type=  "Group_Set_Row",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Type_supertype_uri",
-        #     field_value=        type_supertype_uris,
-        #     options=            self.no_options
-        #     )
-        # # 6th field - view id
-        # type_view_id_placeholder = (
-        #     "(view id)"
-        #     )
-        # check_context_field(self, f5,
-        #     field_id=           "Type_view",
-        #     field_name=         "Type_view",
-        #     field_label=        "Default view",
-        #     field_placeholder=  type_view_id_placeholder,
-        #     field_property_uri= "annal:type_view",
-        #     field_render_type=  "Enum_optional",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:View",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        type_view,
-        #     options=            self.view_options
-        #     )
-        # # 7th field - list id
-        # type_list_id_placeholder = (
-        #     "(list id)"
-        #     )
-        # check_context_field(self, f6,
-        #     field_id=           "Type_list",
-        #     field_name=         "Type_list",
-        #     field_label=        "Default list",
-        #     field_placeholder=  type_list_id_placeholder,
-        #     field_property_uri= "annal:type_list",
-        #     field_render_type=  "Enum_optional",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:List",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        type_list,
-        #     options=            self.list_options
-        #     )
-        #@@
         return
 
     #   -----------------------------------------------------------------------------
@@ -890,7 +759,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_new_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="newtype", action="new", update="RecordType",
             type_uri="test:type"
             )
@@ -907,7 +776,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_new_type_cancel(self):
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="newtype", action="new", cancel="Cancel", update="Updated RecordType"
             )
         u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
@@ -921,7 +790,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_type_missing_id(self):
-        f = recordtype_entity_view_form_data(action="new", update="RecordType")
+        f = type_view_form_data(action="new", update="RecordType")
         u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
         r = self.client.post(u, f)
         # print r.content
@@ -938,7 +807,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_type_invalid_id(self):
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="!badtype", orig_id="orig_type_id", action="new", update="RecordType"
             )
         u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
@@ -959,7 +828,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_copy_type(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="copytype", 
             orig_id="Default_type", orig_coll="_annalist_site", action="copy", 
             update="RecordType",
@@ -979,7 +848,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_post_copy_type_cancel(self):
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="copytype", orig_id="Default_type", action="copy", cancel="Cancel", update="RecordType"
             )
         u = entitydata_edit_url(
@@ -995,7 +864,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_type_missing_id(self):
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             action="copy", update="Updated RecordType"
             )
         u = entitydata_edit_url(
@@ -1016,7 +885,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_type_invalid_id(self):
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="!badtype", orig_id="Default_type", action="copy", update="Updated RecordType"
             )
         u = entitydata_edit_url(
@@ -1041,7 +910,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_edit_type(self):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="edittype", orig_id="edittype", 
             action="edit", update="Updated RecordType"
             )
@@ -1064,7 +933,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertFalse(RecordTypeData.exists(self.testcoll, "edittype2"))
         self.assertTrue(EntityData.exists(d1, "typeentity"))
         self._check_record_type_values("edittype1")
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="edittype2", orig_id="edittype1", 
             action="edit", update="Updated RecordType"
             )
@@ -1091,7 +960,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_edit_type_cancel(self):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="edittype", orig_id="edittype", 
             action="edit", cancel="Cancel", update="Updated RecordType"
             )
@@ -1111,7 +980,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
         # Form post with ID missing
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             action="edit", update="Updated RecordType"
             )
         u = entitydata_edit_url(
@@ -1138,7 +1007,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
         # Form post with invalid ID
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="!badtype", orig_id="edittype", 
             action="edit", update="Updated RecordType"
             )
@@ -1169,7 +1038,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("tasktype")
         self._check_record_type_values("tasktype")
         # Post define view+list
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="tasktype",
             type_uri="test:tasktype",
             task="Define_view_list"
@@ -1217,7 +1086,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("tasktype", type_uri="test:tasktype")
         self._check_record_type_values("tasktype")
         # Post define subtype
-        f = recordtype_entity_view_form_data(
+        f = type_view_form_data(
             type_id="tasktype",
             type_uri="test:tasktype",
             task="Define_subtype"

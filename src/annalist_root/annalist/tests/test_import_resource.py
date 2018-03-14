@@ -42,7 +42,7 @@ from entity_testutils       import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_default_view_form_data,
+    default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
@@ -271,7 +271,7 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     def test_import_resource(self):
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
             entity_id="test1", type_id="testimptype", action="edit", 
             do_import="imp_field__import"
             )
@@ -309,7 +309,7 @@ class ImportResourceTest(AnnalistTestCase):
 
     def test_reference_imported_resource(self):
         # Create imported resource (see previous test)
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
             entity_id="test1", type_id="testimptype", action="edit", 
             do_import="imp_field__import"
             )

@@ -23,8 +23,7 @@ from entity_testtypedata                    import (
     recordtype_coll_url, recordtype_url, recordtype_edit_url,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
-    recordtype_entity_view_context_data, 
-    recordtype_entity_view_form_data, recordtype_delete_confirm_form_data
+    recordtype_delete_confirm_form_data
     )
 
 from annalist.models.site                   import Site

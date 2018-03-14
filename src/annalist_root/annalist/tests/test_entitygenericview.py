@@ -68,8 +68,7 @@ from entity_testentitydata  import (
     entitydata_list_type_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     entitydata_delete_confirm_form_data,
-    entitydata_default_view_form_data,
-    entitydata_recordtype_view_context_data, entitydata_recordtype_view_form_data,
+    default_view_form_data,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
@@ -165,7 +164,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
     def test_post_default_form_use_view(self):
         self._create_entity_data("entityuseview")
         self.assertTrue(EntityData.exists(self.testdata, "entityuseview"))
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entityuseview", action="view",
                 use_view="_view/Type_view", 
                 )
@@ -189,7 +188,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
     def test_post_default_form_default_view(self):
         # Set default entity view, then ensure collection view redirects to it
         self._create_entity_data("entitydefaultview")
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitydefaultview", action="view",
                 default_view="default_view", 
                 )
@@ -224,7 +223,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
 
     def test_post_default_form_use_view_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entityuseview", action="view",
                 use_view="_view/Type_view", 
                 )
@@ -582,7 +581,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
 
     def test_post_view_entity_close(self):
         self._create_entity_data("entityview")
-        f = entitydata_default_view_form_data(entity_id="entityview", action="view", close="Close")
+        f = default_view_form_data(entity_id="entityview", action="view", close="Close")
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -594,7 +593,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
 
     def test_post_view_entity_edit(self):
         self._create_entity_data("entityview")
-        f = entitydata_default_view_form_data(entity_id="entityview", action="view", edit="Edit")
+        f = default_view_form_data(entity_id="entityview", action="view", edit="Edit")
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -611,7 +610,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
 
     def test_post_view_entity_copy(self):
         self._create_entity_data("entityview")
-        f = entitydata_default_view_form_data(entity_id="entityview", action="view", copy="Copy")
+        f = default_view_form_data(entity_id="entityview", action="view", copy="Copy")
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)

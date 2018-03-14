@@ -80,7 +80,7 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    entitydata_delete_confirm_form_data,
     entitylist_form_data
     )
 from entity_testsitedata    import (

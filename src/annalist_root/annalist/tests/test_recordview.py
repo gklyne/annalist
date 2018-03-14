@@ -58,9 +58,9 @@ from entity_testviewdata    import (
     recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
-    recordview_entity_view_context_data, 
+    view_view_context_data, 
     default_view_fields_list, view_view_fields_list,
-    recordview_entity_view_form_data, 
+    view_view_form_data, 
     recordview_delete_confirm_form_data
     )
 from entity_testentitydata  import (
@@ -325,7 +325,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return t
 
     # Check context values common to all view fields
-    #@@REMOVE (when references below replaced)
+    #@@TODO: remove when references below replaced
+    #        see: _check_view_view_context_fields
     def _check_common_view_context_fields(self, response, 
             action="",
             view_id="(?view_id)", orig_view_id=None,
@@ -431,7 +432,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
             update="RecordView",
             continuation_url=None
             ):
-        expect_context = recordview_entity_view_context_data(
+        expect_context = view_view_context_data(
             coll_id="testcoll", view_id=view_id, orig_id=orig_view_id,
             action=action,
             view_uri=view_uri,
@@ -446,63 +447,8 @@ class RecordViewEditViewTest(AnnalistTestCase):
             continuation_url=continuation_url
             )
         actual_context = context_bind_fields(response.context)
-        # print "@@@@@@@ actual:\n"+repr(actual_context['fields'][5]['description']['group_field_descs'][0]['field_choices'])
-        # print "@@@@@@@ expect:\n"+repr(expect_context['fields'][5]['description']['group_field_descs'][0]['field_choices'])
         self.assertEqual(len(response.context['fields']), 6)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-
-
-        #@@REMOVE
-        # Common fields 
-        self._check_common_view_context_fields(response,
-            action=action,
-            view_id=view_id, orig_view_id=orig_view_id,
-            view_label=view_label,
-            view_record_type=view_record_type,
-            view_edit_view=True
-            )
-        # 6th field - field list
-        f5 = context_view_field(response.context, 5, 0)
-        expect_field_data = (
-            [ { 'annal:field_placement': 'small:0,12;medium:0,6'
-              , 'annal:field_id':        layout.FIELD_TYPEID+'/Entity_id'
-              }
-            , { 'annal:field_placement': 'small:0,12;medium:6,6'
-              , 'annal:field_id':        layout.FIELD_TYPEID+'/Entity_type'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        layout.FIELD_TYPEID+'/Entity_label'
-              }
-            , { 'annal:field_placement': 'small:0,12'
-              , 'annal:field_id':        layout.FIELD_TYPEID+'/Entity_comment'
-              }
-            ])
-        if add_field:
-            expect_field_data.append(
-                { 'annal:field_id':         None
-                , 'annal:property_uri':     None
-                , 'annal:field_placement':  None
-                })
-        if remove_field:
-            expect_field_data[3:4] = []
-        if move_up:
-            assert move_up == [2,3]
-            expect_field_data = [ expect_field_data[i]  for i in [0,2,3,1] ]
-        if move_down:
-            assert move_down == [1]
-            expect_field_data = [ expect_field_data[i]  for i in [0,2,1,3] ]
-        self.assertEqual(len(expect_field_data), len(f5['field_value']))
-        check_context_field(self, f5,
-            field_id=           "View_fields",
-            field_name=         "View_fields",
-            field_property_uri= "annal:view_fields",
-            field_render_type=  "Group_Seq_Row",
-            field_value_mode=   "Value_direct",
-            field_value_type=   "annal:View_field",
-            field_value=        expect_field_data,
-            options=            self.no_options
-            )
         return
 
     # The View_view test case checks descriptions of repeat-field-groups that are not 
@@ -518,11 +464,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
             view_record_type="annal:View",
             view_edit_view=False
             )
-
-
-
-
-
         # 6th field - field list
         f5 = context_view_field(response.context, 5, 0)
         expect_field_data = (
@@ -546,8 +487,6 @@ class RecordViewEditViewTest(AnnalistTestCase):
               , 'annal:field_id':        layout.FIELD_TYPEID+'/View_fields'
               }
             ])
-
-
         if num_fields == 7:
             # New blank field, if selected
             expect_field_data.append(
@@ -883,7 +822,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_new_view(self):
         self.assertFalse(RecordView.exists(self.testcoll, "newview"))
-        f = recordview_entity_view_form_data(view_id="newview", action="new", update="NewView")
+        f = view_view_form_data(view_id="newview", action="new", update="NewView")
         u = entitydata_edit_url("new", "testcoll", layout.VIEW_TYPEID, view_id="View_view")
         r = self.client.post(u, f)
         # print r.content
@@ -897,7 +836,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_new_view_cancel(self):
         self.assertFalse(RecordView.exists(self.testcoll, "newview"))
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="newview",
             action="new", cancel="Cancel", update="Updated RecordView"
             )
@@ -912,7 +851,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_view_missing_id(self):
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="",
             action="new", update="RecordView"
             )
@@ -933,7 +872,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_post_new_view_invalid_id(self):
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="!badview", orig_id="orig_view_id", 
             action="new", update="RecordView"
             )
@@ -956,7 +895,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_copy_view(self):
         self.assertFalse(RecordView.exists(self.testcoll, "copyview"))
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="copyview", 
             orig_id="Default_view", orig_coll="_annalist_site", action="copy", 
             update="RecordView"
@@ -975,7 +914,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_post_copy_view_cancel(self):
         self.assertFalse(RecordView.exists(self.testcoll, "copyview"))
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
                 view_id="copyview", orig_id="Default_view", 
                 action="copy", cancel="Cancel", update="RecordView"
                 )
@@ -992,7 +931,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_view_missing_id(self):
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="", orig_id="Default_view", 
             action="copy", update="Updated RecordView"
             )
@@ -1014,7 +953,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_view_invalid_id(self):
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="!badview", orig_id="Default_view", action="copy", update="Updated RecordView"
             )
         u = entitydata_edit_url(
@@ -1039,7 +978,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_edit_view(self):
         self._create_record_view("editview")
         self._check_recordview_values("editview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", 
             target_record_type="annal:View",
@@ -1060,7 +999,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_edit_view_new_id(self):
         self._create_record_view("editview1")
         self._check_recordview_values("editview1")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="editview2", orig_id="editview1", 
             action="edit", 
             target_record_type="annal:View",
@@ -1082,7 +1021,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_edit_view_cancel(self):
         self._create_record_view("editview")
         self._check_recordview_values("editview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", cancel="Cancel", 
             target_record_type="annal:View",
@@ -1104,7 +1043,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._create_record_view("editview")
         self._check_recordview_values("editview")
         # Form post with ID missing
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="", orig_id="editview", 
             action="edit", 
             target_record_type="annal:View",
@@ -1133,7 +1072,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
         self._create_record_view("editview")
         self._check_recordview_values("editview")
         # Form post with invalid ID
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="!badview", orig_id="editview", action="edit", update="Updated RecordView"
             )
         u = entitydata_edit_url(
@@ -1158,7 +1097,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_edit_view_field_placement_missing(self):
         self._create_record_view("editview")
         self._check_recordview_values("editview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", update="Updated RecordView",
             field3_placement=""
@@ -1182,7 +1121,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_add_field(self):
         self._create_record_view("addfieldview")
         self._check_recordview_values("addfieldview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="addfieldview", orig_id="addfieldview", 
             action="edit",
             target_record_type="annal:View",
@@ -1215,7 +1154,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_remove_field(self):
         self._create_record_view("removefieldview")
         self._check_recordview_values("removefieldview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="removefieldview", orig_id="removefieldview", 
             action="edit",
             remove_fields=['3']
@@ -1247,7 +1186,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_remove_no_field_selected(self):
         self._create_record_view("removefieldview")
         self._check_recordview_values("removefieldview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="removefieldview", orig_id="removefieldview", 
             action="edit",
             remove_fields="no-selection"
@@ -1273,7 +1212,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_move_up_fields(self):
         self._create_record_view("movefieldview")
         self._check_recordview_values("movefieldview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="movefieldview", orig_id="movefieldview", 
             action="edit",
             target_record_type="annal:View",
@@ -1306,7 +1245,7 @@ class RecordViewEditViewTest(AnnalistTestCase):
     def test_post_move_down_fields(self):
         self._create_record_view("movefieldview")
         self._check_recordview_values("movefieldview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="movefieldview", orig_id="movefieldview", 
             action="edit",
             target_record_type="annal:View",

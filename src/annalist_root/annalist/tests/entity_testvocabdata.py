@@ -162,7 +162,7 @@ def recordvocab_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def recordvocab_entity_view_context_data(
+def vocab_view_context_data(
         coll_id="testcoll", vocab_id="", orig_id=None, action=None, 
         vocab_label=None,
         vocab_descr=None,
@@ -219,7 +219,7 @@ def recordvocab_entity_view_context_data(
         context_dict['action']      = action
     return context_dict
 
-def recordvocab_entity_view_form_data(
+def vocab_view_form_data(
         coll_id="testcoll", orig_coll=None,
         vocab_id="", orig_id=None, 
         action=None, cancel=None, close=None, edit=None, copy=None, task=None,

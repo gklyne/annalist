@@ -56,14 +56,13 @@ from entity_testtypedata    import (
 from entity_testviewdata    import (
     recordview_url, 
     recordview_create_values, recordview_values, recordview_values_add_field,
-    recordview_entity_view_form_data
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys,
     entitydata_create_values, entitydata_values, entitydata_values_add_field, 
-    entitydata_context_data,
-    entitydata_form_data, entitydata_form_add_field,
+    default_view_form_data, entitydata_form_add_field,
+    default_view_context_data,
     default_comment
     )
 from entity_testsitedata    import (
@@ -82,7 +81,7 @@ from entity_testsitedata    import (
 #
 #   -----------------------------------------------------------------------------
 
-def entitydata_dupfield_view_context_data(
+def dupfield_view_context_data(
         entity_id=None, orig_id=None, 
         coll_id="testcoll", type_id="testtype", 
         type_ref=None, type_choices=None, type_ids=[],
@@ -93,7 +92,7 @@ def entitydata_dupfield_view_context_data(
         action=None, update="Entity", view_label="RecordView testcoll/DupField_view",
         continuation_url=None
     ):
-    context_dict = entitydata_context_data(
+    context_dict = default_view_context_data(
         entity_id=entity_id, orig_id=orig_id, 
         coll_id=coll_id, type_id=type_id, 
         type_ref=type_ref, type_choices=type_choices, type_ids=type_ids,
@@ -240,7 +239,7 @@ class EntityEditDupFieldTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Check display context
-        expect_context = entitydata_dupfield_view_context_data(
+        expect_context = dupfield_view_context_data(
             coll_id="testcoll", type_id="testtype", 
             entity_id="entitydupfield", orig_id=None,
             type_ref="testtype", type_choices=self.type_ids,
@@ -265,16 +264,16 @@ class EntityEditDupFieldTest(AnnalistTestCase):
             )
         # Post form data to update entity
         u = entitydata_edit_url(
-            "edit", "testcoll", "testtype", 
-            entity_id="entitydupfield",
-            view_id="DupField_view"
-            )
-        f = entitydata_form_data(
-            entity_id="entitydupfield",
-            type_id="testtype",
-            coll_id="testcoll", 
-            action="edit", update="Updated Entity"
-            )
+                "edit", "testcoll", "testtype", 
+                entity_id="entitydupfield",
+                view_id="DupField_view"
+                )
+        f = default_view_form_data(
+                entity_id="entitydupfield",
+                type_id="testtype",
+                coll_id="testcoll", 
+                action="edit", update="Updated Entity"
+                )
         f = entitydata_form_add_field(f, "Entity_comment", 2, "Update comment 2")
         f = entitydata_form_add_field(f, "Entity_comment", 3, "Update comment 3")
         r = self.client.post(u, f)

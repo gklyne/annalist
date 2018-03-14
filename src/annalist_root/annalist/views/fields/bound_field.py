@@ -261,6 +261,7 @@ class bound_field(object):
             return self._field_description["field_value_mapper"]
         elif name == "description":
             return self._field_description
+
         elif name == "field_value_key":
             return self._key
         elif name == "context_extra_values":
@@ -269,40 +270,7 @@ class bound_field(object):
             return self.get_field_options()
         elif name == "copy":
             return self.__copy__
-        #@@REMOVE
-        # @@TODO: try to eliminate these pass-through references to field_description
-        #         (Prefer explicit reference to 'field.description')
-        # @@NOTE: the test suite currently assumes field_description values appearing directly as
-        #         members of bound_field; e.g. see entity_testfieldvalue comments about line 235.
-        # elif name in (
-        #     [ "zzrow_field_descs"         # render_fieldrow and tests
-            # , "View_fields"
-            # , "List_fields"
-            # , "group_field_descs"       # render_ref_multifields, render_repeatgroup, and tests
-            # , "field_id"
-            # , "field_name"
-            # , "field_type"
-            # , "field_label"
-            # , "field_comment"
-            # , "group_id"
-            # , "group_label"
-            # , "group_field_list"
-            # , "group_delete_label"
-            # , "group_add_label"
-            # , "field_render_type"
-            # , "field_value_mode"
-            # , "field_value_type"
-            # , "field_ref_type"
-            # , "field_ref_field"
-            # ...
-            # , "field_property_uri"
-            # , "field_placement"
-            # , "field_placeholder"
-            # , "field_tooltip"
-            # , "field_default_value"
-            # ...
-            # ]):
-            # return self._field_description.get(name, "@@bound_field.%s@@"%(name))
+
         # elif name == "row_field_descs":
         elif True:      # For diagnosing failed accesses...
             msg = "@@@@ Accessing bound_field.%s"%(name,)

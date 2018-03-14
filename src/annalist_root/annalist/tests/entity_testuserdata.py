@@ -163,7 +163,7 @@ def annalistuser_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def annalistuser_view_form_data(
+def user_view_form_data(
         coll_id="testcoll", user_id="testuser",
         user_name="Test User",
         user_uri="mailto:testuser@example.org", 
