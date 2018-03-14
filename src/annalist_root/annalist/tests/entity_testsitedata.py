@@ -386,7 +386,7 @@ site_field_subfield_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
     , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
-    , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
+    , FieldChoice("_field/Field_subfield_sel",         label="Subfield ref"        )
     ])  
 
 site_field_all_fields = (
@@ -399,7 +399,7 @@ site_defined_group_fields = (
     , FieldChoice("_field/Group_comment",              label="Help"                )
     , FieldChoice("_field/Group_field_placement",      label="Position/size"       )
     , FieldChoice("_field/Group_field_property",       label="Property URI"        )
-    , FieldChoice("_field/Group_field_sel",            label="Field id"            )
+    , FieldChoice("_field/Group_field_sel",            label="Field ref"           )
     , FieldChoice("_field/Group_fields",               label="Fields"              )
     , FieldChoice("_field/Group_id",                   label="Group Id"            )
     , FieldChoice("_field/Group_label",                label="Label"               )
@@ -420,7 +420,7 @@ site_group_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Group_field_placement",      label="Position/size"       )
     , FieldChoice("_field/Group_field_property",       label="Property URI"        )
-    , FieldChoice("_field/Group_field_sel",            label="Field id"            )
+    , FieldChoice("_field/Group_field_sel",            label="Field ref"           )
     ])
 
 site_defined_list_fields = (
@@ -432,7 +432,7 @@ site_defined_list_fields = (
     , FieldChoice("_field/List_entity_selector",       label="Selector"            )
     , FieldChoice("_field/List_field_placement",       label="Position/size"       )
     , FieldChoice("_field/List_field_property",        label="Property URI"        )
-    , FieldChoice("_field/List_field_sel",             label="Field id"            )
+    , FieldChoice("_field/List_field_sel",             label="Field ref"           )
     , FieldChoice("_field/List_fields",                label="Fields"              )
     , FieldChoice("_field/List_id",                    label="List Id"             )
     , FieldChoice("_field/List_label",                 label="Label"               )
@@ -455,7 +455,7 @@ site_list_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/List_field_placement",       label="Position/size"       )
     , FieldChoice("_field/List_field_property",        label="Property URI"        )
-    , FieldChoice("_field/List_field_sel",             label="Field id"            )
+    , FieldChoice("_field/List_field_sel",             label="Field ref"           )
     ])
 
 site_defined_type_fields = (
@@ -506,7 +506,7 @@ site_defined_view_fields = (
     , FieldChoice("_field/View_edit_view",             label="Editable view?"      )
     , FieldChoice("_field/View_field_placement",       label="Position/size"       )
     , FieldChoice("_field/View_field_property",        label="Property URI"        )
-    , FieldChoice("_field/View_field_sel",             label="Field id"            )
+    , FieldChoice("_field/View_field_sel",             label="Field ref"           )
     , FieldChoice("_field/View_fields",                label="Fields"              )
     , FieldChoice("_field/View_id",                    label="View Id"             )
     , FieldChoice("_field/View_label",                 label="Label"               )
@@ -528,7 +528,7 @@ site_view_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/View_field_placement",       label="Position/size"       )
     , FieldChoice("_field/View_field_property",        label="Property URI"        )
-    , FieldChoice("_field/View_field_sel",             label="Field id"            )
+    , FieldChoice("_field/View_field_sel",             label="Field ref"           )
     ])
 
 site_vocab_fields = (

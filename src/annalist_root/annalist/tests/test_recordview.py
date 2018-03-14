@@ -608,17 +608,17 @@ class RecordViewEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-4 columns" title="%(tooltip6f1)s">
               <div class="row show-for-small-only">
                 <div class="view-label small-12 columns">
-                  <span>Field id</span>
+                  <span>Field ref</span>
                 </div>
               </div>
               <div class="row view-value-col">
                 <div class="view-value small-12 columns">
                 """+
                   render_select_options(
-                    "View_fields__0__View_field_sel", "Field id",
-                    no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
+                    "View_fields__0__View_field_sel", "Field ref",
+                    no_selection("(field ref)") + get_site_default_entity_fields_sorted(),
                     layout.FIELD_TYPEID+"/Entity_id",
-                    placeholder="(field sel)"
+                    placeholder="(field reference)"
                     )+
                 """
                 </div>

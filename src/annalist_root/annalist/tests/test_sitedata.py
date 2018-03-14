@@ -600,7 +600,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_type_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_type_fields_sorted()
         expect_fields = (
             [ "_field/Type_id"
             , "_field/Type_label"
@@ -717,7 +717,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_list_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_list_fields_sorted()
         expect_fields = (
             [ "_field/List_id"
             , "_field/List_type"
@@ -821,7 +821,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_view_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_view_fields_sorted()
         expect_fields        = (
             [ "_field/View_id"
             , "_field/View_label"
@@ -907,7 +907,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "Group_label", "text", None)
         self.check_input_type_value(s, "Group_comment", "textarea", None)
         self.check_input_type_value(s, "Group_target_type", "text", None)
-        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_group_fields_sorted()
         expect_fields = []
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(
@@ -923,7 +923,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_group_fields_sorted()
         expect_fields = (
             [ "_field/Group_id"
             , "_field/Group_label"
@@ -1150,7 +1150,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_field_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_field_fields_sorted()
         expect_fields = (
             [ "_field/Field_id"
             , "_field/Field_render_type"
@@ -1258,7 +1258,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_vocab_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_vocab_fields_sorted()
         expect_fields = (
             [ "_field/Vocab_id"
             , "_field/Entity_label"
@@ -1369,7 +1369,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_user_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_user_fields_sorted()
         expect_fields = (
             [ "_field/User_id"
             , "_field/User_name"

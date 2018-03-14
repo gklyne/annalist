@@ -38,12 +38,12 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] replace <field>.description['field_id'] with .field_id
     - [x] replace <field>.description['field_name'] with .field_name
     - [x] replace <field>.description['field_label'] with .field_label
-    - [ ] View_field_sel change label to "Field ref".  Change field name too.
     - [x] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
     - [ ] eliminate recordtype_zzz_view_context_data, use type_view_context_data?
     - [ ] eliminate recordtype_zzz_view_form_data, use type_view_form_data?
     - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
     - [x] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
+- [x] View_field_sel change label to "Field ref".
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
     - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.

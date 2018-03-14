@@ -941,7 +941,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                     <div class="small-11 columns">
                       <div class="edit-grouprow col-head row">
                         <div class="view-label col-head small-12 medium-4 columns">
-                          <span>Subfield Id</span>
+                          <span>Subfield ref</span>
                         </div>
                         <div class="view-label col-head small-12 medium-4 columns">
                           <span>Subfield URI</span>
@@ -969,17 +969,17 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         #     <div class="small-12 medium-4 columns" title="%(tooltip12b1f1)s">
         #       <div class="row show-for-small-only">
         #         <div class="view-label small-12 columns">
-        #           <span>Field id</span>
+        #           <span>Field ref</span>
         #         </div>
         #       </div>
         #       <div class="row view-value-col">
         #         <div class="view-value small-12 columns">
         #         """+
         #           render_select_options(
-        #             "View_fields__0__Field_id", "Field id",
-        #             no_selection("(field sel)") + get_site_default_entity_fields_sorted(),
+        #             "View_fields__0__Field_sel", "Field ref",
+        #             no_selection("(field reference)") + get_site_default_entity_fields_sorted(),
         #             layout.FIELD_TYPEID+"/Entity_id",
-        #             placeholder="(field sel)"
+        #             placeholder="(field reference)"
         #             )+
         #         """
         #         </div>
@@ -1862,7 +1862,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         # Fields
         expect_subfield_choices = (
-            [ FieldChoice('', label=u'(Field Id of subfield)')
+            [ FieldChoice('', label=u'(reference to a field definition for a subfield)')
             , FieldChoice("_field/Entity_comment",
                 label="Comment", 
                 link=entity_url("testcoll", "_field", "Entity_comment")
@@ -1896,7 +1896,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 link=entity_url("testcoll", "_field", "Field_subfield_property")
                 )
             , FieldChoice("_field/Field_subfield_sel", 
-                label="Subfield Id", 
+                label="Subfield ref", 
                 link=entity_url("testcoll", "_field", "Field_subfield_sel")
                 )
             ])
@@ -1953,7 +1953,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         # Fields
         expect_subfield_choices = (
-            [ FieldChoice('', label=u'(Field Id of subfield)')
+            [ FieldChoice('', label=u'(reference to a field definition for a subfield)')
             , FieldChoice("_field/Entity_comment",
                 label="Comment", 
                 link=entity_url("testcoll", "_field", "Entity_comment")
@@ -2043,7 +2043,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.context['action'],           "edit")
         # Fields
         expect_domain_choices = (
-            [ FieldChoice('', label='(Field Id of subfield)')
+            [ FieldChoice('', label='(reference to a field definition for a subfield)')
             , FieldChoice("_field/Entity_comment",
                 label="Comment", 
                 link=entity_url("testcoll", "_field", "Entity_comment")

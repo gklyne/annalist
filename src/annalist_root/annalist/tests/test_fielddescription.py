@@ -169,18 +169,18 @@ class FieldDescriptionTest(AnnalistTestCase):
         #     ])
         expect_choices = OrderedDict(
             [ (fc.id, fc) 
-              for fc in no_selection("(field sel)") + 
+              for fc in no_selection("(field reference)") + 
                         get_site_default_entity_fields_linked("testcoll") 
             ])
         expect_field_desc = (
             { "field_id":                   "Group_field_sel"
-            , "field_name":                 "Field_id"
+            , "field_name":                 "Group_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
-            , "field_label":                "Field id"
+            , "field_label":                "Field ref"
             , "field_render_type":          "Enum_optional"
             , "field_value_mode":           "Value_direct"
             , "field_property_uri":         ANNAL.CURIE.field_id
-            , "field_placeholder":          "(field sel)"
+            , "field_placeholder":          "(field reference)"
             , "field_default_value":        ""
             , "field_placement":            expect_placement
             , "field_ref_type":             "_field"
@@ -260,7 +260,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             { "field_id":                   "View_field_sel"
             , "field_name":                 "View_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
-            , "field_label":                "Field id"
+            , "field_label":                "Field ref"
             , "field_render_type":          "Enum_optional"
             , "field_value_mode":           "Value_direct"
             , "field_property_uri":         ANNAL.CURIE.field_id

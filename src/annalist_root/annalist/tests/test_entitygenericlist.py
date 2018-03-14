@@ -465,7 +465,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             , ('Type_uri',          "Identifier",      "annal:Identifier", "Type URI")
             , ('List_choice',       "Enum_choice",     "annal:EntityRef",  "List view")
             , ('View_choice',       "View_choice",     "annal:EntityRef",  "Choose view")
-            , ('Group_field_sel',   "Enum_optional",   "annal:EntityRef",  "Field id")
+            , ('Group_field_sel',   "Enum_optional",   "annal:EntityRef",  "Field ref")
             })
         check_field_list_context_fields(self, r, field_entities)
         return

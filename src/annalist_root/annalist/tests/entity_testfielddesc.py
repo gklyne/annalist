@@ -1099,7 +1099,7 @@ f_View_fields = (
 f_View_field_sel = (
     { "field_id":               "View_field_sel"
     , "field_name":             "View_field_sel"
-    , "field_label":            "Field id"
+    , "field_label":            "Field ref"
     , "field_render_type":      "Enum_optional"
     , "field_value_mode":       "Value_direct"
     , "field_entity_type":      "annal:View_field"
@@ -1108,7 +1108,7 @@ f_View_field_sel = (
     , "field_placement":        "small:0,12;medium:0,4"
     , "field_ref_type":         "_field"
     , "field_ref_field":        None
-    , "field_placeholder":      "(field sel)"
+    , "field_placeholder":      "(field reference)"
     , "field_default_value":    ""
     , "field_choices":          no_options
     })

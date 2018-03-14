@@ -157,7 +157,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
-            , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Field ref</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Property URI</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Position/size</span> </div>'''
             # 1st field
@@ -165,7 +165,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="0" class="right" />'''
             , re.sub(r'\s+', " ", 
                 render_choice_options("View_fields__0__View_field_sel", field_choices, 
-                  "_field/Entity_id", placeholder="(field sel)"
+                  "_field/Entity_id", placeholder="(field reference)"
                 ))
             , '''<input type="text" size="64" name="View_fields__0__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -175,7 +175,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="1" class="right" />'''
             , re.sub(r'\s+', " ", 
                 render_choice_options("View_fields__1__View_field_sel", field_choices, 
-                  "_field/Entity_type", placeholder="(field sel)"
+                  "_field/Entity_type", placeholder="(field reference)"
                 ))
             , '''<input type="text" size="64" name="View_fields__1__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -185,7 +185,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="2" class="right" />'''
             , re.sub(r'\s+', " ", 
                 render_choice_options("View_fields__2__View_field_sel", field_choices, 
-                  "_field/Entity_label", placeholder="(field sel)"
+                  "_field/Entity_label", placeholder="(field reference)"
                 ))
             , '''<input type="text" size="64" name="View_fields__2__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
@@ -195,7 +195,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
               ''' value="3" class="right" />'''
             , re.sub(r'\s+', " ", 
                 render_choice_options("View_fields__3__View_field_sel", field_choices, 
-                  "_field/Entity_comment", placeholder="(field sel)"
+                  "_field/Entity_comment", placeholder="(field reference)"
                 ))
             , '''<input type="text" size="64" name="View_fields__3__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
