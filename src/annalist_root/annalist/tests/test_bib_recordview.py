@@ -318,9 +318,9 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         #       bound_field, so type prefix is stripped.  This does not apply to the field
         #       ids actually coming from the view form.
         f5 = r.context['fields'][5]
-        self.assertEqual(f5.description['field_id'],           'View_fields')
-        self.assertEqual(f5.description['field_name'],         'View_fields')
-        self.assertEqual(f5.description['field_label'],        'Fields')
+        self.assertEqual(f5.field_id,           'View_fields')
+        self.assertEqual(f5.field_name,         'View_fields')
+        self.assertEqual(f5.field_label,        'Fields')
         self.assertEqual(f5.description['field_property_uri'], "annal:view_fields")
         self.assertEqual(f5.description['field_value_mode'],   "Value_direct")
         self.assertEqual(f5.description['field_value_type'],   "annal:View_field")

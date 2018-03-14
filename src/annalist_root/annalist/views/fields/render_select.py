@@ -260,7 +260,7 @@ class Select_edit_renderer(object):
             log.exception("Exception in Select_edit_renderer.render")
             log.error("Select_edit_renderer.render: "+repr(e))
             # log.error("Field val %r"%(val,))
-            # log.error("Field name %r"%(context['field'].description['field_name'],))
+            # log.error("Field name %r"%(context['field'].field_name,))
             # log.error("Field type ref %r"%(context['field'].description['field_ref_type'],))
             # ex_type, ex, tb = sys.exc_info()
             # traceback.print_tb(tb)

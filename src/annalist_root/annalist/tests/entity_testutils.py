@@ -670,10 +670,10 @@ def check_context_field(test, context_field,
 
     This function allows certain variations for robustness of tests.
     """
-    test.assertEqual(context_field.description['field_id'],   field_id)
-    test.assertEqual(context_field.description['field_name'], field_name)
+    test.assertEqual(context_field.field_id,   field_id)
+    test.assertEqual(context_field.field_name, field_name)
     if field_label:
-        test.assertEqual(context_field.description['field_label'], field_label)
+        test.assertEqual(context_field.field_label, field_label)
     if field_placeholder:
         test.assertEqual(context_field.description['field_placeholder'], field_placeholder)
     if field_property_uri:

@@ -128,7 +128,7 @@ class FieldAliasTest(AnnalistTestCase):
         self.assertEqual(len(r.context['fields']), 3)
         # Check aliased label field
         f2 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f2.description['field_id'], 'Entity_label')
+        self.assertEqual(f2.field_id, 'Entity_label')
         self.assertEqual(f2.description['field_property_uri'], RDFS.CURIE.label)
         self.assertEqual(f2['field_value'], self.bibentity1_data['bib:title'])
         return
@@ -151,11 +151,11 @@ class FieldAliasTest(AnnalistTestCase):
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
         # 1st field
-        self.assertEqual(f0.description['field_id'], 'Entity_id')
+        self.assertEqual(f0.field_id, 'Entity_id')
         self.assertEqual(f0.description['field_property_uri'], "annal:id")
         self.assertEqual(f0['field_value'], "")
         # 2nd field
-        self.assertEqual(f1.description['field_id'], 'Entity_label')
+        self.assertEqual(f1.field_id, 'Entity_label')
         self.assertEqual(f1.description['field_property_uri'], "rdfs:label")
         self.assertEqual(f1['field_value'], "")
         # List entities (actually, just the one)
