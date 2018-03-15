@@ -762,8 +762,8 @@ def get_site_value_types():
 #   ----- All site entities (including test collection data) -----
 
 test_types = (
-    [ FieldChoice("_type/testtype",     label="RecordType testcoll/testtype")
-    , FieldChoice("_type/testtype2",    label="RecordType testcoll/testtype2")
+    [ FieldChoice("_type/testtype",     label="RecordType testcoll/_type/testtype")
+    , FieldChoice("_type/testtype2",    label="RecordType testcoll/_type/testtype2")
     ])
 
 def get_test_types_sorted():

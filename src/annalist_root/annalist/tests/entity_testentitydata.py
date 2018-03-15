@@ -595,9 +595,10 @@ def recordtype_zzz_view_form_data(
         coll_id="testcoll", 
         type_id="testtype", orig_type=None, type_uri=None,
         entity_id="", orig_id=None, 
-        action=None, cancel=None, update="Entity",
-        add_view_field=None, open_view=None, customize=None):
-    # log.info("type_view_form_data: entity_id %s"%(entity_id))
+        action=None, cancel=None, 
+        add_view_field=None, open_view=None, customize=None,
+        update="Entity",
+        ):
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)

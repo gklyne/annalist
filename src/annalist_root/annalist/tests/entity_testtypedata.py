@@ -17,7 +17,7 @@ from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist.util              import valid_id
+from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
@@ -128,8 +128,8 @@ def recordtype_create_values(
     """
     d = (
         { 'annal:type':         "annal:Type"
-        , 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
-        , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
+        , 'rdfs:label':         "%s %s/%s/%s"%(update, coll_id, "_type", type_id)
+        , 'rdfs:comment':       '%s coll %s, type %s, entity %s'%(update, coll_id, "_type", type_id)
         , 'annal:type_view':    "_view/Default_view"
         , 'annal:type_list':    "_list/Default_list"
         })
@@ -180,9 +180,10 @@ def recordtype_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def type_view_context_data(
-        coll_id="testcoll", type_id="", orig_id=None, type_ids=[],
-        action=None,
+def type_view_context_data(action=None,
+        coll_id="testcoll",
+        type_type_id="_type",
+        type_entity_id="", orig_id=None, type_ids=[],
         type_label=None,
         type_descr=None,
         type_uri=None,
@@ -195,36 +196,36 @@ def type_view_context_data(
     ):
     if type_uri is None:
         type_uri = ""
-        if type_id:
-            type_uri = recordtype_url(coll_id=coll_id, type_id=type_id)
+        if type_entity_id:
+            type_uri = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
     if type_label is None:
-        if type_id:
-            type_label = "%s %s/%s"%(update, coll_id, type_id)
+        if type_entity_id:
+            type_label = "%s %s/%s/%s"%(update, coll_id, type_type_id, type_entity_id)
         else:
-            type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
+            type_label = "%s data ... (%s/%s)"%(update, coll_id, type_entity_id)
     if type_uri is None:
-       type_uri = recordtype_url(coll_id=coll_id, type_id=type_id)
+       type_uri = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
     if continuation_url is None:
         continuation_url = entitydata_list_type_url(coll_id, layout.TYPE_TYPEID)
-    view_label = "Type definition"
-    view_title = (
-        "%s - %s - Collection %s"%(type_label, view_label, coll_id) if type_label
+    view_heading = "Type definition"
+    view_title   = (
+        "%s - %s - Collection %s"%(type_label, view_heading, coll_id) if type_label
         else
-        "%s - Collection %s"%(view_label, coll_id)
+        "%s - Collection %s"%(view_heading, coll_id)
         )
     context_dict = (
         { 'title':              view_title
-        , 'heading':            view_label
+        , 'heading':            view_heading
         , 'coll_id':            coll_id
         , 'type_id':            layout.TYPE_TYPEID
         , 'view_id':            'Type_view'
-        , 'entity_id':          type_id or ""
+        , 'entity_id':          type_entity_id or ""
         , 'orig_id':            orig_id
         , 'orig_type':          layout.TYPE_TYPEID
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
-              get_bound_field("Type_id",           type_id),                # 0 (0,0)
+              get_bound_field("Type_id",           type_entity_id),         # 0 (0,0)
               )
           , context_field_row(
               get_bound_field("Type_label",        type_label)              # 1 (1,0)
@@ -247,61 +248,81 @@ def type_view_context_data(
         context_dict['action']      = action
     return context_dict
 
-def type_view_form_data(
+def type_view_form_data(action=None, 
         coll_id="testcoll", orig_coll=None,
-        type_id="", orig_id=None, 
-        action=None, cancel=None, close=None, edit=None, copy=None, task=None,
+        type_type_id="_type", orig_type=None,
+        type_entity_id="", orig_id=None, type_entity_uri=None,
+        cancel=None, close=None, edit=None, copy=None, task=None,
+        add_view_field=None, open_view=None, customize=None,
         update="RecordType",
-        type_uri=None
         ):
     """
     Returns a request dictionary that can be used with the Django test client.
     Per Django documentation, multiple values for a key are provided as a list.
     See: https://docs.djangoproject.com/en/1.8/topics/testing/tools/#making-requests
+
+    Note: historically, some tests use Type_view to display non-type data, 
+    hence explicit type_type_id and type_entity_id parameters.
     """
     form_data_dict = (
-        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
+        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_entity_id)
+        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_entity_id)
         , 'orig_id':            'orig_type_id'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
-    if type_id is not None:
-        form_data_dict['entity_id']           = type_id
-    if type_id:
-        type_url  = recordtype_url(coll_id=coll_id, type_id=type_id)
-        type_help = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        form_data_dict['entity_id']           = type_id
-        form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
-        form_data_dict['Type_comment']        = type_help
-        form_data_dict['Type_uri']            = type_url or ""
-        form_data_dict['Type_view']           = "_view/Default_view"
-        form_data_dict['Type_list']           = "_list/Default_list"
-        form_data_dict['orig_id']             = type_id
-        form_data_dict['orig_type']           = "_type"
-        form_data_dict['orig_coll']           = coll_id
-    if orig_id:
-        form_data_dict['orig_id']   = orig_id
-    if orig_coll:
-        form_data_dict['orig_coll'] = orig_coll
     if action:
-        form_data_dict['action']    = action
-    if cancel:
-        form_data_dict['cancel']    = "Cancel"
-    elif close:
-        form_data_dict['close']     = "Close"
-    elif edit:
-        form_data_dict['edit']      = "Edit"
-    elif copy:
-        form_data_dict['copy']      = "Copy"
-    elif task:
-        form_data_dict[task]        = task
-    else:
-        form_data_dict['save']      = "Save"
-    if type_uri:
-        form_data_dict['Type_uri']                                   = type_uri
-        type_uri_rstrip = type_uri.rstrip()
+        form_data_dict['action']        = action
+    if type_type_id:
+        form_data_dict['entity_type']   = "_type/"+type_type_id
+        form_data_dict['orig_type']     = extract_entity_id(type_type_id)
+    if type_entity_id is not None:
+        form_data_dict['entity_id']     = type_entity_id
+    if type_entity_id and type_type_id:
+        entity_url  = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
+        form_data_dict['entity_id']     = type_entity_id
+        form_data_dict['Type_uri']      = entity_url or ""
+        form_data_dict['Type_view']     = "_view/Default_view"
+        form_data_dict['Type_list']     = "_list/Default_list"
+        form_data_dict['orig_id']       = type_entity_id
+        form_data_dict['orig_type']     = "_type"
+        form_data_dict['orig_coll']     = coll_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
+    if orig_type:
+        form_data_dict['orig_type']     = orig_type
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    label_id = type_entity_id or orig_id
+    if label_id and type_type_id:
+        form_data_dict['Type_label']    = (
+            '%s %s/%s/%s'%(update, coll_id, type_type_id, label_id)
+            )
+        form_data_dict['Type_comment']  = (
+            '%s coll %s, type %s, entity %s'%(update, coll_id, type_type_id, label_id)
+            )
+    if type_entity_uri:
+        form_data_dict['Type_uri']                                   = type_entity_uri
+        type_uri_rstrip = type_entity_uri.rstrip()
         form_data_dict['Type_supertype_uris__0__Type_supertype_uri'] = type_uri_rstrip+"/super1"
         form_data_dict['Type_supertype_uris__1__Type_supertype_uri'] = type_uri_rstrip+"/super2"
+    if cancel:
+        form_data_dict['cancel']            = "Cancel"
+    elif close:
+        form_data_dict['close']             = "Close"
+    elif edit:
+        form_data_dict['edit']              = "Edit"
+    elif copy:
+        form_data_dict['copy']              = "Copy"
+    elif add_view_field:
+        form_data_dict['add_view_field']    = add_view_field
+    elif open_view:
+        form_data_dict['open_view']         = open_view
+    elif customize:
+        form_data_dict['customize']         = customize
+    elif task:
+        form_data_dict[task]                = task
+    else:
+        form_data_dict['save']      = "Save"
     return form_data_dict
 
 #   -----------------------------------------------------------------------------

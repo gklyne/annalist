@@ -631,9 +631,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     def create_new_type(self, coll_id, type_id):
         self.assertFalse(RecordType.exists(self.testcoll, type_id))
-        f = type_view_form_data(
-            coll_id=coll_id, type_id=type_id, action="new", update="RecordType",
-            type_uri="test:"+type_id
+        f = type_view_form_data(action="new", 
+            coll_id=coll_id, 
+            type_entity_id=type_id, type_entity_uri="test:"+type_id,
+            update="RecordType"
             )
         u = entitydata_edit_url("new", coll_id, type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)

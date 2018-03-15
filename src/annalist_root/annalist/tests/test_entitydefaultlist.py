@@ -103,11 +103,11 @@ class EntityDefaultListViewTest(AnnalistTestCase):
             )
         self.type_ids = get_site_types_linked("testcoll")
         self.type_ids.append(FieldChoice("_type/testtype", 
-                label="RecordType testcoll/testtype",
+                label="RecordType testcoll/_type/testtype",
                 link=recordtype_url("testcoll", "testtype")
             ))
         self.type_ids.append(FieldChoice("_type/testtype2", 
-                label="RecordType testcoll/testtype2",
+                label="RecordType testcoll/_type/testtype2",
                 link=recordtype_url("testcoll", "testtype2")
             ))
         self.list_ids = get_site_lists_linked("testcoll")
@@ -165,7 +165,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
                     <a href="%(base)s/c/testcoll/d/testtype/entity1/%(cont)s">entity1</a>
                   </div>
                   <div class="view-value small-2 columns" %(tooltip2)s>
-                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/testtype</a>
+                    <a href="/testsite/c/testcoll/d/_type/testtype/%(cont)s">RecordType testcoll/_type/testtype</a>
                   </div>
                   <div class="view-value small-7 columns" %(tooltip3)s>
                     <span>Entity testcoll/testtype/entity1</span>
@@ -222,8 +222,8 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 6)
         entity_fields = (
-            [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/testtype"}
-            , {'entity_type_id': "_type",     'annal:id': "testtype2", 'rdfs:label': "RecordType testcoll/testtype2"}
+            [ {'entity_type_id': "_type",     'annal:id': "testtype",  'rdfs:label': "RecordType testcoll/_type/testtype"}
+            , {'entity_type_id': "_type",     'annal:id': "testtype2", 'rdfs:label': "RecordType testcoll/_type/testtype2"}
             , {'entity_type_id': "testtype",  'annal:id': "entity1",   'rdfs:label': "Entity testcoll/testtype/entity1"}
             , {'entity_type_id': "testtype",  'annal:id': "entity2",   'rdfs:label': "Entity testcoll/testtype/entity2"}
             , {'entity_type_id': "testtype",  'annal:id': "entity3",   'rdfs:label': "Entity testcoll/testtype/entity3"}

@@ -394,7 +394,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
         self.assertTrue(RecordType.exists(newcoll, "testtype", altscope="all"))
         testtype = RecordType.load(newcoll, "testtype", altscope="all")
-        self.assertEquals(testtype["rdfs:label"], "RecordType testcoll/testtype")
+        self.assertEquals(testtype["rdfs:label"], "RecordType testcoll/_type/testtype")
         return
 
     def test_alt_parent_inherit_site(self):

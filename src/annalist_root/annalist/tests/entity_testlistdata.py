@@ -231,7 +231,7 @@ def list_view_context_data(
             [ FieldChoice("", label="(default entity type)")] +
             get_site_types_linked("testcoll") +
             [ FieldChoice("_type/testtype", 
-                label="RecordType testcoll/testtype",
+                label="RecordType testcoll/_type/testtype",
                 link=recordtype_url("testcoll", "testtype")
                 )]
             )

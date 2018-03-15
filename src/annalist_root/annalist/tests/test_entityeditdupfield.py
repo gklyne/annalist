@@ -153,7 +153,7 @@ class EntityEditDupFieldTest(AnnalistTestCase):
         # Other data
         self.type_ids = get_site_types_linked("testcoll")
         self.type_ids.append(FieldChoice("_type/testtype", 
-                label="RecordType testcoll/testtype",
+                label="RecordType testcoll/_type/testtype",
                 link=recordtype_url("testcoll", "testtype")
             ))
         # Login and permissions

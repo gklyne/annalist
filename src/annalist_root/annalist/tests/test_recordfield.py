@@ -274,7 +274,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             [FieldChoice("", label="(no type selected)")] +
             self.type_options +
             [ FieldChoice("_type/testtype", 
-                label="RecordType testcoll/testtype", 
+                label="RecordType testcoll/_type/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
                 )
             ])

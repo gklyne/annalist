@@ -239,7 +239,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self.type_options   = get_site_types_linked("testcoll")
         self.type_options.append(
             FieldChoice("_type/testtype", 
-                label="RecordType testcoll/testtype", 
+                label="RecordType testcoll/_type/testtype", 
                 link=entity_url("testcoll", "_type", "testtype")
             ))
         self.view_options   = get_site_views_linked("testcoll")
