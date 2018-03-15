@@ -801,7 +801,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Test context
         self._check_context_fields(r, 
             action="new",
-            type_id="", orig_type_id="orig_type_id",
+            type_id="",
             type_uri=None,
             type_supertype_uris=[],
             )
@@ -879,7 +879,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Test context
         self._check_context_fields(r, 
             action="copy",
-            type_id="", orig_type_id="orig_type_id",
+            type_id="",
             type_uri=None,
             type_supertype_uris=[],
             update="Updated RecordType"
@@ -996,7 +996,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Test context for re-rendered form
         self._check_context_fields(r, 
             action="edit",
-            type_id="", orig_type_id="orig_type_id",
+            type_id="",
             type_uri=None,
             type_supertype_uris=[],
             update="Updated RecordType"

@@ -34,13 +34,13 @@ See also: https://www.divio.com/en/blog/documentation/
         - [x] test_recordview.py, entity_testviewdata
     - [x] rename *_context_data contruction methods
     - [x] rename *_form_data contruction methods
-- [ ] Test code general cleanup
+- [x] Test code general cleanup
     - [x] replace <field>.description['field_id'] with .field_id
     - [x] replace <field>.description['field_name'] with .field_name
     - [x] replace <field>.description['field_label'] with .field_label
     - [x] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
-    - [ ] eliminate recordtype_zzz_view_context_data, use type_view_context_data?
-    - [ ] eliminate recordtype_zzz_view_form_data, use type_view_form_data?
+    - [x] eliminate recordtype_zzz_view_context_data, use type_view_context_data
+    - [x] eliminate recordtype_zzz_view_form_data, use type_view_form_data
     - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
     - [x] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
 - [x] View_field_sel change label to "Field ref".

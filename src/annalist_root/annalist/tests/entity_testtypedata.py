@@ -182,7 +182,7 @@ def recordtype_read_values(
 
 def type_view_context_data(action=None,
         coll_id="testcoll",
-        type_type_id="_type",
+        type_type_id=layout.TYPE_TYPEID, orig_type=None,
         type_entity_id="", orig_id=None, type_ids=[],
         type_label=None,
         type_descr=None,
@@ -190,7 +190,7 @@ def type_view_context_data(action=None,
         type_supertype_uris=[],
         type_view="_view/Default_view",
         type_list="_list/Default_list",
-        type_aliases="",
+        type_aliases=[],
         update="RecordType",
         continuation_url=None
     ):
@@ -206,7 +206,7 @@ def type_view_context_data(action=None,
     if type_uri is None:
        type_uri = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
     if continuation_url is None:
-        continuation_url = entitydata_list_type_url(coll_id, layout.TYPE_TYPEID)
+        continuation_url = entitydata_list_type_url(coll_id, type_type_id)
     view_heading = "Type definition"
     view_title   = (
         "%s - %s - Collection %s"%(type_label, view_heading, coll_id) if type_label
@@ -217,11 +217,10 @@ def type_view_context_data(action=None,
         { 'title':              view_title
         , 'heading':            view_heading
         , 'coll_id':            coll_id
-        , 'type_id':            layout.TYPE_TYPEID
-        , 'view_id':            'Type_view'
+        , 'type_id':            type_type_id
+        , 'view_id':            "Type_view"
         , 'entity_id':          type_entity_id or ""
-        , 'orig_id':            orig_id
-        , 'orig_type':          layout.TYPE_TYPEID
+        , 'orig_type':          orig_type or type_type_id
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
@@ -244,6 +243,10 @@ def type_view_context_data(action=None,
           , get_bound_field("Type_aliases",        type_aliases)            # 7 (6)
           ]
         })
+    if orig_id is not None:
+        context_dict['orig_id']     = orig_id
+    elif action != "new":
+        context_dict['orig_id']     = type_entity_id
     if action:  
         context_dict['action']      = action
     return context_dict
@@ -267,8 +270,7 @@ def type_view_form_data(action=None,
     form_data_dict = (
         { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_entity_id)
         , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_entity_id)
-        , 'orig_id':            'orig_type_id'
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
+        , 'continuation_url':   entitydata_list_type_url(coll_id, type_type_id)
         })
     if action:
         form_data_dict['action']        = action
@@ -277,14 +279,13 @@ def type_view_form_data(action=None,
         form_data_dict['orig_type']     = extract_entity_id(type_type_id)
     if type_entity_id is not None:
         form_data_dict['entity_id']     = type_entity_id
+        form_data_dict['orig_id']       = type_entity_id
     if type_entity_id and type_type_id:
         entity_url  = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
         form_data_dict['entity_id']     = type_entity_id
         form_data_dict['Type_uri']      = entity_url or ""
         form_data_dict['Type_view']     = "_view/Default_view"
         form_data_dict['Type_list']     = "_list/Default_list"
-        form_data_dict['orig_id']       = type_entity_id
-        form_data_dict['orig_type']     = "_type"
         form_data_dict['orig_coll']     = coll_id
     if orig_coll:
         form_data_dict['orig_coll']     = orig_coll

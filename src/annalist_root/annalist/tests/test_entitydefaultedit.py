@@ -49,6 +49,8 @@ from entity_testtypedata    import (
     recordtype_url,
     recordtype_edit_url,
     recordtype_create_values,
+    type_view_context_data, 
+    type_view_form_data,
     )
 from entity_testentitydata  import (
     recorddata_dir,  entitydata_dir,
@@ -57,7 +59,6 @@ from entity_testentitydata  import (
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     default_view_context_data, 
     default_view_form_data, entitydata_delete_confirm_form_data,
-    recordtype_zzz_view_form_data,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
@@ -372,9 +373,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Checks logic for creating an entity which may require creation of new recorddata
         # Create new type
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
-        f = recordtype_zzz_view_form_data(
-            coll_id="testcoll", type_id="_type", entity_id="newtype",
-            action="new"
+        f = type_view_form_data(action="new",
+            coll_id="testcoll", 
+            type_entity_id="newtype",            
             )
         u = entitydata_edit_url("new", "testcoll", type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)

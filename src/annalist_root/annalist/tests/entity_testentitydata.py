@@ -547,101 +547,6 @@ def entitydata_delete_confirm_form_data(entity_id=None, search=None):
 
 #   -----------------------------------------------------------------------------
 #
-#   ----- Entity data in Type_view
-#
-#   -----------------------------------------------------------------------------
-
-# Used in test_entitygenericedit - move?
-
-def recordtype_zzz_view_context_data(
-        entity_id=None, orig_id=None, coll_id="testcoll", type_id="testtype", type_uri=None, type_ids=[],
-        action=None, update="Entity", view_label="Type definition"
-    ):
-    if entity_id:
-        entity_label = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
-        entity_descr = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
-    else:
-        entity_label = '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        entity_descr = '%s description ... (%s/%s)'%(update, coll_id, type_id)
-    context_dict = (
-        { 'title':              "%s - %s - Collection %s"%(entity_label, view_label, coll_id)
-        , 'heading':            view_label
-        , 'coll_id':            coll_id
-        , 'type_id':            type_id
-        , 'orig_id':            'orig_entity_id'
-        , 'continuation_url':   entitydata_list_type_url(coll_id, type_id)
-        , 'fields':
-          [ context_field_row(
-              get_bound_field("Type_id", entity_id)                 # 0 (0,0)
-              )
-          , context_field_row(
-              get_bound_field("Type_label", entity_label)           # 1 (1,0)
-              )
-          , context_field_row(
-              get_bound_field("Type_comment", entity_descr)         # 2 (2,0)
-              )
-          , context_field_row(
-              get_bound_field("Type_uri", type_uri)                 # 3 (2,0)
-              )
-          ]
-        })
-    if orig_id is not None:
-        context_dict['orig_id']     = orig_id
-    if action:  
-        context_dict['action']      = action
-    return context_dict
-
-def recordtype_zzz_view_form_data(
-        coll_id="testcoll", 
-        type_id="testtype", orig_type=None, type_uri=None,
-        entity_id="", orig_id=None, 
-        action=None, cancel=None, 
-        add_view_field=None, open_view=None, customize=None,
-        update="Entity",
-        ):
-    form_data_dict = (
-        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
-        , 'orig_id':            'orig_entity_id'
-        , 'continuation_url':   entitydata_list_type_url(coll_id, orig_type or type_id)
-        })
-    if entity_id is not None:
-        form_data_dict['entity_id']       = entity_id
-    if entity_id and type_id:
-        type_url = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
-        type_url = type_url.replace("___", entity_id)  # Preserve bad type in form data
-        form_data_dict['entity_id']       = entity_id
-        form_data_dict['Type_uri']        = "" # type_url
-        form_data_dict['orig_id']         = entity_id
-    if orig_id:
-        form_data_dict['orig_id']         = orig_id
-    label_id = entity_id or orig_id
-    if label_id and type_id:
-        form_data_dict['Type_label']      = '%s %s/%s/%s'%(update, coll_id, type_id, label_id)
-        form_data_dict['Type_comment']    = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, label_id)
-    if type_id:
-        form_data_dict['entity_type']     = "_type/"+type_id
-        form_data_dict['orig_type']       = extract_entity_id(type_id)
-    if type_uri:
-        form_data_dict['Type_uri']        = type_uri
-    if orig_type:
-        form_data_dict['orig_type']       = orig_type
-    if action:
-        form_data_dict['action']          = action
-    if cancel:
-        form_data_dict['cancel']          = "Cancel"
-    elif add_view_field:
-        form_data_dict['add_view_field']  = add_view_field
-    elif open_view:
-        form_data_dict['open_view']       = open_view
-    elif customize:
-        form_data_dict['customize']       = customize
-    else:
-        form_data_dict['save']            = 'Save'
-    return form_data_dict
-
-#   -----------------------------------------------------------------------------
-#
 #   ----- Entity list
 #
 #   -----------------------------------------------------------------------------
@@ -652,21 +557,6 @@ def entitylist_form_data(
         continuation_url=None):
     """
     Form data from entity list form submission
-
-    list_form_data = (
-        { 'search_for':         ""
-        , 'search':             "Find"
-        , 'list_choice':        "_list/Default_list"
-        , 'list_view':          "View"
-        , 'entity_select':      ["{{entity.entity_id}}"]
-        , 'new':                "New"
-        , 'copy':               "Copy"
-        , 'edit':               "Edit"
-        , 'delete':             "Delete"
-        , 'default_view':       "Set default"
-        , 'customize':          "Customize"
-        , 'continuation_url':   "{{continuation_url}}"
-        })
     """
     form_actions = (
         { 'search':             "Find"
