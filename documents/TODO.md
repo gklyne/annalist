@@ -18,6 +18,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 See also: https://www.divio.com/en/blog/documentation/
 
 
+# Feedback
+
+* https://github.com/gklyne/annalist/issues/40
+
+
 # Version 0.5.9, towards 0.5.10
 
 - [x] Flush collection caches on loading customize page rather than view page
@@ -68,22 +73,10 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Provide content for the links in the page footer
 
 (Sub-release?)
 
-- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
-    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
-- [ ] Make it easier to create subtype + view + list...
-    - Get some experience with initial solution; (previous release)
-    - Test cases for subtype creation stages
-- [ ] With implementation of subproperties, are per-type field aliases still needed?
-    - Possible per-type subproperties?
-    - Maybe use these for property updates rather than looking for existing property usage?
-    - Is this an issue?  Need some experience here.
-- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
-    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
-    - If absolute URI is stored, can local reference be discovered for hyperlinking?
-    - I think evolvability is served by making these exchangeable
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
@@ -106,7 +99,6 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
-- [ ] Provide content for the links in the page footer
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -119,7 +111,8 @@ See also: https://www.divio.com/en/blog/documentation/
     - etc.
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
-- [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+- [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+    - Started moving toward paraneterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
@@ -185,6 +178,16 @@ Technical debt:
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 - [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
+- [ ] Final elimination of RecordGroup (field group) entities
+    - [ ] Remove class RecordGroup
+    - [ ] eliminate _field/Field_groupref instances
+    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
+    - [ ] eliminate all Group_* fields
+    - [ ] Remove field group type URI from annal: namespace
+    - [ ] eliminate _type/_group
+    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+    - [ ] Clean up dead code:
+        - [ ] test_recordfield.py
 - [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
 
 Data collection definitions:
@@ -253,20 +256,25 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
+- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
+    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
+- [ ] Make it easier to create subtype + view + list...
+    - Get some experience with initial solution; (previous release)
+    - Test cases for subtype creation stages
+- [ ] With implementation of subproperties, are per-type field aliases still needed?
+    - Possible per-type subproperties?
+    - Maybe use these for property updates rather than looking for existing property usage?
+    - Is this an issue?  Need some experience here.
+    - NOTE: system attempts to preserve subproperties used; aiases are migrated.
+- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
+    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
+    - If absolute URI is stored, can local reference be discovered for hyperlinking?
+    - I think evolvability is served by making these exchangeable
 - [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
     - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
-- [ ] Final elimination of RecordGroup (field group) entities
-    - [ ] Remove class RecordGroup
-    - [ ] eliminate _field/Field_groupref instances
-    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
-    - [ ] eliminate all Group_* fields
-    - [ ] Remove field group type URI from annal: namespace
-    - [ ] eliminate _type/_group
-    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
-    - [ ] Clean up dead code:
-        - [ ] test_recordfield.py
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
 - [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
@@ -291,7 +299,7 @@ Notes for Future TODOs:
     - tried investigating EUDat, which looks promising but fails with invalid certificate
     - see also notes from discussion with Matthew Dovey at CrossRef event in Oxford (EOSC?)
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
-- [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
+- [ ] Views providing different perspectives on data; e.g. artifact centred, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
 - [ ] It would be nice if link field tooltips describe what they link to.
@@ -312,7 +320,7 @@ Notes for Future TODOs:
     - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 - [ ] Think about extending field descriptions to include:
-    - [ ] superproperty URIs (similar to supertype URIs in types)
+    - [x] superproperty URIs (similar to supertype URIs in types)
     - [ ] rules that allow inferences of multiple RDF statements; e.g.
         ?a isRecordingOf ?b
         => 
@@ -339,7 +347,6 @@ Notes for Future TODOs:
 - [ ] Rationalize common fields to reduce duplication?
     - but note that fields may use different comment/help text, so maybe not.
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
-- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
@@ -361,12 +368,6 @@ Notes for Future TODOs:
     - [ ] internal options to save history in per-collection git repo
 - [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility for that collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
     - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
-
-
-
-# Feedback
-
-* https://github.com/gklyne/annalist/issues/40
 
 
 ----
