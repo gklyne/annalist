@@ -51,10 +51,10 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] View_field_sel change label to "Field ref".
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
     - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URL will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ] Remove corresponding special case code in bound_field.
+- [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
 - [ ] Rename "annal:record_type" -> "annal:list_entity_type" (for list target type)
+    - [ ] Find all references in code and sitedata
+    - [ ] Add migraton inRecordList
 - [ ] In entityedit, context 'record_type' looks wrong.  see comment ~line 64 
 - [ ] Consider getting rid of "annal:record_type"; rename use in View and List
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.

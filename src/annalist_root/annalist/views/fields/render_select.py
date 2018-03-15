@@ -32,10 +32,6 @@ from django.template        import Template, Context
 #
 #   ----------------------------------------------------------------------------
 
-# @@TODO: remove references to field value and special case code in bound_field.
-#         the continuation URI will need to be provided separately in the context
-#         and mentioned separately in the templates
-
 edit_options = (
     '''{% for opt in field_options %} '''+
       '''{% if opt.value == encoded_field_value %} '''+
@@ -136,7 +132,7 @@ edit_entitytype = (
 
 view_view_choice = (
     """<!-- field/annalist_view_view_choice.html -->
-    <span>{{field.field_value}}</span>
+    <span>{{encoded_field_value}}</span>
     """)
 
 edit_view_choice = (

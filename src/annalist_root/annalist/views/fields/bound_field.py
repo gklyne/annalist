@@ -38,7 +38,7 @@ class MockFieldDescription(object):
     """
     Simplified field description for local testing.
     (Somehow, can't get it working with real FieldDescription...)
-    (I think it maybe a problem with import cycles...)
+    (I think it may be a problem with import cycles...)
     """
 
     def __init__(self, coll, recordfield):
@@ -178,11 +178,6 @@ class bound_field(object):
         self._targetvals        = None
         self._key               = field_description.get_field_property_uri()
         self._extras            = context_extra_values
-        # eid = entityvals.get('entity_id', "@@bound_field.__init__@@")
-        # log.log(settings.TRACE_FIELD_VALUE,
-        #     "bound_field: field_id %s, entity_id %s, value_key %s, value %s"%
-        #     (field_description['field_id'], eid, self._key, self['field_value'])
-        #     )
         return
 
     def __copy__(self):
@@ -223,21 +218,11 @@ class bound_field(object):
         elif name == "field_value_key":
             return self.get_field_value_key()
         elif name == "field_value_link":
-            return self.get_field_link()
-        elif name == "field_value_link_continuation":
-            return self.get_link_continuation(self.get_field_link())
-
+            return self.get_field_selection_link()
         elif name in ["target_value", "field_view_value"]:
             return self.get_target_value()
         elif name == "target_value_link":
             return self.get_target_link()
-        elif name == "target_value_link_continuation":
-            return self.get_link_continuation(self.get_target_link())
-
-        elif name == "entity_link_continuation":
-            return self.entity_link+self.get_continuation_param()
-        elif name == "entity_type_link_continuation":
-            return self.entity_type_link+self.get_continuation_param()
         elif name == "continuation_url":
             return self.get_continuation_url()
         elif name == "continuation_param":
@@ -313,9 +298,10 @@ class bound_field(object):
         #             return altkey
         return self._field_description.get_field_value_key(self._entityvals)
 
-    def get_field_link(self):
-        # Return link corresponding to field value that is a selection from an enumeration of entities
-        # (or some other value with an associated link), or None
+    def get_field_selection_link(self):
+        # Return link corresponding to field value that is a selection from 
+        # an enumeration of entities (or some other value with an associated link),
+        # or None
         choices = self._field_description['field_choices']  # OrderedDict
         v       = self.field_value
         if choices and v in choices:
@@ -376,13 +362,19 @@ class bound_field(object):
         """
         Return link corresponding to target value, or None.
 
-        The target value is treated as a relative reference relative to the field_link value.
-        If the target value is itself an absolute URI, it will be used as-is.
+        The target value is treated as a relative reference relative to 
+        the field_link value.  If the target value is itself an absolute URI, 
+        it will be used as-is.
 
-        If the target value is a dictionary structure created by a URIImport or FileUpload field, 
-        the resulting value links to the imported data object.
+        If the target value is a dictionary structure created by a URIImport or 
+        FileUpload field, the resulting value links to the imported data object.
+
+        If the field is a reference to values of another type (i.e. a selection 
+        field), then the field field value is used to determine the selected entity, 
+        and the entity link is used as the base URI against which the target value 
+        is resolved (the entity URI referencing a directory or container).
         """
-        target_base  = self.get_field_link() or self.entity_link
+        target_base  = self.get_field_selection_link() or self.entity_link
         target_value = self.get_target_value()
         # log.debug("get_target_link: base %r, value %r"%(target_base, target_value))
         if target_base and target_value:
@@ -493,18 +485,14 @@ class bound_field(object):
         yield "entity_id"
         yield "entity_type_id"
         yield "entity_link"
-        yield "entity_link_continuation"
         yield "entity_type_link"
-        yield "entity_type_link_continuation"
         yield "field_edit_value"
         yield "field_view_value"
         yield "field_value"
         yield "field_value_key"
         yield "field_value_link"
-        yield "field_value_link_continuation"
         yield "target_value"
         yield "target_value_link"
-        yield "target_value_link_continuation"
         yield "continuation_url"
         yield "continuation_param"
         yield "description"
