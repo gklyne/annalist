@@ -76,6 +76,10 @@ class RecordList(EntityData):
             entitydata[fkey] = make_type_entity_id(
                 ftype, extract_entity_id(entitydata[fkey])
                 )
+        migration_map = (
+            [ (ANNAL.CURIE.record_type, ANNAL.CURIE.list_entity_type)
+            ])
+        entitydata = self._migrate_values_map_field_names(migration_map, entitydata)
         if ANNAL.CURIE.list_fields in entitydata:
             for f in entitydata[ANNAL.CURIE.list_fields]:
                 field_id = extract_entity_id(f[ANNAL.CURIE.field_id])
@@ -83,6 +87,10 @@ class RecordList(EntityData):
                     f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_render_type"
                 if field_id == "Field_type":
                     f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/Field_value_type"
+                if field_id == "View_target_type":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/View_entity_type"
+                if field_id == "List_target_type":
+                    f[ANNAL.CURIE.field_id] = layout.FIELD_TYPEID+"/List_entity_type"
         # Return result
         return entitydata
 

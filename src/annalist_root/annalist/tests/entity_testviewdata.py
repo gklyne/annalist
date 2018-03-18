@@ -98,7 +98,7 @@ def recordview_edit_url(action=None, coll_id=None, view_id=None):
 #
 #   -----------------------------------------------------------------------------
 
-def recordview_value_keys(view_uri=False, target_record_type=True):
+def recordview_value_keys(view_uri=False, view_entity_type=True):
     keys = set(
         [ 'annal:id', 'annal:type_id'
         , 'annal:type'
@@ -109,19 +109,19 @@ def recordview_value_keys(view_uri=False, target_record_type=True):
         ])
     if view_uri:
         keys.add('annal:uri')
-    if target_record_type or (target_record_type == ""):
-        keys.add('annal:record_type')
+    if view_entity_type or (view_entity_type == ""):
+        keys.add('annal:view_entity_type')
     return keys
 
-def recordview_load_keys(view_uri=False, target_record_type=True):
+def recordview_load_keys(view_uri=False, view_entity_type=True):
     return (
-        recordview_value_keys(view_uri=view_uri, target_record_type=target_record_type) | 
+        recordview_value_keys(view_uri=view_uri, view_entity_type=view_entity_type) | 
         {"@id", '@type', '@context'}
         )
 
 def recordview_create_values(
         coll_id="testcoll", view_id="testview", update="RecordView", view_uri=None, 
-        target_record_type="annal:Test_default",
+        view_entity_type="annal:Test_default",
         num_fields=4, field3_placement="small:0,12",
         extra_field=None, extra_field_uri=None
         ):
@@ -132,7 +132,7 @@ def recordview_create_values(
         { 'annal:type':         "annal:View"
         , 'rdfs:label':         "%s %s/%s"%(update, coll_id, view_id)
         , 'rdfs:comment':       "%s help for %s in collection %s"%(update, view_id, coll_id)
-        , 'annal:record_type':  target_record_type
+        , 'annal:view_entity_type':  view_entity_type
         , 'annal:open_view':    True
         , 'annal:view_fields':
           [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
@@ -168,12 +168,12 @@ def recordview_create_values(
 def recordview_values(
         coll_id="testcoll", view_id="testtype", view_uri=None, 
         update="RecordView", hosturi=TestHostUri, 
-        target_record_type="annal:Test_default",
+        view_entity_type="annal:Test_default",
         num_fields=4, field3_placement="small:0,12",
         extra_field=None, extra_field_uri=None):
     d = recordview_create_values(
         coll_id, view_id, update=update, view_uri=view_uri,
-        target_record_type=target_record_type,
+        view_entity_type=view_entity_type,
         num_fields=num_fields, field3_placement=field3_placement,
         extra_field=extra_field, extra_field_uri=extra_field_uri
         ).copy()
@@ -187,11 +187,11 @@ def recordview_values(
 
 def recordview_read_values(
         coll_id="testcoll", view_id="testview", view_uri=None, 
-        target_record_type="annal:Test_default",
+        view_entity_type="annal:Test_default",
         update="RecordView", hosturi=TestHostUri):
     d = recordview_values(
         coll_id, view_id, view_uri=view_uri, 
-        target_record_type=target_record_type,
+        view_entity_type=view_entity_type,
         update=update, hosturi=hosturi
         ).copy()
     d.update(
@@ -252,8 +252,8 @@ view_view_fields_list = (
       , ANNAL.CURIE.property_uri:       RDFS.CURIE.comment
       , ANNAL.CURIE.field_placement:    "small:0,12"
       }
-    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_target_type"
-      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.record_type
+    , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_entity_type"
+      , ANNAL.CURIE.property_uri:       ANNAL.CURIE.view_entity_type
       , ANNAL.CURIE.field_placement:    "small:0,12"
       }
     , { ANNAL.CURIE.field_id:           layout.FIELD_TYPEID+"/View_edit_view"
@@ -289,7 +289,7 @@ def view_view_context_data(
         view_uri=None,
         view_label=None,
         view_descr=None,
-        view_record_type="annal:Default_type",
+        view_entity_type="annal:Default_type",
         view_edit_view=True,
         view_fields=None, 
         add_field=None, remove_field=None, move_up=None, move_down=None,
@@ -357,7 +357,7 @@ def view_view_context_data(
               get_bound_field("View_comment",      view_descr)              # 2 (2,0)
               )
           , context_field_row(
-              get_bound_field("View_target_type",  view_record_type)        # 3 (3,0)
+              get_bound_field("View_entity_type",  view_entity_type)        # 3 (3,0)
               )
           , context_field_row(
               get_bound_field("View_edit_view",    view_edit_view)          # 4 (4,0)
@@ -391,7 +391,7 @@ def view_view_form_data(
         coll_id="testcoll", orig_coll=None,
         view_id="", orig_id=None, 
         action=None, cancel=None, 
-        target_record_type="annal:View",
+        view_entity_type="annal:View",
         field3_placement="small:0,12",
         extra_field=None,       # Extra field id for some tests (e.g. dup property uri)
         extra_field_uri=None,   # Extra field property URI to add in
@@ -405,7 +405,7 @@ def view_view_form_data(
     form_data_dict = (
         { 'View_label':         '%s data ... (%s/%s)'%(update, coll_id, view_id)
         , 'View_comment':       '%s description ... (%s/%s)'%(update, coll_id, view_id)
-        , 'View_target_type':   target_record_type
+        , 'View_entity_type':   view_entity_type
         , 'View_edit_view':     "Yes"
         , 'orig_id':            'orig_view_id'
         , 'record_type':        'annal:View'

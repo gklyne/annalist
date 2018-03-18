@@ -124,11 +124,11 @@ class RecordField(EntityData):
                     # raise Annalist_Error(msg)
                 else:
                     field_value_type = entitydata[ANNAL.CURIE.field_value_type]
-                    group_value_type = group_obj[ANNAL.CURIE.record_type]
-                    if field_value_type and group_value_type and field_value_type != group_value_type:
+                    group_entity_type = group_obj[ANNAL.CURIE.group_entity_type]
+                    if field_value_type and group_entity_type and field_value_type != group_entity_type:
                         log.warning(
-                            "Group %s value type %s differs from field %s value type %s"%
-                            (group_id, group_value_type, field_id, field_value_type)
+                            "Group %s entity type %s differs from field %s value type %s"%
+                            (group_id, group_entity_type, field_id, field_value_type)
                             )
                     entitydata[ANNAL.CURIE.field_fields] = group_obj[ANNAL.CURIE.group_fields]
             del entitydata[ANNAL.CURIE.group_ref]

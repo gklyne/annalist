@@ -1,10 +1,10 @@
-{ "@type":              ["annal:View"]
-, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
-, "annal:id":           "_initial_values"
-, "annal:type_id":      "_view"
-, "rdfs:label":         ""
-, "rdfs:comment":       ""
-, "annal:record_type":  ""
+{ "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "_initial_values"
+, "annal:type_id":          "_view"
+, "rdfs:label":             ""
+, "rdfs:comment":           ""
+, "annal:view_entity_type": ""
 , "annal:open_view":    true
 , "annal:view_fields":
   [ { "annal:field_id":         "_field/Entity_id"

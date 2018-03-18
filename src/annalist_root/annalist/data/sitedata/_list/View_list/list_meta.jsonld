@@ -9,7 +9,7 @@
 , "annal:display_type":         "_enum_list_type/List"
 , "annal:default_view":         "_view/View_view"
 , "annal:default_type":         "_type/_view"
-, "annal:record_type":          "annal:View"
+, "annal:list_entity_type":     "annal:View"
 , "annal:list_entity_selector": "'annal:View' in [@type]"
 , "annal:list_fields":
   [ { "annal:field_id":             "_field/Entity_id"

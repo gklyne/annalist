@@ -147,18 +147,17 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Properties in list JSON
     , "entity_list"
     # Properties in internal entities
-    , "id", "type_id", "type"
-    , "url", "uri", "record_type"
+    , "id", "type_id", "type", "url", "uri"
     # Types, Views, lists and field groups
     , "default_type", "default_view"
     , "supertype_uri"
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
-    , "open_view", "view_fields"
+    , "view_entity_type", "open_view", "view_fields"
     , "edit_task_buttons", "view_task_buttons"
     , "button_id", "button_label", "button_help"
-    , "list_entity_selector", "list_fields"
-    , "group_fields"
+    , "list_entity_type", "list_entity_selector", "list_fields"
+    , "group_entity_type", "group_fields"
     , "field_id"
     # Enumerated value terms
     # , "enum_uri"
@@ -179,7 +178,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Deprecated properties - used in entity migration
     , "Slug", "RepeatGroup", "RepeatGroupRow" 
     , "options_typeref", "restrict_values", "target_field"
-    , "field_target_type", "comment"
+    , "record_type", "field_target_type", "comment"
     , "supertype_uris"
     , "user_permissions"
     ])

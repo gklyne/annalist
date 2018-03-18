@@ -138,6 +138,7 @@ def recordlist_create_values(
         , "annal:display_type":         "_enum_list_type/List"
         , "annal:default_view":         "_view/Default_view"
         , "annal:default_type":         "_type/Default_type"
+        # , "annal:list_entity_type":     None
         , "annal:list_entity_selector": "ALL"
         , "annal:list_fields":
           [ { "annal:field_id":             layout.FIELD_TYPEID+"/Entity_id"
@@ -191,7 +192,7 @@ def list_view_context_data(
         list_default_type="_type/Default_type", type_choices=None,
         list_default_view="_type/Default_view", view_choices=None,
         list_entity_selector="ALL",
-        list_target_type="",
+        list_entity_type="",
         list_fields=None,
         num_fields=0,
         update="RecordList",
@@ -281,7 +282,7 @@ def list_view_context_data(
               get_bound_field("List_entity_selector", list_entity_selector) # 6 (4,0)
               )
           , context_field_row(
-              get_bound_field("List_target_type",     list_target_type)     # 7 (5,0)
+              get_bound_field("List_entity_type",     list_entity_type)     # 7 (5,0)
               )
           , get_bound_field("List_fields",            list_fields)          # 8 (6, 0)
           ]

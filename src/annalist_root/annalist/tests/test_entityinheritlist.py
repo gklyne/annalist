@@ -248,7 +248,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             , ('List_comment',      "Markdown",      "annal:Richtext",      "Help")
             , ('List_default_type', "Enum_optional", "annal:Type",          "Default type")
             , ('List_default_view', "Enum_optional", "annal:View",          "Default view")
-            , ('List_target_type',  "Identifier",    "annal:Identifier",    "List entity type")
+            , ('List_entity_type',  "Identifier",    "annal:Identifier",    "List entity type")
             , ('Type_label',        "Text",          "annal:Text",          "Label")
             , ('Type_comment',      "Markdown",      "annal:Richtext",      "Comment")
             , ('Type_uri',          "Identifier",    "annal:Identifier",    "Type URI")

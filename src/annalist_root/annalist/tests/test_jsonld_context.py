@@ -123,8 +123,7 @@ test_image_ref_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -491,7 +490,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, ANNAL.URI.type_id,     Literal(view_user_data[ANNAL.CURIE.type_id]) )
             , (subj, ANNAL.URI.uri,         URIRef(view_uri)                             )
             , (subj, ANNAL.URI.open_view,   Literal(False)                               )
-            , (subj, ANNAL.URI.record_type, URIRef(ANNAL.URI.User)                       )
+            , (subj, ANNAL.URI.view_entity_type, URIRef(ANNAL.URI.User)                       )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )
         # Check field list contents

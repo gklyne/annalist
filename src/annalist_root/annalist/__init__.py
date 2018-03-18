@@ -30,9 +30,10 @@ presumption that new software can read older data, and migrate it where necessar
 Not all software updates create data that cannot be read by older software: for 
 these updates the __version_data__ value can be left unchanged.
 """
-__version_data__   = "0.5.7"    # Data compatibility version number
+__version_data__   = "0.5.9"    # Data compatibility version number
 								# 0.5.5: Supertype closure evaluation logic added
 								# 0.5.7: Superproperty URIs added to field definitions;
 								#        Render type changes for supertypes
+								# 0.5.9: Rename "annal:record_type" fields
 
 # End.

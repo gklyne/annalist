@@ -120,7 +120,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         "Helper function creates record view entry with supplied view_id"
         t = RecordView.create(
             self.testcoll, view_id, 
-            recordview_create_values(view_id=view_id, target_record_type="annal:View")
+            recordview_create_values(view_id=view_id, view_entity_type="annal:View")
             )
         return t
 
@@ -136,7 +136,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_view_url(), TestHostUri + recordview_url("testcoll", view_id))
         v = recordview_values(
             view_id=view_id, view_uri=view_uri, 
-            target_record_type="annal:View",
+            view_entity_type="annal:View",
             update=update, 
             num_fields=num_fields,
             )

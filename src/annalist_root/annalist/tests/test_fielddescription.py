@@ -147,10 +147,10 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd, expect_field_desc)
         return
 
-    def test_Group_field_sel(self):
+    def test_View_field_sel(self):
         fd = field_description_from_view_field(
             self.testcoll, 
-            { ANNAL.CURIE.field_id: "Group_field_sel" }, 
+            { ANNAL.CURIE.field_id: "View_field_sel" }, 
             {}
             )
         expect_placement = Placement(
@@ -173,8 +173,8 @@ class FieldDescriptionTest(AnnalistTestCase):
                         get_site_default_entity_fields_linked("testcoll") 
             ])
         expect_field_desc = (
-            { "field_id":                   "Group_field_sel"
-            , "field_name":                 "Group_field_sel"
+            { "field_id":                   "View_field_sel"
+            , "field_name":                 "View_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
             , "field_label":                "Field ref"
             , "field_render_type":          "Enum_optional"
@@ -185,7 +185,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             , "field_placement":            expect_placement
             , "field_ref_type":             "_field"
             , "field_choices":              expect_choices
-            , "field_ref_restriction":      "entity[annal:record_type] subtype [annal:field_entity_type]"
+            , "field_ref_restriction":      "entity[annal:view_entity_type] subtype [annal:field_entity_type]"
             , "field_group_ref":            None
             })
         # print repr(fd)

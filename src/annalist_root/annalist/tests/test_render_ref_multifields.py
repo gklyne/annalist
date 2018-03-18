@@ -128,12 +128,11 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_refimg_view(self):
         refimg_view = RecordView.create(self.testcoll, "Test_refimg_view",
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:refimg_view"
-            , 'rdfs:label':         "Test view label"
-            , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  "img_type"
-            # , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:refimg_view"
+            , 'rdfs:label':             "Test view label"
+            , 'rdfs:comment':           "Test view comment"
+            , 'annal:view_entity_type': "img_type"
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -148,12 +147,11 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_rptimg_view(self):
         rptimg_view = RecordView.create(self.testcoll, "Test_rptimg_view",
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:rptimg_view"
-            , 'rdfs:label':         "Test rptimg view label"
-            , 'rdfs:comment':       "Test rptimg view comment"
-            , 'annal:record_type':  "img_type"
-            # , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:rptimg_view"
+            , 'rdfs:label':             "Test rptimg view label"
+            , 'rdfs:comment':           "Test rptimg view comment"
+            , 'annal:view_entity_type': "img_type"
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"

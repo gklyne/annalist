@@ -74,12 +74,11 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
 
     def _create_testview(self):
         testview = RecordView.create(self.testcoll, "testview",
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:testtype"
-            , 'rdfs:label':         "Test view label"
-            , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  "testtype"
-            # , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:testtype"
+            , 'rdfs:label':             "Test view label"
+            , 'rdfs:comment':           "Test view comment"
+            , 'annal:view_entity_type': "testtype"
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"

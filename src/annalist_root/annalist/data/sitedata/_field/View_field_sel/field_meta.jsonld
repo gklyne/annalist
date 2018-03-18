@@ -17,5 +17,5 @@
 , "annal:default_value":        ""
 , "annal:placeholder":          "(field reference)"
 , "annal:tooltip":              "Reference to a field to be displayed."
-, "annal:field_ref_restriction":  "entity[annal:record_type] subtype [annal:field_entity_type]"
+, "annal:field_ref_restriction":  "entity[annal:view_entity_type] subtype [annal:field_entity_type]"
 }

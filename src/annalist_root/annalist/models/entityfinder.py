@@ -286,7 +286,7 @@ class EntitySelector(object):
     >>> f7 = "[p:a] in view[v:a]"
     >>> f8 = "[p:b] in view[v:b]"
     >>> f9 = "[p:a] in view[v:b]"
-    >>> f10 = "[annal:field_entity_type] in view[annal:record_type]"
+    >>> f10 = "[annal:field_entity_type] in view[annal:view_entity_type]"
     >>> f11 = "foo:bar in [@type]"
     >>> f12 = "bar:foo in [@type]"
     >>> EntitySelector(f1).select_entity(e, c)

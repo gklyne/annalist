@@ -1057,24 +1057,24 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             , 'type_label': "RecordType testcoll/_type/tasktype"
             })
         expect_type_values = (
-            { 'annal:type':         "annal:Type"
-            , 'rdfs:label':         "%(type_label)s"%common_vals
-            , 'annal:uri':          "test:%(type_id)s"%common_vals
-            , 'annal:type_view':    "_view/%(type_id)s"%common_vals
-            , 'annal:type_list':    "_list/%(type_id)s"%common_vals
+            { 'annal:type':                 "annal:Type"
+            , 'rdfs:label':                 "%(type_label)s"%common_vals
+            , 'annal:uri':                  "test:%(type_id)s"%common_vals
+            , 'annal:type_view':            "_view/%(type_id)s"%common_vals
+            , 'annal:type_list':            "_list/%(type_id)s"%common_vals
             })
         expect_view_values = (
-            { 'annal:type':         "annal:View"
-            , 'rdfs:label':         message.TYPE_VIEW_LABEL%common_vals
-            , 'annal:record_type':  "test:%(type_id)s"%common_vals
+            { 'annal:type':                 "annal:View"
+            , 'rdfs:label':                 message.TYPE_VIEW_LABEL%common_vals
+            , 'annal:view_entity_type':     "test:%(type_id)s"%common_vals
             })
         expect_list_values = (
-            { 'annal:type':         "annal:List"
-            , 'rdfs:label':         message.TYPE_LIST_LABEL%common_vals
-            , 'annal:default_view': "_view/%(type_id)s"%common_vals
-            , 'annal:default_type': "_type/%(type_id)s"%common_vals
-            , 'annal:record_type':  "test:%(type_id)s"%common_vals
-            , 'annal:display_type': "_enum_list_type/List"
+            { 'annal:type':                 "annal:List"
+            , 'rdfs:label':                 message.TYPE_LIST_LABEL%common_vals
+            , 'annal:default_view':         "_view/%(type_id)s"%common_vals
+            , 'annal:default_type':         "_type/%(type_id)s"%common_vals
+            , 'annal:list_entity_type':     "test:%(type_id)s"%common_vals
+            , 'annal:display_type':         "_enum_list_type/List"
             , 'annal:list_entity_selector': "'test:%(type_id)s' in [@type]"%common_vals
             })
         self.check_entity_values(layout.TYPE_TYPEID, "%(type_id)s"%common_vals, expect_type_values)

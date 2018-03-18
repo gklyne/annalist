@@ -820,15 +820,15 @@ f_List_entity_selector = (
     , "field_choices":          no_options
     })
 
-f_List_target_type = (
-    { "field_id":               "List_target_type"
-    , "field_name":             "List_target_type"
+f_List_entity_type = (
+    { "field_id":               "List_entity_type"
+    , "field_name":             "List_entity_type"
     , "field_label":            "List entity type"
     , "field_render_type":      "Identifier"
     , "field_value_mode":       "Value_direct"
     , "field_entity_type":      "annal:List"
     , "field_value_type":       "annal:Identifier"
-    , "field_property_uri":     "annal:record_type"
+    , "field_property_uri":     "annal:list_entity_type"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
     , "field_ref_field":        None
@@ -1045,15 +1045,15 @@ f_View_comment = (
     , "field_choices":          no_options
     })
 
-f_View_target_type = (
-    { "field_id":               "View_target_type"
-    , "field_name":             "View_target_type"
+f_View_entity_type = (
+    { "field_id":               "View_entity_type"
+    , "field_name":             "View_entity_type"
     , "field_label":            "View entity type"
     , "field_render_type":      "Identifier"
     , "field_value_mode":       "Value_direct"
     , "field_entity_type":      "annal:View"
     , "field_value_type":       "annal:Identifier"
-    , "field_property_uri":     "annal:record_type"
+    , "field_property_uri":     "annal:view_entity_type"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
     , "field_ref_field":        None
@@ -1330,7 +1330,7 @@ fields_by_id = (
     , "List_default_type":          f_List_default_type
     , "List_default_view":          f_List_default_view
     , "List_entity_selector":       f_List_entity_selector
-    , "List_target_type":           f_List_target_type
+    , "List_entity_type":           f_List_entity_type
     , "List_fields":                f_List_fields
     , "Type_id":                    f_Type_id
     , "Type_label":                 f_Type_label
@@ -1343,7 +1343,7 @@ fields_by_id = (
     , "View_id":                    f_View_id
     , "View_label":                 f_View_label
     , "View_comment":               f_View_comment
-    , "View_target_type":           f_View_target_type
+    , "View_entity_type":           f_View_entity_type
     , "View_edit_view":             f_View_edit_view
     , "View_fields":                f_View_fields
     , "View_field_sel":             f_View_field_sel

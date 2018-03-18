@@ -52,11 +52,50 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
     - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
 - [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-- [ ] Rename "annal:record_type" -> "annal:list_entity_type" (for list target type)
-    - [ ] Find all references in code and sitedata
-    - [ ] Add migraton inRecordList
+- [x] Rename fields/properties:
+    - "annal:record_type" -> "annal:list_entity_type" (for list target type)
+    - "annal:record_type" -> "annal:view_entity_type" (for view target type)
+    - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
+    - [x] Find all references in code and sitedata
+        - (look for "annal:record_type" and "ANNAL.CURIE.record_type")
+        - [x] appears in field definitions:
+            - [x] Field_restrict
+            - [x] Group_field_sel
+            - [x] Group_target_type --> &rename Group_entity_type
+            - [x] List_field_sel
+            - [x] List_target_type --> &rename List_entity_type
+            - [x] View_field_sel
+            - [x] View_target_type --> &rename View_entity_type
+        - [x] appears as field in list definitions
+        - [x] appears as field in view definitions, and:
+            - Field_view comment
+            - List_view comment
+        - [x] annalist/identifiers.py
+        - [x] annalist/models/entityfinder.py
+        - [x] annalist/models/recordfield.py
+        - [x] annalist/tests/entity_testfielddesc.py
+        - [x] annalist/tests/entity_testviewdata.py
+        - [x] annalist/tests/test_data_migration.py
+        - [x] annalist/tests/test_entity_subtype_selection.py
+        - [x] annalist/tests/test_entityeditenumfield.py ("target_record_type")
+        - [x] annalist/tests/test_field_subproperty.py
+        - [x] annalist/tests/test_fielddescription.py
+        - [x] annalist/tests/test_image_url.py
+        - [x] annalist/tests/test_import_resource.py
+        - [x] annalist/tests/test_jsonld_context.py
+        - [x] annalist/tests/test_linked_records.py
+        - [x] annalist/tests/test_recordtype.py ("annal:record_type")
+        - [x] annalist/tests/test_recordview.py ("view_record_type", "target_record_type", "annal:record_type")
+        - [x] annalist/tests/test_render_ref_multifields.py
+        - [x] annalist/tests/test_render_repeatgroup.py:
+        - [x] annalist/tests/test_sitedata.py:
+        - [x] annalist/tests/test_turtle_output.py:
+        - [x] annalist/tests/test_upload_file.py:
+    - [x] Add migraton in RecordList, RecordView, RecordGroup
+    - [x] Add migration tests
 - [ ] In entityedit, context 'record_type' looks wrong.  see comment ~line 64 
-- [ ] Consider getting rid of "annal:record_type"; rename use in View and List
+        - [ ] annalist/views/entityedit.py (logic error?)
+        - [ ] annalist/tests/entity_testentitydata.py (reinstate test, see what happens)
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
 - [x] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?

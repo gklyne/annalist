@@ -14,6 +14,6 @@
   "annal:type_id": "_type",
   "annal:type_list": "_list/Default_list",
   "annal:type_view": "_view/Default_view",
-  "rdfs:comment": "RecordType help for type2 in collection coll1",
-  "rdfs:label": "RecordType coll1/type2"
+  "rdfs:comment": "RecordType coll coll1, type _type, entity type2",
+  "rdfs:label": "RecordType coll1/_type/type2"
 }

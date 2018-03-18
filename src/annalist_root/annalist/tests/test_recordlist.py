@@ -271,7 +271,9 @@ class RecordListEditViewTest(AnnalistTestCase):
         t = RecordList.create(self.testcoll, list_id, recordlist_create_values(list_id=list_id))
         return t
 
-    def _check_list_view_values(self, list_id, list_uri=None, update="RecordList", num_fields=4):
+    def _check_list_view_values(self, 
+        list_id, list_uri=None, update="RecordList", num_fields=4
+        ):
         "Helper function checks content of record view entry with supplied list_id"
         self.assertTrue(RecordList.exists(self.testcoll, list_id))
         t = RecordList.load(self.testcoll, list_id)
@@ -295,7 +297,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_default_type="_type/Default_type",
             list_default_view="_view/Default_view",
             list_entity_selector="ALL",
-            list_target_type="",
+            list_entity_type="",
             list_fields=None,
             num_fields=0,
             update="RecordList",
@@ -311,7 +313,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_default_type=list_default_type,
             list_default_view=list_default_view,
             list_entity_selector=list_entity_selector,
-            list_target_type=list_target_type,
+            list_entity_type=list_entity_type,
             list_fields=list_fields,
             num_fields=num_fields,
             update=update,
@@ -471,7 +473,7 @@ class RecordListEditViewTest(AnnalistTestCase):
                   <span>List entity type</span>
                 </div>
                 <div class="%(input_classes)s">
-                  <input type="text" size="64" name="List_target_type" 
+                  <input type="text" size="64" name="List_entity_type" 
                          placeholder="%(entitytype_text)s"
                          value=""/>
                 </div>
@@ -912,7 +914,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="", orig_list_id="orig_list_id",
             list_type="_enum_list_type/List",
             list_entity_selector="ALL",
-            list_target_type=""
+            list_entity_type=""
             )
         return
 
@@ -933,7 +935,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="!badlist", orig_list_id="orig_list_id",
             list_type="_enum_list_type/List",
             list_entity_selector="ALL",
-            list_target_type=""
+            list_entity_type=""
             )
         return
 
@@ -995,7 +997,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_id="", orig_list_id="orig_list_id",
             list_type="_enum_list_type/List",
             list_entity_selector="ALL",
-            list_target_type="",
+            list_entity_type="",
             update="Updated RecordList"
             )
         return
@@ -1021,7 +1023,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_type="_enum_list_type/List",
             list_uri="annal:display/Default_list",
             list_entity_selector="ALL",
-            list_target_type="",
+            list_entity_type="",
             update="Updated RecordList"
             )
         return
@@ -1112,7 +1114,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_type="_enum_list_type/List",
             list_uri=None,
             list_entity_selector="ALL",
-            list_target_type="",
+            list_entity_type="",
             update="Updated RecordList"
             )
         # Check original data is unchanged
@@ -1142,7 +1144,7 @@ class RecordListEditViewTest(AnnalistTestCase):
             list_type="_enum_list_type/List",
             list_uri=None,
             list_entity_selector="ALL",
-            list_target_type="",
+            list_entity_type="",
             update="Updated RecordList"
             )
         # Check original data is unchanged

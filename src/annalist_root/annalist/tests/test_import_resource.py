@@ -73,8 +73,7 @@ test_import_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_import_view label"
     , 'rdfs:comment':               "test_import_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -95,8 +94,7 @@ test_reference_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_reference_view label"
     , 'rdfs:comment':               "test_reference_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"

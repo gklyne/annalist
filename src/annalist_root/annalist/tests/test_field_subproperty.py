@@ -81,60 +81,6 @@ class FieldSubpropertyTest(AnnalistTestCase):
             )
         # Create test type data parents
         self.testdata = RecordTypeData.create(self.testcoll, "testtype", {})
-        # #@@@@
-        # # Create test field using superproperty
-        # self.test_sup_field = RecordField.create(self.testcoll, "Test_sup_field",
-        #     { ANNAL.CURIE.type:                 "annal:Field"
-        #     , RDFS.CURIE.label:                 "Field using superproperty URI"
-        #     , RDFS.CURIE.comment:               "Field using superproperty URI"
-        #     , ANNAL.CURIE.field_render_type:    "_enum_render_type/Text"
-        #     , ANNAL.CURIE.field_value_mode:     "_enum_value_mode/Value_direct"
-        #     , ANNAL.CURIE.field_entity_type:    "test:testtype"
-        #     , ANNAL.CURIE.placeholder:          "(Test_sup_field)"
-        #     , ANNAL.CURIE.property_uri:         "test:superprop_uri"
-        #     , ANNAL.CURIE.field_placement:      "small:0,12;medium:0,6"
-        #     })
-        # self.assertTrue(self.test_sup_field is not None)
-        # # Create test field using subproperty and declaring superproperty
-        # self.test_sub_field = RecordField.create(self.testcoll, "Test_sub_field",
-        #     { ANNAL.CURIE.type:                 "annal:Field"
-        #     , RDFS.CURIE.label:                 "Field using superproperty URI"
-        #     , RDFS.CURIE.comment:               "Field using superproperty URI"
-        #     , ANNAL.CURIE.field_render_type:    "_enum_render_type/Text"
-        #     , ANNAL.CURIE.field_value_mode:     "_enum_value_mode/Value_direct"
-        #     , ANNAL.CURIE.field_entity_type:    "test:testtype"
-        #     , ANNAL.CURIE.placeholder:          "(Test_sub_field)"
-        #     , ANNAL.CURIE.property_uri:         "test:subprop_uri"
-        #     , ANNAL.CURIE.superproperty_uri:    [{"@id": "test:superprop_uri"}]
-        #     , ANNAL.CURIE.field_placement:      "small:0,12;medium:0,6"
-        #     })
-        # self.assertTrue(self.test_sub_field is not None)
-        # # Create test view using superproperty
-        # self.test_view = RecordView.create(self.testcoll, "testview",
-        #     { ANNAL.CURIE.type:         "annal:View"
-        #     , ANNAL.CURIE.uri:          "test:view"
-        #     , RDFS.CURIE.label:         "Test view label"
-        #     , RDFS.CURIE.comment:       "Test view comment"
-        #     , ANNAL.CURIE.record_type:  "test:testtype"
-        #     , ANNAL.CURIE.view_fields:
-        #       [ { ANNAL.CURIE.field_id:         layout.FIELD_TYPEID+"/Entity_id"
-        #         , ANNAL.CURIE.field_placement:  "small:0,12;medium:0,6"
-        #         }
-        #       , { ANNAL.CURIE.field_id:         layout.FIELD_TYPEID+"/Test_sup_field"
-        #         , ANNAL.CURIE.field_placement:  "small:0,12;medium:0,6"
-        #         }
-        #       ]
-        #     })
-        # self.assertTrue(self.test_view is not None)
-        # # Create test entity using subproperty
-        # self.testentity_data = EntityData.create(self.testdata, "testentity", 
-        #     entitydata_create_values(
-        #         "testentity", type_id="testtype",
-        #         type_uri="test:testtype",
-        #         extra_fields={"test:subprop_uri": "Test field value"} 
-        #         )
-        #     )
-        # #@@@@
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -176,11 +122,11 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertTrue(self.test_sub_field is not None)
         # Create test view using superproperty
         self.test_view = RecordView.create(self.testcoll, "testview",
-            { ANNAL.CURIE.type:         "annal:View"
-            , ANNAL.CURIE.uri:          "test:view"
-            , RDFS.CURIE.label:         "Test view label"
-            , RDFS.CURIE.comment:       "Test view comment"
-            , ANNAL.CURIE.record_type:  "test:testtype"
+            { ANNAL.CURIE.type:             "annal:View"
+            , ANNAL.CURIE.uri:              "test:view"
+            , RDFS.CURIE.label:             "Test view label"
+            , RDFS.CURIE.comment:           "Test view comment"
+            , ANNAL.CURIE.view_entity_type: "test:testtype"
             , ANNAL.CURIE.view_fields:
               [ { ANNAL.CURIE.field_id:         layout.FIELD_TYPEID+"/Entity_id"
                 , ANNAL.CURIE.field_placement:  "small:0,12;medium:0,6"
@@ -250,11 +196,11 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertTrue(self.test_sub_set is not None)
         # Create test view using superproperty
         self.test_view = RecordView.create(self.testcoll, "testsetview",
-            { ANNAL.CURIE.type:         "annal:View"
-            , ANNAL.CURIE.uri:          "test:setview"
-            , RDFS.CURIE.label:         "Test setview label"
-            , RDFS.CURIE.comment:       "Test setview comment"
-            , ANNAL.CURIE.record_type:  "test:testtype"
+            { ANNAL.CURIE.type:             "annal:View"
+            , ANNAL.CURIE.uri:              "test:setview"
+            , RDFS.CURIE.label:             "Test setview label"
+            , RDFS.CURIE.comment:           "Test setview comment"
+            , ANNAL.CURIE.view_entity_type: "test:testtype"
             , ANNAL.CURIE.view_fields:
               [ { ANNAL.CURIE.field_id:         layout.FIELD_TYPEID+"/Entity_id"
                 , ANNAL.CURIE.field_placement:  "small:0,12;medium:0,6"
@@ -327,11 +273,11 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertTrue(self.test_sub_list is not None)
         # Create test view using superproperty
         self.test_view = RecordView.create(self.testcoll, "testlistview",
-            { ANNAL.CURIE.type:         "annal:View"
-            , ANNAL.CURIE.uri:          "test:listview"
-            , RDFS.CURIE.label:         "Test listview label"
-            , RDFS.CURIE.comment:       "Test listview comment"
-            , ANNAL.CURIE.record_type:  "test:testtype"
+            { ANNAL.CURIE.type:             "annal:View"
+            , ANNAL.CURIE.uri:              "test:listview"
+            , RDFS.CURIE.label:             "Test listview label"
+            , RDFS.CURIE.comment:           "Test listview comment"
+            , ANNAL.CURIE.view_entity_type: "test:testtype"
             , ANNAL.CURIE.view_fields:
               [ { ANNAL.CURIE.field_id:         layout.FIELD_TYPEID+"/Entity_id"
                 , ANNAL.CURIE.field_placement:  "small:0,12;medium:0,6"

@@ -10,8 +10,8 @@
     "annal:SiteData"
   ],
   "annal:id": "_annalist_site",
-  "annal:meta_comment": "Initialized by annalist.models.site.create_site_metadata at 2018-02-16 14:41:21",
-  "annal:software_version": "0.5.7",
+  "annal:meta_comment": "Initialized by annalist.models.site.create_site_metadata at 2018-03-18 15:53:52",
+  "annal:software_version": "0.5.9",
   "annal:type": "annal:SiteData",
   "annal:type_id": "_coll",
   "rdfs:comment": "Annalist test site metadata and site-wide values.",

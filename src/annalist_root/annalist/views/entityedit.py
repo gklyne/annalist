@@ -1870,13 +1870,13 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.collection, entitytypeinfo.VIEW_ID
                     )
                 view_entity   = view_typeinfo.get_copy_entity(view_entity_id, prev_view_id)
-                view_entity[ANNAL.CURIE.record_type] = type_uri
                 view_entity.setdefault(RDFS.CURIE.label,   
                     message.TYPE_VIEW_LABEL%type_values
                     )
                 view_entity.setdefault(RDFS.CURIE.comment, 
                     message.TYPE_VIEW_COMMENT%type_values
                     )
+                view_entity[ANNAL.CURIE.view_entity_type] = type_uri
                 view_entity._save()
             # Set up list details (other defaults from sitedata '_initial_values')
             if prev_list_id:
@@ -1890,10 +1890,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 list_entity.setdefault(RDFS.CURIE.comment, 
                     message.TYPE_LIST_COMMENT%type_values
                     )
+                list_entity[ANNAL.CURIE.display_type] = "List"
                 list_entity[ANNAL.CURIE.default_view] = view_entity_id
                 list_entity[ANNAL.CURIE.default_type] = type_entity_id
-                list_entity[ANNAL.CURIE.record_type]  = type_uri
-                list_entity[ANNAL.CURIE.display_type] = "List"
+                list_entity[ANNAL.CURIE.list_entity_type]     = type_uri
                 list_entity[ANNAL.CURIE.list_entity_selector] = list_selector
                 list_entity._save()
             # Update view, list values in type record, and save again
