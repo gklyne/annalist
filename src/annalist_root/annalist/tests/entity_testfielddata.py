@@ -342,6 +342,8 @@ def field_view_form_data(
         , 'Field_render_type':  render_type
         , 'Field_value_mode':   value_mode
         , 'orig_id':            'orig_field_id'
+        , 'orig_type':          layout.FIELD_TYPEID
+        , 'record_type':        "annal:Field"
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id is not None:
@@ -355,7 +357,7 @@ def field_view_form_data(
         form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
-        form_data_dict['orig_type']         = "_field"
+        # form_data_dict['orig_type']         = "_field"
     if orig_id:
         form_data_dict['orig_id']           = orig_id
     if field_label:

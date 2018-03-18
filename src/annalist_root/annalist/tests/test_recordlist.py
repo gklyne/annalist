@@ -979,12 +979,15 @@ class RecordListEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_view_missing_id(self):
+        self._create_list_view("listview")
         f = list_view_form_data(
-            action="copy", update="Updated RecordList"
+            action="copy", 
+            orig_id="listview",
+            update="Updated RecordList"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.LIST_TYPEID, 
-            entity_id="Default_list", view_id="List_view"
+            entity_id="listview", view_id="List_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -994,7 +997,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="copy",
             num_fields=2,
-            list_id="", orig_list_id="orig_list_id",
+            list_id="", orig_list_id="listview",
             list_type="_enum_list_type/List",
             list_entity_selector="ALL",
             list_entity_type="",
@@ -1096,7 +1099,9 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_values("editlist")
         # Form post with ID missing
         f = list_view_form_data(
-            action="edit", update="Updated RecordList"
+            action="edit", 
+            orig_id="editlist",
+            update="Updated RecordList"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", layout.LIST_TYPEID, 
@@ -1110,7 +1115,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         self._check_list_view_context_fields(r, 
             action="edit",
             num_fields=2,
-            list_id="", orig_list_id="orig_list_id",
+            list_id="", orig_list_id="editlist",
             list_type="_enum_list_type/List",
             list_uri=None,
             list_entity_selector="ALL",

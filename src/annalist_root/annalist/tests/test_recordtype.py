@@ -306,6 +306,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_view="_view/Default_view",
             type_list="_list/Default_list",
             type_aliases=[],
+            record_type="annal:Type",
             update="RecordType",
             continuation_url=None
             ):
@@ -319,6 +320,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_view=type_view,
             type_list=type_list,
             type_aliases=type_aliases,
+            record_type=record_type,
             update=update,
             continuation_url=continuation_url
             )
@@ -804,6 +806,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="",
             type_uri=None,
             type_supertype_uris=[],
+            record_type=None
             )
         return
 
@@ -845,7 +848,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
-        self._check_record_type_values("copytype", update="RecordType", type_uri="test:type")
+        self._check_record_type_values(
+            "copytype", update="RecordType", type_uri="test:type"
+            )
         return
 
     def test_post_copy_type_cancel(self):
@@ -856,7 +861,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             update="RecordType"
             )
         u = entitydata_edit_url(
-            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            "copy", "testcoll", layout.TYPE_TYPEID, 
+            entity_id="Default_type", view_id="Type_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -868,9 +874,13 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_type_missing_id(self):
-        f = type_view_form_data(action="copy", update="Updated RecordType")
+        f = type_view_form_data(action="copy", 
+            orig_id="Default_type",
+            update="Updated RecordType"
+            )
         u = entitydata_edit_url(
-            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="Default_type", view_id="Type_view"
+            "copy", "testcoll", layout.TYPE_TYPEID, 
+            entity_id="Default_type", view_id="Type_view"
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -879,7 +889,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Test context
         self._check_context_fields(r, 
             action="copy",
-            type_id="",
+            type_id="", orig_type_id="Default_type",
             type_uri=None,
             type_supertype_uris=[],
             update="Updated RecordType"
@@ -984,7 +994,10 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         self._create_record_type("edittype")
         self._check_record_type_values("edittype")
         # Form post with ID missing
-        f = type_view_form_data(action="edit", update="Updated RecordType")
+        f = type_view_form_data(action="edit", 
+            orig_id="edittype",
+            update="Updated RecordType"
+            )
         u = entitydata_edit_url(
             "edit", "testcoll", layout.TYPE_TYPEID, 
             entity_id="edittype", view_id="Type_view"
@@ -996,7 +1009,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # Test context for re-rendered form
         self._check_context_fields(r, 
             action="edit",
-            type_id="",
+            type_id="", orig_type_id="edittype",
             type_uri=None,
             type_supertype_uris=[],
             update="Updated RecordType"

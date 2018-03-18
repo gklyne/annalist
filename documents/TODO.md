@@ -93,9 +93,9 @@ See also: https://www.divio.com/en/blog/documentation/
         - [x] annalist/tests/test_upload_file.py:
     - [x] Add migraton in RecordList, RecordView, RecordGroup
     - [x] Add migration tests
-- [ ] In entityedit, context 'record_type' looks wrong.  see comment ~line 64 
-        - [ ] annalist/views/entityedit.py (logic error?)
-        - [ ] annalist/tests/entity_testentitydata.py (reinstate test, see what happens)
+- [x] In entityedit, fix up population of context 'record_type'
+- [x] entity_tyestentitydata.specified_view_context_data add type URI param
+- [ ] Update Annalist_schema to reflect changes
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
 - [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
 - [x] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?

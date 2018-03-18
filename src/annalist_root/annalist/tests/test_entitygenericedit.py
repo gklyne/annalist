@@ -589,7 +589,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context
-        expect_context = type_view_context_data(action="new", type_type_id="testtype")
+        expect_context = type_view_context_data(action="new", 
+            type_type_id="testtype",
+            record_type=None
+            )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
@@ -625,6 +628,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         expect_context = type_view_context_data(action="new",
             type_type_id="testtype", 
             type_entity_id="!badentity", orig_id="orig_entity_id", 
+            record_type="annal:EntityData"
             )
         # log.info(repr(context_bind_fields(r.context)['fields'][1]))
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -1052,7 +1056,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
     def test_post_copy_entity_blank_id(self):
         f = type_view_form_data(action="copy", 
             type_type_id="testtype", 
-            type_entity_id=""
+            type_entity_id="", orig_id="entity1"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view"
@@ -1061,7 +1065,11 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
-        expect_context = type_view_context_data(action="copy", type_type_id="testtype")
+        expect_context = type_view_context_data(
+            action="copy", type_type_id="testtype",
+            orig_id="entity1",
+            record_type="annal:EntityData"
+            )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
@@ -1090,7 +1098,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
     def test_post_copy_entity_invalid_id(self):
         f = type_view_form_data(action="copy",
             type_type_id="testtype", 
-            type_entity_id="!badentity", orig_id="orig_entity_id",
+            type_entity_id="!badentity", orig_id="entity1",
             )
         u = entitydata_edit_url(
             "copy", "testcoll", "testtype", entity_id="entity1", view_id="Type_view"
@@ -1101,7 +1109,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         expect_context = type_view_context_data(action="copy",
             type_type_id="testtype",
-            type_entity_id="!badentity", orig_id="orig_entity_id"
+            type_entity_id="!badentity", orig_id="entity1",
+            record_type="annal:EntityData"
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
@@ -1482,7 +1491,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Form post with ID missing
         f = type_view_form_data(action="edit", 
             type_type_id="testtype", 
-            type_entity_id="", 
+            type_entity_id="", orig_id="edittype",
             update="Updated entity"
             )
         u = entitydata_edit_url(
@@ -1494,7 +1503,10 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context for re-rendered form
         expect_context = type_view_context_data(action="edit", 
-            type_type_id="testtype", update="Updated entity"
+            type_type_id="testtype", 
+            orig_id="edittype",
+            record_type="test:testtype",
+            update="Updated entity"
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged
@@ -1528,7 +1540,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Form post with ID malformed
         f = type_view_form_data(action="edit", 
             type_type_id="testtype",
-            type_entity_id="!badentity", orig_id="orig_entity_id"
+            type_entity_id="!badentity", orig_id="edittype"
             )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype", view_id="Type_view")
         r = self.client.post(u, f)
@@ -1538,7 +1550,8 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # Test context for re-rendered form
         expect_context = type_view_context_data(action="edit",
             type_type_id="testtype", 
-            type_entity_id="!badentity", orig_id="orig_entity_id"
+            type_entity_id="!badentity", orig_id="edittype",
+            record_type="test:testtype"
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged

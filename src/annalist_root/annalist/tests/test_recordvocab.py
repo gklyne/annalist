@@ -710,8 +710,11 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_vocab_missing_id(self):
+        self._create_record_vocab("Default_vocab")
         f = vocab_view_form_data(
-            action="copy", update="Updated RecordVocab"
+            action="copy", 
+            orig_id="Default_vocab", 
+            update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.VOCAB_TYPEID, entity_id="Default_vocab", view_id="Vocab_view"
@@ -723,14 +726,17 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         # Test context
         self._check_context_fields(r, 
             action="copy",
-            vocab_id="", orig_vocab_id="orig_vocab_id",
+            vocab_id="", orig_vocab_id="Default_vocab",
             update="Updated RecordVocab"
             )
         return
 
     def test_post_copy_vocab_invalid_id(self):
+        self._create_record_vocab("Default_vocab")
         f = vocab_view_form_data(
-            vocab_id="!badvocab", orig_id="Default_vocab", action="copy", update="Updated RecordVocab"
+            action="copy", 
+            vocab_id="!badvocab", orig_id="Default_vocab", 
+            update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.VOCAB_TYPEID, entity_id="Default_vocab", view_id="Vocab_view"
@@ -790,7 +796,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self._check_record_vocab_values("editvocab")
         # Form post with ID missing
         f = vocab_view_form_data(
-            action="edit", update="Updated RecordVocab"
+            action="edit",
+            orig_id="editvocab", 
+            update="Updated RecordVocab"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", layout.VOCAB_TYPEID, entity_id="editvocab", view_id="Vocab_view"
@@ -802,7 +810,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         # Test context for re-rendered form
         self._check_context_fields(r, 
             action="edit",
-            vocab_id="", orig_vocab_id="orig_vocab_id",
+            vocab_id="", orig_vocab_id="editvocab",
             update="Updated RecordVocab"
             )
         # Check original data is unchanged

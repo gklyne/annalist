@@ -426,29 +426,31 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_post_copy_entity_missing_id(self):
-        f = default_view_form_data(action="copy", entity_id="")
+        f = default_view_form_data(action="copy", entity_id="", orig_id="entity1")
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         expect_context = default_view_context_data(
-            action="copy", orig_id="orig_entity_id",
+            action="copy", orig_id="entity1",
             type_ref="", type_choices=self.type_ids
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
     def test_post_copy_entity_invalid_id(self):
-        f = default_view_form_data(entity_id="!badentity", orig_id="orig_entity_id", action="copy")
+        f = default_view_form_data(
+            entity_id="!badentity", orig_id="entity1", action="copy"
+            )
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         expect_context = default_view_context_data(
-            action="copy", entity_id="!badentity", orig_id="orig_entity_id",
-            type_ref="_type/testtype", type_choices=self.type_ids
+            action="copy", entity_id="!badentity", orig_id="entity1",
+            type_ref="_type/testtype", type_choices=self.type_ids,
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
@@ -530,7 +532,11 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._create_entity_data("edittype")
         self._check_entity_data_values("edittype")
         # Form post with ID missing
-        f = default_view_form_data(action="edit", entity_id="", update="Updated entity")
+        f = default_view_form_data(
+            action="edit", 
+            entity_id="", orig_id="edittype",
+            update="Updated entity"
+            )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
@@ -539,8 +545,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Test context for re-rendered form
         expect_context = default_view_context_data(
             action="edit", update="Updated entity",
-            orig_id="orig_entity_id",
-            type_ref="", type_choices=self.type_ids
+            orig_id="edittype",
+            type_ref="", type_choices=self.type_ids,
+            record_type="/testsite/c/testcoll/d/_type/testtype/"
             )
         self.assertEqual(len(r.context['fields']), 3) # 4 fields over 3 rows
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -553,7 +560,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self._check_entity_data_values("edittype")
         # Form post with ID malformed
         f = default_view_form_data(
-            entity_id="!badentity", orig_id="orig_entity_id", action="edit"
+            entity_id="!badentity", orig_id="edittype", action="edit"
             )
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
@@ -562,8 +569,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<h3>Problem with entity identifier</h3>")
         # Test context for re-rendered form
         expect_context = default_view_context_data(
-            entity_id="!badentity", orig_id="orig_entity_id", action="edit",
-            type_ref="_type/testtype", type_choices=self.type_ids
+            entity_id="!badentity", orig_id="edittype", action="edit",
+            type_ref="_type/testtype", type_choices=self.type_ids,
+            record_type="/testsite/c/testcoll/d/_type/testtype/"
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged

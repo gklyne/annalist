@@ -61,9 +61,9 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='customize_view_enable', e=None,                    f=None               )
         , StableValueMap(c='entity_id',             e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_uri',            e=ANNAL.CURIE.uri,         f='entity_uri'       )
-        #@@TODO: logic here looks wrong - revisit - the "record_type" value comes from the
-        #        view defintion, not from the target entity.  Set e=None here?
-        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.record_type, f='record_type'      )
+        # The "record_type" value (in context and form data) is intended to reflect the actual
+        # type of the displayed entity.  Currently, it is not used:
+        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.type,        f='record_type'      )
         , SimpleValueMap(c='view_id',               e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',               e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )

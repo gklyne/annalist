@@ -344,7 +344,7 @@ def view_view_context_data(
         , 'entity_id':          view_id or ""
         , 'orig_id':            orig_id
         , 'orig_type':          layout.VIEW_TYPEID
-        # , 'record_type':        'annal:View' #@@reinstate later when logic fixed?
+        , 'record_type':        "annal:View"
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(

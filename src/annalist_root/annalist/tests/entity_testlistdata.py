@@ -259,6 +259,7 @@ def list_view_context_data(
         , 'entity_id':          list_id or ""
         , 'orig_id':            orig_id
         , 'orig_type':          layout.LIST_TYPEID
+        , 'record_type':        "annal:List"
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(

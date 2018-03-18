@@ -89,6 +89,7 @@ def dupfield_view_context_data(
         entity_descr=None,
         entity_descr2=None,
         entity_descr3=None,
+        record_type="annal:EntityData",
         action=None, update="Entity", view_label="RecordView testcoll/DupField_view",
         continuation_url=None
     ):
@@ -97,6 +98,7 @@ def dupfield_view_context_data(
         coll_id=coll_id, type_id=type_id, 
         type_ref=type_ref, type_choices=type_choices, type_ids=type_ids,
         entity_label=entity_label, entity_descr=entity_descr,
+        record_type=record_type,
         action=action, update=update, view_label=view_label,
         continuation_url=continuation_url
         )
@@ -247,6 +249,7 @@ class EntityEditDupFieldTest(AnnalistTestCase):
             entity_descr="Entity coll testcoll, type testtype, entity entitydupfield",
             entity_descr2="Comment field 2",
             entity_descr3="Comment field 3",
+            record_type="/testsite/c/testcoll/d/_type/testtype/",
             action="edit", 
             update="Entity",
             continuation_url=""

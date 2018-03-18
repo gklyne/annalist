@@ -191,6 +191,7 @@ def type_view_context_data(action=None,
         type_view="_view/Default_view",
         type_list="_list/Default_list",
         type_aliases=[],
+        record_type="annal:Type",
         update="RecordType",
         continuation_url=None
     ):
@@ -201,6 +202,8 @@ def type_view_context_data(action=None,
     if type_label is None:
         if type_entity_id:
             type_label = "%s %s/%s/%s"%(update, coll_id, type_type_id, type_entity_id)
+        elif orig_id:
+            type_label = "%s %s/%s/%s"%(update, coll_id, type_type_id, orig_id)
         else:
             type_label = "%s data ... (%s/%s)"%(update, coll_id, type_entity_id)
     if type_uri is None:
@@ -221,6 +224,7 @@ def type_view_context_data(action=None,
         , 'view_id':            "Type_view"
         , 'entity_id':          type_entity_id or ""
         , 'orig_type':          orig_type or type_type_id
+        , 'record_type':        record_type
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(

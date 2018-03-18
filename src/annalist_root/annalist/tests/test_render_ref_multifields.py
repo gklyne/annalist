@@ -266,6 +266,7 @@ class RefMultifieldTest(AnnalistTestCase):
     def _create_refimg_view_context(self, 
             entity_id=None,
             entity_ref=None,
+            record_type="test:ref_type",
             action=None,
             continuation_url=None
         ):
@@ -285,6 +286,7 @@ class RefMultifieldTest(AnnalistTestCase):
             entity_id=entity_id,
             entity_label="Label Test_ref_entity",
             view_fields=view_fields,
+            record_type=record_type,
             action=action, 
             continuation_url=continuation_url
             )
@@ -292,6 +294,7 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_rptref_view_context(self, 
             entity_id=None,
+            record_type="test:ref_type",
             action=None,
             continuation_url=None
         ):
@@ -311,6 +314,7 @@ class RefMultifieldTest(AnnalistTestCase):
             view_id="Test_rptimg_view", view_heading="Test rptimg view label",
             entity_id=entity_id,
             entity_label="Label Test_rpt_entity",
+            record_type=record_type,
             view_fields=view_fields,
             action=action, 
             continuation_url=continuation_url

@@ -178,7 +178,8 @@ def user_view_form_data(
         , 'User_description':   'User %s: permissions for %s in collection %s'%(user_id, user_name, coll_id)
         , 'User_uri':           user_uri
         , 'User_permissions':   user_permissions
-        , 'orig_type':          "_user"
+        , 'orig_type':          layout.USER_TYPEID
+        , 'record_type':        "annal:User"
         , "orig_coll":          coll_id
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_user")
         })
