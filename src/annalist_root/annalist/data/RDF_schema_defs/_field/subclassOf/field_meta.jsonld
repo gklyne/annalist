@@ -19,7 +19,7 @@
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
   "annal:field_value_type": "rdfs:Class",
   "annal:id": "subclassOf",
-  "annal:placeholder": "(Superclass - URI or CURIE)",
+  "annal:placeholder": "(Select superclass field)",
   "annal:property_uri": "annal:subclassOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",

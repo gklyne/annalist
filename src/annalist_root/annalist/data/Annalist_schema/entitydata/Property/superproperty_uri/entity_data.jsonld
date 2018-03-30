@@ -1,14 +1,27 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/superproperty_uri",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
   "annal:id": "superproperty_uri",
+  "annal:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:superproperty_uri",

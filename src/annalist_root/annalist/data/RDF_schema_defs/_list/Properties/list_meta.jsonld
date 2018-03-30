@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_list/Properties",
   "@type": [
     "annal:List"
   ],
@@ -11,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Properties",
   "annal:list_entity_selector": "'rdf:Property' in [@type]",
+  "annal:list_entity_type": "rdf:Property",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -25,7 +29,6 @@
       "annal:field_placement": "small:6,6"
     }
   ],
-  "annal:record_type": "rdf:Property",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# Properties\r\n\r\nList of properties used as types of relations between resources.\r\n",

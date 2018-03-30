@@ -14,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Included_images",
   "annal:list_entity_selector": "'resource:Included_image' in [@type]",
+  "annal:list_entity_type": "resource:Included_image",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -28,7 +29,6 @@
       "annal:field_placement": "small:6,6"
     }
   ],
-  "annal:record_type": "resource:Included_image",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of Included images\r\n\r\nEach listed entity contains a reference to an included (uploaded, imported or linked) image, which can be referenced to present an image obtained by any of these means.",

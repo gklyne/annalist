@@ -1,14 +1,30 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/task_buttons",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
   "annal:id": "task_buttons",
+  "annal:range": [],
+  "annal:subpropertyOf": [
+    {
+      "@id": "Property/edit_task_buttons"
+    },
+    {
+      "@id": "Property/view_task_buttons"
+    }
+  ],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:task_buttons",

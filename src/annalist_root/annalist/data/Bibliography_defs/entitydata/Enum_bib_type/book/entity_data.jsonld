@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "book"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "Book"
-, "rdfs:comment":       "A book with an explicit publisher.  Other fields: author/editor, title, publisher, year, volume/number, series, address, edition, month, note"
-, "annal:uri":          "annal:bib_type/book"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/book",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "book",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/book",
+  "rdfs:comment": "A book with an explicit publisher.  Other fields: author/editor, title, publisher, year, volume/number, series, address, edition, month, note",
+  "rdfs:label": "Book"
 }

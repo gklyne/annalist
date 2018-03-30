@@ -14,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Linked_images",
   "annal:list_entity_selector": "\"resource:Linked_image\" in [@type]",
+  "annal:list_entity_type": "resource:Linked_image",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -24,7 +25,6 @@
       "annal:field_placement": "small:3,9"
     }
   ],
-  "annal:record_type": "resource:Linked_image",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of linked images\r\n\r\nPresents a list of image resources on the web.  Each entity is like an image bookmark that can be referenced by other entities in the collection, and has additional information about the image.\r\n",

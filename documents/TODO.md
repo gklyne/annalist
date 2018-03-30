@@ -56,16 +56,19 @@ See also: https://www.divio.com/en/blog/documentation/
     - "annal:record_type" -> "annal:list_entity_type" (for list target type)
     - "annal:record_type" -> "annal:view_entity_type" (for view target type)
     - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
+    - Group_target_type -> Group_entity_type
+    - List_target_type -> List_entity_type
+    - View_target_type -> View_entity_type
     - [x] Find all references in code and sitedata
         - (look for "annal:record_type" and "ANNAL.CURIE.record_type")
         - [x] appears in field definitions:
             - [x] Field_restrict
             - [x] Group_field_sel
-            - [x] Group_target_type --> &rename Group_entity_type
+            - [x] Group_target_type
             - [x] List_field_sel
-            - [x] List_target_type --> &rename List_entity_type
+            - [x] List_target_type
             - [x] View_field_sel
-            - [x] View_target_type --> &rename View_entity_type
+            - [x] View_target_type
         - [x] appears as field in list definitions
         - [x] appears as field in view definitions, and:
             - Field_view comment
@@ -97,16 +100,12 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] entity_testentitydata.specified_view_context_data add type URI param
 - [x] Allow `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
 - [x] Update Annalist_schema to reflect changes
-    - [x] edit task buttons help through Annalist, to cover edit- and view- options.  Update view- example.
 - [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id@@@, except that it uses a separate template in templates.fields.
-- [ ] migrate content of all installable collections
-- [x] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
-    - NO: it is varied in form data for multiple occurrences of the same field id 
+- [x] migrate content of all installable collections
 
 (Sub-release?)
 
+- [ ] Update python to latest in version 2 series
 - [ ] Update pip to latest version in python environment (for continued testing)
 - [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)

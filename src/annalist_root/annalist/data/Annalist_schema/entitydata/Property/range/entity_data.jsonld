@@ -1,23 +1,27 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/range",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": "",
   "annal:id": "range",
+  "annal:range": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:range",
   "rdfs:comment": "# Has range\r\n\r\nReferences a [Class]($BASE:_type/Class) entity that describes a range of the current Property entity.\r\n\r\nThis can be used to infer `rdfs:range` relationships between the URIs of Property and Class entities.",
-  "rdfs:range": [
-    {
-      "@id": "annal:Property"
-    }
-  ],
   "rdfs:label": "Has range",
   "rdfs:range": [
     {

@@ -1,14 +1,24 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Class/Enum_value_mode",
   "@type": [
-    "rdfs:Resource",
     "rdfs:Class",
     "annal:EntityData"
   ],
   "annal:id": "Enum_value_mode",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ],
   "annal:type": "rdfs:Class",
   "annal:type_id": "Class",
   "annal:uri": "annal:Enum_value_mode",

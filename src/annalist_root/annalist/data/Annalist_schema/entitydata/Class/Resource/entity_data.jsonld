@@ -1,14 +1,17 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Class/Resource",
   "@type": [
     "rdfs:Class",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
   "annal:id": "Resource",
+  "annal:subclassOf": [],
   "annal:type": "rdfs:Class",
   "annal:type_id": "Class",
   "annal:uri": "rdfs:Resource",

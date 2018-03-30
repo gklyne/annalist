@@ -1,14 +1,24 @@
-{ "@id":                        "annal:fields/Bib_description"
-, "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
-, "annal:id":                   "Bib_description"
-, "annal:type_id":              "_field"
-, "rdfs:label":                 "Description"
-, "rdfs:comment":               "BibJSON(ish) description (of license)"
-, "annal:field_render_type":    "Text"
-, "annal:field_value_mode":     "Value_direct"
-, "annal:field_value_type":     "annal:Text"
-, "annal:placeholder":          "(Description)"
-, "annal:property_uri":         "bib:description"
-, "annal:field_entity_type":    "bib:BibEntry"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Bib_description",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:field_entity_type": "bib:BibEntry",
+  "annal:field_render_type": "_enum_render_type/Text",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Text",
+  "annal:id": "Bib_description",
+  "annal:placeholder": "(Description)",
+  "annal:property_uri": "bib:description",
+  "annal:tooltip": "BibJSON(ish) description (of license)",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Description\r\n\r\nBibJSON(ish) description (of license)",
+  "rdfs:label": "Description"
 }

@@ -1,15 +1,24 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/list_entity_type",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
-  "annal:id": "view_entity_type",
+  "annal:domain": [],
+  "annal:id": "list_entity_type",
   "annal:missing_field": "",
+  "annal:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:view_entity_type",

@@ -14,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Linked_audio",
   "annal:list_entity_selector": "\"resource:Linked_audio\" in [@type]",
+  "annal:list_entity_type": "resource:Linked_audio",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -24,7 +25,6 @@
       "annal:field_placement": "small:3,9"
     }
   ],
-  "annal:record_type": "resource:Linked_audio",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of linked audio clips\r\n\r\nPresents a list of audio clip resources from the web.  Each entity is like a bookmark that can be referenced by other entities in the collection, and has additional information about the audio clip.\r\n",

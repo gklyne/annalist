@@ -1,11 +1,20 @@
-{ "@id":                "./"
-, "@type":              ["annal:Type_enum", "annal:Type"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "Enum_bib_type"
-, "annal:type_id":      "_type"
-, "annal:uri":          "annal:Enum_bib_type"
-, "rdfs:label":         "Bibliographic entry type"
-, "rdfs:comment":       "Bibliographic entry type (e.g. article, book, inproceedings, etc.)"
-, "annal:type_view":    "_view/Default_view"
-, "annal:type_list":    "_list/Default_list"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Enum_bib_type",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:id": "Enum_bib_type",
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Default_list",
+  "annal:type_view": "_view/Default_view",
+  "annal:uri": "annal:Enum_bib_type",
+  "rdfs:comment": "Bibliographic entry type (e.g. article, book, inproceedings, etc.)",
+  "rdfs:label": "Bibliographic entry type"
 }

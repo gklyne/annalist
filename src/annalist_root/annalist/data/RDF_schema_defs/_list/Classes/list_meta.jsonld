@@ -1,8 +1,11 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "_list/Classes",
   "@type": [
     "annal:List"
   ],
@@ -11,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Classes",
   "annal:list_entity_selector": "'rdfs:Class' in [@type]",
+  "annal:list_entity_type": "rdfs:Class",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -25,7 +29,6 @@
       "annal:field_placement": "small:6,6"
     }
   ],
-  "annal:record_type": "rdfs:Class",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List resource classes\r\n\r\nDisplays a list of [Class]($BASE:_type/Class/) values.\r\n\r\n",
