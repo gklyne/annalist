@@ -291,17 +291,14 @@ class bound_field(object):
         present in the entity, and a subproperty URI is present, then that 
         subproperty URI is returned.  Otherwise the declared property URI is returned.
         """
-        # if self._key not in self._entityvals:
-        #     subproperty_uris = self._field_description.get_field_subproperty_uris()
-        #     for altkey in subproperty_uris:
-        #         if altkey in self._entityvals:
-        #             return altkey
         return self._field_description.get_field_value_key(self._entityvals)
 
     def get_field_selection_link(self):
-        # Return link corresponding to field value that is a selection from 
-        # an enumeration of entities (or some other value with an associated link),
-        # or None
+        """
+        Return a link corresponding to a field value that is a selection from 
+        an enumeration of entities (or some other value with an associated link),
+        or None
+        """
         choices = self._field_description['field_choices']  # OrderedDict
         v       = self.field_value
         if choices and v in choices:

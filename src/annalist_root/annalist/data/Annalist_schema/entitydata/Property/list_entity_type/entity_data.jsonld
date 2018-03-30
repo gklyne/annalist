@@ -1,0 +1,25 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdf:Property",
+    "rdfs:Resource",
+    "annal:EntityData"
+  ],
+  "annal:id": "view_entity_type",
+  "annal:missing_field": "",
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:view_entity_type",
+  "rdfs:comment": "# Record type\r\n\r\nA resource type URI or CURIE.\r\n\r\nUsed with list definitions to indicate the type of entities displayed.\r\n\r\nIn combination with `field_entity_type` in field definitions, allows for presentation of a choice of fields that are appropriate to the list being defined.",
+  "rdfs:domain": [],
+  "rdfs:label": "List entity type",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

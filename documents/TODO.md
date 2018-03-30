@@ -94,10 +94,14 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] Add migraton in RecordList, RecordView, RecordGroup
     - [x] Add migration tests
 - [x] In entityedit, fix up population of context 'record_type'
-- [x] entity_tyestentitydata.specified_view_context_data add type URI param
-- [ ] Update Annalist_schema to reflect changes
+- [x] entity_testentitydata.specified_view_context_data add type URI param
+- [x] Allow `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
+- [x] Update Annalist_schema to reflect changes
+    - [x] edit task buttons help through Annalist, to cover edit- and view- options.  Update view- example.
+- [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
 - [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
+- [ ] Similar to above for entity_id@@@, except that it uses a separate template in templates.fields.
+- [ ] migrate content of all installable collections
 - [x] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
     - NO: it is varied in form data for multiple occurrences of the same field id 
 

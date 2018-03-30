@@ -12,13 +12,13 @@
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:group_ref",
-  "rdfs:comment": "# Field group reference\r\n\r\nUsed in a field definition that itself contains or references one or more fields (e.g., repeat groups, fields of referenced entity).  The value indicates a field group entity, which in turn indicates the contained of referenced fields.\r\n",
+  "rdfs:comment": "# Field group reference (deprecated)\r\n\r\nUsed in a field definition that itself contains or references one or more fields (e.g., repeat groups, fields of referenced entity).  The value indicates a field group entity, which in turn indicates the contained of referenced fields.\r\n",
   "rdfs:domain": [
     {
       "@id": "annal:Field"
     }
   ],
-  "rdfs:label": "Field group",
+  "rdfs:label": "Field group (deprecated)",
   "rdfs:range": [
     {
       "@id": "annal:Field_group"

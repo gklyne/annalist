@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource"
+  ],
+  "annal:id": "EntityRef",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:EntityRef",
+  "rdfs:comment": "# Entity reference type\r\n\r\nAn internal data type that is used for values that refer to other entities in the current collection.  The value itself is generally stored as a URI reference in the form `type-id/entity-id`, which is resolved as a URI against the base URI for the current collection; this representation allows data to me copied between Annalist collections.",
+  "rdfs:label": "Entity reference",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

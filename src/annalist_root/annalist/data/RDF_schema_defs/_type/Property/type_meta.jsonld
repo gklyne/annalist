@@ -7,6 +7,16 @@
     "annal:Type"
   ],
   "annal:field_aliases": [],
+  "annal:field_aliases": [
+    { "annal:alias_target":     "annal:subpropertyOf"
+    , "annal:alias_source":     "rdfs:subPropertyOf"
+    },
+    { "annal:alias_target":     "annal:domain"
+    , "annal:alias_source":     "rdfs:domain"
+    },
+    { "annal:alias_target":     "annal:range"
+    , "annal:alias_source":     "rdfs:range"
+    }],
   "annal:id": "Property",
   "annal:supertype_uri": [
     {

@@ -128,22 +128,48 @@ OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
 Annalist namespace terms
 """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
-    [ "EntityRoot", "Entity", "EntityData"
-    , "Site", "SiteData", "Collection"
-    # Internal IDs for MIME types (see resourcetypes.py)
-    , "Metadata", "Type_Data"
-    # Entity types
-    , "User", "Type", "List", "View", "Field_group", "Field", "Field_list", "Vocabulary", "Enum"
-    , "Enum_field_placement", "Enum_list_type", "Enum_render_type", "Enum_value_mode", "Enum_value_type"
-    # Group value types
-    , "View_field", "List_field", "Group_field"
-    # Value types
-    , "Text", "Longtext", "Richtext", "EntityRef", "Identifier"
-    , "Placement", "Image", "Audio", "Video"
-    , "Resource"
-    , "Default_type", "Unknown_type"
+    [ "Unknown_type"
+    # Entity value types
+    , "Collection"
+    , "Default_type"
+    , "Entity"
+    , "EntityData"
+    , "EntityRoot"
+    , "Enum"
+    , "Enum_field_placement"
+    , "Enum_list_type"
+    , "Enum_render_type"
+    , "Enum_value_mode"
+    , "Enum_value_type" # Unused??
+    , "Field"
+    , "Field_group"
+    , "List"
+    , "Site"
+    , "SiteData"
+    , "Type"
+    , "Type_Data"
+    , "User"
+    , "View"
+    , "Vocabulary"
     # Repeat/list group types
-    , "Type_supertype_uri" # @@deprecated?
+    , "Field_list"
+    , "Field_superproperty_uri"
+    , "Group_field" # @@deprecated
+    , "List_field"
+    , "Type_supertype_uri"
+    , "View_field"
+    # Data value and resource types
+    , "Audio"
+    , "EntityRef"
+    , "Identifier"
+    , "Image"
+    , "Longtext"
+    , "Metadata"
+    , "Placement"
+    , "Resource"
+    , "Richtext"
+    , "Text"
+    , "Video"
     # Properties in list JSON
     , "entity_list"
     # Properties in internal entities
@@ -154,13 +180,11 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
     , "view_entity_type", "open_view", "view_fields"
-    , "edit_task_buttons", "view_task_buttons"
+    , "task_buttons", "edit_task_buttons", "view_task_buttons"
     , "button_id", "button_label", "button_help"
     , "list_entity_type", "list_entity_selector", "list_fields"
     , "group_entity_type", "group_fields"
     , "field_id"
-    # Enumerated value terms
-    # , "enum_uri"
     # User permissions
     , "user_uri", "user_permission"
     # Field definitions
@@ -169,13 +193,18 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "placeholder", "tooltip", "default_value", "property_uri"
     , "superproperty_uri"
     , "field_ref_type", "field_ref_restriction", "field_ref_field"
-    , "field_fields", "group_ref", "repeat_label_add", "repeat_label_delete"
+    , "field_fields", "repeat_label_add", "repeat_label_delete" 
     , "field_name", "field_placement"
+    , "group_ref" # deprecated
     # Collection metadata
     , "software_version", "meta_comment", "inherit_from"
     , "default_list"
     , "default_view_id", "default_view_type", "default_view_entity"
-    # Deprecated properties - used in entity migration
+    # Schema properties (like RDF equivalents, but connecting Annalist entities)
+    # The intent is that the RDF equivalents can be inferred by looking at the 
+    # referenced entities.
+    , "subclassOf", "subpropertyOf", "domain", "range"
+    # Deprecated identifiers - used in entity migration
     , "Slug", "RepeatGroup", "RepeatGroupRow" 
     , "options_typeref", "restrict_values", "target_field"
     , "record_type", "field_target_type", "comment"

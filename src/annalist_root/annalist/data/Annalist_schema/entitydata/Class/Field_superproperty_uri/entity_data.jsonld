@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource"
+  ],
+  "annal:id": "Field_superproperty_uri",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Field_superproperty_uri",
+  "rdfs:comment": "# Superproperty URI\r\n\r\nAn internal data type that is used for an entry in a list of superproperty URIs within a field definition.",
+  "rdfs:label": "Superproperty URI",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

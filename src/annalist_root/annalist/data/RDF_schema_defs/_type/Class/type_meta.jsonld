@@ -7,6 +7,10 @@
     "annal:Type"
   ],
   "annal:field_aliases": [],
+  "annal:field_aliases": [
+    { "annal:alias_target":     "annal:subclassOf"
+    , "annal:alias_source":     "rdfs:subClassOf"
+    }],
   "annal:id": "Class",
   "annal:supertype_uri": [
     {

@@ -1095,8 +1095,9 @@ class DisplayInfo(object):
                 , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
             context['title'] = "%(view_label)s - %(coll_label)s"%context
-            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, None)
-            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, None)
+            task_buttons      = self.recordview.get(ANNAL.CURIE.task_buttons, None)
+            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, task_buttons)
+            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, task_buttons)
             self.add_task_button_context('edit_task_buttons', edit_task_buttons, context)
             self.add_task_button_context('view_task_buttons', view_task_buttons, context)
         if self.recordlist:
