@@ -1,8 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.8.
+Current status: candidate feature-complete minmum viable product, release 0.5.10.
 
-This release adds super- and sub-property URI support, changes to some message text, and a few bug fixes.
+This is a maintenance release with restructuring of form rendering and tests.
 
 
 # V1.0 release
