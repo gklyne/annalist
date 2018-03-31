@@ -116,6 +116,8 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] Provide content for the links in the page footer
+- [ ] Documentation and tutorial updates
+- [ ] Demo screencast update
 
 (Sub-release?)
 
@@ -132,7 +134,7 @@ See also: https://www.divio.com/en/blog/documentation/
         - [x] There is repeated reading of RecordType values in EntityFinder
               (cf. collection.types() and EntityTypeInfo constructor; also URI access)
         - [x] Need more direct way to locate type (and other entities?) by URI
-        - [ ] Review common mechanism to retrieve URI for entity?  
+        - [ ] Review common mechanism to retrieve URI for entity?
               (Current mechanism fixes use of annal:uri for all entities; maybe OK)
         - [x] Think about how to optimize retrieval of subtypes/supertypes
         - [x] Do special case for types, or more generic caching approach?
@@ -154,14 +156,13 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
-    - Started moving toward paraneterized context data generation for comparison.
+    - Started moving toward parameterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
 Technical debt:
 
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
-- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
     - [ ] update 'models'
@@ -298,7 +299,9 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
-- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
+definitions.
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
@@ -319,7 +322,7 @@ Notes for Future TODOs:
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
       ]
