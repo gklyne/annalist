@@ -17,91 +17,9 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 See also: https://www.divio.com/en/blog/documentation/
 
-
 # Feedback
 
 * https://github.com/gklyne/annalist/issues/40
-
-
-# Version 0.5.10
-
-- [x] Flush collection caches on loading customize page rather than view page
-- [x] Bound_field access to FieldDecription: use methods not dictionary
-    - [x] Update test case context checking (see bound_field holding comments)
-    - [x] Use 'entity_testfielddesc' methods in `entity_testtypedata`
-    - [x] Use 'entity_testfielddesc' methods in `entity_testviewdata`
-    - [x] Use 'entity_testfielddesc' methods in `entity_testvocabdata`
-    - [x] various test modules _check_context_fields use 'entity_testfielddesc' methods
-        - [x] test_recordtype.py
-        - [x] test_recordfield.py
-        - [x] test_recordvocab.py
-        - [x] test_recordlist.py, entity_testlistdata
-        - [x] test_recordview.py, entity_testviewdata
-    - [x] rename *_context_data contruction methods
-    - [x] rename *_form_data contruction methods
-- [x] Test code general cleanup
-    - [x] replace <field>.description['field_id'] with .field_id
-    - [x] replace <field>.description['field_name'] with .field_name
-    - [x] replace <field>.description['field_label'] with .field_label
-    - [x] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
-    - [x] eliminate recordtype_zzz_view_context_data, use type_view_context_data
-    - [x] eliminate recordtype_zzz_view_form_data, use type_view_form_data
-    - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
-    - [x] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
-- [x] View_field_sel change label to "Field ref".
-- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-- [x] Rename fields/properties:
-    - "annal:record_type" -> "annal:list_entity_type" (for list target type)
-    - "annal:record_type" -> "annal:view_entity_type" (for view target type)
-    - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
-    - Group_target_type -> Group_entity_type
-    - List_target_type -> List_entity_type
-    - View_target_type -> View_entity_type
-    - [x] Find all references in code and sitedata
-        - (look for "annal:record_type" and "ANNAL.CURIE.record_type")
-        - [x] appears in field definitions:
-            - [x] Field_restrict
-            - [x] Group_field_sel
-            - [x] Group_target_type
-            - [x] List_field_sel
-            - [x] List_target_type
-            - [x] View_field_sel
-            - [x] View_target_type
-        - [x] appears as field in list definitions
-        - [x] appears as field in view definitions, and:
-            - Field_view comment
-            - List_view comment
-        - [x] annalist/identifiers.py
-        - [x] annalist/models/entityfinder.py
-        - [x] annalist/models/recordfield.py
-        - [x] annalist/tests/entity_testfielddesc.py
-        - [x] annalist/tests/entity_testviewdata.py
-        - [x] annalist/tests/test_data_migration.py
-        - [x] annalist/tests/test_entity_subtype_selection.py
-        - [x] annalist/tests/test_entityeditenumfield.py ("target_record_type")
-        - [x] annalist/tests/test_field_subproperty.py
-        - [x] annalist/tests/test_fielddescription.py
-        - [x] annalist/tests/test_image_url.py
-        - [x] annalist/tests/test_import_resource.py
-        - [x] annalist/tests/test_jsonld_context.py
-        - [x] annalist/tests/test_linked_records.py
-        - [x] annalist/tests/test_recordtype.py ("annal:record_type")
-        - [x] annalist/tests/test_recordview.py ("view_record_type", "target_record_type", "annal:record_type")
-        - [x] annalist/tests/test_render_ref_multifields.py
-        - [x] annalist/tests/test_render_repeatgroup.py:
-        - [x] annalist/tests/test_sitedata.py:
-        - [x] annalist/tests/test_turtle_output.py:
-        - [x] annalist/tests/test_upload_file.py:
-    - [x] Add migraton in RecordList, RecordView, RecordGroup
-    - [x] Add migration tests
-- [x] In entityedit, fix up population of context 'record_type'
-- [x] entity_testentitydata.specified_view_context_data add type URI param
-- [x] Allow `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
-- [x] Update Annalist_schema to reflect changes
-- [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
-- [x] migrate content of all installable collections
 
 # Version 0.5.11, towards 0.5.12
 
