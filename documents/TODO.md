@@ -22,8 +22,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 * https://github.com/gklyne/annalist/issues/40
 
-
-# Version 0.5.9, towards 0.5.10
+# Version 0.5.10
 
 - [x] Flush collection caches on loading customize page rather than view page
 - [x] Bound_field access to FieldDecription: use methods not dictionary
@@ -103,7 +102,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
 - [x] migrate content of all installable collections
 
-(Sub-release?)
+# Version 0.5.11, towards 0.5.12
 
 - [ ] Update python to latest in version 2 series
 - [ ] Update pip to latest version in python environment (for continued testing)
