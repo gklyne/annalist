@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "inproceedings"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "In proceedings"
-, "rdfs:comment":       "An article in a conference proceedings.  Other fields: author, title, booktitle, year, editor, volume/number, series, pages, address, month, organization, publisher, note."
-, "annal:uri":          "annal:bib_type/inproceedings"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/inproceedings",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "inproceedings",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/inproceedings",
+  "rdfs:comment": "An article in a conference proceedings.  Other fields: author, title, booktitle, year, editor, volume/number, series, pages, address, month, organization, publisher, note.",
+  "rdfs:label": "In proceedings"
 }

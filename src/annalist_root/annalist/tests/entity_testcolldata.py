@@ -171,7 +171,7 @@ def collectiondata_read_values(coll_id="testcoll", coll_label=None, coll_descr=N
 #
 #   -----------------------------------------------------------------------------
 
-def collectiondata_view_form_data(
+def coll_view_form_data(
         coll_id="testcoll",
         coll_label=None,
         coll_descr=None,
@@ -187,6 +187,7 @@ def collectiondata_view_form_data(
         , 'Coll_software_version':  annalist.__version_data__
         , 'Coll_comment':           "Created by Annalist test suite"
         , 'orig_type':              "_coll"
+        , 'record_type':            "annal:Collection"
         , 'continuation_url':       ""
         })
     if orig_id:

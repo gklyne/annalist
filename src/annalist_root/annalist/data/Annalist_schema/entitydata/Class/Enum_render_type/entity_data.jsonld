@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Enum_render_type",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Enum_render_type",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Enum_render_type",
+  "rdfs:comment": "# Enumerated type for field render type\r\n\r\nRefers to a value that identifies a renderer to be used for preasenting a field value.\r\n",
+  "rdfs:label": "Field render type",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

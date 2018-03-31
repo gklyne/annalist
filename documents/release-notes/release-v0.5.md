@@ -5,11 +5,11 @@ Annalist release 0.5.x is a candidate feature-complete minimal viable product fo
 A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Current release: 0.5.8
+## Release: 0.5.10
 
-This release primarily adds support for sub/superproperty URI relations declared in field definitions, and adds logic to access entity values using subproperties of a specified field property URI.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some kinds of data evolution.  These changes have prompted some further codebase refactoring.
+This is a maintenance release, with no substantial changes in functionality.  Form rendering and test cases have been restructured, some view fields renamed, and some property URIs renamed.
 
-This release also includes numerous bug fixes, and changes to some messages.
+Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the efford of revising tests to follow changes in the view context structure.
 
 
 ## Status
@@ -83,6 +83,50 @@ Active development takes place on the [`develop` branch](https://github.com/gkly
 See also previous release notes:
 
 - [Release 0.1.x](./release-v0.1.md)
+
+
+## Release: 0.5.10
+
+This is a maintenance release, with no substantial changes in functionality.  Form rendering and test case have been restructured, some view fields renamed, and some property URIs renamed.
+
+Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the efford of revising tests to follow changes in the view context structure.
+
+
+# Version 0.5.9, towards 0.5.10
+
+- [x] Flush collection caches on loading customize page rather than view page
+- [x] Bound_field access to FieldDecription: use methods not dictionary
+    - [x] Update test case context checking (see bound_field holding comments)
+    - [x] Use 'entity_testfielddesc' methods in `entity_testtypedata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testviewdata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testvocabdata`
+    - [x] Various test modules _check_context_fields use 'entity_testfielddesc' methods
+    - [x] Rename *_context_data contruction methods
+    - [x] Rename *_form_data contruction methods
+- [x] Test code general cleanup
+    - [x] replace <field>.description['field_id'] with .field_id
+    - [x] replace <field>.description['field_name'] with .field_name
+    - [x] replace <field>.description['field_label'] with .field_label
+    - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
+- [x] View_field_sel change label to "Field ref".
+- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this reduces of wrapping and duplication of render mode functions.
+- [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+- [x] Rename fields/properties:
+    - "annal:record_type" -> "annal:list_entity_type" (for list target type)
+    - "annal:record_type" -> "annal:view_entity_type" (for view target type)
+    - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
+    - Group_target_type -> Group_entity_type
+    - List_target_type -> List_entity_type
+    - View_target_type -> View_entity_type
+    - [x] Add migraton in RecordList, RecordView, RecordGroup
+    - [x] Add migration tests
+- [x] In entityedit, fix up population of context 'record_type'
+- [x] entity_testentitydata.specified_view_context_data add type URI param
+- [x] Allow field `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
+- [x] Update Annalist_schema to reflect changes
+- [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
+- [x] migrate content of all installable collections
 
 
 ## Release: 0.5.8

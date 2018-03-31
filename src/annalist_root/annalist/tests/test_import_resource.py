@@ -42,7 +42,7 @@ from entity_testutils       import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_default_view_form_data,
+    default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
@@ -73,8 +73,7 @@ test_import_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_import_view label"
     , 'rdfs:comment':               "test_import_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -95,8 +94,7 @@ test_reference_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_reference_view label"
     , 'rdfs:comment':               "test_reference_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -271,7 +269,7 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     def test_import_resource(self):
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
             entity_id="test1", type_id="testimptype", action="edit", 
             do_import="imp_field__import"
             )
@@ -309,7 +307,7 @@ class ImportResourceTest(AnnalistTestCase):
 
     def test_reference_imported_resource(self):
         # Create imported resource (see previous test)
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
             entity_id="test1", type_id="testimptype", action="edit", 
             do_import="imp_field__import"
             )

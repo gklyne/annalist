@@ -86,6 +86,7 @@ Thumbs.db
 annalist.sublime*
 _old_*
 _unused_*
+/ERRORS.txt
 /pyenv
 /anenv
 /setupenv

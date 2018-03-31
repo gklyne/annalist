@@ -24,10 +24,12 @@ from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
+from entity_testfielddesc       import get_field_description, get_bound_field
 from entity_testentitydata      import entitydata_list_type_url
 from entity_testutils           import (
     collection_dir, 
-    collection_entity_view_url
+    collection_entity_view_url,
+    context_field_row
     )
 
 #   -----------------------------------------------------------------------------
@@ -160,93 +162,65 @@ def recordvocab_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def recordvocab_entity_view_context_data(
+def vocab_view_context_data(
         coll_id="testcoll", vocab_id="", orig_id=None, action=None, 
+        vocab_label=None,
+        vocab_descr=None,
         vocab_uri=None,
-        update="RecordVocab"
+        vocab_seealso=[],
+        update="RecordVocab",
+        continuation_url=None
     ):
     if vocab_id:
-        vocab_label = "%s %s/%s"%(update, coll_id, vocab_id)
-        vocab_descr = "%s help for %s in collection %s"%(update, vocab_id, coll_id)
+        def_vocab_label = "%s %s/_vocab/%s"%(update, coll_id, vocab_id)
     else:
-        vocab_label = "%s data ... (%s/%s)"%(update, coll_id, vocab_id)
-        vocab_descr = "%s description ... (%s/%s)"%(update, coll_id, vocab_id)
+        def_vocab_label = "%s data ... (%s/_vocab/)"%(update, coll_id)
+    if vocab_label is None:
+        vocab_label = def_vocab_label
+    if vocab_uri is None:
+       vocab_uri = recordvocab_url(coll_id=coll_id, vocab_id=vocab_id)
+    if continuation_url is None:
+        continuation_url = entitydata_list_type_url(coll_id, "_vocab")
+    view_label = "Vocabulary namespace"
+    view_title = (
+        "%s - %s - Collection %s"%(vocab_label, view_label, coll_id) if vocab_label
+        else
+        "%s - Collection %s"%(view_label, coll_id)
+        )
     context_dict = (
-        { 'title':              "%s - Vocabulary definition - Collection %s"%(vocab_label, coll_id)
-        , 'heading':            "Vocabulary definition"
+        { 'title':              view_title
+        , 'heading':            view_label
         , 'coll_id':            coll_id
         , 'type_id':            '_vocab'
-        , 'orig_id':            'orig_vocab_id'
+        , 'view_id':            'Vocab_view'
+        , 'entity_id':          vocab_id or ""
+        , 'orig_id':            orig_id
+        , 'orig_type':          layout.VOCAB_TYPEID
+        , 'record_type':        "annal:Vocabulary"
+        , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
-              { 'field_id':           'Vocab_id'
-              , 'field_name':         'entity_id'
-              , 'field_value_type':   'annal:EntityRef'
-              , 'field_label':        'Prefix'
-              , 'field_render_type':  'EntityId'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("Vocab_id",          vocab_id),               # 0 (0,0)
+              )
           , context_field_row(
-              { 'field_id':           'Entity_label'
-              , 'field_name':         'Entity_label'
-              , 'field_value_type':   'annal:Text'
-              , 'field_label':        'Label'
-              , 'field_render_type':  'Text'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        vocab_label
-              , 'options':            []
-              })
+              get_bound_field("Entity_label",      vocab_label)             # 1 (1,0)
+              )
           , context_field_row(
-              { 'field_id':           'Entity_comment'
-              , 'field_name':         'Entity_comment'
-              , 'field_label':        'Comment'
-              , 'field_value_type':   'annal:Richtext'
-              , 'field_render_type':  'Markdown'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        vocab_descr
-              , 'options':            []
-              })
+              get_bound_field("Entity_comment",    vocab_descr)             # 2 (2,0)
+              )
           , context_field_row(
-              { 'field_id':           'Entity_uri'
-              , 'field_name':         'Entity_uri'
-              , 'field_value_type':   'annal:Identifier'
-              , 'field_label':        'URI'
-              , 'field_render_type':  'Identifier'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
-          , { 'field_id':             'See_also'
-            , 'field_name':           'See_also'
-            , 'field_value_type':     'annal:seealso'
-            , 'field_label':          'See also'
-            , 'field_render_type':    'RepeatGroupRow'
-            , 'field_value_mode':     'Value_direct'
-            , 'field_placement':      get_placement_classes('small:0,12')
-            , 'field_value':          []
-            , 'options':              []
-            }
+              get_bound_field("Vocab_uri",         vocab_uri)               # 3 (3,0)
+              )
+          , get_bound_field("Entity_see_also_r",   vocab_seealso)           # 4 (4, 0)
           ]
-        , 'continuation_url':   entitydata_list_vocab_url(coll_id, "_vocab")
         })
-    if vocab_id:
-        vocab_url = recordvocab_url(coll_id=coll_id, vocab_id=vocab_id)
-        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = vocab_id
-        context_dict['fields'][3]['row_field_descs'][0]['field_value'] = vocab_url or ""
-        context_dict['orig_id']     = vocab_id
     if orig_id:
         context_dict['orig_id']     = orig_id
     if action:  
         context_dict['action']      = action
     return context_dict
 
-def recordvocab_entity_view_form_data(
+def vocab_view_form_data(
         coll_id="testcoll", orig_coll=None,
         vocab_id="", orig_id=None, 
         action=None, cancel=None, close=None, edit=None, copy=None, task=None,

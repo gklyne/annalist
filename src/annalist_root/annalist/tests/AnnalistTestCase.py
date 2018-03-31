@@ -83,8 +83,8 @@ class AnnalistTestCase(TestCase):
                 log.info("  expect %r"%(expect_dict,))
                 log.info("  actual %r"%(actual_dict,))
             self.assertTrue(k in actual_dict, prefix+"Expected key %s not found in actual"%(k))
-            if isinstance(expect_dict[k],list):
-                if isinstance(actual_dict[k],list):
+            if isinstance(expect_dict[k],(list,tuple)):
+                if isinstance(actual_dict[k],(list,tuple)):
                     # log.info("dict match: prefix: %s, key: %s, list_len %d"%(prefix, k, len(expect_dict[k])))
                     if k == "@type":
                         self.assertEqual(
@@ -92,6 +92,8 @@ class AnnalistTestCase(TestCase):
                             "Key %s: %r != %r"%(k, set(actual_dict[k]), set(expect_dict[k]))
                             )
                     else:
+                        # NOTE: this logic tests for expected list being a leading sublist of 
+                        # the actual list.  Thus, an empty epected list macthes any actual list.
                         for i in range(len(expect_dict[k])):
                             # if i >= len(actual_dict[k]):
                             #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
@@ -111,17 +113,17 @@ class AnnalistTestCase(TestCase):
                                     prefix+"Key %s[%d]: %r != %r"%(k, i, actual_dict[k], expect_dict[k])
                                     )
                 else:
-                    self.fail("Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
+                    self.fail(prefix+"Key %s expected list, got %r instead of %r"%(k, actual_dict[k], expect_dict[k]))
             elif isinstance(expect_dict[k],dict):
                 self.assertDictionaryMatch(
                     actual_dict[k], expect_dict[k], 
                     prefix=prefix+"Key %s: "%(k,)
                     )
             else:
-                # if actual_dict[k] != expect_dict[k]:
-                #     log.info("\n***********\nexpect_dict %r"%(expect_dict))
-                #     log.info("\n-----------\nactual_dict %r"%(actual_dict))
-                #     log.info("\n***********")
+                if actual_dict[k] != expect_dict[k]:
+                    log.info("\n***********\nexpect_dict %r"%(expect_dict))
+                    log.info("\n-----------\nactual_dict %r"%(actual_dict))
+                    log.info("\n***********")
                 # log.info("dict match: prefix: %s, key: %s, actual %s, expected: %s"%(prefix, k, actual_dict[k], expect_dict[k]))
                 self.assertEqual(actual_dict[k], expect_dict[k], 
                     prefix+"Key %s: actual '%s' expected '%s'"%(k, actual_dict[k], expect_dict[k]))

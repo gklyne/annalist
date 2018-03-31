@@ -61,7 +61,9 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='customize_view_enable', e=None,                    f=None               )
         , StableValueMap(c='entity_id',             e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_uri',            e=ANNAL.CURIE.uri,         f='entity_uri'       )
-        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.record_type, f='record_type'      )
+        # The "record_type" value (in context and form data) is intended to reflect the actual
+        # type of the displayed entity.  Currently, it is not used:
+        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.type,        f='record_type'      )
         , SimpleValueMap(c='view_id',               e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',               e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )
@@ -1868,13 +1870,13 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.collection, entitytypeinfo.VIEW_ID
                     )
                 view_entity   = view_typeinfo.get_copy_entity(view_entity_id, prev_view_id)
-                view_entity[ANNAL.CURIE.record_type] = type_uri
                 view_entity.setdefault(RDFS.CURIE.label,   
                     message.TYPE_VIEW_LABEL%type_values
                     )
                 view_entity.setdefault(RDFS.CURIE.comment, 
                     message.TYPE_VIEW_COMMENT%type_values
                     )
+                view_entity[ANNAL.CURIE.view_entity_type] = type_uri
                 view_entity._save()
             # Set up list details (other defaults from sitedata '_initial_values')
             if prev_list_id:
@@ -1888,10 +1890,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 list_entity.setdefault(RDFS.CURIE.comment, 
                     message.TYPE_LIST_COMMENT%type_values
                     )
+                list_entity[ANNAL.CURIE.display_type] = "List"
                 list_entity[ANNAL.CURIE.default_view] = view_entity_id
                 list_entity[ANNAL.CURIE.default_type] = type_entity_id
-                list_entity[ANNAL.CURIE.record_type]  = type_uri
-                list_entity[ANNAL.CURIE.display_type] = "List"
+                list_entity[ANNAL.CURIE.list_entity_type]     = type_uri
                 list_entity[ANNAL.CURIE.list_entity_selector] = list_selector
                 list_entity._save()
             # Update view, list values in type record, and save again
@@ -2651,9 +2653,9 @@ class GenericEntityEditView(AnnalistGenericView):
         Returns the full name of the field found (without the trailing suffix), 
         or None.
         """
-        log.debug("form_data_contains: field_desc %r"%field_desc)
-        log.debug("form_data_contains: group_list %r"%field_desc['group_list'])
-        log.debug("form_data_contains: form_data %r"%form_data)
+        # log.debug("form_data_contains: field_desc %r"%field_desc)
+        # log.debug("form_data_contains: group_list %r"%field_desc['group_list'])
+        # log.debug("form_data_contains: form_data %r"%form_data)
         field_name         = field_desc.get_field_name()
         def _scan_groups(prefix, group_list):
             """
@@ -2665,7 +2667,6 @@ class GenericEntityEditView(AnnalistGenericView):
             stop_all   = True
             if group_list == []:
                 try_field = prefix + field_name
-                log.debug("form_data_contains: try_field %s__%s"%(try_field, field_name_postfix))
                 if try_field in form_data:
                     try_postfix = try_field + "__" + field_name_postfix
                     return (try_postfix in form_data, try_field)

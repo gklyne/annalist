@@ -163,7 +163,7 @@ def annalistuser_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def annalistuser_view_form_data(
+def user_view_form_data(
         coll_id="testcoll", user_id="testuser",
         user_name="Test User",
         user_uri="mailto:testuser@example.org", 
@@ -178,7 +178,8 @@ def annalistuser_view_form_data(
         , 'User_description':   'User %s: permissions for %s in collection %s'%(user_id, user_name, coll_id)
         , 'User_uri':           user_uri
         , 'User_permissions':   user_permissions
-        , 'orig_type':          "_user"
+        , 'orig_type':          layout.USER_TYPEID
+        , 'record_type':        "annal:User"
         , "orig_coll":          coll_id
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_user")
         })

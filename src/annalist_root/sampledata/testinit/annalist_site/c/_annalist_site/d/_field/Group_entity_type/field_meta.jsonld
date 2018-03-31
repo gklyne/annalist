@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Group_entity_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_entity_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_entity_type"
+, "rdfs:label":                 "Group entity type"
+, "rdfs:comment":               "# Group entity type\r\n\r\nType (URI or CURIE) of entity to which this field group applies. Used to determine field choices appropriate to this group.  (See also field 'Entity type' in field definition.)"
+, "annal:tooltip":              "Type (URI or CURIE) of entity to which this field group applies. Used to determine field choices appropriate to this group.  (See also field 'Entity type' in field definition.)"
+, "annal:field_name":           "Group_entity_type"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Field_group"
+, "annal:placeholder":          "(target record type URI/CURIE)"
+, "annal:property_uri":         "annal:group_entity_type"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

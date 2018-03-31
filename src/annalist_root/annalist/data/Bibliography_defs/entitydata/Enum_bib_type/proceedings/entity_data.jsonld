@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "proceedings"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "Proceedings"
-, "rdfs:comment":       "The proceedings of a conference.  Other fields: title, year, editor, volume/number, series, address, month, publisher, organization, note."
-, "annal:uri":          "annal:bib_type/proceedings"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/proceedings",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "proceedings",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/proceedings",
+  "rdfs:comment": "The proceedings of a conference.  Other fields: title, year, editor, volume/number, series, address, month, publisher, organization, note.",
+  "rdfs:label": "Proceedings"
 }

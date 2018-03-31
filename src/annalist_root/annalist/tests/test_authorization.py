@@ -49,8 +49,7 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, 
-    entitydata_delete_form_data,
+    default_view_form_data, entitydata_delete_form_data,
     entitydata_delete_confirm_form_data
     )
 from entity_testuserdata    import (
@@ -58,16 +57,16 @@ from entity_testuserdata    import (
     annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
     annalistuser_create_values, annalistuser_values, annalistuser_read_values,
-    annalistuser_view_form_data,
+    user_view_form_data,
     annalistuser_delete_form_data,
     annalistuser_delete_confirm_form_data
     )
 from entity_testcolldata    import (
-    collectiondata_view_form_data
+    coll_view_form_data
     )
 from entity_testtypedata    import (
     recordtype_create_values, 
-    recordtype_entity_view_form_data,
+    type_view_form_data,
     recordtype_delete_form_data,
     recordtype_delete_confirm_form_data
     )
@@ -263,7 +262,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
-        f = collectiondata_view_form_data(action="view",
+        f = coll_view_form_data(action="view",
             coll_id=self.access_collection_id,
             edit="edit"
             )
@@ -283,7 +282,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id="_annalist_site", type_id="_coll", entity_id=self.access_collection_id, 
             view_id="Collection_view"
             )
-        f = collectiondata_view_form_data(action="edit",
+        f = coll_view_form_data(action="edit",
             coll_id=self.access_collection_id,
             edit="edit"
             )
@@ -334,7 +333,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_user", entity_id="view_user", 
             view_id="Default_view"
             )
-        f = annalistuser_view_form_data(action="view",
+        f = user_view_form_data(action="view",
             coll_id=self.access_collection_id, user_id="view_user",
             user_name="View User",
             user_uri="mailto:view_user@%s"%(TestHost), 
@@ -351,7 +350,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_user", entity_id="view_user", 
             view_id="Default_view"
             )
-        f = annalistuser_view_form_data(action="view",
+        f = user_view_form_data(action="view",
             coll_id=self.access_collection_id, user_id="view_user",
             user_name="View User",
             user_uri="mailto:view_user@%s"%(TestHost), 
@@ -367,7 +366,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_user",
             view_id="Default_view"
             )
-        f = annalistuser_view_form_data(action="new",
+        f = user_view_form_data(action="new",
             coll_id=self.access_collection_id, user_id="new_user",
             user_name="New User",
             user_uri="mailto:new_user@%s"%(TestHost), 
@@ -383,7 +382,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_user", entity_id="copy_user", 
             view_id="Default_view"
             )
-        f = annalistuser_view_form_data(action="copy",
+        f = user_view_form_data(action="copy",
             coll_id=self.access_collection_id, user_id="copy_user_new", orig_id="copy_user",
             user_name="Copy User",
             user_uri="mailto:copy_user_new@%s"%(TestHost), 
@@ -398,7 +397,7 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_user", entity_id="edit_user", 
             view_id="Default_view"
             )
-        f = annalistuser_view_form_data(action="edit",
+        f = user_view_form_data(action="edit",
             coll_id=self.access_collection_id, user_id="edit_user",
             user_name="Edit User",
             user_uri="mailto:edit_user@%s"%(TestHost), 
@@ -462,8 +461,9 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_type", entity_id="view_type", 
             view_id="Default_view"
             )
-        f = recordtype_entity_view_form_data(action="view",
-            coll_id=self.access_collection_id, type_id="_type", orig_id="view_type",
+        f = type_view_form_data(action="view",
+            coll_id=self.access_collection_id, type_type_id="_type", 
+            type_entity_id="view_type", orig_id="view_type",
             edit="edit"
             )
         r = self.client.post(u, f)
@@ -473,11 +473,13 @@ class AuthorizationTest(AnnalistTestCase):
         # requires CONFIG
         e = self.create_type("view_type")
         u = entitydata_edit_url(action="view", 
-            coll_id=self.access_collection_id, type_id="_type", entity_id="view_type", 
+            coll_id=self.access_collection_id, type_id="_type", 
+            entity_id="view_type", 
             view_id="Default_view"
             )
-        f = recordtype_entity_view_form_data(action="view",
-            coll_id=self.access_collection_id, type_id="_type", orig_id="view_type",
+        f = type_view_form_data(action="view",
+            coll_id=self.access_collection_id, type_type_id="_type", 
+            type_entity_id="view_type", orig_id="view_type",
             copy="copy"
             )
         r = self.client.post(u, f)
@@ -489,9 +491,9 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_type",
             view_id="Default_view"
             )
-        f = recordtype_entity_view_form_data(action="new",
+        f = type_view_form_data(action="new",
             coll_id=self.access_collection_id, 
-            type_id="new_type", orig_id="orig_type"
+            type_entity_id="new_type", orig_id="orig_type"
             )
         r = self.client.post(u, f)
         return r
@@ -503,9 +505,9 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_type", entity_id="copy_type", 
             view_id="Default_view"
             )
-        f = recordtype_entity_view_form_data(action="copy",
+        f = type_view_form_data(action="copy",
             coll_id=self.access_collection_id, 
-            type_id="copy_type_new", orig_id="copy_type"
+            type_entity_id="copy_type_new", orig_id="copy_type"
             )
         r = self.client.post(u, f)
         return r
@@ -517,9 +519,9 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="_type", entity_id="edit_type", 
             view_id="Default_view"
             )
-        f = recordtype_entity_view_form_data(action="edit",
+        f = type_view_form_data(action="edit",
             coll_id=self.access_collection_id, 
-            type_id="edit_type"
+            type_entity_id="edit_type"
             )
         r = self.client.post(u, f)
         return r
@@ -583,11 +585,11 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="Default_type", entity_id="view_data", 
             view_id="Default_view"
             )
-        f = entitydata_form_data(action="edit",
-            coll_id=self.access_collection_id, type_id="Default_type", 
-            entity_id="view_data", orig_id="view_data",
-            edit="edit"
-            )
+        f = default_view_form_data(action="edit",
+                coll_id=self.access_collection_id, type_id="Default_type", 
+                entity_id="view_data", orig_id="view_data",
+                edit="edit"
+                )
         r = self.client.post(u, f)
         return r
 
@@ -598,11 +600,11 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="Default_type", entity_id="view_data", 
             view_id="Default_view"
             )
-        f = entitydata_form_data(action="copy",
-            coll_id=self.access_collection_id, type_id="Default_type", 
-            entity_id="copy_view_data", orig_id="view_data",
-            copy="copy"
-            )
+        f = default_view_form_data(action="copy",
+                coll_id=self.access_collection_id, type_id="Default_type", 
+                entity_id="copy_view_data", orig_id="view_data",
+                copy="copy"
+                )
         r = self.client.post(u, f)
         return r
 
@@ -612,9 +614,10 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="Default_type",
             view_id="Default_view"
             )
-        f = entitydata_form_data(action="new",
-            coll_id=self.access_collection_id, type_id="Default_type", entity_id="new_entity"
-            )
+        f = default_view_form_data(action="new",
+                coll_id=self.access_collection_id, type_id="Default_type", 
+                entity_id="new_entity"
+                )
         r = self.client.post(u, f)
         return r
 
@@ -625,10 +628,10 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="Default_type", entity_id="copy_entity", 
             view_id="Default_view"
             )
-        f = entitydata_form_data(action="copy",
-            coll_id=self.access_collection_id, type_id="Default_type", 
-            entity_id="copy_entity_new", orig_id="copy_entity"
-            )
+        f = default_view_form_data(action="copy",
+                coll_id=self.access_collection_id, type_id="Default_type", 
+                entity_id="copy_entity_new", orig_id="copy_entity"
+                )
         r = self.client.post(u, f)
         # log.info("r %s"%r)
         return r
@@ -640,9 +643,10 @@ class AuthorizationTest(AnnalistTestCase):
             coll_id=self.access_collection_id, type_id="Default_type", entity_id="edit_entity", 
             view_id="Default_view"
             )
-        f = entitydata_form_data(action="edit",
-            coll_id=self.access_collection_id, type_id="Default_type", entity_id="edit_entity"
-            )
+        f = default_view_form_data(action="edit",
+                coll_id=self.access_collection_id, type_id="Default_type", 
+                entity_id="edit_entity"
+                )
         r = self.client.post(u, f)
         # log.info("r %s"%r)
         return r
@@ -1289,7 +1293,7 @@ class AuthorizationTest(AnnalistTestCase):
         entities = context_list_entities(r.context)
         self.assertEqual(len(entities), 2)
         entity_fields = (
-            [ ('testtype',    '_type',    'RecordType testcoll/testtype')
+            [ ('testtype',    '_type',    'RecordType testcoll/_type/testtype')
             , ('entity1',     'testtype', 'Entity testcoll/testtype/entity1')
             ])
         for eid in range(2):

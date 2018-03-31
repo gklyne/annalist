@@ -148,14 +148,15 @@ class SubtypeSelectionTest(AnnalistTestCase):
             self.assertEqual(entities[eid]['entity_id'], expect_entities[eid][1])
         return
 
-    def _create_ref_type_view(self, view_id="Test_ref_type_view", record_type="test:testtypes"):
+    def _create_ref_type_view(self, 
+        view_id="Test_ref_type_view", view_entity_type="test:testtypes"
+        ):
         ref_type_view = RecordView.create(self.testcoll, view_id,
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:"+view_id
-            , 'rdfs:label':         "Test view label"
-            , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  record_type
-            #@@ , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:"+view_id
+            , 'rdfs:label':             "Test view label"
+            , 'rdfs:comment':           "Test view comment"
+            , 'annal:view_entity_type': view_entity_type
             , 'annal:view_fields':
               [ { 'annal:field_id':         layout.FIELD_TYPEID+"/Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -168,7 +169,7 @@ class SubtypeSelectionTest(AnnalistTestCase):
         self.assertTrue(ref_type_view is not None)
         return ref_type_view
 
-    def _create_ref_type_field(self, entity_type="test:testtypes"):
+    def _create_ref_type_field(self, field_entity_type="test:testtypes"):
         ref_type_field = RecordField.create(self.testcoll, "Test_ref_type_field",
             { "annal:type":                     "annal:Field"
             , "rdfs:label":                     "Type reference"
@@ -180,8 +181,8 @@ class SubtypeSelectionTest(AnnalistTestCase):
             , "annal:property_uri":             "test:ref_type"
             , "annal:field_placement":          "small:0,12;medium:0,6"
             , "annal:field_ref_type":           "_type/testtypes"
-            , "annal:field_ref_restriction":    "[test:turi] subtype %s"%entity_type
-            , "annal:field_entity_type":        entity_type
+            , "annal:field_ref_restriction":    "[test:turi] subtype %s"%field_entity_type
+            , "annal:field_entity_type":        field_entity_type
             })
         self.assertTrue(ref_type_field is not None)
         return ref_type_field
@@ -228,11 +229,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.field_id, "Entity_id")
+        self.assertEqual(f1.field_id, "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (
@@ -243,8 +244,10 @@ class SubtypeSelectionTest(AnnalistTestCase):
         return
 
     def test_select_notype_fields(self):
-        ref_view  = self._create_ref_type_view(view_id="Test_ref_notype_view", record_type="test:notypes")
-        ref_field = self._create_ref_type_field(entity_type="test:sometypes")
+        ref_view  = self._create_ref_type_view(
+            view_id="Test_ref_notype_view", view_entity_type="test:notypes"
+            )
+        ref_field = self._create_ref_type_field(field_entity_type="test:sometypes")
         u = entitydata_edit_url(
             "new", "testcoll", "ref_type", view_id="Test_ref_notype_view"
             )
@@ -257,11 +260,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.field_id, "Entity_id")
+        self.assertEqual(f1.field_id, "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = []
@@ -269,8 +272,10 @@ class SubtypeSelectionTest(AnnalistTestCase):
         return
 
     def test_select_subtype1_fields(self):
-        ref_view  = self._create_ref_type_view(view_id="Test_ref_type1_view", record_type="test:testtypes")
-        ref_field = self._create_ref_type_field(entity_type="test:testtype1")
+        ref_view  = self._create_ref_type_view(
+            view_id="Test_ref_type1_view", view_entity_type="test:testtypes"
+            )
+        ref_field = self._create_ref_type_field(field_entity_type="test:testtype1")
         u = entitydata_edit_url(
             "new", "testcoll", "ref_type", view_id="Test_ref_type1_view"
             )
@@ -283,11 +288,11 @@ class SubtypeSelectionTest(AnnalistTestCase):
         # Fields
         head_fields = context_list_head_fields(r.context)
         self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-        self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
+        self.assertEqual(len(head_fields[0].description['row_field_descs']), 2)
         f0 = context_view_field(r.context, 0, 0)
         f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f0['field_id'], "Entity_id")
-        self.assertEqual(f1['field_id'], "Test_ref_type_field")
+        self.assertEqual(f0.field_id, "Entity_id")
+        self.assertEqual(f1.field_id, "Test_ref_type_field")
         baselabel = "Entity testcoll/"
         baseuri   = TestBasePath+"/c/testcoll/d/%s/"
         ref_options = (

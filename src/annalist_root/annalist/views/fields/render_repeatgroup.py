@@ -35,10 +35,10 @@ view_group = (
         <div class="small-12 columns">
           <div class="row">
             <div class="group-label small-2 columns">
-              <span>{{field.field_label}}</span>
+              <span>{{field.description.field_label}}</span>
             </div>
             <div class="group-placeholder small-10 columns">
-              {{field.field_placeholder}}
+              {{field.description.field_placeholder}}
             </div>
           </div>
         </div>"""
@@ -69,10 +69,10 @@ edit_group = (
         <div class="small-12 columns"{{field.field_tooltip_attr|safe}}>
           <div class="row">
             <div class="group-label small-2 columns">
-              <span>{{field.field_label}}</span>
+              <span>{{field.description.field_label}}</span>
             </div>
             <div class="group-placeholder small-10 columns">
-              {{field.field_placeholder}}
+              {{field.description.field_placeholder}}
             </div>
           </div>
         </div>"""
@@ -82,7 +82,7 @@ edit_group = (
           <div class="row selectable">
             <div class="small-2 columns checkbox-in-edit-padding">
               {% if auth_config %}
-              <input type="checkbox" name="{{field.group_id}}__select_fields"
+              <input type="checkbox" name="{{field.description.group_id}}__select_fields"
                      value="{{repeat_index}}" class="right" />
               {% endif %}
             </div>
@@ -103,13 +103,13 @@ edit_group = (
               &nbsp;
             </div>
             <div class="small-10 columns">
-              <input type="submit" name="{{field.group_id}}__remove"
-                     value="{{field.group_delete_label}}" />
-              <input type="submit" name="{{field.group_id}}__add"
-                     value="{{field.group_add_label}}" />
-              <input type="submit" name="{{field.group_id}}__up"
+              <input type="submit" name="{{field.description.group_id}}__remove"
+                     value="{{field.description.group_delete_label}}" />
+              <input type="submit" name="{{field.description.group_id}}__add"
+                     value="{{field.description.group_add_label}}" />
+              <input type="submit" name="{{field.description.group_id}}__up"
                      value="Move &#x2b06;" />
-              <input type="submit" name="{{field.group_id}}__down"
+              <input type="submit" name="{{field.description.group_id}}__down"
                      value="Move &#x2b07;" />
             </div>
           </div>
@@ -123,7 +123,7 @@ view_grouprow = (
         <div class="small-12 columns">
           <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
-              <span>{{field.field_label}}</span>
+              <span>{{field.description.field_label}}</span>
             </div>
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
@@ -131,7 +131,7 @@ view_grouprow = (
                   <div class="view-grouprow col-head row">
                     {% for f in group_head_fields %}
                     <!-- ===== renderer {{f.render}} -->
-                    <!-- ===== {{f.field_render_type}}.{{f.field_value_mode}}/{{f.field_id}}:{{f.field_label}} ({{render_mode}}) -->
+                    <!-- ===== {{f.description.field_render_type}}.{{f.description.field_value_mode}}/{{f.description.field_id}}:{{f.description.field_label}} ({{render_mode}}) -->
                     <!-- ===== f.render.col_head_view... -->
                     <!-- {_ include f.field_render_colhead_view with field=f %} -->
                     {% include f.render.col_head_view with field=f %}
@@ -150,7 +150,7 @@ view_grouprow = (
         <div class="small-12 columns">
           <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
-              <span>{{field.field_label}}</span>
+              <span>{{field.description.field_label}}</span>
             </div>
             <div class="group-placeholder small-12 medium-10 columns">
               <span>(None specified)</span>
@@ -191,7 +191,7 @@ edit_grouprow = (
         <div class="small-12 columns"{{field.field_tooltip_attr|safe}}>
           <div class="grouprow row">
             <div class="group-label small-12 medium-2 columns">
-              <span>{{field.field_label}}</span>
+              <span>{{field.description.field_label}}</span>
             </div>
             <div class="small-12 medium-10 columns hide-for-small-only">
               <div class="row">
@@ -221,7 +221,7 @@ edit_grouprow = (
               <div class="tbody row select-row">
                 <div class="small-1 columns checkbox-in-edit-padding">
                   <input type="checkbox" class="select-box right"
-                         name="{{field.group_id}}__select_fields"
+                         name="{{field.description.group_id}}__select_fields"
                          value="{{repeat_index}}" />
                 </div>
                 <div class="small-11 columns">
@@ -249,13 +249,13 @@ edit_grouprow = (
                   &nbsp;
                 </div>
                 <div class="small-11 columns">
-                  <input type="submit" name="{{field.group_id}}__remove" 
-                         value="{{field.group_delete_label}}" />
-                  <input type="submit" name="{{field.group_id}}__add"    
-                         value="{{field.group_add_label}}" />
-                  <input type="submit" name="{{field.group_id}}__up"
+                  <input type="submit" name="{{field.description.group_id}}__remove" 
+                         value="{{field.description.group_delete_label}}" />
+                  <input type="submit" name="{{field.description.group_id}}__add"    
+                         value="{{field.description.group_add_label}}" />
+                  <input type="submit" name="{{field.description.group_id}}__up"
                          value="Move &#x2b06;" />
-                  <input type="submit" name="{{field.group_id}}__down"
+                  <input type="submit" name="{{field.description.group_id}}__down"
                          value="Move &#x2b07;" />
                 </div>
               </div>
@@ -348,8 +348,10 @@ class RenderRepeatGroup(object):
         # log.info("RenderRepeatGroup.render")
         try:
             # log.info("RenderRepeatGroup.render field: %r"%(context['field'],))
-            # log.info("RenderRepeatGroup.render descs: %r"%(context['field']['group_field_descs'],))
-            h = [ bound_field(f, {}) for f in context['field']['group_field_descs'] ]
+            group_id          = context['field']['description']['group_id']
+            group_field_descs = context['field']['description']['group_field_descs']
+            # log.info("RenderRepeatGroup.render descs: %r"%(group_field_descs,))
+            h = [ bound_field(f, {}) for f in group_field_descs ]
             with context.push({ 'group_head_fields': h }):
                 value_list     = context['field']['field_value']
                 if len(value_list) > 0:
@@ -359,8 +361,9 @@ class RenderRepeatGroup(object):
                     for g in value_list:
                         # log.debug("RenderRepeatGroup.render field_val: %r"%(g))
                         r = [ bound_field(f, g, context_extra_values=extras) 
-                              for f in context['field']['group_field_descs'] ]
-                        repeat_id = context.get('repeat_prefix', "") + context['field']['group_id']
+                              for f in group_field_descs 
+                              ]
+                        repeat_id = context.get('repeat_prefix', "") + group_id
                         repeat_dict = (
                             { 'repeat_id':            repeat_id
                             , 'repeat_index':         str(repeat_index)

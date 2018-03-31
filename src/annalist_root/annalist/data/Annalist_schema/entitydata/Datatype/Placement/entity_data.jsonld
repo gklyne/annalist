@@ -1,11 +1,13 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Datatype/Placement",
   "@type": [
     "rdfs:Datatype",
-    "rdfs:Resource",
     "rdfs:Class",
     "annal:EntityData"
   ],

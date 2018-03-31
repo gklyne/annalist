@@ -1,0 +1,41 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/superproperty_uri",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "annal:id": "superproperty_uri",
+  "annal:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:superproperty_uri",
+  "rdfs:comment": "# Supertype URI\r\n\r\nURI or CURIE of superproperty of the primary property used for a field.\r\n\r\nThis allows specialized properties to be used with structured ontologies, and to still appear as a value for the more general case.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Type"
+    }
+  ],
+  "rdfs:label": "Field superproperty URI",
+  "rdfs:range": [
+    {
+      "@id": "annal:Identifier"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

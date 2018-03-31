@@ -1,0 +1,41 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/subpropertyOf",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "annal:id": "subpropertyOf",
+  "annal:range": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:subpropertyOf",
+  "rdfs:comment": "# Subproperty of\r\n\r\nReferences another [Property]($BASE:_type/Property) entity that describes a superproperty of the current entity.\r\n\r\nThis can be used to infer `rdfs:subPropertyOf` relationships between the URIs of Property entities.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "rdfs:label": "Subproperty of",
+  "rdfs:range": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

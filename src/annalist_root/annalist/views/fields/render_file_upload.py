@@ -90,8 +90,8 @@ view_upload = (
 
 edit_upload = (
     """<!-- fields.render_file_upload -->
-    <input type="file" name="{{repeat_prefix}}{{field.field_name}}"
-           placeholder="{{field.field_placeholder}}"
+    <input type="file" name="{{repeat_prefix}}{{field.description.field_name}}"
+           placeholder="{{field.description.field_placeholder}}"
            value="{{resource_name}}" />
     {% if uploaded_file != "" %}
     Previously uploaded: {{uploaded_file}}

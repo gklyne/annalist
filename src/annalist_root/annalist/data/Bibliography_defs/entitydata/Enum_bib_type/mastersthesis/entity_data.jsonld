@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "mastersthesis"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "Master's thesis"
-, "rdfs:comment":       "A Master's thesis.  Other fields: author, title, school, year, type, address, month, note."
-, "annal:uri":          "annal:bib_type/mastersthesis"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/mastersthesis",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "mastersthesis",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/mastersthesis",
+  "rdfs:comment": "A Master's thesis.  Other fields: author, title, school, year, type, address, month, note.",
+  "rdfs:label": "Master's thesis"
 }

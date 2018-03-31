@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Enum_field_placement",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Enum_field_placement",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Enum_field_placement",
+  "rdfs:comment": "# Enumerated type for field placement\r\n\r\nRefers to a value that describes the placement of a field in a view or list.\r\n",
+  "rdfs:label": "Field placement",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

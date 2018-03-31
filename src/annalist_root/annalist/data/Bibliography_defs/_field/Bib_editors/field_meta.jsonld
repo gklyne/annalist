@@ -1,38 +1,53 @@
-{ "@id":                        "annal:fields/Bib_editors"
-, "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
-, "annal:id":                   "Bib_editors"
-, "annal:type_id":              "_field"
-, "rdfs:label":                 "Editor(s)"
-, "rdfs:comment":               "BibJSON(ish) field for editors"
-, "annal:field_render_type":    "Group_Seq"
-, "annal:field_value_mode":     "Value_direct"
-, "annal:field_value_type":     "bib:Editors"
-, "annal:placeholder":          "Editor(s) of article or compilation"
-, "annal:property_uri":         "bib:editor"
-, "annal:field_entity_type":    "bib:BibEntry"
-, "annal:field_fields":
-  [ { "annal:field_id":         "_field/Bib_id"
-    , "annal:property_uri":     "bib:id"
-    , "annal:field_placement":  "small:0,12"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Bib_editors",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:field_entity_type": "bib:BibEntry",
+  "annal:field_fields": [
+    {
+      "annal:field_id": "_field/Bib_id",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "bib:id"
+    },
+    {
+      "annal:field_id": "_field/Bib_name",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "bib:name"
+    },
+    {
+      "annal:field_id": "_field/Bib_alternate",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "bib:alternate"
+    },
+    {
+      "annal:field_id": "_field/Bib_firstname",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "bib:firstname"
+    },
+    {
+      "annal:field_id": "_field/Bib_lastname",
+      "annal:field_placement": "small:0,12",
+      "annal:property_uri": "bib:lastname"
     }
-  , { "annal:field_id":         "_field/Bib_name"
-    , "annal:property_uri":     "bib:name"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "_field/Bib_alternate"
-    , "annal:property_uri":     "bib:alternate"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "_field/Bib_firstname"
-    , "annal:property_uri":     "bib:firstname"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "_field/Bib_lastname"
-    , "annal:property_uri":     "bib:lastname"
-    , "annal:field_placement":  "small:0,12"
-    }
-  ]
-, "annal:repeat_label_add":     "Add editor"
-, "annal:repeat_label_delete":  "Remove selected editor(s)"
+  ],
+  "annal:field_render_type": "_enum_render_type/Group_Seq",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "bib:Editors",
+  "annal:id": "Bib_editors",
+  "annal:placeholder": "Editor(s) of article or compilation",
+  "annal:property_uri": "bib:editor",
+  "annal:repeat_label_add": "Add editor",
+  "annal:repeat_label_delete": "Remove selected editor(s)",
+  "annal:tooltip": "BibJSON(ish) field for editors",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Editor(s)\r\n\r\nBibJSON(ish) field for editors",
+  "rdfs:label": "Editor(s)"
 }

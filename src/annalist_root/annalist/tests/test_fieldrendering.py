@@ -90,34 +90,36 @@ class FieldRenderingTest(FieldRendererTestSupport):
                     , "annal:property_uri":     "rdfs:comment"
                     }
                   ]
-                # ----- Field description -----
-                , 'field_id':                   'View_fields'
-                , 'field_name':                 'View_fields'
-                , 'field_value_type':          'annal:Field_group'
-                , 'field_label':                'Fields'
-                , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
-                , 'field_render_type':          'RepeatGroup'
-                , 'field_value_mode':           'Value_direct'
-                , 'field_property_uri':         'annal:view_fields'
-                , 'field_placement':            get_placement_classes("small:0,12")
-                , 'field_placeholder':          '(repeat field description)'
-                #@@ , 'field_group_ref':            'View_field_view'
-                , 'group_id':                   'View_fields'
-                , 'group_label':                'Fields'
-                , 'group_add_label':            'Add field'
-                , 'group_delete_label':         'Remove selected field(s)'
-                , 'group_field_descs':
-                    [ field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_sel" },        {}
-                        )
-                    , field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_property" },   {}
-                        )
-                    , field_description_from_view_field(
-                        self.testcoll, { ANNAL.CURIE.field_id: "Group_field_placement" },  {}
-                        )
-                    ]
                 , 'context_extra_values':       {}
+                # ----- Field description -----
+                , 'description':
+                    { 'field_id':                   'View_fields'
+                    , 'field_name':                 'View_fields'
+                    , 'field_value_type':          'annal:Field_group'
+                    , 'field_label':                'Fields'
+                    , 'field_help':                 'This resource descibes the repeated field description used when displaying and/or editing a record view description'
+                    , 'field_render_type':          'RepeatGroup'
+                    , 'field_value_mode':           'Value_direct'
+                    , 'field_property_uri':         'annal:view_fields'
+                    , 'field_placement':            get_placement_classes("small:0,12")
+                    , 'field_placeholder':          '(repeat field description)'
+                    #@@ , 'field_group_ref':            'View_field_view'
+                    , 'group_id':                   'View_fields'
+                    , 'group_label':                'Fields'
+                    , 'group_add_label':            'Add field'
+                    , 'group_delete_label':         'Remove selected field(s)'
+                    , 'group_field_descs':
+                        [ field_description_from_view_field(
+                            self.testcoll, { ANNAL.CURIE.field_id: "View_field_sel" },        {}
+                            )
+                        , field_description_from_view_field(
+                            self.testcoll, { ANNAL.CURIE.field_id: "View_field_property" },   {}
+                            )
+                        , field_description_from_view_field(
+                            self.testcoll, { ANNAL.CURIE.field_id: "View_field_placement" },  {}
+                            )
+                        ]
+                    }
                 }
             # ----- other values -----
             , 'auth_config':                  True
@@ -155,47 +157,47 @@ class FieldRenderingTest(FieldRendererTestSupport):
         expect_elements = (
             [ '''<div class="group-label small-2 columns"> <span>Fields</span> </div>'''
             , '''<div class="row selectable">'''
-            , '''<div class="view-label small-12 medium-4 columns"> <span>Field id</span> </div>'''
+            , '''<div class="view-label small-12 medium-4 columns"> <span>Field ref</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Property URI</span> </div>'''
             , '''<div class="view-label small-12 medium-4 columns"> <span>Position/size</span> </div>'''
             # 1st field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="0" class="right" />'''
             , re.sub(r'\s+', " ", 
-                render_choice_options("View_fields__0__Field_id", field_choices, 
-                  "_field/Entity_id", placeholder="(field sel)"
+                render_choice_options("View_fields__0__View_field_sel", field_choices, 
+                  "_field/Entity_id", placeholder="(field reference)"
                 ))
-            , '''<input type="text" size="64" name="View_fields__0__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__0__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             # 2nd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="1" class="right" />'''
             , re.sub(r'\s+', " ", 
-                render_choice_options("View_fields__1__Field_id", field_choices, 
-                  "_field/Entity_type", placeholder="(field sel)"
+                render_choice_options("View_fields__1__View_field_sel", field_choices, 
+                  "_field/Entity_type", placeholder="(field reference)"
                 ))
-            , '''<input type="text" size="64" name="View_fields__1__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__1__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value=""/>'''
             # 3rd field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="2" class="right" />'''
             , re.sub(r'\s+', " ", 
-                render_choice_options("View_fields__2__Field_id", field_choices, 
-                  "_field/Entity_label", placeholder="(field sel)"
+                render_choice_options("View_fields__2__View_field_sel", field_choices, 
+                  "_field/Entity_label", placeholder="(field reference)"
                 ))
-            , '''<input type="text" size="64" name="View_fields__2__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__2__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:label"/>'''
             # 4th field
             , '''<input type="checkbox" name="View_fields__select_fields"'''+
               ''' value="3" class="right" />'''
             , re.sub(r'\s+', " ", 
-                render_choice_options("View_fields__3__Field_id", field_choices, 
-                  "_field/Entity_comment", placeholder="(field sel)"
+                render_choice_options("View_fields__3__View_field_sel", field_choices, 
+                  "_field/Entity_comment", placeholder="(field reference)"
                 ))
-            , '''<input type="text" size="64" name="View_fields__3__Field_property"'''+
+            , '''<input type="text" size="64" name="View_fields__3__View_field_property"'''+
               ''' placeholder="(field URI or CURIE)"'''+
               ''' value="rdfs:comment"/>'''
             # Buttons
@@ -221,8 +223,8 @@ class FieldRenderingTest(FieldRendererTestSupport):
                         '''value="%(field_value)d"/>''')%
                     { 'field_value':        context['field']['field_value']
                     , 'field_name':         context['field']['field_name']
-                    , 'field_placeholder':  context['field']['field_placeholder']
                     , 'repeat_prefix':      context['repeat_prefix']
+                    , 'field_placeholder':  context['field'].description['field_placeholder']
                     })
 
         fieldrender = RenderFieldValue("render_int",

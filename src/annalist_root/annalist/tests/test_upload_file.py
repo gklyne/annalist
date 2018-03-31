@@ -45,7 +45,7 @@ from entity_testutils       import (
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
-    entitydata_default_view_form_data,
+    default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
@@ -85,8 +85,7 @@ test_upload_file_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_upload_view label"
     , 'rdfs:comment':               "test_upload_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -107,8 +106,7 @@ test_upload_image_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_upload_image_view label"
     , 'rdfs:comment':               "test_upload_image_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -129,8 +127,7 @@ test_reference_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_reference_view label"
     , 'rdfs:comment':               "test_reference_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -151,8 +148,7 @@ test_image_ref_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -173,8 +169,7 @@ test_image_view_create_values = (
     { 'annal:type':                 "annal:View"
     , 'rdfs:label':                 "test_image_view label"
     , 'rdfs:comment':               "test_image_view comment"
-    , 'annal:record_type':          ""
-    # , 'annal:add_field':            "yes"
+    , 'annal:view_entity_type':     ""
     , 'annal:view_fields':
       [ { 'annal:field_id':             "Entity_id"
         , 'annal:field_placement':      "small:0,12;medium:0,6"
@@ -458,7 +453,9 @@ class UploadResourceTest(AnnalistTestCase):
     def test_upload_file_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
         with open(self.filepath) as fp:
-            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
+            f = default_view_form_data(
+                type_id="testupltype", entity_id="test1", action="edit"
+                )
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview")
             r = self.client.post(u, f)
@@ -489,7 +486,9 @@ class UploadResourceTest(AnnalistTestCase):
     def test_reference_uploaded_resource(self):
         # Create uploaded resource (see previous test)
         with open(self.filepath) as fp:
-            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
+            f = default_view_form_data(
+                type_id="testupltype", entity_id="test1", action="edit"
+                )
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url(
                 "view", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview"
@@ -532,7 +531,9 @@ class UploadResourceTest(AnnalistTestCase):
     def test_upload_image_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
         with open(self.imagepath) as fp:
-            f = entitydata_default_view_form_data(type_id="testupltype", entity_id="test1", action="edit")
+            f = default_view_form_data(
+                type_id="testupltype", entity_id="test1", action="edit"
+                )
             f['upl_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplimageview")
             r = self.client.post(u, f)
@@ -623,7 +624,9 @@ class UploadResourceTest(AnnalistTestCase):
     def test_image_edit_field(self):
         # Upload to an image view field
         with open(self.imagepath) as fp:
-            f = entitydata_default_view_form_data(type_id="testimgtype", entity_id="test1", action="edit")
+            f = default_view_form_data(
+                type_id="testimgtype", entity_id="test1", action="edit"
+                )
             f['img_field'] = fp     # Upload file with submission
             u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
             r = self.client.post(u, f)
@@ -715,7 +718,9 @@ class UploadResourceTest(AnnalistTestCase):
         self.test_image_edit_field()
 
         # Edit entity
-        f = entitydata_default_view_form_data(type_id="testimgtype", entity_id="test1", action="edit", update="Updated")
+        f = default_view_form_data(
+            type_id="testimgtype", entity_id="test1", action="edit", update="Updated"
+            )
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -752,7 +757,9 @@ class UploadResourceTest(AnnalistTestCase):
         self.test_image_edit_field()
 
         # Rename entity
-        f = entitydata_default_view_form_data(type_id="testimgtype", orig_id="test1", entity_id="test_new", action="edit")
+        f = default_view_form_data(
+            type_id="testimgtype", orig_id="test1", entity_id="test_new", action="edit"
+            )
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -806,7 +813,7 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertContains(r, hi5, html=True)
 
         # Edit entity
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
             coll_id="testsubcoll", type_id="testimgtype", entity_id="test1", 
             orig_coll="testcoll", action="edit", 
             update="Updated"

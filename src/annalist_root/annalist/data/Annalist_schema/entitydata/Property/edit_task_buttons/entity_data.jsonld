@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/edit_task_buttons",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "annal:id": "edit_task_buttons",
+  "annal:range": [],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:edit_task_buttons",
+  "rdfs:comment": "# Edit task buttons\r\n\r\nThis property may be used in a view definition to describe task buttons that are added to the view when viewing an entity.  It references a list of internal resources, each of which defines a button id, button label and tooltip help text for the button (see example below).\r\n\r\nThe declared button id must correspond to a defined task, and then the button is clicked while editing an entity, that task is invoked.  (Currently, the only tasks are those predefined by Annalist, but future revisions may also support user-definable tasks.)\r\n\r\nSee also: `annal:task_buttons` and  `annal:view_task_buttons`.\r\n\r\nSee also: `annal:button_id`, `annal:button_label` and `annal:button_help`.\r\n\r\n## Example\r\n\r\nTaken from Annalist's internal definition of the field definition view:\r\n\r\n        {\r\n          :\r\n          \"annal:edit_task_buttons\":\r\n            [ { \"annal:button_id\":        \"_task/Define_many_field\" \r\n              , \"annal:button_label\":     \"Define repeat field\"\r\n              , \"annal:button_help\":      \"Define new field that allows zero, one or more occurrences of the current field.  The multiple occurrences are supported through repeated use of the field property URI (as opposed to a list field).  (New set field definitions are created with default values derived from the current field, and may be edited later.)\"\r\n              }\r\n            , { \"annal:button_id\":        \"_task/Define_list_field\" \r\n              , \"annal:button_label\":     \"Define list field\"\r\n              , \"annal:button_help\":      \"Define new field that contains an ordered list of values of the current field.  The multiple values are represented using an RDF list structure.  (New list field definitions are created with default values derived from the current field, and may be edited later.)\"\r\n              }\r\n            , { \"annal:button_id\":        \"_task/Define_field_ref\"\r\n              , \"annal:button_label\":     \"Define field reference\"\r\n              , \"annal:button_help\":      \"Define new field containing a reference to the current field.  (New definitions have default values, and may be edited later.  Additional fields may be added later.)\"\r\n              }\r\n            ]\r\n          :\r\n        }\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:label": "Edit task buttons",
+  "rdfs:range": [],
+  "rdfs:subPropertyOf": []
+}

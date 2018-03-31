@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "conference"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "Conference"
-, "rdfs:comment":       "The same as 'inproceedings', included for Scribe compatibility."
-, "annal:uri":          "annal:bib_type/conference"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/conference",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "conference",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/conference",
+  "rdfs:comment": "The same as 'inproceedings', included for Scribe compatibility.",
+  "rdfs:label": "Conference"
 }

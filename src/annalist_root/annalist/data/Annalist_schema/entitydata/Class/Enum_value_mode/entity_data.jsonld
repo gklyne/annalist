@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Enum_value_mode",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Enum_value_mode",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Enum_value_mode",
+  "rdfs:comment": "# Enumerated type for field value mode\r\n\r\nRefers to a value that identifies how a field value is accessed for rendering.  This value is used together with a render type vcalue to control the process of rendering a field in a view or a list.\r\n\r\nThe majority of fields are used with a value mode of `Value_direct`, which indicates that the field value is taken directly from the identified field of the containing entity.  In a few cases, rendered field values are retrieved from a referenced entity or web resource, for which alternative value modes may be used.",
+  "rdfs:label": "Field value mode",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

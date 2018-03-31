@@ -1,0 +1,30 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Type_supertype_uri",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Type_supertype_uri",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Type_supertype_uri",
+  "rdfs:comment": "# Supertype URI\r\n\r\nAn internal data type that is used for an entry in a list of supertype URIs within a type definition.",
+  "rdfs:label": "Supertype URI",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

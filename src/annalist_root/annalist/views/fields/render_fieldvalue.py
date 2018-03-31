@@ -39,7 +39,7 @@ from annalist.exceptions import Annalist_Error
 # Render-type-independent templates
 
 label_template = (
-    """<span>{{field.field_label|default:"&nbsp;"}}</span>"""
+    """<span>{{field.description.field_label|default:"&nbsp;"}}</span>"""
     )
 
 no_tooltip   = ""
@@ -49,8 +49,8 @@ with_tooltip = "{{field.field_tooltip_attr|safe}}"
 
 # Wrap field label
 label_wrapper_template = ( 
-    # """<!-- label_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
-    """<div class="view-label {{field.field_placement.field}}">\n"""+
+    # """<!-- label_wrapper_template ({{field.description.field_render_type}}, {{render_mode}}) -->"""+
+    """<div class="view-label {{field.description.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     "</div>"""
     )
@@ -58,8 +58,8 @@ label_wrapper_template = (
 # Wrap bare value (e.g. column value)
 def value_wrapper_template(tooltip):
     return ( 
-        # """<!-- value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
-        """<div class="view-value {{field.field_placement.field}}"%s>\n"""+
+        # """<!-- value_wrapper_template ({{field.description.field_render_type}}, {{render_mode}}) -->"""+
+        """<div class="view-value {{field.description.field_placement.field}}"%s>\n"""+
         """  {%% include value_renderer %%}\n"""+
         """</div>"""
         )%(tooltip,)
@@ -70,13 +70,13 @@ edit_value_wrapper_template = value_wrapper_template(with_tooltip)
 # Wrap value and include label
 def label_value_wrapper_template(tooltip):
     return (
-        # """<!-- label_value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
-        """<div class="{{field.field_placement.field}}"%s>\n"""+
+        # """<!-- label_value_wrapper_template ({{field.description.field_render_type}}, {{render_mode}}) -->"""+
+        """<div class="{{field.description.field_placement.field}}"%s>\n"""+
         """  <div class="row view-value-row">\n"""+
-        """    <div class="view-label {{field.field_placement.label}}">\n"""+
-        """      <span>{{field.field_label}}</span>\n"""+
+        """    <div class="view-label {{field.description.field_placement.label}}">\n"""+
+        """      <span>{{field.description.field_label}}</span>\n"""+
         """    </div>\n"""+
-        """    <div class="view-value {{field.field_placement.value}}">\n"""+
+        """    <div class="view-value {{field.description.field_placement.value}}">\n"""+
         """      {%% include value_renderer %%}\n"""+
         """    </div>\n"""+
         """  </div>\n"""+
@@ -88,8 +88,8 @@ label_edit_value_wrapper_template = label_value_wrapper_template(with_tooltip)
 
 # Wrap field label with column heading styling
 col_head_wrapper_template = ( 
-    # """<!-- col_head_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
-    """<div class="view-label col-head {{field.field_placement.field}}">\n"""+
+    # """<!-- col_head_wrapper_template ({{field.description.field_render_type}}, {{render_mode}}) -->"""+
+    """<div class="view-label col-head {{field.description.field_placement.field}}">\n"""+
     """  {% include value_renderer %}\n"""+
     """</div>"""
     )
@@ -97,11 +97,11 @@ col_head_wrapper_template = (
 # Wrap value with column value styling; include label on small displays only
 def col_label_value_wrapper_template(tooltip):
     return ( 
-        # """<!-- col_label_value_wrapper_template ({{field.field_render_type}}, {{render_mode}}) -->"""+
-        """<div class="{{field.field_placement.field}}"%s>\n"""+
+        # """<!-- col_label_value_wrapper_template ({{field.description.field_render_type}}, {{render_mode}}) -->"""+
+        """<div class="{{field.description.field_placement.field}}"%s>\n"""+
         """  <div class="row show-for-small-only">\n"""+
         """    <div class="view-label small-12 columns">\n"""+
-        """      <span>{{field.field_label}}</span>\n"""+
+        """      <span>{{field.description.field_label}}</span>\n"""+
         """    </div>\n"""+
         """  </div>\n"""+
         """  <div class="row view-value-col">\n"""+
@@ -478,6 +478,10 @@ def get_field_edit_value(context, default):
 
 def get_field_view_value(context, default):
     return get_context_field_value(context, 'field_view_value', default)
+
+def get_context_field_description_value(context, key, default):
+    field = get_context_value(context, 'field', None)
+    return get_context_value(field.description, key, default)
 
 # End.
 #........1.........2.........3.........4.........5.........6.........7.........8

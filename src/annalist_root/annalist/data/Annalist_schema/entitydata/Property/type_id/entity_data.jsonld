@@ -1,14 +1,19 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/type_id",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [],
   "annal:id": "type_id",
+  "annal:range": [],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:type_id",

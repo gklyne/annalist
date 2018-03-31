@@ -18,68 +18,94 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 See also: https://www.divio.com/en/blog/documentation/
 
 
-# Version 0.5.7, towards 0.5.8
+# Feedback
 
-- [x] BUG: delete list view while viewing that list results in obscure error message.
-    - Improve error handling to use alternative list/view definition
-- [x] BUG: Turtle generation from "Smoke" collection journal entry causes internal errors
-    - Error reading bad context file, caused by Annalist data errors, which have been fixed.
-    - Need to look into improving context-generation diagnostics.
-    - Also caused by trailing spoace on URL: need to check valid URLs; can catch errors?
-    - Added logic to flag error and add details to output.
-- [x] Fix some test cases that were failing due to message text changes.
-    - NOTE: `test_entitydefaultlist` and `test_entitygenericlist` now have logic to test messages using definitions in `message`.  In the longer term, all test cases should do this so they don't fail if the language is changed.
-- [x] Review message text; update more tests to expect text as defined in messages module.
-- [x] Introduce superproperty/ies field and button to create subproperty field definition
-    - [x] Collection methods to access field definitions (model on types)
-    - [x] Cache classes for fields (model on types)
-    - [x] RecordField hook to update collection cache
-    - [x] Test cases for new classes and methods
-    - [x] Update collection to use field cache
-    - [x] Update cache flush logic where used
-    - [x] Test suite provide default property URIs 
-    - [x] RecordField accesses should use collecton cache
-    - [x] Cacheing site values separately: no need to flush as they don't change
-    - [x] Field definition to include superproperty URI list
-    - [x] When selecting data element to display in a field, look for subproperties as well as the specified field property.
-        - [x] Add subproperty discovery logic to bound_field
-        - [x] Update fieldvaluemap.map_form_to_entity so it looks for subproperty to update.
-        - [x] Update field mappers to make 'map_form_to_entity_repeated_item' implementations more consistent.
-        - It appears that the logic for this should be in 'bound_field'
-        - All other code seems to be concerned with creating a bound field object.
-        - The collection (and hence field cache) is available via the bound FieldDescription.
-        - What about saving field value?: need to remember property URI used?
-            - fieldvaluemap.map_form_to_entity passes property URI to value mapper decode_store method
-            - fieldvaluemap.map_entity_to_context just passes the field description to bound_field constructor.  (Level imbalance here?)
-    - [x] Review abstractions and interactions around:
-        - [x] bound_field, add:
-            - [x] 'render' (ref field_renderer)
-            - [x] 'value_mapper'
-        - [x] New field_renderer object accessed by bound_field for field rendering
-        - [x] Rework field rendering logic to use new structure
-        - [x] Remove rendering methods from field description
-        - [x] bound_field access to FieldDecription: use methods not dictionary
-        - [x] Eliminate render mode logic in render_fieldvalue
-    - [x] Add test cases for subproperty access
-    - [x] Add test cases for subproperty list field access/update (with subproperty values)
-    - [x] Add "define subproperty" task button to field definition.
-    - [x] Add test case for "define subproperty" task button
-- [x] Add property hierarchy to CIDOC CRM definitions
-- [x] Create FAQ for defining subproperties
+* https://github.com/gklyne/annalist/issues/40
+
+
+# Version 0.5.9, towards 0.5.10
+
+- [x] Flush collection caches on loading customize page rather than view page
+- [x] Bound_field access to FieldDecription: use methods not dictionary
+    - [x] Update test case context checking (see bound_field holding comments)
+    - [x] Use 'entity_testfielddesc' methods in `entity_testtypedata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testviewdata`
+    - [x] Use 'entity_testfielddesc' methods in `entity_testvocabdata`
+    - [x] various test modules _check_context_fields use 'entity_testfielddesc' methods
+        - [x] test_recordtype.py
+        - [x] test_recordfield.py
+        - [x] test_recordvocab.py
+        - [x] test_recordlist.py, entity_testlistdata
+        - [x] test_recordview.py, entity_testviewdata
+    - [x] rename *_context_data contruction methods
+    - [x] rename *_form_data contruction methods
+- [x] Test code general cleanup
+    - [x] replace <field>.description['field_id'] with .field_id
+    - [x] replace <field>.description['field_name'] with .field_name
+    - [x] replace <field>.description['field_label'] with .field_label
+    - [x] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
+    - [x] eliminate recordtype_zzz_view_context_data, use type_view_context_data
+    - [x] eliminate recordtype_zzz_view_form_data, use type_view_form_data
+    - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
+    - [x] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
+- [x] View_field_sel change label to "Field ref".
+- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
+    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
+- [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
+- [x] Rename fields/properties:
+    - "annal:record_type" -> "annal:list_entity_type" (for list target type)
+    - "annal:record_type" -> "annal:view_entity_type" (for view target type)
+    - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
+    - Group_target_type -> Group_entity_type
+    - List_target_type -> List_entity_type
+    - View_target_type -> View_entity_type
+    - [x] Find all references in code and sitedata
+        - (look for "annal:record_type" and "ANNAL.CURIE.record_type")
+        - [x] appears in field definitions:
+            - [x] Field_restrict
+            - [x] Group_field_sel
+            - [x] Group_target_type
+            - [x] List_field_sel
+            - [x] List_target_type
+            - [x] View_field_sel
+            - [x] View_target_type
+        - [x] appears as field in list definitions
+        - [x] appears as field in view definitions, and:
+            - Field_view comment
+            - List_view comment
+        - [x] annalist/identifiers.py
+        - [x] annalist/models/entityfinder.py
+        - [x] annalist/models/recordfield.py
+        - [x] annalist/tests/entity_testfielddesc.py
+        - [x] annalist/tests/entity_testviewdata.py
+        - [x] annalist/tests/test_data_migration.py
+        - [x] annalist/tests/test_entity_subtype_selection.py
+        - [x] annalist/tests/test_entityeditenumfield.py ("target_record_type")
+        - [x] annalist/tests/test_field_subproperty.py
+        - [x] annalist/tests/test_fielddescription.py
+        - [x] annalist/tests/test_image_url.py
+        - [x] annalist/tests/test_import_resource.py
+        - [x] annalist/tests/test_jsonld_context.py
+        - [x] annalist/tests/test_linked_records.py
+        - [x] annalist/tests/test_recordtype.py ("annal:record_type")
+        - [x] annalist/tests/test_recordview.py ("view_record_type", "target_record_type", "annal:record_type")
+        - [x] annalist/tests/test_render_ref_multifields.py
+        - [x] annalist/tests/test_render_repeatgroup.py:
+        - [x] annalist/tests/test_sitedata.py:
+        - [x] annalist/tests/test_turtle_output.py:
+        - [x] annalist/tests/test_upload_file.py:
+    - [x] Add migraton in RecordList, RecordView, RecordGroup
+    - [x] Add migration tests
+- [x] In entityedit, fix up population of context 'record_type'
+- [x] entity_testentitydata.specified_view_context_data add type URI param
+- [x] Allow `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
+- [x] Update Annalist_schema to reflect changes
+- [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
+- [x] migrate content of all installable collections
 
 (Sub-release?)
 
-- [ ] Type/field caching: flush in Customize page; try to be more selective about what collections are flushed
-- [ ] Bound_field access to FieldDecription: use methods not dictionary
-    - [ ] Update test case context checking (see bound_field holding comments)
-- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [ ] In render_select.py: remove references to {{field.field_value}} and {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-    - [ ] The continuation URI will need to be provided separately in the context (via bound_field?) and mentioned separately in the templates.
-    - [ ] Remove corresponding special case code in bound_field.
-- [ ] The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.
-- [ ] Similar to above for entity_id, except that it uses a separate template in templates.fields.
-- [ ] Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?
+- [ ] Update python to latest in version 2 series
 - [ ] Update pip to latest version in python environment (for continued testing)
 - [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
@@ -89,22 +115,12 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Provide content for the links in the page footer
+- [ ] Documentation and tutorial updates
+- [ ] Demo screencast update
 
 (Sub-release?)
 
-- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
-    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
-- [ ] Make it easier to create subtype + view + list...
-    - Get some experience with initial solution; (previous release)
-    - Test cases for subtype creation stages
-- [ ] With implementation of subproperties, are per-type field aliases still needed?
-    - Possible per-type subproperties?
-    - Maybe use these for property updates rather than looking for existing property usage?
-    - Is this an issue?  Need some experience here.
-- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
-    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
-    - If absolute URI is stored, can local reference be discovered for hyperlinking?
-    - I think evolvability is served by making these exchangeable
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
@@ -118,7 +134,7 @@ See also: https://www.divio.com/en/blog/documentation/
         - [x] There is repeated reading of RecordType values in EntityFinder
               (cf. collection.types() and EntityTypeInfo constructor; also URI access)
         - [x] Need more direct way to locate type (and other entities?) by URI
-        - [ ] Review common mechanism to retrieve URI for entity?  
+        - [ ] Review common mechanism to retrieve URI for entity?
               (Current mechanism fixes use of annal:uri for all entities; maybe OK)
         - [x] Think about how to optimize retrieval of subtypes/supertypes
         - [x] Do special case for types, or more generic caching approach?
@@ -127,7 +143,6 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
-- [ ] Provide content for the links in the page footer
 - [ ] Automated test suite for annalist_manager
     - [ ] annalist-manager initialize [ CONFIG ]
     - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
@@ -140,14 +155,14 @@ See also: https://www.divio.com/en/blog/documentation/
     - etc.
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
-- [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+- [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+    - Started moving toward parameterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
 
 Technical debt:
 
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
-- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings
     - [ ] update 'models'
@@ -206,6 +221,16 @@ Technical debt:
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 - [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
+- [ ] Final elimination of RecordGroup (field group) entities
+    - [ ] Remove class RecordGroup
+    - [ ] eliminate _field/Field_groupref instances
+    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
+    - [ ] eliminate all Group_* fields
+    - [ ] Remove field group type URI from annal: namespace
+    - [ ] eliminate _type/_group
+    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
+    - [ ] Clean up dead code:
+        - [ ] test_recordfield.py
 - [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
 
 Data collection definitions:
@@ -274,23 +299,30 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
+definitions.
+- [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
+    - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
+- [ ] Make it easier to create subtype + view + list...
+    - Get some experience with initial solution; (previous release)
+    - Test cases for subtype creation stages
+- [ ] With implementation of subproperties, are per-type field aliases still needed?
+    - Possible per-type subproperties?
+    - Maybe use these for property updates rather than looking for existing property usage?
+    - Is this an issue?  Need some experience here.
+    - NOTE: system attempts to preserve subproperties used; aiases are migrated.
+- [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
+    - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
+    - If absolute URI is stored, can local reference be discovered for hyperlinking?
+    - I think evolvability is served by making these exchangeable
 - [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
     - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
-- [ ] Final elimination of RecordGroup (field group) entities
-    - [ ] Remove class RecordGroup
-    - [ ] eliminate _field/Field_groupref instances
-    - [ ] eliminate _view/Field_group_view, _list/Field_group_list
-    - [ ] eliminate all Group_* fields
-    - [ ] Remove field group type URI from annal: namespace
-    - [ ] eliminate _type/_group
-    - [ ] Remove '_group' from EntityTypeInfo dispatching tables
-    - [ ] Clean up dead code:
-        - [ ] test_recordfield.py
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:URI`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
     "rdfs:subClassOf": [
       { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
       ]
@@ -312,7 +344,7 @@ Notes for Future TODOs:
     - tried investigating EUDat, which looks promising but fails with invalid certificate
     - see also notes from discussion with Matthew Dovey at CrossRef event in Oxford (EOSC?)
 - [ ] Think about facility to make it easier to create identity provider details.  (?)
-- [ ] Views providing different perspectives on data; e.g. artifact centres, event centred, etc.  Would need a way to find inbound references as well as outbound.
+- [ ] Views providing different perspectives on data; e.g. artifact centred, event centred, etc.  Would need a way to find inbound references as well as outbound.
 - [ ] Generate default value type for field based on render type + value mode (to help with consistency)
     - See notes.
 - [ ] It would be nice if link field tooltips describe what they link to.
@@ -333,7 +365,7 @@ Notes for Future TODOs:
     - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?
 - [ ] Think about extending field descriptions to include:
-    - [ ] superproperty URIs (similar to supertype URIs in types)
+    - [x] superproperty URIs (similar to supertype URIs in types)
     - [ ] rules that allow inferences of multiple RDF statements; e.g.
         ?a isRecordingOf ?b
         => 
@@ -360,7 +392,6 @@ Notes for Future TODOs:
 - [ ] Rationalize common fields to reduce duplication?
     - but note that fields may use different comment/help text, so maybe not.
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
-- [ ] New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.
 - [ ] Make default values smarter; e.g. field renderer logic to scan collection data for candidates?
 - [ ] Allow type definition to include template for new id, e.g. based on current date
 - [ ] Use local prefix for type URI (when prefixes are handled properly); e.g. coll:Type/<id>
@@ -382,12 +413,6 @@ Notes for Future TODOs:
     - [ ] internal options to save history in per-collection git repo
 - [ ] Review small inconsistency: editing collection metadata does not update the collection software version compatibility for that collection.  (Editing any other collection entity does.)  The following comment is from the notes for v0.5.1:
     - Deal with special case of editing collection metadata.  This would need a new set of logic (possibly in entitytypeinfo.py) to distinguish between a containing collection and ancestor for any entity (in almost all cases these would be the same), for a benefit that seems of very small practical value. So, for the time being, this is not being fixed.
-
-
-
-# Feedback
-
-* https://github.com/gklyne/annalist/issues/40
 
 
 ----

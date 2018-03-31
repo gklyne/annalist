@@ -1,0 +1,30 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/View_field",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "View_field",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:View_field",
+  "rdfs:comment": "# View field\r\n\r\nAn internal data type that is used for a field reference that appears within a view definition entity.",
+  "rdfs:label": "View field",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

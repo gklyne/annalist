@@ -32,21 +32,17 @@ from django.template        import Template, Context
 #
 #   ----------------------------------------------------------------------------
 
-# @@TODO: remove references to field value and special case code in bound_field.
-#         the continuation URI will need to be provided separately in the context
-#         and mentioned separately in the templates
-
 edit_options = (
     '''{% for opt in field_options %} '''+
       '''{% if opt.value == encoded_field_value %} '''+
         '''{% if opt.value == "" %} '''+
-          '''<option value="" selected="selected">{{field.field_placeholder}}</option>\n'''+
+          '''<option value="" selected="selected">{{field.description.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
           '''<option value="{{opt.value}}" selected="selected">{{opt.choice_html}}</option>\n'''+
         '''{% endif %} '''+
       '''{% else %} '''+
         '''{% if opt.value == "" %} '''+
-          '''<option value="">{{field.field_placeholder}}</option>\n'''+
+          '''<option value="">{{field.description.field_placeholder}}</option>\n'''+
         '''{% else %} '''+
           '''<option value="{{opt.value}}">{{opt.choice_html}}</option>\n'''+
         '''{% endif %} '''+
@@ -62,7 +58,7 @@ view_select = (
       <span class="value-missing">{{field_labelval}}</span>
     {% else %}
     <span class="value-blank">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+      message.NO_SELECTION%{'id': "{{field.description.field_label}}"}+
     """</span>
     {% endif %}
     """)
@@ -71,7 +67,7 @@ edit_select = (
     """<!-- fields.render_select.edit_select -->
     <div class="row"> 
       <div class="small-10 columns view-value less-new-button">
-        <select name="{{repeat_prefix}}{{field.field_name}}">
+        <select name="{{repeat_prefix}}{{field.description.field_name}}">
     """+
     edit_options+
     """
@@ -79,9 +75,9 @@ edit_select = (
       </div>
       <div class="small-2 columns view-value new-button left small-text-right">
         <button type="submit" 
-                name="{{repeat_prefix}}{{field.field_name}}__new_edit" 
+                name="{{repeat_prefix}}{{field.description.field_name}}__new_edit" 
                 value="New"
-                title="Define new or edit {{field.field_label}}"
+                title="Define new or edit {{field.description.field_label}}"
         >
           <span class="select-edit-button-text">+&#x270D;</span>
         </button>
@@ -97,14 +93,14 @@ view_choice = (
       <span class="value-missing">{{field_labelval}}</span>
     {% else %}
     <span class="value-blank">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+      message.NO_SELECTION%{'id': "{{field.description.field_label}}"}+
     """</span>
     {% endif %}
     """)
 
 edit_choice = (
     """<!-- fields.render_select.edit_choice -->
-    <select name="{{repeat_prefix}}{{field.field_name}}">
+    <select name="{{repeat_prefix}}{{field.description.field_name}}">
     """+
     edit_options+
     """
@@ -119,7 +115,7 @@ view_entitytype = (
       <span class="value-missing">{{field_labelval}}</span>
     {% else %}
     <span class="value-blank">"""+
-      message.NO_SELECTION%{'id': "{{field.field_label}}"}+
+      message.NO_SELECTION%{'id': "{{field.description.field_label}}"}+
     """</span>
     {% endif %}
     """)
@@ -136,14 +132,14 @@ edit_entitytype = (
 
 view_view_choice = (
     """<!-- field/annalist_view_view_choice.html -->
-    <span>{{field.field_value}}</span>
+    <span>{{encoded_field_value}}</span>
     """)
 
 edit_view_choice = (
     """<!-- field/annalist_edit_view_choice.html -->
     <div class="row">
       <div class="small-9 columns">
-        <select name="{{repeat_prefix}}{{field.field_name}}">
+        <select name="{{repeat_prefix}}{{field.description.field_name}}">
         """+
         edit_options+
         """
@@ -193,7 +189,9 @@ class Select_view_renderer(object):
         try:
             # val      = get_field_view_value(context, None)
             val      = get_field_edit_value(context, None)
-            typval   = fill_type_entity_id(val, context['field']['field_ref_type'])
+            typval   = fill_type_entity_id(
+                val, context['field'].description['field_ref_type']
+                )
             textval  = SelectValueMapper.encode(typval)
             labelval = textval
             linkval  = None
@@ -243,7 +241,9 @@ class Select_edit_renderer(object):
         try:
             val     = get_field_edit_value(context, None) or ""
             # Use refer-to type if value does not include type..
-            typval  = fill_type_entity_id(val, context['field']['field_ref_type'])
+            typval  = fill_type_entity_id(
+                val, context['field'].description['field_ref_type']
+                )
             textval = SelectValueMapper.encode(typval)
             options = update_choice_labels(context['field']['options'])
             # print repr(options)
@@ -256,8 +256,8 @@ class Select_edit_renderer(object):
             log.exception("Exception in Select_edit_renderer.render")
             log.error("Select_edit_renderer.render: "+repr(e))
             # log.error("Field val %r"%(val,))
-            # log.error("Field name %r"%(context['field']['field_name'],))
-            # log.error("Field type ref %r"%(context['field']['field_ref_type'],))
+            # log.error("Field name %r"%(context['field'].field_name,))
+            # log.error("Field type ref %r"%(context['field'].description['field_ref_type'],))
             # ex_type, ex, tb = sys.exc_info()
             # traceback.print_tb(tb)
             result = repr(e)

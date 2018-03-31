@@ -14,6 +14,7 @@
   "annal:display_type": "_enum_list_type/List",
   "annal:id": "Journal_entries",
   "annal:list_entity_selector": "\"journal:Journal\" in [@type]",
+  "annal:list_entity_type": "journal:Journal",
   "annal:list_fields": [
     {
       "annal:field_id": "_field/Entity_id",
@@ -24,7 +25,6 @@
       "annal:field_placement": "small:3,9"
     }
   ],
-  "annal:record_type": "journal:Journal",
   "annal:type": "annal:List",
   "annal:type_id": "_list",
   "rdfs:comment": "# List of journal entries\r\n\r\nA journal entry consists primarily of narrative text and some associated resources.  It may also contain some minimal metadata (e.g., time, place).\r\n",

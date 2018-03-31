@@ -1,0 +1,30 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Group_field",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Group_field",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Group_field",
+  "rdfs:comment": "# Group field (@@deprecated)\r\n\r\nAn internal data type that is used for a field reference that appears within a group definition entity.",
+  "rdfs:label": "Group field (@@deprecated)",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

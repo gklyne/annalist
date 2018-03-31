@@ -1,14 +1,27 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/display_type",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [
+    {
+      "@id": "annal:List"
+    }
+  ],
   "annal:id": "display_type",
+  "annal:range": [
+    {
+      "@id": "annal:Enum_list_type"
+    }
+  ],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:display_type",

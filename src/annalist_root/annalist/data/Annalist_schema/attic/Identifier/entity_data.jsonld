@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "../../coll_context.jsonld"
+  ],
+  "@id": "./",
+  "@type": [
+    "rdfs:Class",
+    "rdfs:Resource"
+  ],
+  "annal:id": "Identifier",
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Identifier",
+  "rdfs:comment": "# Identifier type\r\n\r\nAn data type that is used for values that are URIs or CURIEs.\r\n\r\n(There is a potential use/mention confusion here, as some values that are stored as URIs have a type that designates the referenced entity.  The intent, though not necessarily followd in all cases, is that the `Identifier` type is used for values that are literal URI/CURIE strings (mention), rather than URIs that are intended to reference some web resource (use)).",
+  "rdfs:label": "Identifier",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

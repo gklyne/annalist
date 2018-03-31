@@ -48,12 +48,12 @@ from entity_testtypedata    import (
 from entity_testviewdata    import (
     recordview_url, 
     recordview_create_values, recordview_values,
-    recordview_entity_view_form_data, 
+    view_view_form_data, 
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values,
-    entitydata_default_view_form_data,
+    default_view_form_data,
     )
 
 #   -----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         "Helper function creates record view entry with supplied view_id"
         t = RecordView.create(
             self.testcoll, view_id, 
-            recordview_create_values(view_id=view_id, target_record_type="annal:View")
+            recordview_create_values(view_id=view_id, view_entity_type="annal:View")
             )
         return t
 
@@ -136,7 +136,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertEqual(t.get_view_url(), TestHostUri + recordview_url("testcoll", view_id))
         v = recordview_values(
             view_id=view_id, view_uri=view_uri, 
-            target_record_type="annal:View",
+            view_entity_type="annal:View",
             update=update, 
             num_fields=num_fields,
             )
@@ -158,10 +158,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_view(self):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewview"))
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewview", action="new", update="Updated entity", 
-            new_view="New view"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewview", action="new", update="Updated entity", 
+                new_view="New view"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -177,10 +177,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_view_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewview", action="new", update="Updated entity", 
-            new_view="New view"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewview", action="new", update="Updated entity", 
+                new_view="New view"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
@@ -189,10 +189,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_field(self):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewfield"))
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewfield", action="new", update="Updated entity", 
-            new_field="New field"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewfield", action="new", update="Updated entity", 
+                new_field="New field"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -208,10 +208,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_field_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewfield", action="new", update="Updated entity", 
-            new_field="New field"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewfield", action="new", update="Updated entity", 
+                new_field="New field"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
@@ -220,10 +220,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_type(self):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewtype", action="new", update="Updated entity", 
-            new_type="New type"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewtype", action="new", update="Updated entity", 
+                new_type="New type"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
@@ -239,10 +239,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_new_type_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewtype", action="new", update="Updated entity", 
-            new_type="New type"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewtype", action="new", update="Updated entity", 
+                new_type="New type"
+                )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   401)
@@ -251,7 +251,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_enum_type_new(self):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
                 new_enum="entity_type__new_edit"
                 )
@@ -274,7 +274,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_new_entity_enum_type_new_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
                 new_enum="entity_type__new_edit"
                 )
@@ -289,7 +289,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
     def test_post_edit_entity_new_view(self):
         self._create_entity_data("entitynewview")
         e1 = self._check_entity_data_values("entitynewview")
-        f  = entitydata_default_view_form_data(
+        f  = default_view_form_data(
                 entity_id="entitynewview", action="edit", update="Updated entity", 
                 new_view="New view"
                 )
@@ -310,10 +310,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_view_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
-            entity_id="entitynewview", action="edit", update="Updated entity", 
-            new_view="New view"
-            )
+        f = default_view_form_data(
+                entity_id="entitynewview", action="edit", update="Updated entity", 
+                new_view="New view"
+                )
         u = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewview", 
             view_id="Default_view"
@@ -326,7 +326,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
     def test_post_edit_entity_new_field(self):
         self._create_entity_data("entitynewfield")
         e1 = self._check_entity_data_values("entitynewfield")
-        f  = entitydata_default_view_form_data(
+        f  = default_view_form_data(
                 entity_id="entitynewfield", action="edit", update="Updated entity", 
                 new_field="New field"
                 )
@@ -347,7 +347,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_field_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitynewfield", action="edit", update="Updated entity", 
                 new_field="New field"
                 )
@@ -363,7 +363,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
     def test_post_edit_entity_new_type(self):
         self._create_entity_data("entitynewtype")
         e1 = self._check_entity_data_values("entitynewtype")
-        f  = entitydata_default_view_form_data(
+        f  = default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
                 new_type="New type"
                 )
@@ -384,7 +384,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_edit_entity_new_type_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
                 new_type="New type"
                 )
@@ -400,7 +400,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
     def test_post_edit_entity_enum_type_new(self):
         self._create_entity_data("entitynewtype")
         e1 = self._check_entity_data_values("entitynewtype")
-        f  = entitydata_default_view_form_data(
+        f  = default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
                 new_enum="entity_type__new_edit"
                 )
@@ -426,7 +426,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
 
     def test_post_edit_entity_enum_type_new_no_login(self):
         self.client.logout()
-        f = entitydata_default_view_form_data(
+        f = default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
                 new_enum="entity_type__new_edit"
                 )
@@ -444,10 +444,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
     def test_post_edit_view_enum_field_new(self):
         self._create_record_view("editview")
         self._check_record_view_values("editview")
-        f = recordview_entity_view_form_data(
+        f = view_view_form_data(
             view_id="editview", orig_id="editview", 
             action="edit", update="Updated RecordView",
-            new_enum="View_fields__3__Field_id__new_edit"
+            new_enum="View_fields__3__View_field_sel__new_edit"
             )
         u = entitydata_edit_url(
             "edit", "testcoll", "_view", 

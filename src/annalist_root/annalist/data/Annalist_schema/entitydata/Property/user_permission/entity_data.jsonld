@@ -1,14 +1,27 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/user_permission",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [
+    {
+      "@id": "annal:User"
+    }
+  ],
   "annal:id": "user_permission",
+  "annal:range": [
+    {
+      "@id": "annal:EntityRef"
+    }
+  ],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:user_permission",

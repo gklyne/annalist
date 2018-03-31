@@ -4,7 +4,7 @@
 
 I've just released an update (release 0.5.8) of Annalist.
 
-This release mainly adds support for sub/superproperty URI relations declared in view field definitions.
+This release mainly adds support for sub/superproperty URI relations declared in view field definitions.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some aspects of data evolution.
 
 More details can be found in the "History" section of the 
 [latest release notes](https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.5.md), 
@@ -28,7 +28,7 @@ I've just released an update (release 0.5.8) of Annalist.
 This mainly adds support for sub/superproperty URI relations declared in view field definitions.  This is intended to make it easier to work with structured vocabularies like CIDOC CRM, and to facilitate some aspects of data evolution.
 
 The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/9k1TUHdaNe4/JauuGxDYAAAJ
+https://groups.google.com/d/msg/annalist-discuss/Y5Ep02E68yo/5-CV_iRzBgAJ
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 

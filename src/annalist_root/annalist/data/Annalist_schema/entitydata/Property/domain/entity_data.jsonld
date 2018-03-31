@@ -1,0 +1,41 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/domain",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "annal:id": "domain",
+  "annal:range": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:domain",
+  "rdfs:comment": "# Has domain\r\n\r\nReferences a [Class]($BASE:_type/Class) entity that describes a domain of the current entity.\r\n\r\nThis can be used to infer `rdfs:domain` relationships between the URIs of Property and Class entities.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Property"
+    }
+  ],
+  "rdfs:label": "Has domain",
+  "rdfs:range": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

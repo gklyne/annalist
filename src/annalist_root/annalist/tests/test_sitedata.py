@@ -67,7 +67,6 @@ from entity_testcolldata    import (
     collectiondata_view_url, collectiondata_view_resource_url,
     collectiondata_value_keys, collectiondata_load_keys,
     collectiondata_create_values, collectiondata_values, collectiondata_read_values,
-    collectiondata_view_form_data
     )
 from entity_testsitedata    import (
     make_field_choices, no_selection,
@@ -104,8 +103,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.testsite  = Site(TestBaseUri, TestBaseDir)
         self.coll1     = Collection.load(self.testsite, "coll1")
         self.local_types = make_field_choices(
-            [ ("_type/type1", "RecordType coll1/type1")
-            , ("_type/type2", "RecordType coll1/type2")
+            [ ("_type/type1", "RecordType coll1/_type/type1")
+            , ("_type/type2", "RecordType coll1/_type/type2")
             ])
         self.local_lists = make_field_choices(
             [ ("_list/list1", "RecordList coll1/list1")
@@ -256,7 +255,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
             self.check_select_field(
-                tcols[0], "View_fields__%d__Field_id"%i, 
+                tcols[0], "View_fields__%d__View_field_sel"%i, 
                 expect_field_choices, expect_fields[i]
                 )
         return
@@ -279,14 +278,14 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_list[ANNAL.CURIE.display_type],   "_enum_list_type/List")
         self.assertEqual(type_list[ANNAL.CURIE.default_type],   "_type/"+type_id)
         self.assertEqual(type_list[ANNAL.CURIE.default_view],   "_view/"+view_id)
-        self.assertEqual(type_list[ANNAL.CURIE.record_type],    type_uri)
+        self.assertEqual(type_list[ANNAL.CURIE.list_entity_type], type_uri)
         self.assertIn(ANNAL.CURIE.list_entity_selector,         type_list)
         # Read type view description
         type_view = RecordView.load(self.coll1, view_id, altscope="all")
         self.assertEqual(type_view["@type"],                    [ANNAL.CURIE.View])
         self.assertEqual(type_view[ANNAL.CURIE.id],             view_id)
         self.assertEqual(type_view[ANNAL.CURIE.type_id],        "_view")
-        self.assertEqual(type_view[ANNAL.CURIE.record_type],    type_uri)
+        self.assertEqual(type_view[ANNAL.CURIE.view_entity_type], type_uri)
         self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
         # print "@@ l: " + type_list[ANNAL.CURIE.id]
@@ -427,8 +426,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         s = self.get_page(u)
         self.assertEqual(s.h2.string, "Customize collection: Collection coll1")
         local_types_expected = make_field_choices(
-            [ ("type1", "RecordType coll1/type1")
-            , ("type2", "RecordType coll1/type2")
+            [ ("type1", "RecordType coll1/_type/type1")
+            , ("type2", "RecordType coll1/_type/type2")
             ])
         local_lists_expected = make_field_choices(
             [ ("list1", "RecordList coll1/list1")
@@ -460,17 +459,17 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows_expected = (
             [ [ "_list/list1",    ["list1",    "List",              "RecordList coll1/list1"] ]
             , [ "_list/list2",    ["list2",    "List",              "RecordList coll1/list2"] ]
-            , [ "_type/type1",    ["type1",    "Type",              "RecordType coll1/type1"] ]
-            , [ "_type/type2",    ["type2",    "Type",              "RecordType coll1/type2"] ]
+            , [ "_type/type1",    ["type1",    "Type",              "RecordType coll1/_type/type1"] ]
+            , [ "_type/type2",    ["type2",    "Type",              "RecordType coll1/_type/type2"] ]
             , [ "_user/testuser", ["testuser", "User permissions",  "Test User"] ]
             , [ "_view/view1",    ["view1",    "View",              "RecordView coll1/view1"] ]
             , [ "_view/view2",    ["view2",    "View",              "RecordView coll1/view2"] ]
-            , [ "type1/entity1",  ["entity1",  "RecordType coll1/type1", "Entity coll1/type1/entity1"] ]
-            , [ "type1/entity2",  ["entity2",  "RecordType coll1/type1", "Entity coll1/type1/entity2"] ]
-            , [ "type1/entity3",  ["entity3",  "RecordType coll1/type1", "Entity coll1/type1/entity3"] ]
-            , [ "type2/entity1",  ["entity1",  "RecordType coll1/type2", "Entity coll1/type2/entity1"] ]
-            , [ "type2/entity2",  ["entity2",  "RecordType coll1/type2", "Entity coll1/type2/entity2"] ]
-            , [ "type2/entity3",  ["entity3",  "RecordType coll1/type2", "Entity coll1/type2/entity3"] ]
+            , [ "type1/entity1",  ["entity1",  "RecordType coll1/_type/type1", "Entity coll1/type1/entity1"] ]
+            , [ "type1/entity2",  ["entity2",  "RecordType coll1/_type/type1", "Entity coll1/type1/entity2"] ]
+            , [ "type1/entity3",  ["entity3",  "RecordType coll1/_type/type1", "Entity coll1/type1/entity3"] ]
+            , [ "type2/entity1",  ["entity1",  "RecordType coll1/_type/type2", "Entity coll1/type2/entity1"] ]
+            , [ "type2/entity2",  ["entity2",  "RecordType coll1/_type/type2", "Entity coll1/type2/entity2"] ]
+            , [ "type2/entity3",  ["entity3",  "RecordType coll1/_type/type2", "Entity coll1/type2/entity3"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         # @@TODO: check entity and type links
@@ -493,8 +492,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows_expected = (
             [ [ "_list/list1",    ["list1",    "RecordList coll1/list1"] ]
             , [ "_list/list2",    ["list2",    "RecordList coll1/list2"] ]
-            , [ "_type/type1",    ["type1",    "RecordType coll1/type1"] ]
-            , [ "_type/type2",    ["type2",    "RecordType coll1/type2"] ]
+            , [ "_type/type1",    ["type1",    "RecordType coll1/_type/type1"] ]
+            , [ "_type/type2",    ["type2",    "RecordType coll1/_type/type2"] ]
             , [ "_user/testuser", ["testuser", "Test User"] ]
             , [ "_view/view1",    ["view1",    "RecordView coll1/view1"] ]
             , [ "_view/view2",    ["view2",    "RecordView coll1/view2"] ]
@@ -565,9 +564,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_type/Default_type",      
                 [ "Default_type",      "annal:Default_type",     "Default record"        ] ]
             , [ "_type/type1",             
-                [ "type1",             "(@@no value@@)",         "RecordType coll1/type1"] ]
+                [ "type1",             "(@@no value@@)",         "RecordType coll1/_type/type1"] ]
             , [ "_type/type2",             
-                [ "type2",             "(@@no value@@)",         "RecordType coll1/type2"] ]
+                [ "type2",             "(@@no value@@)",         "RecordType coll1/_type/type2"] ]
             ])
         self.check_list_row_data(s, trows_expected)
         return
@@ -601,7 +600,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_type_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_type_fields_sorted()
         expect_fields = (
             [ "_field/Type_id"
             , "_field/Type_label"
@@ -627,7 +626,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_input_type_value(s, "List_entity_selector", "text", "'annal:Type' in [@type]")
-        self.check_input_type_value(s, "List_target_type", "text", "annal:Type")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:Type")
         self.check_select_field(
             s, "List_type", 
             self.list_types_expected, 
@@ -707,7 +706,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             "_view/Default_view"
             )
         self.check_input_type_value(s, "List_entity_selector", "text", "ALL")
-        self.check_input_type_value(s, "List_target_type", "text", "")
+        self.check_input_type_value(s, "List_entity_type", "text", "")
         self.check_select_field(s, "view_choice", self.views_expected, "_view/List_view")
         return
 
@@ -718,7 +717,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_list_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_list_fields_sorted()
         expect_fields = (
             [ "_field/List_id"
             , "_field/List_type"
@@ -727,7 +726,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/List_default_type"
             , "_field/List_default_view"
             , "_field/List_entity_selector"
-            , "_field/List_target_type"
+            , "_field/List_entity_type"
             , "_field/List_fields"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -745,7 +744,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
         self.check_input_type_value(s, "List_entity_selector", "text", "'annal:List' in [@type]")
-        self.check_input_type_value(s, "List_target_type", "text", "annal:List")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:List")
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
@@ -810,7 +809,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", None)
         self.check_input_type_value(s, "View_label", "text", None)
         self.check_input_type_value(s, "View_comment", "textarea", None)
-        self.check_input_type_value(s, "View_target_type", "text", None)
+        self.check_input_type_value(s, "View_entity_type", "text", None)
         self.check_input_type_value(s, "View_edit_view", "checkbox", "Yes")
         self.check_select_field(s, "view_choice", self.views_expected, "_view/View_view")
         return
@@ -822,12 +821,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_view_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_view_fields_sorted()
         expect_fields        = (
             [ "_field/View_id"
             , "_field/View_label"
             , "_field/View_comment"
-            , "_field/View_target_type"
+            , "_field/View_entity_type"
             , "_field/View_edit_view"
             , "_field/View_fields"
             ])
@@ -860,7 +859,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             s, "List_entity_selector", "text", "'annal:View' in [@type]"
             )
         self.check_input_type_value(
-            s, "List_target_type", "text", "annal:View"
+            s, "List_entity_type", "text", "annal:View"
             )
         return
 
@@ -907,8 +906,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", None)
         self.check_input_type_value(s, "Group_label", "text", None)
         self.check_input_type_value(s, "Group_comment", "textarea", None)
-        self.check_input_type_value(s, "Group_target_type", "text", None)
-        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        self.check_input_type_value(s, "Group_entity_type", "text", None)
+        expect_field_choices = no_selection("(field reference)") + get_site_group_fields_sorted()
         expect_fields = []
         self.check_view_fields(s, expect_fields, expect_field_choices)
         self.check_select_field(
@@ -924,12 +923,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_group_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_group_fields_sorted()
         expect_fields = (
             [ "_field/Group_id"
             , "_field/Group_label"
             , "_field/Group_comment"
-            , "_field/Group_target_type"
+            , "_field/Group_entity_type"
             , "_field/Group_fields"
             ])
         self.check_view_fields(s, expect_fields, expect_field_choices)
@@ -949,7 +948,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:Field_group' in [@type]"
             )
-        self.check_input_type_value(s, "List_target_type", "text", "annal:Field_group")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:Field_group")
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
@@ -1056,25 +1055,25 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                                                                                             "annal:EntityRef"        ] ]
             , [ "_field/Field_value_type",          ["Field_value_type",  "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Group_comment",             ["Group_comment"             ] ]
+            , [ "_field/Group_entity_type",         ["Group_entity_type"         ] ]
             , [ "_field/Group_field_placement",     ["Group_field_placement"     ] ]
             , [ "_field/Group_field_property",      ["Group_field_property"      ] ]
             , [ "_field/Group_field_sel",           ["Group_field_sel"           ] ]
             , [ "_field/Group_fields",              ["Group_fields"              ] ]
             , [ "_field/Group_id",                  ["Group_id"                  ] ]
             , [ "_field/Group_label",               ["Group_label"               ] ]
-            , [ "_field/Group_target_type",         ["Group_target_type"         ] ]
             , [ "_field/List_choice",               ["List_choice"               ] ]
             , [ "_field/List_comment",              ["List_comment"              ] ]
             , [ "_field/List_default_type",         ["List_default_type"         ] ]
             , [ "_field/List_default_view",         ["List_default_view"         ] ]
             , [ "_field/List_entity_selector",      ["List_entity_selector"      ] ]
+            , [ "_field/List_entity_type",          ["List_entity_type"          ] ]
             , [ "_field/List_field_placement",      ["List_field_placement"      ] ]
             , [ "_field/List_field_property",       ["List_field_property"       ] ]
             , [ "_field/List_field_sel",            ["List_field_sel"            ] ]
             , [ "_field/List_fields",               ["List_fields"               ] ]
             , [ "_field/List_id",                   ["List_id"                   ] ]
             , [ "_field/List_label",                ["List_label"                ] ]
-            , [ "_field/List_target_type",          ["List_target_type"          ] ]
             , [ "_field/List_type",                 ["List_type"                 ] ]
             , [ "_field/Type_alias_source",         ["Type_alias_source"         ] ]
             , [ "_field/Type_alias_target",         ["Type_alias_target"         ] ]
@@ -1095,13 +1094,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/View_choice",               ["View_choice"               ] ]
             , [ "_field/View_comment",              ["View_comment"              ] ]
             , [ "_field/View_edit_view",            ["View_edit_view"            ] ]
+            , [ "_field/View_entity_type",          ["View_entity_type"          ] ]
             , [ "_field/View_field_placement",      ["View_field_placement"      ] ]
             , [ "_field/View_field_property",       ["View_field_property"       ] ]
             , [ "_field/View_field_sel",            ["View_field_sel"            ] ]
             , [ "_field/View_fields",               ["View_fields"               ] ]
             , [ "_field/View_id",                   ["View_id"                   ] ]
             , [ "_field/View_label",                ["View_label"                ] ]
-            , [ "_field/View_target_type",          ["View_target_type"          ] ]
             , [ "_field/Vocab_id",                  ["Vocab_id"                  ] ]
             , [ "_field/Vocab_uri",                 ["Vocab_uri"                 ] ]
             ])
@@ -1151,7 +1150,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_field_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_field_fields_sorted()
         expect_fields = (
             [ "_field/Field_id"
             , "_field/Field_render_type"
@@ -1187,7 +1186,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", "Field_list")
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
-        self.check_input_type_value(s, "List_target_type", "text", "annal:Field")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:Field")
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:Field' in [@type]"
             )
@@ -1259,7 +1258,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_vocab_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_vocab_fields_sorted()
         expect_fields = (
             [ "_field/Vocab_id"
             , "_field/Entity_label"
@@ -1284,7 +1283,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:Vocabulary' in [@type]"
             )
-        self.check_input_type_value(s, "List_target_type", "text", "annal:Vocabulary")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:Vocabulary")
         self.check_select_field(s, "List_type", self.list_types_expected, "_enum_list_type/List")
         self.check_select_field(
             s, "List_default_type", 
@@ -1370,7 +1369,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             view_id="View_view", action="edit"
             )
         s = self.get_page(u)
-        expect_field_choices = no_selection("(field sel)") + get_site_user_fields_sorted()
+        expect_field_choices = no_selection("(field reference)") + get_site_user_fields_sorted()
         expect_fields = (
             [ "_field/User_id"
             , "_field/User_name"
@@ -1392,7 +1391,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.check_input_type_value(s, "entity_id", "text", "User_list")
         self.check_input_type_value(s, "List_label", "text", None)
         self.check_input_type_value(s, "List_comment", "textarea", None)
-        self.check_input_type_value(s, "List_target_type", "text", "annal:User")
+        self.check_input_type_value(s, "List_entity_type", "text", "annal:User")
         self.check_input_type_value(
             s, "List_entity_selector", "text", "'annal:User' in [@type]"
             )

@@ -94,11 +94,11 @@ def test_subtype_entity_create_values(entity_id):
 
 test_group_id            = "List_field_group"
 test_group_create_values = (
-    { "annal:type":         "annal:Field_group"
-    , "rdfs:label":         "List fields group"
-    , "rdfs:comment":       "Group for fields presented in a list view."
-    , "annal:uri":          "annal:group/List_field_group"
-    , "annal:record_type":  "annal:List_field"
+    { "annal:type":                 "annal:Field_group"
+    , "rdfs:label":                 "List fields group"
+    , "rdfs:comment":               "Group for fields presented in a list view."
+    , "annal:uri":                  "annal:group/List_field_group"
+    , "annal:group_entity_type":    "annal:List_field"
     , "annal:group_fields":
       [ { "annal:field_id":         "_field/List_field_sel"
         , "annal:property_uri":     "annal:field_id"
@@ -112,7 +112,6 @@ test_group_create_values = (
     })
 
 test_field_id = "List_fields"
-
 test_field_group_create_values = (
     { "annal:type":                 "annal:Field"
     , "rdfs:label":                 "Fields"
@@ -172,6 +171,70 @@ test_field_tooltip_migrated_values = (
     , "annal:tooltip":              "Fields presented in a list view."
     })
 
+test_view_id = "test_view_id"
+
+test_view_create_values = (
+    { "annal:id":                   test_view_id
+    , "annal:type":                 "annal:View"
+    , "rdfs:label":                 "View label"
+    , "rdfs:comment":               "# View comment"
+    , "annal:record_type":          "_type/View"
+    , "annal:view_fields":
+      [ { "annal:field_id":         "Field_render"      } 
+      , { "annal:field_id":         "Field_type"        } 
+      , { "annal:field_id":         "View_target_type"  } 
+      , { "annal:field_id":         "List_target_type"  } 
+      ]
+    })
+
+test_view_migrated_values = (
+    { "annal:id":                   test_view_id
+    , "annal:type":                 "annal:View"
+    , "rdfs:label":                 "View label"
+    , "rdfs:comment":               "# View comment"
+    , "annal:view_entity_type":     "_type/View"
+    , "annal:view_fields":
+      [ { "annal:field_id":         "_field/Field_render_type" } 
+      , { "annal:field_id":         "_field/Field_value_type"  } 
+      , { "annal:field_id":         "_field/View_entity_type"  } 
+      , { "annal:field_id":         "_field/List_entity_type"  } 
+      ]
+    })
+
+test_list_id = "test_list_id"
+
+test_list_create_values = (
+    { "annal:id":                   test_list_id
+    , "annal:type":                 "annal:List"
+    , "rdfs:label":                 "List label"
+    , "rdfs:comment":               "# List comment"
+    , "annal:display_type":         "List"
+    , "annal:record_type":          "_type/List"
+    , "annal:list_fields":
+      [ { "annal:field_id":         "Field_render"      } 
+      , { "annal:field_id":         "Field_type"        } 
+      , { "annal:field_id":         "View_target_type"  } 
+      , { "annal:field_id":         "List_target_type"  } 
+      ]
+    })
+
+test_list_migrated_values = (
+    { "annal:id":                   test_list_id
+    , "annal:type":                 "annal:List"
+    , "rdfs:label":                 "List label"
+    , "rdfs:comment":               "# List comment"
+    , "annal:display_type":         "_enum_list_type/List"
+    , "annal:list_entity_type":     "_type/List"
+    , "annal:list_fields":
+      [ { "annal:field_id":         "_field/Field_render_type" } 
+      , { "annal:field_id":         "_field/Field_value_type"  } 
+      , { "annal:field_id":         "_field/View_entity_type"  } 
+      , { "annal:field_id":         "_field/List_entity_type"  } 
+      ]
+    })
+
+
+
 #   -----------------------------------------------------------------------------
 #
 #   Linked record tests
@@ -206,7 +269,9 @@ class DataMigrationTest(AnnalistTestCase):
             self.testcoll, "test_subtype_type",   create_typedata=True
             )
         for entity_id in ("test_subtype_entity",):
-            self.test_subtype_type_info.create_entity(entity_id, test_subtype_entity_create_values(entity_id))
+            self.test_subtype_type_info.create_entity(
+                entity_id, test_subtype_entity_create_values(entity_id)
+                )
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -265,7 +330,9 @@ class DataMigrationTest(AnnalistTestCase):
         entity_id = "test_subtype_entity"
         # Create subtype record with wrong type URI
         subtype_entity_values = test_subtype_entity_create_values(entity_id)
-        entity = self.test_subtype_type_info.create_entity(entity_id, subtype_entity_values)
+        entity = self.test_subtype_type_info.create_entity(
+            entity_id, subtype_entity_values
+            )
         entity[ANNAL.CURIE.type] = "test:wrong_type_uri"
         entity._save()
         # Test subtype entity created
@@ -302,7 +369,9 @@ class DataMigrationTest(AnnalistTestCase):
         # Apply migration to collection
         migrate_coll_data(self.testcoll)
         # Read field definition and check for inline field list
-        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_group_migrated_values)
+        field_data = self.check_entity_values(
+            "_field", test_field_id, check_values=test_field_group_migrated_values
+            )
         self.assertNotIn("annal:group_ref", field_data)
         self.check_entity_does_not_exist("_group", test_group_id)
         return
@@ -318,7 +387,37 @@ class DataMigrationTest(AnnalistTestCase):
         # Apply migration to collection
         migrate_coll_data(self.testcoll)
         # Read field definition and check for inline field list
-        field_data = self.check_entity_values("_field", test_field_id, check_values=test_field_tooltip_migrated_values)
+        field_data = self.check_entity_values(
+            "_field", test_field_id, check_values=test_field_tooltip_migrated_values
+            )
+        return
+
+    def test_migrate_view_fields(self):
+        """
+        Test migration of view fields
+        """
+        self.test_view = RecordView.create(
+            self.testcoll, test_view_id, test_view_create_values
+            )
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        view_data = self.check_entity_values(
+            "_view", test_view_id, check_values=test_view_migrated_values
+            )
+        return
+
+    def test_migrate_list_fields(self):
+        """
+        Test migration of list fields
+        """
+        self.test_list = RecordList.create(
+            self.testcoll, test_list_id, test_list_create_values
+            )
+        migrate_coll_data(self.testcoll)
+        # Read field definition and check for inline field list
+        view_data = self.check_entity_values(
+            "_list", test_list_id, check_values=test_list_migrated_values
+            )
         return
 
 # End.

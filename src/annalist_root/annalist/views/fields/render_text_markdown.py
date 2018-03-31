@@ -61,9 +61,9 @@ class text_markdown_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
-            '''<textarea cols="64" rows="6" name="{{repeat_prefix}}{{field.field_name}}" '''+
+            '''<textarea cols="64" rows="6" name="{{repeat_prefix}}{{field.description.field_name}}" '''+
                       '''class="small-rows-4 medium-rows-8" '''+
-                      '''placeholder="{{field.field_placeholder}}" '''+
+                      '''placeholder="{{field.description.field_placeholder}}" '''+
                       '''>{{encoded_field_value}}</textarea>'''
             )
         return

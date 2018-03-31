@@ -322,12 +322,13 @@ class DisplayInfo(object):
 
     def flush_collection_caches(self):
         """
-        Called to flush collection caches so that changes made independentlyu of the caches
-        can be used.
+        Called to flush collection caches so that changes made independently of 
+        the caches can be used.
 
-        NOTE: this is currently called by the top-level collection view.  This is a bit of 
-        a hack to ensure that it is always possible for the user to force caches to be flushed,
-        e.g. when type informatiuon is updated in a different tab or by another user.
+        NOTE: this is currently called by the top-level collection customize view.
+        This is a bit of  a hack to ensure that it is always possible for the user 
+        to force caches to be flushed, e.g. when type informatiuon is updated in a 
+        different tab or by another user.
         """
         assert (self.collection is not None)
         self.collection.flush_collection_caches()
@@ -1094,8 +1095,9 @@ class DisplayInfo(object):
                 , 'edit_view_button':   self.recordview.get(ANNAL.CURIE.open_view, "yes")
                 })
             context['title'] = "%(view_label)s - %(coll_label)s"%context
-            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, None)
-            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, None)
+            task_buttons      = self.recordview.get(ANNAL.CURIE.task_buttons, None)
+            edit_task_buttons = self.recordview.get(ANNAL.CURIE.edit_task_buttons, task_buttons)
+            view_task_buttons = self.recordview.get(ANNAL.CURIE.view_task_buttons, task_buttons)
             self.add_task_button_context('edit_task_buttons', edit_task_buttons, context)
             self.add_task_button_context('view_task_buttons', view_task_buttons, context)
         if self.recordlist:

@@ -17,7 +17,7 @@ from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
 
-from annalist.util              import valid_id
+from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
@@ -26,6 +26,7 @@ from annalist.views.fields.render_placement import (
     )
 
 from entity_testentitydata      import entitydata_list_type_url
+from entity_testfielddesc       import get_field_description, get_bound_field
 from tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
@@ -127,8 +128,8 @@ def recordtype_create_values(
     """
     d = (
         { 'annal:type':         "annal:Type"
-        , 'rdfs:label':         "%s %s/%s"%(update, coll_id, type_id)
-        , 'rdfs:comment':       "%s help for %s in collection %s"%(update, type_id, coll_id)
+        , 'rdfs:label':         "%s %s/%s/%s"%(update, coll_id, "_type", type_id)
+        , 'rdfs:comment':       '%s coll %s, type %s, entity %s'%(update, coll_id, "_type", type_id)
         , 'annal:type_view':    "_view/Default_view"
         , 'annal:type_list':    "_list/Default_list"
         })
@@ -179,168 +180,154 @@ def recordtype_read_values(
 #
 #   -----------------------------------------------------------------------------
 
-def recordtype_entity_view_context_data(
-        coll_id="testcoll", type_id="", orig_id=None, type_ids=[],
-        action=None, update="RecordType",
-        type_uri=None, supertype_uris=None #@@ need to deal with these.
+def type_view_context_data(action=None,
+        coll_id="testcoll",
+        type_type_id=layout.TYPE_TYPEID, orig_type=None,
+        type_entity_id="", orig_id=None, type_ids=[],
+        type_label=None,
+        type_descr=None,
+        type_uri=None,
+        type_supertype_uris=[],
+        type_view="_view/Default_view",
+        type_list="_list/Default_list",
+        type_aliases=[],
+        record_type="annal:Type",
+        update="RecordType",
+        continuation_url=None
     ):
-    if type_id:
-        type_label = "%s %s/%s"%(update, coll_id, type_id)
-        type_descr = "%s help for %s in collection %s"%(update, type_id, coll_id)
-    else:
-        type_label = "%s data ... (%s/%s)"%(update, coll_id, type_id)
-        type_descr = "%s description ... (%s/%s)"%(update, coll_id, type_id)
+    if type_uri is None:
+        type_uri = ""
+        if type_entity_id:
+            type_uri = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
+    if type_label is None:
+        if type_entity_id:
+            type_label = "%s %s/%s/%s"%(update, coll_id, type_type_id, type_entity_id)
+        elif orig_id:
+            type_label = "%s %s/%s/%s"%(update, coll_id, type_type_id, orig_id)
+        else:
+            type_label = "%s data ... (%s/%s)"%(update, coll_id, type_entity_id)
+    if type_uri is None:
+       type_uri = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
+    if continuation_url is None:
+        continuation_url = entitydata_list_type_url(coll_id, type_type_id)
+    view_heading = "Type definition"
+    view_title   = (
+        "%s - %s - Collection %s"%(type_label, view_heading, coll_id) if type_label
+        else
+        "%s - Collection %s"%(view_heading, coll_id)
+        )
     context_dict = (
-        { 'title':              "%s - Type definition - Collection %s"%(type_label, coll_id)
-        , 'heading':            "Type definition"
+        { 'title':              view_title
+        , 'heading':            view_heading
         , 'coll_id':            coll_id
-        , 'type_id':            '_type'
-        , 'orig_id':            'orig_type_id'
+        , 'type_id':            type_type_id
+        , 'view_id':            "Type_view"
+        , 'entity_id':          type_entity_id or ""
+        , 'orig_type':          orig_type or type_type_id
+        , 'record_type':        record_type
+        , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
-              { 'field_id':           'Type_id'
-              , 'field_name':         'entity_id'
-              , 'field_value_type':   'annal:EntityRef'
-              , 'field_label':        'Type Id'
-              , 'field_render_type':  'EntityId'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("Type_id",           type_entity_id),         # 0 (0,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_label'
-              , 'field_name':         'Type_label'
-              , 'field_value_type':   'annal:Text'
-              , 'field_label':        'Label'
-              , 'field_render_type':  'Text'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        type_label
-              , 'options':            []
-              })
+              get_bound_field("Type_label",        type_label)              # 1 (1,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_comment'
-              , 'field_name':         'Type_comment'
-              , 'field_label':        'Comment'
-              , 'field_value_type':   'annal:Richtext'
-              , 'field_render_type':  'Markdown'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              , 'field_value':        type_descr
-              , 'options':            []
-              })
+              get_bound_field("Type_comment",      type_descr)              # 2 (2,0)
+              )
           , context_field_row(
-              { 'field_id':           'Type_uri'
-              , 'field_name':         'Type_uri'
-              , 'field_value_type':   'annal:Identifier'
-              , 'field_label':        'Type URI'
-              , 'field_render_type':  'Identifier'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
-          , { 'field_id':             'Type_supertype_uris'
-            , 'field_name':           'Type_supertype_uris'
-            , 'field_value_type':     'annal:Type_supertype_uris'
-            , 'field_label':          'Supertype URIs'
-            , 'field_render_type':    'Group_Set_Row'
-            , 'field_value_mode':     'Value_direct'
-            , 'field_placement':      get_placement_classes('small:0,12')
-            # , 'field_value':        (Supplied separately)
-            , 'options':              []
-            }
+              get_bound_field("Type_uri",          type_uri),               # 3 (3,0)
+              )
+          , get_bound_field("Type_supertype_uris", type_supertype_uris)     # 4 (4)  
           , context_field_row(
-              { 'field_id':           'Type_view'
-              , 'field_name':         'Type_view'
-              , 'field_value_type':   'annal:View'
-              , 'field_label':        'Default view'
-              , 'field_render_type':  'Enum_optional'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:0,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              },
-              { 'field_id':           'Type_list'
-              , 'field_name':         'Type_list'
-              , 'field_value_type':   'annal:List'
-              , 'field_label':        'Default list'
-              , 'field_render_type':  'Enum_optional'
-              , 'field_value_mode':   'Value_direct'
-              , 'field_placement':    get_placement_classes('small:0,12;medium:6,6')
-              # , 'field_value':      (Supplied separately)
-              , 'options':            []
-              })
+              get_bound_field("Type_view",         type_view),              # 5 (5,0)
+              get_bound_field("Type_list",         type_list)               # 6 (5,1)
+              )
+          , get_bound_field("Type_aliases",        type_aliases)            # 7 (6)
           ]
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
         })
-    if type_id:
-        type_url = recordtype_url(coll_id=coll_id, type_id=type_id)
-        context_dict['fields'][0]['row_field_descs'][0]['field_value'] = type_id
-        context_dict['fields'][3]['row_field_descs'][0]['field_value'] = type_url or ""
-        context_dict['orig_id']     = type_id
-    if orig_id:
+    if orig_id is not None:
         context_dict['orig_id']     = orig_id
+    elif action != "new":
+        context_dict['orig_id']     = type_entity_id
     if action:  
         context_dict['action']      = action
     return context_dict
 
-def recordtype_entity_view_form_data(
+def type_view_form_data(action=None, 
         coll_id="testcoll", orig_coll=None,
-        type_id="", orig_id=None, 
-        action=None, cancel=None, close=None, edit=None, copy=None, task=None,
+        type_type_id="_type", orig_type=None,
+        type_entity_id="", orig_id=None, type_entity_uri=None,
+        cancel=None, close=None, edit=None, copy=None, task=None,
+        add_view_field=None, open_view=None, customize=None,
         update="RecordType",
-        type_uri=None
         ):
     """
     Returns a request dictionary that can be used with the Django test client.
     Per Django documentation, multiple values for a key are provided as a list.
     See: https://docs.djangoproject.com/en/1.8/topics/testing/tools/#making-requests
+
+    Note: historically, some tests use Type_view to display non-type data, 
+    hence explicit type_type_id and type_entity_id parameters.
     """
     form_data_dict = (
-        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_id)
-        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_id)
-        , 'orig_id':            'orig_type_id'
-        , 'continuation_url':   entitydata_list_type_url(coll_id, "_type")
+        { 'Type_label':         '%s data ... (%s/%s)'%(update, coll_id, type_entity_id)
+        , 'Type_comment':       '%s description ... (%s/%s)'%(update, coll_id, type_entity_id)
+        , 'continuation_url':   entitydata_list_type_url(coll_id, type_type_id)
         })
-    if type_id is not None:
-        form_data_dict['entity_id']           = type_id
-    if type_id:
-        type_url  = recordtype_url(coll_id=coll_id, type_id=type_id)
-        type_help = '%s help for %s in collection %s'%(update, type_id, coll_id)
-        form_data_dict['entity_id']           = type_id
-        form_data_dict['Type_label']          = '%s %s/%s'%(update, coll_id, type_id)
-        form_data_dict['Type_comment']        = type_help
-        form_data_dict['Type_uri']            = type_url or ""
-        form_data_dict['Type_view']           = "_view/Default_view"
-        form_data_dict['Type_list']           = "_list/Default_list"
-        form_data_dict['orig_id']             = type_id
-        form_data_dict['orig_type']           = "_type"
-        form_data_dict['orig_coll']           = coll_id
-    if orig_id:
-        form_data_dict['orig_id']   = orig_id
-    if orig_coll:
-        form_data_dict['orig_coll'] = orig_coll
     if action:
-        form_data_dict['action']    = action
-    if cancel:
-        form_data_dict['cancel']    = "Cancel"
-    elif close:
-        form_data_dict['close']     = "Close"
-    elif edit:
-        form_data_dict['edit']      = "Edit"
-    elif copy:
-        form_data_dict['copy']      = "Copy"
-    elif task:
-        form_data_dict[task]        = task
-    else:
-        form_data_dict['save']      = "Save"
-    if type_uri:
-        form_data_dict['Type_uri']                                   = type_uri
-        type_uri_rstrip = type_uri.rstrip()
+        form_data_dict['action']        = action
+    if type_type_id:
+        form_data_dict['entity_type']   = "_type/"+type_type_id
+        form_data_dict['orig_type']     = extract_entity_id(type_type_id)
+    if type_entity_id is not None:
+        form_data_dict['entity_id']     = type_entity_id
+        form_data_dict['orig_id']       = type_entity_id
+    if type_entity_id and type_type_id:
+        entity_url  = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
+        form_data_dict['entity_id']     = type_entity_id
+        form_data_dict['Type_uri']      = entity_url or ""
+        form_data_dict['Type_view']     = "_view/Default_view"
+        form_data_dict['Type_list']     = "_list/Default_list"
+        form_data_dict['orig_coll']     = coll_id
+    if orig_coll:
+        form_data_dict['orig_coll']     = orig_coll
+    if orig_type:
+        form_data_dict['orig_type']     = orig_type
+    if orig_id:
+        form_data_dict['orig_id']       = orig_id
+    label_id = type_entity_id or orig_id
+    if label_id and type_type_id:
+        form_data_dict['Type_label']    = (
+            '%s %s/%s/%s'%(update, coll_id, type_type_id, label_id)
+            )
+        form_data_dict['Type_comment']  = (
+            '%s coll %s, type %s, entity %s'%(update, coll_id, type_type_id, label_id)
+            )
+    if type_entity_uri:
+        form_data_dict['Type_uri']                                   = type_entity_uri
+        type_uri_rstrip = type_entity_uri.rstrip()
         form_data_dict['Type_supertype_uris__0__Type_supertype_uri'] = type_uri_rstrip+"/super1"
         form_data_dict['Type_supertype_uris__1__Type_supertype_uri'] = type_uri_rstrip+"/super2"
+    if cancel:
+        form_data_dict['cancel']            = "Cancel"
+    elif close:
+        form_data_dict['close']             = "Close"
+    elif edit:
+        form_data_dict['edit']              = "Edit"
+    elif copy:
+        form_data_dict['copy']              = "Copy"
+    elif add_view_field:
+        form_data_dict['add_view_field']    = add_view_field
+    elif open_view:
+        form_data_dict['open_view']         = open_view
+    elif customize:
+        form_data_dict['customize']         = customize
+    elif task:
+        form_data_dict[task]                = task
+    else:
+        form_data_dict['save']      = "Save"
     return form_data_dict
 
 #   -----------------------------------------------------------------------------

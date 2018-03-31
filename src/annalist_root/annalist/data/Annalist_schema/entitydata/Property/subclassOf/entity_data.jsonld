@@ -1,0 +1,41 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/subclassOf",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "annal:id": "subclassOf",
+  "annal:range": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:subclassOf",
+  "rdfs:comment": "# Subclass of\r\n\r\nReferences another [Class]($BASE:_type/Class) entity that describes a superclass of the current entity.\r\n\r\nThis can be used to infer `rdfs:subClassOf` relationships between the URIs of Class entities.",
+  "rdfs:domain": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "rdfs:label": "Subclass of",
+  "rdfs:range": [
+    {
+      "@id": "annal:Class"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

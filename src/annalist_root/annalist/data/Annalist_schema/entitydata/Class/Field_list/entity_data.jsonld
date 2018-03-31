@@ -1,0 +1,30 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Field_list",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Field_list",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Field_list",
+  "rdfs:comment": "# Field list type\r\n\r\nAn internal data type that is used for a list of field references that appear within a field definition entity.  (The value is used in the selection of appropriate field options when editing a field definition: some fields occur only in a field list within a field definition.)",
+  "rdfs:label": "Field list",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

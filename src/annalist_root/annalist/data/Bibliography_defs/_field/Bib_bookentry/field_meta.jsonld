@@ -1,34 +1,48 @@
-// @@TODO: introduce new render type for optional/grouped fields.  For now using Group_Seq
-{ "@id":                        "annal:fields/Bib_bookentry"
-, "@type":                      ["annal:Field"]
-, "@context":                   ["../../coll_context.jsonld"]
-, "annal:id":                   "Bib_bookentry"
-, "annal:type_id":              "_field"
-, "rdfs:label":                 "Book content"
-, "rdfs:comment":               "BibJSON(ish) field for book content"
-, "annal:field_render_type":    "Group_Seq"
-, "annal:field_value_mode":     "Value_direct"
-, "annal:field_value_type":     "bib:BookEntry"
-, "annal:placeholder":          "Book in which article appears"
-, "annal:property_uri":         "bib:bookentry"
-, "annal:field_entity_type":    "bib:BibEntry"
-, "annal:field_fields":
-  [ { "annal:field_id":         "_field/Bib_booktitle"
-    , "annal:field_placement":  "small:0,12"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Bib_bookentry",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:field_entity_type": "bib:BibEntry",
+  "annal:field_fields": [
+    {
+      "annal:field_id": "_field/Bib_booktitle",
+      "annal:field_placement": "small:0,12"
+    },
+    {
+      "annal:field_id": "_field/Bib_volume",
+      "annal:field_placement": "small:0,12"
+    },
+    {
+      "annal:field_id": "_field/Bib_chapter",
+      "annal:field_placement": "small:0,12;medium:0,6"
+    },
+    {
+      "annal:field_id": "_field/Bib_pages",
+      "annal:field_placement": "small:0,12;medium:6,6"
+    },
+    {
+      "annal:field_id": "_field/Bib_edition",
+      "annal:field_placement": "small:0,12"
     }
-  , { "annal:field_id":         "_field/Bib_volume"
-    , "annal:field_placement":  "small:0,12"
-    }
-  , { "annal:field_id":         "_field/Bib_chapter"
-    , "annal:field_placement":  "small:0,12;medium:0,6"
-    }
-  , { "annal:field_id":         "_field/Bib_pages"
-    , "annal:field_placement":  "small:0,12;medium:6,6"
-    }
-  , { "annal:field_id":         "_field/Bib_edition"
-    , "annal:field_placement":  "small:0,12"
-    }
-  ]
-, "annal:repeat_label_add":     "Add book"
-, "annal:repeat_label_delete":  "Remove selected book"
+  ],
+  "annal:field_render_type": "_enum_render_type/Group_Seq",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "bib:BookEntry",
+  "annal:id": "Bib_bookentry",
+  "annal:placeholder": "Book in which article appears",
+  "annal:property_uri": "bib:bookentry",
+  "annal:repeat_label_add": "Add book",
+  "annal:repeat_label_delete": "Remove selected book",
+  "annal:tooltip": "BibJSON(ish) field for book content",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Book content\r\n\r\nBibJSON(ish) field for book content",
+  "rdfs:label": "Book content"
 }

@@ -70,7 +70,7 @@ from entity_testentitydata  import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
-    entitydata_context_data, entitydata_form_data, entitydata_delete_confirm_form_data,
+    default_view_form_data, entitydata_delete_confirm_form_data,
     entitylist_form_data
     )
 from entity_testsitedata    import (
@@ -200,7 +200,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
-        f = entitydata_form_data(action="edit", 
+        f = default_view_form_data(action="edit", 
             entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
             orig_coll="testcoll"
             )
@@ -223,7 +223,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
-        f = entitydata_form_data(action="copy", 
+        f = default_view_form_data(action="copy", 
             entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
             orig_coll="testcoll"
             )
@@ -248,7 +248,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testsubuser", password="testpassword")
         # self.assertTrue(loggedin)
         self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
-        f = entitydata_form_data(action="edit", 
+        f = default_view_form_data(action="edit", 
             entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
             orig_coll="testcoll"
             )
@@ -269,7 +269,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testsubuser", password="testpassword")
         self.assertTrue(loggedin)
         self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
-        f = entitydata_form_data(action="edit", 
+        f = default_view_form_data(action="edit", 
             entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
             orig_coll="testcoll"
             )
@@ -290,7 +290,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         loggedin = self.client.login(username="testsubuser", password="testpassword")
         self.assertTrue(loggedin)
         self.assertFalse(EntityData.exists(self.testsubdata, "entity2"))
-        f = entitydata_form_data(action="copy", 
+        f = default_view_form_data(action="copy", 
             entity_id="entity2", type_id="testtype", coll_id="testsubcoll",
             orig_coll="testcoll"
             )

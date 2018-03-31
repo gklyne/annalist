@@ -96,8 +96,8 @@ class uri_link_edit_renderer(object):
 
     def __init__(self):
         self._template = Template(
-            '''<input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}" '''+
-                   '''placeholder="{{field.field_placeholder}}" '''+
+            '''<input type="text" size="64" name="{{repeat_prefix}}{{field.description.field_name}}" '''+
+                   '''placeholder="{{field.description.field_placeholder}}" '''+
                    '''value="{{field.field_edit_value}}" />'''
         )
         return

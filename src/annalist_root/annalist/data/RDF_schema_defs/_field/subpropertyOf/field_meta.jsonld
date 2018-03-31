@@ -19,13 +19,13 @@
   "annal:field_value_mode": "_enum_value_mode/Value_entity",
   "annal:field_value_type": "rdf:Property",
   "annal:id": "subpropertyOf",
-  "annal:placeholder": "(Superproperty - URI or CURIE)",
-  "annal:property_uri": "rdfs:subPropertyOf",
+  "annal:placeholder": "(Select superproperty field)",
+  "annal:property_uri": "annal:subpropertyOf",
   "annal:repeat_label_add": "",
   "annal:repeat_label_delete": "",
   "annal:tooltip": "Indicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
   "annal:type": "annal:Field",
   "annal:type_id": "_field",
-  "rdfs:comment": "# Subproperty of\r\n\r\nIndicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.",
+  "rdfs:comment": "# Subproperty of\r\n\r\nIndicates a superproperty of which the current property is a subproperty.  That is, any statement containing the current property infers a similar statement in which the property is replaced by the indicated superproperty.\r\n\r\n@@Currently this will store the Annalist property entity reference for a selected property, rather than the declered property URI.  Maybe should use a different property URI here, and then extract a value for rdfs:subPropertyOf from the referenced entity?  This would need enhancements to Annalist.",
   "rdfs:label": "Subproperty of"
 }

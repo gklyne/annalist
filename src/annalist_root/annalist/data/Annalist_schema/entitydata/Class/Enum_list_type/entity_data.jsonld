@@ -1,0 +1,36 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Class/Enum_list_type",
+  "@type": [
+    "rdfs:Class",
+    "annal:EntityData"
+  ],
+  "annal:id": "Enum_list_type",
+  "annal:subclassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ],
+  "annal:type": "rdfs:Class",
+  "annal:type_id": "Class",
+  "annal:uri": "annal:Enum_list_type",
+  "rdfs:comment": "# Enumerated type for list type\r\n\r\nRefers to a value that describes the presentation of a list of entities (e.g., as a list or a grid).\r\n",
+  "rdfs:label": "List type",
+  "rdfs:seeAlso": [],
+  "rdfs:subClassOf": [
+    {
+      "@id": "Class/Enum"
+    },
+    {
+      "@id": "Class/Resource"
+    }
+  ]
+}

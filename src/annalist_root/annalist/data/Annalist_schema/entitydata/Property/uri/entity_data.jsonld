@@ -1,14 +1,23 @@
 {
   "@context": [
+    {
+      "@base": "../../"
+    },
     "../../coll_context.jsonld"
   ],
-  "@id": "./",
+  "@id": "Property/uri",
   "@type": [
     "rdf:Property",
-    "rdfs:Resource",
     "annal:EntityData"
   ],
+  "annal:domain": [
+    {
+      "@id": "annal:EntityRoot"
+    }
+  ],
   "annal:id": "uri",
+  "annal:range": [],
+  "annal:subpropertyOf": [],
   "annal:type": "rdf:Property",
   "annal:type_id": "Property",
   "annal:uri": "annal:uri",
@@ -19,11 +28,6 @@
     }
   ],
   "rdfs:label": "Entity URI",
-  "rdfs:range": [
-    {
-      "@id": "annal:Identifier"
-    }
-  ],
   "rdfs:range": [],
   "rdfs:subPropertyOf": []
 }

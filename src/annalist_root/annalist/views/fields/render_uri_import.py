@@ -75,12 +75,12 @@ edit_import = (
     """<!-- fields.uri_import_edit_renderer -->
     <div class="row">
       <div class="small-10 columns view-value view-subfield less-import-button">
-        <input type="text" size="64" name="{{repeat_prefix}}{{field.field_name}}"
-               placeholder="{{field.field_placeholder}}"
+        <input type="text" size="64" name="{{repeat_prefix}}{{field.description.field_name}}"
+               placeholder="{{field.description.field_placeholder}}"
                value="{{encoded_field_value}}" />
       </div>
       <div class="small-2 columns view-value view-subfield import-button left small-text-right">
-        <input type="submit" name="{{repeat_prefix}}{{field.field_name}}__import" value="Import" />
+        <input type="submit" name="{{repeat_prefix}}{{field.description.field_name}}__import" value="Import" />
       </div>
     </div>
     """)

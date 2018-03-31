@@ -30,18 +30,22 @@ from annalist.views.form_utils.fieldchoice  import FieldChoice
 from AnnalistTestCase       import AnnalistTestCase
 from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
 from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from entity_testfielddesc   import get_field_description, get_bound_field
 from entity_testutils       import (
     collection_create_values,
     render_select_options, render_choice_options,
     create_test_user,
     context_field_map,
-    context_view_field
+    context_view_field,
+    context_bind_fields,
+    context_field_row
     )
 from entity_testtypedata    import (
     recordtype_create_values, 
     )
 from entity_testentitydata  import (
     entity_url, entitydata_edit_url, 
+    specified_view_context_data,
     default_fields
     )
 
@@ -124,12 +128,11 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_refimg_view(self):
         refimg_view = RecordView.create(self.testcoll, "Test_refimg_view",
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:refimg_view"
-            , 'rdfs:label':         "Test view label"
-            , 'rdfs:comment':       "Test view comment"
-            , 'annal:record_type':  "img_type"
-            # , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:refimg_view"
+            , 'rdfs:label':             "Test view label"
+            , 'rdfs:comment':           "Test view comment"
+            , 'annal:view_entity_type': "img_type"
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -144,12 +147,11 @@ class RefMultifieldTest(AnnalistTestCase):
 
     def _create_rptimg_view(self):
         rptimg_view = RecordView.create(self.testcoll, "Test_rptimg_view",
-            { 'annal:type':         "annal:View"
-            , 'annal:uri':          "test:rptimg_view"
-            , 'rdfs:label':         "Test rptimg view label"
-            , 'rdfs:comment':       "Test rptimg view comment"
-            , 'annal:record_type':  "img_type"
-            # , 'annal:add_field':    True
+            { 'annal:type':             "annal:View"
+            , 'annal:uri':              "test:rptimg_view"
+            , 'rdfs:label':             "Test rptimg view label"
+            , 'rdfs:comment':           "Test rptimg view comment"
+            , 'annal:view_entity_type': "img_type"
             , 'annal:view_fields':
               [ { 'annal:field_id':         "Entity_id"
                 , 'annal:field_placement':  "small:0,12;medium:0,6"
@@ -261,47 +263,87 @@ class RefMultifieldTest(AnnalistTestCase):
         refimg_image_field = self._create_refimg_comment_field()
         return
 
+    def _create_refimg_view_context(self, 
+            entity_id=None,
+            entity_ref=None,
+            record_type="test:ref_type",
+            action=None,
+            continuation_url=None
+        ):
+        view_fields = (
+            [ context_field_row(
+                get_bound_field("Entity_id",         entity_id,
+                    placement="small:0,12;medium:0,6"
+                    ),
+                get_bound_field("Test_refimg_field", entity_ref, 
+                    placement="small:0,12;medium:6,6"
+                    )
+                )
+            ])
+        context_dict = specified_view_context_data(
+            coll_id="testcoll", type_id="ref_type", 
+            view_id="Test_refimg_view", view_heading="Test view label",
+            entity_id=entity_id,
+            entity_label="Label Test_ref_entity",
+            view_fields=view_fields,
+            record_type=record_type,
+            action=action, 
+            continuation_url=continuation_url
+            )
+        return context_dict
+
+    def _create_rptref_view_context(self, 
+            entity_id=None,
+            record_type="test:ref_type",
+            action=None,
+            continuation_url=None
+        ):
+        view_fields = (
+            [ context_field_row(
+                get_bound_field("Entity_id",         entity_id,
+                    placement="small:0,12;medium:0,6"
+                    ),
+                )
+            , get_bound_field("Test_rptref_field",
+                [{'test:ref_image': 'Test_img_entity'}], 
+                placement="small:0,12;medium:6,6"
+                )
+            ])
+        context_dict = specified_view_context_data(
+            coll_id="testcoll", type_id="ref_type", 
+            view_id="Test_rptimg_view", view_heading="Test rptimg view label",
+            entity_id=entity_id,
+            entity_label="Label Test_rpt_entity",
+            record_type=record_type,
+            view_fields=view_fields,
+            action=action, 
+            continuation_url=continuation_url
+            )
+        return context_dict
+
     # Tests
 
     def test_Ref_Multifield_view(self):
         self._create_image_multifield_ref_and_view()
-
-        # Render view of multifield reference
-        u = entitydata_edit_url("view", "testcoll", "ref_type", "Test_ref_entity", view_id="Test_refimg_view")
-        r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        # Render view of multifield imageb reference
+        u = entitydata_edit_url(
+            "view", "testcoll", "ref_type", "Test_ref_entity", 
+            view_id="Test_refimg_view"
+            )
+        response = self.client.get(u)
+        self.assertEqual(response.status_code,   200)
+        self.assertEqual(response.reason_phrase, "OK")
 
         # Check render context
-        self.assertEqual(r.context['coll_id'],      "testcoll")
-        self.assertEqual(r.context['type_id'],      "ref_type")
-        self.assertEqual(r.context['entity_id'],    "Test_ref_entity")
-        self.assertEqual(r.context['action'],       "view")
-        # Fields
-        # print "@@ field map:\bn"+context_field_map(r.context)
-        self.assertEqual(len(r.context['fields']), 1)
-        # 1st field - Id
-        f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0['field_id'],            "Entity_id")
-        self.assertEqual(f0['field_name'],          "entity_id")
-        self.assertEqual(f0['field_label'],         "Id")
-        self.assertEqual(f0['field_value'],         "Test_ref_entity")
-        # 2nd field - multifield group
-        f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f1['field_id'],            "Test_refimg_field")
-        self.assertEqual(f1['field_name'],          "Test_refimg_field")
-        self.assertEqual(f1['field_label'],         "Image reference")
-        self.assertEqual(f1['field_render_type'],   "RefMultifield")
-        self.assertEqual(f1['field_value_mode'],    "Value_entity")
-        self.assertEqual(f1['field_value_type'],    "annal:Field_group")
-        field_list = (
-            [ { "annal:field_id":   "Test_comment" }
-            , { "annal:field_id":   "Test_image"}
-            ])
-        self.assertEqual(f1['group_field_list'],    field_list)
-        self.assertEqual(f1['group_label'],         "Image reference")
-        self.assertEqual(f1['field_property_uri'],  "test:ref_image")
-        self.assertEqual(f1['field_value'],         "Test_img_entity")
+        expect_context = self._create_refimg_view_context(
+            entity_id="Test_ref_entity",
+            entity_ref="Test_img_entity",
+            action="view",
+            continuation_url=""
+            )
+        actual_context = context_bind_fields(response.context)
+        self.assertEqual(len(response.context['fields']), 1)
+        self.assertDictionaryMatch(actual_context, expect_context)
 
         # Test rendered result
         field_vals = default_fields(
@@ -372,51 +414,34 @@ class RefMultifieldTest(AnnalistTestCase):
             </div>
             """%tgt_field_vals(width=6)
         # log.info(r.content)
-        self.assertContains(r, formrow1,  html=True)
-        self.assertContains(r, formrow2a, html=True)
-        self.assertContains(r, formrow2b, html=True)
+        self.assertContains(response, formrow1,  html=True)
+        self.assertContains(response, formrow2a, html=True)
+        self.assertContains(response, formrow2b, html=True)
         return
 
     def test_Ref_Multifield_edit(self):
         self._create_image_multifield_ref_and_view()
 
-        # Render view of multifield reference
+        # Render edit view of multifield reference
         u = entitydata_edit_url("edit", "testcoll", "ref_type", "Test_ref_entity", view_id="Test_refimg_view")
-        r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        response = self.client.get(u)
+        self.assertEqual(response.status_code,   200)
+        self.assertEqual(response.reason_phrase, "OK")
 
         # Check render context
-        self.assertEqual(r.context['coll_id'],      "testcoll")
-        self.assertEqual(r.context['type_id'],      "ref_type")
-        self.assertEqual(r.context['entity_id'],    "Test_ref_entity")
-        self.assertEqual(r.context['action'],       "edit")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 1)
-        # 1st field - Id
-        f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0['field_id'],            "Entity_id")
-        self.assertEqual(f0['field_name'],          "entity_id")
-        self.assertEqual(f0['field_label'],         "Id")
-        self.assertEqual(f0['field_value'],         "Test_ref_entity")
-        # 2nd field - multifield group
-        f1 = context_view_field(r.context, 0, 1)
-        self.assertEqual(f1['field_id'],            "Test_refimg_field")
-        self.assertEqual(f1['field_name'],          "Test_refimg_field")
-        self.assertEqual(f1['field_label'],         "Image reference")
-        self.assertEqual(f1['field_render_type'],   "RefMultifield")
-        self.assertEqual(f1['field_value_mode'],    "Value_entity")
-        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        field_list = (
-            [ { "annal:field_id":   "Test_comment" }
-            , { "annal:field_id":   "Test_image"}
-            ])
-        self.assertEqual(f1['group_field_list'],    field_list)
-        self.assertEqual(f1['group_label'],         "Image reference")
-        self.assertEqual(f1['field_property_uri'],  "test:ref_image")
-        self.assertEqual(f1['field_value'],         "Test_img_entity")
+        expect_context = self._create_refimg_view_context(
+            entity_id="Test_ref_entity",
+            entity_ref="Test_img_entity",
+            action="edit",
+            continuation_url=""
+            )
+        actual_context = context_bind_fields(response.context)
+        self.assertEqual(len(response.context['fields']), 1)
+        self.assertDictionaryMatch(actual_context, expect_context)
 
         # Test rendered result
+        f0 = context_view_field(response.context, 0, 0)
+        f1 = context_view_field(response.context, 0, 1)
         field_vals    = default_fields(
             coll_id="testcoll", type_id="ref_type", entity_id="Test_ref_entity", 
             view_id="Test_refimg_view",
@@ -465,8 +490,8 @@ class RefMultifieldTest(AnnalistTestCase):
             </div>
             """)%tgt_field_vals(width=6)
         # log.info(r.content)
-        self.assertContains(r, formrow1,  html=True)
-        self.assertContains(r, formrow2,  html=True)
+        self.assertContains(response, formrow1,  html=True)
+        self.assertContains(response, formrow2,  html=True)
         return
 
     def test_Repeat_Ref_Multifield_view(self):
@@ -474,38 +499,19 @@ class RefMultifieldTest(AnnalistTestCase):
 
         # Render view of multifield reference
         u = entitydata_edit_url("view", "testcoll", "ref_type", "Test_rpt_entity", view_id="Test_rptimg_view")
-        r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        response = self.client.get(u)
+        self.assertEqual(response.status_code,   200)
+        self.assertEqual(response.reason_phrase, "OK")
 
         # Check render context
-        self.assertEqual(r.context['coll_id'],      "testcoll")
-        self.assertEqual(r.context['type_id'],      "ref_type")
-        self.assertEqual(r.context['entity_id'],    "Test_rpt_entity")
-        self.assertEqual(r.context['action'],       "view")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 2)
-        # 1st field - Id
-        f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0['field_id'],            "Entity_id")
-        self.assertEqual(f0['field_name'],          "entity_id")
-        self.assertEqual(f0['field_label'],         "Id")
-        self.assertEqual(f0['field_value'],         "Test_rpt_entity")
-        # 2nd field - multifield group
-        f1 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f1['field_id'],            "Test_rptref_field")
-        self.assertEqual(f1['field_name'],          "Test_rptref_field")
-        self.assertEqual(f1['field_label'],         "Repeat image reference")
-        self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
-        self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        field_list = (
-            [ { "annal:field_id":   "Test_refimg_field" }
-            ])
-        self.assertEqual(f1['group_field_list'],    field_list)
-        self.assertEqual(f1['group_label'],         "Repeat image reference")
-        self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
-        self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
+        expect_context = self._create_rptref_view_context(
+            entity_id="Test_rpt_entity",
+            action="view",
+            continuation_url=""
+            )
+        actual_context = context_bind_fields(response.context)
+        self.assertEqual(len(response.context['fields']), 2)
+        self.assertDictionaryMatch(actual_context, expect_context)
 
         # Test rendered result
         field_vals    = default_fields(
@@ -627,11 +633,11 @@ class RefMultifieldTest(AnnalistTestCase):
             </div>
             """)%tgt_field_vals(width=6)
         # log.info(r.content)
-        self.assertContains(r, formrow1,  html=True)
-        self.assertContains(r, formrow2a, html=True)
-        self.assertContains(r, formrow2b, html=True)
-        self.assertContains(r, formrow3a, html=True)
-        self.assertContains(r, formrow3b, html=True)
+        self.assertContains(response, formrow1,  html=True)
+        self.assertContains(response, formrow2a, html=True)
+        self.assertContains(response, formrow2b, html=True)
+        self.assertContains(response, formrow3a, html=True)
+        self.assertContains(response, formrow3b, html=True)
         return
 
     def test_Repeat_Ref_Multifield_edit(self):
@@ -639,38 +645,22 @@ class RefMultifieldTest(AnnalistTestCase):
 
         # Render view of multifield reference
         u = entitydata_edit_url("edit", "testcoll", "ref_type", "Test_rpt_entity", view_id="Test_rptimg_view")
-        r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
+        response = self.client.get(u)
+        self.assertEqual(response.status_code,   200)
+        self.assertEqual(response.reason_phrase, "OK")
 
         # Check render context
-        self.assertEqual(r.context['coll_id'],      "testcoll")
-        self.assertEqual(r.context['type_id'],      "ref_type")
-        self.assertEqual(r.context['entity_id'],    "Test_rpt_entity")
-        self.assertEqual(r.context['action'],       "edit")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 2)
-        # 1st field - Id
-        f0 = context_view_field(r.context, 0, 0)
-        self.assertEqual(f0['field_id'],            "Entity_id")
-        self.assertEqual(f0['field_name'],          "entity_id")
-        self.assertEqual(f0['field_label'],         "Id")
-        self.assertEqual(f0['field_value'],         "Test_rpt_entity")
-        # 2nd field - multifield group
-        f1 = context_view_field(r.context, 1, 0)
-        self.assertEqual(f1['field_id'],            "Test_rptref_field")
-        self.assertEqual(f1['field_name'],          "Test_rptref_field")
-        self.assertEqual(f1['field_label'],         "Repeat image reference")
-        self.assertEqual(f1['field_render_type'],   "Group_Seq_Row")
-        self.assertEqual(f1['field_value_mode'],    "Value_direct")
-        self.assertEqual(f1['field_value_type'],   "annal:Field_group")
-        field_list = (
-            [ { "annal:field_id":   "Test_refimg_field" }
-            ])
-        self.assertEqual(f1['group_field_list'],    field_list)
-        self.assertEqual(f1['group_label'],         "Repeat image reference")
-        self.assertEqual(f1['field_property_uri'],  "test:rpt_image")
-        self.assertEqual(f1['field_value'][0],      {'test:ref_image': 'Test_img_entity'})
+        expect_context = self._create_rptref_view_context(
+            entity_id="Test_rpt_entity",
+            action="edit",
+            continuation_url=""
+            )
+        actual_context = context_bind_fields(response.context)
+        self.assertEqual(len(response.context['fields']), 2)
+        self.assertDictionaryMatch(actual_context, expect_context)
+
+        f0 = context_view_field(response.context, 0, 0)
+        f1 = context_view_field(response.context, 1, 0)
 
         # Test rendered result
         field_vals    = default_fields(
@@ -762,11 +752,11 @@ class RefMultifieldTest(AnnalistTestCase):
             </div>
             """)%tgt_field_vals(width=6)
         # log.info(r.content)
-        self.assertContains(r, formrow1,  html=True)
-        self.assertContains(r, formrow2a, html=True)
-        self.assertContains(r, formrow2b, html=True)
-        self.assertContains(r, formrow3a, html=True)
-        self.assertContains(r, formrow3b, html=True)
+        self.assertContains(response, formrow1,  html=True)
+        self.assertContains(response, formrow2a, html=True)
+        self.assertContains(response, formrow2b, html=True)
+        self.assertContains(response, formrow3a, html=True)
+        self.assertContains(response, formrow3b, html=True)
         return
 
 # End.

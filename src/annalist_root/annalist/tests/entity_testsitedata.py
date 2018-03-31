@@ -386,7 +386,7 @@ site_field_subfield_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Field_subfield_placement",   label="Subfield Pos/size"   )
     , FieldChoice("_field/Field_subfield_property",    label="Subfield URI"        )
-    , FieldChoice("_field/Field_subfield_sel",         label="Subfield Id"         )
+    , FieldChoice("_field/Field_subfield_sel",         label="Subfield ref"        )
     ])  
 
 site_field_all_fields = (
@@ -397,13 +397,13 @@ site_field_all_fields = (
 site_defined_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Group_comment",              label="Help"                )
+    , FieldChoice("_field/Group_entity_type",          label="Group entity type"   )
     , FieldChoice("_field/Group_field_placement",      label="Position/size"       )
     , FieldChoice("_field/Group_field_property",       label="Property URI"        )
-    , FieldChoice("_field/Group_field_sel",            label="Field id"            )
+    , FieldChoice("_field/Group_field_sel",            label="Field ref"           )
     , FieldChoice("_field/Group_fields",               label="Fields"              )
     , FieldChoice("_field/Group_id",                   label="Group Id"            )
     , FieldChoice("_field/Group_label",                label="Label"               )
-    , FieldChoice("_field/Group_target_type",          label="Group entity type"   )
     ])
 
 site_group_fields = (
@@ -420,7 +420,7 @@ site_group_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Group_field_placement",      label="Position/size"       )
     , FieldChoice("_field/Group_field_property",       label="Property URI"        )
-    , FieldChoice("_field/Group_field_sel",            label="Field id"            )
+    , FieldChoice("_field/Group_field_sel",            label="Field ref"           )
     ])
 
 site_defined_list_fields = (
@@ -430,13 +430,13 @@ site_defined_list_fields = (
     , FieldChoice("_field/List_default_type",          label="Default type"        )
     , FieldChoice("_field/List_default_view",          label="Default view"        )   
     , FieldChoice("_field/List_entity_selector",       label="Selector"            )
+    , FieldChoice("_field/List_entity_type",           label="List entity type"    )
     , FieldChoice("_field/List_field_placement",       label="Position/size"       )
     , FieldChoice("_field/List_field_property",        label="Property URI"        )
-    , FieldChoice("_field/List_field_sel",             label="Field id"            )
+    , FieldChoice("_field/List_field_sel",             label="Field ref"           )
     , FieldChoice("_field/List_fields",                label="Fields"              )
     , FieldChoice("_field/List_id",                    label="List Id"             )
     , FieldChoice("_field/List_label",                 label="Label"               )
-    , FieldChoice("_field/List_target_type",           label="List entity type"    )
     , FieldChoice("_field/List_type",                  label="List display type"   )
     ])
 
@@ -455,7 +455,7 @@ site_list_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/List_field_placement",       label="Position/size"       )
     , FieldChoice("_field/List_field_property",        label="Property URI"        )
-    , FieldChoice("_field/List_field_sel",             label="Field id"            )
+    , FieldChoice("_field/List_field_sel",             label="Field ref"           )
     ])
 
 site_defined_type_fields = (
@@ -504,13 +504,13 @@ site_defined_view_fields = (
     , FieldChoice("_field/View_choice",                label="Choose view"         )
     , FieldChoice("_field/View_comment",               label="Help"                )
     , FieldChoice("_field/View_edit_view",             label="Editable view?"      )
+    , FieldChoice("_field/View_entity_type",           label="View entity type"    )
     , FieldChoice("_field/View_field_placement",       label="Position/size"       )
     , FieldChoice("_field/View_field_property",        label="Property URI"        )
-    , FieldChoice("_field/View_field_sel",             label="Field id"            )
+    , FieldChoice("_field/View_field_sel",             label="Field ref"           )
     , FieldChoice("_field/View_fields",                label="Fields"              )
     , FieldChoice("_field/View_id",                    label="View Id"             )
     , FieldChoice("_field/View_label",                 label="Label"               )
-    , FieldChoice("_field/View_target_type",           label="View entity type"    )
     ])
 
 site_view_fields = (
@@ -528,7 +528,7 @@ site_view_field_group_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/View_field_placement",       label="Position/size"       )
     , FieldChoice("_field/View_field_property",        label="Property URI"        )
-    , FieldChoice("_field/View_field_sel",             label="Field id"            )
+    , FieldChoice("_field/View_field_sel",             label="Field ref"           )
     ])
 
 site_vocab_fields = (
@@ -762,8 +762,8 @@ def get_site_value_types():
 #   ----- All site entities (including test collection data) -----
 
 test_types = (
-    [ FieldChoice("_type/testtype",     label="RecordType testcoll/testtype")
-    , FieldChoice("_type/testtype2",    label="RecordType testcoll/testtype2")
+    [ FieldChoice("_type/testtype",     label="RecordType testcoll/_type/testtype")
+    , FieldChoice("_type/testtype2",    label="RecordType testcoll/_type/testtype2")
     ])
 
 def get_test_types_sorted():

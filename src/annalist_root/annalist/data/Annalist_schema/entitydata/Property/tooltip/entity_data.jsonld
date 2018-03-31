@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/tooltip",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [],
+  "annal:id": "tooltip",
+  "annal:range": [
+    {
+      "@id": "annal:Longtext"
+    }
+  ],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:tooltip",
+  "rdfs:comment": "# Field tooltip help\r\n\r\nSpecifies tooltip help text for a field.\r\n\r\nThis is normally a short form of the field's full help text (`rdfs:comment` property).  If not specified, the field's help text is used instead.",
+  "rdfs:domain": [],
+  "rdfs:label": "Tooltip",
+  "rdfs:range": [
+    {
+      "@id": "annal:Longtext"
+    }
+  ],
+  "rdfs:subPropertyOf": []
+}

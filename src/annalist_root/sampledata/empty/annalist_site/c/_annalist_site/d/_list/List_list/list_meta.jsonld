@@ -10,7 +10,7 @@
 , "annal:default_view":         "_view/List_view"
 , "annal:default_type":         "_type/_list"
 , "annal:list_entity_selector": "'annal:List' in [@type]"
-, "annal:record_type":          "annal:List"
+, "annal:list_entity_type":     "annal:List"
 , "annal:list_fields":
   [ { "annal:field_id":             "_field/Entity_id"
     , "annal:field_placement":      "small:0,3"

@@ -147,10 +147,10 @@ class FieldDescriptionTest(AnnalistTestCase):
         self.assertDictionaryMatch(fd, expect_field_desc)
         return
 
-    def test_Group_field_sel(self):
+    def test_View_field_sel(self):
         fd = field_description_from_view_field(
             self.testcoll, 
-            { ANNAL.CURIE.field_id: "Group_field_sel" }, 
+            { ANNAL.CURIE.field_id: "View_field_sel" }, 
             {}
             )
         expect_placement = Placement(
@@ -169,23 +169,23 @@ class FieldDescriptionTest(AnnalistTestCase):
         #     ])
         expect_choices = OrderedDict(
             [ (fc.id, fc) 
-              for fc in no_selection("(field sel)") + 
+              for fc in no_selection("(field reference)") + 
                         get_site_default_entity_fields_linked("testcoll") 
             ])
         expect_field_desc = (
-            { "field_id":                   "Group_field_sel"
-            , "field_name":                 "Field_id"
+            { "field_id":                   "View_field_sel"
+            , "field_name":                 "View_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
-            , "field_label":                "Field id"
+            , "field_label":                "Field ref"
             , "field_render_type":          "Enum_optional"
             , "field_value_mode":           "Value_direct"
             , "field_property_uri":         ANNAL.CURIE.field_id
-            , "field_placeholder":          "(field sel)"
+            , "field_placeholder":          "(field reference)"
             , "field_default_value":        ""
             , "field_placement":            expect_placement
             , "field_ref_type":             "_field"
             , "field_choices":              expect_choices
-            , "field_ref_restriction":      "entity[annal:record_type] subtype [annal:field_entity_type]"
+            , "field_ref_restriction":      "entity[annal:view_entity_type] subtype [annal:field_entity_type]"
             , "field_group_ref":            None
             })
         # print repr(fd)
@@ -258,9 +258,9 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field0_desc = (
             { "field_id":                   "View_field_sel"
-            , "field_name":                 "Field_id"
+            , "field_name":                 "View_field_sel"
             , "field_value_type":           ANNAL.CURIE.EntityRef
-            , "field_label":                "Field id"
+            , "field_label":                "Field ref"
             , "field_render_type":          "Enum_optional"
             , "field_value_mode":           "Value_direct"
             , "field_property_uri":         ANNAL.CURIE.field_id
@@ -278,7 +278,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field1_desc = (
             { "field_id":                   "View_field_property"
-            , "field_name":                 "Field_property"
+            , "field_name":                 "View_field_property"
             , "field_value_type":           ANNAL.CURIE.Identifier
             , "field_label":                "Property URI"
             , "field_render_type":          "Identifier"
@@ -298,7 +298,7 @@ class FieldDescriptionTest(AnnalistTestCase):
             )
         expect_field2_desc = (
             { "field_id":                   "View_field_placement"
-            , "field_name":                 "Field_placement"
+            , "field_name":                 "View_field_placement"
             , "field_value_type":           ANNAL.CURIE.Placement
             , "field_label":                "Position/size"
             , "field_render_type":          "Placement"

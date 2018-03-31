@@ -77,9 +77,9 @@ class bool_checkbox_edit_renderer(object):
     def __init__(self):
         self._template = Template(
             '''<input type="checkbox" '''+
-                   '''name="{{repeat_prefix}}{{field.field_name}}" '''+
+                   '''name="{{repeat_prefix}}{{field.description.field_name}}" '''+
                    '''value="{{encoded_field_value}}"{{checked|safe}} />'''+
-              ''' <span class="value-placeholder">{{field.field_placeholder}}</span>'''
+              ''' <span class="value-placeholder">{{field.description.field_placeholder}}</span>'''
             )
         return
 

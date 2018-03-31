@@ -98,7 +98,7 @@
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
 - [ ] Check out demo system.
 
-- [ ] Commit changes ("Preparing release x.y.z")
+- [ ] Commit changes ("Release x.y.z")
 - [ ] Upload to PyPI (see below)
 - [ ] Tag release on release branch
     - `git tag -ln` to check previous tags

@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "phdthesis"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "PhD thesis"
-, "rdfs:comment":       "A Ph.D. thesis.  Other fields: author, title, school, year, type, address, month, note."
-, "annal:uri":          "annal:bib_type/phdthesis"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/phdthesis",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "phdthesis",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/phdthesis",
+  "rdfs:comment": "A Ph.D. thesis.  Other fields: author, title, school, year, type, address, month, note.",
+  "rdfs:label": "PhD thesis"
 }

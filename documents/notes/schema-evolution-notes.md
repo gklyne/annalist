@@ -62,7 +62,7 @@ entities are created or updated, according to their Annalist type.
 
 (a) need to find all references and update them
 
-(b) On somne systems (e.g, MacOS), renames that only change the case of characters in the type name fail because the file system naming is case-insensitive.  These renames need to be done in two stages.
+(b) On some systems (e.g, MacOS), renames that only change the case of characters in the type name fail because the file system naming is case-insensitive.  These renames need to be done in two stages.
 
 
 ## Rename type, view and list
@@ -96,12 +96,26 @@ property URIs, the new URIs are added when the form is saved, and the old ones
 remain as they were.
 
 
+## Remove property URI no longer used
+
+Can occur when using property aliases to make value accessible at new property URI
+
+
+## Extend graph path
+
+("Shape changing" pattern? - see below)
+
+Add indirection through an additional resource.  E.g,. replacing the domain and range URIs for `Property` entities in `RDF_schema_defs` with references to `Class` entities.  (Similar has been done for `subclassOf` and `subprpertyOf` using a change of URI.)
+
+
 ## Local entity references and permanent entity URIs
 
 These should be interchageable, with the permanent URI stored for referencing local entities where available.  This will mean that enumerated value displays must be able to reference entities using permanent URIs (annal:uri) as well as local references.
 
 
 ## Change property URI used for both list/collection values and list/collection members
+
+("Shape changing" pattern? - see below)
 
 Example:
 
@@ -127,9 +141,16 @@ or:
         }
       ]
 
-This is (maybe) a particular case of a more general "shape-changing" pattern, in which a query might be used to locate and match properties that need to be re-written.  But how easily are differing-length lists handled by such a query?
+
+## "Shape changing" patterns
+
+Some of the preceding examples (where noted) may be particular cases of a more general "shape-changing" pattern, in which a query might be used to locate and match properties that need to be re-written.  (But how easily are differing-length lists handled by querying?)
 
 Pattern matching could be limited to subtrees from an entity node, which could simplify the descriptions required.
+
+See also:
+- https://ci.mines-stetienne.fr/sparql-generate/
+- https://lists.w3.org/Archives/Public/semantic-web/2018Mar/0136.html
 
 
 ## Change namespace prefix

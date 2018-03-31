@@ -1,9 +1,19 @@
-{ "@id":                "./"
-, "@type":              ["annal:Enum_bib_type", "annal:Enum"]
-, "@context":           ["../../coll_context.jsonld"]
-, "annal:id":           "techreport"
-, "annal:type_id":      "Enum_bib_type"
-, "rdfs:label":         "Tech. report"
-, "rdfs:comment":       "A report published by a school or other institution, usually numbered within a series.  Other fields: author, title, institution, year, type, number, address, month, note."
-, "annal:uri":          "annal:bib_type/techreport"
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Enum_bib_type/techreport",
+  "@type": [
+    "annal:Enum_bib_type",
+    "annal:EntityData"
+  ],
+  "annal:id": "techreport",
+  "annal:type": "annal:Enum_bib_type",
+  "annal:type_id": "Enum_bib_type",
+  "annal:uri": "annal:bib_type/techreport",
+  "rdfs:comment": "A report published by a school or other institution, usually numbered within a series.  Other fields: author, title, institution, year, type, number, address, month, note.",
+  "rdfs:label": "Tech. report"
 }

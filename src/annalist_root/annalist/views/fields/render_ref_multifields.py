@@ -107,16 +107,13 @@ class RenderMultiFields_label(object):
 
     returns a string that is incorporated into the resulting web page.
     """
-    # log.info("RenderMultiFields_label.render (mode: %s)"%context['render_mode'])
-    group_field_descs = context['field']['group_field_descs']
+    group_field_descs = context['field'].description['group_field_descs']
     if group_field_descs is None:
         return (
             """<span class="value-missing">Missing field group for %(group_id)s</span>"""%
             context['field']
             )
     try:
-        # log.info("@@@ RenderMultiFields_label.render field: %r"%(context['field'],))
-        # log.info("RenderMultiFields_label.render descs: %r"%(context['field']['group_field_descs'],))
         group_fields = [ bound_field(f, {}) for f in group_field_descs ]
         group_dict = (
             { 'group_bound_fields':  group_fields
@@ -180,24 +177,18 @@ class RenderMultiFields_value(object):
                                     description bound to an entity that contains a 
                                     reference to some target entity.
 
-                @@@`context['field']` contains the group field descriptions.@@@
-
     returns a string that is incorporated into the resulting web page.
     """
     # log.info("RenderMultiFields_value.render (mode: %s)"%context['render_mode'])
-    group_field_descs = context['field']['group_field_descs']
+    group_field_descs = context['field'].description['group_field_descs']
     if group_field_descs is None:
         return (
             """<span class="value-missing">Missing field group for %(field_id)s</span>"""%
             context['field']
             )
     try:
-        # log.info("@@ RenderMultiFields_value.render field: %r"%(context['field'],))
-        # log.info("@@ RenderMultiFields_value.render descs: %r"%(context['field']['group_field_descs'],))
-        # target_vals = context['field']['target_value']
         target_vals = context['field'].get_targetvals()
         extras      = context['field']['context_extra_values']
-        # log.info("@@ RenderMultiFields_value.render target_vals: %r"%(target_vals))
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 
             for f in group_field_descs 

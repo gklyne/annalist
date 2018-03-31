@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Property/view_task_buttons",
+  "@type": [
+    "rdf:Property",
+    "annal:EntityData"
+  ],
+  "annal:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "annal:id": "view_task_buttons",
+  "annal:range": [],
+  "annal:subpropertyOf": [],
+  "annal:type": "rdf:Property",
+  "annal:type_id": "Property",
+  "annal:uri": "annal:view_task_buttons",
+  "rdfs:comment": "# View task buttons\r\n\r\nThis property may be used in a view definition to describe task buttons that are added to the view when viewing an entity.  It references a list of internal resources, each of which defines a button id, button label and tooltip help text for the button (see example below).\r\n\r\nThe declared button id must correspond to a defined task; when the button is clicked while editing an entity, that task is invoked.  (Currently, the only tasks are those predefined by Annalist, but future revisions may also support user-definable tasks.)\r\n\r\nSee also: `annal:task_buttons` and  `annal:edit_task_buttons`.\r\n\r\nSee also: `annal:button_id`, `annal:button_label` and `annal:button_help`.\r\n\r\n## Example\r\n\r\nTaken from Annalist's internal definition of the field definition view:\r\n\r\n        {\r\n          :\r\n        , \"annal:view_task_buttons\":\r\n          [ { \"annal:button_id\":        \"_task/Define_subproperty_field\" \r\n            , \"annal:button_label\":     \"Define subproperty field\"\r\n            , \"annal:button_help\":      \"Create a new field whose property URI is a subproperty of the current fields property.  (The URI of the current field property is inserted as a superproperty URI of the new field.)\"\r\n            }\r\n          ]\r\n          :\r\n        }\r\n",
+  "rdfs:domain": [
+    {
+      "@id": "annal:View"
+    }
+  ],
+  "rdfs:label": "View task buttons",
+  "rdfs:range": [],
+  "rdfs:subPropertyOf": []
+}
