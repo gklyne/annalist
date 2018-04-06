@@ -19,3 +19,19 @@
 
 @gklyne There’s an OIDC interop group, they’ve been doing tons of testing, see http://osis.idcommons.net/wiki/OC5:OpenID_Connect_Interop_5
 
+
+## GitHub
+
+* https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/
+* https://github.com/settings/applications/new
+
+
+## Orcid
+
+* ??
+
+
+## Google
+
+* ??
+

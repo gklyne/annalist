@@ -31,7 +31,7 @@ class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     Define a rotating file logging handler that additionally forces a new file 
     the first time it is instantiated in a run of the containing program.
 
-    NOTE: if multiple file hanfdlers are used with in an application, only the
+    NOTE: if multiple file handlers are used with in an application, only the
     first one instantiated will be allocated a new file at startup.  The
     class variable '_newfile' might be replaced with a dictionary
     indexed by the (fully expanded) filename.

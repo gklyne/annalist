@@ -6,8 +6,6 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-# @@TODO: define a view decorator to apply authentication requirement
-
 import os
 import re
 import json
@@ -33,13 +31,13 @@ from django.contrib.auth.models import User
 
 from utils.http_errors import error400values
 
-from login.auth_django_client   import django_flow_from_user_id
+from auth_django_client         import django_flow_from_user_id
 from auth_oidc_client           import (
-    oauth2_flow_from_provider_details, oauth2_flow_to_dict, oauth2_get_state_token, 
+    oauth2_flow_from_provider_data, 
     SCOPE_DEFAULT
     )
-from login_utils                import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
 from models                     import CredentialsModel, get_user_credential
+from login_utils                import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
 import login_message
 
 # Per-instance generated secret key for CSRF protection via OAuth2 state value.
@@ -51,7 +49,7 @@ PROVIDER_DETAILS = None
 
 settings = import_module(os.environ["DJANGO_SETTINGS_MODULE"])
 
-def collect_provider_details():
+def collect_provider_data():
     global PROVIDER_FILES, PROVIDER_DETAILS
     if PROVIDER_DETAILS is None:
         PROVIDER_DETAILS = {}
@@ -61,35 +59,15 @@ def collect_provider_details():
             clientsecrets_files   = os.listdir(clientsecrets_dirname)
             for f in clientsecrets_files:
                 if f.endswith(".json"):
-                    p = os.path.join(clientsecrets_dirname,f)
-                    j = json.load(open(p, "r"))
-                    n = j['web']['provider']
-                    PROVIDER_FILES[n]   = p
-                    PROVIDER_DETAILS[n] = j['web']
-                    if 'provider_label' not in PROVIDER_DETAILS[n]:
-                        PROVIDER_DETAILS[n]['provider_label'] = n
+                    provider_path = os.path.join(clientsecrets_dirname,f)
+                    with open(provider_path, "r") as f:
+                        provider_data = json.load(f)
+                    provider_name = provider_data['web']['provider']
+                    PROVIDER_FILES[provider_name]   = provider_path
+                    PROVIDER_DETAILS[provider_name] = provider_data['web']
+                    if 'provider_label' not in PROVIDER_DETAILS[provider_name]:
+                        PROVIDER_DETAILS[provider_name]['provider_label'] = provider_name
     return
-
-def _untested_authentication_required(
-        login_form_url=None, login_post_url=None, login_done_url=None, 
-        continuation_url=None):
-    """
-    Decorator for view handler function that activates authentication flow
-    if the current request is not already associated with an authenticated user.
-    """
-    # @@NOTE: not tested; the mix of static and dynamic parameters required makes
-    #         the in-line form easier to use than a decorator.
-    def decorator(func):
-        def guard(view, values):
-            return (
-                confirm_authentication(view, 
-                    login_form_url, login_post_url, login_done_url, 
-                    continuation_url)
-            or
-                func(view, values)
-            )
-        return guard
-    return decorator
 
 def confirm_authentication(view, 
         login_form_url=None, login_post_url=None, login_done_url=None, 
@@ -123,8 +101,8 @@ def confirm_authentication(view,
             #
             # @@TODO: is this safe?
             # 
-            # NOTE: currently, view.credential is provided by the oauth2 and used
-            # only for the .invalid test above.  If it is ever used by other 
+            # NOTE: currently, view.credential is provided by the oauth2 flow and
+            # used only for the .invalid test above.  If it is ever used by other 
             # application components, it may be necessary to construct a
             # credential for local logins.  In the long run, if credentials will
             # be used to access third party services or resources, it may not be 
@@ -145,6 +123,7 @@ def confirm_authentication(view,
     if not continuation_url:
         continuation_url = view.request.path
     # Redirect to initiate login sequence 
+    # See: https://docs.djangoproject.com/en/2.0/topics/http/sessions/
     view.request.session['login_form_url']   = login_form_url
     view.request.session['login_post_url']   = login_post_url
     view.request.session['login_done_url']   = login_done_url
@@ -153,7 +132,7 @@ def confirm_authentication(view,
     view.request.session['help_dir']         = os.path.join(settings.SITE_SRC_ROOT, help_path)
     userid = view.request.POST.get("userid", 
         view.request.GET.get("userid",
-            view.request.session.get('recent_userid', "")
+            view.request.session.get('login_recent_userid', "")
             )
         ) 
     query_params = (
@@ -176,17 +155,17 @@ class LoginUserView(generic.View):
     """
 
     def get(self, request):
-        collect_provider_details()
+        collect_provider_data()
         # @@TODO: check PROVIDER_FILES, report error if none here
         # Retrieve request parameters
-        continuation_url  = request.GET.get("continuation_url",     "/no-login-continuation/")
+        continuation_url  = request.GET.get("continuation_url", "/no-login-continuation/")
         # Check required values in session - if missing, restart sequence from original URI
         # This is intended to avoid problems if this view is invoked out of sequence
-        login_post_url    = request.session.get("login_post_url",   None)
-        login_done_url    = request.session.get("login_done_url",   None)
-        user_profile_url  = request.session.get("user_profile_url", None)
-        help_dir          = request.session.get("help_dir",         None)
-        recent_userid     = request.session.get("recent_userid",    "")
+        login_post_url    = request.session.get("login_post_url",       None)
+        login_done_url    = request.session.get("login_done_url",       None)
+        user_profile_url  = request.session.get("user_profile_url",     None)
+        help_dir          = request.session.get("help_dir",             None)
+        recent_userid     = request.session.get("login_recent_userid",  "")
         if ( (login_post_url is None) or 
              (login_done_url is None) or 
              (user_profile_url is None) or 
@@ -255,9 +234,9 @@ class LoginPostView(generic.View):
     - a user identifying string that will be associated with the external service
       login credentials.
     provider={string}
-    - a string that identifies a provider selectred to perform authentication
+    - a string that identifies a provider selected to perform authentication
       of the indicated user.  This string is an index to PROVIDER_FILES,
-      which in turn contains filenames for client secrets to user when accessing
+      which in turn contains filenames for client secrets to use when accessing
       the indicated identity provider.
     login_done={uri}
     - a URI that is retrieved, with a suitable authorization grant as a parameter, 
@@ -282,36 +261,36 @@ class LoginPostView(generic.View):
         user_profile_url  = request.POST.get("user_profile_url",  "/no_user_profile_url_in_form/")
         continuation_url  = request.POST.get("continuation_url",  "/no_continuation_url_in_form/")
         if request.POST.get("login", None):
-            collect_provider_details()
-            provider_details      = PROVIDER_DETAILS[provider]
-            provider_details_file = PROVIDER_FILES[provider]
-            provider_mechanism    = provider_details.get("mechanism", "OIDC")
-            provider_scope        = provider_details.get("scope", SCOPE_DEFAULT)
+            collect_provider_data()
+            provider_data = PROVIDER_DETAILS[provider]
+            provider_name = PROVIDER_FILES[provider]
+            provider_mechanism = provider_data.get("mechanism", "OIDC")
             if userid and not re.match(r"\w+$", userid):
                 return HttpResponseRedirectLogin(
                     request, 
                     login_message.USER_ID_SYNTAX%(userid)
                     )
-            request.session['recent_userid']    = userid
-            request.session['provider_details'] = provider_details
-            request.session['continuation_url'] = continuation_url
+            request.session['login_recent_userid']    = userid
+            request.session['login_provider_data']    = provider_data
+            request.session['login_continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
-                flow = oauth2_flow_from_provider_details(
-                    provider_details_file,
-                    scope=provider_scope,
+                flow = oauth2_flow_from_provider_data(
+                    provider_data,
                     redirect_uri=request.build_absolute_uri(login_done_url)
                     )
-                flow.params['state']            = oauth2_get_state_token(request.user)
-                flow.params['userid']           = userid
+                request.session['oauth2_state']  = flow.step1_get_state_token()
+                request.session['oauth2_userid'] = userid
+                #@@REMOVE
                 # Save flow object in Django session
-                request.session['oauth2flow']   = oauth2_flow_to_dict(flow)
+                # request.session['oauth2flow']   = oauth2_flow_to_dict(flow)
+                #@@
                 # Initiate OAuth2 dance
-                auth_uri = flow.step1_get_authorize_url()
-                return HttpResponseRedirect(auth_uri)
+                # The response is handled by auth_oidc_client.OIDC_AuthDoneView
+                return HttpResponseRedirect(flow.step1_get_authorize_url())
             if provider_mechanism == "django":
                 flow = django_flow_from_user_id(
-                    provider_details,
+                    provider_data,
                     userid=userid,
                     auth_uri=reverse("LocalUserPasswordView"),
                     redirect_uri=request.build_absolute_uri(user_profile_url)
@@ -321,7 +300,7 @@ class LoginPostView(generic.View):
                 return HttpResponseRedirect(auth_uri)
             return HttpResponseRedirectLogin(
                 request,
-                login_message.UNRECOGNIZED_PROVIDER%(provider_mechanism, provider_details_file)
+                login_message.UNRECOGNIZED_PROVIDER%(provider_mechanism, provider_name)
                 )
         # Login cancelled: redirect to continuation
         # (which may just redisplay the login page)
@@ -333,9 +312,9 @@ class LogoutUserView(generic.View):
     """
 
     def get(self, request):
-        recent_userid = request.session.get('recent_userid', "")
+        recent_userid = request.session.get('login_recent_userid', "")
         logout(request)
-        request.session['recent_userid'] = recent_userid
+        request.session['login_recent_userid'] = recent_userid
         continuation_url = request.GET.get("continuation_url", 
             urljoin(urlparse(request.path).path, "../")
             )
