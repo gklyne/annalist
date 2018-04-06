@@ -161,6 +161,29 @@ NOTE: upload now requires a recent version of setuptools to be installed; some o
     pip install setuptools --upgrade
     easy_install --version
 
+### Problems with old versions of software and TLS
+
+On upgrading the version of Pythonto 2.7.14 in April 2018 I ran into a number of compatibility problems with loading python packages.  It appears that:
+
+1. pip needs to be updated to use the latest version of TLS (1.3, I assume)
+2. setuptools need to be updated.
+
+On MacOS, I ended up using the following commands, after installing the latest version of Python2, and changing to the Annalist project base directory:
+
+    rm -rf anenv
+    virtualenv anenv -p python2.7
+    source anenv/bin/activate
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+    pip install --upgrade setuptools
+    # Note: installation reports success, then I got an error traceback, which seems
+    #       to be caused by an access to the old (now removed) setuptools directory.
+    #       It seems this error can be ignored.
+    cd src
+    python setup.py clean --all
+    python setup.py build
+    python setup.py install
 
 ## Create docker images
 

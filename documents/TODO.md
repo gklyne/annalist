@@ -23,8 +23,36 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.11, towards 0.5.12
 
-- [ ] Update python to latest in version 2 series
-- [ ] Update pip to latest version in python environment (for continued testing)
+- [x] Update python to latest in version 2 series
+- [x] Update pip and setuoptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
+
+        rm -rf anenv
+        virtualenv anenv -p python2.7
+        source anenv/bin/activate
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py
+        # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+        pip install --upgrade setuptools
+        # Note: installation reports success, then I got an error traceback, which seems
+        #       to be caused by an access to the old (now removed) setuptools directory.
+        # It seems some old setup files are bound to the active python environment, 
+        # so need to reactivate:
+        deactivate
+        source anenv/bin/activate
+        cd src
+        # Use old version of oauth2client no longer avaiable to install from PyPI
+        cd oauth2client
+        python setup.py clean --all
+        python setup.py build
+        python setup.py install
+        # Now install Annalist itself
+        cd ..
+        python setup.py clean --all
+        python setup.py build
+        python setup.py install
+
+- [x] Update other packages (in setup.py)
+- [ ] Move from deprecated oauth2client package to recommended replacement
 - [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.

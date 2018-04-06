@@ -194,25 +194,65 @@ setup(
         "Programming Language :: Python",
         ],
     zip_safe = False,
+    # old_install_requires =
+    #     [ 'Django==1.7'
+    #       , 'wsgiref==0.1.2'
+    #     , 'oauth2client==1.2'
+    #       , 'httplib2==0.9'
+    #     , 'pyparsing==2.0.2'
+    #     , 'Markdown==2.5.2'
+    #     , 'rdflib==4.2.1'
+    #     , 'rdflib-jsonld==0.4.0'
+    #       , 'SPARQLWrapper==1.8.1'
+    #       , 'isodate==0.6.0'
+    #       , 'wsgiref==0.1.2'
+    #       , 'six==1.11.0'
+    #     # For testing:
+    #     , 'httpretty==0.8.10'
+    #     , 'beautifulsoup4==4.6.0'
+    #       , 'html5lib==1.0.1'
+    #     ],
     install_requires =
         [ 'Django==1.7'
-          , 'wsgiref==0.1.2'
-        , 'oauth2client==1.2'
-          , 'httplib2==0.9'
-        , 'pyparsing==2.0.2'
-        , 'Markdown==2.5.2'
-        # For testing:
-        , 'httpretty==0.8.10'
-        , 'beautifulsoup4==4.4.0'
-          , 'html5lib==1.0b8'
-        , 'rdflib==4.2.1'
-        # , 'rdflib-jsonld==0.3'
+          # , 'wsgiref'
+        , 'six==1.11.0'
+        , 'oauth2client==1.2' # Old version: install local copy first
+          # , 'pyasn1==0.4.2'
+          # , 'pyasn1-modules==0.2.1'
+          , 'httplib2==0.11.3'
+          # , 'rsa==3.4.2'
+          # , 'webencodings==0.5.1'
+        , 'pyparsing==2.2.0'
+        , 'Markdown==2.6.11'
+        , 'rdflib==4.2.2'
+          , 'isodate==0.6.0'
         , 'rdflib-jsonld==0.4.0'
-          , 'SPARQLWrapper==1.6.4'
-          , 'isodate==0.5.1'
-          , 'wsgiref==0.1.2'
-          , 'six==1.10.0'
+          # , 'SPARQLWrapper'
+        # For testing:
+        , 'httpretty==0.8.14'
+        , 'beautifulsoup4==4.6.0'
+        #   , 'html5lib'
         ],
+
+        # Installed at 2018-04-02:
+        # Django==1.7
+        # oauth2client==1.2
+        #   httplib2==0.11.3
+        # pyparsing==2.2.0
+        # Markdown==2.6.11
+        # rdflib==4.2.2
+        # rdflib-jsonld==0.4.0
+        #   SPARQLWrapper==1.8.1
+        #   isodate==0.6.0
+        #   six==1.11.0
+        # httpretty==0.8.14
+        # beautifulsoup4==4.6.0
+        #   html5lib==1.0.1
+        #
+        # pyasn1==0.4.2
+        # pyasn1-modules==0.2.1
+        # rsa==3.4.2
+        # webencodings==0.5.1
     entry_points =
         {
         'console_scripts':

@@ -89,6 +89,7 @@ _unused_*
 /ERRORS.txt
 /pyenv
 /anenv
+/anenv-*
 /setupenv
 /attic
 # /spike
