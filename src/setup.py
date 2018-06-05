@@ -21,13 +21,6 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-# # from pip.req import parse_requirements      # See: http://stackoverflow.com/questions/14399534/
-# # See also: https://stackoverflow.com/questions/25192794/no-module-named-pip-req
-# try: # for pip >= 10
-#     from pip._internal.req import parse_requirements
-# except ImportError: # for pip <= 9.0.3
-#     from pip.req import parse_requirements
-
 if sys.version_info[:2] != (2,7):
     raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
 
@@ -200,65 +193,26 @@ setup(
         "Programming Language :: Python",
         ],
     zip_safe = False,
-    # old_install_requires =
-    #     [ 'Django==1.7'
-    #       , 'wsgiref==0.1.2'
-    #     , 'oauth2client==1.2'
-    #       , 'httplib2==0.9'
-    #     , 'pyparsing==2.0.2'
-    #     , 'Markdown==2.5.2'
-    #     , 'rdflib==4.2.1'
-    #     , 'rdflib-jsonld==0.4.0'
-    #       , 'SPARQLWrapper==1.8.1'
-    #       , 'isodate==0.6.0'
-    #       , 'wsgiref==0.1.2'
-    #       , 'six==1.11.0'
-    #     # For testing:
-    #     , 'httpretty==0.8.10'
-    #     , 'beautifulsoup4==4.6.0'
-    #       , 'html5lib==1.0.1'
-    #     ],
     install_requires =
         [ 'Django==1.7'
-          # , 'wsgiref'
         , 'six==1.11.0'
-        # , 'oauth2client==1.2' # Old version: install local copy first
-          # , 'pyasn1==0.4.2'
-          # , 'pyasn1-modules==0.2.1'
+        , 'requests==2.18.4'
+          , 'urllib3==1.22'
+          , 'chardet==3.0.4'
+          , 'idna==2.6'
+          , 'requests-oauthlib==0.8.0'
+          , 'oauthlib==2.0.7'
+          , 'certifi==2018.1.18'
           , 'httplib2==0.11.3'
-          # , 'rsa==3.4.2'
-          # , 'webencodings==0.5.1'
-        , 'pyparsing==2.2.0'
-        , 'Markdown==2.6.11'
         , 'rdflib==4.2.2'
           , 'isodate==0.6.0'
-        , 'rdflib-jsonld==0.4.0'
-          # , 'SPARQLWrapper'
+          , 'rdflib-jsonld==0.4.0'
+        , 'pyparsing==2.2.0'
+        , 'Markdown==2.6.11'
         # For testing:
-        , 'httpretty==0.8.14'
+        , 'httpretty==0.9.4'
         , 'beautifulsoup4==4.6.0'
-        #   , 'html5lib'
         ],
-
-        # Installed at 2018-04-02:
-        # Django==1.7
-        # oauth2client==1.2
-        #   httplib2==0.11.3
-        # pyparsing==2.2.0
-        # Markdown==2.6.11
-        # rdflib==4.2.2
-        # rdflib-jsonld==0.4.0
-        #   SPARQLWrapper==1.8.1
-        #   isodate==0.6.0
-        #   six==1.11.0
-        # httpretty==0.8.14
-        # beautifulsoup4==4.6.0
-        #   html5lib==1.0.1
-        #
-        # pyasn1==0.4.2
-        # pyasn1-modules==0.2.1
-        # rsa==3.4.2
-        # webencodings==0.5.1
     entry_points =
         {
         'console_scripts':

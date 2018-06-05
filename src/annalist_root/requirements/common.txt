@@ -2,10 +2,18 @@
 # See: http://www.deploydjango.com/django_project_structure/
 Django==1.7
 six==1.11.0
-oauth2client==1.2
+requests==2.18.4
+urllib3==1.22
+chardet==3.0.4
+idna==2.6
+requests-oauthlib==0.8.0
+oauthlib==2.0.7
+certifi==2018.1.18
 httplib2==0.11.3
+rdflib==4.2.2
+isodate==0.6.0
+rdflib-jsonld==0.4.0
 pyparsing==2.2.0
 Markdown==2.6.11
-isodate==0.6.0
-rdflib==4.2.2
-rdflib-jsonld==0.4.0
+httpretty==0.9.4
+beautifulsoup4==4.6.0

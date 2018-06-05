@@ -40,27 +40,26 @@ See also: https://www.divio.com/en/blog/documentation/
         deactivate
         source anenv/bin/activate
         cd src
-        # Use old version of oauth2client no longer avaiable to install from PyPI
-        cd oauth2client
-        python setup.py clean --all
-        python setup.py build
-        python setup.py install
         # Now install Annalist itself
         cd ..
         python setup.py clean --all
         python setup.py build
         python setup.py install
 
+    `python setup.py install` still fails to reliably install dependencies,
+    so I used:
+
+        pip install -r annalist_root/requirements.txt
+
+    then the `python setup.py` commands.
+
+    To run the server with OIDC login capability, use:
+
+        OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
+
 - [x] Update other packages (in setup.py)
 - [x] Move from deprecated oauth2client package to recommended replacement
-    - annalist_root/login/auth_django_client.py (follows style, doesn't use)
-    - annalist_root/login/auth_oidc_client.py (main oauth2-using code)
-    - annalist_root/login/login_models.py (uses definitions from oauth2client.django_orm)
-    - annalist_root/login/OAuth2CheckBackend.py (access user profile using credential from OAuth2 dance)
-    - All tests oass, but still need to test OIDC login
-    - Track down, and see if I can use the OAuth2 contrib package
 - [ ] Update Django version used to latest version designated for long term support
-- [ ] Update Docker file library versions
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
