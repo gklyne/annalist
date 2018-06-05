@@ -1,28 +1,25 @@
 """
 OAuth2 / OpenID Connect authentication related view handler and
 supporting utilities.
+
+NOTE: for Google provider, set up via 
+https://console.developers.google.com/apis/dashboard
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import sys
 import os
 import json
-# import re
-# import uuid
-
+import base64
+import re
+import traceback
 import logging
 log = logging.getLogger(__name__)
 
 from requests_oauthlib import OAuth2Session
-
-# import httplib2
-
-# from oauth2client.client import OAuth2WebServerFlow
-# from oauth2client import xsrfutil
-# from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
-# from oauth2client.django_orm import Storage
 
 from django.core.urlresolvers import resolve, reverse
 from django.http import HttpResponse
@@ -37,12 +34,12 @@ from django.contrib.auth.models import User
 from utils.http_errors import error400values
 
 from login_utils    import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin, object_to_dict
-from models         import CredentialsModel
+# from models         import CredentialsModel, Storage
 import login_message
 
 #@@@@ FLOW_SECRET_KEY = str(uuid.uuid1())
 
-SCOPE_DEFAULT = "openid profile email"
+SCOPE_DEFAULT = ["openid", "profile", "email"]
 
 #   ---------------------------------------------------------------------------
 #
@@ -50,20 +47,17 @@ SCOPE_DEFAULT = "openid profile email"
 #
 #   ---------------------------------------------------------------------------
 
-def oauth2_flow_from_provider_data(provider_data, scope=None, redirect_uri=None, state=None):
+def oauth2_flow_from_provider_data(provider_data, redirect_uri=None, state=None):
     """
     Create an OpenId connect Oauth2 flow object from a supplied provider details file.
 
     provider_data
             dictionary containing provider details (including oauth2 client secrets).
-    scope   
-            OAuth2 scope names for which access is requested (see SCOPE_DEFAULT).
-            If specified, overrides value from provider-file.
     redirect_uri
             URI to which control is transferred when the OAuth2 authetication dance 
             is completed.  If specified, overrides value from provider-file.
     """
-    return oauth2_flow(provider_data, scope=scope, redirect_uri=redirect_uri, state=state)
+    return oauth2_flow(provider_data, redirect_uri=redirect_uri, state=state)
 
 #@@@@@@@@@@@@REMOVE?
 # def oauth2_get_state_token(request_user):
@@ -114,7 +108,7 @@ class oauth2_flow(object):
     Choreographs the oauth2 dance used to obtain a user authetication credential.
     """
 
-    def __init__(self, provider_data, scope=None, redirect_uri=None, state=None):
+    def __init__(self, provider_data, scope=None, state=None, redirect_uri=None):
         """
         Initialize a flow object with supplied provider data (provided as a dictionary)
         """
@@ -124,8 +118,8 @@ class oauth2_flow(object):
         session             = OAuth2Session(
                                 client_id=provider_data["client_id"],
                                 scope=self._scope,
-                                redirect_uri=self._redirect_uri,
-                                state=state
+                                state=state,
+                                redirect_uri=self._redirect_uri
                                 )
         auth_uri, state     = session.authorization_url(provider_data["auth_uri"])
         self._session       = session
@@ -144,14 +138,20 @@ class oauth2_flow(object):
         Using a credentials provided in the supplied redirect request value,
         requests an access token for user authentication.
         """
-        #@@NOTE: the next call appears to block while an HTTP request is performed
-        token = self.session.fetch_token(self._provider_data['token_uri'], 
-            authorization_response=request.build_absolute_uri(),
-            client_id=self._provider_data['client_id'],
+        auth_resp = request.build_absolute_uri()
+        # log.info("@@@@ auth_resp %s"%(auth_resp))
+        token = self._session.fetch_token(self._provider_data['token_uri'], 
+            authorization_response=auth_resp,
+            # client_id=self._provider_data['client_id'],
             client_secret=self._provider_data['client_secret'],
             timeout=5
             )
         return token
+
+    def step3_get_profile(self, token):
+        r = self._session.get(self._provider_data["profile_uri"])
+        profile = json.loads(r.content)
+        return profile
 
 class OIDC_AuthDoneView(generic.View):
     """
@@ -167,16 +167,34 @@ class OIDC_AuthDoneView(generic.View):
         state         = request.session['oauth2_state']
         userid        = request.session['oauth2_userid']
         provider      = provider_data['provider']
-        flow = oauth2_flow_from_provider_data(provider_data, state=state)
+        flow          = oauth2_flow_from_provider_data(provider_data, state=state)
         # Get authenticated user details
         try:
             credential = flow.step2_exchange(request)
+            profile    = flow.step3_get_profile(credential)
+            # profile looks like this:
+            #
+            # { "id": "104756500079491165441",
+            #   "email": "graham.klyne@oerc.ox.ac.uk",
+            #   "verified_email": true,
+            #   "name": "...",
+            #   "given_name": "...",
+            #   "family_name": "...",
+            #   "link": "...",
+            #   "picture": "...",
+            #   "gender": "..."
+            # }
+            log.info("auth_oidc_client: userid %s, profile %r"%(userid, profile))
             authuser = authenticate(
-                username=userid, password=credential, 
-                profile_uri=provider_data['profile_uri']
+                username=userid, profile=profile
                 )
-        except FlowExchangeError, e:
+            log.info("authuser: %r"%(authuser,))
+        except Exception as e:
+            log.error("Exception %r"%(e,))
             log.error("provider_data %r"%(provider_data,))
+            ex_type, ex, tb = sys.exc_info()
+            log.error("".join(traceback.format_exception(ex_type, ex, tb)))
+            # log.error("".join(traceback.format_stack()))
             return HttpResponseRedirectLogin(request, str(e))
         # Check authenticated details for user id match any previous values.
         #
@@ -192,8 +210,8 @@ class OIDC_AuthDoneView(generic.View):
         #
         if not authuser:
             log.info(
-                "auth_oidc_client: userid %s, provider %s, credential %r"%
-                  (userid, provider, credential)
+                "auth_oidc_client: userid %s, provider %s, profile %r"%
+                  (userid, provider, profile)
                 )
             return HttpResponseRedirectLogin(request, 
                 login_message.USER_NOT_AUTHENTICATED%(userid, provider)
@@ -223,8 +241,8 @@ class OIDC_AuthDoneView(generic.View):
         authuser.save()
         login(request, authuser)
         request.session['login_recent_userid'] = userid
-        storage = Storage(CredentialsModel, 'id', request.user, 'credential')
-        storage.put(credential)
+        # storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+        # storage.put(credential)
         # Don't normally log the credential/token as they might represent a security leakage:
         # log.debug("OIDC_AuthDoneView: credential:      "+repr(credential.to_json()))
         # log.info("OIDC_AuthDoneView: id_token:        "+repr(credential.id_token))

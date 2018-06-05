@@ -26,7 +26,7 @@ class OAuth2CheckBackend(object):
     profile_uri is a URI from which user profile information is retrieved
 
     NOTE: when this method returns a User record on completion of a third
-    party authentication process, it does not guarrantee that it is the same
+    party authentication process, it does not guarantee that it is the same
     as any record that may have been previously associated with the supplied
     username.  It becomes the responsibility of the calling view code to check 
     that the user details match any previously associated with the user id.
@@ -35,29 +35,25 @@ class OAuth2CheckBackend(object):
     but if it already exists the email address is replaced with the one
     returned by the OIDC authentication exchange.
     """
-    def authenticate(self, username=None, password=None, profile_uri=None):
-        if isinstance(password, unicode):
+    def authenticate(self, username=None, profile=None):
+        log.debug(
+            "OAuth2CheckBackend.authenticate: username %s, profile %r"%
+            (username, profile)
+            )
+        if isinstance(profile, unicode):
+            # Not oauth2 exchange
             return None
-        profile         = None
         auth_email      = None
         return_user     = None
         create_username = None
-        if profile_uri and password and not password.invalid:
+        if profile and profile.get("verified_email", None):
             # Use access token to retrieve profile information
-            http = httplib2.Http()
-            http = password.authorize(http)
-            (resp, data) = http.request(profile_uri, method="GET")
-            status   = resp.status
-            reason   = resp.reason
-            assert status == 200, "status: %03d, reason %s"%(status, reason)
-            if status == 200:
-                profile = json.loads(data)
-                # Construct authenticated user ID from email local part
-                auth_email       = profile['email']
-                email_local_part = auth_email.split('@', 1)[0]
-                auth_username    = re.sub(r"\.", "_", email_local_part)
-                auth_username    = re.sub(r"[^a-zA-Z0-9_]", "", auth_username)
-                auth_username    = auth_username[:32]
+            # Construct authenticated user ID from email local part
+            auth_email       = profile['email']
+            email_local_part = auth_email.split('@', 1)[0]
+            auth_username    = re.sub(r"\.", "_", email_local_part)
+            auth_username    = re.sub(r"[^a-zA-Z0-9_]", "", auth_username)
+            auth_username    = auth_username[:32]
         if username:
             try:
                 return_user       = User.objects.get(username=username)

@@ -20,7 +20,13 @@ import sys
 from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
-from pip.req import parse_requirements      # See: http://stackoverflow.com/questions/14399534/
+
+# # from pip.req import parse_requirements      # See: http://stackoverflow.com/questions/14399534/
+# # See also: https://stackoverflow.com/questions/25192794/no-module-named-pip-req
+# try: # for pip >= 10
+#     from pip._internal.req import parse_requirements
+# except ImportError: # for pip <= 9.0.3
+#     from pip.req import parse_requirements
 
 if sys.version_info[:2] != (2,7):
     raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
@@ -216,7 +222,7 @@ setup(
         [ 'Django==1.7'
           # , 'wsgiref'
         , 'six==1.11.0'
-        , 'oauth2client==1.2' # Old version: install local copy first
+        # , 'oauth2client==1.2' # Old version: install local copy first
           # , 'pyasn1==0.4.2'
           # , 'pyasn1-modules==0.2.1'
           , 'httplib2==0.11.3'

@@ -36,7 +36,7 @@ from auth_oidc_client           import (
     oauth2_flow_from_provider_data, 
     SCOPE_DEFAULT
     )
-from models                     import CredentialsModel, get_user_credential
+#@@@ from models                     import CredentialsModel, get_user_credential
 from login_utils                import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
 import login_message
 
@@ -91,29 +91,32 @@ def confirm_authentication(view,
     continuation_url    URL from which the login process was initiated.
     """
     if view.request.user.is_authenticated():
-        view.credential = get_user_credential(view.request.user)
-        # log.info("view.credential %r"%(view.credential,))
-        if view.credential is not None:
-            if not view.credential.invalid:
-                return None         # Valid credential present: proceed...
-        else:
-            # Django login with local credential: check for user email address
-            #
-            # @@TODO: is this safe?
-            # 
-            # NOTE: currently, view.credential is provided by the oauth2 flow and
-            # used only for the .invalid test above.  If it is ever used by other 
-            # application components, it may be necessary to construct a
-            # credential for local logins.  In the long run, if credentials will
-            # be used to access third party services or resources, it may not be 
-            # possible to use non-Oauth2 credentials here.  In the meanwhile,
-            # allowing local Django user credentials provides an easier route for
-            # getting a software instance installed for evaluation purposes.
-            #
-            if view.request.user.email:
-                return None        # Assume valid login: proceed...
-            else:
-                return error400values(view, "Local user has no email address")
+        return None
+        #TODO@@@@ is this needed? @@@@
+        # view.credential = get_user_credential(view.request.user)
+        # # log.info("view.credential %r"%(view.credential,))
+        # if view.credential is not None:
+        #     if not view.credential.invalid:
+        #         return None         # Valid credential present: proceed...
+        # else:
+        #     # Django login with local credential: check for user email address
+        #     #
+        #     # @@TODO: is this safe?
+        #     # 
+        #     # NOTE: currently, view.credential is provided by the oauth2 flow and
+        #     # used only for the .invalid test above.  If it is ever used by other 
+        #     # application components, it may be necessary to construct a
+        #     # credential for local logins.  In the long run, if credentials will
+        #     # be used to access third party services or resources, it may not be 
+        #     # possible to use non-Oauth2 credentials here.  In the meanwhile,
+        #     # allowing local Django user credentials provides an easier route for
+        #     # getting a software instance installed for evaluation purposes.
+        #     #
+        #     if view.request.user.email:
+        #         return None        # Assume valid login: proceed...
+        #     else:
+        #         return error400values(view, "Local user has no email address")
+        #@@@@ is this needed? @@@@
     if not login_form_url:
         return error400values(view, "No login form URI specified")
     if not login_done_url:
@@ -274,6 +277,8 @@ class LoginPostView(generic.View):
             request.session['login_provider_data']    = provider_data
             request.session['login_continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
+                #@@TODO: push session state handling into provider flow object; 
+                #        ... pass request as param
                 # Create and initialize flow object
                 flow = oauth2_flow_from_provider_data(
                     provider_data,
@@ -281,10 +286,6 @@ class LoginPostView(generic.View):
                     )
                 request.session['oauth2_state']  = flow.step1_get_state_token()
                 request.session['oauth2_userid'] = userid
-                #@@REMOVE
-                # Save flow object in Django session
-                # request.session['oauth2flow']   = oauth2_flow_to_dict(flow)
-                #@@
                 # Initiate OAuth2 dance
                 # The response is handled by auth_oidc_client.OIDC_AuthDoneView
                 return HttpResponseRedirect(flow.step1_get_authorize_url())
