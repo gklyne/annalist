@@ -32,16 +32,9 @@ from django.contrib.auth.models import User
 from utils.http_errors import error400values
 
 from auth_django_client         import django_flow_from_user_id
-from auth_oidc_client           import (
-    oauth2_flow_from_provider_data, 
-    SCOPE_DEFAULT
-    )
-#@@@ from models                     import CredentialsModel, get_user_credential
+from auth_oidc_client           import oauth2_flow_from_provider_data
 from login_utils                import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
 import login_message
-
-# Per-instance generated secret key for CSRF protection via OAuth2 state value.
-# Regenerated each time this service is started.
 
 PROVIDER_FILES = None
 
@@ -92,31 +85,6 @@ def confirm_authentication(view,
     """
     if view.request.user.is_authenticated():
         return None
-        #TODO@@@@ is this needed? @@@@
-        # view.credential = get_user_credential(view.request.user)
-        # # log.info("view.credential %r"%(view.credential,))
-        # if view.credential is not None:
-        #     if not view.credential.invalid:
-        #         return None         # Valid credential present: proceed...
-        # else:
-        #     # Django login with local credential: check for user email address
-        #     #
-        #     # @@TODO: is this safe?
-        #     # 
-        #     # NOTE: currently, view.credential is provided by the oauth2 flow and
-        #     # used only for the .invalid test above.  If it is ever used by other 
-        #     # application components, it may be necessary to construct a
-        #     # credential for local logins.  In the long run, if credentials will
-        #     # be used to access third party services or resources, it may not be 
-        #     # possible to use non-Oauth2 credentials here.  In the meanwhile,
-        #     # allowing local Django user credentials provides an easier route for
-        #     # getting a software instance installed for evaluation purposes.
-        #     #
-        #     if view.request.user.email:
-        #         return None        # Assume valid login: proceed...
-        #     else:
-        #         return error400values(view, "Local user has no email address")
-        #@@@@ is this needed? @@@@
     if not login_form_url:
         return error400values(view, "No login form URI specified")
     if not login_done_url:
@@ -277,8 +245,6 @@ class LoginPostView(generic.View):
             request.session['login_provider_data']    = provider_data
             request.session['login_continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
-                #@@TODO: push session state handling into provider flow object; 
-                #        ... pass request as param
                 # Create and initialize flow object
                 flow = oauth2_flow_from_provider_data(
                     provider_data,

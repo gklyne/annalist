@@ -52,7 +52,7 @@ See also: https://www.divio.com/en/blog/documentation/
         python setup.py install
 
 - [x] Update other packages (in setup.py)
-- [.] Move from deprecated oauth2client package to recommended replacement
+- [x] Move from deprecated oauth2client package to recommended replacement
     - annalist_root/login/auth_django_client.py (follows style, doesn't use)
     - annalist_root/login/auth_oidc_client.py (main oauth2-using code)
     - annalist_root/login/login_models.py (uses definitions from oauth2client.django_orm)
