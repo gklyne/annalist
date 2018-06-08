@@ -135,7 +135,7 @@ class UserProfileViewTest(AnnalistTestCase):
         u = reverse("AnnalistProfileView")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertIn(TestHostUri+"/testsite/login/", r['location'])
         self.assertIn("continuation_url=/testsite/", r['location'])

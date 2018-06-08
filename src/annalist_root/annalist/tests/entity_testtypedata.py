@@ -91,7 +91,8 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
             kwargs.update({'entity_id': type_id})
         else:
             kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    url = reverse(viewname, kwargs=kwargs)
+    return url
 
 #   -----------------------------------------------------------------------------
 #

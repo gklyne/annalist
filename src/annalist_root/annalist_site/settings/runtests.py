@@ -13,6 +13,8 @@ log = logging.getLogger(__name__)
 
 ANNALIST_VERSION_MSG = "Annalist version %s (test configuration)"%(ANNALIST_VERSION)
 
+ALLOWED_HOSTS = ["test.example.com"]
+
 # Override authentication backend to use local database only
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -71,11 +73,16 @@ LOGGING = {
         'django': {
             'handlers': ['console', 'logfile'],
         },
+        'django.request': {
+            'level':    'ERROR'
+        },
         'py.warnings': {
             'handlers': ['console', 'logfile'],
         },
     }
 }
+
+# LOGGING['loggers']['django.request'] = {'level': 'ERROR'}
 
 # URI parts used for testing
 TEST_HOST           = "test.example.com"

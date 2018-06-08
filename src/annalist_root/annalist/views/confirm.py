@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.http                    import QueryDict
-from django.template                import RequestContext, loader
+from django.template                import loader
 from django.core.urlresolvers       import resolve, reverse
 
 from django.conf                    import settings
@@ -88,7 +88,7 @@ class ConfirmView(AnnalistGenericView):
             , "suppress_user":          True
             })
         template = loader.get_template('annalist_confirm.html')
-        context  = RequestContext(request, form_data)
+        context  = form_data
         log.debug("confirmview form data: %r"%(form_data))
         return HttpResponse(template.render(context))
 

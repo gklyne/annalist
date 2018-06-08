@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.template                import RequestContext, loader
+from django.template                import loader
 from django.views                   import generic
 from django.views.decorators.csrf   import csrf_exempt
 from django.core.urlresolvers       import resolve, reverse
@@ -104,7 +104,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #     "AnnalistGenericView.error: values %r, continuation_url %s"%(values, continuation_url)
         #     )
         template = loader.get_template('annalist_error.html')
-        context  = RequestContext(self.request, values)
+        context = dict(values)
         if continuation_url:
             context['continuation_url']   = continuation_url
             context['continuation_param'] = uri_params({ 'continuation_url': continuation_url })
@@ -508,8 +508,8 @@ class AnnalistGenericView(ContentNegotiationView):
                     resultdata['help_text'] = helpfile.read()
         if 'help_markdown' in resultdata:
             resultdata['help_text'] = markdown.markdown(resultdata['help_markdown'])
-        template  = loader.get_template(template_name)
-        context   = RequestContext(self.request, resultdata)
+        template = loader.get_template(template_name)
+        context  = resultdata
         # log.debug("render_html - data: %r"%(resultdata))
         response = HttpResponse(template.render(context))
         if "entity_data_ref" in resultdata:

@@ -402,7 +402,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             })
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Check entity exists,and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "testtype")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "testentity"))
@@ -489,7 +489,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             })
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Check entity exists,and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "testtype")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "testsetentity"))
@@ -579,7 +579,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             })
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Check entity exists,and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "testtype")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "testlistentity"))

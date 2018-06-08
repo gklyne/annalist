@@ -317,7 +317,7 @@ class TurtleOutputTest(AnnalistTestCase):
         u = collectiondata_url(coll_id=layout.SITEDATA_ID)
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         w = site_url + layout.COLL_BASE_REF
@@ -447,7 +447,7 @@ class TurtleOutputTest(AnnalistTestCase):
         u = collectiondata_url(coll_id="testcoll")
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+collection_url+layout.COLL_TURTLE_REF)
         w = collection_url + layout.COLL_BASE_REF
@@ -887,7 +887,7 @@ class TurtleOutputTest(AnnalistTestCase):
         # print "@@ test_http_conneg_turtle_entity1: uri %s"%u
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
@@ -927,7 +927,7 @@ class TurtleOutputTest(AnnalistTestCase):
         u = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.TYPE_META_TURTLE)
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
@@ -966,7 +966,7 @@ class TurtleOutputTest(AnnalistTestCase):
         self.testcoll.generate_coll_jsonld_context()
         r = self.client.get(list_url, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         turtle_url = r['Location']
         expect_turtle_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_TURTLE)
         self.assertEqual(turtle_url, expect_turtle_url)

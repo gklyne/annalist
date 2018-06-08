@@ -55,7 +55,6 @@ SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
 # SECURITY WARNING: don't run with debug turned on in production!
 # (overrides in settings.devel and settings.runtests)
 DEBUG = False
-TEMPLATE_DEBUG = False
 
 # Logging level used by selected log statements whose output may be useful
 # for tracing field values displayed in Annalist edit/view forms.
@@ -65,7 +64,15 @@ TRACE_FIELD_VALUE   = logging.INFO
 
 ALLOWED_HOSTS = []
 
-# Application definition
+ROOT_URLCONF = 'annalist_site.urls'
+
+WSGI_APPLICATION = 'annalist_site.wsgi.application'
+
+# Customize authentication backends
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',    # default
+    'login.OAuth2CheckBackend.OAuth2CheckBackend'
+    )
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -87,15 +94,27 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'annalist_site.urls'
-
-WSGI_APPLICATION = 'annalist_site.wsgi.application'
-
-# Customize authentication backends
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',    # default
-    'login.OAuth2CheckBackend.OAuth2CheckBackend'
-    )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            "templates"
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': False,
+        },
+    },
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

@@ -312,7 +312,7 @@ def make_resource_url(baseuri, entityref, resourceref):
     and entity reference, but including the supplied resource name reference
     (i.e. filename)
 
-    This function preserves any query parameters from the supplied entityurl.
+    This function preserves any query parameters from the supplied entityref.
 
     >>> make_resource_url("http://example.org/foo/", "/bar/stuff", "entity.ref")
     'http://example.org/bar/entity.ref'

@@ -16,7 +16,7 @@ CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = True
+
 # INSTALLED_APPS += (
 #     'django.contrib.staticfiles',
 #     )

@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.template                import RequestContext, loader
+from django.template                import loader
 
 from django.conf                    import settings
 

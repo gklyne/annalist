@@ -6,7 +6,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from django.conf.urls                   import patterns, url
+from django.conf.urls                   import url
 
 from annalist.views.home_redirects      import (
     AnnalistHomeView, AnnalistTypeRedirect, AnnalistEntityRedirect
@@ -63,7 +63,7 @@ from annalist.views.entityresource      import EntityResourceAccess
 # user interface for editing collections and resources, and do not of themselves identify
 # persistent resources.
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # Site pages
     url(r'^$',              AnnalistHomeView.as_view(),     name='AnnalistHomeView'),
@@ -176,15 +176,17 @@ urlpatterns = patterns('',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityViewAccess'),
 
-    ) # End of urlpatterns
+    ] # End of urlpatterns
 
-urlpatterns += patterns('',
+# Login-related view URLs
+
+urlpatterns += [
     url(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
     url(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
     url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
     url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
     url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
     url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
-    )
+    ]
 
 # End.

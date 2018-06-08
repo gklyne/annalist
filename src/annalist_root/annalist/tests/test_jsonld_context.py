@@ -887,7 +887,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print "@@ test_http_conneg_jsonld_entity1: uri %s"%u
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
         r = self.client.get(v)
@@ -929,7 +929,7 @@ class JsonldContextTest(AnnalistTestCase):
         u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         r = self.client.get(u, HTTP_ACCEPT="application/json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
         r = self.client.get(v)
@@ -970,7 +970,7 @@ class JsonldContextTest(AnnalistTestCase):
         u = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.TYPE_META_FILE)
         r = self.client.get(v)
@@ -1023,8 +1023,8 @@ class JsonldContextTest(AnnalistTestCase):
         self.testcoll.generate_coll_jsonld_context()
         r = self.client.get(list_url, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        json_url = r['Location']
+        self.assertEqual(r.reason_phrase, "Found")
+        json_url = TestHostUri + r['Location']
         expect_json_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_FILE)
         self.assertEqual(json_url, expect_json_url)
         r = self.client.get(json_url)

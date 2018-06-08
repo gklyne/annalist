@@ -210,7 +210,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertIn(self.continuation_url, r['location'])
         # Check that new data exists
@@ -233,7 +233,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertIn(self.continuation_url, r['location'])
         # Check that new data exists

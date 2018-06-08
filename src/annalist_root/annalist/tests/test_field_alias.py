@@ -193,7 +193,7 @@ class FieldAliasTest(AnnalistTestCase):
             })
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Check entity exists,and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "BibEntry_type")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "bibentity1"))
@@ -228,7 +228,7 @@ class FieldAliasTest(AnnalistTestCase):
             })
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Check entity exists, and compare data with expected
         typeinfo = EntityTypeInfo(self.testcoll, "BibEntry_type")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "bibentity1"))

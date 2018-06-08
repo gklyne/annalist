@@ -395,7 +395,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         u = collectiondata_url(coll_id=layout.SITEDATA_ID)
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+collection_url+layout.COLL_META_REF)
         r = self.client.get(v)

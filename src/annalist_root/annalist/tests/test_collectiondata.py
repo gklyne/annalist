@@ -329,7 +329,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         u = collectiondata_url(coll_id="testcoll")
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+collection_url+layout.COLL_META_REF)
         r = self.client.get(v)
@@ -392,9 +392,9 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         f = coll_view_form_data(coll_id="testcoll", action="edit")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'],   TestBaseUri+"/c/_annalist_site/d/_coll/")
+        self.assertEqual(r['location'],   TestBasePath+"/c/_annalist_site/d/_coll/")
         # Check updated collection data
         self._check_collection_data_values(coll_id="testcoll")
         return
@@ -463,9 +463,9 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         u = collectiondata_view_url(coll_id="testcoll", action="edit")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'],   TestBaseUri+"/c/_annalist_site/d/_coll/")
+        self.assertEqual(r['location'],   TestBasePath+"/c/_annalist_site/d/_coll/")
         # Check updated collection data
         self._check_collection_data_values(coll_id="testcoll", coll_label=new_label)
         return
@@ -487,9 +487,9 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestBaseUri+"/c/testcoll/d/_user/")
+        self.assertEqual(r['location'], TestBasePath+"/c/testcoll/d/_user/")
         # Check that new record type exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))
         self._check_annalist_user_perms("copyuser", ["VIEW", "CREATE", "UPDATE", "DELETE"])

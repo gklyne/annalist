@@ -211,7 +211,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             self.testsite, "testcoll", collection_create_values("testcoll")
             )
         # For checking Location: header values...
-        self.continuation_url = TestHostUri + entitydata_list_type_url(
+        self.continuation_url = entitydata_list_type_url(
             coll_id="testcoll", type_id=layout.USER_TYPEID
             )
         # Login and permissions
@@ -514,7 +514,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
@@ -541,7 +541,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists

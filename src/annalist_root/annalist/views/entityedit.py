@@ -400,8 +400,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def get_form_display_context(self, viewinfo, entityvaluemap, entityvals, **context_extra_values):
         """
-        Return a form display context with data from the supplied entity values, 
-        augmented with inferred values and other context data.
+        Return a form display context dictionary with data from the supplied 
+        entity values, augmented with inferred values and other context data.
         """
         # log.info("get_form_display_context, entityvals: %r"%(entityvals,))
         context_extra_values.update(

@@ -3,6 +3,14 @@
 import os
 import sys
 
+# ----
+# Install `faulthandler` and enable the next two lines to get stack trace
+# diagnostic from segment fault error.
+# ----
+# import faulthandler
+# faulthandler.enable()
+# ----
+
 if __name__ == "__main__":
 
     # Select default settings module

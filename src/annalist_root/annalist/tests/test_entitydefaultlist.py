@@ -335,9 +335,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
+        v = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         self.assertIn(v, r['location'])
         return
 
@@ -346,9 +346,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_all_url("testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "Default_type", 
+        v = entitydata_edit_url("new", "testcoll", "Default_type", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -359,9 +359,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "testtype", 
+        v = entitydata_edit_url("new", "testcoll", "testtype", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -372,9 +372,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u
+        e1 = u
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
@@ -389,9 +389,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -402,9 +402,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_all_url("testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -415,9 +415,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u
+        e1 = u
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message=%s"%(uri_quote_param(message.NO_ENTITY_FOR_COPY),)
         self.assertIn(e1, r['location'])
@@ -430,9 +430,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u
+        e1 = u
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
@@ -456,9 +456,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
+        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -469,9 +469,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_all_url("testcoll")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
+        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
             view_id="Default_view"
             )
         self.assertIn(v, r['location'])
@@ -482,9 +482,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u
+        e1 = u
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])
@@ -497,9 +497,9 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         u = entitydata_list_type_url("testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        e1 = TestHostUri + u
+        e1 = u
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(e1, r['location'])

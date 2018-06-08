@@ -279,8 +279,8 @@ class ImportResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertMatch(r['location'], TestHostUri+u)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertMatch(r['location'], u)
         # Read back form following redirect
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -317,7 +317,7 @@ class ImportResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Display resource with reference
         u = entitydata_edit_url(
             "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"

@@ -53,12 +53,21 @@ See also: https://www.divio.com/en/blog/documentation/
 
     then the `python setup.py` commands.
 
+    [Later] After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
+
     To run the server with OIDC login capability, use:
 
         OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
 
 - [x] Update other packages (in setup.py)
 - [x] Move from deprecated oauth2client package to recommended replacement
+- [ ] Update Django version to 1.11 (last to support Python 2)
+
+        Ran into a segfault problem while running tests uner Python 2.7.14.
+        Installing package `faulthander`, and modifying manage.py to activate it,
+        showed the fault happening in sqlite3.
+        Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem.
+
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.

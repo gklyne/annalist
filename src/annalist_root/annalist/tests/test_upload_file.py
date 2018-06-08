@@ -460,7 +460,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Retrieve updated form
         r = self.client.get(u)
         # Test context
@@ -495,7 +495,7 @@ class UploadResourceTest(AnnalistTestCase):
                 )
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Display resource with reference
         u = entitydata_edit_url(
             "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"
@@ -538,7 +538,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplimageview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Retrieve updated form
         r = self.client.get(u)
         # Test context
@@ -631,7 +631,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare entity resource just created
         siteobj = open(self.imagepath, "rb")
@@ -724,7 +724,7 @@ class UploadResourceTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Retrieve updated form
         r = self.client.get(u)
@@ -763,7 +763,7 @@ class UploadResourceTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare renamed entity resource
         siteobj = open(self.imagepath, "rb")
@@ -823,7 +823,7 @@ class UploadResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Retrieve updated form
         r = self.client.get(u)

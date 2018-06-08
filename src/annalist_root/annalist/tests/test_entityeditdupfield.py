@@ -281,7 +281,7 @@ class EntityEditDupFieldTest(AnnalistTestCase):
         f = entitydata_form_add_field(f, "Entity_comment", 3, "Update comment 3")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Test resulting entity value
         self._check_entity_data_values(
             "entitydupfield", type_id="testtype", update="Updated Entity", 

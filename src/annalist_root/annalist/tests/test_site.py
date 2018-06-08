@@ -85,6 +85,11 @@ class SiteTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SiteTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
         resetSitedata(scope="all")
         return
@@ -220,6 +225,11 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SiteViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
         resetSitedata(scope="all")
         return
@@ -257,8 +267,8 @@ class SiteViewTest(AnnalistTestCase):
     def test_get_home(self):
         r = self.client.get(self.homeuri)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r["location"], TestHostUri+self.uri)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r["location"], self.uri)
         return
 
     def test_get_no_login(self):
@@ -374,10 +384,10 @@ class SiteViewTest(AnnalistTestCase):
         form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
         self.assertEqual(r['location'],
-            TestBaseUri+"/site/"
+            TestBasePath+"/site/"
             "?info_head=Action%20completed"+
             "&info_message=Created%20new%20collection:%20'testnew'")
         # Check site now has new colllection
@@ -457,6 +467,7 @@ class SiteActionViewTests(AnnalistTestCase):
 
     @classmethod
     def setUpClass(cls):
+        super(SiteActionViewTests, cls).setUpClass()
         # Remove any collections left behind from previous tests
         resetSitedata(scope="collections")
         return
@@ -482,12 +493,18 @@ class SiteActionViewTests(AnnalistTestCase):
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="confirm"))
         self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.reason_phrase,   "Found")
         self.assertEqual(r.content,         "")
-        self.assertMatch(
-            r['location'],
-            "^"+TestHostUri+reverse("AnnalistSiteView")+"\\?info_head=.*&info_message=.*coll1,.*coll3.*$"
-            )
+        v  = reverse("AnnalistSiteView")
+        e1 = "info_head="
+        e2 = "info_message="
+        e3 = "coll1"
+        e4 = "coll3"
+        self.assertIn(v,  r['location'])
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
+        self.assertIn(e4, r['location'])
         # Confirm collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']
@@ -507,9 +524,9 @@ class SiteActionViewTests(AnnalistTestCase):
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="cancel"))
         self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
+        self.assertEqual(r.reason_phrase,   "Found")
         self.assertEqual(r.content,         "")
-        self.assertEqual(r['location'],     TestBaseUri+"/site/")
+        self.assertEqual(r['location'],     TestBasePath+"/site/")
         # Confirm no collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']

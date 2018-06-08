@@ -206,7 +206,6 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self.no_options = [ FieldChoice('', label="(no options)") ]
         # For checking Location: header values...
         self.continuation_url = (
-            TestHostUri + 
             entitydata_list_type_url(coll_id="testcoll", type_id=layout.VOCAB_TYPEID)
             )
         # Login and permissions
@@ -611,9 +610,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("newvocab", update="RecordVocab", vocab_uri="test:newvocab")
         return
@@ -626,9 +625,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
         return
@@ -685,9 +684,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("copyvocab", update="RecordVocab", vocab_uri="test:copyvocab")
         return
@@ -702,9 +701,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record vocab still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "copytype"))
         return
@@ -765,9 +764,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", layout.VOCAB_TYPEID, entity_id="editvocab", view_id="Vocab_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("editvocab", update="Updated RecordVocab")
         return
@@ -784,9 +783,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record type still does not exist and unchanged
         self._check_record_vocab_values("editvocab")
         return
