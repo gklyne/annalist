@@ -967,7 +967,7 @@ class TurtleOutputTest(AnnalistTestCase):
         r = self.client.get(list_url, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        turtle_url = r['Location']
+        turtle_url        = TestHostUri + r['Location']
         expect_turtle_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_TURTLE)
         self.assertEqual(turtle_url, expect_turtle_url)
         with MockHttpDictResources(turtle_url, self.get_context_mock_dict(turtle_url, context_path=context_path)):

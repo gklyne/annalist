@@ -511,7 +511,7 @@ class AnnalistGenericView(ContentNegotiationView):
         template = loader.get_template(template_name)
         context  = resultdata
         # log.debug("render_html - data: %r"%(resultdata))
-        response = HttpResponse(template.render(context))
+        response = HttpResponse(template.render(context, request=self.request))
         if "entity_data_ref" in resultdata:
             alt_link = [ { "ref": resultdata["entity_data_ref"], "rel": "alternate" } ]
         else:

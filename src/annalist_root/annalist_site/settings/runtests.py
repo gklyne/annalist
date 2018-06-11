@@ -122,6 +122,7 @@ log.info("DB PATH:         "+DATABASES['default']['NAME'])
 # log.info("TEST_DISCOVER_TOP_LEVEL: "+TEST_DISCOVER_TOP_LEVEL)
 log.info("STATICFILES_DIRS: "+repr(STATICFILES_DIRS))
 log.info("LOGGING_FILE:     "+LOGGING_FILE)
+# log.info("TEMPLATES:\n%r\n"%TEMPLATES)
 
 # See also: annalistr/apps.py
 
