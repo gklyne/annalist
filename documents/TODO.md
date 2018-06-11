@@ -55,27 +55,47 @@ See also: https://www.divio.com/en/blog/documentation/
 
     [Later] After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
 
-    To run the server with OIDC login capability, use:
+- [x] Update other packages (in setup.py)
+- [x] Move from deprecated oauth2client package to recommended replacement for OpenId Connect (OIDC) logins:
+
+    This requires using HTTPS for accessing the server.  See `src/annalist_root/stunnel_dev_https.conf` for using `stunnel` to proxy HTTPS requests to HTTP for Django's internal development server.  
+
+    Alternatively, to test the server over HTTP with OIDC login capability, use:
 
         OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
 
-- [x] Update other packages (in setup.py)
-- [x] Move from deprecated oauth2client package to recommended replacement
-- [ ] Update Django version to 1.11 (last to support Python 2)
+- [x] Update Django version to 1.11 (last to support Python 2)
 
-        Ran into a segfault problem while running tests uner Python 2.7.14.
-        Installing package `faulthander`, and modifying manage.py to activate it,
-        showed the fault happening in sqlite3.
-        Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem.
+    Ran into a segfault problem while running tests uner Python 2.7.14.
 
+    - Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
+    - Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem.
+
+    Changes in Django 1.11 include:
+
+    - redirects no longer include hostname (cf. RFC 7231 changes to Location header);
+      this mainly affects test cases.
+    - the pluggable templating system does not accept Context values, though these
+      are still required when usingtheDjango templating engine directly; 
+      this mainly affects views/fields/render_fieldvalue, which bypasses the 
+      pluggable rendering mechanisms.
+    - the Template.render method requires a request parameter (cf. views/generic).
+    - the above changes also affect login/login_views.
+    - updates to settings are required to configure the templating framework.
+
+- [ ] Update to support Python 3
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+
+(Sub-release?)
+
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
@@ -120,6 +140,9 @@ See also: https://www.divio.com/en/blog/documentation/
     - Started moving toward parameterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
+
+(Alpha release 0.9.0??)
+
 
 Technical debt:
 

@@ -187,8 +187,8 @@ class LoginUserView(generic.View):
             logindata["help_text"] = markdown.markdown(logindata["help_markdown"])
         # Render form & return control to browser
         template = loader.get_template("login.html")
-        context  = RequestContext(self.request, logindata)
-        return HttpResponse(template.render(context))
+        # context  = RequestContext(self.request, logindata)
+        return HttpResponse(template.render(logindata, request=self.request))
 
 class LoginPostView(generic.View):
     """
