@@ -68,6 +68,8 @@ catalog-v001.xml
 *.sql
 *.sqlite
 *.sqlite3
+.coverage
+htmlcov
 
 # OS generated files
 .DS_Store*
