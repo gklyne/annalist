@@ -409,6 +409,7 @@ class Site(EntityRoot):
         """
         Create empty collection, and returns the Collection object.
         """
+        # @@TESTME
         datetime_now = datetime.datetime.today().replace(microsecond=0)
         if label is None:
             label = "Collection %s"%coll_id

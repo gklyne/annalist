@@ -6,8 +6,8 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import logging
-log = logging.getLogger(__name__)
+# import logging
+# log = logging.getLogger(__name__)
 
 from annalist.identifiers       import ANNAL
 
@@ -70,12 +70,24 @@ default_types = [("dat", "application/octet-stream")]
 def file_extension(typeuri):
     """
     Returns preferred file extension for resource type
+
+    >>> file_extension(ANNAL.CURIE.Metadata) == "jsonld"
+    True
+    >>> file_extension(ANNAL.CURIE.Richtext) == "md"
+    True
+
     """
     return resource_types.get(typeuri, default_types)[0][0]
 
 def content_type(typeuri):
     """
     Returns preferred MIME content-type for resource type
+
+    >>> content_type(ANNAL.CURIE.Metadata) == "application/ld+json"
+    True
+    >>> content_type(ANNAL.CURIE.Richtext) == "text/markdown"
+    True
+
     """
     return resource_types.get(typeuri, default_types)[0][1]
 
@@ -83,6 +95,16 @@ def file_extension_for_content_type(typeuri, content_type):
     """
     Returns file extension for given content-type as an instance of a given type URI,
     or None.
+
+    >>> file_extension_for_content_type(ANNAL.CURIE.Richtext, "text/markdown") == "md"
+    True
+    >>> file_extension_for_content_type(ANNAL.CURIE.Resource, "text/markdown") == "md"
+    True
+    >>> file_extension_for_content_type(ANNAL.CURIE.Resource, "application/pdf") == "pdf"
+    True
+    >>> file_extension_for_content_type(ANNAL.CURIE.Resource, "application/unknown") == None
+    True
+
     """
     for fe, ct in resource_types.get(typeuri, default_types):
         if ct == content_type:
@@ -93,10 +115,24 @@ def content_type_for_file_extension(typeuri, file_extension):
     """
     Returns content-type for given file extension as an instance of a given type URI,
     or None.
+
+    >>> content_type_for_file_extension(ANNAL.CURIE.Richtext, "md") == "text/markdown"
+    True
+    >>> content_type_for_file_extension(ANNAL.CURIE.Resource, "md") == "text/markdown"
+    True
+    >>> content_type_for_file_extension(ANNAL.CURIE.Resource, "pdf") == "application/pdf"
+    True
+    >>> content_type_for_file_extension(ANNAL.CURIE.Resource, "unknown") == None
+    True
+
     """
     for fe, ct in resource_types.get(typeuri, default_types):
         if fe == file_extension:
             return ct
     return None
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
 # End.

@@ -84,6 +84,11 @@ def extract_entity_id(eid):
     """
     Accepts an entity id which may be have `type_id/entity_id` form, and returns
     the bare `entity_id` value.
+
+    >>> extract_entity_id("type_id/entity_id") == "entity_id"
+    True
+    >>> extract_entity_id("entity_id") == "entity_id"
+    True
     """
     type_id, entity_id = split_type_entity_id(eid)
     return entity_id
@@ -93,6 +98,11 @@ def fill_type_entity_id(eid, default_type_id=None):
     Assemble a type+entity composite identifier based on a supplied id string.
     If the string does not already include a type_id value, the supplied default
     is used.
+
+    >>> fill_type_entity_id("entity_id", default_type_id="def_type_id") == "def_type_id/entity_id"
+    True
+    >>> fill_type_entity_id("type_id/entity_id", default_type_id="def_type_id") == "type_id/entity_id"
+    True
     """
     type_id, entity_id = split_type_entity_id(eid, default_type_id=default_type_id)
     return make_type_entity_id(type_id, entity_id)
@@ -102,6 +112,11 @@ def make_type_entity_id(type_id=None, entity_id=None):
     Assemble a type_id and entity_id and return a composite identifier.
 
     If the entity Id is blank, ignore the supplied type id
+
+    >>> make_type_entity_id(type_id="type_id", entity_id="entity_id") == "type_id/entity_id"
+    True
+    >>> make_type_entity_id(type_id="type_id", entity_id="") == ""
+    True
     """
     assert type_id is not None,   "make_type_entity_id: no type id (%s, %s)"%(type_id, entity_id)
     assert entity_id is not None, "make_type_entity_id: no entity id (%s, %s)"%(type_id, entity_id)
@@ -128,6 +143,9 @@ def label_from_id(id):
 
     Underscore characters in the Id are replaced by spaces.
     The first character may be capirtalized.
+
+    >>> label_from_id("entity_id") == "Entity id"
+    True
     """
     temp  = id.replace('_', ' ').strip()
     label = temp[0].upper() + temp[1:] 
@@ -330,6 +348,9 @@ def make_resource_ref_query(entityref, resourceref):
     This is used to generate a resource reference that is the supplied resource ref
     treated as relative to the supplied entityref, including any query parameters
     included in entityref.
+
+    >>> make_resource_ref_query("http://example.com/foo?query=value", "http://example.org/bar") == "http://example.org/bar?query=value"
+    True
     """
     query = urlparse.urlsplit(entityref).query
     if query != "":
@@ -529,7 +550,7 @@ def open_url(url):
 
 def copy_resource_to_fileobj(srcobj, dstobj):
     """
-    Copies data from a supplied souyrce file object to a supplied destination object.
+    Copies data from a supplied source file object to a supplied destination object.
 
     Specifically, this is used when downloading a web resource to a local stored entity.
     """

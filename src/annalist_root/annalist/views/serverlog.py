@@ -55,12 +55,8 @@ class ServerLogView(AnnalistGenericView):
         continuation_url  = self.continuation_next(
             request.GET, self.view_uri("AnnalistHomeView")
             )
-            # viewinfo = DisplayInfo(self, "delete", request_params, continuation_url)
-            # viewinfo.check_authorization("delete")
-            # if viewinfo.http_response:
-            #     return viewinfo.http_response
         return (
-            self.authenticate(continuation_url) or 
+            # self.authenticate(continuation_url) or 
             self.authorize("ADMIN", None) or
             self.render_html(resultdata(), 'annalist_serverlog.html') or 
             self.error(self.error406values())

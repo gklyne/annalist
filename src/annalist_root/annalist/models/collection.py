@@ -117,7 +117,7 @@ class Collection(Entity):
             [ (ANNAL.CURIE.comment,     ANNAL.CURIE.meta_comment    )
             ])
         collmetadata = self._migrate_values_map_field_names(migration_map, collmetadata)
-        if collmetadata[ANNAL.CURIE.type_id] == "_collection":
+        if collmetadata[ANNAL.CURIE.type_id] == "_coll":
             collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
         return collmetadata
 
@@ -230,6 +230,7 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
+        #@@ TODO: remove this, not covered by tests.  Or remove entiure method.
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):
@@ -263,6 +264,7 @@ class Collection(Entity):
                     )
                 log.error("Collection._migrate_collection_config_dir: "+msg)
                 assert False, msg
+        #@@
         return
 
     @classmethod
@@ -388,17 +390,6 @@ class Collection(Entity):
         return t
 
     # Record types
-
-    #@@
-    # @classmethod
-    # def reset_type_cache(cls):
-    #     """
-    #     Used for testing: clear out type cache so tets don't interfere with each other
-    #     Could also be used when external application updates data.
-    #     """
-    #     type_cache.flush_all()
-    #     return
-    #@@
 
     def types(self, altscope="all"):
         """

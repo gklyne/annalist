@@ -20,7 +20,7 @@ from django.conf import settings
 
 from annalist                       import layout
 from annalist.util                  import replacetree, removetree
-from annalist.collections           import installable_collections
+from annalist.collections_data      import installable_collections
 from annalist.identifiers           import ANNAL, RDFS
 
 from annalist.models.site           import Site

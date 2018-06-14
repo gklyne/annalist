@@ -150,8 +150,8 @@ def make_turtle_resource_info(json_resource):
 
 def find_fixed_resource(fixed_json_resources, resource_ref):
     """
-    Return a description for the indicated fixed resource from a supplied table,
-    or None
+    Return a description for the indicated fixed (built-in) resource from 
+    a supplied table, or None
     """
     # log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
     for fj in fixed_json_resources:
@@ -176,6 +176,8 @@ def find_entity_resource(entity, resource_ref):
     fr = find_fixed_resource(entity_fixed_json_resources, resource_ref)
     if fr:
         return fr
+    # Look for resource description in entity data
+    # @@TESTME
     for t, f in entity.enum_fields():
         # log.debug("find_resource: t %s, f %r"%(t,f))
         if isinstance(f, dict):

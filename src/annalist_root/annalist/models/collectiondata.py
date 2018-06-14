@@ -64,6 +64,7 @@ def copy_coll_data(src_coll, tgt_coll):
 
     returns     list of error messages; an empty list indicates success.
     """
+    # @@TESTME: Not tested by test suite
     log.info("Copying collection '%s' to '%s'"%(src_coll.get_id(), tgt_coll.get_id()))
     msgs = []
     entityfinder = EntityFinder(src_coll)

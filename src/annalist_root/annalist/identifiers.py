@@ -212,4 +212,8 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "user_permissions"
     ])
 
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
 # End.
