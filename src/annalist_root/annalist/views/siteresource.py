@@ -29,7 +29,8 @@ class SiteResourceAccess(AnnalistGenericView):
     # NOTE: the logic of this view is modelled on `entityresource`, but currently
     #       the only resource recognized is the JSON-LD context.
 
-    # @TODO: define common superclass with `entityresource` to share common logic.
+    # @@TODO: define common superclass with `entityresource` to share common logic.
+    # @@TESTME: recheck test coverege when refactoring done (currently 36%)
 
     def __init__(self):
         super(SiteResourceAccess, self).__init__()

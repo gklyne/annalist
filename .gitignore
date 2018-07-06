@@ -68,6 +68,8 @@ catalog-v001.xml
 *.sql
 *.sqlite
 *.sqlite3
+
+# Test coverage data
 .coverage
 htmlcov
 

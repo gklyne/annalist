@@ -186,7 +186,7 @@ def am_settingsdir(annroot, userhome, options):
 
 def am_version(annroot, userhome, options):
     """
-    Print softwarte version string to standard output.
+    Print software version string to standard output.
 
     annroot     is the root directory for the Annalist software installation.
     userhome    is the home directory for the host system user issuing the command.

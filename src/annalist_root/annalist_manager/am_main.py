@@ -120,7 +120,7 @@ def parseCommandArgs(argv):
 
 def run(userhome, userconfig, options, progname):
     """
-    Command line tool to create and submit deposit information packages
+    Command dispatcher.
     """
     if options.command.startswith("runt"):                  # runtests
         return am_runtests(annroot, options)
@@ -178,8 +178,8 @@ def run(userhome, userconfig, options, progname):
 
 def runCommand(userhome, userconfig, argv):
     """
-    Run program with supplied configuration base directory, Base directory
-    from which to start looking for research objects, and arguments.
+    Run program with supplied configuration base directory, 
+    configuration directory and command arguments.
 
     This is called by main function (below), and also by test suite routines.
 

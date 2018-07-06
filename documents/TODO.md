@@ -76,7 +76,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - redirects no longer include hostname (cf. RFC 7231 changes to Location header);
       this mainly affects test cases.
     - the pluggable templating system does not accept Context values, though these
-      are still required when usingtheDjango templating engine directly; 
+      are still required when using the Django templating engine directly; 
       this mainly affects views/fields/render_fieldvalue, which bypasses the 
       pluggable rendering mechanisms.
     - the Template.render method requires a request parameter (cf. views/generic).
@@ -84,6 +84,12 @@ See also: https://www.divio.com/en/blog/documentation/
     - updates to settings are required to configure the templating framework.
 
 - [ ] Update to support Python 3
+
+    - https://docs.python.org/3/howto/pyporting.html
+    - http://python3porting.com/problems.html
+    - 
+    - [ ] Review test coverage (93% overall, but some key modules 40-80%)
+
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.
