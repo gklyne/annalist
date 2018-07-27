@@ -23,6 +23,11 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.11, towards 0.5.12
 
+NOTE: The devlopment environment (`devel` configuration) settings no longer 
+work "out of the box".  This is the default case when running `manage.py runserver`,
+so when using this command either (a) initialize the development site data in
+the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
+
 - [x] Update python to latest in version 2 series
 - [x] Update pip and setuoptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
 
@@ -99,6 +104,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+    - See also: https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
 
 (Sub-release?)
 

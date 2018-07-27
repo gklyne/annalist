@@ -19,6 +19,9 @@
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
 * virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
 
+NOTE: As of version 0.5.11, see discussion below about use of HTTP and HTTPS.
+TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
+
 
 ## Running as a Docker container
 
@@ -205,6 +208,23 @@ The following assumes that software is installed under a directory called $WORKS
 
         OK
         Destroying test database for alias 'default'...
+
+
+## Accessing Annalist over HTTPS
+
+As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
+
+(@@TODO: write up details for setting up APache and/or Nginx reverse-proxy)
+
+This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials.  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
+
+    OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
+
+or
+
+    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
+
+Or otrherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when running the server.
 
 
 ## Setting up an Annalist site
