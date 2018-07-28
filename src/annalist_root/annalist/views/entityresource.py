@@ -104,16 +104,7 @@ class EntityResourceAccess(AnnalistGenericView):
                     )
                 )
         entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
-        resource_file  = get_resource_file(entity, resource_info, entity_baseurl)
-
-        # if "resource_access" in resource_info:
-        #     # Use indicated resource access renderer
-        #     jsondata = entity.get_values()
-        #     resource_file = resource_info["resource_access"](entity_baseurl, jsondata, resource_info)
-        # else:
-        #     # Return resource data direct from storage
-        #     resource_file = entity_resource_file(entity, resource_info)
-
+        resource_file, resource_type = get_resource_file(entity, resource_info, entity_baseurl)
         if resource_file is None:
             msg = (message.RESOURCE_DOES_NOT_EXIST%
                 { 'id':  entity_label
@@ -123,10 +114,11 @@ class EntityResourceAccess(AnnalistGenericView):
             return self.error(dict(self.error404values(), message=msg))
         # Return resource
         try:
-            return_type = resource_info["resource_type"]
+            return_type = resource_type
             # URL parameter ?type=mime/type overrides specified content type
             #
-            # @@TODO: this is to allow links to return different content-types:
+            # @@TODO: this is to allow links to return different content-types
+            #         (e.g., JSON as text/plain so it is displayed in the browser):
             #         is there a cleaner way?
             if "type" in viewinfo.request_dict:
                 return_type = viewinfo.request_dict["type"]

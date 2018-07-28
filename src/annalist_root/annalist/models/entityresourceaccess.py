@@ -233,11 +233,13 @@ def find_list_resource(type_id, list_id, list_ref):
 
 def get_resource_file(entity, resource_info, base_url):
     """
-    Return a file object from which resource data can be read.
+    Create a file object from which resource data can be read.
 
     resource_info   is a value returned by `find_fixed_resource` or `find_entity_resource`
     base_url        is a base URL that may be used to resolving relative references in the
                     JSON-LD data.
+
+    Returns a pair of values: the file object, and a content-type string.
     """
     if "resource_access" in resource_info:
         # Use indicated resource access renderer
@@ -246,6 +248,6 @@ def get_resource_file(entity, resource_info, base_url):
     else:
         # Return resource data direct from storage
         resource_file = entity.resource_file(resource_info["resource_path"])
-    return resource_file
+    return (resource_file, resource_info["resource_type"])
 
 # End.

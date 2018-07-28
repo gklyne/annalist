@@ -65,7 +65,9 @@ class SiteResourceAccess(AnnalistGenericView):
                     )
                 )
         site_baseurl  = viewinfo.reqhost + self.get_site_base_url()
-        resource_file = get_resource_file(viewinfo.site, resource_info, site_baseurl)
+        resource_file, resource_type = get_resource_file(
+            viewinfo.site, resource_info, site_baseurl
+            )
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
@@ -74,10 +76,9 @@ class SiteResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-
         # Return resource
         try:
-            response = self.resource_response(resource_file, resource_info["resource_type"])
+            response = self.resource_response(resource_file, resource_type)
         except Exception as e:
             log.exception(str(e))
             response = self.error(
@@ -100,47 +101,5 @@ class SiteResourceAccess(AnnalistGenericView):
         viewinfo.check_authorization(action)
         viewinfo.site._ensure_values_loaded()
         return viewinfo
-
-    #@@TODO: remove me
-    # def __unused_find_resource(self, viewinfo, resource_ref):
-    #     """
-    #     Return a description for the indicated site resource, or None
-    #     """
-    #     #@@TODO: still needed?
-    #     log.info("SiteResourceAccess.find_resource %s"%(resource_ref))
-    #     if resource_ref in [layout.SITE_CONTEXT_FILE, layout.COLL_CONTEXT_FILE]:
-    #         return (
-    #             { "resource_type": "application/ld+json"
-    #             , "resource_dir":  layout.SITE_DIR
-    #             , "resource_name": resource_ref
-    #             , "resource_path": resource_ref
-    #             })
-    #     if resource_ref == "test-image.jpg":
-    #         return (
-    #             { "resource_type": "image/jpeg"
-    #             , "resource_dir":  layout.SITE_DIR
-    #             , "resource_name": resource_ref
-    #             , "resource_path": resource_ref
-    #             })
-    #     if resource_ref == "testdatafile.md":
-    #         return (
-    #             { "resource_type": "text/markdown"
-    #             , "resource_dir":  layout.SITE_DIR
-    #             , "resource_name": resource_ref
-    #             , "resource_path": resource_ref
-    #             })
-    #     return None
-
-    #@@TODO: remove me
-    # def _unused_resource_response(self, resource_file, resource_type):
-    #     """
-    #     Construct response containing body of referenced resource,
-    #     with supplied resoure_type as its content_type
-    #     """
-    #     # @@TODO: assumes response can reasonably be held in memory;
-    #     #         consider 'StreamingHttpResponse'?
-    #     response = HttpResponse(content_type=resource_type)
-    #     response.write(resource_file.read())
-    #     return response
 
 # End.
