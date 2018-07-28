@@ -380,6 +380,55 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(btn_new["name"],     "new")
         return
 
+    def test_get_site_context_resource(self):
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": layout.SITE_CONTEXT_FILE})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "application/ld+json")
+        return
+
+    def test_get_site_image_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["testimage"] = (
+            { "resource_name": "test-image.jpg" 
+            , "resource_type": "image/jpeg"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "test-image.jpg"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "image/jpeg")
+        return
+
+    def test_get_site_markdown_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["testdatafile"] = (
+            { "resource_name": "testdatafile.md" 
+            , "resource_type": "text/markdown"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "testdatafile.md"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "text/markdown")
+        return
+
+    def test_get_site_nonexistent_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["nosuchfile"] = (
+            { "resource_name": "nosuch.file" 
+            , "resource_type": "text/plain"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "nosuch.file"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     404)
+        self.assertEqual(r.reason_phrase,   "Not found")
+        return
+
     def test_post_add(self):
         form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)

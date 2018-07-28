@@ -125,6 +125,12 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id=coll_id
             )
 
+    def get_site_base_url(self):
+        """
+        Return base URL for current site
+        """
+        return self.view_uri("AnnalistHomeView")
+
     def get_collection_base_url(self, coll_id):
         """
         Return base URL for specified collection

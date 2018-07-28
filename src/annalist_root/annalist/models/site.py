@@ -54,6 +54,8 @@ class Site(EntityRoot):
     _entitybase     = layout.SITE_META_PATH
     _entityfile     = layout.SITE_META_FILE
     _entityref      = layout.META_SITE_REF
+    _contextbase    = layout.META_SITE_REF
+    _contextref     = layout.SITE_CONTEXT_FILE
 
     def __init__(self, sitebaseuri, sitebasedir, host=""):
         """

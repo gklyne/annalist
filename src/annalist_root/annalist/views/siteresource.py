@@ -16,6 +16,12 @@ from django.http                        import HttpResponse
 from annalist                           import message
 from annalist                           import layout
 
+from annalist.models.entityresourceaccess import (
+    find_entity_resource,
+    site_fixed_json_resources,
+    get_resource_file
+    )
+
 from annalist.views.displayinfo         import DisplayInfo
 from annalist.views.generic             import AnnalistGenericView
 
@@ -30,7 +36,7 @@ class SiteResourceAccess(AnnalistGenericView):
     #       the only resource recognized is the JSON-LD context.
 
     # @@TODO: define common superclass with `entityresource` to share common logic.
-    # @@TESTME: recheck test coverege when refactoring done (currently 36%)
+    # @@TESTME: recheck test coverage when refactoring done (currently 36%)
 
     def __init__(self):
         super(SiteResourceAccess, self).__init__()
@@ -40,15 +46,16 @@ class SiteResourceAccess(AnnalistGenericView):
 
     def get(self, request, coll_id=None, resource_ref=None, view_id=None):
         """
-        Access specified entity resource
+        Access specified site entity resource
         """
         log.info("SiteResourceAccess.get: resource_ref %s"%(resource_ref,))
         viewinfo = self.view_setup(request.GET.dict())
         if viewinfo.http_response:
             return viewinfo.http_response
-
         # Locate resource
-        resource_info = self.find_resource(viewinfo, resource_ref)
+        resource_info = find_entity_resource(
+            viewinfo.site, resource_ref, fixed_resources=site_fixed_json_resources
+            )
         if resource_info is None:
             return self.error(
                 dict(self.error404values(),
@@ -57,7 +64,8 @@ class SiteResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-        resource_file = viewinfo.site.resource_file(resource_info["resource_name"])
+        site_baseurl  = viewinfo.reqhost + self.get_site_base_url()
+        resource_file = get_resource_file(viewinfo.site, resource_info, site_baseurl)
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
@@ -90,30 +98,49 @@ class SiteResourceAccess(AnnalistGenericView):
         viewinfo = DisplayInfo(self, action, request_dict, self.default_continuation_url)
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.check_authorization(action)
+        viewinfo.site._ensure_values_loaded()
         return viewinfo
 
-    def find_resource(self, viewinfo, resource_ref):
-        """
-        Return a description for the indicated site resource, or None
-        """
-        #@@TODO: still needed?
-        log.info("SiteResourceAccess.find_resource %s"%(resource_ref))
-        if resource_ref == layout.COLL_CONTEXT_FILE:
-            return (
-                { 'resource_type': "application/ld+json"
-                , 'resource_name': resource_ref
-                })
-        return None
+    #@@TODO: remove me
+    # def __unused_find_resource(self, viewinfo, resource_ref):
+    #     """
+    #     Return a description for the indicated site resource, or None
+    #     """
+    #     #@@TODO: still needed?
+    #     log.info("SiteResourceAccess.find_resource %s"%(resource_ref))
+    #     if resource_ref in [layout.SITE_CONTEXT_FILE, layout.COLL_CONTEXT_FILE]:
+    #         return (
+    #             { "resource_type": "application/ld+json"
+    #             , "resource_dir":  layout.SITE_DIR
+    #             , "resource_name": resource_ref
+    #             , "resource_path": resource_ref
+    #             })
+    #     if resource_ref == "test-image.jpg":
+    #         return (
+    #             { "resource_type": "image/jpeg"
+    #             , "resource_dir":  layout.SITE_DIR
+    #             , "resource_name": resource_ref
+    #             , "resource_path": resource_ref
+    #             })
+    #     if resource_ref == "testdatafile.md":
+    #         return (
+    #             { "resource_type": "text/markdown"
+    #             , "resource_dir":  layout.SITE_DIR
+    #             , "resource_name": resource_ref
+    #             , "resource_path": resource_ref
+    #             })
+    #     return None
 
-    def resource_response(self, resource_file, resource_type):
-        """
-        Construct response containing body of referenced resource,
-        with supplied resoure_type as its content_type
-        """
-        # @@TODO: assumes response can reasonably be held in memory;
-        #         consider 'StreamingHttpResponse'?
-        response = HttpResponse(content_type=resource_type)
-        response.write(resource_file.read())
-        return response
+    #@@TODO: remove me
+    # def _unused_resource_response(self, resource_file, resource_type):
+    #     """
+    #     Construct response containing body of referenced resource,
+    #     with supplied resoure_type as its content_type
+    #     """
+    #     # @@TODO: assumes response can reasonably be held in memory;
+    #     #         consider 'StreamingHttpResponse'?
+    #     response = HttpResponse(content_type=resource_type)
+    #     response.write(resource_file.read())
+    #     return response
 
 # End.

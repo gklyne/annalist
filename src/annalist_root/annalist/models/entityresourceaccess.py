@@ -28,6 +28,13 @@ from annalist.models.entitytypeinfo     import EntityTypeInfo
 
 # Resource info data for built-in entity data
 
+site_fixed_json_resources = (
+    [ { "resource_name": layout.SITE_META_FILE,     "resource_dir": layout.SITE_META_REF, 
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.SITE_CONTEXT_FILE,  "resource_dir": layout.SITE_META_REF, 
+                                                    "resource_type": "application/ld+json" }
+    ])
+
 collection_fixed_json_resources = (
     [ { "resource_name": layout.COLL_META_FILE,     "resource_dir": layout.COLL_BASE_DIR, 
                                                     "resource_type": "application/ld+json" }
@@ -152,6 +159,19 @@ def find_fixed_resource(fixed_json_resources, resource_ref):
     """
     Return a description for the indicated fixed (built-in) resource from 
     a supplied table, or None
+
+    resource_ref    is the local name of the desired resource relative to the base
+                    location of the entity (or collection or site data) to which it belongs.
+
+    The description returned is a dictionary with the following keys:
+        resource_name:      filename of resource (i.e. part of URI path after final "/")
+        resource_dir:       directory of resource (i.e. part of URI path up to final "/")
+        resource_path:      a file or URI path to the resource data relative to the
+                            URI of the entity to which it belongs.
+        resource_type:      content-type of resource
+        resource_access:    optional: if present, specifies a function that returns an 
+                            alternative representation of a JSON-LD data resource.
+                            (e.g. see `turtle_resource_file`)
     """
     # log.debug("CollectionResourceAccess.find_resource %s/d/%s"%(coll.get_id(), resource_ref))
     for fj in fixed_json_resources:
@@ -165,21 +185,36 @@ def find_fixed_resource(fixed_json_resources, resource_ref):
     log.debug("EntityResourceAccess.find_fixed_resource: %s not found"%(resource_ref))
     return None
 
-def find_entity_resource(entity, resource_ref):
+def find_entity_resource(entity, resource_ref, fixed_resources=entity_fixed_json_resources):
     """
     Return a description for the indicated entity resource, or None
+
+    resource_ref    is the local name of the desired resource relative to the entity
+                    to which it belongs.
+    fixed_resources is a table of fixed resource information, not necessarily referenced 
+                    by the entity itself.
+
+    The description returned is a dictionary with the following keys:
+        resource_name:      filename of resource (i.e. part of URI path after final "/")
+        resource_dir:       directory of resource (i.e. part of URI path up to final "/")
+        resource_path:      a file or URI path to the resource data relative to the
+                            URI of the entity to which it belongs.
+        resource_type:      content-type of resource
+        resource_access:    optional: if present, specifies a function that returns an 
+                            alternative representation of a JSON-LD data resource.
+                            (e.g. see `turtle_resource_file`)
     """
     log.debug(
         "EntityResourceAccess.find_entity_resource %s/%s/%s"%
         (entity.get_type_id(), entity.get_id(), resource_ref)
         )
-    fr = find_fixed_resource(entity_fixed_json_resources, resource_ref)
+    fr = find_fixed_resource(fixed_resources, resource_ref)
     if fr:
         return fr
     # Look for resource description in entity data
     # @@TESTME
     for t, f in entity.enum_fields():
-        # log.debug("find_resource: t %s, f %r"%(t,f))
+        log.debug("find_resource: t %s, f %r"%(t,f))
         if isinstance(f, dict):
             if f.get("resource_name", None) == resource_ref:
                 f = dict(f, resource_path=resource_ref)
@@ -195,5 +230,22 @@ def find_list_resource(type_id, list_id, list_ref):
         (list_id, type_id, list_ref)
         )
     return find_fixed_resource(entity_list_json_resources, list_ref)
+
+def get_resource_file(entity, resource_info, base_url):
+    """
+    Return a file object from which resource data can be read.
+
+    resource_info   is a value returned by `find_fixed_resource` or `find_entity_resource`
+    base_url        is a base URL that may be used to resolving relative references in the
+                    JSON-LD data.
+    """
+    if "resource_access" in resource_info:
+        # Use indicated resource access renderer
+        jsondata = entity.get_values()
+        resource_file = resource_info["resource_access"](base_url, jsondata, resource_info)
+    else:
+        # Return resource data direct from storage
+        resource_file = entity.resource_file(resource_info["resource_path"])
+    return resource_file
 
 # End.

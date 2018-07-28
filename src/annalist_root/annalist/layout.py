@@ -78,6 +78,7 @@ SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"
 SITEDATA_OLD_DIR2       = SITEDATA_DIR+"/"+COLL_ROOT_CONF_OLD_DIR
 SITE_META_PATH          = ""
+SITE_META_REF           = "."
 SITE_META_FILE          = "site_meta.jsonld"    # Currently not used except to store description data
 META_SITE_REF           = "./"
 SITE_COLL_VIEW          = "c/%(id)s/"

@@ -241,7 +241,7 @@ class EntityRoot(object):
         successively to access the corresponding value.
         """
         def is_dict(e):
-            return isinstance(e,dict)
+            return isinstance(e, dict)
         def enum_f(p, d):
             for k in d:
                 if isinstance(d[k], (list, tuple)) and all([is_dict(e) for e in d[k]]):
@@ -254,6 +254,8 @@ class EntityRoot(object):
         if self._values:
             for f in enum_f([], self._values):
                 yield f
+        else:
+            log.error("EntityRoot.enum_fields: no entity values present")
         return
 
     def resource_file(self, resource_ref):

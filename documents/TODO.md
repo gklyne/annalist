@@ -10,10 +10,11 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
+- [ ] Add documentation for view Type, View and List forms (similar to view Field ...)
 - [x] Initial corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
+    - Add etag / if-match support ?  (does this help with POST? How?)
 
 See also: https://www.divio.com/en/blog/documentation/
 
@@ -89,7 +90,6 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - updates to settings are required to configure the templating framework.
 
 - [ ] Update to support Python 3
-
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
     - 
@@ -171,7 +171,7 @@ Technical debt:
     - currently force URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
     - See: _entityviewurl member variable
-    - logic is handled in `Entity.try_alt_parentage` and _init_child`
+    - logic is handled in `Entity.try_alt_parentage` and `_init_child`
     - may want to consider promoting entityviewurl to constructor parameter for all Entity.
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
@@ -227,13 +227,17 @@ Technical debt:
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
-- [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
+- [ ] Test cases: use <namespace>.CURIE.:: values rather than literal CURIEs
+    -
+
+
 
 Data collection definitions:
 
 - [ ] VoID
 - [ ] DCAT
 - [ ] PROV
+- [ ] OA
 - [x] CRM
 
 
