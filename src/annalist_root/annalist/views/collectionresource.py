@@ -21,11 +21,6 @@ from annalist.models.entityresourceaccess import (
     collection_fixed_json_resources,
     find_entity_resource,
     get_resource_file
-    # find_fixed_resource,
-    # entity_resource_file,
-    # json_resource_file,
-    # turtle_resource_file, 
-    # make_turtle_resource_info
     )
 
 from annalist.views.displayinfo         import DisplayInfo
@@ -37,11 +32,6 @@ class CollectionResourceAccess(AnnalistGenericView):
 
     This view class returns a collection data resource.
     """
-
-    # NOTE: the logic of this view is modelled on `entityresource`, but currently
-    #       the only resource recognized is the JSON-LD context.
-
-    # @TODO: define common superclass with `entityresource` to share common logic.
 
     def __init__(self):
         super(CollectionResourceAccess, self).__init__()
@@ -71,13 +61,10 @@ class CollectionResourceAccess(AnnalistGenericView):
                     message=message.COLLECTION_NOT_EXISTS%{'id': coll_id}
                     )
                 )
-
         # Locate resource
         resource_info = find_entity_resource(
             viewinfo.site, resource_ref, fixed_resources=collection_fixed_json_resources
             )
-        #@@TODO: remove me
-        # resource_info = find_fixed_resource(collection_fixed_json_resources, resource_ref)
         log.debug("CollectionResourceAccess.get: resource_info %r"%(resource_info,))
         if resource_info is None:
             return self.error(
@@ -92,15 +79,6 @@ class CollectionResourceAccess(AnnalistGenericView):
         resource_file, resource_type = get_resource_file(
             coll, resource_info, coll_baseurl
             )
-        #@@TODO: remove me
-        # if "resource_access" in resource_info:
-        #     # Use indicated resource access renderer
-        #     jsondata      = coll.get_values()
-        #     resource_file = resource_info["resource_access"](coll_baseurl, jsondata, resource_info)
-        # else:
-        #     # Return resource data direct from storage
-        #     resource_file = entity_resource_file(coll, resource_info)
-        #@@
         if resource_file is None:
             return self.error(
                 dict(self.error404values(),
@@ -110,7 +88,6 @@ class CollectionResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
-
         # Return resource
         try:
             response = self.resource_response(resource_file, resource_info["resource_type"])
@@ -137,17 +114,5 @@ class CollectionResourceAccess(AnnalistGenericView):
         viewinfo.get_request_type_info(entitytypeinfo.COLL_ID)
         viewinfo.check_authorization(action)
         return viewinfo
-
-    #@@TODO: remove me
-    def __unused_resource_response(self, resource_file, resource_type):
-        """
-        Construct response containing body of referenced resource,
-        with supplied resoure_type as its content_type
-        """
-        # @@TODO: assumes response can reasonably be held in memory;
-        #         consider 'StreamingHttpResponse'?
-        response = HttpResponse(content_type=resource_type)
-        response.write(resource_file.read())
-        return response
 
 # End.

@@ -80,7 +80,7 @@ class FieldRenderer(object):
         """
         Return a diagnostic renderer for a specified mode.
 
-        This is similar to the standard renderer, except thaty is allows for additional
+        This is similar to the standard renderer, except that it allows for additional
         diagnostic information to be included to assist in debugging renderer call flows.
         """
         class _renderer(object):
