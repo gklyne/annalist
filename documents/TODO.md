@@ -93,7 +93,12 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
     - 
-    - [ ] Review test coverage (93% overall, but some key modules 40-80%)
+    - [x] Review test coverage (93% overall, but some key modules 40-80%)
+    - [ ] Create branch for Python 3 testing
+    - [ ] Install futurize
+    - [ ] Run futurize; review changes
+    - [ ] Test under Python 2
+    - [ ] Test under Python 3   
 
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
@@ -299,6 +304,7 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Record timestamp in data records (created,updated)
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
 definitions.
