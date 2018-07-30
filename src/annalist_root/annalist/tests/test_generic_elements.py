@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for generic page elements not covered by other tests
 """
@@ -17,14 +20,19 @@ from django.test.client         import Client
 
 from annalist                   import layout
 from annalist.models.site       import Site
-from annalist.models.collection             import Collection
-
+from annalist.models.collection import Collection
 from annalist.views.serverlog   import ServerLogView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     collection_create_values,
     create_test_user, create_user_permissions, 
     )

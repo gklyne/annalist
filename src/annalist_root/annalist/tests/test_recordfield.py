@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for RecordField metadata editing view
 
@@ -39,9 +42,11 @@ from annalist.views.fields.render_placement import (
     get_placement_options, get_placement_option_value_dict
     )
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
     init_annalist_test_site,
     init_annalist_test_coll,
     install_annalist_named_coll,
@@ -49,7 +54,7 @@ from init_tests             import (
     init_annalist_named_test_coll,
     resetSitedata
     )
-from entity_testfielddata   import (
+from .entity_testfielddata import (
     recordfield_dir,
     recordfield_coll_url, recordfield_url,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
@@ -57,7 +62,7 @@ from entity_testfielddata   import (
     field_view_context_data,
     field_view_form_data
     )
-from entity_testutils       import (
+from .entity_testutils import (
     make_message, make_quoted_message,
     collection_entity_view_url,
     collection_create_values,
@@ -69,16 +74,16 @@ from entity_testutils       import (
     check_context_field, check_context_field_value,
     check_field_record,
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testtypedata    import recordtype_url
-from entity_testviewdata    import recordview_url
-from entity_testlistdata    import recordlist_url
-from entity_testgroupdata   import recordgroup_url
-from entity_testsitedata    import (
+from .entity_testtypedata  import recordtype_url
+from .entity_testviewdata  import recordview_url
+from .entity_testlistdata  import recordlist_url
+from .entity_testgroupdata import recordgroup_url
+from .entity_testsitedata  import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,

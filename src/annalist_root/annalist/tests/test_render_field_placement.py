@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for field placement (size/position) rendering
 """
@@ -15,11 +18,13 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.views.fields.render_placement     import (
-    get_field_placement_renderer, option_body, view_body
+from annalist.views.fields.render_placement import (
+    Placement, LayoutOptions, get_placement_classes,
+    get_field_placement_renderer, 
+    option_body, view_body
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class FieldPlacementRenderingTest(FieldRendererTestSupport):
 
@@ -28,6 +33,111 @@ class FieldPlacementRenderingTest(FieldRendererTestSupport):
         return
 
     def tearDown(self):
+        return
+
+    def test_get_placement_classes(self):
+        """
+        This was a DocTest, but Py3 compatibility....
+        """
+        self.assertEqual(
+            get_placement_classes("medium:0,12"),
+            Placement(
+                width=LayoutOptions(s=12, m=12, l=12),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-12 columns',
+                label='small-12 medium-2 columns',
+                value='small-12 medium-10 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("large:0,12"),
+            Placement(
+                width=LayoutOptions(s=12, m=12, l=12),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-12 columns',
+                label='small-12 medium-2 columns',
+                value='small-12 medium-10 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,12;medium:0,4"),
+            Placement(
+                width=LayoutOptions(s=12, m=4, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-12 medium-4 columns',
+                label='small-12 medium-6 columns',
+                value='small-12 medium-6 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,12; medium:0,4"),
+            Placement(
+                width=LayoutOptions(s=12, m=4, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-12 medium-4 columns',
+                label='small-12 medium-6 columns',
+                value='small-12 medium-6 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,12;medium:0,6;large:0,4"),
+            Placement(
+                width=LayoutOptions(s=12, m=6, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-12 medium-6 large-4 columns',
+                label='small-12 medium-4 large-6 columns',
+                value='small-12 medium-8 large-6 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,6;medium:0,4"),
+            Placement(
+                width=LayoutOptions(s=6, m=4, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-6 medium-4 columns',
+                label='small-12 medium-6 columns',
+                value='small-12 medium-6 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,6;medium:0,4,right"),
+            Placement(
+                width=LayoutOptions(s=6, m=4, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-6 medium-4 columns right',
+                label='small-12 medium-6 columns',
+                value='small-12 medium-6 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,6"),
+            Placement(
+                width=LayoutOptions(s=6, m=6, l=6),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=True, m=True, l=True),
+                field='small-6 columns',
+                label='small-12 medium-4 columns',
+                value='small-12 medium-8 columns'
+                )
+            )
+        self.assertEqual(
+            get_placement_classes("small:0,12,hide;medium:0,4"),
+            Placement(
+                width=LayoutOptions(s=12, m=4, l=4),
+                offset=LayoutOptions(s=0, m=0, l=0),
+                display=LayoutOptions(s=False, m=True, l=True),
+                field='small-12 medium-4 columns show-for-medium-up',
+                label='small-12 medium-6 columns',
+                value='small-12 medium-6 columns'
+                )
+            )
         return
 
     def test_RenderFieldPlacementValue(self):

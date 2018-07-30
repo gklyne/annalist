@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module contains utilities for use in conjunction with field renderers.
 """
@@ -125,37 +128,35 @@ class bound_field(object):
     >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
     >>> field_foo_desc = MockFieldDescription(coll, {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"})
     >>> field_foo = bound_field(field_foo_desc, entity)
-    >>> field_foo._key
-    'foo'
-    >>> field_foo.description['field_type']
-    'foo_type'
-    >>> field_foo.field_value
-    'foo_val'
+    >>> field_foo._key == 'foo'
+    True
+    >>> field_foo.description['field_type'] == 'foo_type'
+    True
+    >>> field_foo.field_value == 'foo_val'
+    True
     >>> field_bar_desc = MockFieldDescription(coll, {"field_id": "bar_id", "field_property_uri": "bar", "field_type": "bar_type"})
     >>> field_bar = bound_field(field_bar_desc, entity)
-    >>> field_bar.description['field_type']
-    'bar_type'
-    >>> field_bar.field_value
-    'bar_val'
+    >>> field_bar.description['field_type'] == 'bar_type'
+    True
+    >>> field_bar.field_value == 'bar_val'
+    True
     >>> field_def_desc = MockFieldDescription(coll, {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"})
     >>> entityvals = entity.get_values()
     >>> entityvals['entity_id']      = entity.get_id()
     >>> entityvals['entity_type_id'] = entity.get_type_id()
     >>> entityvals['entity_link']    = entity.get_url()
     >>> field_def = bound_field(field_def_desc, entity)
-    >>> field_def.description['field_type']
-    'def_type'
+    >>> field_def.description['field_type'] == 'def_type'
+    True
     >>> field_def.field_value == ""
     True
     >>> field_def = bound_field(field_def_desc, entity, context_extra_values={"def": "default"})
-    >>> field_def.description['field_type']
-    'def_type'
-    >>> field_def.field_value
-    'default'
-    >>> field_def.entity_link
-    'entityuri/'
-    >>> field_def.htmlrepr()
-    "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
+    >>> field_def.description['field_type'] == 'def_type'
+    True
+    >>> field_def.field_value == 'default'
+    True
+    >>> field_def.entity_link == 'entityuri/'
+    True
     """
 
     __slots__ = ("_field_description", "_entityvals", "_targetvals", "_key", "_extras")

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module contains (and isolates) logic used to find entities based on entity type,
 list selection criteria and search terms.

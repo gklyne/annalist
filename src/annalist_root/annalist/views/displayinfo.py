@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module defines a class that is used to gather information about an entity
 list or view display that is needed to process various kinds of HTTP request.
@@ -118,24 +121,24 @@ def apply_substitutions(context, text_in):
     Any other occurrence of '$' (i.e. not part of any pattern above) is untouched.
 
     >>> context = { 'aa': '-aa-', 'bb': '-bb-', 'c:c': '-cc-'}
-    >>> apply_substitutions(context, "foo bar")
-    'foo bar'
-    >>> apply_substitutions(context, "foo $aa bar")
-    'foo -aa- bar'
-    >>> apply_substitutions(context, "foo $bb:bar")
-    'foo -bb-bar'
-    >>> apply_substitutions(context, "foo $[c:c] bar")
-    'foo -cc- bar'
-    >>> apply_substitutions(context, "foo $$ bar")
-    'foo $ bar'
-    >>> apply_substitutions(context, "foo $dd bar")
-    'foo $dd bar'
-    >>> apply_substitutions(context, "foo $ee bar")
-    'foo $ee bar'
-    >>> apply_substitutions(context, "foo $[f:f] bar")
-    'foo $[f:f] bar'
-    >>> apply_substitutions(context, "foo $aa $bb: $[c:c] $[f:f] bar")
-    'foo -aa- -bb- -cc- $[f:f] bar'
+    >>> apply_substitutions(context, "foo bar") == 'foo bar'
+    True
+    >>> apply_substitutions(context, "foo $aa bar") == 'foo -aa- bar'
+    True
+    >>> apply_substitutions(context, "foo $bb:bar") == 'foo -bb-bar'
+    True
+    >>> apply_substitutions(context, "foo $[c:c] bar") == 'foo -cc- bar'
+    True
+    >>> apply_substitutions(context, "foo $$ bar") == 'foo $ bar'
+    True
+    >>> apply_substitutions(context, "foo $dd bar") == 'foo $dd bar'
+    True
+    >>> apply_substitutions(context, "foo $ee bar") == 'foo $ee bar'
+    True
+    >>> apply_substitutions(context, "foo $[f:f] bar") == 'foo $[f:f] bar'
+    True
+    >>> apply_substitutions(context, "foo $aa $bb: $[c:c] $[f:f] bar") == 'foo -aa- -bb- -cc- $[f:f] bar'
+    True
     """
     def sub_fn(matchobj):
         matched = matchobj.group(1) or matchobj.group(2)

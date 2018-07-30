@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist site-related facilities
 """
@@ -31,6 +34,7 @@ from annalist                       import message
 from annalist.util                  import (
     valid_id, extract_entity_id, replacetree, updatetree
     )
+from annalist.py3porting            import isoformat_space, encode_str
 
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.entityroot     import EntityRoot
@@ -234,7 +238,7 @@ class Site(EntityRoot):
         context = self.site_data_collection().get_coll_jsonld_context()
         # Assemble and write out context description
         datetime_now = datetime.datetime.today().replace(microsecond=0)
-        datetime_str = datetime_now.isoformat(' ')
+        datetime_str = isoformat_space(datetime_now)
         with self._metaobj(
             layout.SITEDATA_CONTEXT_PATH, layout.SITE_CONTEXT_FILE, "wt"
             ) as context_io:
@@ -269,7 +273,7 @@ class Site(EntityRoot):
             description = "Annalist site metadata and site-wide values."
         annal_comment = (
             "Initialized by annalist.models.site.create_site_metadata at "+
-            datetime_now.isoformat(' ')
+            isoformat_space(datetime_now)
             )
         site = Site(site_base_uri, site_base_dir)
         sitedata_values = (
@@ -384,7 +388,7 @@ class Site(EntityRoot):
             """\n""")%
                 { 'site_base_dir':              site._entitydir
                 , 'site_base_uri':              site._entityurl
-                , 'datetime':                   datetime_now.isoformat(' ')
+                , 'datetime':                   isoformat_space(datetime_now)
                 , 'version':                    annalist.__version__
                 , 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
                 , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
@@ -419,7 +423,7 @@ class Site(EntityRoot):
             description = "Annalist data collection %s"%coll_id
         annal_comment = (
             "Initialized by annalist.models.site.create_empty_coll_data at "+
-            datetime_now.isoformat(' ')
+            isoformat_space(datetime_now)
             )
         coll_values = (
             { RDFS.CURIE.label:             label

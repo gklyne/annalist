@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Support methods for field value renderer tests
 """
@@ -38,27 +41,15 @@ class TestBoundField(object):
             self._field['description']['field_ref_type'] = field_ref_type
         if target_value is not None:
             self._field['target_value'] = target_value
-        #@@@@
         if field_link is not None:
             self._field['field_value_link']               = field_link
-        #     self._field['field_value_link_continuation']  = field_link+"?continuation_url="+continuation_url
         if target_link is not None:
             self._field['target_value_link']              = target_link
-        #     self._field['target_value_link_continuation'] = target_link+"?continuation_url="+continuation_url
-        #@@@@
         if options is not None:
             self._field['options'] = options
         return
 
     def __getattr__(self, name):
-        #@@@@
-        # if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
-        #     return self.value.get(name, "")
-        # elif name == "entity_value":
-        #     return self.value
-        # elif name == "field_value_key":
-        #     return self._key
-        #@@@@
         if name == "_field":
             return self._field
         elif name in ["description"]:
@@ -197,20 +188,6 @@ class FieldRendererTestSupport(AnnalistTestCase):
             , 'COLL':                 TestBaseUri+"/c/"+coll_id+"/"
             , 'BASE':                 TestBasePath+"/c/"+coll_id+"/d/"
             })
-        #@@@@
-        # if target_value is not None:
-        #     cd['field']['target_value'] = target_value
-        # if field_link is not None:
-        #     cd['field']['field_value_link']              = field_link
-        #     cd['field']['field_value_link_continuation'] = field_link+"?continuation_url=test_cont"
-        # if target_link is not None:
-        #     cd['field']['target_value_link']              = target_link
-        #     cd['field']['target_value_link_continuation'] = target_link+"?continuation_url=test_cont"
-        # if field_ref_type is not None:
-        #     cd['field']['field_ref_type'] = field_ref_type
-        # if options is not None:
-        #     cd['field']['options'] = options
-        #@@@@
         return Context(cd)
 
     def _check_value_renderer_results(self,
@@ -219,16 +196,6 @@ class FieldRendererTestSupport(AnnalistTestCase):
         expect_rendered_edit="...",
         collapse_whitespace=False
         ):
-        #@@@@
-        #@@ - method unused, deprecated.  When stabilized, remove this code.
-        # rendered_label = fieldrender.label().render(context)
-        # self.assertRenderMatch(
-        #     rendered_label, 
-        #     '''<div class="view-label small-12 columns">  <span>test label</span></div>''',
-        #     collapse_whitespace
-        #     )
-        #@@
-        #@@@@
         rendered_view = fieldrender.view().render(context)
         self.assertRenderMatch(
             rendered_view, 

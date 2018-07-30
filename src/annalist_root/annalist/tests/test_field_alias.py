@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for views that use field aliased.
 """
@@ -27,15 +30,17 @@ from annalist.models.collection     import Collection
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
     init_annalist_test_site,
     init_annalist_test_coll,
     init_annalist_named_test_coll,
     resetSitedata
     )
-from entity_testutils       import (
+from .entity_testutils import (
     collection_create_values,
     create_test_user, create_user_permissions,
     context_view_field,
@@ -43,7 +48,7 @@ from entity_testutils       import (
     context_list_head_fields, context_list_item_fields,
     context_list_item_field, context_list_item_field_value
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     entitydata_list_type_url,
     )

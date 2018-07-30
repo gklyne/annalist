@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for EntityData default list view
 """
@@ -32,10 +35,16 @@ from annalist.models.entitydata     import EntityData
 from annalist.views.uri_builder             import uri_params, uri_with_params, uri_quote_param
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils       import (
     make_message, make_quoted_message,
     site_dir, collection_dir, 
     collection_edit_url,
@@ -49,13 +58,15 @@ from entity_testutils       import (
     context_list_head_fields,
     context_list_item_fields, context_list_item_field_value
     )
-from entity_testfielddesc   import get_field_description, get_bound_field
-from entity_testtypedata    import (
+from .entity_testfielddesc import (
+    get_field_description, get_bound_field
+    )
+from .entity_testtypedata import (
     recordtype_dir, 
     recordtype_url,
     recordtype_create_values
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
@@ -63,7 +74,7 @@ from entity_testentitydata  import (
     entitydata_delete_confirm_form_data,
     entitylist_form_data
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -72,7 +83,7 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-from entity_testlistdata    import recordlist_url
+from .entity_testlistdata import recordlist_url
 
 
 #   -----------------------------------------------------------------------------

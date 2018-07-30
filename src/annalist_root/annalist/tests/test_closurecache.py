@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for closure cache class.
 """
@@ -13,34 +16,15 @@ import logging
 log = logging.getLogger(__name__)
 
 from django.conf    import settings
-from tests          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-
-from AnnalistTestCase               import AnnalistTestCase
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.closurecache   import ClosureCache, Closure_Error
 
-# Test assertion summary from http://docs.python.org/2/library/unittest.html#test-cases
-#
-# Method                    Checks that             New in
-# assertEqual(a, b)         a == b   
-# assertNotEqual(a, b)      a != b   
-# assertTrue(x)             bool(x) is True  
-# assertFalse(x)            bool(x) is False     
-# assertIs(a, b)            a is b                  2.7
-# assertIsNot(a, b)         a is not b              2.7
-# assertIsNone(x)           x is None               2.7
-# assertIsNotNone(x)        x is not None           2.7
-# assertIn(a, b)            a in b                  2.7
-# assertNotIn(a, b)         a not in b              2.7
-# assertIsInstance(a, b)    isinstance(a, b)        2.7
-# assertNotIsInstance(a, b) not isinstance(a, b)    2.7
-#
-# From AnnalistTestCase:
-# self.assertMatch(string, pattern, msg=None)
-# self.assertDictionaryMatch(actual_dict, expect_dict, prefix="")
-
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
 
 #   -----------------------------------------------------------------------------
 #

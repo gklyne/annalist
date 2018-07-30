@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for text value displayed as a hyperlink.
 
@@ -23,14 +26,18 @@ log = logging.getLogger(__name__)
 from annalist.models.site       import Site
 from annalist.models.collection import Collection
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from field_rendering_support    import FieldRendererTestSupport
-
 from annalist.views.fields.render_uri_link import (
     get_uri_link_renderer, 
     URILinkValueMapper
     )
+
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .field_rendering_support import FieldRendererTestSupport
 
 class UriLinkRenderingTest(FieldRendererTestSupport):
 

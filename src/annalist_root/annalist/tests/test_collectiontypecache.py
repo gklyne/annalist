@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for collection type cache class.
 """
@@ -12,24 +15,24 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from AnnalistTestCase                       import AnnalistTestCase
-from tests                                  import (
+from annalist.models.site                   import Site
+from annalist.models.collection             import Collection
+from annalist.models.recordtype             import RecordType
+from annalist.models.collectiontypecache    import CollectionTypeCache
+
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from init_tests                             import (
+from .init_tests import (
     init_annalist_test_site, init_annalist_test_coll, resetSitedata
     )
-from entity_testtypedata                    import (
+from .entity_testtypedata import (
     recordtype_coll_url, recordtype_url, recordtype_edit_url,
     recordtype_value_keys, recordtype_load_keys, 
     recordtype_create_values, recordtype_values, recordtype_read_values,
     recordtype_delete_confirm_form_data
     )
-
-from annalist.models.site                   import Site
-from annalist.models.collection             import Collection
-from annalist.models.recordtype             import RecordType
-from annalist.models.collectiontypecache    import CollectionTypeCache
 
 #   -----------------------------------------------------------------------------
 #

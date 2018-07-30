@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist data record for a member of an enumerated type
 """
@@ -19,7 +22,9 @@ from django.conf import settings
 from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
+from annalist.py3porting        import isoformat_space, encode_str
 from annalist                   import util
+
 from annalist.models.entity     import Entity
 from annalist.models.entitydata import EntityData
 
@@ -54,7 +59,7 @@ def RecordEnumFactory(name, type_id):
         # print("@@ RecordEnumInit parentid %s, entityid %s"%(parent.get_id(), entity_id))
         super(RecordEnumBase, self).__init__(parent, entity_id)
         return
-    return type(name, (RecordEnumBase,), 
+    return type(encode_str(name), (RecordEnumBase,), 
         { '_entitytypeid':  type_id
         , '_entityroot':    layout.COLL_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
         , '__init__': RecordEnumInit}

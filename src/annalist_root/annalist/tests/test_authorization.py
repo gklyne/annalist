@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for authorization functions
 """
@@ -35,24 +38,27 @@ from annalist.models.annalistuser   import (
     unknown_user_id, unknown_user_uri
     )
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase              import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     create_user_permissions,
     collection_new_form_data, collection_remove_form_data,
     context_list_entities,
     context_list_item_fields, context_list_item_field_value
     )
-from entity_testentitydata  import (
-    # recorddata_dir,  entitydata_dir,
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
     default_view_form_data, entitydata_delete_form_data,
     entitydata_delete_confirm_form_data
     )
-from entity_testuserdata    import (
+from .entity_testuserdata import (
     annalistuser_dir,
     annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
@@ -61,10 +67,10 @@ from entity_testuserdata    import (
     annalistuser_delete_form_data,
     annalistuser_delete_confirm_form_data
     )
-from entity_testcolldata    import (
+from .entity_testcolldata import (
     coll_view_form_data
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_create_values, 
     type_view_form_data,
     recordtype_delete_form_data,

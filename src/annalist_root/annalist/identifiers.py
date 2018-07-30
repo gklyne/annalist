@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Defines Annalist built-in identifier values (URIs)
 """
@@ -32,15 +35,15 @@ class Namespace(object):
 
     >>> ns = Namespace("test", "http://example.com/test/")
     >>> cf = ns.mk_curie("foo")
-    >>> cf
-    'test:foo'
+    >>> cf == 'test:foo'
+    True
     >>> uf = ns.mk_uri("foo")
-    >>> uf
-    'http://example.com/test/foo'
-    >>> ns.to_uri(cf)
-    'http://example.com/test/foo'
-    >>> ns.to_uri("notest:bar")
-    'notest:bar'
+    >>> uf == 'http://example.com/test/foo'
+    True
+    >>> ns.to_uri(cf) == 'http://example.com/test/foo'
+    True
+    >>> ns.to_uri("notest:bar") == 'notest:bar'
+    True
     """
 
     def __init__(self, prefix, baseUri):

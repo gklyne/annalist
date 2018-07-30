@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for boolean value rendering as checkbox
 """
@@ -20,7 +23,7 @@ from annalist.views.fields.render_bool_checkbox import (
     BoolCheckboxValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
 
@@ -33,7 +36,7 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
     def test_RenderBoolCheckboxValue(self):
 
         def expect_render(val):
-            if isinstance(val, str):
+            if isinstance(val, (str,unicode)):
                 valtext = val
                 valbool = val.lower() in ["true", "yes"]
             else:
@@ -64,7 +67,7 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
         renderer = get_bool_checkbox_renderer()
 
         for render_context, expect_render in test_value_context_renders:
-            # print repr(render_context['field']['field_value'])
+            # print(repr(render_context['field']['field_value']))
             self._check_value_renderer_results(
                 renderer,
                 context=render_context,

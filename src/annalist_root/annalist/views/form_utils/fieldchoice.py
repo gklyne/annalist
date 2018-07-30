@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module defines a class used to represent a choice for an 
 enumerated-value field.
@@ -11,9 +14,11 @@ import re
 import logging
 log = logging.getLogger(__name__)
 
-from collections import OrderedDict, namedtuple
+from collections            import OrderedDict, namedtuple
 
-from django.utils.html import format_html, mark_safe, escape
+from django.utils.html      import format_html, mark_safe, escape
+
+from annalist.py3porting    import isoformat_space, encode_str
 
 _FieldChoice_tuple = namedtuple("FieldChoice", ("id", "value", "label", "link", "choice_value"))
 
@@ -22,60 +27,56 @@ class FieldChoice(_FieldChoice_tuple):
     Class representing a choice for an enumerated field.
 
     >>> c1 = FieldChoice('id1', 'value1', 'label1', 'link1', choice_value=True)
-    >>> c1
-    FieldChoice(id='id1', value='value1', label='label1', link='link1', choice_value=True)
-    >>> str(c1)
-    "FieldChoice(id='id1', value='value1', label='label1', link='link1', choice_value=True)"
-    >>> c1.id
-    'id1'
-    >>> c1.value
-    'value1'
-    >>> c1.label
-    'label1'
-    >>> c1.link
-    'link1'
-    >>> c1.choice_html()
-    u'label1&nbsp;&nbsp;&nbsp;(value1)'
+    >>> c1 == FieldChoice(id='id1', value='value1', label='label1', link='link1', choice_value=True)
+    True
+    >>> c1.id == 'id1'
+    True
+    >>> c1.value == 'value1'
+    True
+    >>> c1.label == 'label1'
+    True
+    >>> c1.link == 'link1'
+    True
+    >>> c1.choice_html() == u'label1&nbsp;&nbsp;&nbsp;(value1)'
+    True
     >>> c2 = FieldChoice('id2', 'value2', 'label2', 'link2', choice_value=False)
-    >>> c2
-    FieldChoice(id='id2', value='value2', label='label2', link='link2', choice_value=False)
-    >>> str(c2)
-    "FieldChoice(id='id2', value='value2', label='label2', link='link2', choice_value=False)"
-    >>> c2.id
-    'id2'
-    >>> c2.value
-    'value2'
-    >>> c2.label
-    'label2'
-    >>> c2.link
-    'link2'
-    >>> c2.choice()
-    u'label2'
+    >>> c2 == FieldChoice(id='id2', value='value2', label='label2', link='link2', choice_value=False)
+    True
+    >>> c2.id == 'id2'
+    True
+    >>> c2.value == 'value2'
+    True
+    >>> c2.label == 'label2'
+    True
+    >>> c2.link == 'link2'
+    True
+    >>> c2.choice() == u'label2'
+    True
     >>> c3 = FieldChoice(id='id3', value='value3', link='link3')
-    >>> c3
-    FieldChoice(id='id3', value='value3', label='value3', link='link3', choice_value=False)
-    >>> c3.id
-    'id3'
-    >>> c3.value
-    'value3'
-    >>> c3.label
-    'value3'
-    >>> c3.link
-    'link3'
+    >>> c3 == FieldChoice(id='id3', value='value3', label='value3', link='link3', choice_value=False)
+    True
+    >>> c3.id == 'id3'
+    True
+    >>> c3.value == 'value3'
+    True
+    >>> c3.label == 'value3'
+    True
+    >>> c3.link == 'link3'
+    True
     >>> c4 = FieldChoice('id4', link='link4')
-    >>> c4
-    FieldChoice(id='id4', value='id4', label='id4', link='link4', choice_value=False)
-    >>> c4.id
-    'id4'
-    >>> c4.value
-    'id4'
-    >>> c4.label
-    'id4'
-    >>> c4.link
-    'link4'
+    >>> c4 == FieldChoice(id='id4', value='id4', label='id4', link='link4', choice_value=False)
+    True
+    >>> c4.id == 'id4'
+    True
+    >>> c4.value == 'id4'
+    True
+    >>> c4.label == 'id4'
+    True
+    >>> c4.link == 'link4'
+    True
     >>> c5 = FieldChoice('')
-    >>> c5
-    FieldChoice(id='', value='', label='', link=None, choice_value=False)
+    >>> c5 == FieldChoice(id='', value='', label='', link=None, choice_value=False)
+    True
     """
 
     def __new__(_cls, id=None, value=None, label=None, link=None, choice_value=False):

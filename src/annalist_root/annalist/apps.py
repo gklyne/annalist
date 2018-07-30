@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist application hooks
 (cf. https://docs.djangoproject.com/en/dev/ref/applications/)

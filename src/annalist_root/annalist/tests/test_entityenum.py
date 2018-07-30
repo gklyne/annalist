@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for EntityEnum module
 """
@@ -23,11 +26,18 @@ from annalist.models.site           import Site
 from annalist.models.collection     import Collection
 from annalist.models.recordenum     import RecordEnumBase, RecordEnumFactory
 
-
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import collection_dir, site_view_url, site_title
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
+    collection_dir, site_view_url, site_title
+    )
 
 #   -----------------------------------------------------------------------------
 #

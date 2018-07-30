@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist tests
 """
@@ -20,7 +23,6 @@ import utils
 from annalist.layout import Layout
 
 import annalist.util
-
 import annalist.views.fields.find_renderers
 import annalist.views.fields.render_placement
 

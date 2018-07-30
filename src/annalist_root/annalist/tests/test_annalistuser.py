@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for AnnalistUser module and view
 """
@@ -35,10 +38,11 @@ from annalist.models.annalistuser           import AnnalistUser
 
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase                      import AnnalistTestCase
+from .init_tests import (
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -48,7 +52,7 @@ from entity_testutils       import (
     context_view_field,
     context_field
     )
-from entity_testuserdata    import (
+from .entity_testuserdata import (
     annalistuser_dir,
     annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
@@ -56,10 +60,13 @@ from entity_testuserdata    import (
     user_view_form_data,
     annalistuser_delete_confirm_form_data
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
+    )
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
 #   -----------------------------------------------------------------------------

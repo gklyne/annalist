@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module is used to cache information about relations for which transitive
 closure computations are frequently required (e.g. rdfs:superClassOf, 

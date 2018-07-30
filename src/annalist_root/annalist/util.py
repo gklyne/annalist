@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Various utilities for Annalist common functions
 """
@@ -61,14 +64,14 @@ def split_type_entity_id(eid, default_type_id=None):
     The supplied `eid` may be a bare "entity_id" then the supplied default 
     type_id is used.
 
-    >>> split_type_entity_id("type_id/entity_id")
-    ('type_id', 'entity_id')
-    >>> split_type_entity_id("t/e", "f")
-    ('t', 'e')
-    >>> split_type_entity_id("entity_id", "def_type_id")
-    ('def_type_id', 'entity_id')
-    >>> split_type_entity_id(None, "def_type_id")
-    ('def_type_id', None)
+    >>> split_type_entity_id("type_id/entity_id") == ('type_id', 'entity_id')
+    True
+    >>> split_type_entity_id("t/e", "f") == ('t', 'e')
+    True
+    >>> split_type_entity_id("entity_id", "def_type_id") == ('def_type_id', 'entity_id')
+    True
+    >>> split_type_entity_id(None, "def_type_id") == ('def_type_id', None)
+    True
     """
     if eid is not None:
         sub_ids = eid.split("/")
@@ -130,10 +133,10 @@ def make_entity_base_url(url):
     with urlparse.urljoin to obtain URLs for specific resources associated with the 
     entity.
 
-    >>> make_entity_base_url("/example/path/")
-    '/example/path/'
-    >>> make_entity_base_url("/example/path")
-    '/example/path/'
+    >>> make_entity_base_url("/example/path/") == '/example/path/'
+    True
+    >>> make_entity_base_url("/example/path") == '/example/path/'
+    True
     """
     return url if url.endswith("/") else url + "/"
 
@@ -155,12 +158,12 @@ def slug_from_name(filename):
     """
     Extracts a slug (id) value from a filename
 
-    >>> slug_from_path("bar.baz")
-    'bar'
-    >>> slug_from_path("bar")
-    'bar'
-    >>> slug_from_path(".baz")
-    '.baz'
+    >>> slug_from_path("bar.baz") == 'bar'
+    True
+    >>> slug_from_path("bar") == 'bar'
+    True
+    >>> slug_from_path(".baz") == '.baz'
+    True
     """
     slug = os.path.splitext(filename)[0]
     return slug
@@ -169,18 +172,18 @@ def slug_from_path(path):
     """
     Extracts a slug (id) value from a file path
 
-    >>> slug_from_path("/foo/bar.baz")
-    'bar'
-    >>> slug_from_path("/bar")
-    'bar'
-    >>> slug_from_path("bar")
-    'bar'
-    >>> slug_from_path("/example.org/foo/bar/.baz")
-    '.baz'
-    >>> slug_from_path("/foo/bar.baz")
-    'bar'
-    >>> slug_from_path("/example.org/foo/bar/")+"$"
-    '$'
+    >>> slug_from_path("/foo/bar.baz") == 'bar'
+    True
+    >>> slug_from_path("/bar") == 'bar'
+    True
+    >>> slug_from_path("bar") == 'bar'
+    True
+    >>> slug_from_path("/example.org/foo/bar/.baz") == '.baz'
+    True
+    >>> slug_from_path("/foo/bar.baz") == 'bar'
+    True
+    >>> slug_from_path("/example.org/foo/bar/")+"$" == '$'
+    True
     """
     return slug_from_name(os.path.basename(path))
 
@@ -188,26 +191,26 @@ def slug_from_uri(uri):
     """
     Extracts a slug (id) value from a URI
 
-    >>> slug_from_uri("http:/example.org/foo/bar")
-    'bar'
-    >>> slug_from_uri("/example.org/foo/bar")
-    'bar'
-    >>> slug_from_uri("/foo/bar")
-    'bar'
-    >>> slug_from_uri("/bar")
-    'bar'
-    >>> slug_from_uri("bar")
-    'bar'
-    >>> slug_from_uri("/example.org/foo/bar/")+"$"
-    '$'
-    >>> slug_from_uri("http:/example.org/foo/bar.baz")
-    'bar'
-    >>> slug_from_uri("http:/example.org/foo/bar;baz")
-    'bar;baz'
-    >>> slug_from_uri("http:/example.org/foo/bar?baz")
-    'bar'
-    >>> slug_from_uri("http:/example.org/foo/bar#baz")
-    'bar'
+    >>> slug_from_uri("http:/example.org/foo/bar") == 'bar'
+    True
+    >>> slug_from_uri("/example.org/foo/bar") == 'bar'
+    True
+    >>> slug_from_uri("/foo/bar") == 'bar'
+    True
+    >>> slug_from_uri("/bar") == 'bar'
+    True
+    >>> slug_from_uri("bar") == 'bar'
+    True
+    >>> slug_from_uri("/example.org/foo/bar/")+"$" == '$'
+    True
+    >>> slug_from_uri("http:/example.org/foo/bar.baz") == 'bar'
+    True
+    >>> slug_from_uri("http:/example.org/foo/bar;baz") == 'bar;baz'
+    True
+    >>> slug_from_uri("http:/example.org/foo/bar?baz") == 'bar'
+    True
+    >>> slug_from_uri("http:/example.org/foo/bar#baz") == 'bar'
+    True
     """
     return slug_from_path(urlparse.urlsplit(uri).path)
 
@@ -235,18 +238,18 @@ def entity_dir_path(base_dir, path, filename):
 
     Returns a pair containing the full directory and path names for the entity file.
 
-    >>> entity_dir_path("/base/dir/","sub","file.ext")
-    ('/base/dir/sub', '/base/dir/sub/file.ext')
-    >>> entity_dir_path("/base/dir/",["sub"],"file.ext")
-    ('/base/dir/sub', '/base/dir/sub/file.ext')
-    >>> entity_dir_path("/base/dir/",[],"file.ext")
-    ('/base/dir', '/base/dir/file.ext')
-    >>> entity_dir_path("/base/dir/",["sub1","sub2"],"file.ext")
-    ('/base/dir/sub1/sub2', '/base/dir/sub1/sub2/file.ext')
-    >>> entity_dir_path("/base/dir",["sub"],"file.ext")
-    ('/base/dir/sub', '/base/dir/sub/file.ext')
-    >>> entity_dir_path("/base/dir",[],"sub/file.ext")
-    ('/base/dir/sub', '/base/dir/sub/file.ext')
+    >>> entity_dir_path("/base/dir/","sub","file.ext") == ('/base/dir/sub', '/base/dir/sub/file.ext')
+    True
+    >>> entity_dir_path("/base/dir/",["sub"],"file.ext") == ('/base/dir/sub', '/base/dir/sub/file.ext')
+    True
+    >>> entity_dir_path("/base/dir/",[],"file.ext") == ('/base/dir', '/base/dir/file.ext')
+    True
+    >>> entity_dir_path("/base/dir/",["sub1","sub2"],"file.ext") == ('/base/dir/sub1/sub2', '/base/dir/sub1/sub2/file.ext')
+    True
+    >>> entity_dir_path("/base/dir",["sub"],"file.ext") == ('/base/dir/sub', '/base/dir/sub/file.ext')
+    True
+    >>> entity_dir_path("/base/dir",[],"sub/file.ext") == ('/base/dir/sub', '/base/dir/sub/file.ext')
+    True
     """
     # log.debug("util.entity_dir_path %s, %r, %s"%(base_dir, path, filename))
     if path:
@@ -275,8 +278,8 @@ def entity_path(base_dir, path, filename):
     all exist, otherwise None if any directories are missing.  No test is made for 
     existence of the filename.
 
-    >>> entity_path('.',[],"file.ext")
-    './file.ext'
+    >>> entity_path('.',[],"file.ext") == './file.ext'
+    True
     >>> entity_path('.',["nopath"],"file.ext") is None
     True
     """
@@ -290,14 +293,14 @@ def entity_url_host(baseuri, entityref):
     """
     Return host part (as appears in an HTTP host: header) from an entity URI.
 
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity")
-    'example.org'
-    >>> entity_url_host("http://example.org:80/basepath/", "/path/to/entity")
-    'example.org:80'
-    >>> entity_url_host("http://userinfo@example.org:80/basepath/", "/path/to/entity")
-    'example.org:80'
-    >>> entity_url_host("http://base.example.org:80/basepath/", "http://ref.example.org/path/to/entity")
-    'ref.example.org'
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity") == 'example.org'
+    True
+    >>> entity_url_host("http://example.org:80/basepath/", "/path/to/entity") == 'example.org:80'
+    True
+    >>> entity_url_host("http://userinfo@example.org:80/basepath/", "/path/to/entity") == 'example.org:80'
+    True
+    >>> entity_url_host("http://base.example.org:80/basepath/", "http://ref.example.org/path/to/entity") == 'ref.example.org'
+    True
     """
     uri = urlparse.urljoin(baseuri, entityref)
     p   = urlparse.urlparse(uri)
@@ -309,16 +312,16 @@ def entity_url_host(baseuri, entityref):
     """
     Return absolute path part from an entity URI, excluding query or fragment.
 
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity")
-    '/path/to/entity'
-    >>> entity_url_host("http://example.org/basepath/", "relpath/to/entity")
-    '/basepath/relpath/to/entity'
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity?query")
-    '/path/to/entity'
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity#frag")
-    '/path/to/entity'
-    >>> entity_url_host("/basepath/", "relpath/to/entity")
-    '/basepath/relpath/to/entity'
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity") == '/path/to/entity'
+    True
+    >>> entity_url_host("http://example.org/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
+    True
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity?query") == '/path/to/entity'
+    True
+    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity#frag") == '/path/to/entity'
+    True
+    >>> entity_url_host("/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
+    True
     """
 def entity_url_path(baseuri, entityref):
     uri = urlparse.urljoin(baseuri, entityref)
@@ -332,10 +335,10 @@ def make_resource_url(baseuri, entityref, resourceref):
 
     This function preserves any query parameters from the supplied entityref.
 
-    >>> make_resource_url("http://example.org/foo/", "/bar/stuff", "entity.ref")
-    'http://example.org/bar/entity.ref'
-    >>> make_resource_url("http://example.org/foo/", "/bar/stuff?query=val", "entity.ref")
-    'http://example.org/bar/entity.ref?query=val'
+    >>> make_resource_url("http://example.org/foo/", "/bar/stuff", "entity.ref") == 'http://example.org/bar/entity.ref'
+    True
+    >>> make_resource_url("http://example.org/foo/", "/bar/stuff?query=val", "entity.ref") == 'http://example.org/bar/entity.ref?query=val'
+    True
     """
     url          = urlparse.urljoin(baseuri, entityref)
     resource_url = urlparse.urljoin(url, make_resource_ref_query(entityref, resourceref))
@@ -364,8 +367,8 @@ def strip_comments(f):
 
     >>> f1 = StringIO.StringIO("// comment\\ndata\\n// another comment\\n\\n")
     >>> f2 = strip_comments(f1)
-    >>> f2.read()
-    '\\ndata\\n\\n\\n'
+    >>> f2.read() == '\\ndata\\n\\n\\n'
+    True
     """
     fnc = StringIO.StringIO()
     sof = fnc.tell()

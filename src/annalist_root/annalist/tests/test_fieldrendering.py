@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for field rendering functions
 """
@@ -31,10 +34,17 @@ from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
 from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_field_template
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from field_rendering_support    import FieldRendererTestSupport
-from entity_testutils       import (
+# from .AnnalistTestCase import AnnalistTestCase
+from .field_rendering_support import FieldRendererTestSupport
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     render_select_options, render_choice_options
     )
 

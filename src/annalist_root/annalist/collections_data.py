@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Installable collections data.  This is used by annalist-manager and by some test code.
 """

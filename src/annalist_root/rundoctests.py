@@ -1,6 +1,9 @@
 #! /usr/bin/env python -Wall
 
-# Coped from http://dodrum.blogspot.co.uk/2011/01/running-doctests-in-django-project.html
+# Copied from http://dodrum.blogspot.co.uk/2011/01/running-doctests-in-django-project.html
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 """
 Run doctests from a given set of modules in django environment.

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for boolean value rendering as checkbox
 """
@@ -21,8 +24,10 @@ from annalist.views.fields.render_text_markdown import (
     TextMarkdownValueMapper
     )
 
-from annalist.tests.tests                       import TestHost, TestHostUri, TestBasePath, TestBaseUri
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .field_rendering_support import FieldRendererTestSupport
 
 class TextMarkdownRenderingTest(FieldRendererTestSupport):
 

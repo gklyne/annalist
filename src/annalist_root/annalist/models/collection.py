@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist collection
 
@@ -36,6 +39,7 @@ from annalist                               import message
 from annalist.exceptions                    import Annalist_Error
 from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist.util                          import valid_id, extract_entity_id, make_type_entity_id
+from annalist.py3porting                    import isoformat_space, encode_str
 
 from annalist.models.entity                 import Entity
 from annalist.models.annalistuser           import AnnalistUser
@@ -831,7 +835,7 @@ class Collection(Entity):
         # Build context data
         context      = self.get_coll_jsonld_context()
         datetime_now = datetime.datetime.today().replace(microsecond=0)
-        datetime_str = datetime_now.isoformat(' ')
+        datetime_str = isoformat_space(datetime_now)
         # Assemble and write out context description
         with self._metaobj(
                 layout.META_COLL_BASE_REF,

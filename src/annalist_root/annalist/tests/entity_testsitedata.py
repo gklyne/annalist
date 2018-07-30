@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module contains definitions intended to reflect the site-wide data
 used by all Annalist installations.
@@ -18,10 +21,9 @@ log = logging.getLogger(__name__)
 
 from annalist                               import layout
 from annalist.util                          import valid_id, split_type_entity_id
-
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from entity_testentitydata                  import entity_url
+from .entity_testentitydata import entity_url
 
 #   -----------------------------------------------------------------------------
 #
