@@ -181,7 +181,6 @@ class TurtleOutputTest(AnnalistTestCase):
         self.collbasedir = os.path.join(
             self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR
             )
-        #@@@@@ self.collbaseurl = TestHostUri + self.collbasedir + "/"
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -305,10 +304,10 @@ class TurtleOutputTest(AnnalistTestCase):
             )
         return
 
-    # Collection data content negotiation
+    # Site data content negotiation
     def test_get_site_data_turtle(self):
         """
-        Request collection data as Turtle
+        Request site data as Turtle
         """
         site_url = site_view_url()
         site_url = collection_view_url(layout.SITEDATA_ID)
@@ -324,6 +323,21 @@ class TurtleOutputTest(AnnalistTestCase):
             r = self.client.get(v)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_head_site_data_turtle(self):
+        """
+        Request HEAD for site data as Turtle
+        """
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       "")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         return
 
     def test_http_turtle_site(self):
@@ -912,6 +926,25 @@ class TurtleOutputTest(AnnalistTestCase):
             , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
+
+    def test_http_conneg_head_turtle_entity1(self):
+        """
+        HEAD request to entity with content negotiation for Turtle
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+        # Read entity data as Turtle
+        u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       "")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
         return
 
     def test_http_conneg_turtle_type_vocab(self):

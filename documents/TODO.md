@@ -89,6 +89,8 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - the above changes also affect login/login_views.
     - updates to settings are required to configure the templating framework.
 
+- [ ] Add test case for HEAD requests
+
 - [ ] Update to support Python 3
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
@@ -248,7 +250,7 @@ Data collection definitions:
 - [ ] VoID
 - [ ] DCAT
 - [ ] PROV
-- [ ] OA
+- [x] OA
 - [x] CRM
 
 

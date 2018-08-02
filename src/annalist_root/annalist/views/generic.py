@@ -582,19 +582,19 @@ class AnnalistGenericView(ContentNegotiationView):
 
     # Default view methods return 405 Forbidden
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def head(self, request):
+    def head(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def put(self, request):
+    def post(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def post(self, request):
-        return self.error(self.error405values())
-
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
 

@@ -290,6 +290,30 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
+    def test_head_new(self):
+        u = entitydata_edit_url("new", "testcoll", "testtype")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.content,       "")
+        return
+
+    def test_head_edit(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.content,       "")
+        return
+
+    def test_head_edit_not_exists(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertEqual(r.content,       "")
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form response tests
     #   -----------------------------------------------------------------------------
