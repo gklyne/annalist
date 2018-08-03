@@ -1,6 +1,13 @@
-#- Converted from:
-#- http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
-#- (excluding vnd. tree types)
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+"""
+File extension / MIME content-type mapping table.
+
+Converted from:
+http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+(excluding vnd. tree types)
+"""
 
 # NOTE:
 # For some reason, this file raises a syntax error when used with Python 2.6 on Linux.

@@ -1,1 +1,1 @@
-This directory is just a placeholder for the test code in "SetcwdContext.py"
+This directory is for test code

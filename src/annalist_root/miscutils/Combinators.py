@@ -1,5 +1,6 @@
-# $Id: Combinators.py 1047 2009-01-15 14:48:58Z graham $
-#
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Combinators for use with Python code, mostly based on Haskell library elements.
 

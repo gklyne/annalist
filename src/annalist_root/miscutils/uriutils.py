@@ -1,8 +1,9 @@
-# ro_uriutils.py
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 """
-Helper functions for manipulasting and testing URIs and URI-related file paths,
-and for accessing or testing data at a URI reference.
+Helper functions for manipulasting and testing URIs and URI-related 
+file paths, and for accessing or testing data at a URI reference.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

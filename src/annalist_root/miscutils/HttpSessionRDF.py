@@ -1,4 +1,9 @@
-# HTTP session class and supporting utilites.
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+"""
+HTTP session class for accessing RDF data, and supporting utilites.
+"""
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"

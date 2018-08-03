@@ -1,22 +1,27 @@
-# Support functions for running different test suites
-#
-# Test suites are selected using a command line argument:
-#
-# Test classes are:
-#   "unit"          These are stand-alone tests that all complete within a few 
-#                   seceonds and do not depend on resources external to the 
-#                   package being tested, (other than other libraries used).
-#   "component"     These are tests that take loonger to run, or depend on 
-#                   external resources, (files, etc.) but do not depend on 
-#                   external services.
-#   "integration"   These are tests that exercise interactions with seperate
-#                   services.
-#   "pending"       These are tests that have been designed and created, but 
-#                   for which the corresponding implementation has not been
-#                   completed.
-#   "all"           return suite of unit, component and integration tests
-#   name            a single named test to be run.
-#
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+"""
+Support functions for running different test suites.
+Includes code for generating junit-compatible XML (fort CI, etc.)
+
+Test suites are selected using a command line argument:
+
+Test classes are:
+  "unit"          These are stand-alone tests that all complete within a few 
+                  seceonds and do not depend on resources external to the 
+                  package being tested, (other than other libraries used).
+  "component"     These are tests that take loonger to run, or depend on 
+                  external resources, (files, etc.) but do not depend on 
+                  external services.
+  "integration"   These are tests that exercise interactions with seperate
+                  services.
+  "pending"       These are tests that have been designed and created, but 
+                  for which the corresponding implementation has not been
+                  completed.
+  "all"           return suite of unit, component and integration tests
+  name            a single named test to be run.
+"""
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, Graham Klyne, University of Oxford"
@@ -51,7 +56,7 @@ def getTestSuite(testclass, testdict, select="unit"):
     # Named test only
     if select[0:3] not in ["uni","com","all","int","pen"]:
         if not hasattr(testclass, select):
-            print "%s: no test named '%s'"%(testclass.__name__, select)
+            print("%s: no test named '%s'"%(testclass.__name__, select))
             return None
         suite.addTest(testclass(select))
         return suite
@@ -71,7 +76,7 @@ def getTestSuite(testclass, testdict, select="unit"):
     for c in testclasses:
         for t in testdict.get(c,[]):
             if not hasattr(testclass, t):
-                print "%s: in '%s' tests, no test named '%s'"%(testclass.__name__, c, t)
+                print("%s: in '%s' tests, no test named '%s'"%(testclass.__name__, c, t))
                 return None
             suite.addTest(testclass(t))
     return suite
@@ -91,7 +96,7 @@ def runTests(logname, getSuite, args):
     if sel == "xml":
         # Run with XML test output for use in Jenkins environment
         if not junitxml_present:
-            print "junitxml module not available for XML test output"
+            print("junitxml module not available for XML test output")
             raise ValueError, "junitxml module not available for XML test output"
         with open('xmlresults.xml', 'w') as report:
             result = junitxml.JUnitXmlResult(report)
