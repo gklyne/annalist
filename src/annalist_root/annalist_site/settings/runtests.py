@@ -1,12 +1,17 @@
-# Test settings
-#
-# A copy of initial data is created within the project
-# Service configuration is kept under personal home directory to protect secret keys, etc
-#
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+"""
+Test settings
+
+A copy of initial data is created within the project.
+Service configuration is kept under personal home directory to 
+protect secret keys, etc.
+"""
 
 import os
 
-from common import *
+from .common import *
 
 import logging
 log = logging.getLogger(__name__)

@@ -1,11 +1,16 @@
-# Development settings
-#
-# Data is kept within the project directory
-# (initialize as required, e.g. by copying initial testdata)
-# Service configuration is kept under personal home directory to protect secret keys, etc
-#
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
-from common import *
+"""
+Development settings
+
+Data is kept within the project directory
+(initialize as required, e.g. by copying initial testdata).
+Service configuration is kept under personal home directory to 
+protect secret keys, etc.
+"""
+
+from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (development configuration)"%(ANNALIST_VERSION)
 
