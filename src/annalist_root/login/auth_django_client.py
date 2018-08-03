@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module handles authentication by the local Django user database,
 using an interface roughly following the style of Google's oauth2client.
@@ -24,8 +27,11 @@ from django.contrib.auth.models import User
 
 from utils.uri_builder  import uri_with_params
 
-from login_utils        import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
-import login_message
+from .                  import login_message
+from .login_utils       import (
+    HttpResponseRedirectWithQuery, 
+    HttpResponseRedirectLogin
+    )
 
 class LocalUserPasswordView(generic.View):
     """

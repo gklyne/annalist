@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Login and authentication views and related authentication setup logic
 """
@@ -29,12 +32,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from utils.http_errors import error400values
+from utils.http_errors      import error400values
 
-from auth_django_client         import django_flow_from_user_id
-from auth_oidc_client           import oauth2_flow_from_provider_data
-from login_utils                import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
-import login_message
+from .                      import login_message
+from .auth_django_client    import django_flow_from_user_id
+from .auth_oidc_client      import oauth2_flow_from_provider_data
+from .login_utils           import (
+    HttpResponseRedirectWithQuery, 
+    HttpResponseRedirectLogin
+    )
 
 PROVIDER_FILES = None
 

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 OAuth2 / OpenID Connect authentication related view handler and
 supporting utilities.
@@ -32,8 +35,11 @@ from django.contrib.auth.models import User
 
 from utils.http_errors import error400values
 
-from login_utils    import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin, object_to_dict
-import login_message
+from .                  import login_message
+from .login_utils       import (
+    HttpResponseRedirectWithQuery, 
+    HttpResponseRedirectLogin
+    )
 
 SCOPE_DEFAULT = ["openid", "profile", "email"]
 
