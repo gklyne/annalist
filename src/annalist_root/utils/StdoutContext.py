@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 #!/usr/bin/python
 
 """
@@ -70,10 +73,10 @@ if __name__ == "__main__":
     import StringIO
     outstr = StringIO.StringIO()
     with SwitchStdout(outstr) as mystdout:
-        print "Hello, "
-        print >>mystdout, "world"
+        print("Hello, ")
+        print("world", file=mystdout)
     outtxt = outstr.getvalue()
-    print repr(outtxt)
+    print(repr(outtxt))
     assert  outtxt == "Hello, \nworld\n"
     outstr.close()
 

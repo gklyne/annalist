@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module contains functions to assist in the manipulation and construction of URIs.
 """

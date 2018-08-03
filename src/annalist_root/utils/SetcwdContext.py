@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 #!/usr/bin/python
 
 """
@@ -32,12 +35,12 @@ class ChangeCurrentDir:
         return False
 
 if __name__ == "__main__":
-    print os.getcwd()
+    print(os.getcwd())
     oldcwd = os.getcwd()
     with ChangeCurrentDir("test"):
-        print os.getcwd()
+        print(os.getcwd())
         assert os.getcwd() == oldcwd+"/test"
-    print os.getcwd()
+    print(os.getcwd())
     assert os.getcwd() == oldcwd
 
 # End.
