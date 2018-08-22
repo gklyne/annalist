@@ -2,7 +2,8 @@
 am_getargvalue.py - read command value if not already defined
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2013-2014, Graham Klyne"

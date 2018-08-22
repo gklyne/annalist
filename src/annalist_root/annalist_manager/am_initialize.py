@@ -2,7 +2,8 @@
 Initialize Annalist server data.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -19,8 +20,8 @@ log = logging.getLogger(__name__)
 from annalist.util                  import ensure_dir
 from utils.SuppressLoggingContext   import SuppressLogging
 
-import am_errors
-from am_settings                    import am_get_settings
+from .                              import am_errors
+from .am_settings                   import am_get_settings
 
 def am_initialize(annroot, userhome, userconfig, options):
     """

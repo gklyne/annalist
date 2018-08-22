@@ -3,7 +3,8 @@
 # am_main.py - command line tool to perform Annalist installation management
 #
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2013-2014, Graham Klyne"
@@ -27,26 +28,25 @@ sys.path.insert(0, annroot)
 
 import annalist
 
-# from annalist_manager       import am_errors
-import am_errors
-from am_runtests            import am_runtests
-from am_initialize          import am_initialize
-from am_createsite          import am_createsite, am_updatesite
-from am_runserver           import (
+from .                      import am_errors
+from .am_runtests           import am_runtests
+from .am_initialize         import am_initialize
+from .am_createsite         import am_createsite, am_updatesite
+from .am_runserver          import (
     am_runserver, am_serverlog, am_sitedirectory, 
     am_settingsmodule, am_settingsfile, am_settingsdir, 
     am_version
     )
-from am_createuser          import (
+from .am_createuser         import (
     am_createlocaluser, am_createadminuser, am_defaultadminuser, am_updateadminuser, 
     am_setuserpermissions, am_setdefaultpermissions, am_setpublicpermissions,
     am_deleteuser
     )
-from am_managecollections   import (
+from .am_managecollections  import (
     am_installcollection, am_copycollection,
     am_migrationreport, am_migratecollection, am_migrateallcollections
     )
-from am_help                import am_help, command_summary_help
+from .am_help               import am_help, command_summary_help
 
 VERSION = annalist.__version__
 

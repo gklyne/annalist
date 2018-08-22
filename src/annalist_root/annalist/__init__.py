@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist application
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__        = "Graham Klyne"
 __author_email__  = "GK@ACM.ORG"

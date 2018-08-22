@@ -1,8 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
-# print("@@@@ settings: "+__name__)
-
 """
 Django settings for annalist_site project.
 
@@ -12,6 +7,9 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"

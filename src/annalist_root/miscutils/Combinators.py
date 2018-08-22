@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Combinators for use with Python code, mostly based on Haskell library elements.
 
@@ -12,6 +9,9 @@ arguments to just one argument to yield a new function of (n-1) arguments.
 
 See: http://en.wikipedia.org/wiki/Currying
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2009-2013, Graham Klyne, University of Oxford"

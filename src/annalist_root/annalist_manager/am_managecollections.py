@@ -4,7 +4,8 @@ Collection management and migration helpers
 See also: documents/notes/schema-evolution-notes:
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
@@ -34,9 +35,11 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
 
-import am_errors
-from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
-from am_getargvalue                 import getarg, getargvalue
+from .                              import am_errors
+from .am_settings                   import (
+    am_get_settings, am_get_site_settings, am_get_site
+    )
+from .am_getargvalue                import getarg, getargvalue
 
 # Collection access helpers
 

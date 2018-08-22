@@ -2,7 +2,8 @@
 Display Annalist server help messages.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -15,7 +16,7 @@ import subprocess
 
 log = logging.getLogger(__name__)
 
-import am_errors
+from . import am_errors
 
 command_summary_help = ("\n"+
     "Commands:\n"+

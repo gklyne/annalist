@@ -1,11 +1,10 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 #!/usr/bin/python
-
 """
 Context managers for redirecting stdout and stderr to a supplied file or stream
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2014, University of Oxford"

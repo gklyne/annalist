@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist application hooks
 (cf. https://docs.djangoproject.com/en/dev/ref/applications/)
@@ -8,6 +5,9 @@ Annalist application hooks
 The main purpose of this is to log settings values to the log file, 
 after the log file configuration has been applied.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"

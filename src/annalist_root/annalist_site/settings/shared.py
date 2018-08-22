@@ -1,14 +1,12 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
-# print("@@@@ settings: "+__name__)
-
 """
 Shared deployment (separate server host) settings
 
 Data is kept under /var directory.
 Configuration is kept under /etc directory.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 from .common import *
 

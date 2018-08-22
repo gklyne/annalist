@@ -1,8 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
-# print("@@@@ settings: "+__name__)
-
 """
 Personal deployment (same host) settings
 
@@ -10,6 +5,9 @@ Data is kept in personal home directory area.
 Service configuration is kept under personal home directory.
 This is also useful for non-system deployment on a shared host.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 from .common import *
 

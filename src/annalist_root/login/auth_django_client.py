@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module handles authentication by the local Django user database,
 using an interface roughly following the style of Google's oauth2client.
@@ -8,6 +5,9 @@ using an interface roughly following the style of Google's oauth2client.
 In due course, we may be able to use the same flow API to handle
 diverse forms of third party authentication.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"

@@ -1,8 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
-# print("@@@@ settings: "+__name__)
-
 """
 Root settings module for Annalist.
 
@@ -17,6 +12,9 @@ See also:
   http://www.rdegges.com/the-perfect-django-settings-file/
 
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 import sys
 

@@ -1,12 +1,12 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Definitions to support porting to Python 3
 
 The intent is to abstract here those API calls used by Annalist that are 
 sensitive to string vs unicode parameters.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 def encode_str(ustr):
 	"""

@@ -1,8 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
-# print("@@@@ settings: "+__name__)
-
 """
 Development settings
 
@@ -11,6 +6,9 @@ Data is kept within the project directory
 Service configuration is kept under personal home directory to 
 protect secret keys, etc.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 from .common import *
 

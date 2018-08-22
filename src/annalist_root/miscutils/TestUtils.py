@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Support functions for running different test suites.
 Includes code for generating junit-compatible XML (fort CI, etc.)
@@ -22,6 +19,9 @@ Test classes are:
   "all"           return suite of unit, component and integration tests
   name            a single named test to be run.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, Graham Klyne, University of Oxford"

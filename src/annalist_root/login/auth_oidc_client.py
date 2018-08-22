@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 OAuth2 / OpenID Connect authentication related view handler and
 supporting utilities.
@@ -8,6 +5,9 @@ supporting utilities.
 NOTE: for Google provider, set up via 
 https://console.developers.google.com/apis/dashboard
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"

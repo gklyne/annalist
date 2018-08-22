@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist resource types module
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
