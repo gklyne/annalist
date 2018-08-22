@@ -2,6 +2,9 @@
 #
 # NOTE: when testing, use "pip install ... --upgrade"
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -60,6 +63,7 @@ setup(
           , 'annalist_root.annalist_site'
             , 'annalist_root.annalist_site.settings'
           , 'annalist_root.annalist_manager'
+          , 'annalist_root.annalist_manager.tests'
           , 'annalist_root.utils'
           , 'annalist_root.login'
           , 'annalist_root.miscutils'
@@ -75,6 +79,7 @@ setup(
             , 'sampledata/README.md'
             , 'sampledata/testinit/annalist_site/*.md'
             , 'sampledata/testinit/annalist_site/*.jpg'
+            , 'sampledata/testinit/annalist_site/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
             ]
@@ -190,7 +195,7 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
         ],
     zip_safe = False,
     install_requires =

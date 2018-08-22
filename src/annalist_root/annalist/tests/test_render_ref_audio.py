@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for URI reference displayed as an audio playback widget.
 
@@ -23,7 +26,7 @@ from annalist.views.fields.render_ref_audio import (
     RefAudioValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class RefAudioRenderingTest(FieldRendererTestSupport):
 

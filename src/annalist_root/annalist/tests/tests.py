@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist tests
 """
@@ -20,7 +23,6 @@ import utils
 from annalist.layout import Layout
 
 import annalist.util
-
 import annalist.views.fields.find_renderers
 import annalist.views.fields.render_placement
 
@@ -35,6 +37,7 @@ def load_tests(loader, tests, ignore):
     log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
+    #     https://docs.python.org/2/library/doctest.html#unittest-api
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)

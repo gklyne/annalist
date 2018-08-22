@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Entity editing tests for enumerated value fields
 """
@@ -34,23 +37,29 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     collection_create_values,
     continuation_url_param,
     create_test_user
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_create_values, 
     )
-from entity_testviewdata    import (
+from .entity_testviewdata import (
     recordview_url, 
     recordview_create_values, recordview_values,
     view_view_form_data, 
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     default_view_form_data,

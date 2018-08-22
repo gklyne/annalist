@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for rendering value as selection from list of options
 """
@@ -21,10 +24,7 @@ from annalist.views.fields.render_select        import (
     )
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
-# from entity_testutils       import (
-#     render_select_options, render_choice_options
-#     )
+from .field_rendering_support import FieldRendererTestSupport
 
 #   ---- support methods ----
 

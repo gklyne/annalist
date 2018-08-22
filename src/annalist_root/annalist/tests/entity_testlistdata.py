@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Utility functions to support entity data testing
 """
@@ -26,10 +29,19 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testentitydata      import entitydata_list_type_url
-from entity_testfielddesc       import get_field_description, get_bound_field
-from entity_testtypedata        import recordtype_url
-from entity_testsitedata        import (
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .entity_testutils import (
+    collection_dir, 
+    site_title, 
+    collection_entity_view_url,
+    context_field_row
+    )
+from .entity_testentitydata      import entitydata_list_type_url
+from .entity_testfielddesc       import get_field_description, get_bound_field
+from .entity_testtypedata        import recordtype_url
+from .entity_testsitedata import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
@@ -38,15 +50,6 @@ from entity_testsitedata        import (
     get_site_field_groups, get_site_field_groups_sorted, 
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
-    )
-from entity_testutils           import (
-    collection_dir, 
-    site_title, 
-    collection_entity_view_url,
-    context_field_row
-    )
-from tests import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
 #   -----------------------------------------------------------------------------

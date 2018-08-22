@@ -1,11 +1,16 @@
-# Development settings
-#
-# Data is kept within the project directory
-# (initialize as required, e.g. by copying initial testdata)
-# Service configuration is kept under personal home directory to protect secret keys, etc
-#
+"""
+Development settings
 
-from common import *
+Data is kept within the project directory
+(initialize as required, e.g. by copying initial testdata).
+Service configuration is kept under personal home directory to 
+protect secret keys, etc.
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (development configuration)"%(ANNALIST_VERSION)
 
@@ -13,6 +18,7 @@ SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/devel"
 BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
+DATABASES       = DEFAULT_DATABASES
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

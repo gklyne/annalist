@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for user profile page (also tests user identity access)
 """
@@ -25,10 +28,16 @@ from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist.models.site       import Site
 from annalist.views.profile     import ProfileView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import site_title
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import site_title
 
 class UserProfileTest(AnnalistTestCase):
     """

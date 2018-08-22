@@ -1,9 +1,10 @@
-# ro_uriutils.py
+"""
+Helper functions for manipulasting and testing URIs and URI-related 
+file paths, and for accessing or testing data at a URI reference.
+"""
 
-"""
-Helper functions for manipulasting and testing URIs and URI-related file paths,
-and for accessing or testing data at a URI reference.
-"""
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for boolean value rendering as checkbox
 """
@@ -17,7 +20,7 @@ log = logging.getLogger(__name__)
 
 from annalist.views.fields.find_renderers   import get_field_base_renderer
 
-from annalist.tests.field_rendering_support import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class ShowtextRenderingTest(FieldRendererTestSupport):
 

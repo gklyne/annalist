@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Test Turtle generation logic
 """
@@ -18,6 +21,7 @@ from django.test.client             import Client
 from rdflib                         import Graph, URIRef, Literal
 
 from utils.SuppressLoggingContext   import SuppressLogging
+from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
 
 import annalist
 from annalist                       import layout
@@ -37,14 +41,16 @@ from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.entitydata     import EntityData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-# from annalist.views.form_utils.fieldchoice  import FieldChoice
-
-from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
-
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     site_view_url, collection_view_url,
     collection_resource_url,
@@ -52,27 +58,19 @@ from entity_testutils       import (
     collection_create_values,
     create_test_user
     )
-from entity_testcolldata            import (
+from .entity_testcolldata import (
     collectiondata_url
     )
-from entity_testtypedata            import (
+from .entity_testtypedata import (
     recordtype_url
     )
-from entity_testentitydata          import (
+from .entity_testentitydata import (
     entity_url, entity_resource_url,
     entitydata_list_type_url, entitydata_list_all_url
     )
-from entity_testsitedata    import (
-    # make_field_choices, no_selection,
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
-    # get_site_lists, get_site_lists_sorted, get_site_lists_linked,
-    # get_site_views, get_site_views_sorted, get_site_views_linked,
-    # get_site_list_types, get_site_list_types_sorted,
-    # get_site_field_groups, get_site_field_groups_sorted, 
-    # get_site_fields, get_site_fields_sorted, 
-    # get_site_field_types, get_site_field_types_sorted, 
     )
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -183,7 +181,6 @@ class TurtleOutputTest(AnnalistTestCase):
         self.collbasedir = os.path.join(
             self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR
             )
-        #@@@@@ self.collbaseurl = TestHostUri + self.collbasedir + "/"
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -307,10 +304,10 @@ class TurtleOutputTest(AnnalistTestCase):
             )
         return
 
-    # Collection data content negotiation
+    # Site data content negotiation
     def test_get_site_data_turtle(self):
         """
-        Request collection data as Turtle
+        Request site data as Turtle
         """
         site_url = site_view_url()
         site_url = collection_view_url(layout.SITEDATA_ID)
@@ -326,6 +323,21 @@ class TurtleOutputTest(AnnalistTestCase):
             r = self.client.get(v)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_head_site_data_turtle(self):
+        """
+        Request HEAD for site data as Turtle
+        """
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       "")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         return
 
     def test_http_turtle_site(self):
@@ -914,6 +926,25 @@ class TurtleOutputTest(AnnalistTestCase):
             , (subj, ANNAL.URI.type,     URIRef(ANNAL.URI.EntityData)              )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
+        return
+
+    def test_http_conneg_head_turtle_entity1(self):
+        """
+        HEAD request to entity with content negotiation for Turtle
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+        # Read entity data as Turtle
+        u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       "")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
         return
 
     def test_http_conneg_turtle_type_vocab(self):

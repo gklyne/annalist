@@ -6,6 +6,9 @@ NOTE: for Google provider, set up via
 https://console.developers.google.com/apis/dashboard
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -32,8 +35,11 @@ from django.contrib.auth.models import User
 
 from utils.http_errors import error400values
 
-from login_utils    import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin, object_to_dict
-import login_message
+from .                  import login_message
+from .login_utils       import (
+    HttpResponseRedirectWithQuery, 
+    HttpResponseRedirectLogin
+    )
 
 SCOPE_DEFAULT = ["openid", "profile", "email"]
 

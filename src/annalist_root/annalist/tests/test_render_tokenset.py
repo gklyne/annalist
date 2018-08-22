@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for token set rendering functions
 """
@@ -22,7 +25,7 @@ from utils.SuppressLoggingContext           import SuppressLogging
 
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer, TokenSetValueMapper
 
-from field_rendering_support                import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class TokenSetRenderingTest(FieldRendererTestSupport):
 

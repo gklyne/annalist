@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Record field data functions to support entity data testing
 """
@@ -25,18 +28,18 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testentitydata      import entitydata_list_type_url
-from entity_testfielddesc       import get_field_description, get_bound_field
-from tests import (
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from entity_testutils import (
+from .entity_testutils import (
     collection_dir, 
     collection_edit_url,
     collection_entity_view_url,
     site_title,
     context_field_row
     )
+from .entity_testentitydata     import entitydata_list_type_url
+from .entity_testfielddesc      import get_field_description, get_bound_field
 
 #   -----------------------------------------------------------------------------
 #

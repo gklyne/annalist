@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Utility functions to support entity data testing
 """
@@ -37,10 +40,9 @@ from annalist.views.fields.bound_field          import bound_field, get_entity_v
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
 
-from tests import (
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-
 
 #   -----------------------------------------------------------------------------
 #

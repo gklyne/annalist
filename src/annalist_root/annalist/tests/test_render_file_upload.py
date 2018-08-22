@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for file upload field; view as hyperlink.
 """
@@ -20,7 +23,7 @@ from annalist.views.fields.render_file_upload import (
     FileUploadValueMapper
     )
 
-from annalist.tests.field_rendering_support import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class FileUploadRenderingTest(FieldRendererTestSupport):
 

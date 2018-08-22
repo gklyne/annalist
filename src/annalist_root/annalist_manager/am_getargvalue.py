@@ -2,7 +2,8 @@
 am_getargvalue.py - read command value if not already defined
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2013-2014, Graham Klyne"
@@ -35,8 +36,13 @@ def getargvalue(val, prompt):
 
 def getsecret(prompt):
     """
-    Prompt and read secret value without echo
+    Prompt and read secret value without echo, or read from stdin.
     """
-    return getpass.getpass(prompt)
+    if sys.stdin.isatty():
+        val = getpass.getpass(prompt)
+    else:
+        val = sys.stdin.readline()
+        if val[-1] == '\n': val = val[:-1]
+    return val
 
 # End.

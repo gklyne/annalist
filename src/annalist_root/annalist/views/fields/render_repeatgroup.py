@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for a group of fields repeated over a list of values.
 """
@@ -11,14 +14,13 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.http        import HttpResponse
-from django.template    import Template, Context
+from django.http            import HttpResponse
+from django.template        import Template, Context
 
-from annalist.exceptions                import Annalist_Error
+from annalist.exceptions    import Annalist_Error
 
-from annalist.views.fields.bound_field  import bound_field
-
-from render_fieldvalue  import (
+from .bound_field           import bound_field
+from .render_fieldvalue     import (
     RenderFieldValue,
     TemplateWrapValueRenderer, 
     ModeWrapValueRenderer

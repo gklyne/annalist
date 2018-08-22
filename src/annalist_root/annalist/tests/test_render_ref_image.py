@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for URI image reference displayed as an image.
 
@@ -23,7 +26,7 @@ from annalist.views.fields.render_ref_image import (
     RefImageValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class RefImageRenderingTest(FieldRendererTestSupport):
 

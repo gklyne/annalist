@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Support for Annalist collection view testing
 """
@@ -23,13 +26,14 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
 from annalist.util                      import valid_id
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-
-from entity_testutils                   import (
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     collection_entity_view_url
     )
-from entity_testentitydata          import (
+from .entity_testentitydata import (
     entitydata_list_type_url, entitydata_list_all_url,
     )
 

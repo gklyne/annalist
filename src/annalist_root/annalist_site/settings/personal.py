@@ -1,10 +1,15 @@
-# Personal deployment (same host) settings
-#
-# Data is kept in personal directory area
-# Service configuration is kept under personal home directory
-#
+"""
+Personal deployment (same host) settings
 
-from common import *
+Data is kept in personal home directory area.
+Service configuration is kept under personal home directory.
+This is also useful for non-system deployment on a shared host.
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (personal configuration)"%(ANNALIST_VERSION)
 
@@ -18,10 +23,11 @@ DEBUG           = False
 
 ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
-DATABASES = {
+DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3'),
+        'NAME': DATABASE_PATH,
     }
 }
 

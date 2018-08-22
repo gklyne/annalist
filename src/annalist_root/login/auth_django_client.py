@@ -6,6 +6,9 @@ In due course, we may be able to use the same flow API to handle
 diverse forms of third party authentication.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -24,8 +27,11 @@ from django.contrib.auth.models import User
 
 from utils.uri_builder  import uri_with_params
 
-from login_utils        import HttpResponseRedirectWithQuery, HttpResponseRedirectLogin
-import login_message
+from .                  import login_message
+from .login_utils       import (
+    HttpResponseRedirectWithQuery, 
+    HttpResponseRedirectLogin
+    )
 
 class LocalUserPasswordView(generic.View):
     """

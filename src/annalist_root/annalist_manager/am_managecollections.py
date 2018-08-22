@@ -4,7 +4,8 @@ Collection management and migration helpers
 See also: documents/notes/schema-evolution-notes:
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
@@ -23,7 +24,7 @@ log = logging.getLogger(__name__)
 from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
-from annalist.collections           import installable_collections
+from annalist.collections_data      import installable_collections
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -34,9 +35,11 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordgroup    import RecordGroup
 from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
 
-import am_errors
-from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
-from am_getargvalue                 import getarg, getargvalue
+from .                              import am_errors
+from .am_settings                   import (
+    am_get_settings, am_get_site_settings, am_get_site
+    )
+from .am_getargvalue                import getarg, getargvalue
 
 # Collection access helpers
 
@@ -625,7 +628,7 @@ def am_migrateallcollections(annroot, userhome, options):
             return status
         coll_id = coll.get_id()
         if coll_id != layout.SITEDATA_ID:
-            log.info("========== Processing '%s' =========="%(coll_id,))
+            log.debug("========== Processing '%s' =========="%(coll_id,))
             print("---- Processing '%s'"%(coll_id,))
             msgs   = migrate_coll_data(coll)
             if msgs:

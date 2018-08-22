@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Entity editing tests for duplicated fields
 """
@@ -36,11 +39,17 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testfielddesc   import get_field_description, get_bound_field
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testfielddesc import get_field_description, get_bound_field
+from .entity_testutils import (
     collection_create_values,
     continuation_url_param,
     create_test_user,
@@ -48,16 +57,16 @@ from entity_testutils       import (
     context_bind_fields,
     context_field_row
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_url,
     recordtype_edit_url,
     recordtype_create_values,
     )
-from entity_testviewdata    import (
+from .entity_testviewdata import (
     recordview_url, 
     recordview_create_values, recordview_values, recordview_values_add_field,
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys,
     entitydata_create_values, entitydata_values, entitydata_values_add_field, 
@@ -65,7 +74,7 @@ from entity_testentitydata  import (
     default_view_context_data,
     default_comment
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,

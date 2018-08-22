@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for RecordVocab module and view
 
@@ -38,11 +41,17 @@ from annalist.models.recordvocab        import RecordVocab
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 from annalist.views.displayinfo             import apply_substitutions
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testfielddesc   import get_field_description, get_bound_field
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testfielddesc import get_field_description, get_bound_field
+from .entity_testutils import (
     make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
@@ -53,7 +62,7 @@ from entity_testutils       import (
     context_bind_fields,
     check_context_field, check_context_field_value,
     )
-from entity_testvocabdata    import (
+from .entity_testvocabdata import (
     recordvocab_dir,
     recordvocab_coll_url, recordvocab_url, recordvocab_edit_url,
     recordvocab_value_keys, recordvocab_load_keys, 
@@ -61,12 +70,12 @@ from entity_testvocabdata    import (
     vocab_view_context_data, 
     vocab_view_form_data, # recordvocab_delete_confirm_form_data
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -75,8 +84,8 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-from entity_testviewdata    import recordview_url
-from entity_testlistdata    import recordlist_url
+from .entity_testviewdata import recordview_url
+from .entity_testlistdata import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #

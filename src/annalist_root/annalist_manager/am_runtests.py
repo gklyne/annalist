@@ -2,7 +2,8 @@
 Run Annalist server tests.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -17,9 +18,13 @@ log = logging.getLogger(__name__)
 
 from utils.SetcwdContext    import ChangeCurrentDir
 
-import am_errors
-from am_settings            import am_get_settings
-from am_getargvalue         import getarg, getargvalue, getsecret
+from .                      import am_errors
+from .am_settings           import (
+    am_get_settings, am_get_site_settings, am_get_site
+    )
+from .am_getargvalue        import (
+    getarg, getargvalue, getsecret
+    )
 
 def am_runtests(annroot, options):
     """

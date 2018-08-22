@@ -1,10 +1,14 @@
-# Shared deployment (separate server host) settings
-#
-# Data is kept under /var directory
-# Configuration is kept under /etc directory
-#
+"""
+Shared deployment (separate server host) settings
 
-from common import *
+Data is kept under /var directory.
+Configuration is kept under /etc directory.
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
+from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (shared service configuration)"%(ANNALIST_VERSION)
 
@@ -17,10 +21,11 @@ CONFIG_BASE     = "/etc/annalist/"
 DEBUG           = False
 ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
 
-DATABASES = {
+DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3'),
+        'NAME':   DATABASE_PATH,
     }
 }
 
@@ -72,6 +77,7 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
+log.info("@@@@ settings: "+__name__)
 log.info(ANNALIST_VERSION_MSG)
 # log.info("Annalist version %s (shared service configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)

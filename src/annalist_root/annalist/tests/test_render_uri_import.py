@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for text value used as URI for import object; view as hyperlink.
 
@@ -20,14 +23,15 @@ from collections import OrderedDict
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.resourcetypes                 import file_extension, file_extension_for_content_type
-
+from annalist.resourcetypes import (
+    file_extension, file_extension_for_content_type
+    )
 from annalist.views.fields.render_uri_import import (
     get_uri_import_renderer, 
     URIImportValueMapper
     )
 
-from annalist.tests.field_rendering_support import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class UriImportRenderingTest(FieldRendererTestSupport):
 

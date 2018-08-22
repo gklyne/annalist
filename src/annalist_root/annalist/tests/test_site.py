@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for site module
 """
@@ -30,20 +33,26 @@ from annalist.models.annalistuser   import AnnalistUser
 
 from annalist.views.site            import SiteView, SiteActionView
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     site_view_url, collection_view_url, collection_edit_url, 
     collection_value_keys, collection_create_values, collection_values,
     collection_new_form_data, collection_remove_form_data,
     site_title,
     create_user_permissions, create_test_user
     )
-from entity_testuserdata    import (
+from .entity_testuserdata import (
     annalistuser_create_values, annalistuser_values, annalistuser_read_values
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_url, recordtype_edit_url
     )
 
