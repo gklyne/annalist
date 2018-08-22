@@ -24,6 +24,7 @@ from django.utils.html      import escape
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
 from annalist.util          import split_type_entity_id
+from annalist.py3porting    import is_string, to_unicode
 
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entity                 import EntityRoot
@@ -378,7 +379,7 @@ class bound_field(object):
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
-            elif isinstance(target_value, (str, unicode)):
+            elif is_string(target_value):
                 target_ref = target_value
             else:
                 log.warning(

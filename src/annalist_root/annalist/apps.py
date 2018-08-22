@@ -1,9 +1,5 @@
 """
 Annalist application hooks
-(cf. https://docs.djangoproject.com/en/dev/ref/applications/)
-
-The main purpose of this is to log settings values to the log file, 
-after the log file configuration has been applied.
 """
 
 from __future__ import unicode_literals
@@ -13,13 +9,21 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from django.conf import settings
-from django.apps import AppConfig
-
 import logging
 log = logging.getLogger(__name__)
 
+from django.conf import settings
+from django.apps import AppConfig
+
 class AnnalistConfig(AppConfig):
+    """
+    Annalist config class that logs settings when ready is called.
+    (cf. https://docs.djangoproject.com/en/dev/ref/applications/)
+
+    The main purpose of this is to log settings values to the log file, 
+    after the log file configuration has been applied.
+    """
+
     name = 'annalist'
 
     def ready(self):

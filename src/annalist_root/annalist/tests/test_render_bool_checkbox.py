@@ -17,6 +17,7 @@ from collections import OrderedDict
 
 import logging
 log = logging.getLogger(__name__)
+from annalist.py3porting    import is_string, to_unicode
 
 from annalist.views.fields.render_bool_checkbox import (
     get_bool_checkbox_renderer, 
@@ -36,7 +37,7 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
     def test_RenderBoolCheckboxValue(self):
 
         def expect_render(val):
-            if isinstance(val, (str,unicode)):
+            if is_string(val):
                 valtext = val
                 valbool = val.lower() in ["true", "yes"]
             else:

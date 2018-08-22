@@ -97,16 +97,18 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - 
     - [x] Review test coverage (93% overall, but some key modules 40-80%)
     - [x] Create branch for Python 3 testing
-    - [ ] from __future__ import absolute_import, division, print_function, unicode_literals
-
-    - [ ] Install futurize
-    - [ ] Run futurize; review changes
-    - [ ] Test under Python 2
+    - [x] from __future__ import absolute_import, division, print_function, unicode_literals
+    - [x] Install pylint, run python 3 porting tests
+    - [ ] Fix pylint reports and test code under Python 2
+    - [ ] Change all py3porting references to utils, remove version in annalist
+    - [ ] Check for dependencies stuck at Python2
     - [ ] Test under Python 3   
 
 - [ ] Update annalist-manager to Python 3 compatibility
-    - [ ] Create test suite
-    - [ ] from __future__ imports
+    - [x] Create test suite
+    - [x] from __future__ imports ...
+    - [ ] Fix pylint reports and test code under Python 2
+    - [ ] Test under Python 3   
 
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)

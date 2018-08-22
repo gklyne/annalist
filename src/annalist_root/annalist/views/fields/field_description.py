@@ -386,18 +386,22 @@ class FieldDescription(object):
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object
+    #
+    # @@TODO: do we really need to return lists for .keys() and .items()?
+    # It would be more consistent with Python3 to just return an interator.
+    # Try returning iter(...) instead and see what happens?
 
     def keys(self):
         """
         Return collection metadata value keys
         """
-        return self._field_desc.keys()
+        return list(self._field_desc.keys())
 
     def items(self):
         """
         Return collection metadata value fields
         """
-        return self._field_desc.items()
+        return list(self._field_desc.items())
 
     def get(self, key, default):
         """

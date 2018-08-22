@@ -1,3 +1,5 @@
+# pylint: disable=too-many-instance-attributes, too-few-public-methods
+
 """
 Annalist directory/site layout
 """
@@ -273,8 +275,10 @@ DATA_DIRS_CURR_PREV = (
     , (ENUM_VALUE_MODE_DIR,         ENUM_VALUE_MODE_DIR_PREV2)
     , (ENUM_VALUE_TYPE_DIR,         ENUM_VALUE_TYPE_DIR_PREV2)
     ])
-DATA_DIRS       = map(lambda pair:pair[0], DATA_DIRS_CURR_PREV)
-DATA_DIRS_PREV  = map(lambda pair:pair[1], DATA_DIRS_CURR_PREV)
+DATA_DIRS       = [ p[0] for p in DATA_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[0], DATA_DIRS_CURR_PREV)
+DATA_DIRS_PREV  = [ p[1] for p in DATA_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[1], DATA_DIRS_CURR_PREV)
 DATA_VOCAB_DIRS = DATA_DIRS + [VOCAB_DIR]
 
 COLL_DIRS_CURR_PREV = (
@@ -282,8 +286,10 @@ COLL_DIRS_CURR_PREV = (
     [ (USER_DIR,  USER_DIR_PREV)
     , (VOCAB_DIR, VOCAB_DIR_PREV)
     ])
-COLL_DIRS       = map(lambda pair:pair[0], COLL_DIRS_CURR_PREV)
-COLL_DIRS_PREV  = map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
+COLL_DIRS       = [ p[0] for p in COLL_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[0], COLL_DIRS_CURR_PREV)
+COLL_DIRS_PREV  = [ p[1] for p in COLL_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
 
 # Name generation suffixes for tasks that generate new records
 SUFFIX_LIST             = ""

@@ -20,13 +20,15 @@ import httplib2
 
 from django.contrib.auth.models import User
 
+from utils.py3porting import is_string, to_unicode
+
 class OAuth2CheckBackend(object):
     """
     Authenticate using credential object from OAuth2 exchange
 
     username is a local user id that keys the local user database
     password is a Credential object obtained via the OAuth2 dance
-    profile_uri is a URI from which user profile information is retrieved
+    profile  is a user profile information
 
     NOTE: when this method returns a User record on completion of a third
     party authentication process, it does not guarantee that it is the same
@@ -38,13 +40,15 @@ class OAuth2CheckBackend(object):
     but if it already exists the email address is replaced with the one
     returned by the OIDC authentication exchange.
     """
+
     def authenticate(self, username=None, profile=None):
         log.debug(
             "OAuth2CheckBackend.authenticate: username %s, profile %r"%
             (username, profile)
             )
-        if isinstance(profile, unicode):
-            # Not oauth2 exchange
+        if is_string(profile):
+            # Not oauth2 exchange:
+            # @TODO: can we be more specific about what type this should be?
             return None
         auth_email      = None
         return_user     = None

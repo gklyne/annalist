@@ -97,7 +97,7 @@ def runTests(logname, getSuite, args):
         # Run with XML test output for use in Jenkins environment
         if not junitxml_present:
             print("junitxml module not available for XML test output")
-            raise ValueError, "junitxml module not available for XML test output"
+            raise ValueError("junitxml module not available for XML test output")
         with open('xmlresults.xml', 'w') as report:
             result = junitxml.JUnitXmlResult(report)
             result.startTestRun()

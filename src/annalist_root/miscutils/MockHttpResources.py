@@ -22,10 +22,23 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
 log = logging.getLogger(__name__)
-
-import urllib
-import urlparse
 import httpretty
+
+try:
+    # Python3
+    from urllib.parse       import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        quote, unquote
+        )
+    from urllib.request     import urlopen, Request, pathname2url
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
+    from urllib2            import urlopen, Request, HTTPError
+    from urllib             import quote, unquote, pathname2url
+
 
 from .              import ScanDirectories
 from .FileMimeTypes import FileMimeTypes
@@ -52,7 +65,7 @@ class MockHttpFileResources(object):
         refs = ScanDirectories.CollectDirectoryContents(self._path, baseDir=self._path, 
             listDirs=False, listFiles=True, recursive=True)
         for r in refs:
-            ru = self._baseuri + urllib.pathname2url(r)
+            ru = self._baseuri + pathname2url(r)
             rt = HttpContentType(r)
             # log.info("MockHttpFileResource uri %s, file %s"%(ru, self._path+r))
             with open(self._path+r, 'r') as cf:
@@ -77,7 +90,7 @@ class MockHttpDictResources(object):
         httpretty.enable()
         # register stuff...
         for r in self._dict.keys():
-            ru = urlparse.urljoin(self._baseuri, r)
+            ru = urljoin(self._baseuri, r)
             rt = HttpContentType(r)
             log.debug("MockHttpDictResources: registering: %s"%ru)
             httpretty.register_uri(httpretty.GET,  ru, status=200, content_type=rt,

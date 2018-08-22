@@ -85,11 +85,17 @@ class FieldChoice(_FieldChoice_tuple):
         result = super(FieldChoice, _cls).__new__(_cls, id, value, label, link, choice_value)
         return result
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         """
-        Compares current FieldChoice value with another, and returns -1, 0, +1 as required.
+        Returns True if self == other for sorting purposes
         """
-        return self.id.__cmp__(other.id)
+        return self.id.__eq__(other.id)
+
+    def __lt__(self, other):
+        """
+        Returns True if self < other for sorting purposes
+        """
+        return self.id.__lt__(other.id)
 
     def choice(self, sep=u"\xa0\xa0\xa0"):
         """

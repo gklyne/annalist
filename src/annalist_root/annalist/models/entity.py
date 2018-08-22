@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Common base classes for Annalist stored entities (collections, data, metadata, etc.)
 
@@ -11,6 +8,9 @@ local identifier (slug) for the descendent.
 This module also implements the logic used to locate entities on alternate search paths,
 such as site data or data inherited from other collections.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -33,6 +33,7 @@ from annalist                   import util
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
+from annalist.py3porting        import is_string
 
 from annalist.models.entityroot import EntityRoot
 
@@ -371,7 +372,7 @@ class Entity(EntityRoot):
                     search for children.  See method `_find_alt_parents` for more details.
         """
         if altscope is not None:
-            if not isinstance(altscope, (unicode, str)):
+            if not is_string(altscope):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
@@ -398,11 +399,6 @@ class Entity(EntityRoot):
         alternatives and make additional calls as needed.
         """
         # log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         v = func(self)
         if test(v):
             return v
@@ -682,11 +678,6 @@ class Entity(EntityRoot):
         # log.debug("Entity.load: entity %s/%s, altscope %s"%
         #     (cls._entitytype, entityid, altscope)
         #     )
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         entity = None
         if util.valid_id(entityid, reserved_ok=reserved_ok):
             (e, v) = cls.try_alt_parentage(
@@ -724,11 +715,6 @@ class Entity(EntityRoot):
         # log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
         #     (cls._entitytype, parent._entitydir, entityid)
         #     )
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         (e, v) = cls.try_alt_parentage(
             parent, entityid, (lambda e: e._exists()), 
             altscope=altscope
@@ -762,7 +748,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid)
             )
         if altscope is not None:
-            if not isinstance(altscope, (unicode, str)):
+            if not is_string(altscope):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))

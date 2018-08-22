@@ -6,7 +6,7 @@ sensitive to string vs unicode parameters.
 
 To use this module, include something like this in the original source:
 
-    from annalist.py3porting import is_string, to_unicode
+    from utils.py3porting import is_string, to_unicode
 
 Also, for URL handling, use:
 
@@ -17,13 +17,14 @@ Also, for URL handling, use:
             urlsplit, urlunsplit, 
             quote, unquote
             )
-        from urllib.request     import urlopen, Request
+        from urllib.request     import urlopen, Request, pathname2url
         from urllib.error       import HTTPError
     except ImportError:
         # Python2
         from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
         from urllib2            import urlopen, Request, HTTPError
-        from urllib             import quote, unquote
+        from urllib             import quote, unquote, pathname2url
+
 """
 
 from __future__ import unicode_literals

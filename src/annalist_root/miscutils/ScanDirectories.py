@@ -66,9 +66,8 @@ def ScanDirectoriesEx(srcdir, DirFunc, FileFunc=None, recursive=True):
 def ScanDirectories(srcdir, DirFunc, listFiles=False, recursive=True):
     try:
         ScanDirectoriesEx(srcdir, DirFunc, listFiles, recursive)
-    except (IOError, os.error), why:
-        logger.warning("Can't scan %s: %s" % (`srcdir`, str(why)))
-        # print("Can't scan %s: %s" % (`srcdir`, str(why)))
+    except (IOError, os.error) as why:
+        logger.warning("Can't scan %s: %s" % (repr(srcdir), str(why)))
     return
 
 # Collect directories/sub-directories found under the source directory

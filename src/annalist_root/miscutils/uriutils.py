@@ -14,9 +14,27 @@ import sys
 import os
 import os.path
 import re
-import urllib
-import urlparse
 import httplib
+
+try:
+    # Python3
+    from urllib.parse       import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        quote, unquote,
+        SplitResult
+        )
+    from urllib.request     import urlopen, Request, pathname2url
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        SplitResult
+        )
+    from urllib2            import urlopen, Request, HTTPError
+    from urllib             import quote, unquote, pathname2url
 
 import logging
 log = logging.getLogger(__name__)
@@ -31,10 +49,10 @@ def resolveUri(uriref, base, path=""):
     Resolve a URI reference against a supplied base URI and path (supplied as strings).
     (The path is a local file system path, and may need converting to use URI conventions)
     """
-    upath = urllib.pathname2url(path)
+    upath = pathname2url(path)
     if os.path.isdir(path) and not upath.endswith('/'):
         upath = upath + '/'
-    return urlparse.urljoin(urlparse.urljoin(base, upath), uriref)
+    return urljoin(urljoin(base, upath), uriref)
 
 def resolveFileAsUri(path):
     """
@@ -44,7 +62,7 @@ def resolveFileAsUri(path):
     If the supplied string is already a URI, it is returned unchanged
     (for idempotency and non-file URIs)
     """
-    if urlparse.urlsplit(path).scheme == "":
+    if urlsplit(path).scheme == "":
         path = resolveUri("", fileuribase, os.path.abspath(path))
     return path
 
@@ -52,10 +70,10 @@ def getFilenameFromUri(uri):
     """
     Convert a file:// URI into a local file system reference
     """
-    uriparts = urlparse.urlsplit(uri)
+    uriparts = urlsplit(uri)
     assert uriparts.scheme == "file", "RO %s is not in local file system"%uri
-    uriparts = urlparse.SplitResult("","",uriparts.path,uriparts.query,uriparts.fragment)
-    return urllib.url2pathname(urlparse.urlunsplit(uriparts))
+    uriparts = SplitResult("","",uriparts.path,uriparts.query,uriparts.fragment)
+    return url2pathname(urlunsplit(uriparts))
 
 def isLiveUri(uriref):
     """
@@ -69,7 +87,7 @@ def isLiveUri(uriref):
     if isFileUri(fileuri):
         islive = os.path.exists(getFilenameFromUri(fileuri))
     else:
-        parseduri = urlparse.urlsplit(uriref)
+        parseduri = urlsplit(uriref)
         scheme    = parseduri.scheme
         host      = parseduri.netloc
         path      = parseduri.path
@@ -91,9 +109,9 @@ def isLiveUri(uriref):
 def retrieveUri(uriref):
     # @@TODO: revise to use httplib2, or delete this method
     uri = resolveUri(uriref, fileuribase, os.getcwd())
-    request  = urllib2.Request(uri)
+    request  = Request(uri)
     try:
-        response = urllib2.urlopen(request)
+        response = urlopen(request)
         result   = response.read()
     except:
         result = None

@@ -30,6 +30,7 @@ from annalist.util                      import (
     label_from_id,
     open_url, copy_resource_to_fileobj
     )
+from annalist.py3porting                import is_string, to_unicode
 
 import annalist.models.entitytypeinfo as entitytypeinfo
 from annalist.models.entitytypeinfo     import EntityTypeInfo, get_built_in_type_ids, CONFIG_PERMISSIONS
@@ -1360,7 +1361,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if isinstance(fv, dict):
             field_vals   = fv.copy()
             field_string = None
-        elif isinstance(fv, (str, unicode)):
+        elif is_string(fv):
             field_vals   = {}
             field_string = fv
         else:

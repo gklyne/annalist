@@ -12,9 +12,22 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import urllib
-import urlparse
 import re
+
+try:
+    # Python3
+    from urllib.parse       import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        quote, unquote
+        )
+    from urllib.request     import urlopen, Request
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
+    from urllib2            import urlopen, Request, HTTPError
+    from urllib             import quote, unquote
 
 # From RFC 3986:
 gen_delims  = ":/?#[]@"
@@ -27,7 +40,7 @@ def uri_quote_param(pval):
     """
     Apply escaping to a supplied query parameter value for inclusion in a URI.
     """
-    return urllib.quote(pval, query_safe)
+    return quote(pval, query_safe)
 
 def uri_base(uri):
     """
@@ -46,7 +59,7 @@ def uri_query_key_val(p):
     If no '=' is present, the value part returned is an empty string.
     """
     kv = p.split("=", 1) + [""]
-    return (kv[0], urllib.unquote(kv[1]))
+    return (kv[0], unquote(kv[1]))
 
 def uri_param_dict(uri):
     """
@@ -311,7 +324,7 @@ def url_update_type_entity_id(url_base,
         [ re.compile(r"(^.*/d)/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(!.*)?$")
         , re.compile(r"(^.*/v/\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(!.*)?$")
         ])
-    us, ua, up, uq, uf = urlparse.urlsplit(url_base)
+    us, ua, up, uq, uf = urlsplit(url_base)
     if new_type_id:
         for rexp in rewrite_type_id_patterns:
             match = rexp.match(up)
@@ -336,7 +349,7 @@ def url_update_type_entity_id(url_base,
                     if type_id == old_type_id:
                         up = "%s/%s/%s/%s"%(prefix, new_type_id, entity_id, suffix or "")
                         break
-    return urlparse.urlunsplit((us, ua, up, uq, uf))
+    return urlunsplit((us, ua, up, uq, uf))
 
 if __name__ == "__main__":
     import doctest

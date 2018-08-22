@@ -15,6 +15,8 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
+from annalist.py3porting                        import is_string, to_unicode
+
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -53,7 +55,7 @@ class TokenSetValueMapper(RenderBase):
         """
         Decodes a string of space-separated tokens as a list of tokens
         """
-        if isinstance(field_value,(str,unicode)):
+        if is_string(field_value):
             return field_value.split()
         log.warning("TokenSetValueMapper.decode: %r"%(field_value,))
         # log.info("\n".join(traceback.format_stack()))

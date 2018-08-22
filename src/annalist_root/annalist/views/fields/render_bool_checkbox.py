@@ -18,8 +18,9 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_edit_value,
     get_field_view_value
     )
+from annalist.py3porting    import is_string, to_unicode
 
-from django.template    import Template, Context
+from django.template        import Template, Context
 
 #   ----------------------------------------------------------------------------
 #
@@ -43,7 +44,7 @@ class BoolCheckboxValueMapper(RenderBase):
         # print "data_value "+repr(data_value)
         if data_value is None:
             textval = "No"
-        elif isinstance(data_value, (str, unicode)):
+        elif is_string(data_value):
             textval = data_value
         elif isinstance(data_value, bool):
             textval = "Yes" if data_value else "No"

@@ -102,34 +102,34 @@ def makeNamespace(prefix, baseUri, names):
         setattr(ns.CURIE, name, ns.mk_curie(name))
     return ns
 
-"""
-Partial enumeration of RDF namespace - add others as needed
-"""
+# """
+# Partial enumeration of RDF namespace - add others as needed
+# """
 RDF = makeNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     [ "Property", "Statement", "List"
     , "type", "value"
     , "first", "rest", "nil"
     ])
 
-"""
-Partial enumeration of RDFS namespace - add others as needed
-"""
+# """
+# Partial enumeration of RDFS namespace - add others as needed
+# """
 RDFS = makeNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#",
     [ "Resource", "Class", "Literal", "Container", "Datatype"
     , "label", "comment", "member", "seeAlso"
     ])
 
-"""
-Partial enumeration of OWL namespace
-"""
+# """
+# Partial enumeration of OWL namespace
+# """
 OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
     [ "Thing", "Nothing"
     , "sameAs", "differentFrom", "equivalentClass"
     ])
 
-"""
-Annalist namespace terms
-"""
+# """
+# Annalist namespace terms
+# """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     [ "Unknown_type"
     # Entity value types

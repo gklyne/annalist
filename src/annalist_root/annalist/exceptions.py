@@ -18,13 +18,15 @@ class Annalist_Error(Exception):
     """
 
     def __init__(self, value=None, msg="Annalist error"):
+        super(Annalist_Error, self).__init__(value, msg)
         self._msg   = msg
         self._value = value
         return
 
     def __str__(self):
         txt = self._msg
-        if self._value: txt += ": "+repr(self._value)
+        if self._value: 
+            txt += ": "+repr(self._value)
         return txt
 
     def __repr__(self):
@@ -39,7 +41,7 @@ class UnexpectedValue_Error(Annalist_Error):
     """
 
     def __init__(self, value=None, msg="Entity not found"):
-        super(EntityNotFound_Error, self).__init__(value, msg)
+        super(UnexpectedValue_Error, self).__init__(value, msg)
         return
 
 class EntityNotFound_Error(Annalist_Error):

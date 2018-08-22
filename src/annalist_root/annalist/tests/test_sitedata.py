@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for site data.
 
@@ -20,6 +17,9 @@ It is not intended to check details of web page presentation.
 
 (The first couple of tests also check aspects of the test site data setup.)
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -192,7 +192,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             { u'\u2588': u"&block;"
             , u'\u2591': u"&blk14;"
             })
-        for u, e in entity_map.iteritems():
+        for u, e in entity_map.items():
             s = s.replace(u, e)
         return s
 

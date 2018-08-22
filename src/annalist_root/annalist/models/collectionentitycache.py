@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from __future__ import absolute_import, division, print_function
 
 """
-This module is used to cache per-collection information about entities of some 
+This module is used to cache per-collection information about entities of some
 designated type.
 """
 
@@ -304,7 +304,7 @@ class CollectionEntityCache(object):
         coll        is a collection object for which a cache object is obtained
         """
         coll_id = coll.get_id()
-        if coll_id not in self._caches.keys():
+        if coll_id not in list(self._caches):
             # Create and save new cache object
             coll_cache = self._cache_cls(coll_id, self._entity_cls)
             coll_cache.set_site_cache(self._site_cache)

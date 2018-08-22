@@ -27,6 +27,7 @@ from django.contrib.auth.models     import User
 import annalist
 from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
+from annalist.py3porting            import is_string, to_unicode
 from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser
@@ -310,21 +311,14 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     # Local helper to cleanup options and acount for duplicate labels
     def update_options(opts):
         return update_choice_labels(
-            [ FieldChoice(o) if isinstance(o, (str, unicode)) else o 
+            [ FieldChoice(o) if is_string(o) else o 
               for o in opts
             ])
 
     # Local helper to render single option
     def select_option(opt):
-        # if isinstance(opt, (str, unicode)):
-        #     opt = FieldChoice(opt)
-        # selected = ('' if opt.value != sel else ' selected="selected"')
-        # label    = (placeholder or "") if opt.value == "" else opt.label
-        # label    = opt.label or opt.value or placeholder or ""
-        # return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice_html()
-        # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     #
     select_template = (
@@ -373,7 +367,7 @@ def render_choice_options(
     """
     # Local helper to render single option
     def select_option(opt):
-        if isinstance(opt, (str, unicode)):
+        if is_string(opt):
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice()

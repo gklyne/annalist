@@ -1,3 +1,5 @@
+# pylint: disable=broad-except, wrong-import-order
+
 """
 Various utilities for Annalist common functions
 """
@@ -19,17 +21,28 @@ import errno
 import traceback
 import stat
 import time
-import urlparse
-import urllib2
 import json
 import shutil
-import StringIO
 
-from django.conf import settings
+from io import BytesIO     # for handling byte strings
+from io import StringIO    # for handling unicode strings
 
-from annalist.identifiers import ANNAL
+try:
+    # Python3
+    from urllib.parse       import urlparse, urljoin, urlsplit, urlencode
+    from urllib.request     import urlopen, Request
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import urlparse, urljoin, urlsplit
+    from urllib2            import urlopen, Request, HTTPError
 
-def valid_id(id, reserved_ok=False):
+from django.conf            import settings
+
+from annalist.identifiers   import ANNAL
+from annalist.py3porting    import is_string, to_unicode
+
+def valid_id(id_string, reserved_ok=False):
     """
     Checks the supplied id is valid as an Annalist identifier.
 
@@ -53,9 +66,9 @@ def valid_id(id, reserved_ok=False):
         # , "_annalist_site"
         ])
     # cf. urls.py:
-    if id and re.match(r"\w{1,128}$", id):
-        return reserved_ok or (id not in reserved)
-    # log.warning("util.valid_id: id %s"%(id))
+    if id_string and re.match(r"\w{1,128}$", id_string):
+        return reserved_ok or (id_string not in reserved)
+    # log.warning("util.valid_id: id %s"%(id_string))
     return False
 
 def split_type_entity_id(eid, default_type_id=None):
@@ -77,10 +90,9 @@ def split_type_entity_id(eid, default_type_id=None):
         sub_ids = eid.split("/")
         if len(sub_ids) == 2:
             return (sub_ids[0], sub_ids[1])
-        elif len(sub_ids) == 1:
+        if len(sub_ids) == 1:
             return (default_type_id, sub_ids[0])
-        else:
-            return (default_type_id, "")
+        return (default_type_id, "")
     return (default_type_id, None)
 
 def extract_entity_id(eid):
@@ -93,7 +105,7 @@ def extract_entity_id(eid):
     >>> extract_entity_id("entity_id") == "entity_id"
     True
     """
-    type_id, entity_id = split_type_entity_id(eid)
+    _type_id, entity_id = split_type_entity_id(eid)
     return entity_id
 
 def fill_type_entity_id(eid, default_type_id=None):
@@ -130,8 +142,7 @@ def make_type_entity_id(type_id=None, entity_id=None):
 def make_entity_base_url(url):
     """
     Returns an entity URL with a trailing "/" so that it can be used consistently
-    with urlparse.urljoin to obtain URLs for specific resources associated with the 
-    entity.
+    with urljoin to obtain URLs for specific resources associated with the entity.
 
     >>> make_entity_base_url("/example/path/") == '/example/path/'
     True
@@ -140,7 +151,7 @@ def make_entity_base_url(url):
     """
     return url if url.endswith("/") else url + "/"
 
-def label_from_id(id):
+def label_from_id(id_string):
     """
     Returns a label string constructed from the suppliued Id string
 
@@ -150,7 +161,7 @@ def label_from_id(id):
     >>> label_from_id("entity_id") == "Entity id"
     True
     """
-    temp  = id.replace('_', ' ').strip()
+    temp  = id_string.replace('_', ' ').strip()
     label = temp[0].upper() + temp[1:] 
     return label
 
@@ -212,7 +223,7 @@ def slug_from_uri(uri):
     >>> slug_from_uri("http:/example.org/foo/bar#baz") == 'bar'
     True
     """
-    return slug_from_path(urlparse.urlsplit(uri).path)
+    return slug_from_path(urlsplit(uri).path)
 
 def ensure_dir(dirname):
     """
@@ -302,30 +313,30 @@ def entity_url_host(baseuri, entityref):
     >>> entity_url_host("http://base.example.org:80/basepath/", "http://ref.example.org/path/to/entity") == 'ref.example.org'
     True
     """
-    uri = urlparse.urljoin(baseuri, entityref)
-    p   = urlparse.urlparse(uri)
+    uri = urljoin(baseuri, entityref)
+    p   = urlparse(uri)
     h   = p.hostname or ""
     if p.port:
         h += ":" + str(p.port)
     return h
 
+def entity_url_path(baseuri, entityref):
     """
     Return absolute path part from an entity URI, excluding query or fragment.
 
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity") == '/path/to/entity'
+    >>> entity_url_path("http://example.org/basepath/", "/path/to/entity") == '/path/to/entity'
     True
-    >>> entity_url_host("http://example.org/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
+    >>> entity_url_path("http://example.org/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
     True
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity?query") == '/path/to/entity'
+    >>> entity_url_path("http://example.org/basepath/", "/path/to/entity?query") == '/path/to/entity'
     True
-    >>> entity_url_host("http://example.org/basepath/", "/path/to/entity#frag") == '/path/to/entity'
+    >>> entity_url_path("http://example.org/basepath/", "/path/to/entity#frag") == '/path/to/entity'
     True
-    >>> entity_url_host("/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
+    >>> entity_url_path("/basepath/", "relpath/to/entity") == '/basepath/relpath/to/entity'
     True
     """
-def entity_url_path(baseuri, entityref):
-    uri = urlparse.urljoin(baseuri, entityref)
-    return urlparse.urlparse(uri).path
+    uri = urljoin(baseuri, entityref)
+    return urlparse(uri).path
 
 def make_resource_url(baseuri, entityref, resourceref):
     """
@@ -340,8 +351,8 @@ def make_resource_url(baseuri, entityref, resourceref):
     >>> make_resource_url("http://example.org/foo/", "/bar/stuff?query=val", "entity.ref") == 'http://example.org/bar/entity.ref?query=val'
     True
     """
-    url          = urlparse.urljoin(baseuri, entityref)
-    resource_url = urlparse.urljoin(url, make_resource_ref_query(entityref, resourceref))
+    url          = urljoin(baseuri, entityref)
+    resource_url = urljoin(url, make_resource_ref_query(entityref, resourceref))
     return resource_url
 
 def make_resource_ref_query(entityref, resourceref):
@@ -355,28 +366,28 @@ def make_resource_ref_query(entityref, resourceref):
     >>> make_resource_ref_query("http://example.com/foo?query=value", "http://example.org/bar") == "http://example.org/bar?query=value"
     True
     """
-    query = urlparse.urlsplit(entityref).query
+    query = urlsplit(entityref).query
     if query != "":
         query = "?" + query
-    return urlparse.urljoin(resourceref, query)
+    return urljoin(resourceref, query)
 
 def strip_comments(f):
     """
     Returns a file-like object that returns content from the supplied file-like
     object, but with comment lines replaced with blank lines.
 
-    >>> f1 = StringIO.StringIO("// comment\\ndata\\n// another comment\\n\\n")
+    >>> f1 = StringIO("// comment\\ndata\\n// another comment\\n\\n")
     >>> f2 = strip_comments(f1)
     >>> f2.read() == '\\ndata\\n\\n\\n'
     True
     """
-    fnc = StringIO.StringIO()
+    fnc = StringIO()
     sof = fnc.tell()
     for line in f:
-        if re.match("^\s*//", line):
+        if re.match(r"^\s*//", line):
             fnc.write("\n")
         else:
-            fnc.write(line)
+            fnc.write(to_unicode(line))
     fnc.seek(sof)
     return fnc
 
@@ -401,17 +412,17 @@ def renametree_temp(src):
         except OSError as e:
             time.sleep(1)
             if e.errno == errno.EACCES:
-                log.warning("util.renametree_temp: %s EACCES, retrying"%tmp)
+                log.warning("util.renametree_temp: %s EACCES, retrying", tmp)
                 continue    # Try another temp name
             if e.errno == errno.ENOTEMPTY:
-                log.warning("util.renametree_temp: %s ENOTEMPTY, retrying"%tmp)
+                log.warning("util.renametree_temp: %s ENOTEMPTY, retrying", tmp)
                 continue    # Try another temp name
             if e.errno == errno.EEXIST:
-                log.warning("util.renametree_temp: %s EEXIST, retrying"%tmp)
+                log.warning("util.renametree_temp: %s EEXIST, retrying", tmp)
                 shutil.rmtree(tmp, ignore_errors=True)  # Try to clean up old files
                 continue    # Try another temp name
             if e.errno == errno.ENOENT:
-                log.warning("util.renametree_temp: %s ENOENT, skipping"%tmp)
+                log.warning("util.renametree_temp: %s ENOENT, skipping", tmp)
                 break       # 'src' does not exist(?)
             raise           # Other error: propagaee
     return None
@@ -429,7 +440,9 @@ def removetree(tgt):
     # shutil.rmtree error handler that attempts recovery on Windows from 
     # attempts to remove a read-only file or directory (see links above).
     def error_handler(func, path, execinfo):
-        # figure out recovery based on error...
+        """
+        figure out recovery based on error...
+        """
         e = execinfo[1]
         if e.errno == errno.ENOENT or not os.path.exists(path):
             return          # path does not exist
@@ -437,20 +450,20 @@ def removetree(tgt):
             try:
                 os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
             except Exception as che:
-                log.warning("util.removetree: chmod failed: %s"%che)
+                log.warning("util.removetree: chmod failed: %s", che)
             try:
                 func(path)
             except Exception as rfe:
-                log.warning("util.removetree: 'func' retry failed: %s"%rfe)
+                log.warning("util.removetree: 'func' retry failed: %s", rfe)
                 if not os.path.exists(path):
                     return      # Gone, assume all is well
                 raise
         if e.errno == errno.ENOTEMPTY:
-            log.warning("util.removetree: Not empty: %s, %s"%(path, tgt))
+            log.warning("util.removetree: Not empty: %s, %s", path, tgt)
             time.sleep(1)
             removetree(path)    # Retry complete removal
             return
-        log.warning("util.removetree: rmtree path: %s, error: %s"%(path, repr(execinfo)))
+        log.warning("util.removetree: rmtree path: %s, error: %r", path, execinfo)
         raise e
     # Workaround for problems on Windows: it appears that the directory
     # removal does not complete immediately, causing subsequent failures.
@@ -503,17 +516,24 @@ def download_url_to_file(url, fileName=None):
     at [http://stackoverflow.com/questions/862173/]().  (Thanks!)
     """
     def getFileName(url, openUrl):
+        """
+        Local helper to extract filename from content disposition header or URL
+        """
         if 'Content-Disposition' in openUrl.info():
             # If the response has Content-Disposition, try to get filename from it
-            cd = dict(map(
-                lambda x: x.strip().split('=') if '=' in x else (x.strip(),''),
-                openUrl.info()['Content-Disposition'].split(';')))
+            # cd = dict(map(
+            #     lambda x: x.strip().split('=') if '=' in x else (x.strip(),''),
+            #     openUrl.info()['Content-Disposition'].split(';')))
+            cd = dict(
+                    [ x.strip().split('=') if '=' in x else (x.strip(),'')
+                      for x in openUrl.info()['Content-Disposition'].split(';')
+                    ])
             if 'filename' in cd:
                 filename = cd['filename'].strip("\"'")
-                if filename: return filename
-        # if no filename was found above, parse it out of the final URL.
-        return os.path.basename(urlparse.urlsplit(openUrl.url)[2])
-    r = urllib2.urlopen(urllib2.Request(url))
+                if filename: 
+                    return filename
+        return os.path.basename(urlsplit(url)[2])
+    r = urlopen(Request(url))
     try:
         fileName = fileName or getFileName(url,r)
         with open(fileName, 'wb') as f:
@@ -522,17 +542,17 @@ def download_url_to_file(url, fileName=None):
         r.close()
     return
 
-def download_url_to_fileobj(url, fileobj=None):
+def __unused__download_url_to_fileobj(url, fileobj=None):
     """
     Download resource at given URL and write the data to to a supplied
     file stream object.
     """
-    r = urllib2.urlopen(urllib2.Request(url))
+    r = urlopen(Request(url))
     try:
         shutil.copyfileobj(r, fileobj)
     finally:
         r.close()
-    return (resource_url, resource_type)
+    return
 
 # Update MIME types returned by open_url when opening a file
 # @@TODO: unify logic with resourcetypes module, and do all MIME type wrangling there
@@ -546,7 +566,7 @@ def open_url(url):
     returns the access object, actual URL (following any redirect), and 
     resource type (MIME content-type string)
     """
-    r = urllib2.urlopen(urllib2.Request(url))
+    r = urlopen(Request(url))
     u = r.geturl()
     t = r.info().gettype()
     return (r, u, t)

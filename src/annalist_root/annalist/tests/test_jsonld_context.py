@@ -253,11 +253,11 @@ class JsonldContextTest(AnnalistTestCase):
         """
         Iterate over nodes in an RDF list
         """
-        next = head
-        while (next is not None) and (next != URIRef(RDF.URI.nil)):
-            item = graph.value(subject=next, predicate=URIRef(RDF.URI.first))
+        next_item = head
+        while (next_item is not None) and (next_item != URIRef(RDF.URI.nil)):
+            item = graph.value(subject=next_item, predicate=URIRef(RDF.URI.first))
             yield item
-            next = graph.value(subject=next, predicate=URIRef(RDF.URI.rest))
+            next_item = graph.value(subject=next_item, predicate=URIRef(RDF.URI.rest))
         return
 
     def assertTripleIn(self, t, g):
@@ -498,14 +498,14 @@ class JsonldContextTest(AnnalistTestCase):
         for f in fields:
             fi  = URIRef(urlparse.urljoin(self.collbaseurl, f[ANNAL.CURIE.field_id]))
             fp  = Literal(f[ANNAL.CURIE.field_placement])
-            fn  = items.next()
+            fn  = next(items)
             fni = property_value(g, fn, ANNAL.URI.field_id)
             fnp = property_value(g, fn, ANNAL.URI.field_placement)
             self.assertEqual(fni, fi)
             self.assertEqual(fnp, fp)
         # self.assertRaises as context manager, see http://stackoverflow.com/a/28223420/324122
         with self.assertRaises(StopIteration):
-            items.next()
+            next(items)
         return
 
     def test_jsonld_user_default(self):

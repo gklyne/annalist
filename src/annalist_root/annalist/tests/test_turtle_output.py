@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test Turtle generation logic
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2017, G. Klyne"
@@ -771,14 +771,14 @@ class TurtleOutputTest(AnnalistTestCase):
                     ).rstrip("/")
                 )
             fp  = Literal(f[ANNAL.CURIE.field_placement])
-            fn  = items.next()
+            fn  = next(items)
             fni = property_value(g, fn, ANNAL.URI.field_id)
             fnp = property_value(g, fn, ANNAL.URI.field_placement)
             self.assertEqual(fni, fi)
             self.assertEqual(fnp, fp)
         # self.assertRaises as context manager, see http://stackoverflow.com/a/28223420/324122
         with self.assertRaises(StopIteration):
-            items.next()
+            next(items)
         return
 
     def test_http_turtle_user_default(self):

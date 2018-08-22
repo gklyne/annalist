@@ -36,21 +36,12 @@ class compose:
     def __call__(self, *args, **kwargs):
         return self.f(self.g(*args, **kwargs), *self.pending, **self.kwargs)
 
-def curry1(func, arg):
-    """
-    Curry one argument:
-    See: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/229472
-    """
-    import new
-    return new.instancemethod(func, arg, object)
-
 def curry(func, *args):
     """
     Curry multiple arguments:
     See: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/229472
     
-    As of Python 2.5, a more general version of this is in standard
-    module functools:
+    As of Python 2.5, a general version is in standard module functools:
       http://www.python.org/dev/peps/pep-0309/
       http://docs.python.org/lib/module-functools.html
     """

@@ -155,15 +155,23 @@ class LoginUserView(generic.View):
             return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
-        provider_labels  = map( 
-            lambda pair: pair[1], 
-            sorted(
-                [ ( p.get('provider_order', 5),
-                    (k, p.get('provider_label', k), p.get('provider_image', None))
-                  )
-                    for k, p in PROVIDER_DETAILS.items()
-                ])
-            )
+        #@@ original code
+        # provider_labels  = map( 
+        #     lambda pair: pair[1], 
+        #     sorted(
+        #         [ ( p.get('provider_order', 5),
+        #             (k, p.get('provider_label', k), p.get('provider_image', None))
+        #           )
+        #             for k, p in PROVIDER_DETAILS.items()
+        #         ])
+        #     )
+        #@@
+        provider_tuples = (
+            [ ( p.get('provider_order', 5),
+                (k, p.get('provider_label', k), p.get('provider_image', None))
+              ) for k, p in PROVIDER_DETAILS.items()
+            ])
+        provider_labels = [ p[1] for p in sorted(provider_tuples) ]
         for p in PROVIDER_DETAILS:
             if "default" in PROVIDER_DETAILS[p]:            
                 default_provider = PROVIDER_DETAILS[p]["default"]
@@ -172,7 +180,7 @@ class LoginUserView(generic.View):
             , "login_done_url":     login_done_url
             , "user_profile_url":   user_profile_url
             , "continuation_url":   continuation_url
-            , "provider_keys":      PROVIDER_DETAILS.keys()
+            , "provider_keys":      list(PROVIDER_DETAILS)
             , "provider_labels":    provider_labels
             , "provider":           default_provider
             , "suppress_user":      True

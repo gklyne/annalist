@@ -19,6 +19,7 @@ from pyparsing import alphas, alphanums
 
 from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
+from annalist.py3porting            import is_string, to_unicode
 
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData
@@ -244,9 +245,6 @@ class EntityFinder(object):
                 val = e[key]
                 if cls.value_contains(val, search):
                     return True
-                # if isinstance(val, (str, unicode)):
-                #     if search in val:
-                #         return True
             return False
         return True
 
@@ -264,7 +262,7 @@ class EntityFinder(object):
             for e in val:
                 if cls.value_contains(e, search):
                     return True
-        elif isinstance(val, (str, unicode)):
+        elif is_string(val):
             return search in val
         return False
 
