@@ -479,6 +479,10 @@ class EntityRoot(object):
         Returns the values loaded, or None.
         """
         if self._values is None:
+            # log.debug(
+            #     "_ensure_values_loaded: _entitydir %s, _entityfile %s"%
+            #       (self._entitydir, self._entityfile)
+            #     )
             vals = self._load_values()
             if vals:
                 vals = self._migrate_values(vals)

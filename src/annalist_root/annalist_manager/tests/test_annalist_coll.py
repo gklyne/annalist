@@ -53,7 +53,8 @@ class AnnalistManagerCollTest(AnnalistTestCase):
         cls.testhome    = os.path.join(cls.src_root, "sampledata/data")
         cls.sitehome    = os.path.join(cls.testhome, "annalist_site")
         cls.settingsdir = os.path.join(cls.src_root, "annalist_site/settings")
-        removetree(cls.sitehome)
+        if os.path.isdir(cls.sitehome):
+            removetree(cls.sitehome)
         stderrbuf  = StringIO.StringIO()
         with SwitchStderr(stderrbuf):
             stdoutbuf  = StringIO.StringIO()

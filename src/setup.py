@@ -60,6 +60,7 @@ setup(
           , 'annalist_root.annalist_site'
             , 'annalist_root.annalist_site.settings'
           , 'annalist_root.annalist_manager'
+          , 'annalist_root.annalist_manager.tests'
           , 'annalist_root.utils'
           , 'annalist_root.login'
           , 'annalist_root.miscutils'
@@ -75,6 +76,7 @@ setup(
             , 'sampledata/README.md'
             , 'sampledata/testinit/annalist_site/*.md'
             , 'sampledata/testinit/annalist_site/*.jpg'
+            , 'sampledata/testinit/annalist_site/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*.jsonld'
             , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
             ]

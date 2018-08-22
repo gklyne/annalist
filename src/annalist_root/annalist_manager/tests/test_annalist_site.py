@@ -49,7 +49,8 @@ class AnnalistManagerSiteTest(AnnalistTestCase):
         self.testhome    = os.path.join(self.src_root, "sampledata/data")
         self.sitehome    = os.path.join(self.testhome, "annalist_site")
         self.settingsdir = os.path.join(self.src_root, "annalist_site/settings")
-        removetree(self.sitehome)
+        if os.path.isdir(self.sitehome):
+            removetree(self.sitehome)
         return
 
     def tearDown(self):
