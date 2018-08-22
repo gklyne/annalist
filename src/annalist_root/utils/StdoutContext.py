@@ -45,7 +45,7 @@ class SwitchStderr(object):
     """
     Context handler class that swiches standard error to a named file or supplied stream.
 
-    (Same as SwitchStderr, but swirches stderr)
+    (Same as SwitchStdout, but swiches stderr)
     """
     
     def __init__(self, fileorstr):
@@ -67,6 +67,32 @@ class SwitchStderr(object):
         if self.opened:
             self.outstr.close()
         sys.stderr = self.savestderr
+        return False
+
+class SwitchStdin(object):
+    """
+    Context handler class that swiches standard input to a named file or supplied stream.
+    """
+    
+    def __init__(self, fileorstr):
+        self.fileorstr = fileorstr
+        self.opened    = False
+        return
+    
+    def __enter__(self):
+        if isinstance(self.fileorstr,basestring):
+            self.instr = open(self.fileorstr, "w")
+            self.opened = True
+        else:
+            self.instr = self.fileorstr
+        self.savestdin = sys.stdin
+        sys.stdin      = self.instr
+        return 
+
+    def __exit__(self, exctype, excval, exctraceback):
+        if self.opened:
+            self.outin.close()
+        sys.stdin = self.savestdin
         return False
 
 if __name__ == "__main__":

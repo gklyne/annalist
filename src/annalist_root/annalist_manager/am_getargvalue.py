@@ -35,8 +35,13 @@ def getargvalue(val, prompt):
 
 def getsecret(prompt):
     """
-    Prompt and read secret value without echo
+    Prompt and read secret value without echo, or read from stdin.
     """
-    return getpass.getpass(prompt)
+    if sys.stdin.isatty():
+        val = getpass.getpass(prompt)
+    else:
+        val = sys.stdin.readline()
+        if val[-1] == '\n': val = val[:-1]
+    return val
 
 # End.

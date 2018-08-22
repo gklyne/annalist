@@ -219,19 +219,5 @@ if __name__ == "__main__":
     status = runMain()
     sys.exit(status)
 
-# Tests
-#
-# python am_main.py runtests
-# python am_main.py --config=runtests initialize
-# python am_main.py --config=runtests createlocaluser testtestuser  testestuser@localhost
-# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
-# python am_main.py --config=runtests createadminuser testtestadmin testestadmin@localhost
-# python am_main.py --config=runtests deleteuser testtestadmin
-# python am_main.py --config=runtests deleteuser testtestadmin
-# python am_main.py --config=runtests updateadminuser gklyne
-# python am_main.py --config=runtests setdefaultpermissions "VIEW CREATE TEST"
-# python am_main.py --config=runtests setpublicpermissions "VIEW TEST"
-# python am_main.py --config=runtests updatesitedata
-
 # End.
 

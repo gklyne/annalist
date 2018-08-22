@@ -74,7 +74,7 @@ permissions_help = (
     "The 'permissions' parameter is a list of space-separated permission keywords,\n"+
     "or may be empty.  If multiple permissions are specified, some form of command-line\n"+
     "quoting should be used so they are presented as a single argument (e.g. enclose\n"+
-    "the list of keywords in double quoted).\n"+
+    "the list of keywords in double quotes).\n"+
     "\n"+
     "If not specified on the command line, the user will be prompted for default permissions.\n"+
     "\n"+

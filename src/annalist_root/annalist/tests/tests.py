@@ -37,6 +37,7 @@ def load_tests(loader, tests, ignore):
     log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
+    #     https://docs.python.org/2/library/doctest.html#unittest-api
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)

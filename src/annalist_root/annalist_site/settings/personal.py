@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import, division, print_function
 
+# print("@@@@ settings: "+__name__)
+
 """
 Personal deployment (same host) settings
 
@@ -23,10 +25,11 @@ DEBUG           = False
 
 ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
-DATABASES = {
+DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3'),
+        'NAME': DATABASE_PATH,
     }
 }
 

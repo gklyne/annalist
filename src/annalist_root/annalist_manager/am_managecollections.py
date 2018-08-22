@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 from annalist                       import layout
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.util                  import valid_id, extract_entity_id, make_type_entity_id
-from annalist.collections           import installable_collections
+from annalist.collections_data      import installable_collections
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection
@@ -625,7 +625,7 @@ def am_migrateallcollections(annroot, userhome, options):
             return status
         coll_id = coll.get_id()
         if coll_id != layout.SITEDATA_ID:
-            log.info("========== Processing '%s' =========="%(coll_id,))
+            log.debug("========== Processing '%s' =========="%(coll_id,))
             print("---- Processing '%s'"%(coll_id,))
             msgs   = migrate_coll_data(coll)
             if msgs:

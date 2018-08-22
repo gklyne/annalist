@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import, division, print_function
 
+# print("@@@@ settings: "+__name__)
+
 """
 Shared deployment (separate server host) settings
 
@@ -21,10 +23,11 @@ CONFIG_BASE     = "/etc/annalist/"
 DEBUG           = False
 ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
 
-DATABASES = {
+DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3'),
+        'NAME':   DATABASE_PATH,
     }
 }
 
@@ -76,6 +79,7 @@ LOGGING = {
 
 import logging
 log = logging.getLogger(__name__)
+log.info("@@@@ settings: "+__name__)
 log.info(ANNALIST_VERSION_MSG)
 # log.info("Annalist version %s (shared service configuration)"%(ANNALIST_VERSION))
 log.info("SETTINGS_MODULE: "+SETTINGS_MODULE)

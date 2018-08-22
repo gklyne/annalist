@@ -23,8 +23,10 @@ class AnnalistConfig(AppConfig):
     name = 'annalist'
 
     def ready(self):
+        log.info("== AnalistConfig.ready ==")
         log.info(settings.ANNALIST_VERSION_MSG)
         log.info("SETTINGS_MODULE:  "+settings.SETTINGS_MODULE)
+        log.info("DATABASES:        "+repr(settings.DATABASES))
         log.info("BASE_DATA_DIR:    "+settings.BASE_DATA_DIR)
         log.info("CONFIG_BASE:      "+settings.CONFIG_BASE)
         log.info("DJANGO_ROOT:      "+settings.DJANGO_ROOT)
@@ -34,6 +36,7 @@ class AnnalistConfig(AppConfig):
         log.info("DB PATH:          "+settings.DATABASES['default']['NAME'])
         log.info("ALLOWED_HOSTS:    "+",".join(settings.ALLOWED_HOSTS))
         log.info("LOGGING_FILE:     "+settings.LOGGING_FILE)
+        log.info("==")
         return
 
 # End.

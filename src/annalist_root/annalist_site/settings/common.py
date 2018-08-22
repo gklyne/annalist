@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import, division, print_function
 
+# print("@@@@ settings: "+__name__)
+
 """
 Django settings for annalist_site project.
 
@@ -27,7 +29,7 @@ DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))           # src/annalist_root/annalist_site/settings
 SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)                         # src/annalist_root/annalist_site
 SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)                      # src/annalist_root
-SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata"                           # src/annalist_root/sampledata
+SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata/data"                      # src/annalist_root/sampledata
 
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """
@@ -122,10 +124,11 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
+DATABASE_PATH = os.path.join(SAMPLEDATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES     = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(SITE_SRC_ROOT, 'db.sqlite3'),
+        'NAME':   DATABASE_PATH,
     }
 }
 

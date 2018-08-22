@@ -9,6 +9,7 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import sys
 import importlib
 import logging
 log = logging.getLogger(__name__)

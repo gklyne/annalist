@@ -273,7 +273,7 @@ class Site(EntityRoot):
             description = "Annalist site metadata and site-wide values."
         annal_comment = (
             "Initialized by annalist.models.site.create_site_metadata at "+
-            isoformat_space(datetime_now)
+            isoformat_space(datetime_now)+" (UTC)"
             )
         site = Site(site_base_uri, site_base_dir)
         sitedata_values = (
@@ -383,7 +383,7 @@ class Site(EntityRoot):
             """         :                              (repeat for collections in site)\n"""+
             """\n"""+
             """Created by annalist.models.site.py\n"""+
-            """for Annalist %(version)s at %(datetime)s\n"""+
+            """for Annalist %(version)s at %(datetime)s (UTC)\n"""+
             """\n"""+
             """\n""")%
                 { 'site_base_dir':              site._entitydir
@@ -423,7 +423,7 @@ class Site(EntityRoot):
             description = "Annalist data collection %s"%coll_id
         annal_comment = (
             "Initialized by annalist.models.site.create_empty_coll_data at "+
-            isoformat_space(datetime_now)
+            isoformat_space(datetime_now)+" (UTC)"
             )
         coll_values = (
             { RDFS.CURIE.label:             label
