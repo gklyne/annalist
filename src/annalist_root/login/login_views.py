@@ -89,7 +89,7 @@ def confirm_authentication(view,
     user_profile_url    URL retrieved when user profile details have been set up.
     continuation_url    URL from which the login process was initiated.
     """
-    if view.request.user.is_authenticated():
+    if view.request.user.is_authenticated:
         return None
     if not login_form_url:
         return error400values(view, "No login form URI specified")

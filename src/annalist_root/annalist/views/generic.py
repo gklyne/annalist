@@ -303,7 +303,7 @@ class AnnalistGenericView(ContentNegotiationView):
         current request, as a pair (username, URI)
         """
         user = self.request.user
-        if user.is_authenticated():
+        if user.is_authenticated:
             return (user.username, "mailto:"+user.email)
         return ("_unknown_user_perms", "annal:User/_unknown_user_perms")
 

@@ -99,15 +99,16 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - [x] Create branch for Python 3 testing
     - [x] from __future__ import absolute_import, division, print_function, unicode_literals
     - [x] Install pylint, run python 3 porting tests
-    - [ ] Fix pylint reports and test code under Python 2
-    - [ ] Change all py3porting references to utils, remove version in annalist
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Change all py3porting references to utils, remove version in annalist
+    - [x] Run test suite with `python -3 ...`
     - [ ] Check for dependencies stuck at Python2
     - [ ] Test under Python 3   
 
 - [ ] Update annalist-manager to Python 3 compatibility
     - [x] Create test suite
     - [x] from __future__ imports ...
-    - [ ] Fix pylint reports and test code under Python 2
+    - [x] Fix pylint reports and test code under Python 2
     - [ ] Test under Python 3   
 
 - [ ] Update Django version used to latest version designated for long term support
