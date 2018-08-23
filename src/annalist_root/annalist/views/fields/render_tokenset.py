@@ -15,7 +15,7 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from annalist.py3porting                        import is_string, to_unicode
+from utils.py3porting                           import is_string, to_unicode
 
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (

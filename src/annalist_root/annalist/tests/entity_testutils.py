@@ -1,20 +1,19 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Utility functions to support entity data testing
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import copy
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import copy
 
 from django.conf                    import settings
 from django.http                    import QueryDict
@@ -24,10 +23,11 @@ from django.core.urlresolvers       import resolve, reverse
 from django.template                import Context
 from django.contrib.auth.models     import User
 
+from utils.py3porting               import is_string, to_unicode
+
 import annalist
 from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
-from annalist.py3porting            import is_string, to_unicode
 from annalist                       import layout
 
 from annalist.models.annalistuser   import AnnalistUser

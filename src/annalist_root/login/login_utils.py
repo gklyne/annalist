@@ -16,7 +16,7 @@ import copy
 
 try:
     # Python3
-    from urllib.parse   import quote, unquote
+    from .parse   import quote, unquote
 except ImportError:
     # Python2
     from urllib         import quote, unquote

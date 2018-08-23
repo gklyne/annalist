@@ -1,10 +1,10 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module defines a class used to represent a choice for an 
 enumerated-value field.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 
 from collections            import OrderedDict, namedtuple
 
-from django.utils.html      import format_html, mark_safe, escape
+from utils.py3porting       import encode_str, to_unicode
 
-from annalist.py3porting    import isoformat_space, encode_str
+from django.utils.html      import format_html, mark_safe, escape
 
 _FieldChoice_tuple = namedtuple("FieldChoice", ("id", "value", "label", "link", "choice_value"))
 
@@ -87,15 +87,30 @@ class FieldChoice(_FieldChoice_tuple):
 
     def __eq__(self, other):
         """
-        Returns True if self == other for sorting purposes
+        Returns True if self == other for sorting and equivalence purposes
         """
         return self.id.__eq__(other.id)
+
+    def __ne__(self, other):
+        """
+        Returns True if self != other for sorting and equivalence purposes
+
+        Note: required for Python2.
+        """
+        return self.id.__ne__(other.id)
 
     def __lt__(self, other):
         """
         Returns True if self < other for sorting purposes
         """
         return self.id.__lt__(other.id)
+
+    def __hash__(self):
+        """
+        pylint says this should be defined if __eq__ is defined.
+        Something to do with sets?
+        """
+        return hash(self.id)
 
     def choice(self, sep=u"\xa0\xa0\xa0"):
         """
@@ -104,7 +119,7 @@ class FieldChoice(_FieldChoice_tuple):
         if self.choice_value:
             choice_text = self.option_label(sep=sep)
         else:
-            choice_text = unicode(self.label)
+            choice_text = to_unicode(self.label)
         return choice_text
 
     def choice_html(self, sep=u"&nbsp;&nbsp;&nbsp;"):

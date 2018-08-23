@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module contains utilities for use in conjunction with field renderers.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -15,16 +15,16 @@ log = logging.getLogger(__name__)
 import traceback
 import re
 
-from urlparse               import urljoin  # py3: from urllib.parse ...
 from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
 from django.utils.html      import escape
 
+from utils.py3porting       import is_string, to_unicode, urljoin
+
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
 from annalist.util          import split_type_entity_id
-from annalist.py3porting    import is_string, to_unicode
 
 from annalist.models.entitytypeinfo         import EntityTypeInfo
 from annalist.models.entity                 import EntityRoot

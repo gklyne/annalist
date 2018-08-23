@@ -22,23 +22,10 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
 log = logging.getLogger(__name__)
+
 import httpretty
 
-try:
-    # Python3
-    from urllib.parse       import (
-        urlparse, urljoin, 
-        urlsplit, urlunsplit, 
-        quote, unquote
-        )
-    from urllib.request     import urlopen, Request, pathname2url
-    from urllib.error       import HTTPError
-except ImportError:
-    # Python2
-    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
-    from urllib2            import urlopen, Request, HTTPError
-    from urllib             import quote, unquote, pathname2url
-
+from utils.py3porting       import urljoin, pathname2url
 
 from .              import ScanDirectories
 from .FileMimeTypes import FileMimeTypes

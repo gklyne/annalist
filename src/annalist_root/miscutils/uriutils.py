@@ -1,5 +1,5 @@
 """
-Helper functions for manipulasting and testing URIs and URI-related 
+Helper functions for manipulating and testing URIs and URI-related 
 file paths, and for accessing or testing data at a URI reference.
 """
 
@@ -10,34 +10,17 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import sys
 import os
 import os.path
 import re
-import httplib
 
-try:
-    # Python3
-    from urllib.parse       import (
-        urlparse, urljoin, 
-        urlsplit, urlunsplit, 
-        quote, unquote,
-        SplitResult
-        )
-    from urllib.request     import urlopen, Request, pathname2url
-    from urllib.error       import HTTPError
-except ImportError:
-    # Python2
-    from urlparse           import (
-        urlparse, urljoin, 
-        urlsplit, urlunsplit, 
-        SplitResult
-        )
-    from urllib2            import urlopen, Request, HTTPError
-    from urllib             import quote, unquote, pathname2url
-
-import logging
-log = logging.getLogger(__name__)
+from utils.py3porting       import (
+    urljoin, pathname2url, urlopen, Request, HTTPConnection
+    )
 
 fileuribase = "file://"
 
@@ -80,7 +63,7 @@ def isLiveUri(uriref):
     Test URI reference to see if it refers to an accessible resource
     
     Relative URI references are assumed to be local file system references,
-    relartive to the current working directory.
+    relative to the current working directory.
     """
     islive  = False
     fileuri = resolveFileAsUri(uriref)
@@ -92,7 +75,7 @@ def isLiveUri(uriref):
         host      = parseduri.netloc
         path      = parseduri.path
         if parseduri.query: path += "?"+parseduri.query
-        httpcon   = httplib.HTTPConnection(host, timeout=5)
+        httpcon   = HTTPConnection(host, timeout=5)
         # Extra request headers
         # ... none for now
         # Execute request

@@ -1,22 +1,22 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist generic view definition
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import json
 import markdown
 import traceback
-import logging
-log = logging.getLogger(__name__)
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
@@ -24,11 +24,11 @@ from django.template                import loader
 from django.views                   import generic
 from django.views.decorators.csrf   import csrf_exempt
 from django.core.urlresolvers       import resolve, reverse
-
-from django.conf import settings
+from django.conf                    import settings
 
 import login.login_views
 
+from utils.py3porting               import urljoin
 from utils.ContentNegotiationView   import ContentNegotiationView
 
 import annalist
@@ -138,7 +138,7 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         Return base URL for specified collection
         """
-        return urlparse.urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
+        return urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
 
     def get_entity_base_url(self, coll_id, type_id, entity_id):
         """

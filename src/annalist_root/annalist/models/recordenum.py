@@ -1,28 +1,28 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist data record for a member of an enumerated type
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import os.path
-import urlparse
-import shutil
-
 import logging
 log = logging.getLogger(__name__)
 
+import os
+import os.path
+import shutil
+
 from django.conf import settings
+
+from utils.py3porting           import isoformat_space, encode_str
 
 from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
-from annalist.py3porting        import isoformat_space, encode_str
 from annalist                   import util
 
 from annalist.models.entity     import Entity

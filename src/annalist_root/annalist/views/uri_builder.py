@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module contains functions to assist in the construction of URIs for views.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -14,20 +14,7 @@ log = logging.getLogger(__name__)
 
 import re
 
-try:
-    # Python3
-    from urllib.parse       import (
-        urlparse, urljoin, 
-        urlsplit, urlunsplit, 
-        quote, unquote
-        )
-    from urllib.request     import urlopen, Request
-    from urllib.error       import HTTPError
-except ImportError:
-    # Python2
-    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
-    from urllib2            import urlopen, Request, HTTPError
-    from urllib             import quote, unquote
+from utils.py3porting import urljoin, urlsplit, urlunsplit, quote, unquote
 
 # From RFC 3986:
 gen_delims  = ":/?#[]@"

@@ -17,9 +17,10 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
+from utils.py3porting               import is_string, to_unicode
+
 from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
-from annalist.py3porting            import is_string, to_unicode
 
 from annalist.models.recordtype     import RecordType
 from annalist.models.recordtypedata import RecordTypeData

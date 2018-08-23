@@ -16,24 +16,25 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import itertools
 import json
 import errno
 import traceback
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                import settings
+
+from utils.py3porting           import is_string, urljoin
 
 from annalist                   import layout
 from annalist                   import util
 from annalist                   import message
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL
-from annalist.py3porting        import is_string
 
 from annalist.models.entityroot import EntityRoot
 
@@ -153,7 +154,7 @@ class Entity(EntityRoot):
         #     "@@  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
         #     (entityid, parent._entityurl, parent._entitydir, relpath)
         #     )
-        entity_url  = urlparse.urljoin(parent._entityurl, relpath) 
+        entity_url  = urljoin(parent._entityurl, relpath) 
         entity_dir  = os.path.normpath(os.path.join(parent._entitydir, relpath))
         entity_base = parent._entitydir   # Used as safety check when removing data
         if not entity_dir.startswith(entity_base):
@@ -162,7 +163,7 @@ class Entity(EntityRoot):
         #     "@@  _ Entity.__init__: entity_url %s, entity_dir %s"%
         #     (entity_url, entity_dir)
         #     )
-        entityviewurl = urlparse.urljoin(
+        entityviewurl = urljoin(
             parent._entityviewurl,
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
@@ -184,8 +185,8 @@ class Entity(EntityRoot):
         # log.debug("Entity._get_ref_url: baseurl %s, urlref %s"%(baseurl, urlref))
         if urlref is None:
             return None
-        rooturl = urlparse.urljoin(baseurl, entityurl)
-        return urlparse.urljoin(
+        rooturl = urljoin(baseurl, entityurl)
+        return urljoin(
             rooturl,
             urlref%({"type_id": self._entitytypeid, "id": self._entityid})
             )

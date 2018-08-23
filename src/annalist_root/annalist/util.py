@@ -14,33 +14,39 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import re
 import os
 import os.path
 import errno
 import traceback
+import re
 import stat
 import time
 import json
 import shutil
 
-from io import BytesIO     # for handling byte strings
-from io import StringIO    # for handling unicode strings
+# from io import BytesIO     # for handling byte strings
+# from io import StringIO    # for handling unicode strings
 
-try:
-    # Python3
-    from urllib.parse       import urlparse, urljoin, urlsplit, urlencode
-    from urllib.request     import urlopen, Request
-    from urllib.error       import HTTPError
-except ImportError:
-    # Python2
-    from urlparse           import urlparse, urljoin, urlsplit
-    from urllib2            import urlopen, Request, HTTPError
+# @@TODO: from py3porting
+# try:
+#     # Python3
+#     from urllib.parse       import urlparse, urljoin, urlsplit, urlencode
+#     from urllib.request     import urlopen, Request
+#     from urllib.error       import HTTPError
+# except ImportError:
+#     # Python2
+#     from urlparse           import urlparse, urljoin, urlsplit
+#     from urllib2            import urlopen, Request, HTTPError
 
 from django.conf            import settings
 
+from utils.py3porting       import (
+    is_string, to_unicode, StringIO, 
+    urlparse, urljoin, urlsplit, 
+    urlopen, Request
+    )
+
 from annalist.identifiers   import ANNAL
-from annalist.py3porting    import is_string, to_unicode
 
 def valid_id(id_string, reserved_ok=False):
     """

@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Entity resource access (imported and uploaded files).
 
@@ -11,16 +8,23 @@ It contains logic for accessing raw JSON-LD data, or accessing that data convert
 some other format (e.g. Turtle).
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2017, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import sys
 import os
 import json
-import StringIO
-import logging
-log = logging.getLogger(__name__)
+
+# Used by `json_resource_file` below.
+# See: https://stackoverflow.com/questions/51981089
+from six import StringIO     
 
 from rdflib                             import Graph, URIRef, Literal
 
@@ -115,7 +119,7 @@ def json_resource_file(baseurl, jsondata, resource_info):
     """
     Return a file object that reads out a JSON version of the supplied entity values data. 
     """
-    response_file = StringIO.StringIO()
+    response_file = StringIO()
     json.dump(jsondata, response_file, indent=2, separators=(',', ': '), sort_keys=True)
     response_file.seek(0)
     return response_file
@@ -132,7 +136,7 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
     g = Graph()
     g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
-    response_file = StringIO.StringIO()
+    response_file = StringIO()
     try:
         g.serialize(destination=response_file, format='turtle', indent=4)
     except Exception as e:

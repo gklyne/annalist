@@ -280,9 +280,8 @@ TYPE_PERMISSIONS_MAP = (
 def get_built_in_type_ids():
     """
     Returns an interator over the built-in types
-    (on python 2, a list - but it's just a small list)
     """
-    return TYPE_CLASS_MAP.keys()
+    return iter(TYPE_CLASS_MAP)
 
 class EntityTypeInfo(object):
     """

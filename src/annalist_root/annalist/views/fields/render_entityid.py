@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 from django.template        import Template
 
-from annalist.py3porting                import is_string, to_unicode
+from utils.py3porting                   import is_string, to_unicode
 
 from annalist.views.fields.render_base  import RenderBase
 

@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for EntityData generic list view
 
@@ -12,23 +9,26 @@ record views and lists.  This serves two purposes:
   local data.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import unittest
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import unittest
 
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-# from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
+from utils.py3porting               import urlparse, urljoin
 from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist                       import layout
@@ -494,7 +494,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         curi = continuation_params_url(u)
         field_params = (
             { 'base':           TestBasePath
-            , 'list_base':      urlparse.urlparse(u).path.rstrip("/")
+            , 'list_base':      urlparse(u).path.rstrip("/")
             , 'cont':           uri_params({"continuation_url": curi})
             , 'tooltip1':       "" # 'title="%s"'%r.context['fields'][0]['field_help']
             , 'tooltip2':       "" # 'title="%s"'%r.context['fields'][1]['field_help']

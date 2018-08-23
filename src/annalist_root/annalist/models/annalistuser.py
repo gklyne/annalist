@@ -22,7 +22,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
-import urlparse
 import shutil
 
 import logging

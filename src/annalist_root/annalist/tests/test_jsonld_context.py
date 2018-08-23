@@ -1,25 +1,26 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test JSON-LD and context generation logic
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import unittest
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import unittest
+import traceback
 
 from rdflib                         import Graph, URIRef, Literal
 
 from django.test.client             import Client
 
+from utils.py3porting               import urljoin
 from utils.SuppressLoggingContext   import SuppressLogging
 from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
 
@@ -239,14 +240,14 @@ class JsonldContextTest(AnnalistTestCase):
         return self.dir_base_url(self.entity_basedir(coll_id, type_id, entity_id))
 
     def coll_url(self, coll_id):
-        return urlparse.urljoin(self.coll_baseurl(coll_id), layout.META_COLL_REF)
+        return urljoin(self.coll_baseurl(coll_id), layout.META_COLL_REF)
 
     def entity_url(self, coll_id, type_id, entity_id):
         return "file://" + self.entity_basedir(coll_id, type_id, entity_id)
 
     def resolve_coll_url(self, coll, ref):
-        coll_base    = urlparse.urljoin(self.testcoll.get_url(), layout.COLL_BASE_REF)
-        resolved_url = urlparse.urljoin(coll_base, ref)
+        coll_base    = urljoin(self.testcoll.get_url(), layout.COLL_BASE_REF)
+        resolved_url = urljoin(coll_base, ref)
         return resolved_url
 
     def scan_rdf_list(self, graph, head):
@@ -278,7 +279,7 @@ class JsonldContextTest(AnnalistTestCase):
             ])
         mock_dict = {}
         for mock_ref in mock_refs:
-            mu = urlparse.urljoin(base_path, mock_ref)
+            mu = urljoin(base_path, mock_ref)
             log.debug(
                 "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
                 (base_path, mock_ref, mu)
@@ -427,7 +428,7 @@ class JsonldContextTest(AnnalistTestCase):
         s = type_vocab._read_stream()
         # print("***** s.read():   (type_vocab)")
         # print(s.read())
-        b = urlparse.urljoin(
+        b = urljoin(
                 self.collbaseurl, 
                 layout.COLL_BASE_TYPE_REF%{ 'id': type_vocab.get_id() }
                 )
@@ -440,8 +441,8 @@ class JsonldContextTest(AnnalistTestCase):
         # Check the resulting graph contents
         subj            = b
         type_vocab_data = type_vocab.get_values()
-        vocab_list_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_list])
-        vocab_view_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_view])
+        vocab_list_url  = urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_list])
+        vocab_view_url  = urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
             [ (subj, RDF.URI.type,        URIRef(ANNAL.URI.Type)                        )
             , (subj, RDFS.URI.label,      Literal(type_vocab_data[RDFS.CURIE.label])    )
@@ -465,7 +466,7 @@ class JsonldContextTest(AnnalistTestCase):
         # Read view data as JSON-LD
         g = Graph()
         s = view_user._read_stream()
-        b = urlparse.urljoin(
+        b = urljoin(
                 self.collbaseurl, 
                 layout.COLL_BASE_VIEW_REF%{ 'id': view_user.get_id() }
                 )
@@ -496,7 +497,7 @@ class JsonldContextTest(AnnalistTestCase):
         head   = property_value(g, URIRef(subj), ANNAL.URI.view_fields)
         items  = scan_list(g, head)
         for f in fields:
-            fi  = URIRef(urlparse.urljoin(self.collbaseurl, f[ANNAL.CURIE.field_id]))
+            fi  = URIRef(urljoin(self.collbaseurl, f[ANNAL.CURIE.field_id]))
             fp  = Literal(f[ANNAL.CURIE.field_placement])
             fn  = next(items)
             fni = property_value(g, fn, ANNAL.URI.field_id)
@@ -520,7 +521,7 @@ class JsonldContextTest(AnnalistTestCase):
         # Read user data as JSON-LD
         g = Graph()
         s = user_default._read_stream()
-        b = urlparse.urljoin(
+        b = urljoin(
                 self.collbaseurl, 
                 layout.COLL_BASE_USER_REF%{ 'id': user_default.get_id() }
                 )
@@ -560,7 +561,7 @@ class JsonldContextTest(AnnalistTestCase):
         # Read user data as JSON-LD
         g = Graph()
         s = list_type_list._read_stream()
-        b = urlparse.urljoin(
+        b = urljoin(
                 self.collbaseurl,
                 layout.COLL_BASE_ENUM_REF%
                     { 'type_id': list_type_list.get_type_id()
@@ -734,8 +735,8 @@ class JsonldContextTest(AnnalistTestCase):
         # Check the resulting graph contents
         subj            = TestHostUri + v.rstrip("/")
         type_vocab_data = type_vocab.get_values()
-        # vocab_list_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_list])
-        # vocab_view_url  = urlparse.urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_view])
+        # vocab_list_url  = urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_list])
+        # vocab_view_url  = urljoin(self.collbaseurl, type_vocab_data[ANNAL.CURIE.type_view])
         vocab_list_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_list])
         vocab_view_url  = self.resolve_coll_url(self.testcoll, type_vocab_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
@@ -796,8 +797,8 @@ class JsonldContextTest(AnnalistTestCase):
         # Check the resulting graph contents
         subj          = TestHostUri + v.rstrip("/")
         type_new_data = type_new.get_values()
-        # new_list_url  = urlparse.urljoin(self.collbaseurl, type_new_data[ANNAL.CURIE.type_list])
-        # new_view_url  = urlparse.urljoin(self.collbaseurl, type_new_data[ANNAL.CURIE.type_view])
+        # new_list_url  = urljoin(self.collbaseurl, type_new_data[ANNAL.CURIE.type_list])
+        # new_view_url  = urljoin(self.collbaseurl, type_new_data[ANNAL.CURIE.type_view])
         new_list_url  = self.resolve_coll_url(self.testcoll, type_new_data[ANNAL.CURIE.type_list])
         new_view_url  = self.resolve_coll_url(self.testcoll, type_new_data[ANNAL.CURIE.type_view])
         for (s, p, o) in (
@@ -1012,8 +1013,8 @@ class JsonldContextTest(AnnalistTestCase):
         Return list of entity nodes from JSON list
         """
         #@@
-        # list_url_abs    = urlparse.urljoin(TestHostUri, list_url)
-        # list_url_query = urlparse.urlsplit(list_url).query
+        # list_url_abs   = urljoin(TestHostUri, list_url)
+        # list_url_query = urlsplit(list_url).query
         # if list_url_query != "":
         #     list_url_query = "?" + list_url_query
         # expect_json_url = list_url_abs + layout.ENTITY_LIST_FILE + list_url_query
@@ -1040,7 +1041,7 @@ class JsonldContextTest(AnnalistTestCase):
         # for t in g.triples((None, None, None)):
         #     print repr(t)
         # print("*****")
-        subj = urlparse.urljoin(json_url, subj_ref)
+        subj = urljoin(json_url, subj_ref)
         for (s, p, o) in (
             [ (subj, ANNAL.URI.entity_list, None)
             ]):
@@ -1065,7 +1066,7 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
@@ -1081,8 +1082,8 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 2)
         self.assertIn(URIRef(t_uri), list_items)
         self.assertIn(URIRef(e1uri), list_items)
@@ -1101,8 +1102,8 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
-        t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
@@ -1128,7 +1129,7 @@ class JsonldContextTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 
@@ -1150,7 +1151,7 @@ class JsonldContextTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 

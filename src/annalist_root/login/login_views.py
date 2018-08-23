@@ -9,6 +9,9 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import re
 import json
@@ -16,11 +19,7 @@ import markdown
 import copy
 import uuid
 import urllib
-from urlparse import urlparse, urljoin
 from importlib import import_module
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.core.urlresolvers import resolve, reverse
 from django.http import HttpResponse
@@ -33,6 +32,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 from utils.http_errors      import error400values
+from utils.py3porting       import urlparse, urljoin
 
 from .                      import login_message
 from .auth_django_client    import django_flow_from_user_id

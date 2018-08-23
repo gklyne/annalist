@@ -1,19 +1,20 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Record field data functions to support entity data testing
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+
+from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
@@ -65,7 +66,7 @@ def recordfield_dir(coll_id="testcoll", field_id="testfield"):
 #   the declared URI patterns.
 
 def recordfield_coll_url(site, coll_id="testcoll", field_id="testfield"):
-    return urlparse.urljoin(
+    return urljoin(
         site._entityurl,
         layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
         layout.COLL_FIELD_PATH%{'id': field_id} + "/"

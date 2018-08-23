@@ -17,7 +17,8 @@ from collections import OrderedDict
 
 import logging
 log = logging.getLogger(__name__)
-from annalist.py3porting    import is_string, to_unicode
+
+from utils.py3porting import is_string, to_unicode
 
 from annalist.views.fields.render_bool_checkbox import (
     get_bool_checkbox_renderer, 

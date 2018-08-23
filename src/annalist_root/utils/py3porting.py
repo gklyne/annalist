@@ -2,35 +2,34 @@
 Definitions to support porting to Python 3
 
 The intent is to abstract here those API calls used by Annalist that are 
-sensitive to string vs unicode parameters.
+sensitive to string vs unicode parameters, and changes to the Python library
+structure between Python versions 2 and 3.  It also serves to identify code
+features for which there isn't a natural idiom that works across versions.
 
 To use this module, include something like this in the original source:
 
-    from utils.py3porting import is_string, to_unicode
-
-Also, for URL handling, use:
-
-    try:
-        # Python3
-        from urllib.parse       import (
-            urlparse, urljoin, 
-            urlsplit, urlunsplit, 
-            quote, unquote
-            )
-        from urllib.request     import urlopen, Request, pathname2url
-        from urllib.error       import HTTPError
-    except ImportError:
-        # Python2
-        from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
-        from urllib2            import urlopen, Request, HTTPError
-        from urllib             import quote, unquote, pathname2url
-
+    from utils.py3porting import is_string, to_unicode, urljoin
 """
 
 from __future__ import unicode_literals
 from __future__ import absolute_import, division, print_function
 
-from builtins import str as unicode_str
+try:
+    # Python3
+    from urllib.parse       import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        quote, unquote
+        )
+    from urllib.request     import urlopen, Request, pathname2url
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
+    from urllib2            import urlopen, Request, HTTPError
+    from urllib             import quote, unquote, pathname2url
+
+from six import text_type, StringIO
 
 def is_string(val):
     """
@@ -38,13 +37,13 @@ def is_string(val):
 
     See: https://stackoverflow.com/a/33699705/324122
     """
-    return isinstance(val, ("".__class__, u"".__class__))
+    return isinstance(val, (str, u"".__class__))
 
 def to_unicode(val):
     """
-    Converts a supplied string value to Unicode
+    Converts a supplied string value to Unicode text
     """
-    return unicode_str(val)
+    return text_type(val)
 
 def encode_str(ustr):
     """
@@ -59,3 +58,4 @@ def isoformat_space(datetime):
     Return ISO-formatted date with space to separate date and time.
     """
     return datetime.isoformat(str_space)
+

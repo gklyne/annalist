@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module defines a class that is used to gather information about an entity
 list or view display that is needed to process various kinds of HTTP request.
@@ -10,23 +7,29 @@ into a common module to avoid repetition of logic and reduce code clutter in
 the various Annalist view processing handlers.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from collections                    import OrderedDict
-from distutils.version              import LooseVersion
-import json
-import re
-import urlparse
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import json
+import re
+import traceback
+
+from collections                    import OrderedDict
+from distutils.version              import LooseVersion
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
+
+from utils.py3porting               import urljoin, urlsplit
 
 import annalist
 from annalist                       import message
@@ -909,7 +912,7 @@ class DisplayInfo(object):
                 self.coll_id, type_id,
                 entity_id
                 )
-        return urlparse.urljoin(base_url, resource_ref)
+        return urljoin(base_url, resource_ref)
 
     # Additonal support functions
 
@@ -1067,7 +1070,7 @@ class DisplayInfo(object):
         Context values set here do not need to be named in the valuye map used to
         create the view context.
         """
-        site_url_parts = urlparse.urlsplit(self.site._entityurl)
+        site_url_parts = urlsplit(self.site._entityurl)
         context = (
             { 'site_label':         self.sitedata["title"]
             , 'title':              self.sitedata["title"]
@@ -1083,7 +1086,7 @@ class DisplayInfo(object):
             })
         context.update(self.authorizations)
         if self.collection:
-            coll_url_parts = urlparse.urlsplit(self.collection._entityurl)
+            coll_url_parts = urlsplit(self.collection._entityurl)
             context.update(
                 { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]

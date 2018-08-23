@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Entity resource access (imported and uploaded files)
 
@@ -10,16 +7,19 @@ by an entity field.  The MIME content type is obtained from the same entity
 field.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import sys
 import os
 import json
-import StringIO
-import logging
-log = logging.getLogger(__name__)
 
 # from rdflib                             import Graph, URIRef, Literal
 

@@ -12,15 +12,16 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from django.template        import Template, Context
+
+from utils.py3porting       import is_string, to_unicode
+
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
     get_field_edit_value,
     get_field_view_value
     )
-from annalist.py3porting    import is_string, to_unicode
-
-from django.template        import Template, Context
 
 #   ----------------------------------------------------------------------------
 #
