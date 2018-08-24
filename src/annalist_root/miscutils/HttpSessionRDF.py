@@ -263,7 +263,7 @@ class HTTP_Session(object):
             headers["_headerlist"] = headerlist
             log.debug("HTTP_Session.doRequest response:   "+str(status)+" "+reason)
             log.debug("HTTP_Session.doRequest rspheaders: "+repr(headers))
-        except Exception, e:
+        except Exception as e:
             log.warn("HTTP_Session error %r accessing %s with request headers %r"%(e, uripath, reqheaders))
             status = 900
             reason = str(e)
@@ -338,7 +338,7 @@ class HTTP_Session(object):
                     # rdfgraph.parse(data=data, location=baseuri, format=bodyformat)
                     rdfgraph.parse(data=data, publicID=baseuri, format=bodyformat)
                     data = rdfgraph
-                except Exception, e:
+                except Exception as e:
                     log.info("HTTP_Session.doRequestRDF: %s"%(e))
                     log.info("HTTP_Session.doRequestRDF parse failure: '%s', '%s'"%(content_type, bodyformat))
                     # log.debug("HTTP_Session.doRequestRDF data:\n----\n"+data[:200]+"\n------------")

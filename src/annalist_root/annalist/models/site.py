@@ -14,18 +14,17 @@ log = logging.getLogger(__name__)
 
 import os
 import os.path
-import collections
 import json
 import datetime
 import traceback
-from collections    import OrderedDict
+from collections                    import OrderedDict
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
 
-from utils.py3porting               import isoformat_space, encode_str, urljoin
+from utils.py3porting               import isoformat_space, urljoin
 
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
@@ -145,7 +144,7 @@ class Site(EntityRoot):
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
         # log.info("site.site_data: site_data %r"%(site_data))
-        colls = collections.OrderedDict()
+        colls = OrderedDict()
         for k, v in self.collections_dict().items():
             # log.info("site.site_data: colls[%s] %r"%(k, v))
             colls[k] = dict(v.items(), id=k, url=v[ANNAL.CURIE.url], title=v[RDFS.CURIE.label])
@@ -191,7 +190,7 @@ class Site(EntityRoot):
         Return an ordered dictionary of collections indexed by collection id
         """
         coll = [ (c.get_id(), c) for c in self.collections() ]
-        return collections.OrderedDict(sorted(coll))
+        return OrderedDict(sorted(coll))
 
     def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version_data__):
         """

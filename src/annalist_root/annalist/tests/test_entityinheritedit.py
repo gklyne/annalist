@@ -197,7 +197,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertEqual(r.content,       "")
         return
 
     # POST edit inherited entity from collection with access allowed
@@ -217,7 +216,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertIn(self.continuation_url, r['location'])
         # Check that new data exists
         self.assertTrue(EntityData.exists(self.testsubdata, "entity2"))
@@ -240,7 +239,7 @@ class EntityInheritListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertIn(self.continuation_url, r['location'])
         # Check that new data exists
         self.assertTrue(EntityData.exists(self.testsubdata, "entity2"))

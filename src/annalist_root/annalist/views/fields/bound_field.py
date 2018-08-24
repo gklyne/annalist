@@ -468,8 +468,13 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
+        """
+        Returns list of selectable options for the current field
+
+        Note: in Python3, OrderedDict.values() returns a view, not a list.
+        """
         options = self._field_description['field_choices']      # OrderedDict
-        options = ( options.values() if options is not None else 
+        options = ( list(options.values()) if options is not None else 
                     [ FieldChoice('', label="(no options)") ]
                   )
         return options

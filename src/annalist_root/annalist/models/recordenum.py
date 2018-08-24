@@ -18,7 +18,7 @@ import shutil
 
 from django.conf import settings
 
-from utils.py3porting           import isoformat_space, encode_str
+from utils.py3porting           import isoformat_space, text_to_str
 
 from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
@@ -59,10 +59,10 @@ def RecordEnumFactory(name, type_id):
         # print("@@ RecordEnumInit parentid %s, entityid %s"%(parent.get_id(), entity_id))
         super(RecordEnumBase, self).__init__(parent, entity_id)
         return
-    return type(encode_str(name), (RecordEnumBase,), 
+    return type(text_to_str(name), (RecordEnumBase,), 
         { '_entitytypeid':  type_id
         , '_entityroot':    layout.COLL_ENUM_PATH%{'id': "%(id)s", 'type_id': type_id}
-        , '__init__': RecordEnumInit}
+        , '__init__':       RecordEnumInit}
         )
 
 # End.

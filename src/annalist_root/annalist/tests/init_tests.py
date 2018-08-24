@@ -21,7 +21,7 @@ import datetime
 # from django.test import TestCase
 from django.conf import settings
 
-from utils.py3porting               import isoformat_space, encode_str
+from utils.py3porting               import isoformat_space
 
 from annalist                       import layout
 from annalist.util                  import replacetree, removetree

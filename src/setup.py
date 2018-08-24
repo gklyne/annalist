@@ -24,8 +24,8 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-if sys.version_info[:2] != (2,7):
-    raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
+if sys.version_info[:2] not in [(2,7),(3,7)]:
+    raise AssertionError("Annalist requires Python 2.7 or 3.7 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))

@@ -400,7 +400,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   TestBasePath+"/c/_annalist_site/d/_coll/")
         # Check updated collection data
         self._check_collection_data_values(coll_id="testcoll")
@@ -471,7 +471,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   TestBasePath+"/c/_annalist_site/d/_coll/")
         # Check updated collection data
         self._check_collection_data_values(coll_id="testcoll", coll_label=new_label)
@@ -495,7 +495,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], TestBasePath+"/c/testcoll/d/_user/")
         # Check that new record type exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))

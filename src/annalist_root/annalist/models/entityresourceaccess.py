@@ -22,11 +22,11 @@ import sys
 import os
 import json
 
+from rdflib                             import Graph, URIRef, Literal
+
 # Used by `json_resource_file` below.
 # See: https://stackoverflow.com/questions/51981089
-from six import StringIO     
-
-from rdflib                             import Graph, URIRef, Literal
+from utils.py3porting import BytesIO, StringIO
 
 from annalist                           import message
 from annalist                           import layout
@@ -126,7 +126,9 @@ def json_resource_file(baseurl, jsondata, resource_info):
 
 def turtle_resource_file(baseurl, jsondata, resource_info):
     """
-    Return a file object that reads out a Turtle version of the supplied entity values data.
+    Return a file object that reads out a Turtle version of the supplied 
+    entity values data.  The file object returns a byte stream, as this is
+    what rdflib expects.
 
     baseurl     base URL for resolving relative URI references for Turtle output.
     jsondata    is the data to be formatted and returned.
@@ -136,7 +138,7 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
     g = Graph()
     g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
-    response_file = StringIO()
+    response_file = BytesIO()
     try:
         g.serialize(destination=response_file, format='turtle', indent=4)
     except Exception as e:

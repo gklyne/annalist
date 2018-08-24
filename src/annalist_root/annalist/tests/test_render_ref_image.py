@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for URI image reference displayed as an image.
 
@@ -8,18 +5,20 @@ Tests for URI image reference displayed as an image.
 https://github.com/gklyne/annalist/issues/19).
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from annalist.views.fields.render_ref_image import (
     get_ref_image_renderer, 

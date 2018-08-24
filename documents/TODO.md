@@ -102,14 +102,20 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - [x] Fix pylint reports and test code under Python 2
     - [x] Change all py3porting references to utils, remove version in annalist
     - [x] Run test suite with `python -3 ...`
-    - [ ] Check for dependencies stuck at Python2
-    - [ ] Test under Python 3   
+    - [x] Check for dependencies stuck at Python2
+        - NOTE: Django 1.11 has regression on Python 3.6 (generator syntax)
+        - It's easily fixed, but version 1.11 is no longer being maintained
+        - NOTE: rdflib-jsonld Py3 compatibility isn't yet released to PyPI
+        - Also requires modification to rdflib-jsonld current branch
+        - see: https://github.com/RDFLib/rdflib-jsonld/issues/55
+    - [x] Test under Python 3
+    - [ ] Update installation documents
 
-- [ ] Update annalist-manager to Python 3 compatibility
+- [x] Update annalist-manager to Python 3 compatibility
     - [x] Create test suite
     - [x] from __future__ imports ...
     - [x] Fix pylint reports and test code under Python 2
-    - [ ] Test under Python 3   
+    - [x] Test under Python 3   
 
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)

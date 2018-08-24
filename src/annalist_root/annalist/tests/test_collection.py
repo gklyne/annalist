@@ -474,7 +474,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.get(self.view_url)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_all_url(coll_id="coll1"))
         return
 
@@ -533,7 +533,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         new_type_uri = recordtype_edit_url("new", "coll1")
         self.assertEqual(r['location'], new_type_uri+self.continuation)
         return
@@ -546,7 +546,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         copy_type_uri = recordtype_edit_url("copy", "coll1", type_id="type1")
         self.assertEqual(r['location'], copy_type_uri+self.continuation)
         return
@@ -558,7 +558,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], erroruri)
         return
@@ -571,7 +571,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         edit_type_uri = recordtype_edit_url("edit", "coll1", type_id="type1")
         self.assertEqual(r['location'], edit_type_uri+self.continuation)
         return
@@ -583,7 +583,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         erroruri = self.edit_url+r"\?error_head=.*\&error_message=.*"
         self.assertMatch(r['location'], erroruri)
         return
@@ -631,7 +631,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertIn(self.edit_url+"?",                   r['location'])
         self.assertIn("error_head=Problem%20with%20input", r['location'])
         self.assertIn("error_message=",                    r['location'])
@@ -684,7 +684,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         l1 = self.edit_url
         l2 = "info_head=Action%20completed"
         l3 = "info_message=Migrated%20data%20for%20collection%20coll1"
@@ -700,7 +700,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         metadataurl = collectiondata_view_url(coll_id="coll1", action="edit")
         self.assertEqual(r['location'], metadataurl+self.continuation)
         return
@@ -712,7 +712,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.post(self.edit_url, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], site_view_url())
         return
 

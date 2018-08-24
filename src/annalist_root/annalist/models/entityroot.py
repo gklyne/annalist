@@ -460,11 +460,11 @@ class EntityRoot(object):
                     # log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
-            except IOError, e:
+            except IOError as e:
                 if e.errno != errno.ENOENT:
                     raise
                 log.error("EntityRoot._load_values: no file %s"%(body_file))
-            except ValueError, e:
+            except ValueError as e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)
                 return (
@@ -785,7 +785,7 @@ class EntityRoot(object):
         if body_file:
             try:
                 f_stream = open(body_file, "rt")
-            except IOError, e:
+            except IOError as e:
                 if e.errno != errno.ENOENT:
                     raise
                 log.error("EntityRoot._read_stream: no file %s"%(body_file))

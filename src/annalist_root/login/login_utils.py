@@ -14,15 +14,10 @@ log = logging.getLogger(__name__)
 
 import copy
 
-try:
-    # Python3
-    from .parse   import quote, unquote
-except ImportError:
-    # Python2
-    from urllib         import quote, unquote
+from utils.py3porting   import quote, unquote
 
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http        import HttpResponse
+from django.http        import HttpResponseRedirect
 
 def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     """

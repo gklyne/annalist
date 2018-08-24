@@ -22,6 +22,22 @@
 NOTE: As of version 0.5.11, see discussion below about use of HTTP and HTTPS.
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
 
+NOTE: Due to some changes with TLS and PyPI, you see messages like these when trying to install the software when using `Python setup.py install`:
+
+    Download error on https://pypi.org/simple/****/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1045) -- Some packages may not be found!
+    Couldn't find index page for '****' (maybe misspelled?)
+    Scanning index of all packages (this may take a while)
+    Reading https://pypi.org/simple/
+    Download error on https://pypi.org/simple/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1045) -- Some packages may not be found!
+    No local packages or working download links found for ****==2.6.11
+    error: Could not find suitable distribution for Requirement.parse('****==2.6.11')
+
+If this happens, try first running:
+
+    pip install certifi
+
+NOTE: you may also need to ensure you are running a recent version of `pip`.
+
 
 ## Running as a Docker container
 

@@ -14,9 +14,9 @@ import re
 import logging
 log = logging.getLogger(__name__)
 
-from collections            import OrderedDict, namedtuple
+from collections            import namedtuple
 
-from utils.py3porting       import encode_str, to_unicode
+from utils.py3porting       import to_unicode
 
 from django.utils.html      import format_html, mark_safe, escape
 
@@ -180,8 +180,9 @@ def get_choice_labels(fieldchoices):
     >>> c1  = FieldChoice('id1',  'value1',  'label1', 'link1')
     >>> c2a = FieldChoice('id2a', 'value2a', 'label2', 'link2')
     >>> c2b = FieldChoice('id2b', 'value2b', 'label2', 'link2')
-    >>> get_choice_labels([c1,c2a,c2b])
-    [u'label1', u'label2\\xa0\\xa0\\xa0(value2a)', u'label2\\xa0\\xa0\\xa0(value2b)']
+    >>> labels = get_choice_labels([c1,c2a,c2b])
+    >>> labels == ['label1', u'label2\\xa0\\xa0\\xa0(value2a)', u'label2\\xa0\\xa0\\xa0(value2b)']
+    True
     """
     return [ fc.choice() for fc in update_choice_labels(fieldchoices) ]
 

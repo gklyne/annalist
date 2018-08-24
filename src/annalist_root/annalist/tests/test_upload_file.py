@@ -430,13 +430,13 @@ class UploadResourceTest(AnnalistTestCase):
         testobj1 = self.test_upl_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "wb"
             )
-        testobj1.write("Test data test1res.txt")
+        testobj1.write(b"Test data test1res.txt")
         self.assertEqual(testobj1.name, test1dir+"/test1res.txt")
         testobj1.close()
         testobj2 = self.test_upl_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "rb"
             )
-        self.assertEqual(testobj2.read(), "Test data test1res.txt")
+        self.assertEqual(testobj2.read(), b"Test data test1res.txt")
         testobj2.close()
         return
 
@@ -538,7 +538,7 @@ class UploadResourceTest(AnnalistTestCase):
 
     def test_upload_image_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
-        with open(self.imagepath) as fp:
+        with open(self.imagepath, "rb") as fp:
             f = default_view_form_data(
                 type_id="testupltype", entity_id="test1", action="edit"
                 )
@@ -631,7 +631,7 @@ class UploadResourceTest(AnnalistTestCase):
 
     def test_image_edit_field(self):
         # Upload to an image view field
-        with open(self.imagepath) as fp:
+        with open(self.imagepath, "rb") as fp:
             f = default_view_form_data(
                 type_id="testimgtype", entity_id="test1", action="edit"
                 )

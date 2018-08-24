@@ -24,26 +24,12 @@ import time
 import json
 import shutil
 
-# from io import BytesIO     # for handling byte strings
-# from io import StringIO    # for handling unicode strings
-
-# @@TODO: from py3porting
-# try:
-#     # Python3
-#     from urllib.parse       import urlparse, urljoin, urlsplit, urlencode
-#     from urllib.request     import urlopen, Request
-#     from urllib.error       import HTTPError
-# except ImportError:
-#     # Python2
-#     from urlparse           import urlparse, urljoin, urlsplit
-#     from urllib2            import urlopen, Request, HTTPError
-
 from django.conf            import settings
 
 from utils.py3porting       import (
     is_string, to_unicode, StringIO, 
     urlparse, urljoin, urlsplit, 
-    urlopen, Request
+    urlopen, Request, get_message_type
     )
 
 from annalist.identifiers   import ANNAL
@@ -237,7 +223,7 @@ def ensure_dir(dirname):
     """
     try:
         os.makedirs(dirname)
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST:
             raise
     return
@@ -574,7 +560,7 @@ def open_url(url):
     """
     r = urlopen(Request(url))
     u = r.geturl()
-    t = r.info().gettype()
+    t = get_message_type(r.info())
     return (r, u, t)
 
 def copy_resource_to_fileobj(srcobj, dstobj):

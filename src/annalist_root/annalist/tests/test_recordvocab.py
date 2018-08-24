@@ -620,7 +620,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("newvocab", update="RecordVocab", vocab_uri="test:newvocab")
@@ -635,7 +635,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
@@ -694,7 +694,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("copyvocab", update="RecordVocab", vocab_uri="test:copyvocab")
@@ -711,7 +711,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record vocab still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "copytype"))
@@ -774,7 +774,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("editvocab", update="Updated RecordVocab")
@@ -793,7 +793,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record type still does not exist and unchanged
         self._check_record_vocab_values("editvocab")

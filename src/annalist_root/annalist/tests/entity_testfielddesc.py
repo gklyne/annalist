@@ -1410,7 +1410,7 @@ def get_bound_field(field_id,
     if field_val is not None:
         bound_field["field_value"] = field_val
     if isinstance(options, OrderedDict):
-        options = options.values()
+        options = list(options.values())
     if options is not None:
         bound_field["options"] = options
     return bound_field

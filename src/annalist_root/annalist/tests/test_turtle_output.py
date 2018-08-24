@@ -336,7 +336,7 @@ class TurtleOutputTest(AnnalistTestCase):
         r = self.client.head(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = r['Location']
         self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         return
@@ -943,7 +943,7 @@ class TurtleOutputTest(AnnalistTestCase):
         r = self.client.head(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
         return

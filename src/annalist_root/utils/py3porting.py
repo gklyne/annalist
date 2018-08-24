@@ -29,7 +29,8 @@ except ImportError:
     from urllib2            import urlopen, Request, HTTPError
     from urllib             import quote, unquote, pathname2url
 
-from six import text_type, StringIO
+import six
+from six import text_type, StringIO, BytesIO, iteritems, iterlists
 
 def is_string(val):
     """
@@ -45,13 +46,28 @@ def to_unicode(val):
     """
     return text_type(val)
 
-def encode_str(ustr):
+def text_to_str(ustr):
     """
     Return string value for supplied Unicode
     """
-    return ustr.encode('ascii', 'ignore')
+    return str(ustr)
 
-str_space = encode_str(' ')
+def bytes_to_str(bstr):
+    """
+    Return string value for supplied bytes
+    """
+    # return bstr.encode('ascii', 'ignore')
+    if six.PY3:
+        return bstr.decode('ascii', 'ignore')
+    return bstr
+
+def bytes_to_unicode(bstr):
+    """
+    Return unicode value for supplied bytes
+    """
+    return bstr.decode('utf-8')
+
+str_space = text_to_str(' ')
 
 def isoformat_space(datetime):
     """
@@ -59,3 +75,19 @@ def isoformat_space(datetime):
     """
     return datetime.isoformat(str_space)
 
+def get_message_type(msg_info):
+    """
+    Return content type of result returned by urlopen.
+
+    The message info value returned by Python2's urllib2.urlopen has long been
+    deprecated.  The newer methods return info() as an `email.message.Message`
+    value, whose corresponding content-type method is `get_content_type`.
+    """
+    try:
+        # Python3
+        return msg_info.get_content_type()
+    except AttributeError:
+        # Python2
+        return msg_info.gettype()
+
+# End.

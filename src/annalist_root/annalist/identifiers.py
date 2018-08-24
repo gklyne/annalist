@@ -84,8 +84,10 @@ class Namespace(object):
         """
         Return value for <namespace>.<name>
         """
-        # Called for attributes that aren't defined.
+        # Called for attributes that aren't defined directly.
         # Placeholder should generate error
+        if name not in self.__dict__:
+            raise AttributeError
         return self.__dict__[name]
 
 def makeNamespace(prefix, baseUri, names):

@@ -714,7 +714,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
@@ -729,7 +729,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view"
             )
@@ -747,7 +747,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view"
             )
@@ -765,7 +765,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(u,  r['location'])
@@ -783,7 +783,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view")
         c = continuation_url_param(u, continuation_url_param(s))
         self.assertIn(v, r['location'])
@@ -796,7 +796,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
             )
@@ -811,7 +811,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "copy", "testcoll", "testtype", "entity1", view_id="Field_view"
             )
@@ -826,7 +826,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         c  = "continuation_url"
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
@@ -845,7 +845,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(u,  r['location'])
@@ -870,7 +870,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         c = continuation_url_param(u)
         v = entitydata_edit_url(
             "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
@@ -885,7 +885,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
             )
@@ -900,7 +900,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(u,  r['location'])
@@ -917,7 +917,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e2 = "error_head=%s"%(uri_quote_param(message.INPUT_ERROR),)
         e3 = "error_message="
         self.assertIn(u,  r['location'])
@@ -1005,7 +1005,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e2 = "error_head="    + uri_quote_param(message.INPUT_ERROR)
         e3 = "error_message=" + make_quoted_message(message.CANNOT_DELETE_ENTITY, 
                 type_id=layout.FIELD_TYPEID,
@@ -1026,7 +1026,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(c, r['location'])
         return
 
@@ -1040,7 +1040,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = collection_view_url(coll_id="testcoll")
         self.assertEqual(v, r['location'])
         return
@@ -1052,7 +1052,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_type_url("testcoll", "_type", list_id="View_list")
         c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
@@ -1066,7 +1066,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_type_url("testcoll", "_type", list_id="View_list")
         c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
@@ -1080,7 +1080,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_type_url(
             "testcoll", "testtype", list_id="Default_list"
             )
@@ -1103,7 +1103,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_type_url(
             "testcoll", "testtype", list_id="Default_list"
             )
@@ -1122,7 +1122,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_all_url("testcoll", list_id="Type_list")
         c = continuation_url_param(collection_view_url("testcoll"))
         self.assertIn(v, r['location'])
@@ -1136,7 +1136,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_list_type_url("testcoll", "_type", list_id="Type_list")
         c = continuation_url_param(collection_view_url("testcoll"))
         h = "info_head="    + uri_quote_param(message.ACTION_COMPLETED)
@@ -1155,7 +1155,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = collection_edit_url("testcoll")
         c = continuation_url_param(u, continuation_url_param("/xyzxy/"))
         self.assertIn(v, r['location'])

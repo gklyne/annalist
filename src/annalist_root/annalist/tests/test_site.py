@@ -11,6 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import unittest
+import json
 
 import logging
 log = logging.getLogger(__name__)
@@ -260,7 +261,6 @@ class SiteViewTest(AnnalistTestCase):
         r = self.client.get(self.uri+"?error_head=Error&error_message=Error%20presented")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertEqual(r.content, "???")
         self.assertContains(r, """<h3>Error</h3>""", html=True)
         self.assertContains(r, """<p class="messages">Error presented</p>""", html=True)
         return
@@ -443,7 +443,7 @@ class SiteViewTest(AnnalistTestCase):
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],
             TestBasePath+"/site/"
             "?info_head=Action%20completed"+
@@ -484,8 +484,19 @@ class SiteViewTest(AnnalistTestCase):
         self.assertContains(r, '''<input type="submit" name="confirm" value="Confirm"/>''', html=True)
         self.assertContains(r, '''<input type="submit" name="cancel" value="Cancel"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="confirmed_action" value="'''+reverse("AnnalistSiteActionView")+'''"/>''', html=True)
-        self.assertContains(r, '''<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="cancel_action"   value="'''+reverse("AnnalistSiteView")+'''"/>''', html=True)
+        self.assertHtmlContentElement(r.content,
+            tagname="input", tagattrs={"name": "action_params"},
+            expect_attrs=
+                { "type": "hidden"
+                , "value":
+                    { "remove":    ["Remove selected"]
+                    , "new_id":    [""]
+                    , "new_label": [""]
+                    , "select":    ["coll1", "coll3"]
+                    }
+                }
+            )
         return
 
 #   -----------------------------------------------------------------------------
@@ -550,9 +561,9 @@ class SiteActionViewTests(AnnalistTestCase):
         # Submit positive confirmation
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="confirm"))
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "Found")
-        self.assertEqual(r.content,         "")
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
         v  = reverse("AnnalistSiteView")
         e1 = "info_head="
         e2 = "info_message="
@@ -581,10 +592,10 @@ class SiteActionViewTests(AnnalistTestCase):
     def test_post_cancelled_remove(self):
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="cancel"))
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "Found")
-        self.assertEqual(r.content,         "")
-        self.assertEqual(r['location'],     TestBasePath+"/site/")
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
+        self.assertEqual(r['location'],    TestBasePath+"/site/")
         # Confirm no collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']

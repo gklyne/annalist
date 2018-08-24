@@ -21,7 +21,6 @@ import json
 import re
 import traceback
 
-from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 
 from django.conf                    import settings

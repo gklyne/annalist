@@ -521,7 +521,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "edituser"))
@@ -548,7 +548,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))

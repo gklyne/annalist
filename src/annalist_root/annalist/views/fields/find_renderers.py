@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module contains utilities for use in conjunction with field renderers.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -13,7 +13,6 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections                import OrderedDict, namedtuple
 
 from django.conf                import settings
 
