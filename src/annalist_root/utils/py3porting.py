@@ -31,6 +31,7 @@ except ImportError:
 
 import six
 from six import text_type, StringIO, BytesIO, iteritems, iterlists
+from six.moves import input
 
 def is_string(val):
     """

@@ -15,7 +15,6 @@
 - [ ] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
-    - `annalist-manager updateadmin ...` (if needed)
 - [ ] Test collection installation; e.g.
     - `annalist-manager installcoll RDF_schema_defs --force`
     - `annalist-manager installcoll Annalist_schema --force`    

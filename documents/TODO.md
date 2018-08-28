@@ -95,7 +95,7 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
 - [x] Add test case for HEAD requests
 
-- [ ] Update to support Python 3
+- [x] Update to support Python 3
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
     - [x] Review test coverage (93% overall, but some key modules 40-80%)
@@ -114,7 +114,7 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
         - Also requires modification to rdflib-jsonld current branch
         - see: https://github.com/RDFLib/rdflib-jsonld/issues/55
     - [x] Test under Python 3
-    - [ ] Update installation documents
+    - [x] Update installation documents
 
 - [x] Update annalist-manager to Python 3 compatibility
     - [x] Create test suite
@@ -124,7 +124,6 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
 (Sub-release?)
 
-- [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
@@ -328,6 +327,9 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Update Django version used to latest version designated for long term support
+    - This will mean cutting adrift from Python 2 support.
+    - Leaving this until after version 1 is released.
 - [ ] Record timestamp in data records (created,updated)
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
 - [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end

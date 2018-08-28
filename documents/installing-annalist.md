@@ -14,7 +14,7 @@
 8. [Setting up an Annalist site](#setting-up-an-annalist-site)
     - [Annalist site options](#annalist-site-options)
     - [Annalist authentication options](#annalist-authentication-options)
-        - [OpenID Connect using Google+](#openid-connect-using-google-)
+        - [OpenID Connect using Google+](#openid-connect-using-google)
         - [Local user database](#local-user-database)
     - [Initial site setup](#initial-site-setup)
 9. [Accessing Annalist](#accessing-annalist)
@@ -32,6 +32,7 @@
 NOTE: As of version 0.5.11, see discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
 
+<!--
 NOTE: Due to some changes with TLS and PyPI, you may see messages like these when trying to install the software when using `Python setup.py install`:
 
     Download error on https://pypi.org/simple/****/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1045) -- Some packages may not be found!
@@ -47,6 +48,7 @@ If this happens, try first running:
     pip install certifi
 
 NOTE: you may also need to ensure you are running a recent version of `pip`. At the time of writing, the current version is 18.0.
+-->
 
 ## New software installation
 
@@ -54,7 +56,7 @@ NOTE: you may also need to ensure you are running a recent version of `pip`. At 
 
 The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
 
-1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a displaty like this:
+1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a display like this:
 
         $ python
         Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
@@ -78,13 +80,17 @@ The following assumes that software is installed under a directory called $WORKS
 2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
 
         cd $WORKSPACE
-        virtualenv annenv
-        source annenv/bin/activate
+        virtualenv anenv2
+        source anenv2/bin/activate
+        pip install --upgrade pip
+        pip install --upgrade certifi
 
     In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
 
-        virtualenv -p python2.7 annenv
-        source annenv/bin/activate
+        virtualenv -p python2.7 anenv2
+        source anenv2/bin/activate
+        pip install --upgrade pip
+        pip install --upgrade certifi
 
 3.  Install the software from PyPI:
 
@@ -328,9 +334,9 @@ These instructions use the example of a local user database: these options are n
 
 NOTE: using the development configuration, data files are stored within the software source code tree, and will be removed when the software is updated.  Use a personal configuration if you want to preserve any data files you create.
 
-1.  The commands must be issued with the annalist python environment activated.  If needed, use a command like this (where "annenv" is replaced with the name used previously to create the python virtual environment):
+1.  The commands must be issued with the annalist python environment activated.  If needed, use a command like this (where "anenv2" is replaced with the name used previously to create the python virtual environment):
 
-        source annenv/bin/activate
+        source anenv2/bin/activate
 
 2.  Initialize sitedata:
 

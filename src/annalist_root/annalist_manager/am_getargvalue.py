@@ -11,7 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import getpass
-from builtins import input
+from utils.py3porting import input
 
 # raw_input and getpass:
 #   http://packetforger.wordpress.com/2014/03/26/using-pythons-getpass-module/

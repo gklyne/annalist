@@ -2,7 +2,7 @@
 #
 # NOTE: when testing, use "pip install ... --upgrade"
 
-from __future__ import unicode_literals
+# from __future__ import unicode_literals # (import Fails under Pythons)
 from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
