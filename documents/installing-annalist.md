@@ -2,27 +2,37 @@
 
 ## Contents
 
-1. Prerequisites
-2. Running as a Docker container
-3. Upgrading an existing installation
-4. New software installation
-5. Setting up an Annalist site
-6. Run annalist as a background process
-7. Accessing Annalist
-8. Create a collection
-9. `annalist-manager` command reference
+1. [Contents](#contents)
+2. [Prerequisites](#prerequisites)
+3. [New software installation](#new-software-installation)
+    - [Under Python 2.7](#under-python-27)
+    - [Under Python 3](#under-python-3)
+4. [Upgrading an existing installation](#upgrading-an-existing-installation)
+5. [Run annalist as a background process](#run-annalist-as-a-background-process)
+6. [Accessing Annalist over HTTPS](#accessing-annalist-over-https)
+7. [Running as a Docker container](#running-as-a-docker-container)
+8. [Setting up an Annalist site](#setting-up-an-annalist-site)
+    - [Annalist site options](#annalist-site-options)
+    - [Annalist authentication options](#annalist-authentication-options)
+        - [OpenID Connect using Google+](#openid-connect-using-google-)
+        - [Local user database](#local-user-database)
+    - [Initial site setup](#initial-site-setup)
+9. [Accessing Annalist](#accessing-annalist)
+10. [Create a collection](#create-a-collection)
+11. [`annalist-manager` commands](#-annalist-manager--commands)
 
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 14.04.  Other versions should be usable.  (The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
+* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 14.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
-* virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
+    - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
+* Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
 
-NOTE: As of version 0.5.11, see discussion below about use of HTTP and HTTPS.
+NOTE: As of version 0.5.11, see discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
 
-NOTE: Due to some changes with TLS and PyPI, you see messages like these when trying to install the software when using `Python setup.py install`:
+NOTE: Due to some changes with TLS and PyPI, you may see messages like these when trying to install the software when using `Python setup.py install`:
 
     Download error on https://pypi.org/simple/****/: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1045) -- Some packages may not be found!
     Couldn't find index page for '****' (maybe misspelled?)
@@ -36,7 +46,179 @@ If this happens, try first running:
 
     pip install certifi
 
-NOTE: you may also need to ensure you are running a recent version of `pip`.
+NOTE: you may also need to ensure you are running a recent version of `pip`. At the time of writing, the current version is 18.0.
+
+## New software installation
+
+### Under Python 2.7
+
+The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
+
+1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a displaty like this:
+
+        $ python
+        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
+        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
+        Type "help", "copyright", "credits" or "license" for more information.
+        >>>
+
+    If the default version shown by this command is not 2.7.x, it may still be possible to run a 2.7 version with a command like:
+
+        $ python2.7
+        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
+        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
+        Type "help", "copyright", "credits" or "license" for more information.
+        >>>
+
+    (On Linux/Unix systems, typing `python<tab>` may help to show what versions are installed.)
+
+    In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
+
+
+2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
+
+        cd $WORKSPACE
+        virtualenv annenv
+        source annenv/bin/activate
+
+    In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
+
+        virtualenv -p python2.7 annenv
+        source annenv/bin/activate
+
+3.  Install the software from PyPI:
+
+        pip install annalist
+
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.10.tar.gz).  Then install it thus:
+
+        pip install $WORKSPACE/Annalist-0.5.10.tar.gz
+
+5.  Finally, test the installed software:
+
+        annalist-manager runtests
+
+    The output from this command should look something like this:
+
+        $ annalist-manager runtest
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.11 (test configuration)
+        INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
+        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Django-1.11.13-py3.7.egg/django
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:TEST_BASE_URI:   http://test.example.com/testsite
+        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
+        INFO:annalist_site.settings.runtests:DATABASE_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist/data/identity_providers/')
+        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist.log
+        Creating test database for alias 'default'...
+        System check identified no issues (0 silenced).
+        .......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ----------------------------------------------------------------------
+        Ran 807 tests in 248.154s
+
+        OK
+        Destroying test database for alias 'default'...
+
+
+### Under Python 3
+
+Use Python version 3.6, as Django 1.11 (the last version to support Python 2) is not supported under later versions.  (I have found one syntax error reported running Django under Python 3.7: fix that and all is well.)
+
+Python3 includes a `virtualenv` equivalent called `venv`.  To create a virtual environment for running Annalist, go to the desired home directory and run:
+
+    python3 -m venv anenv3
+    source anenv3/bin/activate
+    pip install --upgrade pip
+    pip install certifi
+
+From here on, the Annalist installation is the same as under Python 2, starting from step 3 (above).
+
+
+## Upgrading an existing installation
+
+Stop any existing annalist server.  Look for background processes running `annalist-manager` or `django-admin`.  There may be up to three separate background processes that need to be stopped.
+
+NOTE: irreversible changes are applied to site and collection data when upgrading, particularly from versions below 0.5.0.  It is recommended to make a duplicate copy of the ananlist site data before upgrading the software,  This will make it possible to revert to an earlier verson in the event of problems with the newer software. For example, to back up a default "personal" configuration on Linux:
+
+    cp -ax ~/annalist_site ~/annalist_site.backup
+
+The installation instructions above ("New software installation") can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
+
+The annalist user database may need to be initialized or migrated:
+
+    annalist-manager initialize [ CONFIG ]
+
+If upgrading from a version 0.1.4 or earlier, recreate an admin user:
+
+    annalist-manager defaultadminuser [ CONFIG ]
+
+To update site-wide data for an existing Annalist site, use:
+
+    annalist-manager updatesitedata [ CONFIG ]
+
+If any of the Annalist installable collection data is used then these should be re-installed (assuming they have not been modified locally since they were installed); e.g.
+
+    annalist-manager installcollection Resource_defs -f [CONFIG]
+    annalist-manager installcollection Concept_defs -f [CONFIG]
+    annalist-manager installcollection Journal_defs -f [CONFIG]
+
+(The `-f` or `--force` option allows the existing collection to be replaced by new defnitions provided by the new Annalist release.)
+
+Existing user collection data will be migrated as it is accessed, but it may be cleaner to migrate all data _en masse_ before startign to access it, thus:
+
+    annalist-manager migrateallcollections [ CONFIG ]
+
+Then start the server as before.
+
+e.g.
+
+    annalist-manager initialize --personal
+    annalist-manager defaultadminuser --personal
+      Creating user admin
+      Password:
+      Re-enter password:
+    annalist-manager updatesitedata --personal
+    annalist-manager installcollection Resource_defs -f --personal
+    annalist-manager migrateallcollections --personal
+    annalist-manager runserver --personal
+
+
+## Run annalist as a background process
+
+To run annalist as a long-running background process, use the following command:
+
+    nohup annalist-manager runserver &
+
+(with `annalist-manager` configuration options if required.)
+
+To view the server log of a running Annalist instance:
+
+    less $(annalist-manager serverlog)
+
+To check for Annalist background processes, and to terminate an Annalist server running as a background process (run from the same user account that started annalist):
+
+    ps x
+    killall python
+
+
+## Accessing Annalist over HTTPS
+
+As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
+
+(@@TODO: write up details for setting up Apache and/or Nginx reverse-proxy)
+
+This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials.  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
+
+    OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
+
+or
+
+    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
+
+Or otherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when running the server.
 
 
 ## Running as a Docker container
@@ -103,144 +285,6 @@ From version 0.1.11 onwards, the server logs are located on the annalist_site da
 then
 
     less $(annalist-manager serverlog)
-
-
-## Upgrading an existing installation
-
-Stop any existing annalist server.  Look for background processes running `annalist-manager` or `django-admin`.  There may be up to three separate background processes that need to be stopped.
-
-NOTE: irreversible changes are applied to site and collection data when upgrading, particularly from versions below 0.5.0.  It is recommended to make a duplicate copy of the ananlist site data before upgrading the software,  This will make it possible to revert to an earlier verson in the event of problems with the newer software. For example, to back up a default "personal" configuration on Linux:
-
-    cp -ax ~/annalist_site ~/annalist_site.backup
-
-The installation instructions below ("New software installation") can then be used to update an Annalist software installation, except that step 2 may be skipped if re-using an existing virtual environment.
-
-The annalist user database may need to be initialized or migrated:
-
-    annalist-manager initialize [ CONFIG ]
-
-If upgrading from a version 0.1.4 or earlier, recreate an admin user:
-
-    annalist-manager defaultadminuser [ CONFIG ]
-
-To update site-wide data for an existing Annalist site, use:
-
-    annalist-manager updatesitedata [ CONFIG ]
-
-If any of the Annalist installable collection data is used then these should be re-installed (assuming they have not been modified locally since they were installed); e.g.
-
-    annalist-manager installcollection Resource_defs -f [CONFIG]
-    annalist-manager installcollection Concept_defs -f [CONFIG]
-    annalist-manager installcollection Journal_defs -f [CONFIG]
-
-(The `-f` or `--force` option allows the existing collection to be replaced by new defnitions provided by the new Annalist release.)
-
-Existing user collection data will be migrated as it is accessed, but it may be cleaner to migrate all data _en masse_ before startign to access it, thus:
-
-    annalist-manager migrateallcollections [ CONFIG ]
-
-Then start the server as before.
-
-e.g.
-
-    annalist-manager initialize --personal
-    annalist-manager defaultadminuser --personal
-      Creating user admin
-      Password:
-      Re-enter password:
-    annalist-manager updatesitedata --personal
-    annalist-manager installcollection Resource_defs -f --personal
-    annalist-manager migrateallcollections --personal
-    annalist-manager runserver --personal
-
-
-## New software installation
-
-The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
-
-1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a displaty like this:
-
-        $ python
-        Python 2.7.5 (default, Aug 25 2013, 00:04:04) 
-        [GCC 4.2.1 Compatible Apple LLVM 5.0 (clang-500.0.68)] on darwin
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>> 
-
-    If the default version shown by this command is not 2.7.x, it may still be possible to run a 2.7 version with a command like:
-
-        $ python2.7
-        Python 2.7.5 (default, Aug 25 2013, 00:04:04) 
-        [GCC 4.2.1 Compatible Apple LLVM 5.0 (clang-500.0.68)] on darwin
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>> 
-
-    (On Linux/Unix systems, typing `python<tab>` may help to show what versions are installed.)
-
-    In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
-
-
-2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
-
-        cd $WORKSPACE
-        virtualenv annenv
-        source annenv/bin/activate
-
-    In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
-
-        virtualenv -p python2.7 annenv
-        source annenv/bin/activate
-
-3.  Install the software from PyPI:
-
-        pip install annalist
-
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.10.tar.gz).  Then install it thus:
-
-        pip install $WORKSPACE/Annalist-0.5.10.tar.gz
-
-5.  Finally, test the installed software:
-
-        annalist-manager runtests
-
-    The output from this command should look something like this:
-
-        $ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.5.10 (test configuration)
-        INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/sampledata/data
-        INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Django-1.7-py2.7.egg/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root
-        INFO:annalist_site.settings.runtests:TEST_BASE_URI:   http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DB PATH:         /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/db.sqlite3
-        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/annalist/data/identity_providers/')
-        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv/lib/python2.7/site-packages/Annalist-0.5.10-py2.7.egg/annalist_root/annalist.log
-        INFO:rdflib:RDFLib Version: 4.2.1
-        Creating test database for alias 'default'...
-        ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
-        ----------------------------------------------------------------------
-        Ran 760 tests in 292.134s
-
-        OK
-        Destroying test database for alias 'default'...
-
-
-## Accessing Annalist over HTTPS
-
-As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
-
-(@@TODO: write up details for setting up APache and/or Nginx reverse-proxy)
-
-This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials.  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
-
-    OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
-
-or
-
-    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
-
-Or otrherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when running the server.
 
 
 ## Setting up an Annalist site
@@ -318,24 +362,6 @@ NOTE: using the development configuration, data files are stored within the soft
 You should now be able to use a browser to view the Annalist server, e.g. at http://localhost:8000.
 
 NOTE: for configurations which store the database file in the site data area (including the default personal configuration), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.  When updating an existing Annalist site, it should not be necessary to run `annalist-manager initialize`.
-
-
-## Run annalist as a background process
-
-To run annalist as a long-running background process, use the following command:
-
-    nohup annalist-manager runserver &
-
-(with `annalist-manager` configuration options if required.)
-
-To view the server log of a running Annalist instance:
-
-    less $(annalist-manager serverlog)
-
-To check for Annalist background processes, and to terminate an Annalist server running as a background process (run from the same user account that started annalist):
-
-    ps x
-    killall python
 
 
 ## Accessing Annalist
