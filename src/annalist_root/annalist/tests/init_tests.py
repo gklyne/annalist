@@ -21,11 +21,12 @@ import datetime
 # from django.test import TestCase
 from django.conf import settings
 
+from utils.py3porting               import isoformat_space
+
 from annalist                       import layout
 from annalist.util                  import replacetree, removetree
 from annalist.collections_data      import installable_collections
 from annalist.identifiers           import ANNAL, RDFS
-from annalist.py3porting            import isoformat_space, encode_str
 
 from annalist.models.site           import Site
 from annalist.models.collection     import Collection

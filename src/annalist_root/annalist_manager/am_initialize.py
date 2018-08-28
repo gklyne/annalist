@@ -17,8 +17,10 @@ import subprocess
 
 log = logging.getLogger(__name__)
 
-from annalist.util                  import ensure_dir
 from utils.SuppressLoggingContext   import SuppressLogging
+from utils.py3porting               import bytes_to_str 
+
+from annalist.util                  import ensure_dir
 
 from .                              import am_errors
 from .am_settings                   import am_get_settings
@@ -71,8 +73,8 @@ def am_initialize(annroot, userhome, userconfig, options):
         )
     out, err = p.communicate(None)
     status = p.returncode
-    sys.stdout.write(out)
-    sys.stderr.write(err)
+    sys.stdout.write(bytes_to_str(out))
+    sys.stderr.write(bytes_to_str(err))
     log.debug("am_initialize subprocess status: %s"%status)
     return status
 

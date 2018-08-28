@@ -24,8 +24,8 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-if sys.version_info[:2] != (2,7):
-    raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
+if sys.version_info[:2] not in [(2,7),(3,6),(3,7)]:
+    raise AssertionError("Annalist requires Python 2.7 or 3.6 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
@@ -191,11 +191,13 @@ setup(
         [
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
-        "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
+        "Intended Audience :: Personal data",
+        "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         ],
     zip_safe = False,
     install_requires =
@@ -225,5 +227,11 @@ setup(
             ]
         }
     )
+
+if sys.version_info[:2] >= (3,7):
+    print("*****")
+    print("Warning: Django 1.11 does not work with Python versions after 3.6")
+    print("See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django")
+    print("     https://stackoverflow.com/a/48822656/324122")
 
 # End.

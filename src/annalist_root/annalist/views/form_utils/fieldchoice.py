@@ -1,10 +1,10 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module defines a class used to represent a choice for an 
 enumerated-value field.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
@@ -14,11 +14,11 @@ import re
 import logging
 log = logging.getLogger(__name__)
 
-from collections            import OrderedDict, namedtuple
+from collections            import namedtuple
+
+from utils.py3porting       import to_unicode
 
 from django.utils.html      import format_html, mark_safe, escape
-
-from annalist.py3porting    import isoformat_space, encode_str
 
 _FieldChoice_tuple = namedtuple("FieldChoice", ("id", "value", "label", "link", "choice_value"))
 
@@ -85,11 +85,32 @@ class FieldChoice(_FieldChoice_tuple):
         result = super(FieldChoice, _cls).__new__(_cls, id, value, label, link, choice_value)
         return result
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         """
-        Compares current FieldChoice value with another, and returns -1, 0, +1 as required.
+        Returns True if self == other for sorting and equivalence purposes
         """
-        return self.id.__cmp__(other.id)
+        return self.id.__eq__(other.id)
+
+    def __ne__(self, other):
+        """
+        Returns True if self != other for sorting and equivalence purposes
+
+        Note: required for Python2.
+        """
+        return self.id.__ne__(other.id)
+
+    def __lt__(self, other):
+        """
+        Returns True if self < other for sorting purposes
+        """
+        return self.id.__lt__(other.id)
+
+    def __hash__(self):
+        """
+        pylint says this should be defined if __eq__ is defined.
+        Something to do with sets?
+        """
+        return hash(self.id)
 
     def choice(self, sep=u"\xa0\xa0\xa0"):
         """
@@ -98,7 +119,7 @@ class FieldChoice(_FieldChoice_tuple):
         if self.choice_value:
             choice_text = self.option_label(sep=sep)
         else:
-            choice_text = unicode(self.label)
+            choice_text = to_unicode(self.label)
         return choice_text
 
     def choice_html(self, sep=u"&nbsp;&nbsp;&nbsp;"):
@@ -159,8 +180,9 @@ def get_choice_labels(fieldchoices):
     >>> c1  = FieldChoice('id1',  'value1',  'label1', 'link1')
     >>> c2a = FieldChoice('id2a', 'value2a', 'label2', 'link2')
     >>> c2b = FieldChoice('id2b', 'value2b', 'label2', 'link2')
-    >>> get_choice_labels([c1,c2a,c2b])
-    [u'label1', u'label2\\xa0\\xa0\\xa0(value2a)', u'label2\\xa0\\xa0\\xa0(value2b)']
+    >>> labels = get_choice_labels([c1,c2a,c2b])
+    >>> labels == ['label1', u'label2\\xa0\\xa0\\xa0(value2a)', u'label2\\xa0\\xa0\\xa0(value2b)']
+    True
     """
     return [ fc.choice() for fc in update_choice_labels(fieldchoices) ]
 

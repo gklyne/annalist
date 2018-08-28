@@ -1,36 +1,28 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test module for annalist-manager information commands
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2018, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import sys
-import os
-import StringIO
-
 import logging
 log = logging.getLogger(__name__)
 
+import sys
+import os
+
+from utils.py3porting           import StringIO
+from utils.StdoutContext        import SwitchStdout, SwitchStderr
+
 import annalist
 
-from utils.StdoutContext import SwitchStdout, SwitchStderr
-
-from annalist.tests.AnnalistTestCase import AnnalistTestCase
-
-from annalist_manager.tests   import get_source_root
-
-from annalist_manager.am_main import runCommand
-
-#   -----------------------------------------------------------------------------
-#
-#   Helper functions
-#
-#   -----------------------------------------------------------------------------
+from annalist_manager.tests     import get_source_root
+from annalist_manager.tests     import test_annalist_base
+from annalist_manager.am_main   import runCommand
 
 #   -----------------------------------------------------------------------------
 #
@@ -38,14 +30,19 @@ from annalist_manager.am_main import runCommand
 #
 #   -----------------------------------------------------------------------------
 
-class AnnalistManagerInfoTest(AnnalistTestCase):
+class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.setup_annalist_manager_test()
+        return
 
     def setUp(self):
-        self.userhome    = os.path.os.path.expanduser("~")
-        self.userconfig  = os.path.os.path.expanduser("~/.annalist")
-        self.src_root    = get_source_root()
-        self.testhome    = os.path.join(self.src_root, "sampledata/data")
-        self.settingsdir = os.path.join(self.src_root, "annalist_site/settings")
+        # self.userhome    = os.path.os.path.expanduser("~")
+        # self.userconfig  = os.path.os.path.expanduser("~/.annalist")
+        # self.src_root    = get_source_root()
+        # self.testhome    = os.path.join(self.src_root, "sampledata/data")
+        # self.settingsdir = os.path.join(self.src_root, "annalist_site/settings")
         return
 
     def tearDown(self):
@@ -56,7 +53,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_Version(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "version"]
@@ -67,7 +64,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_Help(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStderr(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "help"]
@@ -93,7 +90,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_SiteDirectory(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "sitedirectory"]
@@ -112,7 +109,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_SettingsModule(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsmodule"]
@@ -131,7 +128,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_SettingsDirectory(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsdirectory"]
@@ -150,7 +147,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_SettingsFile(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsfile"]
@@ -169,7 +166,7 @@ class AnnalistManagerInfoTest(AnnalistTestCase):
         return
 
     def test_ServerLog(self):
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "serverlog"]

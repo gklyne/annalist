@@ -59,8 +59,9 @@ def ScanFilesEx(srcdir, pattern, FileFunc, recursive=True):
 def ScanFiles(srcdir, pattern, FileFunc, recursive=True):
     try:
         ScanFilesEx(srcdir, pattern, FileFunc, recursive)
-    except (IOError, os.error), why:
-        log.warning("Can't scan %s: %s" % (`srcdir`, str(why)))
+    except (IOError, os.error) as why:
+        log.warning("Can't scan %s: %s" % (repr(srcdir), str(why)))
+    return
 
 # Collect files matching pattern in a directory tree
 #

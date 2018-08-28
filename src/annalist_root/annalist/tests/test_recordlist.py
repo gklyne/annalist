@@ -886,7 +886,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
         self._check_list_view_values("newlist", update="New List", num_fields=0)
@@ -901,7 +901,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type still does not exist
         self.assertFalse(RecordList.exists(self.testcoll, "newview"))
@@ -963,7 +963,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record type exists
         self._check_list_view_values("copylist", update="RecordList")
@@ -981,7 +981,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that target record view still does not exist
         self.assertFalse(RecordList.exists(self.testcoll, "copylist"))
@@ -1056,7 +1056,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record list exists
         self._check_list_view_values("listview", update="Updated RecordList")
@@ -1076,7 +1076,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new record list exists and old does not
         self.assertFalse(RecordList.exists(self.testcoll, "editlist1"))
@@ -1097,7 +1097,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that target record list still does not exist and unchanged
         self._check_list_view_values("editlist")
@@ -1181,7 +1181,7 @@ class RecordListEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         l = entitydata_list_all_url(
             "testcoll", list_id="List_list", scope=None,
             continuation_url=u
@@ -1237,9 +1237,9 @@ class ConfirmRecordListDeleteTests(AnnalistTestCase):
         u = TestHostUri + recordlist_edit_url("delete", "testcoll")
         f = recordlist_delete_confirm_form_data("deleteview")
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "Found")
-        self.assertEqual(r.content,         "")
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
         v  = collection_edit_url("testcoll")
         e1 = "info_head="
         e2 = "info_message="

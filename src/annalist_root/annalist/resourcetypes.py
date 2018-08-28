@@ -1,3 +1,5 @@
+# pylint: disable=no-member, redefined-outer-name
+
 """
 Annalist resource types module
 """
@@ -14,17 +16,17 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 from annalist.identifiers       import ANNAL
 
-"""
-Each resource type URI or CURIE is associated with a list of one or more file 
-extensions and MIME content-types.
-
-The first of each list indicates the value used when creating or serving a 
-resource of the indicated type.  Any other values given are alternatives
-that are accepted as supplying a resource that is compatible with the type.
-
-File extensions and MIME types are presented as pairs so that an extension 
-can be inferred when a MIME content-type is given, and vice versa.
-"""
+# """
+# Each resource type URI or CURIE is associated with a list of one or more file 
+# extensions and MIME content-types.
+#
+# The first of each list indicates the value used when creating or serving a 
+# resource of the indicated type.  Any other values given are alternatives
+# that are accepted as supplying a resource that is compatible with the type.
+#
+# File extensions and MIME types are presented as pairs so that an extension 
+# can be inferred when a MIME content-type is given, and vice versa.
+# """
 resource_types = (
     { ANNAL.CURIE.Metadata:
       [ ("jsonld",  "application/ld+json")

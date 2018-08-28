@@ -1,30 +1,30 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist site-related facilities
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import os.path
-import collections
-import urlparse
-import json
-import datetime
-from collections    import OrderedDict
-
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import os.path
+import json
+import datetime
+import traceback
+from collections                    import OrderedDict
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
+
+from utils.py3porting               import isoformat_space, urljoin
 
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
@@ -34,7 +34,6 @@ from annalist                       import message
 from annalist.util                  import (
     valid_id, extract_entity_id, replacetree, updatetree
     )
-from annalist.py3porting            import isoformat_space, encode_str
 
 from annalist.models.annalistuser   import AnnalistUser
 from annalist.models.entityroot     import EntityRoot
@@ -72,7 +71,7 @@ class Site(EntityRoot):
         sitebaseuri    = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri + "/"
         sitebasedir    = sitebasedir if sitebasedir.endswith("/") else sitebasedir + "/"
         sitepath       = layout.SITE_META_PATH
-        siteuripath    = urlparse.urljoin(sitebaseuri, sitepath) 
+        siteuripath    = urljoin(sitebaseuri, sitepath) 
         sitedir        = os.path.join(sitebasedir, sitepath)
         self._sitedata = None
         super(Site, self).__init__(host+siteuripath, siteuripath, sitedir, sitebasedir)
@@ -145,7 +144,7 @@ class Site(EntityRoot):
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
         # log.info("site.site_data: site_data %r"%(site_data))
-        colls = collections.OrderedDict()
+        colls = OrderedDict()
         for k, v in self.collections_dict().items():
             # log.info("site.site_data: colls[%s] %r"%(k, v))
             colls[k] = dict(v.items(), id=k, url=v[ANNAL.CURIE.url], title=v[RDFS.CURIE.label])
@@ -191,7 +190,7 @@ class Site(EntityRoot):
         Return an ordered dictionary of collections indexed by collection id
         """
         coll = [ (c.get_id(), c) for c in self.collections() ]
-        return collections.OrderedDict(sorted(coll))
+        return OrderedDict(sorted(coll))
 
     def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version_data__):
         """

@@ -1,9 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module contains utilities for use in conjunction with field renderers.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -15,11 +15,12 @@ log = logging.getLogger(__name__)
 import traceback
 import re
 
-from urlparse               import urljoin  # py3: from urllib.parse ...
 from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
 from django.utils.html      import escape
+
+from utils.py3porting       import is_string, to_unicode, urljoin
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
@@ -378,7 +379,7 @@ class bound_field(object):
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
-            elif isinstance(target_value, (str, unicode)):
+            elif is_string(target_value):
                 target_ref = target_value
             else:
                 log.warning(
@@ -467,8 +468,13 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
+        """
+        Returns list of selectable options for the current field
+
+        Note: in Python3, OrderedDict.values() returns a view, not a list.
+        """
         options = self._field_description['field_choices']      # OrderedDict
-        options = ( options.values() if options is not None else 
+        options = ( list(options.values()) if options is not None else 
                     [ FieldChoice('', label="(no options)") ]
                   )
         return options

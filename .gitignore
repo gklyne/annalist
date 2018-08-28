@@ -18,6 +18,7 @@
 
 # Compiled Python file
 *.pyc
+_pycache_
 
 # Eclipse/Pydev files
 /.pydevproject
@@ -93,7 +94,8 @@ _unused_*
 /ERRORS.txt
 /pyenv
 /anenv
-/anenv-*
+/anenv3
+/anenv*
 /setupenv
 /attic
 # /spike

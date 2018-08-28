@@ -281,7 +281,7 @@ def get_built_in_type_ids():
     """
     Returns an interator over the built-in types
     """
-    return TYPE_CLASS_MAP.iterkeys()
+    return iter(TYPE_CLASS_MAP)
 
 class EntityTypeInfo(object):
     """

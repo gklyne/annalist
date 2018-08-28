@@ -9,6 +9,9 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import re
 import json
@@ -16,11 +19,7 @@ import markdown
 import copy
 import uuid
 import urllib
-from urlparse import urlparse, urljoin
 from importlib import import_module
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.core.urlresolvers import resolve, reverse
 from django.http import HttpResponse
@@ -33,6 +32,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 from utils.http_errors      import error400values
+from utils.py3porting       import urlparse, urljoin
 
 from .                      import login_message
 from .auth_django_client    import django_flow_from_user_id
@@ -89,7 +89,7 @@ def confirm_authentication(view,
     user_profile_url    URL retrieved when user profile details have been set up.
     continuation_url    URL from which the login process was initiated.
     """
-    if view.request.user.is_authenticated():
+    if view.request.user.is_authenticated:
         return None
     if not login_form_url:
         return error400values(view, "No login form URI specified")
@@ -155,15 +155,23 @@ class LoginUserView(generic.View):
             return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
-        provider_labels  = map( 
-            lambda pair: pair[1], 
-            sorted(
-                [ ( p.get('provider_order', 5),
-                    (k, p.get('provider_label', k), p.get('provider_image', None))
-                  )
-                    for k, p in PROVIDER_DETAILS.items()
-                ])
-            )
+        #@@ original code
+        # provider_labels  = map( 
+        #     lambda pair: pair[1], 
+        #     sorted(
+        #         [ ( p.get('provider_order', 5),
+        #             (k, p.get('provider_label', k), p.get('provider_image', None))
+        #           )
+        #             for k, p in PROVIDER_DETAILS.items()
+        #         ])
+        #     )
+        #@@
+        provider_tuples = (
+            [ ( p.get('provider_order', 5),
+                (k, p.get('provider_label', k), p.get('provider_image', None))
+              ) for k, p in PROVIDER_DETAILS.items()
+            ])
+        provider_labels = [ p[1] for p in sorted(provider_tuples) ]
         for p in PROVIDER_DETAILS:
             if "default" in PROVIDER_DETAILS[p]:            
                 default_provider = PROVIDER_DETAILS[p]["default"]
@@ -172,7 +180,7 @@ class LoginUserView(generic.View):
             , "login_done_url":     login_done_url
             , "user_profile_url":   user_profile_url
             , "continuation_url":   continuation_url
-            , "provider_keys":      PROVIDER_DETAILS.keys()
+            , "provider_keys":      list(PROVIDER_DETAILS)
             , "provider_labels":    provider_labels
             , "provider":           default_provider
             , "suppress_user":      True

@@ -1,39 +1,29 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test module for annalist-manager collection data management commands
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2018, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import sys
-import os
-import StringIO
-
 import logging
 log = logging.getLogger(__name__)
 
-import annalist
-from annalist.util       import replacetree, removetree
+import sys
+import os
 
+from utils.py3porting    import StringIO
 from utils.StdoutContext import SwitchStdout, SwitchStderr
 
-from annalist.tests.AnnalistTestCase import AnnalistTestCase
+import annalist
+from annalist.util              import replacetree, removetree
 
-from annalist_manager.tests   import get_source_root
-
-from annalist_manager.am_main import runCommand
-
-
-#   -----------------------------------------------------------------------------
-#
-#   Helper functions
-#
-#   -----------------------------------------------------------------------------
-
+from annalist_manager.tests     import get_source_root
+from annalist_manager.tests     import test_annalist_base
+from annalist_manager.am_main   import runCommand
 
 #   -----------------------------------------------------------------------------
 #
@@ -41,32 +31,13 @@ from annalist_manager.am_main import runCommand
 #
 #   -----------------------------------------------------------------------------
 
-class AnnalistManagerCollTest(AnnalistTestCase):
+class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
 
     @classmethod
     def setUpTestData(cls):
-        # See https://stackoverflow.com/questions/29653129/
-        # Regenerate Analist site data and Django database, once-only for all tests
-        cls.userhome    = os.path.os.path.expanduser("~")
-        cls.userconfig  = os.path.os.path.expanduser("~/.annalist")
-        cls.src_root    = get_source_root()
-        cls.testhome    = os.path.join(cls.src_root, "sampledata/data")
-        cls.sitehome    = os.path.join(cls.testhome, "annalist_site")
-        cls.settingsdir = os.path.join(cls.src_root, "annalist_site/settings")
-        if os.path.isdir(cls.sitehome):
-            removetree(cls.sitehome)
-        stderrbuf  = StringIO.StringIO()
-        with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO.StringIO()
-            with SwitchStdout(stdoutbuf):
-                runCommand(cls.userhome, cls.userconfig, 
-                    ["annalist-manager", "init", "--config=runtests"]
-                    )
-        stdoutbuf  = StringIO.StringIO()
-        with SwitchStdout(stdoutbuf):
-            runCommand(cls.userhome, cls.userconfig, 
-                ["annalist-manager", "createsitedata", "--config=runtests"]
-                )
+        cls.setup_annalist_manager_test()
+        cls.init_site_database()
+        cls.create_site_data()
         return
 
     def setUp(self):
@@ -79,45 +50,12 @@ class AnnalistManagerCollTest(AnnalistTestCase):
         return
 
     #   -----------------------------------------------------------------------------
-    #   Helpers
-    #   -----------------------------------------------------------------------------
-
-    def collsrc(self, coll_id):
-        return self.src_root + "/annalist/data/%s"%(coll_id,)
-
-    def colldir(self, coll_id):
-        return os.path.join(self.sitehome, "c/%s"%(coll_id,))
-
-    def installcoll(self, coll_id):
-        stdoutbuf  = StringIO.StringIO()
-        with SwitchStdout(stdoutbuf):
-            runCommand(self.userhome, self.userconfig, 
-                [ "annalist-manager", "installcollection"
-                , coll_id
-                , "--config=runtests"
-                ])
-        return
-
-    def copycoll(self, coll_id1, coll_id2):
-        coll_dir = self.colldir(coll_id2)
-        if os.path.isdir(coll_dir):
-            return # Copy already exists
-        stdoutbuf  = StringIO.StringIO()
-        with SwitchStdout(stdoutbuf):
-            runCommand(self.userhome, self.userconfig, 
-                [ "annalist-manager", "copycollection"
-                , coll_id1, coll_id2
-                , "--config=runtests"
-                ])
-        return
-
-    #   -----------------------------------------------------------------------------
     #   Tests
     #   -----------------------------------------------------------------------------
 
     def test_installcollection(self):
         coll_id = "Resource_defs"
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "installcollection"
@@ -148,7 +86,7 @@ class AnnalistManagerCollTest(AnnalistTestCase):
             removetree(coll_id2)
         collexists = os.path.isdir(self.colldir(coll_id2))
         self.assertFalse(collexists, "%s absent?"%coll_id2)
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "copycollection"
@@ -176,7 +114,7 @@ class AnnalistManagerCollTest(AnnalistTestCase):
         collexists = os.path.isdir(self.colldir(coll_id2))
         self.assertTrue(collexists, "%s created?"%coll_id2)
         # Now generate migration report
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "migrationreport"
@@ -198,7 +136,7 @@ class AnnalistManagerCollTest(AnnalistTestCase):
         collexists = os.path.isdir(self.colldir(coll_id))
         self.assertTrue(collexists, "%s created?"%coll_id)
         # Now migrate
-        stdoutbuf  = StringIO.StringIO()
+        stdoutbuf  = StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "migratecollection"
@@ -233,9 +171,9 @@ class AnnalistManagerCollTest(AnnalistTestCase):
         self.assertTrue(collexists, "%s created?"%coll_id4)
 
         # Now migrate
-        stderrbuf  = StringIO.StringIO()
+        stderrbuf  = StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO.StringIO()
+            stdoutbuf  = StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "migrateallcollections"

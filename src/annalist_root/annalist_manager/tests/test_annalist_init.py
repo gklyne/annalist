@@ -1,37 +1,29 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test module for annalist-manager initialization commands
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2018, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import sys
-import os
-import StringIO
-
 import logging
 log = logging.getLogger(__name__)
 
+import sys
+import os
+
+from utils.py3porting           import StringIO
+from utils.StdoutContext        import SwitchStdout, SwitchStderr
+
 import annalist
-from annalist.util       import replacetree, removetree
+from annalist.util              import replacetree, removetree
 
-from utils.StdoutContext import SwitchStdout, SwitchStderr
-
-from annalist.tests.AnnalistTestCase import AnnalistTestCase
-
-from annalist_manager.tests   import get_source_root
-
-from annalist_manager.am_main import runCommand
-
-#   -----------------------------------------------------------------------------
-#
-#   Helper functions
-#
-#   -----------------------------------------------------------------------------
+from annalist_manager.tests     import get_source_root
+from annalist_manager.tests     import test_annalist_base
+from annalist_manager.am_main   import runCommand
 
 #   -----------------------------------------------------------------------------
 #
@@ -39,15 +31,14 @@ from annalist_manager.am_main import runCommand
 #
 #   -----------------------------------------------------------------------------
 
-class AnnalistManagerInitTest(AnnalistTestCase):
+class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.setup_annalist_manager_test()
+        return
 
     def setUp(self):
-        self.userhome    = os.path.os.path.expanduser("~")
-        self.userconfig  = os.path.os.path.expanduser("~/.annalist")
-        self.src_root    = get_source_root()
-        self.testhome    = os.path.join(self.src_root, "sampledata/data")
-        self.sitehome    = os.path.join(self.testhome, "annalist_site")
-        self.settingsdir = os.path.join(self.src_root, "annalist_site/settings")
         if os.path.isdir(self.sitehome):
             removetree(self.sitehome)
         return
@@ -60,9 +51,9 @@ class AnnalistManagerInitTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_initialize(self):
-        stderrbuf  = StringIO.StringIO()
+        stderrbuf  = StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO.StringIO()
+            stdoutbuf  = StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     ["annalist-manager", "init", "--config=runtests"]

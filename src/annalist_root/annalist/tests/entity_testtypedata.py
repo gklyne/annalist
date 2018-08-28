@@ -1,24 +1,25 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Record field data functions to support entity data testing
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
 
 from django.conf                import settings
 from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
+
+from utils.py3porting           import urljoin
 
 from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -60,7 +61,7 @@ def recordtype_dir(coll_id="testcoll", type_id="testtype"):
 #   the declared URI patterns.
 
 def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
-    return urlparse.urljoin(
+    return urljoin(
         site._entityurl,
         layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
         layout.COLL_TYPE_PATH%{'id': type_id} + "/"

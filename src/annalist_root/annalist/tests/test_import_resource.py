@@ -249,13 +249,13 @@ class ImportResourceTest(AnnalistTestCase):
         testobj1 = self.test_imp_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "wb"
             )
-        testobj1.write("Test data test1res.txt")
+        testobj1.write(b"Test data test1res.txt")
         self.assertEqual(testobj1.name, test1dir+"/test1res.txt")
         testobj1.close()
         testobj2 = self.test_imp_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "rb"
             )
-        self.assertEqual(testobj2.read(), "Test data test1res.txt")
+        self.assertEqual(testobj2.read(), b"Test data test1res.txt")
         testobj2.close()
         return
 

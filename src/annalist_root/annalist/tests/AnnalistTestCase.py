@@ -1,23 +1,26 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Test case with additional test methods used by some Annalist tests
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import re
-
 import logging
 log = logging.getLogger(__name__)
 
-from django.test import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+import re
+import json
+from bs4                import BeautifulSoup
+
+from django.test        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+
+from utils.py3porting   import is_string, bytes_to_str
 
 from annalist.models.entitytypeinfo             import EntityTypeInfo
-
 from annalist.views.fields.bound_field          import bound_field
 from annalist.views.fields.field_description    import FieldDescription
 
@@ -50,6 +53,8 @@ class AnnalistTestCase(TestCase):
         """
         Throw an exception if the regular expresson pattern is matched
         """
+        if not is_string(string):
+            string = bytes_to_str(string)
         m = re.search(pattern, string)
         if not m or not m.group(0):
             raise self.failureException(
@@ -156,6 +161,51 @@ class AnnalistTestCase(TestCase):
         """
         second_start = second[:len(first)]
         self.assertEqual(first, second_start, msg=msg)
+        return
+
+    def assertHtmlContentElement(self, 
+        content, tagname=None, tagattrs={}, 
+        expect_content=None,
+        expect_attrs={}
+        ):
+        """
+        Test element content in HTML response.
+
+        Because dictionary element ordering changes between Python 2 and 3,
+        attribute values supplied as dictionaries are matched against actual 
+        attribute content decoded as JSON.
+
+        Example usage:
+
+        self.assertHtmlContentElement(response.content,
+            tagname="input", tagattrs={"name": "action_params"},
+            expect_attrs=
+                { "type": "hidden"
+                , "value":
+                    { "remove":    ["Remove selected"]
+                    , "new_id":    [""]
+                    , "new_label": [""]
+                    , "select":    ["coll1", "coll3"]
+                    }
+                }
+            )
+        """
+        s = BeautifulSoup(content, "html.parser" )
+        testelem = s.find(tagname, attrs=tagattrs)
+        self.assertIsNotNone(
+            testelem, "Expected element %s@%r not found"%(tagname, tagattrs)
+            )
+        if expect_content is not None:
+            self.assertEqual(testelem.string, expect_content)
+        for attr in expect_attrs:
+            attr_val = testelem[attr]
+            self.assertIsNotNone(
+                attr_val, "Expected element %s attribute @%s not found"%(tagname, attr)
+                )
+            if isinstance(expect_attrs[attr], dict):
+                # Decode attribute value as JSON for testing
+                attr_val = json.loads(attr_val)
+            self.assertEqual(attr_val, expect_attrs[attr])
         return
 
 # End.

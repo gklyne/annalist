@@ -335,6 +335,9 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 7)
+        # for i in range(7):
+        #     print("@@@@ act field[%d]: "%i, repr(actual_context['fields'][i]))
+        #     print("@@@@ exp field[%d]: "%i, repr(expect_context['fields'][i]))
         self.assertDictionaryMatch(actual_context, expect_context)
         return
 
@@ -778,7 +781,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_type_values("newtype", update="RecordType", type_uri="test:type")
@@ -795,7 +798,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "newtype"))
@@ -854,7 +857,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_type_values(
@@ -876,7 +879,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record type still does not exist
         self.assertFalse(RecordType.exists(self.testcoll, "copytype"))
@@ -940,7 +943,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_type_values("edittype", update="Updated RecordType")
@@ -965,7 +968,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists and old does not
         self.assertFalse(RecordType.exists(self.testcoll, "edittype1"))
@@ -993,7 +996,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record type still does not exist and unchanged
         self._check_record_type_values("edittype")
@@ -1072,7 +1075,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         # Check content of type, view and list
         common_vals = (
             { 'type_id':    "tasktype"
@@ -1124,7 +1127,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             "/testsite/c/testcoll/v/Type_view/_type/%s/"%(subtype_id,), 
             r['location']
             )
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         # Check content of type record
         common_vals = (
             { 'coll_id':    "testcoll"
@@ -1181,9 +1184,9 @@ class ConfirmRecordTypeDeleteTests(AnnalistTestCase):
         u = TestHostUri + recordtype_edit_url("delete", "testcoll")
         f = recordtype_delete_confirm_form_data("deletetype")
         r = self.client.post(u, f)
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "Found")
-        self.assertEqual(r.content,         "")
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
         v  = collection_edit_url("testcoll")
         e1 = "info_head="
         e2 = "info_message="

@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Common base classes for Annalist stored entities (collections, data, metadata, etc.)
 
@@ -12,21 +9,26 @@ This module also implements the logic used to locate entities on alternate searc
 such as site data or data inherited from other collections.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import itertools
 import json
 import errno
 import traceback
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                import settings
+
+from utils.py3porting           import is_string, urljoin
 
 from annalist                   import layout
 from annalist                   import util
@@ -152,7 +154,7 @@ class Entity(EntityRoot):
         #     "@@  _ Entity.__init__: id %s, parenturl %s, parentdir %s, relpath %s"%
         #     (entityid, parent._entityurl, parent._entitydir, relpath)
         #     )
-        entity_url  = urlparse.urljoin(parent._entityurl, relpath) 
+        entity_url  = urljoin(parent._entityurl, relpath) 
         entity_dir  = os.path.normpath(os.path.join(parent._entitydir, relpath))
         entity_base = parent._entitydir   # Used as safety check when removing data
         if not entity_dir.startswith(entity_base):
@@ -161,7 +163,7 @@ class Entity(EntityRoot):
         #     "@@  _ Entity.__init__: entity_url %s, entity_dir %s"%
         #     (entity_url, entity_dir)
         #     )
-        entityviewurl = urlparse.urljoin(
+        entityviewurl = urljoin(
             parent._entityviewurl,
             self._entityview%{'id': entityid, 'type_id': self._entitytypeid}
             )
@@ -183,8 +185,8 @@ class Entity(EntityRoot):
         # log.debug("Entity._get_ref_url: baseurl %s, urlref %s"%(baseurl, urlref))
         if urlref is None:
             return None
-        rooturl = urlparse.urljoin(baseurl, entityurl)
-        return urlparse.urljoin(
+        rooturl = urljoin(baseurl, entityurl)
+        return urljoin(
             rooturl,
             urlref%({"type_id": self._entitytypeid, "id": self._entityid})
             )
@@ -371,7 +373,7 @@ class Entity(EntityRoot):
                     search for children.  See method `_find_alt_parents` for more details.
         """
         if altscope is not None:
-            if not isinstance(altscope, (unicode, str)):
+            if not is_string(altscope):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
@@ -398,11 +400,6 @@ class Entity(EntityRoot):
         alternatives and make additional calls as needed.
         """
         # log.debug("Entity.try_alt_entities: %s/%s"%(self.get_type_id(), self.get_id()))
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         v = func(self)
         if test(v):
             return v
@@ -682,11 +679,6 @@ class Entity(EntityRoot):
         # log.debug("Entity.load: entity %s/%s, altscope %s"%
         #     (cls._entitytype, entityid, altscope)
         #     )
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         entity = None
         if util.valid_id(entityid, reserved_ok=reserved_ok):
             (e, v) = cls.try_alt_parentage(
@@ -724,11 +716,6 @@ class Entity(EntityRoot):
         # log.debug("Entity.exists: entitytype %s, parentdir %s, entityid %s"%
         #     (cls._entitytype, parent._entitydir, entityid)
         #     )
-        # if altscope is not None:
-        #     if not isinstance(altscope, (unicode, str)):
-        #         log.error("altscope must be string (%r supplied)"%(altscope))
-        #         log.error("".join(traceback.format_stack()))
-        #         raise ValueError("altscope must be string (%r supplied)"%(altscope))
         (e, v) = cls.try_alt_parentage(
             parent, entityid, (lambda e: e._exists()), 
             altscope=altscope
@@ -762,7 +749,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid)
             )
         if altscope is not None:
-            if not isinstance(altscope, (unicode, str)):
+            if not is_string(altscope):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))

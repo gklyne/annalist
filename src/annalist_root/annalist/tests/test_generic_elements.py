@@ -125,9 +125,6 @@ class UserServerLogViewTest(AnnalistTestCase):
         err_head    = "401: Unauthorized"
         err_message = "Resource http://test.example.com/testsite/serverlog/ requires authentication for ADMIN access"
         self.assertEqual(r.context["message"], err_message)
-        # self.assertEqual(r.content,       "")
-        # self.assertIn("/testsite/login/", r['location'])
-        # self.assertIn("continuation_url=/testsite/", r['location'])
         self.assertContains(r, err_head,    status_code=401)
         self.assertContains(r, err_message, status_code=401)
         return

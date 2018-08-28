@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Record field definitions for testing.
 
@@ -8,12 +5,12 @@ This module contains record field definitioons that can be used in
 test context values.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2018, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
-
-# import os
-# import urlparse
 
 from collections                import OrderedDict
 
@@ -1413,7 +1410,7 @@ def get_bound_field(field_id,
     if field_val is not None:
         bound_field["field_value"] = field_val
     if isinstance(options, OrderedDict):
-        options = options.values()
+        options = list(options.values())
     if options is not None:
         bound_field["options"] = options
     return bound_field

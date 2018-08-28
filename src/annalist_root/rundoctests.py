@@ -1,9 +1,5 @@
 #! /usr/bin/env python -Wall
-
-# Copied from http://dodrum.blogspot.co.uk/2011/01/running-doctests-in-django-project.html
-
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
+# pylint: disable=multiple-imports, ungrouped-imports
 
 """
 Run doctests from a given set of modules in django environment.
@@ -11,11 +7,15 @@ Run doctests from a given set of modules in django environment.
 @license: BSD
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 import os, sys, glob
 from sys import stderr 
+import doctest
+
 os.environ['DJANGO_SETTINGS_MODULE'] = "annalist_site.settings.runtests"
 from django.test.utils import setup_test_environment
-import doctest
 
 if len(sys.argv) < 2:
     n = sys.argv[0]
@@ -51,7 +51,8 @@ for fn in ls:
     f = os.path.splitext(fn)[0].replace(os.sep, '.')
     m = __import__(f, {}, {}, ['*'])
     result = doctest.testmod(m, verbose=verbose)
-    if verbose: print(f, result, file=stderr) 
+    if verbose: 
+        print(f, result, file=stderr) 
     results.append((f, result))
 
 totalTests = 0
@@ -69,3 +70,4 @@ if totalFailures > 0:
 else:
     print("All", totalTests, "tests passed")
 
+# End.

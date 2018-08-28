@@ -1,25 +1,24 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for AnnalistUser module and view
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import unittest
 import re
 
-import logging
-log = logging.getLogger(__name__)
-
 from django.conf                            import settings
 from django.db                              import models
 from django.http                            import QueryDict
-from django.core.urlresolvers               import resolve, reverse
 from django.contrib.auth.models             import User
 from django.test                            import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client                     import Client
@@ -522,7 +521,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "edituser"))
@@ -549,7 +548,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))

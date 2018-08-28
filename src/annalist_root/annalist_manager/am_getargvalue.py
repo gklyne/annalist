@@ -11,10 +11,13 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 import getpass
+from builtins import input
 
 # raw_input and getpass:
 #   http://packetforger.wordpress.com/2014/03/26/using-pythons-getpass-module/
 #   https://docs.python.org/2/library/getpass.html
+# Also, for Python 2/3:
+#   http://python-future.org/compatible_idioms.html#raw-input
 
 def getarg(args, index):
     """
@@ -28,7 +31,7 @@ def getargvalue(val, prompt):
     """
     if not val:
         if sys.stdin.isatty():
-            val = raw_input(prompt)
+            val = input(prompt)
         else:
             val = sys.stdin.readline()
             if val[-1] == '\n': val = val[:-1]

@@ -1,22 +1,23 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for boolean value rendering as checkbox
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
 
-import logging
-log = logging.getLogger(__name__)
+from utils.py3porting import is_string, to_unicode
 
 from annalist.views.fields.render_bool_checkbox import (
     get_bool_checkbox_renderer, 
@@ -36,7 +37,7 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
     def test_RenderBoolCheckboxValue(self):
 
         def expect_render(val):
-            if isinstance(val, (str,unicode)):
+            if is_string(val):
                 valtext = val
                 valbool = val.lower() in ["true", "yes"]
             else:

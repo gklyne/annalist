@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 This module contains definitions intended to reflect the site-wide data
 used by all Annalist installations.
@@ -9,15 +6,17 @@ Test cases should use values returned by this module so that additions to
 the site data can be updated here, in just one place.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
 
 from annalist                               import layout
 from annalist.util                          import valid_id, split_type_entity_id

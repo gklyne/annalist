@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Annalist collection
 
@@ -15,23 +12,27 @@ A collection is represented by:
 - ... and additional supporting metadata (fields, groups, user permissions, etc.)
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import shutil
 import json
 import datetime
 from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 
-import logging
-log = logging.getLogger(__name__)
+from django.conf                    import settings
 
-from django.conf import settings
+from utils.py3porting               import isoformat_space
 
 import annalist
 from annalist                               import layout
@@ -39,7 +40,6 @@ from annalist                               import message
 from annalist.exceptions                    import Annalist_Error
 from annalist.identifiers                   import RDF, RDFS, ANNAL
 from annalist.util                          import valid_id, extract_entity_id, make_type_entity_id
-from annalist.py3porting                    import isoformat_space, encode_str
 
 from annalist.models.entity                 import Entity
 from annalist.models.annalistuser           import AnnalistUser

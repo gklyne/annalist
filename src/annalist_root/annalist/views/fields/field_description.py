@@ -1,20 +1,20 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Define class to represent a field description when processing an entity view.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import sys
-import traceback
-import collections
-
 import logging
 log = logging.getLogger(__name__)
+
+import sys
+import traceback
+from collections            import OrderedDict
 
 from annalist               import layout
 from annalist               import message
@@ -132,7 +132,7 @@ class FieldDescription(object):
             # Note: the options list may be used more than once, so the id generator
             # returned must be materialized as a list
             # Uses collections.OrderedfDict to preserve entity ordering
-            self._field_desc['field_choices'] = collections.OrderedDict()
+            self._field_desc['field_choices'] = OrderedDict()
             if field_render_type in ["Enum_optional", "Enum_choice_opt"]:
                 # Add blank choice for optional selections
                 self._field_desc['field_choices'][''] = FieldChoice('', label=field_placeholder)
@@ -386,18 +386,22 @@ class FieldDescription(object):
 
     # Define methods to facilitate access to values using dictionary operations
     # on the FieldDescription object
+    #
+    # @@TODO: do we really need to return lists for .keys() and .items()?
+    # It would be more consistent with Python3 to just return an interator.
+    # Try returning iter(...) instead and see what happens?
 
     def keys(self):
         """
         Return collection metadata value keys
         """
-        return self._field_desc.keys()
+        return list(self._field_desc.keys())
 
     def items(self):
         """
         Return collection metadata value fields
         """
-        return self._field_desc.items()
+        return list(self._field_desc.items())
 
     def get(self, key, default):
         """

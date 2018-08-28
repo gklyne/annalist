@@ -515,7 +515,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check new entity data created
         self._check_entity_data_values("newentity", update="RecordType")
@@ -545,7 +545,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check new entity data created
         self._check_entity_data_values("newentity", update="RecordType")
@@ -562,7 +562,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(
             r['location'], entitydata_list_type_url("testcoll", "testtype")
             )
@@ -581,7 +581,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # print r.content
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check new entity data created, except label, comment
         self._check_entity_data_values("newentity", 
@@ -617,7 +617,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(
             r['location'], entitydata_list_type_url("testcoll", "testtype")
             )
@@ -657,7 +657,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
         self._check_entity_data_values("newentity", 
@@ -681,7 +681,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url(coll_id, "_type"))
         self.assertTrue(RecordType.exists(self.testcoll, type_id))
         return
@@ -696,7 +696,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "newtype"))
         # Check new entity data created
         self._check_entity_data_values("newentity", type_id="newtype")
@@ -713,7 +713,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
         self.assertTrue(RecordField.exists(self.testcoll, "newfield", self.testsite))
@@ -734,7 +734,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         c = continuation_url_param(w)
@@ -769,7 +769,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view"
             )
@@ -808,7 +808,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view"
             )
@@ -842,7 +842,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
         c = continuation_url_param(w)
@@ -875,7 +875,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
         c = continuation_url_param(w)
@@ -908,7 +908,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
         c = continuation_url_param(w)
@@ -943,7 +943,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertIn(u, r['location'])
         ih = "info_head=Action%20completed"
         im = (
@@ -958,7 +958,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r2 = self.client.get(u2)
         self.assertEqual(r2.status_code,   302)
         self.assertEqual(r2.reason_phrase, "Found")
-        self.assertEqual(r2.content,       "")
+        self.assertEqual(r2.content,       b"")
         v2 = entitydata_edit_url(
             coll_id="testcoll", view_id="Default_view", type_id="testtype", entity_id="entity1"
             )
@@ -976,7 +976,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = collection_edit_url(coll_id="testcoll")
         w = entitydata_edit_url(
             action="edit", 
@@ -1026,7 +1026,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists
         self._check_entity_data_values("copytype", update="RecordType")
@@ -1057,7 +1057,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check that target record type still does not exist
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
@@ -1096,7 +1096,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(
             r['location'], entitydata_list_type_url("testcoll", "testtype")
             )
@@ -1138,7 +1138,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityaddfield", view_id="Type_view")
         c = continuation_url_param(w)
@@ -1178,7 +1178,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(
             "edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view"
             )
@@ -1219,7 +1219,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityuseview1", view_id="Type_view")
         c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
         self.assertIn(v, r['location'])
@@ -1252,7 +1252,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview1", view_id="Default_view")
         c = continuation_url_param(w)
@@ -1286,7 +1286,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield1", view_id="Default_view")
         c = continuation_url_param(w)
@@ -1320,7 +1320,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype1", view_id="Default_view")
         c = continuation_url_param(w)
@@ -1358,7 +1358,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         self._check_entity_data_values("entityedit", update="Updated entity")
         return
@@ -1379,7 +1379,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(
             r['location'], entitydata_list_type_url("testcoll", "testtype")
             )
@@ -1417,7 +1417,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         c2 = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityeditid2", view_id="Type_view")
         self.assertEqual(r['location'], c2)
         # self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
@@ -1446,7 +1446,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # log.info("***********\n"+r.content)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
         self.assertTrue(EntityData.exists(newtypedata, "entityedittype"))
@@ -1467,7 +1467,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         # log.info("***********\n"+r.content)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "_field"))
         self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
         self.assertTrue(RecordField.exists(self.testcoll, "entityedittype"))
@@ -1489,7 +1489,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         # Check that target record type still does not exist and unchanged
         self._check_entity_data_values("edittype")
@@ -1536,7 +1536,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(
             r['location'], entitydata_list_type_url("testcoll", "testtype")
             )
@@ -1581,7 +1581,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         c = continuation_url_param(u)
         a = "add_field=View_fields"
@@ -1618,7 +1618,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_view", view_id="View_view", entity_id="Type_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
@@ -1652,7 +1652,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view")
         c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
         self.assertIn(v, r['location'])
@@ -1685,7 +1685,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
@@ -1718,7 +1718,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
@@ -1751,7 +1751,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
@@ -1781,7 +1781,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         e = entitydata_edit_url(
             "view", "testcoll", "testtype", entity_id="entityeditview", view_id="Default_view"
             )
@@ -1806,7 +1806,7 @@ class GenericEntityEditViewTest(AnnalistTestCase):
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view")
         c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
         self.assertIn(v, r['location'])

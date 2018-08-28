@@ -61,6 +61,10 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
     [Later] After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
 
+    [Later] I ran into some problems with setup.py on Python3, that were resolved by:
+
+        pip install certifi
+
 - [x] Update other packages (in setup.py)
 - [x] Move from deprecated oauth2client package to recommended replacement for OpenId Connect (OIDC) logins:
 
@@ -89,25 +93,36 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - the above changes also affect login/login_views.
     - updates to settings are required to configure the templating framework.
 
-- [ ] Add test case for HEAD requests
+- [x] Add test case for HEAD requests
 
 - [ ] Update to support Python 3
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
     - [x] Review test coverage (93% overall, but some key modules 40-80%)
     - [x] Create branch for Python 3 testing
-    - [x] from __future__ imports:
-        - absolute_import, division, print_function, unicode_literals
-    - [ ] Install futurize
-    - [ ] Run futurize; review changes
-    - [ ] Test under Python 2
-    - [ ] Test under Python 3   
-- [ ] Update annalist-manager to Python 3 compatibility
+    - [x] from __future__ import absolute_import, division, print_function, unicode_literals
+    - [x] Install pylint, run python 3 porting tests
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Change all py3porting references to utils, remove version in annalist
+    - [x] Run test suite with `python -3 ...`
+    - [x] Check for dependencies stuck at Python2
+        - NOTE: Django 1.11 has regression on Python 3.6 (generator syntax)
+        - It's easily fixed, but version 1.11 is no longer being maintained
+            - See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
+            - See: https://stackoverflow.com/a/48822656/324122
+        - NOTE: rdflib-jsonld Py3 compatibility isn't yet released to PyPI
+        - Also requires modification to rdflib-jsonld current branch
+        - see: https://github.com/RDFLib/rdflib-jsonld/issues/55
+    - [x] Test under Python 3
+    - [ ] Update installation documents
+
+- [x] Update annalist-manager to Python 3 compatibility
     - [x] Create test suite
-    - [x] from __future__ imports
-    - [ ] Run futurize; review changes
-    - [ ] Test under Python 2
-    - [ ] Test under Python 3   
+    - [x] from __future__ imports ...
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Test under Python 3   
+
+(Sub-release?)
 
 - [ ] Update Django version used to latest version designated for long term support
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
@@ -182,11 +197,11 @@ Technical debt:
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
 - [ ] review view URL returned for entities found with alternative parentage:
-    - currently force URL returned to be that of original parent, not alt. 
+    - currently forces URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
     - See: _entityviewurl member variable
     - logic is handled in `Entity.try_alt_parentage` and `_init_child`
-    - may want to consider promoting entityviewurl to constructor parameter for all Entity.
+    - may want to consider promoting entityviewurl to constructor parameter for all Entity types.
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.

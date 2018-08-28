@@ -22,9 +22,6 @@ from annalist.views.collection          import CollectionView, CollectionEditVie
 from annalist.views.recordtypedelete    import RecordTypeDeleteConfirmedView
 from annalist.views.recordviewdelete    import RecordViewDeleteConfirmedView
 from annalist.views.recordlistdelete    import RecordListDeleteConfirmedView
-from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
-from login.auth_oidc_client             import OIDC_AuthDoneView
-from login.auth_django_client           import LocalUserPasswordView
 
 from annalist.views.entityedit          import GenericEntityEditView
 from annalist.views.entitylist          import EntityGenericListView
@@ -35,6 +32,9 @@ from annalist.views.siteresource        import SiteResourceAccess
 from annalist.views.collectionresource  import CollectionResourceAccess
 from annalist.views.entityresource      import EntityResourceAccess
 
+from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
+from login.auth_oidc_client             import OIDC_AuthDoneView
+from login.auth_django_client           import LocalUserPasswordView
 
 # c - collections
 # v - view

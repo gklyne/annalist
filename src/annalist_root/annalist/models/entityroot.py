@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Common base classes for Annalist stored entities (collections, data, metadata, etc.)
 
@@ -12,21 +9,25 @@ Part of the purpose of this module is to abstract the underlying storage access
 from the Annalist organization of presented entities.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import shutil
 import json
 import errno
 
-import logging
-log = logging.getLogger(__name__)
-
 from django.conf import settings
+
+from utils.py3porting       import is_string, urljoin
 
 from annalist               import layout
 from annalist               import util
@@ -144,7 +145,7 @@ class EntityRoot(object):
         specializations to be created without changing the URI used.
         """
         # log.debug("EntityRoot.get_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
-        return urlparse.urljoin(baseurl, self._entityurl)
+        return urljoin(baseurl, self._entityurl)
 
     def get_view_url(self, baseurl=""):
         """
@@ -158,7 +159,7 @@ class EntityRoot(object):
         location.
         """
         # log.debug("EntityRoot.get_view_url: baseurl %s, _entityurl %s"%(baseurl, self._entityurl))
-        return urlparse.urljoin(baseurl, self._entityviewurl)
+        return urljoin(baseurl, self._entityviewurl)
 
     def get_view_url_path(self, baseurl=""):
         """
@@ -459,11 +460,11 @@ class EntityRoot(object):
                     # log.debug("EntityRoot._load_values: url_path %s"%(self.get_view_url_path()))
                     entitydata[ANNAL.CURIE.url] = self.get_view_url_path()
                     return entitydata
-            except IOError, e:
+            except IOError as e:
                 if e.errno != errno.ENOENT:
                     raise
                 log.error("EntityRoot._load_values: no file %s"%(body_file))
-            except ValueError, e:
+            except ValueError as e:
                 log.error("EntityRoot._load_values: error loading %s"%(body_file))
                 log.error(e)
                 return (
@@ -784,7 +785,7 @@ class EntityRoot(object):
         if body_file:
             try:
                 f_stream = open(body_file, "rt")
-            except IOError, e:
+            except IOError as e:
                 if e.errno != errno.ENOENT:
                     raise
                 log.error("EntityRoot._read_stream: no file %s"%(body_file))
