@@ -19,7 +19,7 @@
     - [Initial site setup](#initial-site-setup)
 9. [Accessing Annalist](#accessing-annalist)
 10. [Create a collection](#create-a-collection)
-11. [`annalist-manager` commands](#-annalist-manager--commands)
+11. [`annalist-manager` commands](#annalist-manager-commands)
 
 
 ## Prerequisites
@@ -27,7 +27,7 @@
 * A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 14.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
 * Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
     - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
-* Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv introduction](http://virtualenv.readthedocs.org/en/latest/virtualenv.html)).
+* Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv documentation](https://virtualenv.pypa.io/en/stable/)).
 
 NOTE: As of version 0.5.11, see discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
