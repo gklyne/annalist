@@ -50,10 +50,11 @@ def am_runtests(annroot, options):
     with ChangeCurrentDir(annroot):
         # For some reason, tests are not discovered unless run from here
         cmd = "test"
+        moreoptions = "--verbosity=2" if options.debug else ""
         testname = getarg(options.args, 0) or ""
         subprocess_command = (
-            "django-admin %s %s --pythonpath=%s --settings=%s --top-level-directory=%s"%
-            (cmd, testname, annroot, testsettings.modulename, annroot)
+            "django-admin %s %s --pythonpath=%s --settings=%s --top-level-directory=%s %s"%
+            (cmd, testname, annroot, testsettings.modulename, annroot, moreoptions)
             )
         log.debug("am_initialize subprocess: %s"%subprocess_command)
         # OLD: status = os.system(subprocess_command)

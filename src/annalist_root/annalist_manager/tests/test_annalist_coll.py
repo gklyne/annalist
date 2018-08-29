@@ -169,7 +169,6 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
         self.installcoll(coll_id4)
         collexists = os.path.isdir(self.colldir(coll_id4))
         self.assertTrue(collexists, "%s created?"%coll_id4)
-
         # Now migrate
         stderrbuf  = StringIO()
         with SwitchStderr(stderrbuf):
@@ -181,39 +180,23 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
                     ])
         stdoutbuf.seek(0)
         stdoutlines = stdoutbuf.read().split("\n")
+        expectlines = (
+            [ "---- Processing '%s'"%(cid) 
+              for cid in (coll_id1, coll_id2, coll_id3, coll_id4)
+            ])
+        expectlines.append("")
         self.assertEqual(
             stdoutlines[0], 
             "Apply data migrations in all collections:"
             )
-        self.assertEqual(
-            stdoutlines[1], 
-            "---- Processing '%s'"%(coll_id3,)
-            )
-        self.assertEqual(
-            stdoutlines[2], 
-            "---- Processing '%s'"%(coll_id4,)
-            )
-        self.assertEqual(
-            stdoutlines[3], 
-            "---- Processing '%s'"%(coll_id1,)
-            )
-        self.assertEqual(
-            stdoutlines[4], 
-            "---- Processing '%s'"%(coll_id2,)
-            )
+        self.assertIn(stdoutlines[1], expectlines)
+        self.assertIn(stdoutlines[2], expectlines)
+        self.assertIn(stdoutlines[3], expectlines)
+        self.assertIn(stdoutlines[4], expectlines)
         self.assertEqual(
             stdoutlines[5], 
             "Data migrations complete."
             )
         return
-
-
-
-#   annalist-manager installcollection coll_id [--force] [ CONFIG ]
-#   annalist-manager copycollection old_coll_id new_coll_id [ CONFIG ]
-#   annalist-manager migratecollection coll_id [ CONFIG ]
-#   annalist-manager migrateallcollections [ CONFIG ]
-#   annalist-manager migrationreport old_coll_id new_coll_id [ CONFIG ]
-
 
 # End.
