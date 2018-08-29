@@ -108,8 +108,14 @@ class FieldAliasTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(FieldAliasTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        # resetSitedata()
+        super(FieldAliasTest, cls).tearDownClass()
+        resetSitedata()
         return
 
     def test_view_field_alias(self):

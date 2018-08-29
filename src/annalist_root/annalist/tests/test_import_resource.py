@@ -235,7 +235,13 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ImportResourceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ImportResourceTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

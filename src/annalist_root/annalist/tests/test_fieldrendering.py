@@ -73,7 +73,13 @@ class FieldRenderingTest(FieldRendererTestSupport):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(FieldRenderingTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(FieldRenderingTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

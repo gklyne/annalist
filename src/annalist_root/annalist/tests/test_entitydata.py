@@ -66,7 +66,13 @@ class EntityDataTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityDataTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityDataTest, cls).tearDownClass()
         resetSitedata(scope="collections") #@@checkme@@
         return
 

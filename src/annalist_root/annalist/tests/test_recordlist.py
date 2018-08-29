@@ -132,7 +132,13 @@ class RecordListTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordListTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RecordListTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
@@ -267,8 +273,14 @@ class RecordListEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordListEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        # resetSitedata()
+        super(RecordListEditViewTest, cls).tearDownClass()
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

@@ -83,7 +83,13 @@ class RefMultifieldTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RefMultifieldTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RefMultifieldTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

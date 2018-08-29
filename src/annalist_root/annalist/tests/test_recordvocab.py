@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-from __future__ import absolute_import, division, print_function
-
 """
 Tests for RecordVocab module and view
 
@@ -9,16 +6,19 @@ type description sitedata files, and as such duplicates some tests covered by
 module test_entitygenericedit.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2017, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import unittest
 import markdown
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 from django.db                          import models
@@ -134,6 +134,16 @@ class RecordVocabTest(AnnalistTestCase):
         resetSitedata(scope="collections")
         return
 
+    # @classmethod
+    # def setUpClass(cls):
+    #     super(zzzzzz, cls).setUpClass()
+    #     return
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     super(zzzzzz, cls).tearDownClass()
+    #     return
+
     def test_RecordVocabTest(self):
         self.assertEqual(RecordVocab.__name__, "RecordVocab", "Check RecordVocab class name")
         return
@@ -230,7 +240,13 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordVocabEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RecordVocabEditViewTest, cls).tearDownClass()
         # @@checkme@@ resetSitedata()
         return
 

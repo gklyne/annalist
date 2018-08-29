@@ -416,7 +416,13 @@ class UploadResourceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(UploadResourceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(UploadResourceTest, cls).tearDownClass()
         resetSitedata(scope="collections")      # @@checkme@@
         return
 

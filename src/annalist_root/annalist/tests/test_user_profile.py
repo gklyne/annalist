@@ -53,7 +53,13 @@ class UserProfileTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(UserProfileTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(UserProfileTest, cls).tearDownClass()
         # @@checkme@@ resetSitedata(scope="all")
         return
 

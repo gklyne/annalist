@@ -218,7 +218,13 @@ class AuthorizationTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(AuthorizationTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(AuthorizationTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

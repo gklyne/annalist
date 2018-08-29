@@ -16,7 +16,8 @@ import re
 import json
 from bs4                import BeautifulSoup
 
-from django.test        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django.test        import TestCase # https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
+from django             import db       # https://stackoverflow.com/questions/8816238/memoryerror-with-django
 
 from utils.py3porting   import is_string, bytes_to_str
 
@@ -25,6 +26,20 @@ from annalist.views.fields.bound_field          import bound_field
 from annalist.views.fields.field_description    import FieldDescription
 
 class AnnalistTestCase(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(AnnalistTestCase, cls).setUpClass()
+        log.debug("AnnalistTestCase.setUpClass: %s"%(cls.__name__))
+        db.reset_queries() # https://stackoverflow.com/questions/8816238/memoryerror-with-django
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        super(AnnalistTestCase, cls).tearDownClass()
+        log.debug("AnnalistTestCase.tearDownClass: %s"%(cls.__name__))
+        return
+
     """
     Additonal test methods for Annalist test cases
     """

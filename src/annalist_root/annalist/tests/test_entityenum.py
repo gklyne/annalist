@@ -151,7 +151,13 @@ class RecordEnumTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordEnumTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RecordEnumTest, cls).tearDownClass()
         resetSitedata(scope="collections") #@@checkme@@
         return
 

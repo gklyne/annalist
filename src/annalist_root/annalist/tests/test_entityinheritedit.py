@@ -152,8 +152,13 @@ class EntityInheritListViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityInheritListViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        # resetSitedata()
+        super(EntityInheritListViewTest, cls).tearDownClass()
         return
 
     #   -----------------------------------------------------------------------------

@@ -97,6 +97,17 @@ class FieldSubpropertyTest(AnnalistTestCase):
         resetSitedata(scope="collections")
         return
 
+    @classmethod
+    def setUpClass(cls):
+        super(FieldSubpropertyTest, cls).setUpClass()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        super(FieldSubpropertyTest, cls).tearDownClass()
+        resetSitedata()
+        return
+
     def create_subproperty_field_view_entity(self):
         # Create test field using superproperty
         self.test_sup_field = RecordField.create(self.testcoll, "Test_sup_field",
@@ -307,11 +318,6 @@ class FieldSubpropertyTest(AnnalistTestCase):
                 )
             )
         self.assertTrue(self.testlistentity_data is not None)
-        return
-
-    @classmethod
-    def tearDownClass(cls):
-        # resetSitedata()
         return
 
     # -------------------------------------------------------------------------

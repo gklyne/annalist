@@ -125,7 +125,13 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(GenericEntityViewViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(GenericEntityViewViewTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

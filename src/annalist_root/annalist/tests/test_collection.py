@@ -135,7 +135,13 @@ class CollectionTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(CollectionTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(CollectionTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -462,7 +468,13 @@ class CollectionEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(CollectionEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(CollectionEditViewTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

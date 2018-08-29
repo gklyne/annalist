@@ -92,7 +92,13 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityEditEnumFieldTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityEditEnumFieldTest, cls).tearDownClass()
         resetSitedata(scope="collections") #@@checkme@@
         return
 

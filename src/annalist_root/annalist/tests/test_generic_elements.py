@@ -51,7 +51,13 @@ class ServerLogTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ServerLogTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ServerLogTest, cls).tearDownClass()
         return
 
     def test_ServerLogTest(self):

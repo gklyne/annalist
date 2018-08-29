@@ -66,7 +66,13 @@ class ConfirmEntityDataDeleteTests(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ConfirmEntityDataDeleteTests, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ConfirmEntityDataDeleteTests, cls).tearDownClass()
         resetSitedata(scope="collections") #@@checkme@@
         return
 

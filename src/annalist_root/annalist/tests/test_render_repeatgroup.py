@@ -75,8 +75,15 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         # resetSitedata(scope="collections")
         return
 
+
+    @classmethod
+    def setUpClass(cls):
+        super(RepeatGroupRenderingTest, cls).setUpClass()
+        return
+
     @classmethod
     def tearDownClass(cls):
+        super(RepeatGroupRenderingTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

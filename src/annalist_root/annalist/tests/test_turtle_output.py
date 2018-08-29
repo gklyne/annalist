@@ -194,7 +194,13 @@ class TurtleOutputTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(TurtleOutputTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(TurtleOutputTest, cls).tearDownClass()
         resetSitedata()
         return
 

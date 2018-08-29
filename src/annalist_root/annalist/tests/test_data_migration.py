@@ -293,7 +293,13 @@ class DataMigrationTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(DataMigrationTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(DataMigrationTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

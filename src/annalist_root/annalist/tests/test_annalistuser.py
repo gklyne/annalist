@@ -111,6 +111,16 @@ class AnnalistUserTest(AnnalistTestCase):
         resetSitedata(scope="collections")
         return
 
+    # @classmethod
+    # def setUpClass(cls):
+    #     super(zzzzzz, cls).setUpClass()
+    #     return
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     super(zzzzzz, cls).tearDownClass()
+    #     return
+
     def test_AnnalistUserTest(self):
         self.assertEqual(AnnalistUser.__name__, "AnnalistUser", "Check AnnalistUser class name")
         return

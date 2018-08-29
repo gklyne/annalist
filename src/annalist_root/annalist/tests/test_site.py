@@ -101,6 +101,7 @@ class SiteTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        super(SiteTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -241,6 +242,7 @@ class SiteViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        super(SiteViewTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

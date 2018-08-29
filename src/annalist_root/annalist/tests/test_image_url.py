@@ -161,7 +161,13 @@ class ImageReferenceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ImageReferenceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ImageReferenceTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

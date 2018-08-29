@@ -117,7 +117,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityDefaultEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityDefaultEditViewTest, cls).tearDownClass()
         #@@checkme@@ resetSitedata()
         return
 

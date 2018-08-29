@@ -63,7 +63,13 @@ class EntityRootTest(TestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityRootTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityRootTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -317,7 +323,13 @@ class EntityTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

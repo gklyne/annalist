@@ -143,11 +143,18 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata()
+        resetSitedata()
+        return
+
+    @classmethod
+    def setUpClass(cls):
+        super(AnnalistSiteDataTest, cls).setUpClass()
+        # @@checkme@@  resetSitedata()
         return
 
     @classmethod
     def tearDownClass(cls):
+        super(AnnalistSiteDataTest, cls).tearDownClass()
         # @@checkme@@  resetSitedata()
         return
 

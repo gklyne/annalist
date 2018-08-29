@@ -130,6 +130,16 @@ class GenericEntityEditViewTest(AnnalistTestCase):
 
     @classmethod
     def tearDownClass(cls):
+        return
+
+    @classmethod
+    def setUpClass(cls):
+        super(GenericEntityEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        super(GenericEntityEditViewTest, cls).tearDownClass()
         # resetSitedata()
         return
 

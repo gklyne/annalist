@@ -213,7 +213,13 @@ class JsonldContextTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(JsonldContextTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(JsonldContextTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

@@ -132,7 +132,13 @@ class SubtypeSelectionTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SubtypeSelectionTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(SubtypeSelectionTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

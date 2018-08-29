@@ -240,7 +240,13 @@ class LinkedRecordTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(LinkedRecordTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(LinkedRecordTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
