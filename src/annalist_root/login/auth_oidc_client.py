@@ -26,7 +26,6 @@ from requests_oauthlib import OAuth2Session
 from django.core.urlresolvers import resolve, reverse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext, loader
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 

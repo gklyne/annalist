@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext, loader
+from django.template import loader
 from django.views import generic
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -84,8 +84,7 @@ class LocalUserPasswordView(generic.View):
             localdata['help_text'] = markdown.markdown(localdata['help_markdown'])
         # Render form & return control to browser
         template = loader.get_template('local_password.html')
-        context  = RequestContext(self.request, localdata)
-        return HttpResponse(template.render(context))
+        return HttpResponse(template.render(localdata, request=self.request))
 
     def post(self, request):
         userid           = request.POST.get("userid",           "")

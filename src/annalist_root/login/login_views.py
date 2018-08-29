@@ -24,7 +24,7 @@ from importlib import import_module
 from django.core.urlresolvers import resolve, reverse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.template import RequestContext, loader
+from django.template import loader
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
@@ -201,7 +201,6 @@ class LoginUserView(generic.View):
             logindata["help_text"] = markdown.markdown(logindata["help_markdown"])
         # Render form & return control to browser
         template = loader.get_template("login.html")
-        # context  = RequestContext(self.request, logindata)
         return HttpResponse(template.render(logindata, request=self.request))
 
 class LoginPostView(generic.View):
