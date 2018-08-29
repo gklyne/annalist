@@ -10,6 +10,7 @@
 4. [Upgrading an existing installation](#upgrading-an-existing-installation)
 5. [Run annalist as a background process](#run-annalist-as-a-background-process)
 6. [Accessing Annalist over HTTPS](#accessing-annalist-over-https)
+    - [Setting up Apache httpd on Ubuntu to forward HTTPS requests](#setting-up-apache-httpd-on-ubuntu-to-forward-https-requests)
 7. [Running as a Docker container](#running-as-a-docker-container)
 8. [Setting up an Annalist site](#setting-up-an-annalist-site)
     - [Annalist site options](#annalist-site-options)
@@ -29,7 +30,7 @@
     - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
 * Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv documentation](https://virtualenv.pypa.io/en/stable/)).
 
-NOTE: As of version 0.5.11, see discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
+NOTE: As of version 0.5.11, Annalist should be accessed using HTTPS.  See discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
 
 <!--
@@ -96,9 +97,9 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.10.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.12.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.5.10.tar.gz
+        pip install $WORKSPACE/Annalist-0.5.12.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -107,18 +108,18 @@ The following assumes that software is installed under a directory called $WORKS
     The output from this command should look something like this:
 
         $ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.5.11 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.12 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE: annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:     /Users/graham/.annalist/
         INFO:annalist_site.settings.runtests:DJANGO_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Django-1.11.13-py3.7.egg/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root
         INFO:annalist_site.settings.runtests:TEST_BASE_URI:   http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
-        INFO:annalist_site.settings.runtests:DATABASE_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
-        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist/data/identity_providers/')
-        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.11-py3.7.egg/annalist_root/annalist.log
+        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
+        INFO:annalist_site.settings.runtests:DATABASE_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/sampledata/data/annalist_site/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS: ('/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/annalist/data/static/', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/annalist/data/identity_providers/')
+        INFO:annalist_site.settings.runtests:LOGGING_FILE:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.7/site-packages/Annalist-0.5.12-py3.7.egg/annalist_root/annalist.log
         Creating test database for alias 'default'...
         System check identified no issues (0 silenced).
         .......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
@@ -214,8 +215,6 @@ To check for Annalist background processes, and to terminate an Annalist server 
 
 As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
 
-(@@TODO: write up details for setting up Apache and/or Nginx reverse-proxy)
-
 This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials.  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
 
     OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
@@ -225,6 +224,105 @@ or
     OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
 
 Or otherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when running the server.
+
+Alternatively, see `src/annalist_root/stunnel_dev_https.conf` for using `stunnel` to proxy HTTPS requests to HTTP for Django's internal development server.  
+
+If using Google authentication, remember to update the login redirect URLs on the `developers.google.com` [dashboard](https://console.developers.google.com/apis/dashboard).  Other authentication providers will require similar treatment.  The Annalist login redirect URLs end with `/annalist/login_done/`.
+
+### Setting up Apache httpd on Ubuntu to forward HTTPS requests
+
+@@NOTE: these instructions still need proper testing@@
+
+Prerequisites:
+
+- Apache2 web server installed and running (in default confuguration with test page)
+
+Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, anmd should be replaced with the actual domain name of the server running Annalist.
+
+1. Install _LetsEncrypt_ certificate agent:
+
+    sudo add-apt-repository ppa:certbot/certbot
+    apt-get update
+    apt-get install python-certbot-apache
+
+2. The following modules should be installed and enabled (use `a2query -m` to list):
+
+        headers
+        proxy
+        filter
+        ssl
+        proxy_http
+        autoindex
+
+3. Disable any proxy configuration.  This would usually be done by using `a2dissite` to disable any sites for which proxying has been set up.
+
+4. Create a proxy configuration for Annalist, if not already done.  This can take the form of a file `/etc/apache2/sites-available/annalist.conf`, with content like this:
+
+        # See: 000-default.host, ports.conf
+        # NameVirtualHost *:80
+        #
+        # See also: https://wiki.apache.org/httpd/CommonMisconfigurations
+
+        <VirtualHost *:80>
+            ServerName  "annalist.example.net"
+            ServerAdmin annalist@annalist.example.net
+            ErrorLog    /var/log/apache2/annalist-error.log
+            CustomLog   /var/log/apache2/annalist-access.log combined
+            <location />
+                allow from all
+            </location>
+            ProxyPass        / http://annalist.example.net:8000/
+            ProxyPassReverse / http://annalist.example.net:8000/
+            ProxyPreserveHost On
+        </VirtualHost>
+
+5. Generate and install a certificate:
+
+        certbot --apache -d annalist.example.net
+
+    If all goes well, this will create an additional proxy configuration file `/etc/apache2/sites-available/annalist-le-ssl.conf` containing something like:
+
+        <IfModule mod_ssl.c>
+        <VirtualHost *:443>
+            ServerName  "annalist.example.net"
+            ServerAdmin annalist@annalist.example.net
+            ErrorLog    /var/log/apache2/annalist-error.log
+            CustomLog   /var/log/apache2/annalist-access.log combined
+            <location />
+                allow from all
+            </location>
+            RequestHeader     set X-Forwarded-Proto 'https'
+            ProxyPass         / http://annalist.example.net:8000/
+            ProxyPassReverse  / http://annalist.example.net:8000/
+            ProxyPreserveHost On
+
+            SSLCertificateFile /etc/letsencrypt/live/annalist.example.net/cert.pem
+            SSLCertificateKeyFile /etc/letsencrypt/live/annalist.example.net/privkey.pem
+            Include /etc/letsencrypt/options-ssl-apache.conf
+            SSLCertificateChainFile /etc/letsencrypt/live/annalist.example.net/chain.pem
+        </VirtualHost>
+        </IfModule>
+
+    (The `RequestHeader` line may not be added automatically, and may turn out to be optional)
+
+    If things don't go well, some combination of the following might help:
+
+        certbot --help
+        certbot certonly --webroot -d annalist.example.net
+        certbot --apache -d annalist.example.net
+        certbot renew --force-renew
+
+6.  Enable Annalist request forwarding; e.g.
+
+        a2ensite annalist   # This may turn out to be spurious with HTTPS enforced
+        a2ensite annalist-le-ssl
+
+7.  Check the revised configuration and (if OK) restart Apache:
+
+        apachectl -t
+        apachectl restart
+
+For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
 
 ## Running as a Docker container
