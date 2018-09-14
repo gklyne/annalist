@@ -1,15 +1,23 @@
 # Annalist v0.5 release notes
 
-Annalist release 0.5.x is a candidate feature-complete minimal viable product for an eventual version 1 release.
+Annalist release 0.5.x is a feature-complete candidate for an eventual version 1 product release.
 
-A summary of issues intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
+A summary of issues relating to deployability, resilience and security that are intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Release: 0.5.10
+## Release 0.5.12
 
-This is a maintenance release, with no substantial changes in functionality.  Form rendering and test cases have been restructured, some view fields renamed, and some property URIs renamed.
+This is a maintenance release, with no changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
 
-Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the efford of revising tests to follow changes in the view context structure.
+All code has been updated to run under Python 3.7, but package dependencies Django 1.11 and rdflib-jsonld 0.4.0 are not ready (though easily patched).
+
+The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The next release is planned to include a documented procedure for this setup.)
+
+The test suite has been updated to cover `annalist-manager` functionality.
+
+NOTE: there appear to be SQLite problems with Python versions before 2.7.15 (see below).  See also: https://stackoverflow.com/a/52077775/324122 for a possible solution for running with older versions of Python.
+
+NOTE: changes in Google's OpenID Connect API amnd access library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) may need to be updated (following the example provided).
 
 
 ## Status
@@ -36,10 +44,10 @@ Key features implemented:
 
 Intended core features not yet fully implemented but which are under consideration for future releases:
 
-* Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
-* Serve and access underlying data through a standard HTTP server using LDP and/or SoLiD protocols (the current implementation uses direct file access).
-* Grid view (e.g. for photo+metadata galleries).
 * Data bridges to other data sources, in particular to allow Annalist to work with existing spreadhseet and other data.
+* Serve and access underlying data through a standard HTTP server using LDP and/or SoLiD protocols (the current implementation uses direct file access).
+* Full linked data support, recognizing a range of linked data formats and facilitating the creation of links in and out.  (Links can be created, but it's currently a mostly manual process.)
+* Grid view (e.g. for photo+metadata galleries).
 
 See the [list of outstanding issues for initial release](https://github.com/gklyne/annalist/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22V0.x+alpha%22) for more details on planned features still to be implemented.
 
@@ -85,14 +93,137 @@ See also previous release notes:
 - [Release 0.1.x](./release-v0.1.md)
 
 
+## Release 0.5.12
+
+This is a maintenance release, with no changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
+
+All code has been updated to run under Python 3.7, but package dependencies Django 1.11 and rdflib-jsonld 0.4.0 are not ready (though easily patched).
+
+The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The next release is planned to include a documented procedure for this setup.)
+
+The test suite has been updated to cover `annalist-manager` functionality.
+
+NOTE: there appear to be SQLite problems with Python versions before 2.7.15 (see below).  See also: https://stackoverflow.com/a/52077775/324122 for a possible solution for running with older versions of Python.
+
+NOTE: changes in Google's OpenID Connect API amnd accfess library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) will need to be updated when updating an existing system.
+
+
+## Version 0.5.11, towards 0.5.12
+
+NOTE: The devlopment environment (`devel` configuration) settings no longer 
+work "out of the box".  This is the default case when running `manage.py runserver`,
+so when using this command either (a) initialize the development site data in
+the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
+
+- [x] Update python to latest in version 2 series
+- [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  See "Python `pip` and `setuptools` update issues" below.
+- [x] Update other packages (in setup.py)
+- [x] Move from deprecated oauth2client package to recommended replacement for OpenId Connect (OIDC) logins:
+
+    This requires using HTTPS for accessing the server.  See `src/annalist_root/stunnel_dev_https.conf` for using `stunnel` to proxy HTTPS requests to HTTP for Django's internal development server.  
+
+    Alternatively, to test the server over HTTP with OIDC login capability, use:
+
+        OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
+
+- [x] Update Django version to 1.11 (last version to support Python 2)
+
+    Ran into a segfault problem while running tests uner Python 2.7.14.
+
+    - Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
+    - Updated Python to 2.7.15 and created new virtualenv; seems to have fixed this.
+
+    Changes in Django 1.11 include:
+
+    - redirects no longer include hostname (cf. RFC 7231 changes to Location header);
+      this mainly affects test cases.
+    - the pluggable templating system does not accept Context values, though these
+      are still required when using the Django templating engine directly; 
+      this mainly affects views/fields/render_fieldvalue, which bypasses the 
+      pluggable rendering mechanisms.
+    - the Template.render method requires a request parameter (cf. views/generic).
+    - the above changes also affect login/login_views.
+    - updates to settings are required to configure the templating framework.
+
+- [x] Add test cases for HTTP HEAD requests
+
+- [x] Update to support Python 3
+    - https://docs.python.org/3/howto/pyporting.html
+    - http://python3porting.com/problems.html
+    - [x] Review test coverage (93% overall, but some key modules were 40-80%)
+    - [x] Create branch for Python 3 testing
+    - [x] from __future__ import absolute_import, division, print_function, unicode_literals
+    - [x] Install pylint, run python 3 porting tests
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Change all py3porting references to utils, remove version in annalist
+    - [x] Run test suite with `python -3 ...`
+    - [x] Check for dependencies stuck at Python2
+        - NOTE: Django 1.11 has regression on Python 3.6 (generator syntax)
+        - It's easily fixed, but version 1.11 is no longer being maintained
+            - See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
+            - See: https://stackoverflow.com/a/48822656/324122
+        - NOTE: rdflib-jsonld Py3 compatibility isn't yet released to PyPI
+        - Also requires modification to rdflib-jsonld current branch
+        - see: https://github.com/RDFLib/rdflib-jsonld/issues/55
+    - [x] Test under Python 3
+    - [x] Update installation documents
+
+- [x] Update annalist-manager to Python 3 compatibility
+    - [x] Create test suite
+    - [x] from __future__ imports ...
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Test under Python 3   
+
+### Python `pip` and `setuptools` update issues
+
+I ran into some problems updating `pip` and `setuptools` to the latest version in a new python environment (for continued testing).  I think these were some transitional problems caused by improvements in PyPI security, and changes to the way that certificates are distributed.  In recent installations using a new virtual environment with Python 2.7.15, I have found the following sufficient to prepare the virtualenv for installing annalist:
+
+    pip install --upgrade pip
+    pip install --upgrade certifi
+
+In case problems persist, the following notes might conceivabluy help:
+
+    rm -rf anenv
+    virtualenv anenv -p python2.7
+    source anenv/bin/activate
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+    pip install --upgrade setuptools
+    # Note: installation reports success, then I got an error traceback, which seems
+    #       to be caused by an access to the old (now removed) setuptools directory.
+    # It seems some old setup files are bound to the active python environment, 
+    # so need to reactivate:
+    deactivate
+    source anenv/bin/activate
+    cd src
+    # Now install Annalist itself
+    cd ..
+    python setup.py clean --all
+    python setup.py build
+    python setup.py install
+
+`python setup.py install` was still failing to reliably install dependencies,
+so I used:
+
+    pip install -r annalist_root/requirements.txt
+
+then the `python setup.py` commands.
+
+After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
+
+I later ran into some problems with setup.py on Python3, that were resolved by:
+
+    pip install certifi
+
+
 ## Release: 0.5.10
 
 This is a maintenance release, with no substantial changes in functionality.  Form rendering and test case have been restructured, some view fields renamed, and some property URIs renamed.
 
-Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the efford of revising tests to follow changes in the view context structure.
+Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the effort of revising tests to follow changes in the view context structure.
 
-
-# Version 0.5.9, towards 0.5.10
+## Version 0.5.9, towards 0.5.10
 
 - [x] Flush collection caches on loading customize page rather than view page
 - [x] Bound_field access to FieldDecription: use methods not dictionary
@@ -136,7 +267,7 @@ This release primarily adds support for sub/superproperty URI relations declared
 This release also includes numerous bug fixes, and changes to some messages.
 
 
-# Version 0.5.7, towards 0.5.8
+## Version 0.5.7, towards 0.5.8
 
 - [x] BUG: delete list view while viewing that list results in obscure error message.
     - Improve error handling to use alternative list/view definition

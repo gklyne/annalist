@@ -28,14 +28,14 @@
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 - [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
-    - `git tag -a release-x.y.z`
+    - ```git tag -a release-`annalist-manager version` ```
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
 
 - [ ] Create release preparation branch
-    - git stash
-    - git checkout -b release-prep-x.y.z develop
-    - git stash pop
+        git stash
+        git checkout -b release-prep-x.y.z develop
+        git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
 - [ ] Bump data compatibility version if new data is not compatible with older releases

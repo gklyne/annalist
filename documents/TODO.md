@@ -30,7 +30,7 @@ so when using this command either (a) initialize the development site data in
 the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
 
 - [x] Update python to latest in version 2 series
-- [x] Update pip and setuoptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
+- [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
 
         rm -rf anenv
         virtualenv anenv -p python2.7
@@ -124,15 +124,19 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
 (Sub-release?)
 
-- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+- [ ] HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
         - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
+    - See also: 
+        - https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
+        - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
+        - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
+- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-    - See also: https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
 
 (Sub-release?)
 

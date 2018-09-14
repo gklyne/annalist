@@ -148,6 +148,7 @@ class Entity(EntityRoot):
         """
         if not util.valid_id(entityid):
             msg = "Invalid entity identifier: %s"%(entityid)
+            log.error(msg)
             raise ValueError(msg)
         relpath = self.relpath(entityid)
         # log.debug(

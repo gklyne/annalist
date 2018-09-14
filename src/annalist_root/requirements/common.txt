@@ -1,6 +1,6 @@
 # requirements/common.txt
 # See: http://www.deploydjango.com/django_project_structure/
-Django==1.7
+Django==1.11.13
 six==1.11.0
 requests==2.18.4
 urllib3==1.22
@@ -12,8 +12,10 @@ certifi==2018.1.18
 httplib2==0.11.3
 rdflib==4.2.2
 isodate==0.6.0
+pytz==2018.5
 rdflib-jsonld==0.4.0
 pyparsing==2.2.0
 Markdown==2.6.11
 httpretty==0.9.4
 beautifulsoup4==4.6.0
+
