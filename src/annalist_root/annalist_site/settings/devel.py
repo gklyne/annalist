@@ -18,7 +18,14 @@ SETTINGS_MODULE = __name__
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/devel"
 BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
-DATABASES       = DEFAULT_DATABASES
+
+DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASES       = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': DATABASE_PATH,
+    }
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
