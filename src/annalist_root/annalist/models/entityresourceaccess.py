@@ -118,6 +118,12 @@ def entity_resource_file(entity, resource_info):
 def json_resource_file(baseurl, jsondata, resource_info):
     """
     Return a file object that reads out a JSON version of the supplied entity values data. 
+
+    baseurl         base URL for resolving relative URI references.
+                    (Unused except for diagnostic purposes.)
+    jsondata        is the data to be formatted and returned.
+    resource_info   is a dictionary of values about the resource to be serialized.
+                    (Unused except for diagnostic purposes.)
     """
     response_file = StringIO()
     json.dump(jsondata, response_file, indent=2, separators=(',', ': '), sort_keys=True)
@@ -130,15 +136,26 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     entity values data.  The file object returns a byte stream, as this is
     what rdflib expects.
 
-    baseurl     base URL for resolving relative URI references for Turtle output.
-    jsondata    is the data to be formatted and returned.
-    links       is an optional array of link values to be added to the HTTP response
-                (see method add_link_header for description).
+    baseurl         base URL for resolving relative URI references.
+                    (Unused except for diagnostic purposes.)
+    jsondata        is the data to be formatted and returned.
+    resource_info   is a dictionary of values about the resource to be serialized.
+                    (Unused except for diagnostic purposes.)
     """
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
-    g = Graph()
-    g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
     response_file = BytesIO()
+    g = Graph()
+    try:
+        g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")
+    except Exception as e:
+        reason = str(e)
+        log.warning(message.JSONLD_PARSE_ERROR)
+        log.info(reason)
+        log.info("baseurl %s, resourceinfo %r"%(baseurl, resource_info))
+        response_file.write("\n\n***** ERROR ****\n\n")
+        response_file.write(message.JSONLD_PARSE_ERROR)
+        response_file.write("\n\n%s:\n\n"%message.JSONLD_PARSE_REASON)
+        response_file.write(reason)
     try:
         g.serialize(destination=response_file, format='turtle', indent=4)
     except Exception as e:

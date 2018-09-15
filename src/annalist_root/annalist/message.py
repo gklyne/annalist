@@ -32,6 +32,8 @@ CONFIRM_OR_CANCEL           = """Click "Confirm" to continue, or "Cancel" to abo
 ACTION_COMPLETED            = """Action completed"""
 TURTLE_SERIALIZE_ERROR      = """Problem generating Turtle serialization from data"""
 TURTLE_SERIALIZE_REASON     = """Internal description of error"""
+JSONLD_PARSE_ERROR          = """Problem pasring JSON-LD data (maybe JSON-LD context)"""
+JSONLD_PARSE_REASON         = """Internal description of error"""
 
 INVALID_OPERATION_ATTEMPTED = "Attempt to peform invalid operation"
 INVALID_TYPE_CHANGE         = "Change of entity type to or from '_type' is not supported"
