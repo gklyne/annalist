@@ -175,6 +175,8 @@ class bound_field(object):
                                 probed for values that are not provided by the entity itself.  
                                 Can be used to specify default values for an entity.
         """
+        # if not isinstance(entityvals, dict):
+        #     raise ValueError("bound_field entityvals is not dictionary (%r)"%(entityvals,))
         self._field_description = field_description
         self._entityvals        = entityvals
         self._targetvals        = None
@@ -271,7 +273,14 @@ class bound_field(object):
         Return field value corresponding to key from field description.
         """
         field_key = self.get_field_value_key()
-        field_val = self._entityvals.get(field_key, None)
+        # log.debug(
+        #     "@@ bound_field.get_field_value field_key %s, _entityvals %r"%
+        #     (field_key, self._entityvals)
+        #     )
+        if hasattr(self._entityvals, "get"):
+            field_val = self._entityvals.get(field_key, None)
+        else:
+            field_val = "@@ Cannot resolve: %s[%s]"%(self._entityvals, field_key)
         # Allow field value to be provided via `context_extra_values` if not in entity.
         # (Currently used for 'get_view_choices_field' and 'get_list_choices_field'
         # to insert current display selection.)
@@ -396,10 +405,10 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        # log.debug("@@ bound_field.get_targetvals: field_description %r"%(self._field_description,))
         target_type = self._field_description.get('field_ref_type',  None)
         target_key  = self._field_description.get('field_ref_field', None)
-        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        log.debug("bound_field.get_targetvals: target_type '%s', target_key '%s'"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr

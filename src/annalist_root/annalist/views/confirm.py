@@ -92,7 +92,7 @@ class ConfirmView(AnnalistGenericView):
         template = loader.get_template('annalist_confirm.html')
         context  = form_data
         log.debug("confirmview form data: %r"%(form_data))
-        return HttpResponse(template.render(context))
+        return HttpResponse(template.render(context, request=request))
 
     # POST
 

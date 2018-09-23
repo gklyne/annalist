@@ -122,11 +122,21 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - [x] Fix pylint reports and test code under Python 2
     - [x] Test under Python 3   
 
+- [x] Fix CSRF verification fails on entity delete confirmation dialog
+    - Pass request to template render method
+
 (Sub-release?)
 
-- [ ] HTTPS deployment
-    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.
+- [ ] If field name in view is blank/undefined/invalid: display placeholder.
+- [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
+- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
+- [ ] When referencing an entity, render using annal:uri if defined
+- [ ] When locating a referenced entity, recognize annal:uri value if defined
+- [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
+- [ ] Tidy up HTTPS deployment
+    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
+        - Done for annalist-dev
         - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
     - See also: 
@@ -168,16 +178,7 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
-- [ ] Automated test suite for annalist_manager
-    - [ ] annalist-manager initialize [ CONFIG ]
-    - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
-    - [ ] annalist-manager updateadminuser [ username ] [ CONFIG ]
-    - [ ] annalist-manager setdefaultpermissions [ permissions ] [ CONFIG ]
-    - [ ] annalist-manager setpublicpermissions [ permissions ] [ CONFIG ]
-    - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
-    - [ ] annalist-manager createsitedata [ CONFIG ]
-    - [ ] annalist-manager updatesitedata [ CONFIG ]
-    - etc.
+- [x] Automated test suite for annalist_manager
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
@@ -275,6 +276,8 @@ Data collection definitions:
 
 Usability notes:
 
+- [ ] After copy entity, and edit new entity values, returns to view of original entity: would be better to return to view of copy if all is well.
+- [ ] Review method of calculating label widths for fields: consider table lookup that can work with widths that are not sub-multiple of 12 (e.g. 9?).  Problem is that actual width needs to be presented as 12ths of smaller field - how to maintain reasonable alignments?
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Allow multiple entity deletes from list display 
     - views.entitylist > post - allow and handle multiple ids for delete operation
@@ -303,6 +306,7 @@ Usability notes:
     - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
     - As an edge case, don't worry about this immediately.
+    - Can error message be improved to clarify what is happening?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too?
@@ -335,9 +339,9 @@ Notes for Future TODOs:
     - This will mean cutting adrift from Python 2 support.
     - Leaving this until after version 1 is released.
 - [ ] Record timestamp in data records (created,updated)
+    - Generate etag too
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
-- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
-definitions.
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end definitions.
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
@@ -409,6 +413,7 @@ definitions.
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
     - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
+    - could this work on output like migration rules do on input?
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider render type option for repeat group rows without headings? (simple repeat group doesn't hack it).
@@ -425,6 +430,8 @@ definitions.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
+    - make grid density a view option?
+    - remove field placement values from field definitions?
 - [ ] Rationalize common fields to reduce duplication?
     - but note that fields may use different comment/help text, so maybe not.
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
