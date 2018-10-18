@@ -129,6 +129,8 @@ The following assumes that software is installed under a directory called $WORKS
         OK
         Destroying test database for alias 'default'...
 
+For first-time installations, the Annalist site data will need to be initialized:  see section "Setting up an Annalist site" below.
+
 
 ### Under Python 3
 
@@ -215,7 +217,7 @@ To check for Annalist background processes, and to terminate an Annalist server 
 
 As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
 
-This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials.  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
+This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials).  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
 
     OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
 
@@ -259,9 +261,11 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 4. Create a proxy configuration for Annalist, if not already done.  This can take the form of a file `/etc/apache2/sites-available/annalist.conf`, with content like this:
 
         # See: 000-default.host, ports.conf
-        # NameVirtualHost *:80
         #
         # See also: https://wiki.apache.org/httpd/CommonMisconfigurations
+        #
+        # Change so that 'annalist.example.net' is your local host name.
+        # e.g. in vim: "%s/annalist.example.net/annalist.yourdomain.org/g"
 
         <VirtualHost *:80>
             ServerName  "annalist.example.net"
@@ -271,10 +275,12 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
             <location />
                 allow from all
             </location>
-            ProxyPass        / http://annalist.example.net:8000/
-            ProxyPassReverse / http://annalist.example.net:8000/
+            RequestHeader    set X-Forwarded-Protocol 'http'
+            ProxyPass        /annalist http://localhost:8000/annalist
+            ProxyPassReverse /annalist http://localhost:8000/annalist
             ProxyPreserveHost On
         </VirtualHost>
+
 
 5. Generate and install a certificate:
 
@@ -303,7 +309,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         </VirtualHost>
         </IfModule>
 
-    (The `RequestHeader` line may not be added automatically, and may turn out to be optional)
+    (The `RequestHeader` line may need to be edited: it is needed so that the Annalist login logic knows it is being accessed via HTTPS.)
 
     If things don't go well, some combination of the following might help:
 
@@ -323,6 +329,11 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         apachectl restart
 
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
+
+
+## Set up Gogle authentication
+
+See [Configuring Annalist to use OpenID Connect](./openid-connect-setup.md).
 
 
 ## Running as a Docker container
@@ -397,7 +408,7 @@ Before setting up an Annalist configuration, there are two issues to be aware of
 
 ### Annalist site options
 
-Annalist deployment details are controlled by files in the `src/annalist_root/annalist_site/settings` directory.  Annalist comes with three pre-defined configurations: deveopment, personal, and shared.  The main differences between these are the location of the Annalist site data files, and the location of certain private configuration files.  (Other configuration options are possible by defining a new settings file.)
+Annalist deployment details are controlled by files in the `src/annalist_root/annalist_site/settings` directory.  Annalist comes with three pre-defined configurations: development, personal, and shared.  The main differences between these are the location of the Annalist site data files, and the location of certain private configuration files.  (Other configuration options are possible by defining a new settings file.)
 
 **Development**: Annalist site data is kept in a directory within the Annalist software source tree, and configuration files are in subdirectory `.annalist` of the installing user's home directory.
 

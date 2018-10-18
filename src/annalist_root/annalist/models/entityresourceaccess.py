@@ -26,7 +26,7 @@ from rdflib                             import Graph, URIRef, Literal
 
 # Used by `json_resource_file` below.
 # See: https://stackoverflow.com/questions/51981089
-from utils.py3porting import BytesIO, StringIO
+from utils.py3porting import BytesIO, StringIO, write_bytes
 
 from annalist                           import message
 from annalist                           import layout
@@ -142,6 +142,17 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     resource_info   is a dictionary of values about the resource to be serialized.
                     (Unused except for diagnostic purposes.)
     """
+    # @@NOTE: under Python 2, "BytesIO" is implemented by "StringIO", which does
+    #         not handle well a combination of str and unicode values, and may 
+    #         raise an exception if the Turtle data contains non-ASCII characters.
+    #         The problem manifests when an error occurs, and manifests as a 500 
+    #         server error response.
+    #
+    #         On reflection, I think the prioblem arises because the `message.*`
+    #         values are unicode (per `from __future__ import unicode_literals`),
+    #         and are getting joined with UTF-encoded bytestring values, which
+    #         results in the error noted.
+    #         The fix here is to encode everything as bytes before writing.
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
     response_file = BytesIO()
     g = Graph()
@@ -152,20 +163,22 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
         log.warning(message.JSONLD_PARSE_ERROR)
         log.info(reason)
         log.info("baseurl %s, resourceinfo %r"%(baseurl, resource_info))
-        response_file.write("\n\n***** ERROR ****\n\n")
-        response_file.write(message.JSONLD_PARSE_ERROR)
-        response_file.write("\n\n%s:\n\n"%message.JSONLD_PARSE_REASON)
-        response_file.write(reason)
+        write_bytes(response_file, "\n\n***** ERROR ****\n")
+        write_bytes(response_file, "%s"%message.JSONLD_PARSE_ERROR)
+        write_bytes(response_file, "\n%s:\n"%message.JSONLD_PARSE_REASON)
+        write_bytes(response_file, reason)
+        write_bytes(response_file, "\n\n")
     try:
         g.serialize(destination=response_file, format='turtle', indent=4)
     except Exception as e:
         reason = str(e)
         log.warning(message.TURTLE_SERIALIZE_ERROR)
         log.info(reason)
-        response_file.write("\n\n***** ERROR ****\n\n")
-        response_file.write(message.TURTLE_SERIALIZE_ERROR)
-        response_file.write("\n\n%s:\n\n"%message.TURTLE_SERIALIZE_REASON)
-        response_file.write(reason)
+        write_bytes(response_file, "\n\n***** ERROR ****\n")
+        write_bytes(response_file, "%s"%message.TURTLE_SERIALIZE_ERROR)
+        write_bytes(response_file, "\n%s:\n"%message.TURTLE_SERIALIZE_REASON)
+        write_bytes(response_file, reason)
+        write_bytes(response_file, "\n\n")
     response_file.seek(0)
     return response_file
 
@@ -215,10 +228,10 @@ def find_entity_resource(entity, resource_ref, fixed_resources=entity_fixed_json
     """
     Return a description for the indicated entity resource, or None
 
-    resource_ref    is the local name of the desired resource relative to the entity
-                    to which it belongs.
-    fixed_resources is a table of fixed resource information, not necessarily referenced 
-                    by the entity itself.
+    resource_ref    is the local name of the desired resource relative to the 
+                    entity to which it belongs.
+    fixed_resources is a table of fixed resource information, not necessarily 
+                    referenced by the entity itself.
 
     The description returned is a dictionary with the following keys:
         resource_name:      filename of resource (i.e. part of URI path after final "/")

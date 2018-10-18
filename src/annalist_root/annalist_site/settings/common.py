@@ -71,6 +71,8 @@ ROOT_URLCONF = 'annalist_site.urls'
 
 WSGI_APPLICATION = 'annalist_site.wsgi.application'
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
+
 # Customize authentication backends
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',    # default

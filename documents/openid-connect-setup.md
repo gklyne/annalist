@@ -4,11 +4,13 @@ Annalist is designed to use third party authentication services based on [OpenID
 
 Currently, Annalist has been tested with identity services provided by Google, but should work with other identity providers.  The instructions below are for setting up with Google.  Some of the steps for other providers will almost certainly be different, but should follow a similar pattern.
 
+In the following, the domain `annalist.example.net` will need to be replaced with the domain being used for the Annalist system being configured.
+
 In outline, the steps are:
 
 1. Install Annalist.  This is covered in [Installing and setting up Annalist](installing-annalist.md).
 
-2. Register the installed Annalist service with the identity provider (Google).
+2. Register the installed Annalist service with the identity provider.  
 
 3. Create a local "client secrets" file containing application authentication protocol details provided by the registration process.
 
@@ -25,9 +27,12 @@ Note that being logged in does not necessarily mean you have permissions to acce
 
 In order to use Google OAuth2/OpenID Connect authentication the installed Annalist service must be registered with Google (via [https://cloud.google.com/console](https://cloud.google.com/console)) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
+As part of the registration process, the URLs to which the browser may be redirected following authentication (these will generally be something like `https://annalist.example.net:8000/annalist/login_done/` and `http://localhost:8000/annalist/login_done/`)  are specified.  This will involve installing a file in the root of the server to prove control of the domain used for login redirects.  Follow the instructions presented by Google's web pages.
+
 ![Screenshot showing Google+ API enabled for project](screenshots/Google-APIs-screenshot.png)
 
 * Create new project
+* Verify the domain the installation will use for redirects (under the "Domain verification" tab).  The HTTPS proxy server (e.g., Apache) will need to be installed and running so that a small file provided by Google can be installed and served from this domain).
 * Under `APIs & Auth > APIs`, enable Google+ and disable all others
 * Under `APIs & Auth > Credentials`, Create new Client Id:
   * Select "Web application"
@@ -49,7 +54,7 @@ The JSON file provided by Google looks something like this:
             "https://www.googleapis.com/robot/v1/metadata/x509/9876543210@developer.gserviceaccount.com",
         "redirect_uris": 
           [ "http://localhost:8000/annalist/login_done/", 
-            "http://annalist-demo.example.org:8000/annalist/login_done/"
+            "https://annalist.example.net:8000/annalist/login_done/"
           ],
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://accounts.google.com/o/oauth2/token",
@@ -78,7 +83,7 @@ To configure Annalist to use the Google authentication service based on the serv
                 "https://www.googleapis.com/robot/v1/metadata/x509/9876543210@developer.gserviceaccount.com",
             "redirect_uris": 
               [ "http://localhost:8000/annalist/login_done/", 
-                "http://annalist-demo.example.org:8000/annalist/login_done/"
+                "https://annalist.example.net:8000/annalist/login_done/"
               ],
             "auth_uri": "https://accounts.google.com/o/oauth2/auth",
             "token_uri": "https://accounts.google.com/o/oauth2/token",
@@ -90,13 +95,14 @@ To configure Annalist to use the Google authentication service based on the serv
 
 2.  Copy the modified client secrets file to `~/.annalist/providers/google_oauth2_client_secrets.json`.  (The exact filename is not critical, just its location and content)
 
-3.  Restart the Annalist server if it is already running.  (The client secrets are loaded and cached the first time a user logs in)
+3.  Restart the Annalist server if it is already running.  (The client secrets are loaded and cached the first time a user logs in.)  For local testing (using http://localhost:8000/annalist), environment variable `OAUTHLIB_INSECURE_TRANSPORT` should be set to "1".  (See also file `src/annalist_root/runserver.sh`.)
 
 
-## Log in with Google credentials
+## Test log in with Google credentials
 
-Now point a local browser at [http://localhost:8000/annalist](http://localhost:8000/annalist).  Clicking on the login link should display a login screen with "Google" offered as a login service.  Enter a user ID and click "Login" to invoke an OAuth2 authentication sequence with Google.
+With environment variable `OAUTHLIB_INSECURE_TRANSPORT` should be set to "1", start the Annalist server.
 
-(Note: if using the "NoScript" browser plugin, this will trigger an XSS warning, and separately an ABE warning.  Hopefully, NoScript will fix this.  Meanwhile I added accounts.google.com as an exception from XSS sanitization, and disabled ABE checking, in NoScript.)
+Using the same computer, point a local browser at [http://localhost:8000/annalist](http://localhost:8000/annalist).  Clicking on the login link should display a login screen with "Google" offered as a login service.  Enter a user ID and click "Login" to invoke an OAuth2 authentication sequence with Google.
 
+(Note: if using the "NoScript" browser plugin, this may trigger an XSS warning, and separately an ABE warning.  Hopefully, NoScript will fix this.  Meanwhile I added accounts.google.com as an exception from XSS sanitization, and disabled ABE checking, in NoScript.)
 

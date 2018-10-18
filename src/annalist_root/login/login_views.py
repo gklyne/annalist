@@ -259,6 +259,8 @@ class LoginPostView(generic.View):
             request.session['login_continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
+                # log.debug("@@ LoginPostView.post: SECURE_PROXY_SSL_HEADER %r"%(settings.SECURE_PROXY_SSL_HEADER,))
+                # log.debug("@@ LoginPostView.post: headers %r"%(request.META,))
                 flow = oauth2_flow_from_provider_data(
                     provider_data,
                     redirect_uri=request.build_absolute_uri(login_done_url)

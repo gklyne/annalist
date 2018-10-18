@@ -62,13 +62,28 @@ def bytes_to_str(bstr):
         return bstr.decode('ascii', 'ignore')
     return bstr
 
+def text_to_bytes(ustr):
+    """
+    Return bytes value for supplied string.
+    The intent is that the string may be an ASCII or unicode string, but not
+    something that has already been encoded.
+    """
+    return ustr.encode('utf-8', 'ignore')
+
 def bytes_to_unicode(bstr):
     """
-    Return unicode value for supplied bytes
+    Return Unicode value for supplied (UTF-8 encoding) bytes.
     """
     return bstr.decode('utf-8')
 
 str_space = text_to_str(' ')
+
+def write_bytes(file, text):
+    """
+    Write supplied string to file as bytes
+    """
+    file.write(text_to_bytes(text))
+    return
 
 def isoformat_space(datetime):
     """
