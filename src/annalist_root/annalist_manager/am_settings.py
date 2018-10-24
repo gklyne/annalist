@@ -87,7 +87,7 @@ def am_get_site(sitesettings):
     """
     Get site object corresponding to supplied settings
     """
-    site_layout  = Layout(sitesettings.BASE_DATA_DIR)
+    site_layout  = Layout(sitesettings.BASE_DATA_DIR, sitesettings.SITE_DIR_NAME)
     site_dir     = site_layout.SITE_PATH
     site_uri     = "annalist_site:"
     site         = Site(site_uri, site_dir)

@@ -407,9 +407,9 @@ class EntityRoot(object):
             raise ValueError(msg)
         (body_dir, body_file) = self._dir_path()
         # log.debug("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
-        fullpath = os.path.join(settings.BASE_DATA_DIR, "annalist_site", body_file)
+        fullpath = os.path.join(settings.BASE_SITE_DIR, body_file)
         # Next is partial protection against code errors
-        if not fullpath.startswith(os.path.join(settings.BASE_DATA_DIR, "annalist_site")):
+        if not fullpath.startswith(settings.BASE_SITE_DIR):
             log.error("EntityRoot._save: Failing to create entity at %s"%(fullpath,))
             log.info("EntityRoot._save: dir %s, file %s"%(body_dir, body_file))
             log.info("EntityRoot._save: settings.BASE_DATA_DIR %s"%(settings.BASE_DATA_DIR,))

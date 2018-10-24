@@ -45,7 +45,7 @@ class AnnalistManagerTestBase(AnnalistTestCase):
         cls.userconfig  = os.path.os.path.expanduser("~/.annalist")
         cls.src_root    = get_source_root()
         cls.testhome    = os.path.join(cls.src_root, "sampledata/data")
-        cls.sitehome    = os.path.join(cls.testhome, "annalist_site")
+        cls.sitehome    = os.path.join(cls.testhome, "annalist_test")
         cls.settingsdir = os.path.join(cls.src_root, "annalist_site/settings")
         return
 

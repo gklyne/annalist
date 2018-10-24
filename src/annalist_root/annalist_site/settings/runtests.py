@@ -110,9 +110,18 @@ TRACE_FIELD_VALUE   = logging.DEBUG
 ROOT_URLCONF    = 'annalist_site.runtests_urls'
 
 SETTINGS_MODULE = __name__
+SITE_DIR_NAME   = "annalist_test"
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/sampledata/data"
-BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
+BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
+
+DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
+DATABASES       = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':   DATABASE_PATH,
+    }
+}
 
 # log.info("@@@@ settings: "+__name__)
 # log.info("@@@@ settings globals: "+repr(globals()))

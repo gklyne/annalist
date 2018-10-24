@@ -13,21 +13,22 @@ from .common import *
 ANNALIST_VERSION_MSG = "Annalist version %s (shared service configuration)"%(ANNALIST_VERSION)
 
 SETTINGS_MODULE = __name__
+SITE_DIR_NAME   = "annalist_site"
 BASE_DATA_DIR   = "/var"
-BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
+BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
 CONFIG_BASE     = "/etc/annalist/"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG           = False
-ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
-
-DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
 DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME':   DATABASE_PATH,
     }
 }
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG           = False
+ALLOWED_HOSTS   = ['.annalist.net']     # @@FIXME
 
 LOGGING_FILE    = '/var/log/annalist/annalist.log'
 LOGGING = {

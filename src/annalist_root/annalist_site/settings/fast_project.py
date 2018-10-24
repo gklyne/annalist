@@ -11,18 +11,13 @@ from __future__ import absolute_import, division, print_function
 
 from .common import *
 
-ANNALIST_VERSION_MSG = "Annalist version %s (personal configuration)"%(ANNALIST_VERSION)
+ANNALIST_VERSION_MSG = "Annalist version %s (FAST project configuration)"%(ANNALIST_VERSION)
 
 SETTINGS_MODULE = __name__
-SITE_DIR_NAME   = "annalist_site"
+SITE_DIR_NAME   = "annalist_fast"
 BASE_DATA_DIR   = os.path.expanduser("~")
 BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG           = False
-
-ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
 DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
 DATABASES       = {
@@ -31,6 +26,11 @@ DATABASES       = {
         'NAME': DATABASE_PATH,
     }
 }
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG           = False
+
+ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
 # LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
 LOGGING_FILE = BASE_SITE_DIR+'/annalist.log'
@@ -122,7 +122,7 @@ for h in log.handlers:
         log.info("@@ log rollover")        
         h.doRollover()
 
-# log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
+# log.info("Annalist version %s (FAST project configuration)"%(ANNALIST_VERSION))
 log.info(ANNALIST_VERSION_MSG)
 log.debug("SETTINGS_MODULE:  "+SETTINGS_MODULE)
 log.debug("BASE_DATA_DIR:    "+BASE_DATA_DIR)

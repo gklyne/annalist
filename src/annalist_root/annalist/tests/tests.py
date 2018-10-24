@@ -26,7 +26,7 @@ import annalist.util
 import annalist.views.fields.find_renderers
 import annalist.views.fields.render_placement
 
-test_layout     = Layout(settings.BASE_DATA_DIR)    # e.g. ".../sampledata/data/"
+test_layout     = Layout(settings.BASE_DATA_DIR, settings.SITE_DIR_NAME)
 TestBaseDir     = test_layout.SITE_PATH             # e.g. ".../sampledata/data/annalist_site"
 TestHost        = settings.TEST_HOST                # e.g. "test.example.com"
 TestBasePath    = "/" + settings.TEST_BASE_PATH     # e.g. "/testsite"

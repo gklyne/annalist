@@ -105,7 +105,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
                 )
         stdoutbuf.seek(0)
         stdoutlines = stdoutbuf.read().split("\n")
-        self.assertEqual(stdoutlines[0], self.testhome+"/annalist_site")
+        self.assertEqual(stdoutlines[0], self.sitehome)
         return
 
     def test_SettingsModule(self):

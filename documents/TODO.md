@@ -125,8 +125,9 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 - [x] Fix CSRF verification fails on entity delete confirmation dialog
     - Pass request to template render method
 
-(Sub-release?)
+(Sub-release)
 
+- [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
 - [ ] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }

@@ -68,7 +68,8 @@ class AnnalistGenericView(ContentNegotiationView):
     def __init__(self):
         super(AnnalistGenericView, self).__init__()
         self._sitebaseuri      = reverse("AnnalistHomeView")
-        self._sitebasedir      = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
+        # self._sitebasedir      = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
+        self._sitebasedir      = settings.BASE_SITE_DIR
         self._site             = None
         self._site_data        = None
         self._user_perms       = {}

@@ -77,7 +77,7 @@ COLL_CONTEXT_FILE       = "coll_context.jsonld"
 # COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
-SITE_DIR                = "annalist_site"
+#@@ SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"
@@ -312,18 +312,18 @@ class Layout(object):
     using a supplied base directory.
     """
 
-    def __init__(self, base_data_dir):
+    def __init__(self, base_data_dir, site_dir_name):
         """
         Dynamically initialize a layout value
         """
         self.BASE_DIR           = base_data_dir
-        self.SITE_DIR           = SITE_DIR
+        self.SITE_DIR_NAME      = site_dir_name
         self.SITEDATA_ID        = SITEDATA_ID
         self.SITEDATA_DIR       = SITEDATA_DIR
         self.SITEDATA_OLD_DIR1  = SITEDATA_OLD_DIR1
         self.SITEDATA_OLD_DIR2  = SITEDATA_OLD_DIR2
-        self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR                         # e.g. c/_annalist_site/d
-        self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
+        self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR     # e.g. c/_annalist_site/d
+        self.SITE_PATH          = os.path.join(base_data_dir, site_dir_name)
         self.SITE_META_FILE     = SITE_META_FILE
         self.SITE_DATABASE_FILE = SITE_DATABASE_FILE
         return

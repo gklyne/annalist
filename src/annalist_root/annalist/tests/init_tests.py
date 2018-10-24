@@ -111,7 +111,7 @@ def copySitedata(src, sitedatasrc, tgt):
 def init_annalist_test_site():
     log.debug("init_annalist_test_site")
     copySitedata(
-        settings.SITE_SRC_ROOT+"/sampledata/testinit/"+test_layout.SITE_DIR, 
+        settings.SITE_SRC_ROOT+"/sampledata/testinit/"+test_layout.SITE_DIR_NAME, 
         settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)

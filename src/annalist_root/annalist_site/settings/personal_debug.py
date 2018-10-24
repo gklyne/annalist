@@ -14,22 +14,23 @@ from .common import *
 ANNALIST_VERSION_MSG = "Annalist version %s (personal_debug configuration)"%(ANNALIST_VERSION)
 
 SETTINGS_MODULE = __name__
+SITE_DIR_NAME   = "annalist_site"
 BASE_DATA_DIR   = os.path.expanduser("~")
-BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, layout.SITE_DIR)
+BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG           = True
-
-ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
-
-DATABASE_PATH   = os.path.join(BASE_DATA_DIR, 'annalist_site/db.sqlite3')
+DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
 DATABASES       = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DATABASE_PATH,
     }
 }
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG           = True
+
+ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
 
 # LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
 LOGGING_FILE = BASE_SITE_DIR+'/annalist.log'

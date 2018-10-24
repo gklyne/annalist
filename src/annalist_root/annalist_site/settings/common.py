@@ -124,13 +124,13 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASE_PATH = os.path.join(SAMPLEDATA_DIR, 'annalist_site/db.sqlite3')
-DATABASES     = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME':   DATABASE_PATH,
-    }
-}
+# DATABASE_PATH = os.path.join(SAMPLEDATA_DIR, 'annalist_site/db.sqlite3')
+# DATABASES     = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME':   DATABASE_PATH,
+#     }
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

@@ -77,11 +77,11 @@ setup(
             [ '*.sh', '*.txt'
             # Pre-assembled data for tests; not used by running system
             , 'sampledata/README.md'
-            , 'sampledata/testinit/annalist_site/*.md'
-            , 'sampledata/testinit/annalist_site/*.jpg'
-            , 'sampledata/testinit/annalist_site/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/d/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
+            , 'sampledata/testinit/annalist_test/*.md'
+            , 'sampledata/testinit/annalist_test/*.jpg'
+            , 'sampledata/testinit/annalist_test/*.jsonld'
+            , 'sampledata/testinit/annalist_test/c/*/d/*.jsonld'
+            , 'sampledata/testinit/annalist_test/c/*/d/*/*/*.jsonld'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'
