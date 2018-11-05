@@ -124,9 +124,15 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
 - [x] Fix CSRF verification fails on entity delete confirmation dialog
     - Pass request to template render method
+- [x] Allow recognition of "HTTP_X_FORWARDED_PROTOCOL" header (injected by Apache proxy).
+- [x] Remove hard-coded references to "annalist_site" directory with value defined by configuration settings.
+- [x] Fix server error generating Turtle output from ivalidf JSON-LD (a knock-on effect from using Uniciode literals with StringIO)
+- [x] Added new Python3 comnpatibility shims `text_to_bytes` and `write_bytes`
+- [x] Add documentation for OIDC setup with HTTPS proxying.
 
 (Sub-release)
 
+- [ ] entity list returns IDs with trailing "/", but indoividual entities do not.  (See entitylist.strip_context_values)
 - [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
 - [ ] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)

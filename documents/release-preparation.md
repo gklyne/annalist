@@ -76,6 +76,8 @@
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
 
+@@@ test revised docker image creation on dev.annalist.net
+
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [ ] Update and test demo installation on annalist.net
