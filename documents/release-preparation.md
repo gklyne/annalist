@@ -99,7 +99,8 @@
 - [ ] Check out demo system.
 
 - [ ] Commit changes ("Release x.y.z")
-- [ ] Upload to PyPI (see below)
+- [ ] Upload to PyPI (`python setup.py sdist upload`)
+    - But see also: https://pypi.org/project/twine/
 - [ ] Tag release on release branch
     - `git tag -ln` to check previous tags
     - `git tag -a release-x.y.z`
