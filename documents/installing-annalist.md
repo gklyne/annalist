@@ -25,8 +25,9 @@
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 14.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
-* Python 2.7 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
+* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 18.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
+    - NOTE: there are problems with SQLite3 on Ubunbtu versions 14.04 and 16.04 (and probably others).  Recommended is to use Ubuntu 18.04 or later.
+* Python 2.7.15 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
     - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
 * Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv documentation](https://virtualenv.pypa.io/en/stable/)).
 
@@ -217,7 +218,7 @@ To check for Annalist background processes, and to terminate an Annalist server 
 
 As of version 0.5.11, Annalist should be accessed over HTTPS rather than HTTP.  The in-built HTTP server does not support HTTPS, so this is achieved by using a standard web server (e.g. Apache httpd or Nginx) to accept incoming HTTPS requests and pass them on to Annalist using local HTTP (using a configuration called "reverse proxying").
 
-This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials).  To test the software using the in-build development server (i.e. using HTTP rarher than HTTPS), use the following command (in a BASH shell):
+This particularly affects the OpenID Connect login, which now fails if an HTTPS connection is not being used (as using HTTP could result in exposure of credentials).  To test the software using the in-built development server (i.e. using HTTP rather than HTTPS), use the following command (in a BASH shell):
 
     OAUTHLIB_INSECURE_TRANSPORT=1 python manage.py runserver 0.0.0.0:8000
 
@@ -233,8 +234,6 @@ If using Google authentication, remember to update the login redirect URLs on th
 
 ### Setting up Apache httpd on Ubuntu to forward HTTPS requests
 
-@@NOTE: these instructions still need proper testing@@
-
 Prerequisites:
 
 - Apache2 web server installed and running (in default confuguration with test page)
@@ -247,7 +246,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
     apt-get update
     apt-get install python-certbot-apache
 
-2. The following modules should be installed and enabled (use `a2query -m` to list):
+2. The following Apache modules should be installed and enabled (use `a2query -m` to list); use `a2enmod` to enable modules (e.g. `a2enmod headers, ssl`):
 
         headers
         proxy
@@ -256,9 +255,19 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         proxy_http
         autoindex
 
-3. Disable any proxy configuration.  This would usually be done by using `a2dissite` to disable any sites for which proxying has been set up.
+3. Check firewal configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
 
-4. Create a proxy configuration for Annalist, if not already done.  This can take the form of a file `/etc/apache2/sites-available/annalist.conf`, with content like this:
+        ufw allow ssh
+        ufw allow http
+        ufw allow https
+        ufw allow from <local-IP> to <local-IP> port 8000
+        ufw enable
+
+    If you can't access Annalist with the firewall enabled, look at `/var/log/ufw.log` to see what is being bocked.
+
+4. Disable any proxy configuration.  This would usually be done by using `a2dissite` to disable any sites for which proxying has been set up.
+
+5. Create a proxy configuration for Annalist, if not already done.  This can take the form of a file `/etc/apache2/sites-available/annalist.conf`, with content like this:
 
         # See: 000-default.host, ports.conf
         #
@@ -278,11 +287,12 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
             RequestHeader    set X-Forwarded-Protocol 'http'
             ProxyPass        /annalist http://localhost:8000/annalist
             ProxyPassReverse /annalist http://localhost:8000/annalist
+            ProxyPass        /static   http://localhost:8000/static
+            ProxyPassReverse /static   http://localhost:8000/static
             ProxyPreserveHost On
         </VirtualHost>
 
-
-5. Generate and install a certificate:
+6. Generate and install a certificate:
 
         certbot --apache -d annalist.example.net
 
@@ -318,12 +328,12 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         certbot --apache -d annalist.example.net
         certbot renew --force-renew
 
-6.  Enable Annalist request forwarding; e.g.
+7.  Enable Annalist request forwarding; e.g.
 
         a2ensite annalist   # This may turn out to be spurious with HTTPS enforced
         a2ensite annalist-le-ssl
 
-7.  Check the revised configuration and (if OK) restart Apache:
+8.  Check the revised configuration and (if OK) restart Apache:
 
         apachectl -t
         apachectl restart
@@ -338,7 +348,9 @@ See [Configuring Annalist to use OpenID Connect](./openid-connect-setup.md).
 
 ## Running as a Docker container
 
-Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.
+**NOTE** the Docker containers c5eated for Annalist are intended for evaluation or local use.  They do not have OpenID connect logins configured, and the annalist server accepts HTTP coinnections on port 8000, including for the login username/password form.  You should build your own Annalist docker containers (with HTTPS proxying, OpenID connect and firewall access restrictions configured) for production use. The `docker/annalist_dev` files may be used as a starting point for this.
+
+Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.  (Also appears to work on Mac with Docker.)
 
 If Annalist Docker containers have been used previously on the host system, the following commamnds ensure you have the latest images:
 
@@ -361,10 +373,11 @@ The remaining commands are executed in the shell environment presented by the `d
 
 Check the version displayed: I've found Docker sometimes caches older versions and fails up update to the latest available.  If necessary, use `docker rmi gklyne/annalist` to remove old images from the local cache.  If all is well, continue as follows:
 
-If this is the first time Annalist has been run on this system, create a new Annalist site data and database:
+If this is the first time Annalist has been run on this system, create a new Annalist site data and database, and define an admin user login:
 
     annalist-manager createsitedata
     annalist-manager initialize
+    annalist-manager defaultadminuser
 
 or, to keep previous annalist collection data:
 
@@ -379,7 +392,7 @@ Then, to start the Annalist web server:
 
 At this point, a browser can be directed to port 8000 (e.g. http://localhost:8000) of the Docker container host to interact with the Annlist system and data.
 
-Existing Analist collection data can be loaded into a new installation, before strarting the server.  For example, an experimental Digital Music Object, which demonstrates several features of Annalist, can be loaded thus:
+Existing Analist collection data can be loaded into a new installation, before starting the server.  For example, an experimental Digital Music Object, which demonstrates several features of Annalist, can be loaded thus:
 
     cd /annalist_site/annalist_site/c/
     git clone https://github.com/gklyne/DMO_Experiment.git

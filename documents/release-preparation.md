@@ -76,12 +76,11 @@
         annalist-manager runserver &
         curl http://localhost:8000/annalist/site/ -v
 
-@@@ test revised docker image creation on dev.annalist.net
-
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
+- [.] Update and test demo installation on annalist.net
     - [ ] ssh to annalist@annalist.net
+    - [ ] check HTTPS proxy and Certbot setup
     - [ ] `. backup_annalist_site.sh`
     - [ ] `mv annalist_site_2015MMDD/ annalist_site_2017----`
     - [ ] `killall python`

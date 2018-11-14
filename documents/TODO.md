@@ -24,10 +24,14 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.11, towards 0.5.12
 
-NOTE: The devlopment environment (`devel` configuration) settings no longer 
+NOTE: this release may fail (specifically, the test suite may fail to complete) on versions of Python lower than 2.7.15 due to a bug in the SQLite libraries.  See further notes below.
+
+NOTE: the devlopment environment (`devel` configuration) settings no longer 
 work "out of the box".  This is the default case when running `manage.py runserver`,
 so when using this command either (a) initialize the development site data in
 the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
+
+NOTE: this release falls foul of a bug in earlier versions of SQLite3: see notes "Problems with SQLite3" below.
 
 - [x] Update python to latest in version 2 series
 - [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
@@ -75,11 +79,6 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
         OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
 
 - [x] Update Django version to 1.11 (last to support Python 2)
-
-    Ran into a segfault problem while running tests uner Python 2.7.14.
-
-    - Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
-    - Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem.
 
     Changes in Django 1.11 include:
 
@@ -130,9 +129,36 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 - [x] Added new Python3 comnpatibility shims `text_to_bytes` and `write_bytes`
 - [x] Add documentation for OIDC setup with HTTPS proxying.
 
+## Problems with SQLite3 (Annalist 0.5.11 and 0.5.12)
+
+There was a segfault problem while running the latest tests under Python 2.7.14.  This was eventually tracked down to a bug in SQLite3.  More recent versions of Python on MacOS include an updated SQLite3.  On Ubuntu, the system installed SQLite3 is used, and the bug is not fixed in Ubuntu releases 14.04 or 16.04.  The recommended way to avoid this problem on Ubuntu is to use a more recent verson of Ubuntu (18.04 or later).
+
+What follows are my notes from getting Annalist tests working on MacOS and Ububntu.
+
+- Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
+- Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem (on MacOS).
+- Still having SQLite problems when trying to runon Ubuntu 14.04...
+- https://code.djangoproject.com/ticket/24080
+- https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=820225
+- https://www.sqlite.org/src/info/7f7f8026eda38
+- When installing Python from source on Ubuntu, tried using `make altinstall` rather than `make install`, then use `virtualenv -p python2.7` when creating enviroment for annalist.  Th python instalkl is OK, but still crashes in the Annalist test suite - assume it's still using buggy sqlite3.
+- sqlite3 version installed on Ubuntu 14.04 is "SQLite version 3.8.2 2013-12-06 14:53:30".  3.12.1 appears to be when the fix was applied.
+- Tried `do_release_update` to Ubuntu 16.04, but problem still persisted (sqlite3 version 3.11.0)
+- The following commands on Ububntu 16.04, updating sqlite to version 3.22.0, fixed the test suite problem for me:
+
+    apt install software-properties-common
+    add-apt-repository ppa:jonathonf/backports
+    apt-get update && sudo apt-get install sqlite3
+
+(From https://linuxhint.com/install-sqlite-ubuntu-linux-mint/; not sure if this works for earlier versions of Ubunbtu.)
+
+- Running the Annalist server generates an error (import error with "datetime"), apparently because the Ubuntu upgrade has messed up the python virtual environment.  Eventually, I reinstalled  Python 2.7.15 (see above), regenerated the virtual environment and reinstalled Annalist to get the server working.
+
+
+
 (Sub-release)
 
-- [ ] entity list returns IDs with trailing "/", but indoividual entities do not.  (See entitylist.strip_context_values)
+- [ ] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
 - [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
 - [ ] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)

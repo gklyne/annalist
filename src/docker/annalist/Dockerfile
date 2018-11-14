@@ -5,8 +5,9 @@ MAINTAINER Graham Klyne <gk-annalist@ninebynine.org>
 RUN apt-get update -y  && \
     apt-get upgrade -y && \
     apt-get install -y python python-pip python-virtualenv && \
-    apt-get install -y git && \
-    pip install annalist==0.5.12
+    apt-get install -y git
+
+RUN pip install annalist==0.5.12
 
 VOLUME /annalist_site
 ENV HOME=/annalist_site \

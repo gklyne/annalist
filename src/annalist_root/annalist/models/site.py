@@ -143,7 +143,7 @@ class Site(EntityRoot):
         if not site_data:
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
-        log.info("site.site_data: site_data %r"%(site_data))
+        log.debug("site.site_data: site_data %r"%(site_data))
         colls = OrderedDict()
         for k, v in self.collections_dict().items():
             # log.info("site.site_data: colls[%s] %r"%(k, v))
