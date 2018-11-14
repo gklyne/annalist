@@ -30,7 +30,7 @@ push: build
 	# docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
 	# docker push gklyne/$(IMAGE):$(RELEASE)
 
-	docker tag -f $(IMAGE) gklyne/$(IMAGE)
+	docker tag $(IMAGE) gklyne/$(IMAGE)
 	docker push gklyne/$(IMAGE)
 
 # Declare non-file targets

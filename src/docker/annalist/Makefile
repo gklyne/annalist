@@ -29,10 +29,10 @@ run: build
 	docker run -it -p $(HOSTPORT):$(GUESTPORT) --volumes-from=$(DATA_CONTAINER) $(IMAGE):$(RELEASE) annalist-manager runserver
 
 push: build
-	docker tag -f $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
+	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):$(RELEASE)
 	docker push gklyne/$(IMAGE):$(RELEASE)
 
-	docker tag -f $(IMAGE):$(RELEASE) gklyne/$(IMAGE):latest
+	docker tag $(IMAGE):$(RELEASE) gklyne/$(IMAGE):latest
 	docker push gklyne/$(IMAGE)
 
 # Declare non-file targets
