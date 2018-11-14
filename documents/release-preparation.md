@@ -3,6 +3,7 @@
 ## Summary of release tasks
 
 - [ ] Feature freeze
+- [ ] Check GitHub for security alerts; ensure requirements/common.txt is up-to-date.
 - [ ] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
 - [ ] Uninstall annalist (if installed): `pip uninstall annalist`
 - [ ] Delete contents of build directory (remove old files) 
