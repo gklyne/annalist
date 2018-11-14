@@ -7,22 +7,22 @@ A summary of issues relating to deployability, resilience and security that are 
 
 ## Release 0.5.12
 
-This is a maintenance release, with no changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
+This is a maintenance release, with no significant changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
 
 All code has been updated to run under Python 3.7, but package dependencies Django 1.11 and rdflib-jsonld 0.4.0 are not ready (though easily patched).
 
-The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The next release is planned to include a documented procedure for this setup.)
+The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The Annalist installation document has initial instructions for installation with Apache, including installation of a "LetsEncrypt" certificate.)
 
 The test suite has been updated to cover `annalist-manager` functionality.
 
-NOTE: there appear to be SQLite problems with Python versions before 2.7.15 (see below).  See also: https://stackoverflow.com/a/52077775/324122 for a possible solution for running with older versions of Python.
+NOTE: there appear to be SQLite problems with Python versions before 2.7.15.  See "Problems with SQLite3" notes below.
 
-NOTE: changes in Google's OpenID Connect API amnd access library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) may need to be updated (following the example provided).
+NOTE: changes in Google's OpenID Connect API and access library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) will need to be updated when updating an existing system.
 
 
 ## Status
 
-The Annalist software is now believed to offer a level of functionality that will be incorporated in an initial full software release.  The primary goals of Annalist are to make it easy for people to create and share linked data on the web, without programming:
+The Annalist software is now believed to offer a level of functionality that will be incorporated in an initial full software release.  The main goal of Annalist is to make it easy for individuals and small groups to create and share linked data on the web, without programming:
 
 * Easy data: out-of-box data acquisition, modification and organization of small data records.
 * Flexible data: new record types and fields can be added as-required.
@@ -95,28 +95,64 @@ See also previous release notes:
 
 ## Release 0.5.12
 
-This is a maintenance release, with no changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
+This is a maintenance release, with no significant changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
 
 All code has been updated to run under Python 3.7, but package dependencies Django 1.11 and rdflib-jsonld 0.4.0 are not ready (though easily patched).
 
-The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The next release is planned to include a documented procedure for this setup.)
+The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The Annalist installation document has initial instructions for installation with Apache, including installation of a "LetsEncrypt" certificate.)
 
 The test suite has been updated to cover `annalist-manager` functionality.
 
-NOTE: there appear to be SQLite problems with Python versions before 2.7.15 (see below).  See also: https://stackoverflow.com/a/52077775/324122 for a possible solution for running with older versions of Python.
+NOTE: there appear to be SQLite problems with Python versions before 2.7.15.  See "Problems with SQLite3" notes below.
 
-NOTE: changes in Google's OpenID Connect API amnd accfess library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) will need to be updated when updating an existing system.
+NOTE: changes in Google's OpenID Connect API and access library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) will need to be updated when updating an existing system.
 
 
 ## Version 0.5.11, towards 0.5.12
 
-NOTE: The devlopment environment (`devel` configuration) settings no longer 
+NOTE: this release may fail (specifically, the test suite may fail to complete) on versions of Python lower than 2.7.15 due to a bug in the SQLite libraries.  See notes "Problems with SQLite3" below.
+
+NOTE: the devlopment environment (`devel` configuration) settings no longer 
 work "out of the box".  This is the default case when running `manage.py runserver`,
 so when using this command either (a) initialize the development site data in
 the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
 
 - [x] Update python to latest in version 2 series
-- [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  See "Python `pip` and `setuptools` update issues" below.
+- [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
+
+        rm -rf anenv
+        virtualenv anenv -p python2.7
+        source anenv/bin/activate
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py
+        # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+        pip install --upgrade setuptools
+        # Note: installation reports success, then I got an error traceback, which seems
+        #       to be caused by an access to the old (now removed) setuptools directory.
+        # It seems some old setup files are bound to the active python environment, 
+        # so need to reactivate:
+        deactivate
+        source anenv/bin/activate
+        cd src
+        # Now install Annalist itself
+        cd ..
+        python setup.py clean --all
+        python setup.py build
+        python setup.py install
+
+    `python setup.py install` still fails to reliably install dependencies,
+    so I used:
+
+        pip install -r annalist_root/requirements.txt
+
+    then the `python setup.py` commands.
+
+    [Later] After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
+
+    [Later] I ran into some problems with setup.py on Python3, that were resolved by:
+
+        pip install certifi
+
 - [x] Update other packages (in setup.py)
 - [x] Move from deprecated oauth2client package to recommended replacement for OpenId Connect (OIDC) logins:
 
@@ -126,12 +162,7 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
 
         OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
 
-- [x] Update Django version to 1.11 (last version to support Python 2)
-
-    Ran into a segfault problem while running tests uner Python 2.7.14.
-
-    - Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
-    - Updated Python to 2.7.15 and created new virtualenv; seems to have fixed this.
+- [x] Update Django version to 1.11 (last to support Python 2)
 
     Changes in Django 1.11 include:
 
@@ -145,12 +176,12 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - the above changes also affect login/login_views.
     - updates to settings are required to configure the templating framework.
 
-- [x] Add test cases for HTTP HEAD requests
+- [x] Add test case for HEAD requests
 
 - [x] Update to support Python 3
     - https://docs.python.org/3/howto/pyporting.html
     - http://python3porting.com/problems.html
-    - [x] Review test coverage (93% overall, but some key modules were 40-80%)
+    - [x] Review test coverage (93% overall, but some key modules 40-80%)
     - [x] Create branch for Python 3 testing
     - [x] from __future__ import absolute_import, division, print_function, unicode_literals
     - [x] Install pylint, run python 3 porting tests
@@ -173,6 +204,14 @@ the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to s
     - [x] from __future__ imports ...
     - [x] Fix pylint reports and test code under Python 2
     - [x] Test under Python 3   
+
+- [x] Fix CSRF verification fails on entity delete confirmation dialog
+    - Pass request to template render method
+- [x] Allow recognition of "HTTP_X_FORWARDED_PROTOCOL" header (injected by Apache proxy).
+- [x] Remove hard-coded references to "annalist_site" directory with value defined by configuration settings.
+- [x] Fix server error generating Turtle output from ivalidf JSON-LD (a knock-on effect from using Uniciode literals with StringIO)
+- [x] Added new Python3 comnpatibility shims `text_to_bytes` and `write_bytes`
+- [x] Add documentation for OIDC setup with HTTPS proxying.
 
 ### Python `pip` and `setuptools` update issues
 
@@ -216,12 +255,40 @@ I later ran into some problems with setup.py on Python3, that were resolved by:
 
     pip install certifi
 
+### Problems with SQLite3
+
+There was a segfault problem while running the latest tests under Python 2.7.14.  This was eventually tracked down to a bug in SQLite3.  More recent versions of Python on MacOS include an updated SQLite3.  On Ubuntu, the system installed SQLite3 is used, and the bug is not fixed in Ubuntu releases 14.04 or 16.04.  The recommended way to avoid this problem on Ubuntu is to use a more recent verson of Ubuntu (18.04 or later).
+
+What follows are my notes from getting Annalist tests working on MacOS and Ubuntu.
+
+- See also: 
+    - https://stackoverflow.com/a/52077775/324122
+    - https://code.djangoproject.com/ticket/24080
+    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=820225
+    - https://www.sqlite.org/src/info/7f7f8026eda38
+- Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
+- Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem (on MacOS).
+- Still having SQLite problems when trying to runon Ubuntu 14.04...
+- When installing Python from source on Ubuntu, tried using `make altinstall` rather than `make install`, then use `virtualenv -p python2.7` when creating enviroment for annalist.  Th python instalkl is OK, but still crashes in the Annalist test suite - assume it's still using buggy sqlite3.
+- sqlite3 version installed on Ubuntu 14.04 is "SQLite version 3.8.2 2013-12-06 14:53:30".  3.12.1 appears to be when the fix was applied.
+- Tried `do_release_update` to Ubuntu 16.04, but problem still persisted (sqlite3 version 3.11.0)
+- The following commands on Ububntu 16.04, updating sqlite to version 3.22.0, fixed the test suite problem for me:
+
+        apt install software-properties-common
+        add-apt-repository ppa:jonathonf/backports
+        apt-get update && sudo apt-get install sqlite3
+
+    _(From https://linuxhint.com/install-sqlite-ubuntu-linux-mint/; not sure if this works for earlier versions of Ubunbtu.)_
+
+- Running the Annalist server generates an error (import error with "datetime"), apparently because the Ubuntu upgrade has messed up the python virtual environment.  Eventually, I reinstalled  Python 2.7.15 (see above), regenerated the virtual environment and reinstalled Annalist to get the server working.
+
 
 ## Release: 0.5.10
 
 This is a maintenance release, with no substantial changes in functionality.  Form rendering and test case have been restructured, some view fields renamed, and some property URIs renamed.
 
 Access to values in `bound_field` has been changed so field definition references must use `_field_definition` attribute, or special methods/attributres for a few common cases.  This makes it clearer in calling code what is being acessed, and simplified the implemenation of `bound_field`.  Many tests have been revamped to compare the generated view context with a value generated locally by support functions.  This reduces the effort of revising tests to follow changes in the view context structure.
+
 
 ## Version 0.5.9, towards 0.5.10
 
