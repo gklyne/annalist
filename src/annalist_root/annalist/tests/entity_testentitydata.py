@@ -83,13 +83,23 @@ def entitydata_dir(coll_id="testcoll", type_id="testtype", entity_id="testentity
 #   These all use the Django `reverse` function so they correspond to
 #   the declared URI patterns.
 
+def entity_uriref(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
+    """
+    URI for entity data with trailing slash removed.  Used as entity idemntifier in data.
+    """
+    uri = entity_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    if uri.endswith("/"):
+        uri = uri[0:-1] # Strip traling "/"  
+    return uri
+
 def entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity_id"):
     """
     URI for entity data; also view using default entity view
     """
     if not valid_id(entity_id):
         entity_id = "___"
-    return collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    url = collection_entity_view_url(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
+    return url
 
 def entity_resource_url(
     coll_id="testcoll", type_id="testtype", entity_id="entity_id", 

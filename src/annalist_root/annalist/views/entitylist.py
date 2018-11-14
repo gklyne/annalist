@@ -158,7 +158,7 @@ class EntityGenericListView(AnnalistGenericView):
         entityref = make_type_entity_id(
             entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
             )
-        entityvals['@id'] = base_url+entityref+"/"
+        entityvals['@id'] = base_url+entityref
         return entityvals
 
     def assemble_list_data(self, listinfo, scope, search_for):

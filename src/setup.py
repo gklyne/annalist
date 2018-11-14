@@ -201,9 +201,9 @@ setup(
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==1.11.13'
+        [ 'Django==1.11.15'
         , 'six==1.11.0'
-        , 'requests==2.18.4'
+        , 'requests==2.20.0'
           , 'urllib3==1.22'
           , 'chardet==3.0.4'
           , 'idna==2.6'

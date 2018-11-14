@@ -25,8 +25,8 @@ See also: https://www.divio.com/en/blog/documentation/
 # Version 0.5.13, towards 0.5.14
 
 - [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
-- [ ] Address security alters for dependencies that appear in GitHub
-- [ ] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
+- [x] Address GitHub security alerts for dependencies
+- [x] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
 - [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
 - [ ] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)

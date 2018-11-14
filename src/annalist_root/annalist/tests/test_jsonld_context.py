@@ -61,7 +61,7 @@ from .entity_testtypedata import (
     recordtype_url
     )
 from .entity_testentitydata import (
-    entity_url, entity_resource_url,
+    entity_url, entity_resource_url, entity_uriref,
     entitydata_list_type_url, entitydata_list_all_url
     )
 from .entity_testsitedata import (
@@ -1072,7 +1072,10 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        t_uri = urljoin(
+            json_url, 
+            entity_uriref(coll_id="testcoll", type_id="_type", entity_id="testtype")
+            )
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
@@ -1088,8 +1091,16 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""
             )
-        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urljoin(
+            json_url, 
+            entity_uriref(coll_id="testcoll", type_id="_type", entity_id="testtype")
+            )
+        #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urljoin(
+            json_url, 
+            entity_uriref(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+            )
+        #@@ e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 2)
         self.assertIn(URIRef(t_uri), list_items)
         self.assertIn(URIRef(e1uri), list_items)
@@ -1108,7 +1119,11 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
-        t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        t_uri = urljoin(
+            json_url, 
+            entity_uriref(coll_id="testcoll", type_id="_type", entity_id="testtype")
+            )
         e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
@@ -1135,7 +1150,10 @@ class JsonldContextTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(
+                json_url, 
+                entity_uriref(coll_id="testcoll", type_id="_type", entity_id=entity_id)
+                )
             self.assertIn(URIRef(t_uri), list_items)
         return
 
@@ -1157,7 +1175,11 @@ class JsonldContextTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(
+                json_url, 
+                entity_uriref(coll_id="testcoll", type_id="_type", entity_id=entity_id)
+                )
+            #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 
