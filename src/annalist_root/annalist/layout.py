@@ -1,6 +1,11 @@
+# pylint: disable=too-many-instance-attributes, too-few-public-methods
+
 """
 Annalist directory/site layout
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014-2016, G. Klyne"
@@ -72,12 +77,13 @@ COLL_CONTEXT_FILE       = "coll_context.jsonld"
 # COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
-SITE_DIR                = "annalist_site"
+#@@ SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"
 SITEDATA_OLD_DIR2       = SITEDATA_DIR+"/"+COLL_ROOT_CONF_OLD_DIR
 SITE_META_PATH          = ""
+SITE_META_REF           = "."
 SITE_META_FILE          = "site_meta.jsonld"    # Currently not used except to store description data
 META_SITE_REF           = "./"
 SITE_COLL_VIEW          = "c/%(id)s/"
@@ -269,8 +275,10 @@ DATA_DIRS_CURR_PREV = (
     , (ENUM_VALUE_MODE_DIR,         ENUM_VALUE_MODE_DIR_PREV2)
     , (ENUM_VALUE_TYPE_DIR,         ENUM_VALUE_TYPE_DIR_PREV2)
     ])
-DATA_DIRS       = map(lambda pair:pair[0], DATA_DIRS_CURR_PREV)
-DATA_DIRS_PREV  = map(lambda pair:pair[1], DATA_DIRS_CURR_PREV)
+DATA_DIRS       = [ p[0] for p in DATA_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[0], DATA_DIRS_CURR_PREV)
+DATA_DIRS_PREV  = [ p[1] for p in DATA_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[1], DATA_DIRS_CURR_PREV)
 DATA_VOCAB_DIRS = DATA_DIRS + [VOCAB_DIR]
 
 COLL_DIRS_CURR_PREV = (
@@ -278,8 +286,10 @@ COLL_DIRS_CURR_PREV = (
     [ (USER_DIR,  USER_DIR_PREV)
     , (VOCAB_DIR, VOCAB_DIR_PREV)
     ])
-COLL_DIRS       = map(lambda pair:pair[0], COLL_DIRS_CURR_PREV)
-COLL_DIRS_PREV  = map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
+COLL_DIRS       = [ p[0] for p in COLL_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[0], COLL_DIRS_CURR_PREV)
+COLL_DIRS_PREV  = [ p[1] for p in COLL_DIRS_CURR_PREV ]
+                # map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
 
 # Name generation suffixes for tasks that generate new records
 SUFFIX_LIST             = ""
@@ -302,18 +312,18 @@ class Layout(object):
     using a supplied base directory.
     """
 
-    def __init__(self, base_data_dir):
+    def __init__(self, base_data_dir, site_dir_name):
         """
         Dynamically initialize a layout value
         """
         self.BASE_DIR           = base_data_dir
-        self.SITE_DIR           = SITE_DIR
+        self.SITE_DIR_NAME      = site_dir_name
         self.SITEDATA_ID        = SITEDATA_ID
         self.SITEDATA_DIR       = SITEDATA_DIR
         self.SITEDATA_OLD_DIR1  = SITEDATA_OLD_DIR1
         self.SITEDATA_OLD_DIR2  = SITEDATA_OLD_DIR2
-        self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR                         # e.g. c/_annalist_site/d
-        self.SITE_PATH          = os.path.join(base_data_dir, SITE_DIR)     # e.g. /data/annalist_site
+        self.SITEDATA_BASE_DIR  = SITEDATA_BASE_DIR     # e.g. c/_annalist_site/d
+        self.SITE_PATH          = os.path.join(base_data_dir, site_dir_name)
         self.SITE_META_FILE     = SITE_META_FILE
         self.SITE_DATABASE_FILE = SITE_DATABASE_FILE
         return

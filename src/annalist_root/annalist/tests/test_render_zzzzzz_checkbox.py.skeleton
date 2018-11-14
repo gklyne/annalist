@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for zzzzzz field rendering
 """
@@ -24,7 +27,17 @@ from annalist.views.fields.render_zzzzzz import (
     ZzzzzzValueMapper
     )
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    init_annalist_named_test_coll,
+    resetSitedata
+    )
 
 #   -----------------------------------------------------------------------------
 #

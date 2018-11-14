@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for EntityData subtype selection in list views and select dropdowns
 """
@@ -25,21 +28,26 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from AnnalistTestCase       import AnnalistTestCase
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     collection_create_values,
     create_test_user,
     context_view_field,
     context_list_entities,
     context_list_head_fields
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_create_values
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     entitydata_value_keys, entitydata_create_values, entitydata_values, 
@@ -124,7 +132,13 @@ class SubtypeSelectionTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SubtypeSelectionTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(SubtypeSelectionTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -300,40 +314,6 @@ class SubtypeSelectionTest(AnnalistTestCase):
               for opt in ['testtype1/entity1']
             ])
         self.assertEqual(f1['options'], ref_options)
-        return
-
-    def _no_test_test_select_view_subtype_fields(self):
-        # @@INCOMPLETE:  this was an attempt to check field selction from the view context,
-        #                but abandoned to to complexity of reconstructing bound fields.
-        #                NOTE: sitedata tests use Beautifulsoup representation of rendered
-        #                page for these tests
-        ref_view  = self._create_ref_type_view()
-        ref_field = self._create_ref_type_field()
-        u = entitydata_edit_url(
-            "edit", "testcoll", "_view", "Test_ref_type_view", view_id="View_view"
-            )
-        r = self.client.get(u)
-        self.assertEqual(r.status_code,   200)
-        self.assertEqual(r.reason_phrase, "OK")
-        # Check render context
-        self.assertEqual(r.context['coll_id'],          "testcoll")
-        self.assertEqual(r.context['type_id'],          "_view")
-        # Fields
-        self.assertEqual(len(r.context['fields']), 6)
-        self.assertEqual(r.context['fields'][0]['field_id'], "View_id")
-        self.assertEqual(r.context['fields'][1]['field_id'], "View_label")
-        self.assertEqual(r.context['fields'][2]['field_id'], "View_comment")
-        self.assertEqual(r.context['fields'][3]['field_id'], "View_target_type")
-        self.assertEqual(r.context['fields'][4]['field_id'], "View_edit_view")
-        self.assertEqual(r.context['fields'][5]['field_id'], "View_fields")
-        print repr(r.context['fields'][5])
-        baselabel = "Entity testcoll/"
-        baseuri   = TestBasePath+"/c/testcoll/d/%s/"
-        ref_options = (
-            [ FieldChoice(opt, label=baselabel+opt, link=baseuri%opt)
-              for opt in ['testtype1/entity1', 'testtype2/entity2', 'testtypes/entitys']
-            ])
-        self.assertEqual(r.context['fields'][5]['options'], ref_options)
         return
 
 # End.

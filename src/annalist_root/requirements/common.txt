@@ -1,14 +1,21 @@
 # requirements/common.txt
 # See: http://www.deploydjango.com/django_project_structure/
-Django==1.7
-wsgiref==0.1.2
-oauth2client==1.2
-httplib2==0.9
-pyparsing==2.0.2
-Markdown==2.5.2
-# RDF stuff:
-# SPARQLWrapper==1.5.2
-# pyparsing==1.5.7    # Does RDFlib need this?
-# html5lib==1.0b3
-# isodate==0.4.9
-# six==1.4.1
+Django==1.11.13
+six==1.11.0
+requests==2.18.4
+urllib3==1.22
+chardet==3.0.4
+idna==2.6
+requests-oauthlib==0.8.0
+oauthlib==2.0.7
+certifi==2018.1.18
+httplib2==0.11.3
+rdflib==4.2.2
+isodate==0.6.0
+pytz==2018.5
+rdflib-jsonld==0.4.0
+pyparsing==2.2.0
+Markdown==2.6.11
+httpretty==0.9.4
+beautifulsoup4==4.6.0
+

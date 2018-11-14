@@ -2,6 +2,9 @@
 This module contains utilities for use in conjunction with field renderers.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -12,11 +15,12 @@ log = logging.getLogger(__name__)
 import traceback
 import re
 
-from urlparse               import urljoin  # py3: from urllib.parse ...
 from collections            import OrderedDict, namedtuple
 
 from django.conf            import settings
 from django.utils.html      import escape
+
+from utils.py3porting       import is_string, to_unicode, urljoin
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
@@ -125,37 +129,35 @@ class bound_field(object):
     >>> vals = entity.set_values({"foo": "foo_val", "bar": "bar_val"})
     >>> field_foo_desc = MockFieldDescription(coll, {"field_id": "foo_id", "field_property_uri": "foo", "field_type": "foo_type"})
     >>> field_foo = bound_field(field_foo_desc, entity)
-    >>> field_foo._key
-    'foo'
-    >>> field_foo.description['field_type']
-    'foo_type'
-    >>> field_foo.field_value
-    'foo_val'
+    >>> field_foo._key == 'foo'
+    True
+    >>> field_foo.description['field_type'] == 'foo_type'
+    True
+    >>> field_foo.field_value == 'foo_val'
+    True
     >>> field_bar_desc = MockFieldDescription(coll, {"field_id": "bar_id", "field_property_uri": "bar", "field_type": "bar_type"})
     >>> field_bar = bound_field(field_bar_desc, entity)
-    >>> field_bar.description['field_type']
-    'bar_type'
-    >>> field_bar.field_value
-    'bar_val'
+    >>> field_bar.description['field_type'] == 'bar_type'
+    True
+    >>> field_bar.field_value == 'bar_val'
+    True
     >>> field_def_desc = MockFieldDescription(coll, {"field_id": "def_id", "field_property_uri": "def", "field_type": "def_type"})
     >>> entityvals = entity.get_values()
     >>> entityvals['entity_id']      = entity.get_id()
     >>> entityvals['entity_type_id'] = entity.get_type_id()
     >>> entityvals['entity_link']    = entity.get_url()
     >>> field_def = bound_field(field_def_desc, entity)
-    >>> field_def.description['field_type']
-    'def_type'
+    >>> field_def.description['field_type'] == 'def_type'
+    True
     >>> field_def.field_value == ""
     True
     >>> field_def = bound_field(field_def_desc, entity, context_extra_values={"def": "default"})
-    >>> field_def.description['field_type']
-    'def_type'
-    >>> field_def.field_value
-    'default'
-    >>> field_def.entity_link
-    'entityuri/'
-    >>> field_def.htmlrepr()
-    "<ul><li>key: def</li><li>val: default</li><li>field_description: {'field_property_uri': 'def', 'field_id': 'def_id', 'field_type': 'def_type'}</li></ul>"
+    >>> field_def.description['field_type'] == 'def_type'
+    True
+    >>> field_def.field_value == 'default'
+    True
+    >>> field_def.entity_link == 'entityuri/'
+    True
     """
 
     __slots__ = ("_field_description", "_entityvals", "_targetvals", "_key", "_extras")
@@ -173,6 +175,8 @@ class bound_field(object):
                                 probed for values that are not provided by the entity itself.  
                                 Can be used to specify default values for an entity.
         """
+        # if not isinstance(entityvals, dict):
+        #     raise ValueError("bound_field entityvals is not dictionary (%r)"%(entityvals,))
         self._field_description = field_description
         self._entityvals        = entityvals
         self._targetvals        = None
@@ -269,7 +273,14 @@ class bound_field(object):
         Return field value corresponding to key from field description.
         """
         field_key = self.get_field_value_key()
-        field_val = self._entityvals.get(field_key, None)
+        # log.debug(
+        #     "@@ bound_field.get_field_value field_key %s, _entityvals %r"%
+        #     (field_key, self._entityvals)
+        #     )
+        if hasattr(self._entityvals, "get"):
+            field_val = self._entityvals.get(field_key, None)
+        else:
+            field_val = "@@ Cannot resolve: %s[%s]"%(self._entityvals, field_key)
         # Allow field value to be provided via `context_extra_values` if not in entity.
         # (Currently used for 'get_view_choices_field' and 'get_list_choices_field'
         # to insert current display selection.)
@@ -377,7 +388,7 @@ class bound_field(object):
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
-            elif isinstance(target_value, (str, unicode)):
+            elif is_string(target_value):
                 target_ref = target_value
             else:
                 log.warning(
@@ -394,10 +405,10 @@ class bound_field(object):
         If field description is a reference to a target type entity or field, 
         return a copy of the referenced target entity, otherwise None.
         """
-        log.debug("bound_field.get_targetvals: field_description %r"%(self._field_description,))
+        # log.debug("@@ bound_field.get_targetvals: field_description %r"%(self._field_description,))
         target_type = self._field_description.get('field_ref_type',  None)
         target_key  = self._field_description.get('field_ref_field', None)
-        log.debug("bound_field.get_targetvals: target_type %s, target_key %s"%(target_type, target_key))
+        log.debug("bound_field.get_targetvals: target_type '%s', target_key '%s'"%(target_type, target_key))
         if self._targetvals is None:
             if target_type:
                 # Extract entity_id and type_id; default to type id from field descr
@@ -466,8 +477,13 @@ class bound_field(object):
         return chere
 
     def get_field_options(self):
+        """
+        Returns list of selectable options for the current field
+
+        Note: in Python3, OrderedDict.values() returns a view, not a list.
+        """
         options = self._field_description['field_choices']      # OrderedDict
-        options = ( options.values() if options is not None else 
+        options = ( list(options.values()) if options is not None else 
                     [ FieldChoice('', label="(no options)") ]
                   )
         return options

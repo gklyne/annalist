@@ -2,19 +2,22 @@
 Login views and authentication supporting utilities
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import copy
-import urllib
-
 import logging
 log = logging.getLogger(__name__)
 
-# from django.core.urlresolvers import resolve, reverse
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+import copy
+
+from utils.py3porting   import quote, unquote
+
+from django.http        import HttpResponse
+from django.http        import HttpResponseRedirect
 
 def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     """
@@ -24,7 +27,7 @@ def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     nq = "?"
     for pname in query_params.keys():
         if query_params[pname]:
-            redirect_uri += nq + pname + "=" + urllib.quote(query_params[pname])
+            redirect_uri += nq + pname + "=" + quote(query_params[pname])
             nq = "&"
     return HttpResponseRedirect(redirect_uri)
 

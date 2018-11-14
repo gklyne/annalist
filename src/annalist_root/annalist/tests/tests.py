@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist tests
 """
@@ -20,11 +23,10 @@ import utils
 from annalist.layout import Layout
 
 import annalist.util
-
 import annalist.views.fields.find_renderers
 import annalist.views.fields.render_placement
 
-test_layout     = Layout(settings.BASE_DATA_DIR)    # e.g. ".../sampledata/data/"
+test_layout     = Layout(settings.BASE_DATA_DIR, settings.SITE_DIR_NAME)
 TestBaseDir     = test_layout.SITE_PATH             # e.g. ".../sampledata/data/annalist_site"
 TestHost        = settings.TEST_HOST                # e.g. "test.example.com"
 TestBasePath    = "/" + settings.TEST_BASE_PATH     # e.g. "/testsite"
@@ -35,12 +37,14 @@ def load_tests(loader, tests, ignore):
     log.debug("load_tests")
     #init_annalist_test_site()
     # See http://stackoverflow.com/questions/2380527/django-doctests-in-views-py
+    #     https://docs.python.org/2/library/doctest.html#unittest-api
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
         # (These add a total of 12 tests to the overall test)
         tests.addTests(doctest.DocTestSuite(utils.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.util))
         tests.addTests(doctest.DocTestSuite(annalist.identifiers))
+        tests.addTests(doctest.DocTestSuite(annalist.resourcetypes))
         tests.addTests(doctest.DocTestSuite(annalist.views.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.views.displayinfo))
         tests.addTests(doctest.DocTestSuite(annalist.views.form_utils.fieldchoice))

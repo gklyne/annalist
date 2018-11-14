@@ -2,30 +2,33 @@
 Annalist generic view definition
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import os.path
-import urlparse
-import json
-import markdown
-import traceback
 import logging
 log = logging.getLogger(__name__)
 
+import os
+import os.path
+import json
+import markdown
+import traceback
+
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.template                import RequestContext, loader
+from django.template                import loader
 from django.views                   import generic
 from django.views.decorators.csrf   import csrf_exempt
 from django.core.urlresolvers       import resolve, reverse
-
-from django.conf import settings
+from django.conf                    import settings
 
 import login.login_views
 
+from utils.py3porting               import urljoin
 from utils.ContentNegotiationView   import ContentNegotiationView
 
 import annalist
@@ -65,7 +68,8 @@ class AnnalistGenericView(ContentNegotiationView):
     def __init__(self):
         super(AnnalistGenericView, self).__init__()
         self._sitebaseuri      = reverse("AnnalistHomeView")
-        self._sitebasedir      = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
+        # self._sitebasedir      = os.path.join(settings.BASE_DATA_DIR, layout.SITE_DIR)
+        self._sitebasedir      = settings.BASE_SITE_DIR
         self._site             = None
         self._site_data        = None
         self._user_perms       = {}
@@ -104,7 +108,7 @@ class AnnalistGenericView(ContentNegotiationView):
         #     "AnnalistGenericView.error: values %r, continuation_url %s"%(values, continuation_url)
         #     )
         template = loader.get_template('annalist_error.html')
-        context  = RequestContext(self.request, values)
+        context = dict(values)
         if continuation_url:
             context['continuation_url']   = continuation_url
             context['continuation_param'] = uri_params({ 'continuation_url': continuation_url })
@@ -125,11 +129,17 @@ class AnnalistGenericView(ContentNegotiationView):
             coll_id=coll_id
             )
 
+    def get_site_base_url(self):
+        """
+        Return base URL for current site
+        """
+        return self.view_uri("AnnalistHomeView")
+
     def get_collection_base_url(self, coll_id):
         """
         Return base URL for specified collection
         """
-        return urlparse.urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
+        return urljoin(self.get_collection_view_url(coll_id), layout.COLL_BASE_REF)
 
     def get_entity_base_url(self, coll_id, type_id, entity_id):
         """
@@ -294,7 +304,7 @@ class AnnalistGenericView(ContentNegotiationView):
         current request, as a pair (username, URI)
         """
         user = self.request.user
-        if user.is_authenticated():
+        if user.is_authenticated:
             return (user.username, "mailto:"+user.email)
         return ("_unknown_user_perms", "annal:User/_unknown_user_perms")
 
@@ -508,10 +518,10 @@ class AnnalistGenericView(ContentNegotiationView):
                     resultdata['help_text'] = helpfile.read()
         if 'help_markdown' in resultdata:
             resultdata['help_text'] = markdown.markdown(resultdata['help_markdown'])
-        template  = loader.get_template(template_name)
-        context   = RequestContext(self.request, resultdata)
+        template = loader.get_template(template_name)
+        context  = resultdata
         # log.debug("render_html - data: %r"%(resultdata))
-        response = HttpResponse(template.render(context))
+        response = HttpResponse(template.render(context, request=self.request))
         if "entity_data_ref" in resultdata:
             alt_link = [ { "ref": resultdata["entity_data_ref"], "rel": "alternate" } ]
         else:
@@ -573,19 +583,19 @@ class AnnalistGenericView(ContentNegotiationView):
 
     # Default view methods return 405 Forbidden
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def head(self, request):
+    def head(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def put(self, request):
+    def post(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
-    def post(self, request):
-        return self.error(self.error405values())
-
-    def delete(self, request):
+    def delete(self, request, *args, **kwargs):
         return self.error(self.error405values())
 
 

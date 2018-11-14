@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for file upload functions.
 """
@@ -29,12 +32,17 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import (
-    init_annalist_test_site, init_annalist_test_coll, create_test_coll_inheriting, resetSitedata
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from entity_testutils       import (
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    create_test_coll_inheriting,
+    resetSitedata
+    )
+from .entity_testutils import (
     create_test_user,
     create_user_permissions,
     context_field_map,
@@ -43,7 +51,7 @@ from entity_testutils       import (
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     default_view_form_data,
     )
@@ -408,7 +416,13 @@ class UploadResourceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(UploadResourceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(UploadResourceTest, cls).tearDownClass()
         resetSitedata(scope="collections")      # @@checkme@@
         return
 
@@ -422,13 +436,13 @@ class UploadResourceTest(AnnalistTestCase):
         testobj1 = self.test_upl_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "wb"
             )
-        testobj1.write("Test data test1res.txt")
+        testobj1.write(b"Test data test1res.txt")
         self.assertEqual(testobj1.name, test1dir+"/test1res.txt")
         testobj1.close()
         testobj2 = self.test_upl_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "rb"
             )
-        self.assertEqual(testobj2.read(), "Test data test1res.txt")
+        self.assertEqual(testobj2.read(), b"Test data test1res.txt")
         testobj2.close()
         return
 
@@ -460,7 +474,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplfileview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Retrieve updated form
         r = self.client.get(u)
         # Test context
@@ -495,7 +509,7 @@ class UploadResourceTest(AnnalistTestCase):
                 )
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Display resource with reference
         u = entitydata_edit_url(
             "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"
@@ -530,7 +544,7 @@ class UploadResourceTest(AnnalistTestCase):
 
     def test_upload_image_resource(self):
         # See https://docs.djangoproject.com/en/1.7/topics/testing/tools/#django.test.Client.post
-        with open(self.imagepath) as fp:
+        with open(self.imagepath, "rb") as fp:
             f = default_view_form_data(
                 type_id="testupltype", entity_id="test1", action="edit"
                 )
@@ -538,7 +552,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testupltype", entity_id="test1", view_id="testuplimageview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Retrieve updated form
         r = self.client.get(u)
         # Test context
@@ -623,7 +637,7 @@ class UploadResourceTest(AnnalistTestCase):
 
     def test_image_edit_field(self):
         # Upload to an image view field
-        with open(self.imagepath) as fp:
+        with open(self.imagepath, "rb") as fp:
             f = default_view_form_data(
                 type_id="testimgtype", entity_id="test1", action="edit"
                 )
@@ -631,7 +645,7 @@ class UploadResourceTest(AnnalistTestCase):
             u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
             r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare entity resource just created
         siteobj = open(self.imagepath, "rb")
@@ -724,7 +738,7 @@ class UploadResourceTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Retrieve updated form
         r = self.client.get(u)
@@ -763,7 +777,7 @@ class UploadResourceTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", "testimgtype", entity_id="test1", view_id="testimgview")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare renamed entity resource
         siteobj = open(self.imagepath, "rb")
@@ -823,7 +837,7 @@ class UploadResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
 
         # Retrieve updated form
         r = self.client.get(u)

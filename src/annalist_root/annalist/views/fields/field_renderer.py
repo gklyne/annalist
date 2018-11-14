@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module implements a class that is used for rendering a bound field, given
 """
@@ -80,7 +83,7 @@ class FieldRenderer(object):
         """
         Return a diagnostic renderer for a specified mode.
 
-        This is similar to the standard renderer, except thaty is allows for additional
+        This is similar to the standard renderer, except that it allows for additional
         diagnostic information to be included to assist in debugging renderer call flows.
         """
         class _renderer(object):

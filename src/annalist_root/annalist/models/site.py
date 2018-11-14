@@ -2,26 +2,29 @@
 Annalist site-related facilities
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import os.path
-import collections
-import urlparse
-import json
-import datetime
-from collections    import OrderedDict
-
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import os.path
+import json
+import datetime
+import traceback
+from collections                    import OrderedDict
 
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.core.urlresolvers       import resolve, reverse
+
+from utils.py3porting               import isoformat_space, urljoin
 
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
@@ -54,6 +57,8 @@ class Site(EntityRoot):
     _entitybase     = layout.SITE_META_PATH
     _entityfile     = layout.SITE_META_FILE
     _entityref      = layout.META_SITE_REF
+    _contextbase    = layout.META_SITE_REF
+    _contextref     = layout.SITE_CONTEXT_FILE
 
     def __init__(self, sitebaseuri, sitebasedir, host=""):
         """
@@ -66,7 +71,7 @@ class Site(EntityRoot):
         sitebaseuri    = sitebaseuri if sitebaseuri.endswith("/") else sitebaseuri + "/"
         sitebasedir    = sitebasedir if sitebasedir.endswith("/") else sitebasedir + "/"
         sitepath       = layout.SITE_META_PATH
-        siteuripath    = urlparse.urljoin(sitebaseuri, sitepath) 
+        siteuripath    = urljoin(sitebaseuri, sitepath) 
         sitedir        = os.path.join(sitebasedir, sitepath)
         self._sitedata = None
         super(Site, self).__init__(host+siteuripath, siteuripath, sitedir, sitebasedir)
@@ -138,8 +143,8 @@ class Site(EntityRoot):
         if not site_data:
             return None
         site_data["title"] = site_data.get(RDFS.CURIE.label, message.SITE_NAME_DEFAULT)
-        # log.info("site.site_data: site_data %r"%(site_data))
-        colls = collections.OrderedDict()
+        log.debug("site.site_data: site_data %r"%(site_data))
+        colls = OrderedDict()
         for k, v in self.collections_dict().items():
             # log.info("site.site_data: colls[%s] %r"%(k, v))
             colls[k] = dict(v.items(), id=k, url=v[ANNAL.CURIE.url], title=v[RDFS.CURIE.label])
@@ -185,7 +190,7 @@ class Site(EntityRoot):
         Return an ordered dictionary of collections indexed by collection id
         """
         coll = [ (c.get_id(), c) for c in self.collections() ]
-        return collections.OrderedDict(sorted(coll))
+        return OrderedDict(sorted(coll))
 
     def add_collection(self, coll_id, coll_meta, annal_ver=annalist.__version_data__):
         """
@@ -232,7 +237,7 @@ class Site(EntityRoot):
         context = self.site_data_collection().get_coll_jsonld_context()
         # Assemble and write out context description
         datetime_now = datetime.datetime.today().replace(microsecond=0)
-        datetime_str = datetime_now.isoformat(' ')
+        datetime_str = isoformat_space(datetime_now)
         with self._metaobj(
             layout.SITEDATA_CONTEXT_PATH, layout.SITE_CONTEXT_FILE, "wt"
             ) as context_io:
@@ -267,7 +272,7 @@ class Site(EntityRoot):
             description = "Annalist site metadata and site-wide values."
         annal_comment = (
             "Initialized by annalist.models.site.create_site_metadata at "+
-            datetime_now.isoformat(' ')
+            isoformat_space(datetime_now)+" (UTC)"
             )
         site = Site(site_base_uri, site_base_dir)
         sitedata_values = (
@@ -377,12 +382,12 @@ class Site(EntityRoot):
             """         :                              (repeat for collections in site)\n"""+
             """\n"""+
             """Created by annalist.models.site.py\n"""+
-            """for Annalist %(version)s at %(datetime)s\n"""+
+            """for Annalist %(version)s at %(datetime)s (UTC)\n"""+
             """\n"""+
             """\n""")%
                 { 'site_base_dir':              site._entitydir
                 , 'site_base_uri':              site._entityurl
-                , 'datetime':                   datetime_now.isoformat(' ')
+                , 'datetime':                   isoformat_space(datetime_now)
                 , 'version':                    annalist.__version__
                 , 'enum_field_placement_dir':   layout.ENUM_FIELD_PLACEMENT_DIR
                 , 'enum_list_type_dir':         layout.ENUM_LIST_TYPE_DIR
@@ -409,6 +414,7 @@ class Site(EntityRoot):
         """
         Create empty collection, and returns the Collection object.
         """
+        # @@TESTME
         datetime_now = datetime.datetime.today().replace(microsecond=0)
         if label is None:
             label = "Collection %s"%coll_id
@@ -416,7 +422,7 @@ class Site(EntityRoot):
             description = "Annalist data collection %s"%coll_id
         annal_comment = (
             "Initialized by annalist.models.site.create_empty_coll_data at "+
-            datetime_now.isoformat(' ')
+            isoformat_space(datetime_now)+" (UTC)"
             )
         coll_values = (
             { RDFS.CURIE.label:             label

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist action confirmation view definition
 """
@@ -16,16 +19,15 @@ import copy
 import logging
 log = logging.getLogger(__name__)
 
-# import rdflib
-# import httplib2
-
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.http                    import QueryDict
-from django.template                import RequestContext, loader
+from django.template                import loader
 from django.core.urlresolvers       import resolve, reverse
 
 from django.conf                    import settings
+
+from utils.py3porting               import iteritems, iterlists
 
 from annalist.views.generic         import AnnalistGenericView
 
@@ -33,14 +35,14 @@ def querydict_dict(querydict):
     """
     Converts a Django QueryDict value to a regular dictionary, preserving multiple items.
     """
-    return dict(querydict.iterlists())
+    return dict(iterlists(querydict))
 
 def dict_querydict(dict_):
     """
     Converts a value created by querydict_dict back into a Django QueryDict value.
     """
     q = QueryDict("", mutable=True)
-    for k, v in dict_.iteritems():
+    for k, v in iteritems(dict_):
         q.setlist(k, v)
     q._mutable = False
     return q
@@ -88,9 +90,9 @@ class ConfirmView(AnnalistGenericView):
             , "suppress_user":          True
             })
         template = loader.get_template('annalist_confirm.html')
-        context  = RequestContext(request, form_data)
+        context  = form_data
         log.debug("confirmview form data: %r"%(form_data))
-        return HttpResponse(template.render(context))
+        return HttpResponse(template.render(context, request=request))
 
     # POST
 

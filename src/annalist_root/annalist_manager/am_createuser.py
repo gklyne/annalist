@@ -2,7 +2,8 @@
 Create Annalist/Django superuser.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -24,9 +25,9 @@ from annalist.models.annalistuser   import AnnalistUser
 
 from utils.SuppressLoggingContext   import SuppressLogging
 
-import am_errors
-from am_settings                    import am_get_settings, am_get_site_settings, am_get_site
-from am_getargvalue                 import getarg, getargvalue, getsecret
+from .                              import am_errors
+from .am_settings                   import am_get_settings, am_get_site_settings, am_get_site
+from .am_getargvalue                import getarg, getargvalue, getsecret
 
 def create_user_permissions(site, user_id, user_uri, user_name, user_comment, user_permissions):
     user_values = (
@@ -40,7 +41,7 @@ def create_user_permissions(site, user_id, user_uri, user_name, user_comment, us
     return user
 
 def delete_user_permissions(site, user_id):
-    AnnalistUser.remove(site, user_id)
+    AnnalistUser.remove(site.site_data_collection(), user_id)
     return
 
 def get_user_name(options, prompt_prefix):
@@ -87,7 +88,7 @@ def get_user_permissions(options, pos, prompt_prefix):
     while not re.match(user_permissions_regex, user_permissions):
         print("Invalid permissions %s - re-enter"%user_permissions, file=sys.stderr)
         user_permissions = getargvalue(None, user_permissions_prompt)
-    return user_permissions
+    return user_permissions.split()
 
 def create_django_user(user_type, user_details):
     """
@@ -232,43 +233,6 @@ def am_createadminuser(annroot, userhome, options):
     user_perms    = ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
     return am_createlocaluser(annroot, userhome, options, prompt_prefix, user_type, user_perms)
 
-def _x_am_createadminuser(annroot, userhome, options):
-    """
-    Create Annalist/Django admin/superuser account.  
-
-    Once created, this can be used to create additional users through the 
-    site 'admin' link, and can also create collections and
-
-    annroot     is the root directory for theannalist software installation.
-    userhome    is the home directory for the host system user issuing the command.
-    options     contains options parsed from the command line.
-
-    returns     0 if all is well, or a non-zero status code.
-                This value is intended to be used as an exit status code
-                for the calling program.
-    """
-    prompt_prefix = "Admin user"
-    if len(options.args) > 4:
-        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
-        return am_errors.AM_UNEXPECTEDARGS
-    sitesettings = am_get_site_settings(annroot, userhome, options)
-    if not sitesettings:
-        return am_errors.AM_NOSETTINGS
-    user_name = get_user_name(options, prompt_prefix)
-    #
-    from django.contrib.auth.models import User     # import deferred until after sitesettings import
-    if User.objects.filter(username=user_name):
-        print("User %s already exists"%user_name, file=sys.stderr)
-        return am_errors.AM_USEREXISTS
-    user_details = get_user_details(user_name, options, prompt_prefix)
-    status = create_django_user("superuser", user_details)
-    if status == am_errors.AM_SUCCESS:
-        status = create_site_permissions(
-            sitesettings, user_details, 
-            ["VIEW", "CREATE", "UPDATE", "DELETE", "CONFIG", "ADMIN"]
-            )
-    return status
-
 def am_defaultadminuser(annroot, userhome, options):
     """
     Create default Annalist/Django admin/superuser account.  
@@ -337,32 +301,10 @@ def am_updateadminuser(annroot, userhome, options):
     if not django_user:
         print("User %s does not exist"%user_name, file=sys.stderr)
         return am_errors.AM_USERNOTEXISTS
-    #@@@@@@@@
-    # # @@ read_django_user_details
-    # from django.contrib.auth.models import User     # import deferred until after sitesettings import
-    # userqueryset = User.objects.filter(username=user_name)
-    # if not userqueryset:
-    #     print("User %s does not exist"%user_name, file=sys.stderr)
-    #     return am_errors.AM_USERNOTEXISTS
-    # # Have all the details - now update the user in the Django user database
-    # # see:
-    # #   https://docs.djangoproject.com/en/1.7/ref/contrib/auth/#django.contrib.auth.models.User
-    # #   https://docs.djangoproject.c om/en/1.7/ref/contrib/auth/#manager-methods
-    # user = userqueryset[0]
-    #@@@@@@@@
     django_user.is_staff     = True
     django_user.is_superuser = True
     django_user.save()
     # Create site permissions record for admin user
-    #@@@@@@@@
-    # user_details = (
-    #     { 'name':       user_name
-    #     , 'email':      user.email
-    #     , 'uri':        "mailto:%s"%user.email
-    #     , 'first_name': user.first_name
-    #     , 'last_name':  user.last_name
-    #     })
-    #@@@@@@@@
     user_details = make_django_user_details(user_name, django_user)
     status = create_site_permissions(
         sitesettings, user_details, 
@@ -383,7 +325,7 @@ def am_setuserpermissions(annroot, userhome, options):
                 for the calling program.
     """
     prompt_prefix = "User "
-    if len(options.args) > 1:
+    if len(options.args) > 2:
         print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
         return am_errors.AM_UNEXPECTEDARGS
     sitesettings = am_get_site_settings(annroot, userhome, options)
@@ -394,7 +336,7 @@ def am_setuserpermissions(annroot, userhome, options):
     if not user_details:
         print("User %s does not exist"%user_name, file=sys.stderr)
         return am_errors.AM_USERNOTEXISTS
-    user_permissions = get_user_permissions(options, 0, prompt_prefix)
+    user_permissions = get_user_permissions(options, 1, prompt_prefix)
     status = create_site_permissions(sitesettings, user_details, user_permissions)
     return status
 
@@ -417,13 +359,13 @@ def am_setdefaultpermissions(annroot, userhome, options):
     sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
-    user_permissions = get_user_permissions(options, 0, prompt_prefix)
     user_details = (
         { 'name':       "_default_user_perms"
         , 'uri':        "annal:User/_default_user_perms"
         , 'label':      "Default permissions"
         , 'comment':    "Default permissions for authenticated user."
         })
+    user_permissions = get_user_permissions(options, 0, prompt_prefix)
     status = create_site_permissions(sitesettings, user_details, user_permissions)
     return status
 
@@ -446,13 +388,13 @@ def am_setpublicpermissions(annroot, userhome, options):
     sitesettings = am_get_site_settings(annroot, userhome, options)
     if not sitesettings:
         return am_errors.AM_NOSETTINGS
-    user_permissions = get_user_permissions(options, 0, prompt_prefix)
     user_details = (
         { 'name':       "_unknown_user_perms"
         , 'uri':        "annal:User/_unknown_user_perms"
         , 'label':      "Unknown user"
         , 'comment':    "Permissions for unauthenticated user."
         })
+    user_permissions = get_user_permissions(options, 0, prompt_prefix)
     status = create_site_permissions(sitesettings, user_details, user_permissions)
     return status
 

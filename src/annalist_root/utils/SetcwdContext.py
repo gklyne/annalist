@@ -1,8 +1,10 @@
 #!/usr/bin/python
-
 """
 Context manager for switching the current working directory
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2014, University of Oxford"
@@ -32,12 +34,12 @@ class ChangeCurrentDir:
         return False
 
 if __name__ == "__main__":
-    print os.getcwd()
+    print(os.getcwd())
     oldcwd = os.getcwd()
     with ChangeCurrentDir("test"):
-        print os.getcwd()
+        print(os.getcwd())
         assert os.getcwd() == oldcwd+"/test"
-    print os.getcwd()
+    print(os.getcwd())
     assert os.getcwd() == oldcwd
 
 # End.

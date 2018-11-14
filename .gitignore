@@ -18,6 +18,7 @@
 
 # Compiled Python file
 *.pyc
+_pycache_
 
 # Eclipse/Pydev files
 /.pydevproject
@@ -69,6 +70,10 @@ catalog-v001.xml
 *.sqlite
 *.sqlite3
 
+# Test coverage data
+.coverage
+htmlcov
+
 # OS generated files
 .DS_Store*
 ehthumbs.db
@@ -89,6 +94,8 @@ _unused_*
 /ERRORS.txt
 /pyenv
 /anenv
+/anenv3
+/anenv*
 /setupenv
 /attic
 # /spike

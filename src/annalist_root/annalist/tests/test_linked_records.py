@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for linked record functions.
 
@@ -34,10 +37,16 @@ from annalist.models.entitytypeinfo import EntityTypeInfo
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     collection_entity_view_url,
     create_test_user,
     create_user_permissions,
@@ -46,7 +55,7 @@ from entity_testutils       import (
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_delete_confirm_url,
     entitydata_list_type_url, entitydata_list_all_url,
     )
@@ -231,7 +240,13 @@ class LinkedRecordTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(LinkedRecordTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(LinkedRecordTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

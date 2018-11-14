@@ -2,22 +2,26 @@
 Utility functions to support entity data testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import copy
-from collections import OrderedDict
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import copy
+from collections import OrderedDict
 
 from django.conf                import settings
 from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
+
+from utils.py3porting           import urljoin
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -28,17 +32,17 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testfielddesc       import get_field_description, get_bound_field
-from entity_testentitydata      import entitydata_list_type_url
-from entity_testutils           import (
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .entity_testutils import (
     collection_dir, 
     site_title, 
     collection_entity_view_url,
     context_field_row
     )
-from tests import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
+from .entity_testfielddesc       import get_field_description, get_bound_field
+from .entity_testentitydata      import entitydata_list_type_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -56,7 +60,7 @@ def recordview_dir(coll_id="testcoll", view_id="testview"):
 #   -----------------------------------------------------------------------------
 
 def recordview_coll_url(site, coll_id="testcoll", view_id="testview"):
-    return urlparse.urljoin(
+    return urljoin(
         site._entityurl,
         layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
         layout.COLL_VIEW_PATH%{'id': view_id} + "/"

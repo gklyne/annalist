@@ -12,23 +12,27 @@ A collection is represented by:
 - ... and additional supporting metadata (fields, groups, user permissions, etc.)
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import shutil
 import json
 import datetime
 from collections                    import OrderedDict
 from distutils.version              import LooseVersion
 
-import logging
-log = logging.getLogger(__name__)
+from django.conf                    import settings
 
-from django.conf import settings
+from utils.py3porting               import isoformat_space
 
 import annalist
 from annalist                               import layout
@@ -117,7 +121,7 @@ class Collection(Entity):
             [ (ANNAL.CURIE.comment,     ANNAL.CURIE.meta_comment    )
             ])
         collmetadata = self._migrate_values_map_field_names(migration_map, collmetadata)
-        if collmetadata[ANNAL.CURIE.type_id] == "_collection":
+        if collmetadata[ANNAL.CURIE.type_id] == "_coll":
             collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
         return collmetadata
 
@@ -230,6 +234,7 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
+        #@@ TODO: remove this, not covered by tests.  Or remove entiure method.
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):
@@ -263,6 +268,7 @@ class Collection(Entity):
                     )
                 log.error("Collection._migrate_collection_config_dir: "+msg)
                 assert False, msg
+        #@@
         return
 
     @classmethod
@@ -388,17 +394,6 @@ class Collection(Entity):
         return t
 
     # Record types
-
-    #@@
-    # @classmethod
-    # def reset_type_cache(cls):
-    #     """
-    #     Used for testing: clear out type cache so tets don't interfere with each other
-    #     Could also be used when external application updates data.
-    #     """
-    #     type_cache.flush_all()
-    #     return
-    #@@
 
     def types(self, altscope="all"):
         """
@@ -840,7 +835,7 @@ class Collection(Entity):
         # Build context data
         context      = self.get_coll_jsonld_context()
         datetime_now = datetime.datetime.today().replace(microsecond=0)
-        datetime_str = datetime_now.isoformat(' ')
+        datetime_str = isoformat_space(datetime_now)
         # Assemble and write out context description
         with self._metaobj(
                 layout.META_COLL_BASE_REF,

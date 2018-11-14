@@ -7,16 +7,19 @@ by an entity field.  The MIME content type is obtained from the same entity
 field.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import sys
 import os
 import json
-import StringIO
-import logging
-log = logging.getLogger(__name__)
 
 # from rdflib                             import Graph, URIRef, Literal
 
@@ -27,10 +30,11 @@ from annalist                           import layout
 
 from annalist.models.entityresourceaccess import (
     find_entity_resource,
-    entity_resource_file,
-    json_resource_file,
-    turtle_resource_file, 
-    make_turtle_resource_info
+    # entity_resource_file,
+    # json_resource_file,
+    # turtle_resource_file, 
+    # make_turtle_resource_info,
+    get_resource_file
     )
 
 from annalist.views.displayinfo         import DisplayInfo
@@ -44,11 +48,11 @@ class EntityResourceAccess(AnnalistGenericView):
     entity data itself (from the internally stored JSON), or the content of an attached
     data resource (e.g. image, audio, etc.)
 
-    This view may be used as thye target of content negotiation redirects, and no
+    This view may be used as the target of content negotiation redirects, and no
     further content negotiation is attempted.  Rather, the URI is expected to reference 
-    the form of the resource to be returned (cf. 'find_resource' function).  This allows links
-    to specific resource formats to be obtained for use by clients that don't have access to
-    set HTTP content negotiation headers.
+    the form of the resource to be returned (cf. 'find_entity_resource' function).  
+    This allows links to specific resource formats to be obtained for use by clients 
+    that don't have access to set HTTP content negotiation headers.
     """
 
     def __init__(self):
@@ -90,6 +94,7 @@ class EntityResourceAccess(AnnalistGenericView):
                         }
                     )
                 )
+
         # Locate and open resource file
         resource_info = find_entity_resource(entity, resource_ref)
         if resource_info is None:
@@ -102,13 +107,7 @@ class EntityResourceAccess(AnnalistGenericView):
                     )
                 )
         entity_baseurl = viewinfo.reqhost + self.get_entity_base_url(coll_id, type_id, entity_id)
-        if "resource_access" in resource_info:
-            # Use indicated resource access renderer
-            jsondata = entity.get_values()
-            resource_file = resource_info["resource_access"](entity_baseurl, jsondata, resource_info)
-        else:
-            # Return resource data direct from storage
-            resource_file = entity_resource_file(entity, resource_info)
+        resource_file, resource_type = get_resource_file(entity, resource_info, entity_baseurl)
         if resource_file is None:
             msg = (message.RESOURCE_DOES_NOT_EXIST%
                 { 'id':  entity_label
@@ -118,10 +117,11 @@ class EntityResourceAccess(AnnalistGenericView):
             return self.error(dict(self.error404values(), message=msg))
         # Return resource
         try:
-            return_type = resource_info["resource_type"]
+            return_type = resource_type
             # URL parameter ?type=mime/type overrides specified content type
             #
-            # @@TODO: this is to allow links to return different content-types:
+            # @@TODO: this is to allow links to return different content-types
+            #         (e.g., JSON as text/plain so it is displayed in the browser):
             #         is there a cleaner way?
             if "type" in viewinfo.request_dict:
                 return_type = viewinfo.request_dict["type"]

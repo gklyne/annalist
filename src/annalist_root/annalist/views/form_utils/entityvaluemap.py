@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module defines a class that performs mapping of entity data between 
 whoile entities, (Django) view contexts and form data.

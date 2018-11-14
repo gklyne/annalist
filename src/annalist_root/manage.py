@@ -1,7 +1,21 @@
 #!/usr/bin/env python
+"""
+Django application manager for Annalist
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 import os
 import sys
+
+# ----
+# Install `faulthandler` and enable the next two lines to get stack trace
+# diagnostic from segment fault error.
+# ----
+# import faulthandler
+# faulthandler.enable()
+# ----
 
 if __name__ == "__main__":
 

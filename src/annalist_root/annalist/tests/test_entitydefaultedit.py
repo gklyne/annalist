@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for EntityData default editing view
 """
@@ -31,10 +34,16 @@ from annalist.models.entitydata     import EntityData
 
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     make_message, make_quoted_message,
     site_dir, collection_dir, 
     collection_edit_url,
@@ -45,14 +54,14 @@ from entity_testutils       import (
     context_view_field,
     context_bind_fields
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_url,
     recordtype_edit_url,
     recordtype_create_values,
     type_view_context_data, 
     type_view_form_data,
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, 
     entitydata_list_type_url,
@@ -62,7 +71,7 @@ from entity_testentitydata  import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted,
     get_site_list_types, get_site_list_types_sorted,
@@ -108,7 +117,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityDefaultEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityDefaultEditViewTest, cls).tearDownClass()
         #@@checkme@@ resetSitedata()
         return
 
@@ -281,6 +296,30 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
+    def test_head_new(self):
+        u = entitydata_edit_url("new", "testcoll", "testtype")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.content,       b"")
+        return
+
+    def test_head_edit(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertEqual(r.content,       b"")
+        return
+
+    def test_head_edit_not_exists(self):
+        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone")
+        r = self.client.head(u)
+        self.assertEqual(r.status_code,   404)
+        self.assertEqual(r.reason_phrase, "Not found")
+        self.assertEqual(r.content,       b"")
+        return
+
     #   -----------------------------------------------------------------------------
     #   Form response tests
     #   -----------------------------------------------------------------------------
@@ -293,9 +332,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check new entity data created
         self._check_entity_data_values("newentity")
         return
@@ -306,9 +345,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type still does not exist
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         return
@@ -358,9 +397,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "Default_type")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "Default_type"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "Default_type"))
         # Check new entity data created
         self._check_entity_data_values(
             "newentity", type_id="Default_type", type_uri="annal:Default_type",
@@ -380,9 +419,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", type_id="_type", view_id="Type_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "_type"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "_type"))
         self.assertTrue(RecordType.exists(self.testcoll, "newtype"))
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
@@ -390,9 +429,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "newtype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "newtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "newtype"))
         # Check new entity data created
         self._check_entity_data_values("newentity", type_id="newtype")
         return
@@ -405,9 +444,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists
         self._check_entity_data_values("copytype")
         return
@@ -418,9 +457,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("copy", "testcoll", "testtype", entity_id="entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that target record type still does not exist
         self.assertFalse(EntityData.exists(self.testdata, "copytype"))
         return
@@ -464,9 +503,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityedit")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         self._check_entity_data_values("entityedit", update="Updated entity")
         return
 
@@ -478,9 +517,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u  = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entityeditid1")
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type exists and old does not
         self.assertFalse(EntityData.exists(self.testdata, "entityeditid1"))
         self._check_entity_data_values("entityeditid2")
@@ -503,9 +542,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         # log.info("***********\n"+r.content)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that new record type data now exists, and that new record exists and old does not
         self.assertTrue(RecordTypeData.exists(self.testcoll, "newtype"))
         self.assertFalse(EntityData.exists(self.testdata, "entityedittype"))
@@ -521,9 +560,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="edittype")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   entitydata_list_type_url("testcoll", "testtype"))
         # Check that target record type still does not exist and unchanged
         self._check_entity_data_values("edittype")
         return

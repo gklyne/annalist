@@ -2,21 +2,23 @@
 Tests for AnnalistUser module and view
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import os
 import unittest
 import re
 
-import logging
-log = logging.getLogger(__name__)
-
 from django.conf                            import settings
 from django.db                              import models
 from django.http                            import QueryDict
-from django.core.urlresolvers               import resolve, reverse
 from django.contrib.auth.models             import User
 from django.test                            import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client                     import Client
@@ -35,10 +37,11 @@ from annalist.models.annalistuser           import AnnalistUser
 
 from annalist.views.fields.render_tokenset  import get_field_tokenset_renderer
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase                      import AnnalistTestCase
+from .init_tests import (
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -48,7 +51,7 @@ from entity_testutils       import (
     context_view_field,
     context_field
     )
-from entity_testuserdata    import (
+from .entity_testuserdata import (
     annalistuser_dir,
     annalistuser_coll_url, annalistuser_url, annalistuser_edit_url,
     annalistuser_value_keys, annalistuser_load_keys,
@@ -56,10 +59,13 @@ from entity_testuserdata    import (
     user_view_form_data,
     annalistuser_delete_confirm_form_data
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
+    )
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
 #   -----------------------------------------------------------------------------
@@ -104,6 +110,16 @@ class AnnalistUserTest(AnnalistTestCase):
     def tearDown(self):
         resetSitedata(scope="collections")
         return
+
+    # @classmethod
+    # def setUpClass(cls):
+    #     super(zzzzzz, cls).setUpClass()
+    #     return
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     super(zzzzzz, cls).tearDownClass()
+    #     return
 
     def test_AnnalistUserTest(self):
         self.assertEqual(AnnalistUser.__name__, "AnnalistUser", "Check AnnalistUser class name")
@@ -211,7 +227,7 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             self.testsite, "testcoll", collection_create_values("testcoll")
             )
         # For checking Location: header values...
-        self.continuation_url = TestHostUri + entitydata_list_type_url(
+        self.continuation_url = entitydata_list_type_url(
             coll_id="testcoll", type_id=layout.USER_TYPEID
             )
         # Login and permissions
@@ -514,8 +530,8 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "edituser"))
@@ -541,8 +557,8 @@ class AnnalistUserEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'], self.continuation_url)
         # Check that new user exists
         self.assertTrue(AnnalistUser.exists(self.testcoll, "copyuser"))

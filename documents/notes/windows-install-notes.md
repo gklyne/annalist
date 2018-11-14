@@ -2,7 +2,7 @@ This text removed from `installing-annalist.md`, and parked here in case it is l
 
 ### Notes for installing and using virtualenv on Windows 7
 
-**UPDATE**: after several hours of wrestling with obscure problems, I've given up trying to run the Annlist software on Windows.  In particular, the Windows file system appears to be particularly inconsistent in its behaviour, with bulk file delete and copy operations used by the test suite not performing reliably.  Since Annalist is highly dependent on reliable performance of the underlying file system, I have to conclude that it should not be expected to runb proiperly on Windows.  Maybe one day I'll try again, so I'll leave these notes here, but for now they serve little purpose..
+**UPDATE**: after several hours of wrestling with obscure problems, I've given up trying to run the Annlist software on Windows.  In particular, the Windows file system appears to be particularly inconsistent in its behaviour, with bulk file delete and copy operations used by the test suite not performing reliably.  Since Annalist is highly dependent on reliable performance of the underlying file system, I have to conclude that it should not be expected to runb properly on Windows.  Maybe one day I'll try again, so I'll leave these notes here, but for now they serve little purpose..
 
 On a fresh Windows install of Python, pip appears to be needed to install virtualenv;  see [How to install pip on windows?](http://stackoverflow.com/questions/4750806/).
 

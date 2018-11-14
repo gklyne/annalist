@@ -1039,107 +1039,29 @@ body .markdown-body
 <ul>
 <li><a href="https://github.com/gklyne/annalist/issues/40">https://github.com/gklyne/annalist/issues/40</a></li>
 </ul>
-<h1 id="version-059-towards-0510"><a name="user-content-version-059-towards-0510" href="#version-059-towards-0510" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Version 0.5.9, towards 0.5.10</h1>
+<h1 id="version-0511-towards-0512"><a name="user-content-version-0511-towards-0512" href="#version-0511-towards-0512" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Version 0.5.11, towards 0.5.12</h1>
 <ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled checked> Flush collection caches on loading customize page rather than view page</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Bound_field access to FieldDecription: use methods not dictionary<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled checked> Update test case context checking (see bound_field holding comments)</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Use &lsquo;entity_testfielddesc&rsquo; methods in <code>entity_testtypedata</code></li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Use &lsquo;entity_testfielddesc&rsquo; methods in <code>entity_testviewdata</code></li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Use &lsquo;entity_testfielddesc&rsquo; methods in <code>entity_testvocabdata</code></li>
-<li class="task-list-item"><input type="checkbox" disabled checked> various test modules _check_context_fields use &lsquo;entity_testfielddesc&rsquo; methods<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled checked> test_recordtype.py</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> test_recordfield.py</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> test_recordvocab.py</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> test_recordlist.py, entity_testlistdata</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> test_recordview.py, entity_testviewdata</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> rename *_context_data contruction methods</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> rename *_form_data contruction methods</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Test code general cleanup<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled checked> replace <field>.description[&lsquo;field_id&rsquo;] with .field_id</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> replace <field>.description[&lsquo;field_name&rsquo;] with .field_name</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> replace <field>.description[&lsquo;field_label&rsquo;] with .field_label</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> eliminate redundant entitydata_form_data; use entitydata_default_view_form_data</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> eliminate recordtype_zzz_view_context_data, use type_view_context_data</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> eliminate recordtype_zzz_view_form_data, use type_view_form_data</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Remove old (commented-out and redundant) code in test cases - look for @@REMOVE</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> View_field_sel change label to &ldquo;Field ref&rdquo;.</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)<ul>
-<li>this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.</li>
+<li class="task-list-item"><input type="checkbox" disabled checked> Update python to latest in version 2 series</li>
 <li class="task-list-item">
-<p><input type="checkbox" disabled> Rename &ldquo;annal:record_type&rdquo; -&gt; &ldquo;annal:list_entity_type&rdquo; (for list target type)</p>
-<ul class="task-list">
-<li class="task-list-item">
-<p><input type="checkbox" disabled> Find all references in code and sitedata</p>
-<ul class="task-list">
-<li>(look for &ldquo;annal:record_type&rdquo; and &ldquo;ANNAL.CURIE.record_type&rdquo;)</li>
-<li class="task-list-item"><input type="checkbox" disabled> appears in field definitions:<ul>
-<li>Field_restrict</li>
-<li>Group_field_sel</li>
-<li>Group_target_type</li>
-<li>List_field_sel</li>
-<li>List_target_type</li>
-<li>View_field_sel</li>
-<li>View_target_type</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled> appears as field in list definitions</li>
-<li class="task-list-item"><input type="checkbox" disabled> appears as field in view definitions, and:<ul>
-<li>Field_view comment</li>
-<li>List_view comment</li>
-</ul>
-</li>
-<li class="task-list-item"><input type="checkbox" disabled> annalist/views/entityedit.py (logic error?)</li>
-<li>annalist/tests/entity_testentitydata.py (reinstate test, see what happens)</li>
-<li>annalist/identifiers.py</li>
-<li>annalist/models/entityfinder.py</li>
-<li>annalist/models/recordfield.py</li>
-<li>annalist/tests/entity_testfielddesc.py</li>
-<li>annalist/tests/entity_testviewdata.py</li>
-<li>annalist/tests/test_data_migration.py</li>
-<li>annalist/tests/test_entity_subtype_selection.py</li>
-<li>annalist/tests/test_entityeditenumfield.py (&ldquo;target_record_type&rdquo;)</li>
-<li>annalist/tests/test_field_subproperty.py</li>
-<li>annalist/tests/test_fielddescription.py</li>
-<li>annalist/tests/test_image_url.py</li>
-<li>annalist/tests/test_import_resource.py</li>
-<li>annalist/tests/test_jsonld_context.py</li>
-<li>annalist/tests/test_linked_records.py</li>
-<li>annalist/tests/test_recordtype.py (&ldquo;annal:record_type&rdquo;)</li>
-<li>annalist/tests/test_recordview.py (&ldquo;view_record_type&rdquo;, &ldquo;target_record_type&rdquo;, &ldquo;annal:record_type&rdquo;)</li>
-<li>annalist/tests/test_render_ref_multifields.py</li>
-<li>annalist/tests/test_render_repeatgroup.py:</li>
-<li>annalist/tests/test_sitedata.py:</li>
-<li>annalist/tests/test_turtle_output.py:</li>
-<li>annalist/tests/test_upload_file.py:</li>
-<li></li>
-</ul>
+<p><input type="checkbox" disabled checked> Update pip and setuoptools to the latest version in the python environment (for continued testing).  I used the following commands for this:<br />
+    rm -rf anenv<br />
+    virtualenv anenv -p python2.7<br />
+    source anenv/bin/activate<br />
+    curl <a href="https://bootstrap.pypa.io/get-pip.py">https://bootstrap.pypa.io/get-pip.py</a> -o get-pip.py<br />
+    python get-pip.py<br />
+    # Look for: &ldquo;Successfully installed pip-9.0.3 wheel-0.31.0&rdquo;<br />
+    pip install &ndash;upgrade setuptools<br />
+    # Note: installation reports success, then I got an error traceback, which seems<br />
+    #       to be caused by an access to the old (now removed) setuptools directory.<br />
+    #       It seems this error can be ignored.<br />
+    cd src<br />
+    python setup.py clean &ndash;all<br />
+    python setup.py build<br />
+    python setup.py install</p>
 </li>
 <li class="task-list-item">
-<p><input type="checkbox" disabled> Add migraton in RecordList, RecordView, RecordGroup</p>
+<p><input type="checkbox" disabled> Update other packages (in setup.py)</p>
 </li>
-<li class="task-list-item"><input type="checkbox" disabled> In entityedit, context &lsquo;record_type&rsquo; looks wrong.  see comment ~line 64 </li>
-<li class="task-list-item"><input type="checkbox" disabled> Consider getting rid of &ldquo;annal:record_type&rdquo;; rename use in View and List</li>
-<li class="task-list-item"><input type="checkbox" disabled> The handling of entity_id and entity_type involves some special case testing in bound_field, due somewhat to the early template-based logic for field rendering.  With the introduction of separate render-templates in views.fields.render_select.py, it may be possible to change the context variables used for this case and remove the special logic in bound_field.</li>
-<li class="task-list-item"><input type="checkbox" disabled> Similar to above for entity_id, except that it uses a separate template in templates.fields.</li>
-<li class="task-list-item"><input type="checkbox" disabled checked> Can annal:field_name in field descriptions be eliminated with revised entity_id and entity_type logic?</li>
-<li>NO: it is varied in form data for multiple occurrences of the same field id </li>
-</ul>
-</li>
-</ul>
-<p>(Sub-release?)</p>
-<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled> Update pip to latest version in python environment (for continued testing)</li>
 <li class="task-list-item"><input type="checkbox" disabled> Update Django version used to latest version designated for long term support (1.8? 2.x?)</li>
 <li class="task-list-item"><input type="checkbox" disabled> Security and robust deployability enhancements <a href="https://github.com/gklyne/annalist/issues/12">#12</a><ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled> deploy <code>letsencrypt</code> certs on all <code>annalist.net</code> servers and force use of HTTPS.<ul class="task-list">
@@ -1153,6 +1075,8 @@ body .markdown-body
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled> Provide content for the links in the page footer</li>
+<li class="task-list-item"><input type="checkbox" disabled> Documentation and tutorial updates</li>
+<li class="task-list-item"><input type="checkbox" disabled> Demo screencast update</li>
 </ul>
 <p>(Sub-release?)</p>
 <ul class="task-list">
@@ -1201,7 +1125,7 @@ body .markdown-body
 <li class="task-list-item"><input type="checkbox" disabled> Review docker files: reduce number of separate commands used; always build on clean python setup</li>
 <li class="task-list-item"><input type="checkbox" disabled> Code and service review  <a href="https://github.com/gklyne/annalist/issues/1">#1</a></li>
 <li>[.] Simplify generic view tests <a href="https://github.com/gklyne/annalist/issues/33">#33</a><ul>
-<li>Started moving toward paraneterized context data generation for comparison.</li>
+<li>Started moving toward parameterized context data generation for comparison.</li>
 </ul>
 </li>
 <li class="task-list-item"><input type="checkbox" disabled> Checkout default form buttons. See:  <a href="http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305">http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305</a></li>
@@ -1210,7 +1134,6 @@ body .markdown-body
 <p>Technical debt:</p>
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled> For models and views, define a module that exports classes and functions directly so that importers don&rsquo;t have to name the individual modules in import statements. (Search for instances of &ldquo;import annalist.models.&rdquo; and import &ldquo;annalist.views.&rdquo;)</li>
-<li class="task-list-item"><input type="checkbox" disabled> Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end</li>
 <li class="task-list-item"><input type="checkbox" disabled> Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)</li>
 <li class="task-list-item"><input type="checkbox" disabled> Built-in type id&rsquo;s: use definitions from <code>models.entitytypeinfo</code> rather than literal strings<ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled> update &lsquo;models&rsquo;</li>
@@ -1402,7 +1325,9 @@ body .markdown-body
 <p>Notes for Future TODOs:</p>
 <p>(Collecting ideas here: consider expand them in the GitHub issues list.)</p>
 <ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled> New field renderer for displaying/selecting/entering type URIs, using scan of type definitions.</li>
+<li class="task-list-item"><input type="checkbox" disabled> New field renderer for displaying/selecting/entering type URIs, using scan of types</li>
+<li class="task-list-item"><input type="checkbox" disabled> Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end<br />
+definitions.</li>
 <li class="task-list-item"><input type="checkbox" disabled> Consider new render type for URI reference (or fragment) relative to URI specified in another entity.<ul>
 <li>Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.</li>
 </ul>
@@ -1435,7 +1360,7 @@ body .markdown-body
 <li>for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.</li>
 </ul>
 </li>
-<li class="task-list-item"><input type="checkbox" disabled> Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (<code>annal:URI</code>) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:<br />
+<li class="task-list-item"><input type="checkbox" disabled> Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (<code>annal:uri</code>) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:<br />
     &ldquo;rdfs:subClassOf&rdquo;: [<br />
       { &ldquo;@id&rdquo;: &ldquo;Class/Resource&rdquo;, &ldquo;owl:sameAs&rdquo;: &ldquo;rdfs:Resource&rdquo;}<br />
       ]<ul>

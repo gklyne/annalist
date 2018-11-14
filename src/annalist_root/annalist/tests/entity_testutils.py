@@ -2,16 +2,18 @@
 Utility functions to support entity data testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import copy
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import copy
 
 from django.conf                    import settings
 from django.http                    import QueryDict
@@ -20,6 +22,8 @@ from django.utils.html              import escape
 from django.core.urlresolvers       import resolve, reverse
 from django.template                import Context
 from django.contrib.auth.models     import User
+
+from utils.py3porting               import is_string, to_unicode
 
 import annalist
 from annalist.util                  import valid_id, extract_entity_id
@@ -37,10 +41,9 @@ from annalist.views.fields.bound_field          import bound_field, get_entity_v
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.form_utils.fieldchoice      import FieldChoice, update_choice_labels
 
-from tests import (
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -308,21 +311,14 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     # Local helper to cleanup options and acount for duplicate labels
     def update_options(opts):
         return update_choice_labels(
-            [ FieldChoice(o) if isinstance(o, (str, unicode)) else o 
+            [ FieldChoice(o) if is_string(o) else o 
               for o in opts
             ])
 
     # Local helper to render single option
     def select_option(opt):
-        # if isinstance(opt, (str, unicode)):
-        #     opt = FieldChoice(opt)
-        # selected = ('' if opt.value != sel else ' selected="selected"')
-        # label    = (placeholder or "") if opt.value == "" else opt.label
-        # label    = opt.label or opt.value or placeholder or ""
-        # return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice_html()
-        # label    = opt.label or opt.value or placeholder or ""
         return '<option value="%s"%s>%s</option>'%(opt.value, selected, label)
     #
     select_template = (
@@ -371,7 +367,7 @@ def render_choice_options(
     """
     # Local helper to render single option
     def select_option(opt):
-        if isinstance(opt, (str, unicode)):
+        if is_string(opt):
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice()

@@ -1,8 +1,9 @@
-# $Id: ScanDirectories.py 1047 2009-01-15 14:48:58Z graham $
-#
 """
 Function to scan the sub-directory structure in a given directory.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, Graham Klyne, University of Oxford"
@@ -65,9 +66,8 @@ def ScanDirectoriesEx(srcdir, DirFunc, FileFunc=None, recursive=True):
 def ScanDirectories(srcdir, DirFunc, listFiles=False, recursive=True):
     try:
         ScanDirectoriesEx(srcdir, DirFunc, listFiles, recursive)
-    except (IOError, os.error), why:
-        logger.debug("Can't scan %s: %s" % (`srcdir`, str(why)))
-        print "Can't scan %s: %s" % (`srcdir`, str(why))
+    except (IOError, os.error) as why:
+        logger.warning("Can't scan %s: %s" % (repr(srcdir), str(why)))
     return
 
 # Collect directories/sub-directories found under the source directory
@@ -104,6 +104,6 @@ def CollectDirectoryContents(srcDir, baseDir="",
 if __name__ == "__main__":
     directoryCollection = CollectDirectoryContents(".", baseDir=".", 
         listFiles=True, listDirs=False, appendSep=True)
-    print "\n".join(directoryCollection)
+    print("\n".join(directoryCollection))
 
 # End.

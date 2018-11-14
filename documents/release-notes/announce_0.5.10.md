@@ -27,8 +27,8 @@ I've just released an update (release 0.5.10) of Annalist.
 
 This is a maintenance release, with no substantial changes in functionality.
 
-The full announcement is at: 
-https://groups.google.com/d/msg/annalist-discuss/Y5Ep02E68yo/5-CV_iRzBgAJ
+The full announcement is at:
+https://groups.google.com/d/msg/annalist-discuss/dRoV3fGjCIE/7j_g_E5uBgAJ 
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 

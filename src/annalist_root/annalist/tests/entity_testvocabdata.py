@@ -2,34 +2,33 @@
 Namespace vocabulary functions to support testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
 
-# from django.conf                import settings
-# from django.utils.http          import urlquote, urlunquote
+import os
+
 from django.core.urlresolvers   import resolve, reverse
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist                   import layout
 
-from tests import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-
-from entity_testfielddesc       import get_field_description, get_bound_field
-from entity_testentitydata      import entitydata_list_type_url
-from entity_testutils           import (
+from .entity_testfielddesc      import get_field_description, get_bound_field
+from .entity_testentitydata     import entitydata_list_type_url
+from .entity_testutils import (
     collection_dir, 
     collection_entity_view_url,
     context_field_row
+    )
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 
 #   -----------------------------------------------------------------------------

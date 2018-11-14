@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for collection vocabulary namespace cache class.
 """
@@ -12,23 +15,21 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from AnnalistTestCase                       import AnnalistTestCase
-from tests                                  import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
-from init_tests                             import (
-    init_annalist_test_site, init_annalist_test_coll, resetSitedata
-    )
-from entity_testentitydata  import (
-    # entity_url, entitydata_edit_url, entitydata_list_vocab_url,
-    # default_fields, default_label, default_comment, error_label,
-    entitydata_create_values
-    )
-
 from annalist.models.site                   import Site
 from annalist.models.collection             import Collection
 from annalist.models.recordvocab            import RecordVocab
 from annalist.models.collectionvocabcache   import CollectionVocabCache
+
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testentitydata import (
+    entitydata_create_values
+    )
 
 #   -----------------------------------------------------------------------------
 #

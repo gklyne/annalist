@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Test module used to create some initial site data for experimentation and manual testing
 """
@@ -26,15 +29,19 @@ from annalist.models.recordlist     import RecordList
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                  import test_layout
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from init_tests             import copySitedata
-from entity_testutils       import collection_create_values
-from entity_testtypedata    import recordtype_create_values
-from entity_testviewdata    import recordview_create_values
-from entity_testlistdata    import recordlist_create_values
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils    import collection_create_values
+from .entity_testtypedata import recordtype_create_values
+from .entity_testviewdata import recordview_create_values
+from .entity_testlistdata import recordlist_create_values
 
 #   -----------------------------------------------------------------------------
 #

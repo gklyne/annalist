@@ -15,7 +15,6 @@
 - [ ] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
-    - `annalist-manager updateadmin ...` (if needed)
 - [ ] Test collection installation; e.g.
     - `annalist-manager installcoll RDF_schema_defs --force`
     - `annalist-manager installcoll Annalist_schema --force`    
@@ -29,14 +28,14 @@
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
 - [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
-    - `git tag -a release-x.y.z`
+    - ```git tag -a release-`annalist-manager version` ```
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
 
 - [ ] Create release preparation branch
-    - git stash
-    - git checkout -b release-prep-x.y.z develop
-    - git stash pop
+        git stash
+        git checkout -b release-prep-x.y.z develop
+        git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
 - [ ] Bump data compatibility version if new data is not compatible with older releases
@@ -79,8 +78,9 @@
 
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
+- [.] Update and test demo installation on annalist.net
     - [ ] ssh to annalist@annalist.net
+    - [ ] check HTTPS proxy and Certbot setup
     - [ ] `. backup_annalist_site.sh`
     - [ ] `mv annalist_site_2015MMDD/ annalist_site_2017----`
     - [ ] `killall python`
@@ -99,7 +99,8 @@
 - [ ] Check out demo system.
 
 - [ ] Commit changes ("Release x.y.z")
-- [ ] Upload to PyPI (see below)
+- [ ] Upload to PyPI (`python setup.py sdist upload`)
+    - But see also: https://pypi.org/project/twine/
 - [ ] Tag release on release branch
     - `git tag -ln` to check previous tags
     - `git tag -a release-x.y.z`
@@ -161,6 +162,29 @@ NOTE: upload now requires a recent version of setuptools to be installed; some o
     pip install setuptools --upgrade
     easy_install --version
 
+### Problems with old versions of software and TLS
+
+On upgrading the version of Pythonto 2.7.14 in April 2018 I ran into a number of compatibility problems with loading python packages.  It appears that:
+
+1. pip needs to be updated to use the latest version of TLS (1.3, I assume)
+2. setuptools need to be updated.
+
+On MacOS, I ended up using the following commands, after installing the latest version of Python2, and changing to the Annalist project base directory:
+
+    rm -rf anenv
+    virtualenv anenv -p python2.7
+    source anenv/bin/activate
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+    pip install --upgrade setuptools
+    # Note: installation reports success, then I got an error traceback, which seems
+    #       to be caused by an access to the old (now removed) setuptools directory.
+    #       It seems this error can be ignored.
+    cd src
+    python setup.py clean --all
+    python setup.py build
+    python setup.py install
 
 ## Create docker images
 

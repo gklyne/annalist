@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for generic EntityData non-editing view
 """
@@ -38,10 +41,16 @@ from annalist.models.entitydata     import EntityData
 from annalist.views.entityedit              import GenericEntityEditView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     make_message, make_quoted_message,
     collection_create_values,
     site_dir, collection_dir, 
@@ -57,12 +66,12 @@ from entity_testutils       import (
     check_default_view_context_fields,
     check_type_view_context_fields
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_dir, 
     recordtype_edit_url,
     recordtype_create_values, 
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     recorddata_dir,  entitydata_dir,
     entity_url, entitydata_edit_url, 
     entitydata_list_type_url,
@@ -72,7 +81,7 @@ from entity_testentitydata  import (
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -81,8 +90,8 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-from entity_testviewdata    import recordview_url
-from entity_testlistdata    import recordlist_url
+from .entity_testviewdata import recordview_url
+from .entity_testlistdata import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -116,7 +125,13 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(GenericEntityViewViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(GenericEntityViewViewTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
@@ -174,9 +189,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url(
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url(
             "view", "testcoll", "testtype", entity_id="entityuseview", view_id="Type_view"
             )
         c = continuation_url_param("/testsite/c/testcoll/d/testtype/")
@@ -199,10 +214,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + u
-        self.assertIn(v, r['location'])
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertIn(u, r['location'])
         ih = "info_head=" + make_quoted_message(message.ACTION_COMPLETED)
         im = "info_message=" + make_quoted_message(message.DEFAULT_VIEW_UPDATED,
             view_id="Default_view",
@@ -213,9 +227,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u2 = collection_view_url(coll_id="testcoll")
         r2 = self.client.get(u2)
         self.assertEqual(r2.status_code,   302)
-        self.assertEqual(r2.reason_phrase, "FOUND")
-        self.assertEqual(r2.content,       "")
-        v2 = TestHostUri + entitydata_edit_url(
+        self.assertEqual(r2.reason_phrase, "Found")
+        self.assertEqual(r2.content,       b"")
+        v2 = entitydata_edit_url(
             coll_id="testcoll", view_id="Default_view", type_id="testtype", entity_id="entitydefaultview"
             )
         self.assertEqual(v2, r2['location'])
@@ -230,7 +244,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u = entity_url("testcoll", "testtype", "entity1")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         return
 
     def test_get_view_form_no_login(self):
@@ -528,7 +542,7 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u = collection_entity_view_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_FILE)
         return
@@ -585,9 +599,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", "testtype"))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", "testtype"))
         self._check_entity_data_values("entityview")
         return
 
@@ -597,9 +611,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        e = TestHostUri + entitydata_edit_url(
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        e = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entityview", view_id="Default_view"
             )
         l = continuation_url_param(entitydata_list_type_url("testcoll", "testtype"))
@@ -614,9 +628,9 @@ class GenericEntityViewViewTest(AnnalistTestCase):
         u = entitydata_edit_url("view", "testcoll", "testtype", entity_id="entityview", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        e = TestHostUri + entitydata_edit_url(
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        e = entitydata_edit_url(
             "copy", "testcoll", "testtype", entity_id="entityview", view_id="Default_view"
             )
         l = continuation_url_param(entitydata_list_type_url("testcoll", "testtype"))

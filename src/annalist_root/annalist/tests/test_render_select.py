@@ -2,18 +2,20 @@
 Tests for rendering value as selection from list of options
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from annalist.views.fields.render_select        import (
     get_select_renderer, get_choice_renderer, 
@@ -21,10 +23,7 @@ from annalist.views.fields.render_select        import (
     )
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from annalist.tests.field_rendering_support     import FieldRendererTestSupport
-# from entity_testutils       import (
-#     render_select_options, render_choice_options
-#     )
+from .field_rendering_support import FieldRendererTestSupport
 
 #   ---- support methods ----
 

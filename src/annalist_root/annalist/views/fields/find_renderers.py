@@ -2,6 +2,9 @@
 This module contains utilities for use in conjunction with field renderers.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -10,37 +13,36 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-from collections                import OrderedDict, namedtuple
 
 from django.conf                import settings
 
-from render_fieldvalue          import RenderFieldValue
-from render_text                import TextValueMapper
-from render_entityid            import EntityIdValueMapper
-from render_identifier          import IdentifierValueMapper
-from render_placement           import get_field_placement_renderer
-from render_tokenset            import get_field_tokenset_renderer, TokenSetValueMapper
-from render_bool_checkbox       import get_bool_checkbox_renderer, BoolCheckboxValueMapper
-from render_ref_audio           import get_ref_audio_renderer, RefAudioValueMapper
-from render_ref_image           import get_ref_image_renderer, RefImageValueMapper
-from render_text_markdown       import (
+from .render_fieldvalue         import RenderFieldValue
+from .render_text               import TextValueMapper
+from .render_entityid           import EntityIdValueMapper
+from .render_identifier         import IdentifierValueMapper
+from .render_placement          import get_field_placement_renderer
+from .render_tokenset           import get_field_tokenset_renderer, TokenSetValueMapper
+from .render_bool_checkbox      import get_bool_checkbox_renderer, BoolCheckboxValueMapper
+from .render_ref_audio          import get_ref_audio_renderer, RefAudioValueMapper
+from .render_ref_image          import get_ref_image_renderer, RefImageValueMapper
+from .render_text_markdown      import (
     get_text_markdown_renderer, get_show_markdown_renderer, TextMarkdownValueMapper
     )
-from render_select              import (
+from .render_select             import (
     get_select_renderer, get_choice_renderer,
     get_entitytype_renderer, get_view_choice_renderer,
     SelectValueMapper
     )
-from render_uri_link            import get_uri_link_renderer, URILinkValueMapper
-from render_uri_import          import get_uri_import_renderer, URIImportValueMapper
-from render_file_upload         import get_file_upload_renderer, FileUploadValueMapper
-from render_repeatgroup         import (
+from .render_uri_link           import get_uri_link_renderer, URILinkValueMapper
+from .render_uri_import         import get_uri_import_renderer, URIImportValueMapper
+from .render_file_upload        import get_file_upload_renderer, FileUploadValueMapper
+from .render_repeatgroup        import (
     get_repeatgroup_renderer,
     get_repeatgrouprow_renderer,
     get_repeatlistrow_renderer,
     )
-from render_fieldrow            import get_fieldrow_renderer, FieldRowValueMapper
-from render_ref_multifields     import get_ref_multifield_renderer, RefMultifieldValueMapper
+from .render_fieldrow           import get_fieldrow_renderer, FieldRowValueMapper
+from .render_ref_multifields    import get_ref_multifield_renderer, RefMultifieldValueMapper
 
 # Render type mappings to templates and/or renderer access functions
 

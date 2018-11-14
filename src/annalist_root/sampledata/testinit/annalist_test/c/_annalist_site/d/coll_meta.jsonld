@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "./"
+    },
+    "coll_context.jsonld"
+  ],
+  "@id": "../",
+  "@type": [
+    "annal:SiteData"
+  ],
+  "annal:id": "_annalist_site",
+  "annal:meta_comment": "Initialized by annalist.models.site.create_site_metadata at 2018-10-24 15:09:31 (UTC)",
+  "annal:software_version": "0.5.9",
+  "annal:type": "annal:SiteData",
+  "annal:type_id": "_coll",
+  "rdfs:comment": "Annalist test site metadata and site-wide values.",
+  "rdfs:label": "Annalist data notebook test site"
+}

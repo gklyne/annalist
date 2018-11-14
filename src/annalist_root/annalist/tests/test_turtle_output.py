@@ -2,22 +2,27 @@
 Test Turtle generation logic
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2017, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-import unittest
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import unittest
+import traceback
 
 from django.test.client             import Client
 
 from rdflib                         import Graph, URIRef, Literal
 
+from utils.py3porting               import urljoin
 from utils.SuppressLoggingContext   import SuppressLogging
+from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
 
 import annalist
 from annalist                       import layout
@@ -37,14 +42,16 @@ from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.entitydata     import EntityData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-# from annalist.views.form_utils.fieldchoice  import FieldChoice
-
-from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
-
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     site_view_url, collection_view_url,
     collection_resource_url,
@@ -52,27 +59,19 @@ from entity_testutils       import (
     collection_create_values,
     create_test_user
     )
-from entity_testcolldata            import (
+from .entity_testcolldata import (
     collectiondata_url
     )
-from entity_testtypedata            import (
+from .entity_testtypedata import (
     recordtype_url
     )
-from entity_testentitydata          import (
+from .entity_testentitydata import (
     entity_url, entity_resource_url,
     entitydata_list_type_url, entitydata_list_all_url
     )
-from entity_testsitedata    import (
-    # make_field_choices, no_selection,
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
-    # get_site_lists, get_site_lists_sorted, get_site_lists_linked,
-    # get_site_views, get_site_views_sorted, get_site_views_linked,
-    # get_site_list_types, get_site_list_types_sorted,
-    # get_site_field_groups, get_site_field_groups_sorted, 
-    # get_site_fields, get_site_fields_sorted, 
-    # get_site_field_types, get_site_field_types_sorted, 
     )
-
 
 #   -----------------------------------------------------------------------------
 #
@@ -183,7 +182,6 @@ class TurtleOutputTest(AnnalistTestCase):
         self.collbasedir = os.path.join(
             self.sitebasedir, layout.SITEDATA_DIR, layout.COLL_BASE_DIR
             )
-        #@@@@@ self.collbaseurl = TestHostUri + self.collbasedir + "/"
         # Login and permissions
         create_test_user(self.testcoll, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)
@@ -196,7 +194,13 @@ class TurtleOutputTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(TurtleOutputTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(TurtleOutputTest, cls).tearDownClass()
         resetSitedata()
         return
 
@@ -223,14 +227,14 @@ class TurtleOutputTest(AnnalistTestCase):
         return self.dir_base_url(self.entity_basedir(coll_id, type_id, entity_id))
 
     def coll_url(self, coll_id):
-        return urlparse.urljoin(self.coll_baseurl(coll_id), layout.META_COLL_REF)
+        return urljoin(self.coll_baseurl(coll_id), layout.META_COLL_REF)
 
     def entity_url(self, coll_id, type_id, entity_id):
         return "file://" + self.entity_basedir(coll_id, type_id, entity_id)
 
     def resolve_coll_url(self, coll, ref):
-        coll_base    = urlparse.urljoin(self.testcoll.get_url(), layout.COLL_BASE_REF)
-        resolved_url = urlparse.urljoin(coll_base, ref)
+        coll_base    = urljoin(self.testcoll.get_url(), layout.COLL_BASE_REF)
+        resolved_url = urljoin(coll_base, ref)
         return resolved_url
 
     def scan_rdf_list(self, graph, head):
@@ -262,7 +266,7 @@ class TurtleOutputTest(AnnalistTestCase):
             ])
         mock_dict = {}
         for mock_ref in mock_refs:
-            mu = urlparse.urljoin(base_path, mock_ref)
+            mu = urljoin(base_path, mock_ref)
             log.debug(
                 "get_context_mock_dict: base_path %s, mock_ref %s, mu %s"%
                 (base_path, mock_ref, mu)
@@ -307,17 +311,17 @@ class TurtleOutputTest(AnnalistTestCase):
             )
         return
 
-    # Collection data content negotiation
+    # Site data content negotiation
     def test_get_site_data_turtle(self):
         """
-        Request collection data as Turtle
+        Request site data as Turtle
         """
         site_url = site_view_url()
         site_url = collection_view_url(layout.SITEDATA_ID)
         u = collectiondata_url(coll_id=layout.SITEDATA_ID)
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         w = site_url + layout.COLL_BASE_REF
@@ -326,6 +330,21 @@ class TurtleOutputTest(AnnalistTestCase):
             r = self.client.get(v)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
+        return
+
+    def test_head_site_data_turtle(self):
+        """
+        Request HEAD for site data as Turtle
+        """
+        site_url = site_view_url()
+        site_url = collection_view_url(layout.SITEDATA_ID)
+        u = collectiondata_url(coll_id=layout.SITEDATA_ID)
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+site_url+layout.COLL_TURTLE_REF)
         return
 
     def test_http_turtle_site(self):
@@ -447,7 +466,7 @@ class TurtleOutputTest(AnnalistTestCase):
         u = collectiondata_url(coll_id="testcoll")
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+collection_url+layout.COLL_TURTLE_REF)
         w = collection_url + layout.COLL_BASE_REF
@@ -759,14 +778,14 @@ class TurtleOutputTest(AnnalistTestCase):
                     ).rstrip("/")
                 )
             fp  = Literal(f[ANNAL.CURIE.field_placement])
-            fn  = items.next()
+            fn  = next(items)
             fni = property_value(g, fn, ANNAL.URI.field_id)
             fnp = property_value(g, fn, ANNAL.URI.field_placement)
             self.assertEqual(fni, fi)
             self.assertEqual(fnp, fp)
         # self.assertRaises as context manager, see http://stackoverflow.com/a/28223420/324122
         with self.assertRaises(StopIteration):
-            items.next()
+            next(items)
         return
 
     def test_http_turtle_user_default(self):
@@ -887,7 +906,7 @@ class TurtleOutputTest(AnnalistTestCase):
         # print "@@ test_http_conneg_turtle_entity1: uri %s"%u
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
@@ -916,6 +935,25 @@ class TurtleOutputTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
 
+    def test_http_conneg_head_turtle_entity1(self):
+        """
+        HEAD request to entity with content negotiation for Turtle
+        """
+        # Generate collection JSON-LD context data
+        self.testcoll.generate_coll_jsonld_context()
+        # Create entity object to access entity data 
+        testdata = RecordTypeData.load(self.testcoll, "testtype")
+        entity1  = EntityData.load(testdata, "entity1")
+        # Read entity data as Turtle
+        u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
+        r = self.client.head(u, HTTP_ACCEPT="text/turtle")
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = r['Location']
+        self.assertEqual(v, TestHostUri+u+layout.ENTITY_DATA_TURTLE)
+        return
+
     def test_http_conneg_turtle_type_vocab(self):
         """
         Read type data as Turtle, and check resulting RDF triples
@@ -927,7 +965,7 @@ class TurtleOutputTest(AnnalistTestCase):
         u = recordtype_url(coll_id="testcoll", type_id=type_vocab.get_id())
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+u+layout.TYPE_META_TURTLE)
         with MockHttpDictResources(v, self.get_context_mock_dict(v)):
@@ -966,8 +1004,8 @@ class TurtleOutputTest(AnnalistTestCase):
         self.testcoll.generate_coll_jsonld_context()
         r = self.client.get(list_url, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        turtle_url = r['Location']
+        self.assertEqual(r.reason_phrase, "Found")
+        turtle_url        = TestHostUri + r['Location']
         expect_turtle_url = make_resource_url(TestHostUri, list_url, layout.ENTITY_LIST_TURTLE)
         self.assertEqual(turtle_url, expect_turtle_url)
         with MockHttpDictResources(turtle_url, self.get_context_mock_dict(turtle_url, context_path=context_path)):
@@ -980,7 +1018,7 @@ class TurtleOutputTest(AnnalistTestCase):
         g = Graph()
         result = g.parse(data=r.content, publicID=turtle_url, format="turtle")
         # Check the resulting graph contents
-        subj = urlparse.urljoin(turtle_url, subj_ref)
+        subj = urljoin(turtle_url, subj_ref)
         for (s, p, o) in (
             [ (subj, ANNAL.URI.entity_list, None)
             ]):
@@ -1005,7 +1043,7 @@ class TurtleOutputTest(AnnalistTestCase):
         (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        t_uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
@@ -1021,8 +1059,8 @@ class TurtleOutputTest(AnnalistTestCase):
         (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path=""
             )
-        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 2)
         self.assertIn(URIRef(t_uri), list_items)
         self.assertIn(URIRef(e1uri), list_items)
@@ -1041,8 +1079,8 @@ class TurtleOutputTest(AnnalistTestCase):
         (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
-        t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
-        e1uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
+        t_uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
+        e1uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 1)
         self.assertIn(URIRef(t_uri), list_items)
         return
@@ -1068,7 +1106,7 @@ class TurtleOutputTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 
@@ -1090,7 +1128,7 @@ class TurtleOutputTest(AnnalistTestCase):
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
         for entity_id in expect_type_ids:
-            t_uri = urlparse.urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
+            t_uri = urljoin(turtle_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist user record
 
@@ -19,7 +22,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import os.path
-import urlparse
 import shutil
 
 import logging

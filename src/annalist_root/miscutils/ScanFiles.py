@@ -1,11 +1,12 @@
-# $Id: ScanFiles.py 1047 2009-01-15 14:48:58Z graham $
-#
 """
 Funtions to scan all files with names matching a given pattern in
 a directory or directory tree.
 
 Note that directories are not included in the results returned.
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, Graham Klyne, University of Oxford"
@@ -58,8 +59,9 @@ def ScanFilesEx(srcdir, pattern, FileFunc, recursive=True):
 def ScanFiles(srcdir, pattern, FileFunc, recursive=True):
     try:
         ScanFilesEx(srcdir, pattern, FileFunc, recursive)
-    except (IOError, os.error), why:
-        print "Can't scan %s: %s" % (`srcdir`, str(why))
+    except (IOError, os.error) as why:
+        log.warning("Can't scan %s: %s" % (repr(srcdir), str(why)))
+    return
 
 # Collect files matching pattern in a directory tree
 #
@@ -114,12 +116,6 @@ if __name__ == "__main__":
     pattern = re.compile( r'^.+\.py$' )
     c = CollectFiles(".", pattern)
     for (d,f) in c:
-        print d+"\\"+f
+        print(d+"\\"+f)
 
-# print "*******************************************"
-# def ProcFile(path,name):
-#     print "path: ", path, ", name: ", name
-# pattern=re.compile(r'.*')
-# ScanFilesEx(".",pattern,ProcFile)
-
-# $Log: ScanFiles.py,v $
+# End.

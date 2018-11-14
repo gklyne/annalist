@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Entity editing tests for enumerated value fields
 """
@@ -34,23 +37,29 @@ from annalist.models.recordfield    import RecordField
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
+from .entity_testutils import (
     collection_create_values,
     continuation_url_param,
     create_test_user
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_create_values, 
     )
-from entity_testviewdata    import (
+from .entity_testviewdata import (
     recordview_url, 
     recordview_create_values, recordview_values,
     view_view_form_data, 
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     entitydata_value_keys, entitydata_create_values, entitydata_values,
     default_view_form_data,
@@ -83,7 +92,13 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityEditEnumFieldTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityEditEnumFieldTest, cls).tearDownClass()
         resetSitedata(scope="collections") #@@checkme@@
         return
 
@@ -105,7 +120,10 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, entity_id))
         e = typeinfo.entityclass.load(typeinfo.entityparent, entity_id)
         self.assertEqual(e.get_id(), entity_id)
-        self.assertEqual(e.get_view_url(""), TestHostUri + entity_url("testcoll", type_id, entity_id))
+        self.assertEqual(
+            e.get_view_url(""), 
+            TestHostUri+entity_url("testcoll", type_id, entity_id)
+            )
         v = entitydata_values(entity_id, type_id=type_id, update=update)
         if update_dict:
             v.update(update_dict)
@@ -133,7 +151,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertTrue(RecordView.exists(self.testcoll, view_id))
         t = RecordView.load(self.testcoll, view_id)
         self.assertEqual(t.get_id(), view_id)
-        self.assertEqual(t.get_view_url(), TestHostUri + recordview_url("testcoll", view_id))
+        self.assertEqual(t.get_view_url(), TestHostUri+recordview_url("testcoll", view_id))
         v = recordview_values(
             view_id=view_id, view_uri=view_uri, 
             view_entity_type="annal:View",
@@ -165,9 +183,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewview", view_id="Default_view")
         c = continuation_url_param(w)
         self.assertIn(v, r['location'])
@@ -196,9 +214,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewfield", view_id="Default_view")
         c = continuation_url_param(w)
         self.assertIn(v, r['location'])
@@ -227,9 +245,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         w = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynewtype", view_id="Default_view")
         c = continuation_url_param(w)
         self.assertIn(v, r['location'])
@@ -258,16 +276,15 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 
             view_id="Default_view"
             )
         c = continuation_url_param(w)
-        self.assertIn(TestHostUri+v, r['location'])
+        self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewtype", update="Updated entity")
         return
@@ -299,9 +316,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
             )
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_view", view_id="View_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -336,9 +353,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
             )
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -373,9 +390,9 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
             )
         r  = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        v = TestHostUri + entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -410,8 +427,8 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         # v = entitydata_edit_url("new", "testcoll", "_type", view_id="Type_view")
         v = entitydata_edit_url("edit", "testcoll", "_type", "testtype", view_id="Type_view")
         w = entitydata_edit_url(
@@ -419,7 +436,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
             view_id="Default_view"
             )
         c = continuation_url_param(w)
-        self.assertIn(TestHostUri+v, r['location'])
+        self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_entity_data_values("entitynewtype", update="Updated entity")
         return
@@ -456,16 +473,15 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         r = self.client.post(u, f)
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # v = entitydata_edit_url("new", "testcoll", "_field", view_id="Field_view")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url("edit", "testcoll", "_field", "Entity_comment", view_id="Field_view")
         w = entitydata_edit_url(
             "edit", "testcoll", "_view", entity_id="editview", 
             view_id="View_view"
             )
         c = continuation_url_param(w)
-        self.assertIn(TestHostUri+v, r['location'])
+        self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         self._check_record_view_values("editview", update="Updated RecordView")
         return

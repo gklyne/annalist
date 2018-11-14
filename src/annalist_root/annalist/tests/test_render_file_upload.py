@@ -2,25 +2,27 @@
 Tests for file upload field; view as hyperlink.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from annalist.views.fields.render_file_upload import (
     get_file_upload_renderer, 
     FileUploadValueMapper
     )
 
-from annalist.tests.field_rendering_support import FieldRendererTestSupport
+from .field_rendering_support import FieldRendererTestSupport
 
 class FileUploadRenderingTest(FieldRendererTestSupport):
 

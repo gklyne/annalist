@@ -7,23 +7,28 @@ into a common module to avoid repetition of logic and reduce code clutter in
 the various Annalist view processing handlers.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from collections                    import OrderedDict
-from distutils.version              import LooseVersion
-import json
-import re
-import urlparse
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import json
+import re
+import traceback
+
+from distutils.version              import LooseVersion
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.core.urlresolvers       import resolve, reverse
+
+from utils.py3porting               import urljoin, urlsplit
 
 import annalist
 from annalist                       import message
@@ -118,24 +123,24 @@ def apply_substitutions(context, text_in):
     Any other occurrence of '$' (i.e. not part of any pattern above) is untouched.
 
     >>> context = { 'aa': '-aa-', 'bb': '-bb-', 'c:c': '-cc-'}
-    >>> apply_substitutions(context, "foo bar")
-    'foo bar'
-    >>> apply_substitutions(context, "foo $aa bar")
-    'foo -aa- bar'
-    >>> apply_substitutions(context, "foo $bb:bar")
-    'foo -bb-bar'
-    >>> apply_substitutions(context, "foo $[c:c] bar")
-    'foo -cc- bar'
-    >>> apply_substitutions(context, "foo $$ bar")
-    'foo $ bar'
-    >>> apply_substitutions(context, "foo $dd bar")
-    'foo $dd bar'
-    >>> apply_substitutions(context, "foo $ee bar")
-    'foo $ee bar'
-    >>> apply_substitutions(context, "foo $[f:f] bar")
-    'foo $[f:f] bar'
-    >>> apply_substitutions(context, "foo $aa $bb: $[c:c] $[f:f] bar")
-    'foo -aa- -bb- -cc- $[f:f] bar'
+    >>> apply_substitutions(context, "foo bar") == 'foo bar'
+    True
+    >>> apply_substitutions(context, "foo $aa bar") == 'foo -aa- bar'
+    True
+    >>> apply_substitutions(context, "foo $bb:bar") == 'foo -bb-bar'
+    True
+    >>> apply_substitutions(context, "foo $[c:c] bar") == 'foo -cc- bar'
+    True
+    >>> apply_substitutions(context, "foo $$ bar") == 'foo $ bar'
+    True
+    >>> apply_substitutions(context, "foo $dd bar") == 'foo $dd bar'
+    True
+    >>> apply_substitutions(context, "foo $ee bar") == 'foo $ee bar'
+    True
+    >>> apply_substitutions(context, "foo $[f:f] bar") == 'foo $[f:f] bar'
+    True
+    >>> apply_substitutions(context, "foo $aa $bb: $[c:c] $[f:f] bar") == 'foo -aa- -bb- -cc- $[f:f] bar'
+    True
     """
     def sub_fn(matchobj):
         matched = matchobj.group(1) or matchobj.group(2)
@@ -906,7 +911,7 @@ class DisplayInfo(object):
                 self.coll_id, type_id,
                 entity_id
                 )
-        return urlparse.urljoin(base_url, resource_ref)
+        return urljoin(base_url, resource_ref)
 
     # Additonal support functions
 
@@ -1064,7 +1069,7 @@ class DisplayInfo(object):
         Context values set here do not need to be named in the valuye map used to
         create the view context.
         """
-        site_url_parts = urlparse.urlsplit(self.site._entityurl)
+        site_url_parts = urlsplit(self.site._entityurl)
         context = (
             { 'site_label':         self.sitedata["title"]
             , 'title':              self.sitedata["title"]
@@ -1080,7 +1085,7 @@ class DisplayInfo(object):
             })
         context.update(self.authorizations)
         if self.collection:
-            coll_url_parts = urlparse.urlsplit(self.collection._entityurl)
+            coll_url_parts = urlsplit(self.collection._entityurl)
             context.update(
                 { 'heading':    self.collection[RDFS.CURIE.label]
                 , 'coll_label': self.collection[RDFS.CURIE.label]

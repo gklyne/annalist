@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for a group of fields repeated over a list of values.
 """
@@ -11,14 +14,13 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from django.http        import HttpResponse
-from django.template    import Template, Context
+from django.http            import HttpResponse
+from django.template        import Template, Context
 
-from annalist.exceptions                import Annalist_Error
+from annalist.exceptions    import Annalist_Error
 
-from annalist.views.fields.bound_field  import bound_field
-
-from render_fieldvalue  import (
+from .bound_field           import bound_field
+from .render_fieldvalue     import (
     RenderFieldValue,
     TemplateWrapValueRenderer, 
     ModeWrapValueRenderer
@@ -354,6 +356,12 @@ class RenderRepeatGroup(object):
             h = [ bound_field(f, {}) for f in group_field_descs ]
             with context.push({ 'group_head_fields': h }):
                 value_list     = context['field']['field_value']
+                if value_list and not isinstance(value_list, list):
+                  # This is to allow field changes from single to repeated values
+                  # to be handled less confusingly.  String values were previously
+                  # treated as lists if characters, which gave some pretty weird
+                  # results.
+                  value_list = [value_list]
                 if len(value_list) > 0:
                     response_parts = [self._template_head.render(context)]
                     repeat_index = 0

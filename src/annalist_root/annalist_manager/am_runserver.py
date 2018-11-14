@@ -2,7 +2,8 @@
 Run Annalist server.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -21,8 +22,11 @@ from utils.SetcwdContext            import ChangeCurrentDir
 from utils.SuppressLoggingContext   import SuppressLogging
 from annalist                       import __version__
 
-import am_errors
-from am_settings                    import am_get_settings
+from .                              import am_errors
+from .am_settings                   import (
+    am_get_settings, am_get_site_settings, am_get_site
+    )
+from .am_getargvalue                import getarg, getargvalue
 
 def am_runserver(annroot, userhome, options):
     """
@@ -186,7 +190,7 @@ def am_settingsdir(annroot, userhome, options):
 
 def am_version(annroot, userhome, options):
     """
-    Print softwarte version string to standard output.
+    Print software version string to standard output.
 
     annroot     is the root directory for the Annalist software installation.
     userhome    is the home directory for the host system user issuing the command.

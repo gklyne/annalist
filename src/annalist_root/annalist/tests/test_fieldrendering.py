@@ -2,18 +2,20 @@
 Tests for field rendering functions
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 from django.template                    import Context, Template, loader
@@ -28,13 +30,20 @@ from annalist.views.fields.field_description    import FieldDescription, field_d
 from annalist.views.fields.render_placement     import get_placement_classes
 from annalist.views.fields                      import render_repeatgroup
 from annalist.views.fields.render_repeatgroup   import RenderRepeatGroup
-from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_template
+from annalist.views.fields.render_fieldvalue    import RenderFieldValue, get_field_template
 from annalist.views.form_utils.fieldchoice      import FieldChoice
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from field_rendering_support    import FieldRendererTestSupport
-from entity_testutils       import (
+# from .AnnalistTestCase import AnnalistTestCase
+from .field_rendering_support import FieldRendererTestSupport
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     render_select_options, render_choice_options
     )
 
@@ -64,7 +73,13 @@ class FieldRenderingTest(FieldRendererTestSupport):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(FieldRenderingTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(FieldRenderingTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
@@ -129,8 +144,6 @@ class FieldRenderingTest(FieldRendererTestSupport):
     # Tests
 
     def test_RenderRepeatGroupTest(self):
-        # print "\n".join(sys.path)
-        # template = loader.get_template('field/annalist_edit_select.html')
         self.assertEqual(
             RenderRepeatGroup.__name__, "RenderRepeatGroup", 
             "Check RenderRepeatGroup class name"
@@ -243,17 +256,17 @@ class FieldRenderingTest(FieldRendererTestSupport):
 
     # Rendering using compiled template supplied
     def test_RenderFieldValue_templates(self):
-        view_template = get_template(
+        view_template = get_field_template(
             "field/annalist_view_text.html",  
             "Can't load view template"
             )
-        edit_template = get_template(
+        edit_template = get_field_template(
             "field/annalist_edit_text.html",
             "Can't load edit template"
             )
         fieldrender = RenderFieldValue("render_compiled_template",
-            view_template=view_template, 
-            edit_template=edit_template
+            view_renderer=view_template, 
+            edit_renderer=edit_template
             )
         self._check_value_renderer_results(
             fieldrender,

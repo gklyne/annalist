@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for multiple fields displayed from a referenced entity.
 
@@ -118,7 +121,7 @@ class RenderMultiFields_label(object):
         group_dict = (
             { 'group_bound_fields':  group_fields
             })
-        log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
+        #@@ log.info("RenderMultiFields_label.render group_dict: %r"%(group_dict))
         with context.push(group_dict):
             response_parts = [self._template_head.render(context)]
             response_parts.append(self._template_body.render(context))

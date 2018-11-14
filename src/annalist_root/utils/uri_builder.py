@@ -2,6 +2,9 @@
 This module contains functions to assist in the manipulation and construction of URIs.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -9,9 +12,22 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import urllib
-import urlparse
 import re
+
+try:
+    # Python3
+    from urllib.parse       import (
+        urlparse, urljoin, 
+        urlsplit, urlunsplit, 
+        quote, unquote
+        )
+    from urllib.request     import urlopen, Request
+    from urllib.error       import HTTPError
+except ImportError:
+    # Python2
+    from urlparse           import urlparse, urljoin, urlsplit, urlunsplit
+    from urllib2            import urlopen, Request, HTTPError
+    from urllib             import quote, unquote
 
 # From RFC 3986:
 gen_delims  = ":/?#[]@"
@@ -37,7 +53,7 @@ def uri_query_key_val(p):
     If no '=' is present, the value part returned is an empty string.
     """
     kv = p.split("=", 1) + [""]
-    return (kv[0], urllib.unquote(kv[1]))
+    return (kv[0], unquote(kv[1]))
 
 def uri_param_dict(uri):
     """
@@ -75,7 +91,7 @@ def uri_params(*param_dicts, **param_dict):
         pval = uri_param_dict[pnam]
         if pval:
             # log.info("pnam %s, pval %s, uri_param_dict %r"%(pnam, pval, uri_param_dict))
-            uri_param_str += next_sep + pnam + "=" + urllib.quote(pval, query_safe)
+            uri_param_str += next_sep + pnam + "=" + quote(pval, query_safe)
             next_sep = "&"
     return uri_param_str
 

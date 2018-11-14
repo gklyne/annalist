@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for collection field and superproperty cache classes.
 """
@@ -17,18 +20,18 @@ from annalist.models.collection             import Collection
 from annalist.models.recordfield            import RecordField
 from annalist.models.collectionfieldcache   import CollectionFieldCache
 
-from AnnalistTestCase                       import AnnalistTestCase
-from tests                                  import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from init_tests                             import (
+from .init_tests import (
     init_annalist_test_site, init_annalist_test_coll, resetSitedata
     )
-from entity_testfielddata import (
+from .entity_testfielddata import (
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
     recordfield_create_values, recordfield_values, recordfield_read_values,
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_fields, get_site_fields_sorted, 
     )
 

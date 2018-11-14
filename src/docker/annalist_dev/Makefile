@@ -10,6 +10,11 @@ GUESTPORT=8000
 base-shell:
 	docker run --rm -it $(BASE) bash
 
+# To set up new site, use the following in a target system shell:
+#     annalist-manager createsitedata
+#     annalist-manager initialize
+#     annalist-manager defaultadminuser
+
 clean:
 	$(RM) .build
 

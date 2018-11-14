@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for user profile page (also tests user identity access)
 """
@@ -25,10 +28,16 @@ from annalist.identifiers       import RDF, RDFS, ANNAL
 from annalist.models.site       import Site
 from annalist.views.profile     import ProfileView
 
-from tests                      import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests                 import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from AnnalistTestCase           import AnnalistTestCase
-from entity_testutils           import site_title
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import site_title
 
 class UserProfileTest(AnnalistTestCase):
     """
@@ -44,7 +53,13 @@ class UserProfileTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(UserProfileTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(UserProfileTest, cls).tearDownClass()
         # @@checkme@@ resetSitedata(scope="all")
         return
 
@@ -135,9 +150,9 @@ class UserProfileViewTest(AnnalistTestCase):
         u = reverse("AnnalistProfileView")
         r = self.client.get(u)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertIn(TestHostUri+"/testsite/login/", r['location'])
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertIn("/testsite/login/", r['location'])
         self.assertIn("continuation_url=/testsite/", r['location'])
         return
 

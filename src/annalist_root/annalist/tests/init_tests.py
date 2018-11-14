@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Annalist test initialization support
 """
@@ -18,9 +21,11 @@ import datetime
 # from django.test import TestCase
 from django.conf import settings
 
+from utils.py3porting               import isoformat_space
+
 from annalist                       import layout
 from annalist.util                  import replacetree, removetree
-from annalist.collections           import installable_collections
+from annalist.collections_data      import installable_collections
 from annalist.identifiers           import ANNAL, RDFS
 
 from annalist.models.site           import Site
@@ -35,10 +40,12 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
 from annalist.models.collectiondata import initialize_coll_data, copy_coll_data, migrate_coll_data
 
-from tests                          import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from tests                          import test_layout
-from entity_testutils               import collection_create_values
-from entity_testtypedata            import recordtype_create_values
+from .entity_testutils              import collection_create_values
+from .entity_testtypedata           import recordtype_create_values
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
 
 sitedata_target_reset = "all"
 
@@ -104,7 +111,7 @@ def copySitedata(src, sitedatasrc, tgt):
 def init_annalist_test_site():
     log.debug("init_annalist_test_site")
     copySitedata(
-        settings.SITE_SRC_ROOT+"/sampledata/testinit/"+test_layout.SITE_DIR, 
+        settings.SITE_SRC_ROOT+"/sampledata/testinit/"+test_layout.SITE_DIR_NAME, 
         settings.SITE_SRC_ROOT+"/annalist/data/sitedata",
         TestBaseDir)
     testsite = Site(TestBaseUri, TestBaseDir)
@@ -136,10 +143,10 @@ def install_annalist_named_coll(coll_id):
     src_dir = os.path.join(settings.SITE_SRC_ROOT, "annalist/data", coll_src_dir)
     log.debug("Installing collection '%s' from data directory '%s'"%(coll_id, src_dir))
     coll_metadata = installable_collections[coll_id]['coll_meta']
-    date_time_now = datetime.datetime.now().replace(microsecond=0)
+    datetime_now  = datetime.datetime.now().replace(microsecond=0)
     coll_metadata[ANNAL.CURIE.comment] = (
         "Initialized at %s by `annalist.tests.init_tests.install_annalist_named_coll`"%
-        date_time_now.isoformat()
+        isoformat_space(datetime_now)
         )
     coll = site.add_collection(coll_id, coll_metadata)
     # print "@@ src_dir %s"%src_dir

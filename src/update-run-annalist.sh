@@ -8,6 +8,8 @@ echo "    annalist-manager runtests"
 echo ""
 
 killall python
+killall python2
+killall python3
 annalist-manager initialize --personal
 annalist-manager updatesite --personal
 nohup annalist-manager runserver --personal >annalist.out &

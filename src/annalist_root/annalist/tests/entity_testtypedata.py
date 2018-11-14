@@ -2,20 +2,24 @@
 Record field data functions to support entity data testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
 
 from django.conf                import settings
 from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
 from django.core.urlresolvers   import resolve, reverse
+
+from utils.py3porting           import urljoin
 
 from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -25,18 +29,18 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testentitydata      import entitydata_list_type_url
-from entity_testfielddesc       import get_field_description, get_bound_field
-from tests import (
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from entity_testutils import (
+from .entity_testutils import (
     collection_dir, 
     collection_edit_url,
     collection_entity_view_url,
     site_title,
     context_field_row
     )
+from .entity_testentitydata     import entitydata_list_type_url
+from .entity_testfielddesc      import get_field_description, get_bound_field
 
 #   -----------------------------------------------------------------------------
 #
@@ -57,7 +61,7 @@ def recordtype_dir(coll_id="testcoll", type_id="testtype"):
 #   the declared URI patterns.
 
 def recordtype_coll_url(site, coll_id="testcoll", type_id="testtype"):
-    return urlparse.urljoin(
+    return urljoin(
         site._entityurl,
         layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
         layout.COLL_TYPE_PATH%{'id': type_id} + "/"
@@ -91,7 +95,8 @@ def recordtype_edit_url(action=None, coll_id=None, type_id=None):
             kwargs.update({'entity_id': type_id})
         else:
             kwargs.update({'entity_id': "___"})
-    return reverse(viewname, kwargs=kwargs)
+    url = reverse(viewname, kwargs=kwargs)
+    return url
 
 #   -----------------------------------------------------------------------------
 #

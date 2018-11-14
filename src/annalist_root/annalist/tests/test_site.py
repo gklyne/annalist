@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for site module
 """
@@ -8,6 +11,7 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
 import unittest
+import json
 
 import logging
 log = logging.getLogger(__name__)
@@ -30,20 +34,26 @@ from annalist.models.annalistuser   import AnnalistUser
 
 from annalist.views.site            import SiteView, SiteActionView
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     site_view_url, collection_view_url, collection_edit_url, 
     collection_value_keys, collection_create_values, collection_values,
     collection_new_form_data, collection_remove_form_data,
     site_title,
     create_user_permissions, create_test_user
     )
-from entity_testuserdata    import (
+from .entity_testuserdata import (
     annalistuser_create_values, annalistuser_values, annalistuser_read_values
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_url, recordtype_edit_url
     )
 
@@ -85,7 +95,13 @@ class SiteTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SiteTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(SiteTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -105,10 +121,10 @@ class SiteTest(AnnalistTestCase):
 
     def test_site_data(self):
         sd = self.testsite.site_data()
-        self.assertEquals(set(sd.keys()),     site_data_keys)
-        self.assertEquals(sd["title"],        site_title())
-        self.assertEquals(sd["rdfs:label"],   site_title())
-        self.assertEquals(sd["collections"].keys(), init_collection_keys)
+        self.assertEquals(set(sd),                  site_data_keys)
+        self.assertEquals(sd["title"],              site_title())
+        self.assertEquals(sd["rdfs:label"],         site_title())
+        self.assertEquals(list(sd["collections"]),  init_collection_keys)
         self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
         return
 
@@ -162,26 +178,26 @@ class SiteTest(AnnalistTestCase):
 
     def test_collections_dict(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(), init_collection_keys)
+        self.assertEquals(list(colls), init_collection_keys)
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 
     def test_add_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(), init_collection_keys)
+        self.assertEquals(list(colls), init_collection_keys)
         self.testsite.add_collection("new", self.collnewmeta)
         colls = self.testsite.collections_dict()
-        self.assertEquals(set(colls.keys()), set(init_collection_keys+["new"]))
+        self.assertEquals(set(colls), set(init_collection_keys+["new"]))
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         self.assertDictionaryMatch(colls["new"],   self.collnew)
         return
 
     def test_remove_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(colls.keys(), init_collection_keys)
+        self.assertEquals(list(colls), init_collection_keys)
         self.testsite.remove_collection("coll2")
         collsb = self.testsite.collections_dict()
-        self.assertEquals(set(collsb.keys()), set(init_collection_keys) - {"coll2"})
+        self.assertEquals(set(collsb), set(init_collection_keys) - {"coll2"})
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 
@@ -220,7 +236,13 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(SiteViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(SiteViewTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -241,7 +263,6 @@ class SiteViewTest(AnnalistTestCase):
         r = self.client.get(self.uri+"?error_head=Error&error_message=Error%20presented")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        # self.assertEqual(r.content, "???")
         self.assertContains(r, """<h3>Error</h3>""", html=True)
         self.assertContains(r, """<p class="messages">Error presented</p>""", html=True)
         return
@@ -257,8 +278,8 @@ class SiteViewTest(AnnalistTestCase):
     def test_get_home(self):
         r = self.client.get(self.homeuri)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r["location"], TestHostUri+self.uri)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r["location"], self.uri)
         return
 
     def test_get_no_login(self):
@@ -370,14 +391,63 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(btn_new["name"],     "new")
         return
 
+    def test_get_site_context_resource(self):
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": layout.SITE_CONTEXT_FILE})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "application/ld+json")
+        return
+
+    def test_get_site_image_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["testimage"] = (
+            { "resource_name": "test-image.jpg" 
+            , "resource_type": "image/jpeg"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "test-image.jpg"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "image/jpeg")
+        return
+
+    def test_get_site_markdown_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["testdatafile"] = (
+            { "resource_name": "testdatafile.md" 
+            , "resource_type": "text/markdown"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "testdatafile.md"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     200)
+        self.assertEqual(r.reason_phrase,   "OK")
+        self.assertEqual(r["content-type"], "text/markdown")
+        return
+
+    def test_get_site_nonexistent_resource(self):
+        self.testsite._ensure_values_loaded()
+        self.testsite["nosuchfile"] = (
+            { "resource_name": "nosuch.file" 
+            , "resource_type": "text/plain"
+            })
+        self.testsite._save()
+        u = reverse("AnnalistSiteResourceAccess", kwargs={"resource_ref": "nosuch.file"})
+        r = self.client.get(u)
+        self.assertEqual(r.status_code,     404)
+        self.assertEqual(r.reason_phrase,   "Not found")
+        return
+
     def test_post_add(self):
         form_data = collection_new_form_data("testnew")
         r = self.client.post(self.uri, form_data)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],
-            TestBaseUri+"/site/"
+            TestBasePath+"/site/"
             "?info_head=Action%20completed"+
             "&info_message=Created%20new%20collection:%20'testnew'")
         # Check site now has new colllection
@@ -416,8 +486,19 @@ class SiteViewTest(AnnalistTestCase):
         self.assertContains(r, '''<input type="submit" name="confirm" value="Confirm"/>''', html=True)
         self.assertContains(r, '''<input type="submit" name="cancel" value="Cancel"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="confirmed_action" value="'''+reverse("AnnalistSiteActionView")+'''"/>''', html=True)
-        self.assertContains(r, '''<input type="hidden" name="action_params"   value="{&quot;new_label&quot;: [&quot;&quot;], &quot;new_id&quot;: [&quot;&quot;], &quot;select&quot;: [&quot;coll1&quot;, &quot;coll3&quot;], &quot;remove&quot;: [&quot;Remove selected&quot;]}"/>''', html=True)
         self.assertContains(r, '''<input type="hidden" name="cancel_action"   value="'''+reverse("AnnalistSiteView")+'''"/>''', html=True)
+        self.assertHtmlContentElement(r.content,
+            tagname="input", tagattrs={"name": "action_params"},
+            expect_attrs=
+                { "type": "hidden"
+                , "value":
+                    { "remove":    ["Remove selected"]
+                    , "new_id":    [""]
+                    , "new_label": [""]
+                    , "select":    ["coll1", "coll3"]
+                    }
+                }
+            )
         return
 
 #   -----------------------------------------------------------------------------
@@ -457,6 +538,7 @@ class SiteActionViewTests(AnnalistTestCase):
 
     @classmethod
     def setUpClass(cls):
+        super(SiteActionViewTests, cls).setUpClass()
         # Remove any collections left behind from previous tests
         resetSitedata(scope="collections")
         return
@@ -481,20 +563,26 @@ class SiteActionViewTests(AnnalistTestCase):
         # Submit positive confirmation
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="confirm"))
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertMatch(
-            r['location'],
-            "^"+TestHostUri+reverse("AnnalistSiteView")+"\\?info_head=.*&info_message=.*coll1,.*coll3.*$"
-            )
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
+        v  = reverse("AnnalistSiteView")
+        e1 = "info_head="
+        e2 = "info_message="
+        e3 = "coll1"
+        e4 = "coll3"
+        self.assertIn(v,  r['location'])
+        self.assertIn(e1, r['location'])
+        self.assertIn(e2, r['location'])
+        self.assertIn(e3, r['location'])
+        self.assertIn(e4, r['location'])
         # Confirm collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']
         #@@ (diagnostic only)
         if len(colls) != len(init_collection_keys)-2:
             log.warning("@@ Collection count mismatch: %s != %d"%(len(colls), len(init_collection_keys)-2))
-            log.warning("@@ Collections seen %r"%(colls.keys(),))
+            log.warning("@@ Collections seen %r"%(list(colls),))
         #@@
         self.assertEqual(len(colls), len(init_collection_keys)-2)
         id = "coll2"
@@ -506,10 +594,10 @@ class SiteActionViewTests(AnnalistTestCase):
     def test_post_cancelled_remove(self):
         u = reverse("AnnalistConfirmView")
         r = self.client.post(u, self._conf_data(action="cancel"))
-        self.assertEqual(r.status_code,     302)
-        self.assertEqual(r.reason_phrase,   "FOUND")
-        self.assertEqual(r.content,         "")
-        self.assertEqual(r['location'],     TestBaseUri+"/site/")
+        self.assertEqual(r.status_code,    302)
+        self.assertEqual(r.reason_phrase,  "Found")
+        self.assertEqual(r.content,        b"")
+        self.assertEqual(r['location'],    TestBasePath+"/site/")
         # Confirm no collections deleted
         r = self.client.get(TestBasePath+"/site/")
         colls = r.context['collections']

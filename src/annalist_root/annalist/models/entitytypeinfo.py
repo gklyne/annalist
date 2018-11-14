@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Gather information about an entity/record type
 """
@@ -278,7 +281,7 @@ def get_built_in_type_ids():
     """
     Returns an interator over the built-in types
     """
-    return TYPE_CLASS_MAP.iterkeys()
+    return iter(TYPE_CLASS_MAP)
 
 class EntityTypeInfo(object):
     """

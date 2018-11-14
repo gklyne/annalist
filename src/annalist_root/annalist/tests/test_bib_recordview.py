@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for RecordView module and view with inherited bibliographic definitioins
 """
@@ -33,15 +36,17 @@ from annalist.views.uri_builder             import uri_with_params
 from annalist.views.recordviewdelete        import RecordViewDeleteConfirmedView
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
     init_annalist_test_site, 
     init_annalist_test_coll,
     init_annalist_named_test_coll,
     resetSitedata
     )
-from entity_testutils       import (
+from .entity_testutils import (
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
     collection_entity_view_url,
@@ -50,18 +55,18 @@ from entity_testutils       import (
     create_test_user,
     context_view_field
     )
-from entity_testviewdata    import (
+from .entity_testviewdata import (
     recordview_dir,
     recordview_coll_url, recordview_url, recordview_edit_url,
     recordview_value_keys, recordview_load_keys, 
     recordview_create_values, recordview_values, recordview_read_values,
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     make_field_choices, no_selection,
     get_site_default_entity_fields_sorted,
     get_site_bibentry_fields_sorted
@@ -124,7 +129,13 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(BibRecordViewEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(BibRecordViewEditViewTest, cls).tearDownClass()
         # @@checkme@@ resetSitedata(scope="all")
         return
 

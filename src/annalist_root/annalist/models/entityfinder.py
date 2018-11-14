@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 This module contains (and isolates) logic used to find entities based on entity type,
 list selection criteria and search terms.
@@ -13,6 +16,8 @@ log = logging.getLogger(__name__)
 import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
+
+from utils.py3porting               import is_string, to_unicode
 
 from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
@@ -241,9 +246,6 @@ class EntityFinder(object):
                 val = e[key]
                 if cls.value_contains(val, search):
                     return True
-                # if isinstance(val, (str, unicode)):
-                #     if search in val:
-                #         return True
             return False
         return True
 
@@ -261,7 +263,7 @@ class EntityFinder(object):
             for e in val:
                 if cls.value_contains(e, search):
                     return True
-        elif isinstance(val, (str, unicode)):
+        elif is_string(val):
             return search in val
         return False
 

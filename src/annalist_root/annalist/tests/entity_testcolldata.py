@@ -2,16 +2,20 @@
 Support for Annalist collection view testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import unittest
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+import unittest
+
+from utils.py3porting                   import urljoin
 
 from django.conf                        import settings
 from django.db                          import models
@@ -23,13 +27,14 @@ from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
 from annalist.util                      import valid_id
 
-from tests                              import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-
-from entity_testutils                   import (
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .entity_testutils import (
     site_dir, collection_dir,
     collection_entity_view_url
     )
-from entity_testentitydata          import (
+from .entity_testentitydata import (
     entitydata_list_type_url, entitydata_list_all_url,
     )
 
@@ -67,7 +72,7 @@ def collectiondata_resource_url(coll_id="testcoll", resource_ref=layout.COLL_MET
     e.g. 
       http://example.com/site/c/_annalist_site/d/_coll/testcoll/
     """
-    return urlparse.urljoin(
+    return urljoin(
         collectiondata_url(coll_id=coll_id),
         resource_ref
         )
@@ -101,7 +106,7 @@ def collectiondata_view_resource_url(coll_id="testcoll", resource_ref=layout.COL
       http://example.com/site/c/_annalist_site/v/Collection_view/_coll/testcoll/!view
       http://example.com/site/c/_annalist_site/v/Collection_view/_coll/testcoll/!edit
     """
-    return urlparse.urljoin(
+    return urljoin(
         collectiondata_view_url(coll_id=coll_id, action="view"),
         resource_ref
         )

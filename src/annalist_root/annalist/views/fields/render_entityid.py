@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for Entity Id field
 """
@@ -9,8 +12,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-# from django.http        import HttpResponse
-from django.template    import Template
+from django.template        import Template
+
+from utils.py3porting                   import is_string, to_unicode
 
 from annalist.views.fields.render_base  import RenderBase
 
@@ -30,7 +34,7 @@ class EntityIdValueMapper(RenderBase):
         """
         Returns an entity Id form field value as itself with leading/trailing spaces trimmed
         """
-        if isinstance(field_value, (str, unicode)):
+        if is_string(field_value):
             field_value = field_value.strip()
         return field_value
 
@@ -41,8 +45,5 @@ class EntityIdValueMapper(RenderBase):
 #   Entity Id field renderers
 #
 #   ----------------------------------------------------------------------------
-
-
-
 
 # End.

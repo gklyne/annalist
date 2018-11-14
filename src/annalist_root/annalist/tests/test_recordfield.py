@@ -6,16 +6,19 @@ field description sitedata files, and as such duplicates some tests covered by
 module test_entitygenericedit.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import json
 import unittest
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                            import settings
 from django.db                              import models
@@ -39,9 +42,11 @@ from annalist.views.fields.render_placement import (
     get_placement_options, get_placement_option_value_dict
     )
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
     init_annalist_test_site,
     init_annalist_test_coll,
     install_annalist_named_coll,
@@ -49,7 +54,7 @@ from init_tests             import (
     init_annalist_named_test_coll,
     resetSitedata
     )
-from entity_testfielddata   import (
+from .entity_testfielddata import (
     recordfield_dir,
     recordfield_coll_url, recordfield_url,
     recordfield_init_keys, recordfield_value_keys, recordfield_load_keys,
@@ -57,7 +62,7 @@ from entity_testfielddata   import (
     field_view_context_data,
     field_view_form_data
     )
-from entity_testutils       import (
+from .entity_testutils import (
     make_message, make_quoted_message,
     collection_entity_view_url,
     collection_create_values,
@@ -69,16 +74,16 @@ from entity_testutils       import (
     check_context_field, check_context_field_value,
     check_field_record,
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testtypedata    import recordtype_url
-from entity_testviewdata    import recordview_url
-from entity_testlistdata    import recordlist_url
-from entity_testgroupdata   import recordgroup_url
-from entity_testsitedata    import (
+from .entity_testtypedata  import recordtype_url
+from .entity_testviewdata  import recordview_url
+from .entity_testlistdata  import recordlist_url
+from .entity_testgroupdata import recordgroup_url
+from .entity_testsitedata  import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
@@ -134,7 +139,13 @@ class RecordFieldTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordFieldTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RecordFieldTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
@@ -301,8 +312,14 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordFieldEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        # resetSitedata()
+        super(RecordFieldEditViewTest, cls).tearDownClass()
+        resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -412,222 +429,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 14)
         self.assertDictionaryMatch(actual_context, expect_context)
-
-        #@@ to be removed
-        # f_Field_id                  = context_view_field(r.context,  0, 0)
-        # f_Field_render_type         = context_view_field(r.context,  0, 1)
-
-        # f_Field_label               = context_view_field(r.context,  1, 0)
-        # f_Field_help                = context_view_field(r.context,  2, 0)
-        # f_Field_property            = context_view_field(r.context,  3, 0)
-        # f_Field_placement           = context_view_field(r.context,  3, 1)
-        # f_Field_superproperty_uris  = context_view_field(r.context,  4, 0)
-
-        # f_Field_value_type          = context_view_field(r.context,  5, 0)
-        # f_Field_value_mode          = context_view_field(r.context,  5, 1)
-        # f_Field_entity_type         = context_view_field(r.context,  6, 0)
-
-        # f_Field_typeref             = context_view_field(r.context,  7, 0)
-        # f_Field_fieldref            = context_view_field(r.context,  7, 1)
-        # f_Field_default             = context_view_field(r.context,  8, 0)
-        # f_Field_placeholder         = context_view_field(r.context,  9, 0)
-        # f_Field_tooltip             = context_view_field(r.context, 10, 0)
-        # f_Field_fields              = context_view_field(r.context, 11, 0)
-        # f_Field_repeat_label_add    = context_view_field(r.context, 12, 0)
-        # f_Field_repeat_label_delete = context_view_field(r.context, 12, 1)
-        # f_Field_restrict            = context_view_field(r.context, 13, 0)
-        # check_context_field(self, f_Field_id,
-        #     field_id=           "Field_id",
-        #     field_name=         "entity_id",
-        #     field_property_uri= "annal:id",
-        #     field_render_type=  "EntityId",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        field_id,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_render_type,
-        #     field_id=           "Field_render_type",
-        #     field_name=         "Field_render_type",
-        #     field_property_uri= "annal:field_render_type",
-        #     field_render_type=  "Enum_choice",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_placement=    "small-12 medium-6 columns",
-        #     field_value=        field_render_type,
-        #     options=            self.render_options
-        #     )
-        # check_context_field(self, f_Field_value_type,
-        #     field_id=           "Field_value_type",
-        #     field_name=         "Field_value_type",
-        #     field_property_uri= "annal:field_value_type",
-        #     field_render_type=  "Identifier",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        field_type,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_value_mode,
-        #     field_id=           "Field_value_mode",
-        #     field_name=         "Field_value_mode",
-        #     field_property_uri= "annal:field_value_mode",
-        #     field_render_type=  "Enum_choice",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_value=        field_value_mode,
-        #     options=            self.value_mode_options
-        #     )
-        # check_context_field(self, f_Field_entity_type,
-        #     field_id=           "Field_entity_type",
-        #     field_name=         "Field_entity_type",
-        #     field_property_uri= "annal:field_entity_type",
-        #     field_render_type=  "Identifier",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        field_entity_type,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_label,
-        #     field_id=           "Field_label",
-        #     field_name=         "Field_label",
-        #     field_property_uri= "rdfs:label",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_label,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_help,
-        #     field_id=           "Field_help",
-        #     field_name=         "Field_help",
-        #     field_property_uri= "rdfs:comment",
-        #     field_render_type=  "Markdown",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Richtext",
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_property,
-        #     field_id=           "Field_property",
-        #     field_name=         "Field_property",
-        #     field_property_uri= "annal:property_uri",
-        #     field_render_type=  "Identifier",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        field_property,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_placement,
-        #     field_id=           "Field_placement",
-        #     field_name=         "Field_placement",
-        #     field_property_uri= "annal:field_placement",
-        #     field_render_type=  "Placement",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Placement",
-        #     field_value=        field_placement,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_superproperty_uris,
-        #     field_id=           "Field_superproperty_uris",
-        #     field_name=         "Field_superproperty_uris",
-        #     field_property_uri= "annal:superproperty_uri",
-        #     field_render_type=  "Group_Set_Row",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Field_superproperty_uri",
-        #     field_value=        field_superproperty_uris,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_typeref,
-        #     field_id=           "Field_typeref",
-        #     field_name=         "Field_typeref",
-        #     field_property_uri= "annal:field_ref_type",
-        #     field_render_type=  "Enum_optional",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:EntityRef",
-        #     field_value=        field_typeref,
-        #     options=            self.ref_type_options
-        #     )
-        # check_context_field(self, f_Field_fieldref,
-        #     field_id=           "Field_fieldref",
-        #     field_name=         "Field_fieldref",
-        #     field_property_uri= "annal:field_ref_field",
-        #     field_render_type=  "Identifier",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Identifier",
-        #     field_value=        field_fieldref,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_default,
-        #     field_id=           "Field_default",
-        #     field_name=         "Field_default",
-        #     field_property_uri= "annal:default_value",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_default,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_placeholder,
-        #     field_id=           "Field_placeholder",
-        #     field_name=         "Field_placeholder",
-        #     field_property_uri= "annal:placeholder",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_placeholder,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_tooltip,
-        #     field_id=           "Field_tooltip",
-        #     field_name=         "Field_tooltip",
-        #     field_property_uri= "annal:tooltip",
-        #     field_render_type=  "Textarea",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Longtext",
-        #     field_value=        field_tooltip,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_fields,
-        #     field_id=           "Field_fields",
-        #     field_name=         "Field_fields",
-        #     field_property_uri= "annal:field_fields",
-        #     field_render_type=  "Group_Seq_Row",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Field_list",
-        #     field_value=        field_fields,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_repeat_label_add,
-        #     field_id=           "Field_repeat_label_add",
-        #     field_name=         "Field_repeat_label_add",
-        #     field_property_uri= "annal:repeat_label_add",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_repeat_label_add,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_repeat_label_delete,
-        #     field_id=           "Field_repeat_label_delete",
-        #     field_name=         "Field_repeat_label_delete",
-        #     field_property_uri= "annal:repeat_label_delete",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_repeat_label_delete,
-        #     options=            self.no_options
-        #     )
-        # check_context_field(self, f_Field_restrict,
-        #     field_id=           "Field_restrict",
-        #     field_name=         "Field_restrict",
-        #     field_property_uri= "annal:field_ref_restriction",
-        #     field_render_type=  "Text",
-        #     field_value_mode=   "Value_direct",
-        #     field_value_type=   "annal:Text",
-        #     field_value=        field_restrict,
-        #     options=            self.no_options
-        #     )
-        #@@
 
         return
 
@@ -1252,10 +1053,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # NOTE: Location header must be absolute URI
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check new entity data created
         self._check_field_data_values("newfield", property_uri="test:new_prop")
         return
@@ -1271,10 +1071,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # NOTE: Location header must be absolute URI
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check new entity data created
         self._check_field_data_values("newfield", property_uri="test:new_prop")
         return
@@ -1285,10 +1084,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # NOTE: Location header must be absolute URI
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that new record type still does not exist
         self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
         return
@@ -1335,9 +1133,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that new record type exists
         self._check_field_data_values("copyfield", property_uri="test:copy_prop")
         return
@@ -1352,10 +1150,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        # NOTE: Location header must be absolute URI
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that target record type still does not exist
         self.assertFalse(RecordField.exists(self.testcoll, "copyfield"))
         return
@@ -1405,9 +1202,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         self._check_field_data_values("editfield", 
             property_uri="test:edit_prop", 
             update="Updated entity"
@@ -1427,9 +1224,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that new record type exists and old does not
         self.assertFalse(RecordField.exists(self.testcoll, "editfieldid1"))
         self._check_field_data_values("editfieldid2", property_uri="test:edit_prop")
@@ -1447,9 +1244,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], TestHostUri + entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check that target record type still does not exist and unchanged
         self._check_field_data_values("editfield")
         return
@@ -1518,8 +1315,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         # Check content of type, view and list
         common_vals = (
             { 'coll_id':        "testcoll"
@@ -1588,8 +1385,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         # Check content of type, view and list
         common_vals = (
             { 'coll_id':        "testcoll"
@@ -1657,8 +1454,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         # Check content of field
         common_vals = (
             { 'coll_id':        "testcoll"
@@ -1735,8 +1532,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(action="edit", 
             coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id=common_vals["field_ref_id"], 
             view_id="Field_view"
@@ -1817,8 +1614,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
         v = entitydata_edit_url(action="edit", 
             coll_id="testcoll", type_id=layout.FIELD_TYPEID, 
             entity_id=common_vals["subfield_id"], 
@@ -1932,7 +1729,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Access and check selectable options for subfield id
         f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.description["group_field_descs"][0]
-        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        actual_subfield_choices = list(f_subfield_sel_field["field_choices"].values())
         # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
         return
@@ -2007,7 +1804,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Access and check selectable options for subfield id
         f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.description["group_field_descs"][0]
-        actual_subfield_choices = f_subfield_sel_field["field_choices"].values()
+        actual_subfield_choices = list(f_subfield_sel_field["field_choices"].values())
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
         return
 
@@ -2127,7 +1924,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Access and check selectable options for domain field
         f_Field_fields = context_view_field(r.context, 11, 0)
         f_domain_field = f_Field_fields.description["group_field_descs"][0]
-        actual_domain_choices = f_domain_field["field_choices"].values()
+        actual_domain_choices = list(f_domain_field["field_choices"].values())
         self.assertEqual(actual_domain_choices, expect_domain_choices)
         return
 

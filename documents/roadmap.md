@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.10.
+Current status: candidate feature-complete minmum viable product, release 0.5.12.
 
 This is a maintenance release with restructuring of form rendering and tests.
 

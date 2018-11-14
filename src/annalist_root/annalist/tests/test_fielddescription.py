@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for FieldDescription module
 """
@@ -29,11 +32,17 @@ from annalist.views.fields.render_placement     import (
     Placement, make_field_width, make_field_offset, make_field_display
     )
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testentitydata  import entity_url
-from entity_testsitedata    import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testentitydata import entity_url
+from .entity_testsitedata import (
     make_field_choices, no_selection,
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
@@ -67,7 +76,13 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(FieldDescriptionTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(FieldDescriptionTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

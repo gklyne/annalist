@@ -2,22 +2,15 @@
 Annalist renderer type information, used for generating JSON-LD context data.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2015, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-# import os
-# import os.path
-# import urlparse
-# import shutil
-
 import logging
 log = logging.getLogger(__name__)
-
-# from annalist                   import layout
-# from annalist.exceptions        import Annalist_Error
-# from annalist.identifiers       import ANNAL
-# from annalist                   import util
 
 # Render type classification, used for generating appropriate JSON-LD context values
 # Separated from annalist.views.fields.find_renderers to avoid model dependency on views

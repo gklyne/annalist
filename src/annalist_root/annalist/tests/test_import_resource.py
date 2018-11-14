@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for resource import functions.
 """
@@ -29,10 +32,16 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     create_test_user,
     create_user_permissions,
     context_view_field,
@@ -40,7 +49,7 @@ from entity_testutils       import (
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     default_view_form_data,
     )
@@ -226,7 +235,13 @@ class ImportResourceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ImportResourceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ImportResourceTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 
@@ -240,13 +255,13 @@ class ImportResourceTest(AnnalistTestCase):
         testobj1 = self.test_imp_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "wb"
             )
-        testobj1.write("Test data test1res.txt")
+        testobj1.write(b"Test data test1res.txt")
         self.assertEqual(testobj1.name, test1dir+"/test1res.txt")
         testobj1.close()
         testobj2 = self.test_imp_type_info.get_fileobj(
             "test1", "test1res", "annal:Text", "text/plain", "rb"
             )
-        self.assertEqual(testobj2.read(), "Test data test1res.txt")
+        self.assertEqual(testobj2.read(), b"Test data test1res.txt")
         testobj2.close()
         return
 
@@ -279,8 +294,8 @@ class ImportResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertMatch(r['location'], TestHostUri+u)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertMatch(r['location'], u)
         # Read back form following redirect
         r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -317,7 +332,7 @@ class ImportResourceTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         # Display resource with reference
         u = entitydata_edit_url(
             "view", "testcoll", "testreftype", entity_id="test1", view_id="testrefview"

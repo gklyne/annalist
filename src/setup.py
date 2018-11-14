@@ -2,6 +2,9 @@
 #
 # NOTE: when testing, use "pip install ... --upgrade"
 
+# from __future__ import unicode_literals # (import Fails under Pythons)
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2016, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -20,10 +23,9 @@ import sys
 from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
-from pip.req import parse_requirements      # See: http://stackoverflow.com/questions/14399534/
 
-if sys.version_info[:2] != (2,7):
-    raise AssertionError("Annalist requires Python 2.7 (found Python %s.%s)"%sys.version_info[:2])
+if sys.version_info[:2] not in [(2,7),(3,6),(3,7)]:
+    raise AssertionError("Annalist requires Python 2.7 or 3.6 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
@@ -61,6 +63,7 @@ setup(
           , 'annalist_root.annalist_site'
             , 'annalist_root.annalist_site.settings'
           , 'annalist_root.annalist_manager'
+          , 'annalist_root.annalist_manager.tests'
           , 'annalist_root.utils'
           , 'annalist_root.login'
           , 'annalist_root.miscutils'
@@ -74,10 +77,11 @@ setup(
             [ '*.sh', '*.txt'
             # Pre-assembled data for tests; not used by running system
             , 'sampledata/README.md'
-            , 'sampledata/testinit/annalist_site/*.md'
-            , 'sampledata/testinit/annalist_site/*.jpg'
-            , 'sampledata/testinit/annalist_site/c/*/d/*.jsonld'
-            , 'sampledata/testinit/annalist_site/c/*/d/*/*/*.jsonld'
+            , 'sampledata/testinit/annalist_test/*.md'
+            , 'sampledata/testinit/annalist_test/*.jpg'
+            , 'sampledata/testinit/annalist_test/*.jsonld'
+            , 'sampledata/testinit/annalist_test/c/*/d/*.jsonld'
+            , 'sampledata/testinit/annalist_test/c/*/d/*/*/*.jsonld'
             ]
         , 'annalist_root.annalist':
             [ 'templates/*.html'
@@ -189,29 +193,32 @@ setup(
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
+        "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==1.7'
-          , 'wsgiref==0.1.2'
-        , 'oauth2client==1.2'
-          , 'httplib2==0.9'
-        , 'pyparsing==2.0.2'
-        , 'Markdown==2.5.2'
+        [ 'Django==1.11.13'
+        , 'six==1.11.0'
+        , 'requests==2.18.4'
+          , 'urllib3==1.22'
+          , 'chardet==3.0.4'
+          , 'idna==2.6'
+          , 'requests-oauthlib==0.8.0'
+          , 'oauthlib==2.0.7'
+          , 'certifi==2018.1.18'
+          , 'httplib2==0.11.3'
+        , 'rdflib==4.2.2'
+          , 'isodate==0.6.0'
+          , 'rdflib-jsonld==0.4.0'
+        , 'pyparsing==2.2.0'
+        , 'Markdown==2.6.11'
         # For testing:
-        , 'httpretty==0.8.10'
-        , 'beautifulsoup4==4.4.0'
-          , 'html5lib==1.0b8'
-        , 'rdflib==4.2.1'
-        # , 'rdflib-jsonld==0.3'
-        , 'rdflib-jsonld==0.4.0'
-          , 'SPARQLWrapper==1.6.4'
-          , 'isodate==0.5.1'
-          , 'wsgiref==0.1.2'
-          , 'six==1.10.0'
+        , 'httpretty==0.9.4'
+        , 'beautifulsoup4==4.6.0'
         ],
     entry_points =
         {
@@ -220,5 +227,11 @@ setup(
             ]
         }
     )
+
+if sys.version_info[:2] >= (3,7):
+    print("*****")
+    print("Warning: Django 1.11 does not work with Python versions after 3.6")
+    print("See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django")
+    print("     https://stackoverflow.com/a/48822656/324122")
 
 # End.

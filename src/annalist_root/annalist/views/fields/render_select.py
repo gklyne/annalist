@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for text values selected from a list of options.
 In some cases, the ren dered edit control also inclused a button for 
@@ -11,6 +14,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import traceback
 import logging
 log = logging.getLogger(__name__)
+
+from utils.py3porting       import is_string
 
 from annalist               import message
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
@@ -189,6 +194,10 @@ class Select_view_renderer(object):
         try:
             # val      = get_field_view_value(context, None)
             val      = get_field_edit_value(context, None)
+            if val is not None:
+                if not is_string(val):
+                    log.error(ValueError("Entity selector value is not string", val))
+                    val = "@@ unexpected selector %r"%(val,)
             typval   = fill_type_entity_id(
                 val, context['field'].description['field_ref_type']
                 )
@@ -240,6 +249,9 @@ class Select_edit_renderer(object):
     def render(self, context):
         try:
             val     = get_field_edit_value(context, None) or ""
+            if not is_string(val):
+                log.error(ValueError("Entity selector value is not string", val))
+                val = "@@ unexpected selector %r"%(val,)
             # Use refer-to type if value does not include type..
             typval  = fill_type_entity_id(
                 val, context['field'].description['field_ref_type']

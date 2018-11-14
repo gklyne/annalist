@@ -8,6 +8,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -24,14 +27,14 @@ DJANGO_ROOT     = os.path.dirname(os.path.realpath(django.__file__))
 SETTINGS_DIR    = os.path.dirname(os.path.realpath(__file__))           # src/annalist_root/annalist_site/settings
 SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)                         # src/annalist_root/annalist_site
 SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)                      # src/annalist_root
-SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata"                           # src/annalist_root/sampledata
+SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata/data"                      # src/annalist_root/sampledata
 
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """
     Define a rotating file logging handler that additionally forces a new file 
     the first time it is instantiated in a run of the containing program.
 
-    NOTE: if multiple file hanfdlers are used with in an application, only the
+    NOTE: if multiple file handlers are used with in an application, only the
     first one instantiated will be allocated a new file at startup.  The
     class variable '_newfile' might be replaced with a dictionary
     indexed by the (fully expanded) filename.
@@ -55,7 +58,6 @@ SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
 # SECURITY WARNING: don't run with debug turned on in production!
 # (overrides in settings.devel and settings.runtests)
 DEBUG = False
-TEMPLATE_DEBUG = False
 
 # Logging level used by selected log statements whose output may be useful
 # for tracing field values displayed in Annalist edit/view forms.
@@ -65,7 +67,17 @@ TRACE_FIELD_VALUE   = logging.INFO
 
 ALLOWED_HOSTS = []
 
-# Application definition
+ROOT_URLCONF = 'annalist_site.urls'
+
+WSGI_APPLICATION = 'annalist_site.wsgi.application'
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
+
+# Customize authentication backends
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',    # default
+    'login.OAuth2CheckBackend.OAuth2CheckBackend'
+    )
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -78,7 +90,7 @@ INSTALLED_APPS = (
     'login',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,25 +99,38 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'annalist_site.urls'
-
-WSGI_APPLICATION = 'annalist_site.wsgi.application'
-
-# Customize authentication backends
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',    # default
-    'login.OAuth2CheckBackend.OAuth2CheckBackend'
-    )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            "templates"
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': False,
+        },
+    },
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(SITE_SRC_ROOT, 'db.sqlite3'),
-    }
-}
+# DATABASE_PATH = os.path.join(SAMPLEDATA_DIR, 'annalist_site/db.sqlite3')
+# DATABASES     = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME':   DATABASE_PATH,
+#     }
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

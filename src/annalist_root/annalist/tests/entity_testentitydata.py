@@ -2,15 +2,19 @@
 Utility functions to support entity data testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+
+from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
@@ -28,8 +32,10 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from entity_testfielddesc       import get_field_description, get_bound_field
-from entity_testutils import (
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .entity_testutils import (
     collection_dir, 
     entitydata_list_url_query,
     site_view_url,
@@ -39,9 +45,7 @@ from entity_testutils import (
     site_title,
     context_field_row
     )
-from tests import (
-    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-    )
+from .entity_testfielddesc      import get_field_description, get_bound_field
 
 #   -----------------------------------------------------------------------------
 #
@@ -95,7 +99,7 @@ def entity_resource_url(
     URI for entity resource data
     """
     base = entity_url(coll_id, type_id, entity_id)
-    return urlparse.urljoin(base, resource_ref)
+    return urljoin(base, resource_ref)
 
 def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
     viewname = ( 

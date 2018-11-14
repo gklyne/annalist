@@ -2,21 +2,26 @@
 Generic entity edit view
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import sys
-import os
-import urlparse
-import traceback
 import logging
 log = logging.getLogger(__name__)
+
+import sys
+import os
+import traceback
 
 from django.conf                        import settings
 from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.core.urlresolvers           import resolve, reverse
+
+from utils.py3porting                   import is_string, to_unicode, urljoin
 
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import Annalist_Error
@@ -400,8 +405,8 @@ class GenericEntityEditView(AnnalistGenericView):
 
     def get_form_display_context(self, viewinfo, entityvaluemap, entityvals, **context_extra_values):
         """
-        Return a form display context with data from the supplied entity values, 
-        augmented with inferred values and other context data.
+        Return a form display context dictionary with data from the supplied 
+        entity values, augmented with inferred values and other context data.
         """
         # log.info("get_form_display_context, entityvals: %r"%(entityvals,))
         context_extra_values.update(
@@ -476,8 +481,8 @@ class GenericEntityEditView(AnnalistGenericView):
             viewinfo.reqhost + 
             viewinfo.get_src_entity_resource_url("")
             )
-        entity_json_url   = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_data_ref())
-        entity_turtle_url = urlparse.urljoin(entity_baseurl, viewinfo.get_entity_turtle_ref())
+        entity_json_url   = urljoin(entity_baseurl, viewinfo.get_entity_data_ref())
+        entity_turtle_url = urljoin(entity_baseurl, viewinfo.get_entity_turtle_ref())
         entity_links = [
             { "rel": "canonical"
             , "ref": entity_baseurl
@@ -1357,7 +1362,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if isinstance(fv, dict):
             field_vals   = fv.copy()
             field_string = None
-        elif isinstance(fv, (str, unicode)):
+        elif is_string(fv):
             field_vals   = {}
             field_string = fv
         else:

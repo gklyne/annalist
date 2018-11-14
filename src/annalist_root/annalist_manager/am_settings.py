@@ -2,13 +2,15 @@
 Initialize Annalist server data.
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import os
+import sys
 import importlib
 import logging
 log = logging.getLogger(__name__)
@@ -85,7 +87,7 @@ def am_get_site(sitesettings):
     """
     Get site object corresponding to supplied settings
     """
-    site_layout  = Layout(sitesettings.BASE_DATA_DIR)
+    site_layout  = Layout(sitesettings.BASE_DATA_DIR, sitesettings.SITE_DIR_NAME)
     site_dir     = site_layout.SITE_PATH
     site_uri     = "annalist_site:"
     site         = Site(site_uri, site_dir)

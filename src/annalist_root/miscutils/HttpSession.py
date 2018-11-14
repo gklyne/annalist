@@ -1,16 +1,21 @@
-# HTTP session class and supporting utilites.
+"""
+HTTP session class and supporting utilites.
+"""
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2011-2013, University of Oxford"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import re   # Used for link header parsing
 import httplib2
-import urlparse
-import logging
 
-# Logger for this module
-log = logging.getLogger(__name__)
+from utils.py3porting       import urljoin, urlsplit
 
 def splitValues(txt, sep=",", lq='"<', rq='">'):
     """
@@ -138,7 +143,7 @@ class HTTP_Session(object):
         log.debug("HTTP_Session.__init__: baseuri "+baseuri)
         self._baseuri = baseuri
         self._key     = accesskey
-        parseduri     = urlparse.urlsplit(baseuri)
+        parseduri     = urlsplit(baseuri)
         self._scheme  = parseduri.scheme
         self._host    = parseduri.netloc
         self._path    = parseduri.path
@@ -162,7 +167,7 @@ class HTTP_Session(object):
 
     def getpathuri(self, uripath):
         # str used here so rdflib.URIRef values can be accepted
-        return urlparse.urljoin(self._baseuri, str(uripath))
+        return urljoin(self._baseuri, str(uripath))
 
     def error(self, msg, value=None):
         return HTTP_Error(msg=msg, value=value, uri=self._baseuri)
@@ -199,7 +204,7 @@ class HTTP_Session(object):
         """
         # Construct request path
         urifull  = self.getpathuri(uripath)
-        uriparts = urlparse.urlsplit(urifull)
+        uriparts = urlsplit(urifull)
         path     = uriparts.path
         if uriparts.query: path += ("?"+uriparts.query)
         # Sort out HTTP connection to use: session or new
@@ -246,7 +251,7 @@ class HTTP_Session(object):
             headers["_headerlist"] = headerlist
             log.debug("HTTP_Session.doRequest response:   "+str(status)+" "+reason)
             log.debug("HTTP_Session.doRequest rspheaders: "+repr(headers))
-        except Exception, e:
+        except Exception as e:
             log.warn("HTTP_Session error %r accessing %s with request headers %r"%(e, uripath, reqheaders))
             status = 900
             reason = str(e)

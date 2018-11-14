@@ -2,6 +2,9 @@
 Defines Annalist built-in identifier values (URIs)
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -32,15 +35,15 @@ class Namespace(object):
 
     >>> ns = Namespace("test", "http://example.com/test/")
     >>> cf = ns.mk_curie("foo")
-    >>> cf
-    'test:foo'
+    >>> cf == 'test:foo'
+    True
     >>> uf = ns.mk_uri("foo")
-    >>> uf
-    'http://example.com/test/foo'
-    >>> ns.to_uri(cf)
-    'http://example.com/test/foo'
-    >>> ns.to_uri("notest:bar")
-    'notest:bar'
+    >>> uf == 'http://example.com/test/foo'
+    True
+    >>> ns.to_uri(cf) == 'http://example.com/test/foo'
+    True
+    >>> ns.to_uri("notest:bar") == 'notest:bar'
+    True
     """
 
     def __init__(self, prefix, baseUri):
@@ -81,8 +84,10 @@ class Namespace(object):
         """
         Return value for <namespace>.<name>
         """
-        # Called for attributes that aren't defined.
+        # Called for attributes that aren't defined directly.
         # Placeholder should generate error
+        if name not in self.__dict__:
+            raise AttributeError
         return self.__dict__[name]
 
 def makeNamespace(prefix, baseUri, names):
@@ -99,34 +104,34 @@ def makeNamespace(prefix, baseUri, names):
         setattr(ns.CURIE, name, ns.mk_curie(name))
     return ns
 
-"""
-Partial enumeration of RDF namespace - add others as needed
-"""
+# """
+# Partial enumeration of RDF namespace - add others as needed
+# """
 RDF = makeNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     [ "Property", "Statement", "List"
     , "type", "value"
     , "first", "rest", "nil"
     ])
 
-"""
-Partial enumeration of RDFS namespace - add others as needed
-"""
+# """
+# Partial enumeration of RDFS namespace - add others as needed
+# """
 RDFS = makeNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#",
     [ "Resource", "Class", "Literal", "Container", "Datatype"
     , "label", "comment", "member", "seeAlso"
     ])
 
-"""
-Partial enumeration of OWL namespace
-"""
+# """
+# Partial enumeration of OWL namespace
+# """
 OWL = makeNamespace("owl", "http://www.w3.org/2002/07/owl#",
     [ "Thing", "Nothing"
     , "sameAs", "differentFrom", "equivalentClass"
     ])
 
-"""
-Annalist namespace terms
-"""
+# """
+# Annalist namespace terms
+# """
 ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     [ "Unknown_type"
     # Entity value types
@@ -211,5 +216,9 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "supertype_uris"
     , "user_permissions"
     ])
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
 # End.

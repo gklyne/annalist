@@ -2,15 +2,19 @@
 Record field data functions to support entity data testing
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-import os
-import urlparse
-
 import logging
 log = logging.getLogger(__name__)
+
+import os
+
+from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
@@ -27,19 +31,21 @@ from annalist.views.fields.render_placement import (
     get_placement_classes
     )
 
-from tests import (
+from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
-from entity_testutils           import (
+from .entity_testutils import (
     collection_dir, 
     site_title,
     collection_entity_view_url,
     context_field_row
     )
-from entity_testentitydata      import (
+from .entity_testentitydata import (
     entitydata_list_type_url
     )
-from entity_testfielddesc       import get_field_description, get_bound_field
+from .entity_testfielddesc import (
+    get_field_description, get_bound_field
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -60,7 +66,7 @@ def recordfield_dir(coll_id="testcoll", field_id="testfield"):
 #   the declared URI patterns.
 
 def recordfield_coll_url(site, coll_id="testcoll", field_id="testfield"):
-    return urlparse.urljoin(
+    return urljoin(
         site._entityurl,
         layout.SITE_COLL_PATH%{'id': coll_id} + "/" + 
         layout.COLL_FIELD_PATH%{'id': field_id} + "/"

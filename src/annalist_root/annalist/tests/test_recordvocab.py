@@ -6,16 +6,19 @@ type description sitedata files, and as such duplicates some tests covered by
 module test_entitygenericedit.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2017, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import unittest
 import markdown
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf                        import settings
 from django.db                          import models
@@ -38,11 +41,17 @@ from annalist.models.recordvocab        import RecordVocab
 from annalist.views.form_utils.fieldchoice  import FieldChoice
 from annalist.views.displayinfo             import apply_substitutions
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testfielddesc   import get_field_description, get_bound_field
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testfielddesc import get_field_description, get_bound_field
+from .entity_testutils import (
     make_message, make_quoted_message,
     site_dir, collection_dir,
     site_view_url, collection_edit_url, 
@@ -53,7 +62,7 @@ from entity_testutils       import (
     context_bind_fields,
     check_context_field, check_context_field_value,
     )
-from entity_testvocabdata    import (
+from .entity_testvocabdata import (
     recordvocab_dir,
     recordvocab_coll_url, recordvocab_url, recordvocab_edit_url,
     recordvocab_value_keys, recordvocab_load_keys, 
@@ -61,12 +70,12 @@ from entity_testvocabdata    import (
     vocab_view_context_data, 
     vocab_view_form_data, # recordvocab_delete_confirm_form_data
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, entitydata_list_type_url,
     default_fields, default_label, default_comment, error_label,
     layout_classes
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     get_site_types, get_site_types_sorted, get_site_types_linked,
     get_site_lists, get_site_lists_sorted, get_site_lists_linked,
     get_site_views, get_site_views_sorted, get_site_views_linked,
@@ -75,8 +84,8 @@ from entity_testsitedata    import (
     get_site_fields, get_site_fields_sorted, 
     get_site_field_types, get_site_field_types_sorted, 
     )
-from entity_testviewdata    import recordview_url
-from entity_testlistdata    import recordlist_url
+from .entity_testviewdata import recordview_url
+from .entity_testlistdata import recordlist_url
 
 #   -----------------------------------------------------------------------------
 #
@@ -124,6 +133,16 @@ class RecordVocabTest(AnnalistTestCase):
     def tearDownClass(cls):
         resetSitedata(scope="collections")
         return
+
+    # @classmethod
+    # def setUpClass(cls):
+    #     super(zzzzzz, cls).setUpClass()
+    #     return
+
+    # @classmethod
+    # def tearDownClass(cls):
+    #     super(zzzzzz, cls).tearDownClass()
+    #     return
 
     def test_RecordVocabTest(self):
         self.assertEqual(RecordVocab.__name__, "RecordVocab", "Check RecordVocab class name")
@@ -206,7 +225,6 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self.no_options = [ FieldChoice('', label="(no options)") ]
         # For checking Location: header values...
         self.continuation_url = (
-            TestHostUri + 
             entitydata_list_type_url(coll_id="testcoll", type_id=layout.VOCAB_TYPEID)
             )
         # Login and permissions
@@ -222,7 +240,13 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(RecordVocabEditViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(RecordVocabEditViewTest, cls).tearDownClass()
         # @@checkme@@ resetSitedata()
         return
 
@@ -611,9 +635,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("newvocab", update="RecordVocab", vocab_uri="test:newvocab")
         return
@@ -626,9 +650,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
         return
@@ -685,9 +709,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("copyvocab", update="RecordVocab", vocab_uri="test:copyvocab")
         return
@@ -702,9 +726,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record vocab still does not exist
         self.assertFalse(RecordVocab.exists(self.testcoll, "copytype"))
         return
@@ -765,9 +789,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         u = entitydata_edit_url("edit", "testcoll", layout.VOCAB_TYPEID, entity_id="editvocab", view_id="Vocab_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
         self._check_record_vocab_values("editvocab", update="Updated RecordVocab")
         return
@@ -784,9 +808,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             )
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
-        self.assertEqual(r.content,       "")
-        self.assertEqual(r['location'], self.continuation_url)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'],   self.continuation_url)
         # Check that target record type still does not exist and unchanged
         self._check_record_vocab_values("editvocab")
         return

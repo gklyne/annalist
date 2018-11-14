@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Static hack view to allow Django serving of static files using Django's 
 internal static file server.
@@ -67,7 +70,7 @@ def serve_static(request, path, insecure=False, **kwargs):
             raise Http404("'%s' could not be found" % path)
         document_root, path = os.path.split(absolute_path)
         # log.info("document_root %s, path %s"%(document_root, path))
-    except Exception, e:
+    except Exception as e:
         log.info(str(e))
         raise
     return static.serve(request, path, document_root=document_root, **kwargs)

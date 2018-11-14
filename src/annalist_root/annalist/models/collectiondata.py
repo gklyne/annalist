@@ -2,20 +2,21 @@
 Annalist collection data management utilities
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
+import logging
+log = logging.getLogger(__name__)
+
 import os
 import os.path
-import urlparse
 import shutil
 import json
 import datetime
-from collections    import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.conf import settings
 
@@ -64,6 +65,7 @@ def copy_coll_data(src_coll, tgt_coll):
 
     returns     list of error messages; an empty list indicates success.
     """
+    # @@TESTME: Not tested by test suite
     log.info("Copying collection '%s' to '%s'"%(src_coll.get_id(), tgt_coll.get_id()))
     msgs = []
     entityfinder = EntityFinder(src_coll)

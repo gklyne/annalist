@@ -5,7 +5,7 @@
 #    http://www.alexecollins.com/docker-persistence/
 #
 
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
 VOLUME /annalist_site
 

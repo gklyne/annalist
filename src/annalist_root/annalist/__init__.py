@@ -2,6 +2,9 @@
 Annalist application
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__        = "Graham Klyne"
 __author_email__  = "GK@ACM.ORG"
 __copyright__     = "Copyright 2014 G. Klyne"
@@ -18,7 +21,7 @@ Even sub-releases are stable versions, except for critical bug-fixes
 
 Odd sub-releases are work-in-progress, and code may change from day-to-day.
 """
-__version__        = "0.5.10"   # Software version number (odd = unstable)
+__version__        = "0.5.12"   # Software version number (odd = unstable)
 
 """
 Data compatibility version: this is saved with collection data, and is used to

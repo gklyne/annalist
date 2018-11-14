@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Renderer and value mapper for multiple fields displayed from a referenced entity.
 
@@ -158,7 +161,7 @@ def get_fieldrow_renderer():
     """
     Return field row renderer object.
 
-    This renders multiple fields froma supplied entity as a single row, wrapping
+    This renders multiple fields from a supplied entity as a single row, wrapping
     the entire set of fields in a row <div>.
     """
     r = RenderFieldValue("fieldrow",
@@ -166,7 +169,7 @@ def get_fieldrow_renderer():
         edit_renderer=RenderFieldRow(view_fieldrow) # @@@@ change back to edit
         )
     # Suppress all modal rendering: just render field content
-    # @@TODO: this is a hack - need to re-think how render modes are hamndled.
+    # @@TODO: this is a hack - need to re-think how render modes are handled.
     r._render_label           = None
     r._render_view            = ModeWrapValueRenderer("view", r._view_renderer)
     r._render_edit            = ModeWrapValueRenderer("edit", r._edit_renderer)
@@ -178,20 +181,6 @@ def get_fieldrow_renderer():
     r._render_col_view        = ModeWrapValueRenderer("col_view", r._view_renderer)
     r._render_col_edit        = ModeWrapValueRenderer("col_edit", r._edit_renderer)
     r._render_label           = None
-
-    # r._render_label           = None
-    # r._render_view            = ModeWrapValueRenderer("view", r.view().value_renderer)
-    # r._render_edit            = ModeWrapValueRenderer("edit", r.edit().value_renderer)
-    # r._render_label_view      = ModeWrapValueRenderer("label_view", r.view().value_renderer)
-    # r._render_label_edit      = ModeWrapValueRenderer("label_edit", r.edit().value_renderer)
-    # r._render_col_head        = None
-    # r._render_col_head_view   = ModeWrapValueRenderer("col_head_view", r.view().value_renderer)
-    # r._render_col_head_edit   = ModeWrapValueRenderer("col_head_edit", r.edit().value_renderer)
-    # r._render_col_view        = ModeWrapValueRenderer("col_view", r.view().value_renderer)
-    # r._render_col_edit        = ModeWrapValueRenderer("col_edit", r.edit().value_renderer)
-    # r._render_label           = None
-
-
 
     return r
 

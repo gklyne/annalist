@@ -2,6 +2,9 @@
 This module contains functions to assist in the construction of URIs for views.
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -9,9 +12,9 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-import urllib
-import urlparse
 import re
+
+from utils.py3porting import urljoin, urlsplit, urlunsplit, quote, unquote
 
 # From RFC 3986:
 gen_delims  = ":/?#[]@"
@@ -24,7 +27,7 @@ def uri_quote_param(pval):
     """
     Apply escaping to a supplied query parameter value for inclusion in a URI.
     """
-    return urllib.quote(pval, query_safe)
+    return quote(pval, query_safe)
 
 def uri_base(uri):
     """
@@ -43,7 +46,7 @@ def uri_query_key_val(p):
     If no '=' is present, the value part returned is an empty string.
     """
     kv = p.split("=", 1) + [""]
-    return (kv[0], urllib.unquote(kv[1]))
+    return (kv[0], unquote(kv[1]))
 
 def uri_param_dict(uri):
     """
@@ -160,26 +163,26 @@ def continuation_url_chain(continuation_url):
     >>> hop2p = (uri_base(hop2), uri_param_dict(hop2))
     >>> hop3p = (uri_base(hop3), uri_param_dict(hop3))
     >>> hop4p = (uri_base(hop4), uri_param_dict(hop4))
-    >>> hop1p
-    ('base:hop1', {'search': 's1'})
-    >>> hop2p
-    ('base:hop2', {'search': 's2'})
-    >>> hop3p
-    ('base:hop3', {'search': 's3'})
-    >>> hop4p
-    ('base:hop4', {'search': 's4'})
+    >>> hop1p == ('base:hop1', {'search': 's1'})
+    True
+    >>> hop2p == ('base:hop2', {'search': 's2'})
+    True
+    >>> hop3p == ('base:hop3', {'search': 's3'})
+    True
+    >>> hop4p == ('base:hop4', {'search': 's4'})
+    True
     >>> hop1c = hop1
     >>> hop2c = uri_with_params("base:hop2", search="s2", continuation_url=hop1)
     >>> hop3c = uri_with_params("base:hop3", search="s3", continuation_url=hop2c)
     >>> hop4c = uri_with_params("base:hop4", search="s4", continuation_url=hop3c)
-    >>> hop1c
-    'base:hop1?search=s1'
-    >>> hop2c
-    'base:hop2?search=s2&continuation_url=base:hop1%3Fsearch=s1'
-    >>> hop3c
-    'base:hop3?search=s3&continuation_url=base:hop2%3Fsearch=s2%26continuation_url=base:hop1%253Fsearch=s1'
-    >>> hop4c
-    'base:hop4?search=s4&continuation_url=base:hop3%3Fsearch=s3%26continuation_url=base:hop2%253Fsearch=s2%2526continuation_url=base:hop1%25253Fsearch=s1'
+    >>> hop1c == 'base:hop1?search=s1'
+    True
+    >>> hop2c == 'base:hop2?search=s2&continuation_url=base:hop1%3Fsearch=s1'
+    True
+    >>> hop3c == 'base:hop3?search=s3&continuation_url=base:hop2%3Fsearch=s2%26continuation_url=base:hop1%253Fsearch=s1'
+    True
+    >>> hop4c == 'base:hop4?search=s4&continuation_url=base:hop3%3Fsearch=s3%26continuation_url=base:hop2%253Fsearch=s2%2526continuation_url=base:hop1%25253Fsearch=s1'
+    True
     >>> continuation_url_chain(hop1c) == [hop1p]
     True
     >>> continuation_url_chain(hop2c) == [hop2p, hop1p]
@@ -257,36 +260,45 @@ def url_update_type_entity_id(url_base,
         ^.*/v/<view-id>/<type-id>/(!.*])?$
         ^.*/v/<view-id>/<type-id>/<entity-id>/(!.*])?$
 
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/d/t1/",
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/d/t1/",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/d/t2/'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/d/t1/!all",
+    ...     == 'http://example.com/base/c/coll/d/t2/' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/d/t1/!all",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/d/t2/!all'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/l/list/t1/",
+    ...     == 'http://example.com/base/c/coll/d/t2/!all' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/l/list/t1/",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/l/list/t2/'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/l/list/t1/!all",
+    ...     == 'http://example.com/base/c/coll/l/list/t2/' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/l/list/t1/!all",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/l/list/t2/!all'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/",
+    ...     == 'http://example.com/base/c/coll/l/list/t2/!all' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/v/view/t2/'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/!new",
+    ...     == 'http://example.com/base/c/coll/v/view/t2/' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/!new",
     ...     old_type_id="t1", new_type_id="t2")
-    'http://example.com/base/c/coll/v/view/t2/!new'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/d/t1/e1/",
+    ...     == 'http://example.com/base/c/coll/v/view/t2/!new' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/d/t1/e1/",
     ...     old_type_id="t1", new_type_id="t2",
     ...     old_entity_id="e1", new_entity_id="e2")
-    'http://example.com/base/c/coll/d/t2/e2/'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/e1/",
+    ...     == 'http://example.com/base/c/coll/d/t2/e2/' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/e1/",
     ...     old_type_id="t1", new_type_id="t2",
     ...     old_entity_id="e1", new_entity_id="e2")
-    'http://example.com/base/c/coll/v/view/t2/e2/'
-    >>> url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/e1/",
+    ...     == 'http://example.com/base/c/coll/v/view/t2/e2/' )
+    True
+    >>> ( url_update_type_entity_id("http://example.com/base/c/coll/v/view/t1/e1/",
     ...     old_type_id="t1", new_type_id="t2",
     ...     old_entity_id="e1", new_entity_id="e2")
-    'http://example.com/base/c/coll/v/view/t2/e2/'
+    ...     == 'http://example.com/base/c/coll/v/view/t2/e2/' )
+    True
     """
     rewrite_type_id_patterns = (
         # (<prefix>)/(<type_id>)/<suffix>)
@@ -299,7 +311,7 @@ def url_update_type_entity_id(url_base,
         [ re.compile(r"(^.*/d)/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(!.*)?$")
         , re.compile(r"(^.*/v/\w{0,32})/(?P<type_id>\w{0,32})/(?P<entity_id>\w{0,32})/(!.*)?$")
         ])
-    us, ua, up, uq, uf = urlparse.urlsplit(url_base)
+    us, ua, up, uq, uf = urlsplit(url_base)
     if new_type_id:
         for rexp in rewrite_type_id_patterns:
             match = rexp.match(up)
@@ -324,7 +336,7 @@ def url_update_type_entity_id(url_base,
                     if type_id == old_type_id:
                         up = "%s/%s/%s/%s"%(prefix, new_type_id, entity_id, suffix or "")
                         break
-    return urlparse.urlunsplit((us, ua, up, uq, uf))
+    return urlunsplit((us, ua, up, uq, uf))
 
 if __name__ == "__main__":
     import doctest

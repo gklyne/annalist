@@ -1,5 +1,3 @@
-# $Id: Combinators.py 1047 2009-01-15 14:48:58Z graham $
-#
 """
 Combinators for use with Python code, mostly based on Haskell library elements.
 
@@ -11,6 +9,9 @@ arguments to just one argument to yield a new function of (n-1) arguments.
 
 See: http://en.wikipedia.org/wiki/Currying
 """
+
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2009-2013, Graham Klyne, University of Oxford"
@@ -35,21 +36,12 @@ class compose:
     def __call__(self, *args, **kwargs):
         return self.f(self.g(*args, **kwargs), *self.pending, **self.kwargs)
 
-def curry1(func, arg):
-    """
-    Curry one argument:
-    See: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/229472
-    """
-    import new
-    return new.instancemethod(func, arg, object)
-
 def curry(func, *args):
     """
     Curry multiple arguments:
     See: http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/229472
     
-    As of Python 2.5, a more general version of this is in standard
-    module functools:
+    As of Python 2.5, a general version is in standard module functools:
       http://www.python.org/dev/peps/pep-0309/
       http://docs.python.org/lib/module-functools.html
     """

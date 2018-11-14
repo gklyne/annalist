@@ -18,6 +18,9 @@ It is not intended to check details of web page presentation.
 (The first couple of tests also check aspects of the test site data setup.)
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
@@ -50,10 +53,16 @@ from annalist.views.fields.find_renderers   import is_repeat_field_render_type
 from annalist.views.fields.render_placement import get_placement_options
 from annalist.views.form_utils.fieldchoice  import FieldChoice, get_choice_labels
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site, 
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     site_view_url,
     collection_view_url,
     collection_edit_url,
@@ -62,13 +71,13 @@ from entity_testutils       import (
     collection_entity_edit_url,
     create_user_permissions, create_test_user
     )
-from entity_testcolldata    import (
+from .entity_testcolldata import (
     collectiondata_url, collectiondata_resource_url,
     collectiondata_view_url, collectiondata_view_resource_url,
     collectiondata_value_keys, collectiondata_load_keys,
     collectiondata_create_values, collectiondata_values, collectiondata_read_values,
     )
-from entity_testsitedata    import (
+from .entity_testsitedata import (
     make_field_choices, no_selection,
     get_site_types,        get_site_types_sorted,
     get_site_lists,        get_site_lists_sorted,
@@ -134,11 +143,18 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata()
+        resetSitedata()
+        return
+
+    @classmethod
+    def setUpClass(cls):
+        super(AnnalistSiteDataTest, cls).setUpClass()
+        # @@checkme@@  resetSitedata()
         return
 
     @classmethod
     def tearDownClass(cls):
+        super(AnnalistSiteDataTest, cls).tearDownClass()
         # @@checkme@@  resetSitedata()
         return
 
@@ -183,7 +199,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             { u'\u2588': u"&block;"
             , u'\u2591': u"&blk14;"
             })
-        for u, e in entity_map.iteritems():
+        for u, e in entity_map.items():
             s = s.replace(u, e)
         return s
 
@@ -225,12 +241,12 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 )
             f = next(i, "(@@no value@@)")
             if f != e:
-                print "@@ Expected: %r, found %r"%(e, f)
+                print("@@ Expected: %r, found %r"%(e, f))
                 cols = (row_data
                         .find("div", class_="row")
                         .find_all("div", class_="columns")
                     )
-                print "@@ cols %s"%(cols,)
+                print("@@ cols %s"%(cols,))
             self.assertEqual(e, f, "%s != %s (%r)"%(e, f, row_expected))
         return
 
@@ -288,9 +304,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(type_view[ANNAL.CURIE.view_entity_type], type_uri)
         self.assertIn(ANNAL.CURIE.open_view,                    type_view)
         # Read and check fields used in list and view displays
-        # print "@@ l: " + type_list[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_list[ANNAL.CURIE.list_fields])
-        # print "@@ v: " + type_view[ANNAL.CURIE.id]
         self.check_type_fields(type_id, type_uri, type_view[ANNAL.CURIE.view_fields])
         return
 
@@ -395,7 +409,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         u = collectiondata_url(coll_id=layout.SITEDATA_ID)
         r = self.client.get(u, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
-        self.assertEqual(r.reason_phrase, "FOUND")
+        self.assertEqual(r.reason_phrase, "Found")
         v = r['Location']
         self.assertEqual(v, TestHostUri+collection_url+layout.COLL_META_REF)
         r = self.client.get(v)

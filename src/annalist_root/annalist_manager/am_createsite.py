@@ -4,7 +4,8 @@ Create Annalist/Django site data.
 Note: uses data in `sampledata/empty/annalist_site`
 """
 
-from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
@@ -25,8 +26,8 @@ from annalist.util                  import removetree, replacetree, updatetree, 
 
 from annalist.models.site           import Site
 
-import am_errors
-from am_settings                    import am_get_settings, am_get_site_settings
+from .                              import am_errors
+from .am_settings                   import am_get_settings, am_get_site_settings
 
 def am_createsite(annroot, userhome, options):
     """
@@ -52,7 +53,7 @@ def am_createsite(annroot, userhome, options):
             file=sys.stderr
             )
         return am_errors.AM_UNEXPECTEDARGS
-    site_layout = layout.Layout(sitesettings.BASE_DATA_DIR)
+    site_layout = layout.Layout(sitesettings.BASE_DATA_DIR, sitesettings.SITE_DIR_NAME)
     sitebasedir = site_layout.SITE_PATH
     sitebaseurl = "/annalist/"     # @@TODO: figure more robust way to define this
     # --- If old site exists and --force option given, remove it
@@ -132,7 +133,7 @@ def am_updatesite(annroot, userhome, options):
             file=sys.stderr
             )
         return am_errors.AM_UNEXPECTEDARGS
-    site_layout   = layout.Layout(sitesettings.BASE_DATA_DIR)
+    site_layout   = layout.Layout(sitesettings.BASE_DATA_DIR, sitesettings.SITE_DIR_NAME)
     sitebasedir   = site_layout.SITE_PATH
     sitebaseurl   = "/annalist/"                # @@TODO: figure more robust way to define this
     site          = Site(sitebaseurl, site_layout.SITE_PATH)

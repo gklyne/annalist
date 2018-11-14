@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests image URL display field.
 
@@ -34,10 +37,16 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordfield    import RecordField
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testutils import (
     create_test_user,
     create_user_permissions,
     context_view_field,
@@ -45,7 +54,7 @@ from entity_testutils       import (
     context_list_head_fields,
     context_list_item_fields
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url
     )
 
@@ -152,7 +161,13 @@ class ImageReferenceTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(ImageReferenceTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(ImageReferenceTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

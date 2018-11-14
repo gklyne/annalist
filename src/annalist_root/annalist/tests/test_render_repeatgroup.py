@@ -2,18 +2,20 @@
 Tests for repeat group rendering
 """
 
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
+
+import logging
+log = logging.getLogger(__name__)
 
 import sys
 import os
 import unittest
 import re
-from collections import OrderedDict
-
-import logging
-log = logging.getLogger(__name__)
 
 from django.test.client                 import Client
 
@@ -25,21 +27,29 @@ from annalist.models.recordview         import RecordView
 from annalist.models.recordfield        import RecordField
 from annalist.models.entitydata         import EntityData
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
-from entity_testfielddesc   import get_field_description, get_bound_field
-from entity_testutils       import (
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    init_annalist_test_site,
+    init_annalist_test_coll,
+    resetSitedata
+    )
+from .entity_testfielddesc import (
+    get_field_description, get_bound_field
+    )
+from .entity_testutils import (
     collection_create_values,
     create_test_user,
     context_view_field,
     context_bind_fields,
     context_field_row
     )
-from entity_testtypedata    import (
+from .entity_testtypedata import (
     recordtype_create_values, 
     )
-from entity_testentitydata  import (
+from .entity_testentitydata import (
     entity_url, entitydata_edit_url, 
     specified_view_context_data,
     default_fields
@@ -65,8 +75,15 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
         # resetSitedata(scope="collections")
         return
 
+
+    @classmethod
+    def setUpClass(cls):
+        super(RepeatGroupRenderingTest, cls).setUpClass()
+        return
+
     @classmethod
     def tearDownClass(cls):
+        super(RepeatGroupRenderingTest, cls).tearDownClass()
         resetSitedata(scope="collections")
         return
 

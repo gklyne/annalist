@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 RenderFieldValue class for returning field renderers.  This class works for 
 fields that can be rendered using supplied renderer objects (which may be 
@@ -24,9 +27,20 @@ from django.http        import HttpResponse
 from django.template    import Template, Context
 
 import django
-django.setup()  # Needed for template loader
-from django.template.loaders.app_directories import Loader
- 
+# django.setup()  # Needed for template loader (??)
+
+# Used to bypass configurable template loader so we can render using Context values
+#
+# Mostly, Analist calls template renderers with dict values for context data, which are 
+# fine with the template rendering framework introduced with Django 1.8.  But where 
+# renderers are references using {% include .. %} directives from Django templates, 
+# Context values are provided, and assumed by the compiled templates used with field 
+# value renderers.  So we need to explicitly access the DjangoTemplates engine to render 
+# field values.
+#
+from django.template import engine
+template_backend = engine.Engine.get_default()
+
 from annalist.exceptions import Annalist_Error
 
 #   ------------------------------------------------------------
@@ -130,7 +144,8 @@ class WrapValueRenderer(object):
         try:
             return self.value_renderer.render(context)
         except Exception as e:
-            log.exception("Exception in WrapValueRenderer.value_renderer")
+            msg = "Exception in WrapValueRenderer.value_renderer"
+            log.exception(msg)
             ex_type, ex, tb = sys.exc_info()
             traceback.print_tb(tb)
             response_parts = (
@@ -155,6 +170,8 @@ class TemplateWrapValueRenderer(object):
         self.value_renderer   = WrapValueRenderer(value_renderer)
         return
     def render(self, context):
+        if isinstance(context, dict):
+            raise ValueError("@@@@ TemplateWrapValueRenderer.render called with dict")
         with context.push(value_renderer=self.value_renderer):
             try:
                 return self.compiled_wrapper.render(context)
@@ -180,6 +197,8 @@ class ModeWrapValueRenderer(object):
         self.value_renderer = value_renderer
         return
     def render(self, context):
+        if isinstance(context, dict):
+            raise ValueError("@@@@ ModeWrapValueRenderer.render called with dict")
         with context.push(render_mode=self.render_mode):
             try:
                 return self.value_renderer.render(context)
@@ -260,7 +279,7 @@ class RenderFieldValue(object):
         elif view_template is not None:
             self._view_renderer = Template(view_template)
         elif view_file is not None:
-            self._view_renderer = Template(get_template(view_file))
+            self._view_renderer = get_field_template(view_file)
         else:
             raise Annalist_Error("RenderFieldValue: no view renderer or template provided")
         # Save edit renderer
@@ -269,7 +288,7 @@ class RenderFieldValue(object):
         elif edit_template is not None:
             self._edit_renderer = Template(edit_template)
         elif edit_file is not None:
-            self._edit_renderer = Template(get_template(edit_file))
+            self._edit_renderer = get_field_template(edit_file)
         else:
             raise Annalist_Error("RenderFieldValue: no edit renderer or template provided")
         # Initialize various renderer caches
@@ -445,29 +464,21 @@ class RenderFieldValue(object):
 # Helper function for caller to get template content.
 # This uses the configured Django template loader.
 
-def get_template(templatefile, failmsg="no template filename supplied"):
+def get_field_template(templatefile, failmsg="no template filename supplied"):
     """
-    Retrieve template source from the supplied filename
+    Retrieve field template from the supplied filename
     """
     assert templatefile, "get_template: %s"%failmsg
-    # Instantiate a template loader
-    loader = Loader()
-    # Source: actual source code read from template file
-    # File path: absolute file path of template file
-    source, file_path = loader.load_template_source(templatefile)
-    return source
+    # Use DjangoTemplates backend to get template that works with Context values
+    template = template_backend.get_template(templatefile)
+    return template
 
 # Helper functions for accessing values from context
 
-# @@TODO: this seems redundant, and only used once.  Use context.get()?
 def get_context_value(context, key, default):
     if key in context:
         return context[key]
     return default
-
-# def get_context_repeat_value(context, key, default):
-#     repeat = get_context_value(context, 'repeat', {})
-#     return get_context_value(repeat, key, default)
 
 def get_context_field_value(context, key, default):
     field = get_context_value(context, 'field', {})

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function
+
 """
 Tests for entity module
 """
@@ -20,9 +23,15 @@ from django.test.client         import Client
 from annalist.identifiers       import ANNAL
 from annalist.models.entity     import EntityRoot, Entity
 
-from AnnalistTestCase       import AnnalistTestCase
-from tests                  import TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
-from init_tests             import init_annalist_test_site, init_annalist_test_coll, resetSitedata
+from .AnnalistTestCase import AnnalistTestCase
+from .tests import (
+    test_layout,
+    TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
+    )
+from .init_tests import (
+    copySitedata,
+    init_annalist_test_site, init_annalist_test_coll, resetSitedata
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -54,7 +63,13 @@ class EntityRootTest(TestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityRootTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityRootTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 
@@ -308,7 +323,13 @@ class EntityTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
+        super(EntityTest, cls).tearDownClass()
         resetSitedata(scope="all")
         return
 

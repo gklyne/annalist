@@ -10,110 +10,177 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 - [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [ ] Add documentation for view Type, View, List and Group forms (similar to view Field ...)
+- [ ] Add documentation for view Type, View and List forms (similar to view Field ...)
 - [x] Initial corpus of FAQs
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
+    - Add etag / if-match support ?  (does this help with POST? How?)
 
 See also: https://www.divio.com/en/blog/documentation/
-
 
 # Feedback
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Version 0.5.10
-
-- [x] Flush collection caches on loading customize page rather than view page
-- [x] Bound_field access to FieldDecription: use methods not dictionary
-    - [x] Update test case context checking (see bound_field holding comments)
-    - [x] Use 'entity_testfielddesc' methods in `entity_testtypedata`
-    - [x] Use 'entity_testfielddesc' methods in `entity_testviewdata`
-    - [x] Use 'entity_testfielddesc' methods in `entity_testvocabdata`
-    - [x] various test modules _check_context_fields use 'entity_testfielddesc' methods
-        - [x] test_recordtype.py
-        - [x] test_recordfield.py
-        - [x] test_recordvocab.py
-        - [x] test_recordlist.py, entity_testlistdata
-        - [x] test_recordview.py, entity_testviewdata
-    - [x] rename *_context_data contruction methods
-    - [x] rename *_form_data contruction methods
-- [x] Test code general cleanup
-    - [x] replace <field>.description['field_id'] with .field_id
-    - [x] replace <field>.description['field_name'] with .field_name
-    - [x] replace <field>.description['field_label'] with .field_label
-    - [x] eliminate redundant entitydata_form_data; use entitydata_default_view_form_data
-    - [x] eliminate recordtype_zzz_view_context_data, use type_view_context_data
-    - [x] eliminate recordtype_zzz_view_form_data, use type_view_form_data
-    - [x] Refactoring view context tests: new module entityfielddesc has field details, and creating and/or editing functions to create context structures for comparison in tests.
-    - [x] Remove old (commented-out and redundant) code in test cases - look for @@REMOVE
-- [x] View_field_sel change label to "Field ref".
-- [x] Render modes:  instead of a separate function for each mode, pass parameter to each renderer and select at the point of rendering (e.g. see render_fieldvalue.render_mode)
-    - this should avoid the need for the multiple layers of wrapping and duplication of render mode functions.  Field description should carry just a single renderer; figure later what to do with it.)
-- [x] In render_select.py, and elsewhere: remove references to {{field.field_value_link_continuation}} and use locally generated {{field_labelval}}, etc.
-- [x] Rename fields/properties:
-    - "annal:record_type" -> "annal:list_entity_type" (for list target type)
-    - "annal:record_type" -> "annal:view_entity_type" (for view target type)
-    - "annal:record_type" -> "annal:group_entity_type" (for field group target type)
-    - Group_target_type -> Group_entity_type
-    - List_target_type -> List_entity_type
-    - View_target_type -> View_entity_type
-    - [x] Find all references in code and sitedata
-        - (look for "annal:record_type" and "ANNAL.CURIE.record_type")
-        - [x] appears in field definitions:
-            - [x] Field_restrict
-            - [x] Group_field_sel
-            - [x] Group_target_type
-            - [x] List_field_sel
-            - [x] List_target_type
-            - [x] View_field_sel
-            - [x] View_target_type
-        - [x] appears as field in list definitions
-        - [x] appears as field in view definitions, and:
-            - Field_view comment
-            - List_view comment
-        - [x] annalist/identifiers.py
-        - [x] annalist/models/entityfinder.py
-        - [x] annalist/models/recordfield.py
-        - [x] annalist/tests/entity_testfielddesc.py
-        - [x] annalist/tests/entity_testviewdata.py
-        - [x] annalist/tests/test_data_migration.py
-        - [x] annalist/tests/test_entity_subtype_selection.py
-        - [x] annalist/tests/test_entityeditenumfield.py ("target_record_type")
-        - [x] annalist/tests/test_field_subproperty.py
-        - [x] annalist/tests/test_fielddescription.py
-        - [x] annalist/tests/test_image_url.py
-        - [x] annalist/tests/test_import_resource.py
-        - [x] annalist/tests/test_jsonld_context.py
-        - [x] annalist/tests/test_linked_records.py
-        - [x] annalist/tests/test_recordtype.py ("annal:record_type")
-        - [x] annalist/tests/test_recordview.py ("view_record_type", "target_record_type", "annal:record_type")
-        - [x] annalist/tests/test_render_ref_multifields.py
-        - [x] annalist/tests/test_render_repeatgroup.py:
-        - [x] annalist/tests/test_sitedata.py:
-        - [x] annalist/tests/test_turtle_output.py:
-        - [x] annalist/tests/test_upload_file.py:
-    - [x] Add migraton in RecordList, RecordView, RecordGroup
-    - [x] Add migration tests
-- [x] In entityedit, fix up population of context 'record_type'
-- [x] entity_testentitydata.specified_view_context_data add type URI param
-- [x] Allow `annal:task_buttons` in view definition to define buttons for both entity edit and view displays
-- [x] Update Annalist_schema to reflect changes
-- [x] Update RDF schema to use different properties for subclass and subproperty relations between Annalist `Class`/`Property` entities describing them.  Add aliases to support migration.
-- [x] migrate content of all installable collections
-
 # Version 0.5.11, towards 0.5.12
 
-- [ ] Update python to latest in version 2 series
-- [ ] Update pip to latest version in python environment (for continued testing)
-- [ ] Update Django version used to latest version designated for long term support (1.8? 2.x?)
-- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+NOTE: this release may fail (specifically, the test suite may fail to complete) on versions of Python lower than 2.7.15 due to a bug in the SQLite libraries.  See further notes below.
+
+NOTE: the devlopment environment (`devel` configuration) settings no longer 
+work "out of the box".  This is the default case when running `manage.py runserver`,
+so when using this command either (a) initialize the development site data in
+the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).
+
+NOTE: this release falls foul of a bug in earlier versions of SQLite3: see notes "Problems with SQLite3" below.
+
+- [x] Update python to latest in version 2 series
+- [x] Update pip and setuptools to the latest version in the python environment (for continued testing).  I used the following commands for this:
+
+        rm -rf anenv
+        virtualenv anenv -p python2.7
+        source anenv/bin/activate
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py
+        # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
+        pip install --upgrade setuptools
+        # Note: installation reports success, then I got an error traceback, which seems
+        #       to be caused by an access to the old (now removed) setuptools directory.
+        # It seems some old setup files are bound to the active python environment, 
+        # so need to reactivate:
+        deactivate
+        source anenv/bin/activate
+        cd src
+        # Now install Annalist itself
+        cd ..
+        python setup.py clean --all
+        python setup.py build
+        python setup.py install
+
+    `python setup.py install` still fails to reliably install dependencies,
+    so I used:
+
+        pip install -r annalist_root/requirements.txt
+
+    then the `python setup.py` commands.
+
+    [Later] After upgrading to Python 2.7.15 (on MacOS), software installation into a virtual environment seems to be OK again.
+
+    [Later] I ran into some problems with setup.py on Python3, that were resolved by:
+
+        pip install certifi
+
+- [x] Update other packages (in setup.py)
+- [x] Move from deprecated oauth2client package to recommended replacement for OpenId Connect (OIDC) logins:
+
+    This requires using HTTPS for accessing the server.  See `src/annalist_root/stunnel_dev_https.conf` for using `stunnel` to proxy HTTPS requests to HTTP for Django's internal development server.  
+
+    Alternatively, to test the server over HTTP with OIDC login capability, use:
+
+        OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runser
+
+- [x] Update Django version to 1.11 (last to support Python 2)
+
+    Changes in Django 1.11 include:
+
+    - redirects no longer include hostname (cf. RFC 7231 changes to Location header);
+      this mainly affects test cases.
+    - the pluggable templating system does not accept Context values, though these
+      are still required when using the Django templating engine directly; 
+      this mainly affects views/fields/render_fieldvalue, which bypasses the 
+      pluggable rendering mechanisms.
+    - the Template.render method requires a request parameter (cf. views/generic).
+    - the above changes also affect login/login_views.
+    - updates to settings are required to configure the templating framework.
+
+- [x] Add test case for HEAD requests
+
+- [x] Update to support Python 3
+    - https://docs.python.org/3/howto/pyporting.html
+    - http://python3porting.com/problems.html
+    - [x] Review test coverage (93% overall, but some key modules 40-80%)
+    - [x] Create branch for Python 3 testing
+    - [x] from __future__ import absolute_import, division, print_function, unicode_literals
+    - [x] Install pylint, run python 3 porting tests
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Change all py3porting references to utils, remove version in annalist
+    - [x] Run test suite with `python -3 ...`
+    - [x] Check for dependencies stuck at Python2
+        - NOTE: Django 1.11 has regression on Python 3.6 (generator syntax)
+        - It's easily fixed, but version 1.11 is no longer being maintained
+            - See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
+            - See: https://stackoverflow.com/a/48822656/324122
+        - NOTE: rdflib-jsonld Py3 compatibility isn't yet released to PyPI
+        - Also requires modification to rdflib-jsonld current branch
+        - see: https://github.com/RDFLib/rdflib-jsonld/issues/55
+    - [x] Test under Python 3
+    - [x] Update installation documents
+
+- [x] Update annalist-manager to Python 3 compatibility
+    - [x] Create test suite
+    - [x] from __future__ imports ...
+    - [x] Fix pylint reports and test code under Python 2
+    - [x] Test under Python 3   
+
+- [x] Fix CSRF verification fails on entity delete confirmation dialog
+    - Pass request to template render method
+- [x] Allow recognition of "HTTP_X_FORWARDED_PROTOCOL" header (injected by Apache proxy).
+- [x] Remove hard-coded references to "annalist_site" directory with value defined by configuration settings.
+- [x] Fix server error generating Turtle output from ivalidf JSON-LD (a knock-on effect from using Uniciode literals with StringIO)
+- [x] Added new Python3 comnpatibility shims `text_to_bytes` and `write_bytes`
+- [x] Add documentation for OIDC setup with HTTPS proxying.
+
+## Problems with SQLite3 (Annalist 0.5.11 and 0.5.12)
+
+There was a segfault problem while running the latest tests under Python 2.7.14.  This was eventually tracked down to a bug in SQLite3.  More recent versions of Python on MacOS include an updated SQLite3.  On Ubuntu, the system installed SQLite3 is used, and the bug is not fixed in Ubuntu releases 14.04 or 16.04.  The recommended way to avoid this problem on Ubuntu is to use a more recent verson of Ubuntu (18.04 or later).
+
+What follows are my notes from getting Annalist tests working on MacOS and Ububntu.
+
+- Installing package `faulthander`, and modifying manage.py to activate it, showed the fault happening in sqlite3.
+- Updated Python to 2.7.15 and created new virtualenv seems to have fixed this problem (on MacOS).
+- Still having SQLite problems when trying to runon Ubuntu 14.04...
+- https://code.djangoproject.com/ticket/24080
+- https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=820225
+- https://www.sqlite.org/src/info/7f7f8026eda38
+- When installing Python from source on Ubuntu, tried using `make altinstall` rather than `make install`, then use `virtualenv -p python2.7` when creating enviroment for annalist.  Th python instalkl is OK, but still crashes in the Annalist test suite - assume it's still using buggy sqlite3.
+- sqlite3 version installed on Ubuntu 14.04 is "SQLite version 3.8.2 2013-12-06 14:53:30".  3.12.1 appears to be when the fix was applied.
+- Tried `do_release_update` to Ubuntu 16.04, but problem still persisted (sqlite3 version 3.11.0)
+- The following commands on Ububntu 16.04, updating sqlite to version 3.22.0, fixed the test suite problem for me:
+
+    apt install software-properties-common
+    add-apt-repository ppa:jonathonf/backports
+    apt-get update && sudo apt-get install sqlite3
+
+(From https://linuxhint.com/install-sqlite-ubuntu-linux-mint/; not sure if this works for earlier versions of Ubunbtu.)
+
+- Running the Annalist server generates an error (import error with "datetime"), apparently because the Ubuntu upgrade has messed up the python virtual environment.  Eventually, I reinstalled  Python 2.7.15 (see above), regenerated the virtual environment and reinstalled Annalist to get the server working.
+
+(Sub-release)
+
+- [ ] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
+- [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
+- [ ] If field name in view is blank/undefined/invalid: display placeholder.
+- [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
+- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
+- [ ] When referencing an entity, render using annal:uri if defined
+- [ ] When locating a referenced entity, recognize annal:uri value if defined
+- [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
+- [ ] Tidy up HTTPS deployment
+    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
     - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
+        - Done for annalist-dev
         - [ ] Document setup process.
     - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
+    - See also: 
+        - https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
+        - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
+        - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
+- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+
+(Sub-release?)
+
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
@@ -142,22 +209,16 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
-- [ ] Automated test suite for annalist_manager
-    - [ ] annalist-manager initialize [ CONFIG ]
-    - [ ] annalist-manager createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]
-    - [ ] annalist-manager updateadminuser [ username ] [ CONFIG ]
-    - [ ] annalist-manager setdefaultpermissions [ permissions ] [ CONFIG ]
-    - [ ] annalist-manager setpublicpermissions [ permissions ] [ CONFIG ]
-    - [ ] annalist-manager deleteuser [ username ] [ CONFIG ]
-    - [ ] annalist-manager createsitedata [ CONFIG ]
-    - [ ] annalist-manager updatesitedata [ CONFIG ]
-    - etc.
+- [x] Automated test suite for annalist_manager
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
     - Started moving toward parameterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues
+
+(Alpha release 0.9.0??)
+
 
 Technical debt:
 
@@ -171,11 +232,11 @@ Technical debt:
 - [ ] Consider `views.site`, `views.collection` refactor to use `views.displayinfo`
 - [ ] Implement "get the data" link as a field renderer?
 - [ ] review view URL returned for entities found with alternative parentage:
-    - currently force URL returned to be that of original parent, not alt. 
+    - currently forces URL returned to be that of original parent, not alt. 
     - This is done to minimize disruption to tests while changing logic.
     - See: _entityviewurl member variable
-    - logic is handled in `Entity.try_alt_parentage` and _init_child`
-    - may want to consider promoting entityviewurl to constructor parameter for all Entity.
+    - logic is handled in `Entity.try_alt_parentage` and `_init_child`
+    - may want to consider promoting entityviewurl to constructor parameter for all Entity types.
 - [ ] Delay accessing settings data until actually needed, so that new dependencies (e.g. models on views) don't cause premature selection.  This will help to avoid certain unexpected problems cropping up as happened with release 0.1.22 logging setup for annalist-manager.
 - [ ] After reworking site data access, review `layout.py` and patterns for accessing entities, metadata, context data, etc.
     - The various relative references for accessing context data are particularly unclear in the current software.
@@ -230,18 +291,24 @@ Technical debt:
     - [ ] Remove '_group' from EntityTypeInfo dispatching tables
     - [ ] Clean up dead code:
         - [ ] test_recordfield.py
-- [ ] Test cases: use <namespace>.CURIE.??? values rather than literal CURIEs
+- [ ] Test cases: use <namespace>.CURIE.:: values rather than literal CURIEs
+    -
+
+
 
 Data collection definitions:
 
 - [ ] VoID
 - [ ] DCAT
 - [ ] PROV
+- [x] OA
 - [x] CRM
 
 
 Usability notes:
 
+- [ ] After copy entity, and edit new entity values, returns to view of original entity: would be better to return to view of copy if all is well.
+- [ ] Review method of calculating label widths for fields: consider table lookup that can work with widths that are not sub-multiple of 12 (e.g. 9?).  Problem is that actual width needs to be presented as 12ths of smaller field - how to maintain reasonable alignments?
 - [ ] Provide renderer that shows calculated supertype transitive closure?
 - [ ] Allow multiple entity deletes from list display 
     - views.entitylist > post - allow and handle multiple ids for delete operation
@@ -270,6 +337,7 @@ Usability notes:
     - This could be tricky, as each view does its own auth checks.
     - Would need much better structuring of view dispatching to enable pre-flight auth check.
     - As an edge case, don't worry about this immediately.
+    - Can error message be improved to clarify what is happening?
 - [ ] Try to make changing entity type and entity id follow-through more smoothly.
     - especially when creating a supertype and selecting an appropriate subtype.
 - [ ] Better support for type renaming: hunt out all references and rename them too?
@@ -298,9 +366,13 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Update Django version used to latest version designated for long term support
+    - This will mean cutting adrift from Python 2 support.
+    - Leaving this until after version 1 is released.
+- [ ] Record timestamp in data records (created,updated)
+    - Generate etag too
 - [ ] New field renderer for displaying/selecting/entering type URIs, using scan of types
-- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end
-definitions.
+- [ ] Implement in-memory entity storage to speed up test suite, and lay groundwork for LDP back-end definitions.
 - [ ] Consider new render type for URI reference (or fragment) relative to URI specified in another entity.
     - Use-case for this is Climb! data where MEI resource should be referenced just once, with MEI embodiments listing just the fragment identifiers.
 - [ ] Make it easier to create subtype + view + list...
@@ -372,6 +444,7 @@ definitions.
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
     - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
+    - could this work on output like migration rules do on input?
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
 - [ ] consider render type option for repeat group rows without headings? (simple repeat group doesn't hack it).
@@ -388,6 +461,8 @@ definitions.
     - [ ] Calling sites to collect continuation are: EntityGenericListView.get, EntityGenericListView.post, EntityDeleteConfirmedBaseView.complete_remove_entity, GenericEntityEditView.get, GenericEntityEditView.post.
 - [ ] Image collections - check out http://iiif.io/, http://showcase.iiif.io/, https://github.com/pulibrary/loris
 - [ ] Review field placement and layout grid density (16col instead of 12col?)
+    - make grid density a view option?
+    - remove field placement values from field definitions?
 - [ ] Rationalize common fields to reduce duplication?
     - but note that fields may use different comment/help text, so maybe not.
 - [ ] introduce general validity checking framework to entityvaluemap structures (cf. unique property URI check in views) - allow specific validity check(s) to be associated with view(s)?  But note that general philosophy is to avoid unnecessary validity checks that might impede data entry.
