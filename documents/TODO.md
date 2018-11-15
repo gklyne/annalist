@@ -27,11 +27,14 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
 - [x] Address GitHub security alerts for dependencies
 - [x] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
-- [ ] Rename collection: if already exists, wrong id is reported.  Also, update collection metadata id to match directory name used?  (Causes inconsistent display if collecton is copied by hand - displays old name.)
+- [x] Rename collection: if already exists, wrong id is reported.  
+- [x] Update collection metadata id to match directory name used?  (Causes inconsistent display if collection is copied by hand - displays old name.)
+- [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
+    - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site darta is created or updated.
 - [ ] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
-- [ ] When referencing an entity, render using annal:uri if defined
+- [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
 - [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
 - [ ] Tidy up HTTPS deployment
@@ -92,6 +95,8 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
+- [ ] Apply id update in migration logic for all entity types?  (cf. collection)
+- [ ] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings

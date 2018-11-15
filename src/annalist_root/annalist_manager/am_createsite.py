@@ -105,6 +105,14 @@ def am_createsite(annroot, userhome, options):
     print("-   to: %s"%(provider_dir_tgt,))
     ensure_dir(provider_dir_tgt)
     updatetree(provider_dir_src, provider_dir_tgt)
+    # --- Copy sample system configuration files to config directory
+    config_dir_src = os.path.join(annroot, "annalist/data/config_examples")
+    config_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "config")
+    print("Copy system configuration sample files:")
+    print("- from: %s"%(config_dir_src,))
+    print("-   to: %s"%(config_dir_tgt,))
+    ensure_dir(config_dir_tgt)
+    updatetree(config_dir_src, provider_dir_tgt)
     # --- Created
     print("Now run 'annalist-manager initialize' to create site admin database")
     return status
@@ -194,13 +202,21 @@ def am_updatesite(annroot, userhome, options):
     print("Generating context for site data")
     sitedata.generate_coll_jsonld_context()
     # --- Copy provider data to site config provider directory
-    provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
     provider_dir_src = os.path.join(annroot, "annalist/data/identity_providers")
+    provider_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "providers")
     print("Copy identity provider data:")
     print("- from: %s"%(provider_dir_src,))
     print("-   to: %s"%(provider_dir_tgt,))
     ensure_dir(provider_dir_tgt)
     updatetree(provider_dir_src, provider_dir_tgt)
+    # --- Copy sample system configuration files to config directory
+    config_dir_src = os.path.join(annroot, "annalist/data/config_examples")
+    config_dir_tgt = os.path.join(sitesettings.CONFIG_BASE, "config")
+    print("Copy system configuration sample files:")
+    print("- from: %s"%(config_dir_src,))
+    print("-   to: %s"%(config_dir_tgt,))
+    ensure_dir(config_dir_tgt)
+    updatetree(config_dir_src, provider_dir_tgt)
     return status
 
 def migrate_old_data(old_site_dir, old_data_dir, new_site_dir, new_data_dir):

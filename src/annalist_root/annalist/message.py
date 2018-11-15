@@ -109,7 +109,7 @@ SITE_RESOURCE_NOT_EXIST     = "Site resource %(ref)s does not exist"
 COLLECTION_ID               = "Problem with collection identifier"
 COLLECTION_ID_INVALID       = "The collection identifier is missing or not a valid identifier"
 COLLECTION_LABEL            = "Collection %(id)s"
-COLLECTION_EXISTS           = "Collection %(id)s already exists"
+COLLECTION_EXISTS           = "Collection %(save_id)s already exists"
 COLLECTION_NOT_EXISTS       = "Collection %(id)s does not exist"
 COLLECTION_REMOVED          = "The following collections were removed: %(ids)s"
 

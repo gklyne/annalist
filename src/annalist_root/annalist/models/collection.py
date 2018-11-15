@@ -121,8 +121,11 @@ class Collection(Entity):
             [ (ANNAL.CURIE.comment,     ANNAL.CURIE.meta_comment    )
             ])
         collmetadata = self._migrate_values_map_field_names(migration_map, collmetadata)
+        collmetadata[ANNAL.CURIE.id] = self._entityid # In case directory renamed by hand
+        #@@ redundant?...
         if collmetadata[ANNAL.CURIE.type_id] == "_coll":
             collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
+        #@@
         return collmetadata
 
     def flush_collection_caches(self):
@@ -234,7 +237,7 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
-        #@@ TODO: remove this, not covered by tests.  Or remove entiure method.
+        #@@ TODO: remove this, not covered by tests.  Or remove entire method.
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):

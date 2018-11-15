@@ -234,9 +234,11 @@ If using Google authentication, remember to update the login redirect URLs on th
 
 ### Setting up Apache httpd on Ubuntu to forward HTTPS requests
 
+NOTE:  Sample configuration files should be created in directory `~/.annalist/config/` by the site initialization procedure (`annalist-manager createsite` or `annalist-manager updatesite` commands)
+
 Prerequisites:
 
-- Apache2 web server installed and running (in default confuguration with test page)
+- Apache2 web server installed and running (in default configuration with test page)
 
 Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, anmd should be replaced with the actual domain name of the server running Annalist.
 
@@ -341,14 +343,14 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
 
-## Set up Gogle authentication
+## Set up Google authentication
 
 See [Configuring Annalist to use OpenID Connect](./openid-connect-setup.md).
 
 
 ## Running as a Docker container
 
-**NOTE** the Docker containers c5eated for Annalist are intended for evaluation or local use.  They do not have OpenID connect logins configured, and the annalist server accepts HTTP coinnections on port 8000, including for the login username/password form.  You should build your own Annalist docker containers (with HTTPS proxying, OpenID connect and firewall access restrictions configured) for production use. The `docker/annalist_dev` files may be used as a starting point for this.
+**NOTE** the Docker containers created for Annalist are intended for evaluation or local use.  They do not have OpenID connect logins configured, and the Annalist server accepts HTTP coinnections on port 8000, including for the login username/password form.  You should build your own Annalist docker containers (with HTTPS proxying, OpenID connect and firewall access restrictions configured) for production use. The `docker/annalist_dev` files may be used as a starting point for this.
 
 Prerequisite for this option:  a Linux operating system with [Docker](https://www.docker.com) installed.  (Also appears to work on Mac with Docker.)
 
