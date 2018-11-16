@@ -57,6 +57,7 @@ _field_view_files = (
     , "EntityId":       "field/annalist_view_entityid.html"
     , "Identifier":     "field/annalist_view_identifier.html"
     , "Padding":        "field/annalist_view_padding.html"
+    , "Placeholder":    "field/annalist_view_placeholder.html"
     })
 
 _field_edit_files = (
@@ -68,6 +69,7 @@ _field_edit_files = (
     , "EntityId":       "field/annalist_edit_entityid.html"
     , "Identifier":     "field/annalist_edit_identifier.html"
     , "Padding":        "field/annalist_edit_padding.html"
+    , "Placeholder":    "field/annalist_view_placeholder.html"
     })
 
 _field_get_renderer_functions = (

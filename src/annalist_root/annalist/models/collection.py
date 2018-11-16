@@ -716,7 +716,7 @@ class Collection(Entity):
 
         Returns field entity if found, otherwise None.
         """
-        field_cache.get_field(self, field_id)
+        #@@ field_cache.get_field(self, field_id)
         t = field_cache.get_field(self, field_id)
         # Was it previously created but not cached?
         if not t and RecordField.exists(self, field_id, altscope="all"):
@@ -801,7 +801,18 @@ class Collection(Entity):
         if not valid_id(field_id):
             msg = "Collection %s get_field(%s) invalid id"%(self.get_id(), field_id)
             log.error(msg)
-            raise ValueError(msg, field_id)
+            # Construct and return a placeholder field
+            ph_meta = (
+                { RDFS.CURIE.label:               "(field error)"
+                , ANNAL.CURIE.field_render_type:  "_enum_render_type/Placeholder"
+                , ANNAL.CURIE.field_value_mode:   "_enum_value_mode/Value_direct"
+                , ANNAL.CURIE.field_placement:    "small:0,12"
+                , ANNAL.CURIE.placeholder:        
+                    "(Invalid field id: '%s')"%(field_id,)
+                })
+            f = RecordField._child_init(self, "_placeholder")
+            f.set_values(ph_meta)
+            return f
         return self.cache_get_field(field_id)
 
     def get_uri_field(self, property_uri):
