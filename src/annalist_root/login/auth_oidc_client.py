@@ -68,7 +68,7 @@ def oauth2_flow_from_provider_data(provider_data, redirect_uri=None, state=None)
 
 class oauth2_flow(object):
     """
-    Choreographs the oauth2 dance used to obtain a user authetication credential.
+    Choreographs the oauth2 dance used to obtain a user authentication credential.
     """
 
     def __init__(self, provider_data, scope=None, state=None, redirect_uri=None):
@@ -88,6 +88,12 @@ class oauth2_flow(object):
         self._session       = session
         self._auth_uri      = auth_uri
         self._state         = state
+        log.debug("oauth2_flow: provider_data %r"%(self._provider_data,))
+        log.debug("oauth2_flow: scope         %r"%(self._scope,))
+        log.debug("oauth2_flow: redirect_uri  %r"%(self._redirect_uri,))
+        log.debug("oauth2_flow: session       %r"%(self._session,))
+        log.debug("oauth2_flow: auth_uri      %r"%(self._auth_uri,))
+        log.debug("oauth2_flow: state         %r"%(self._state,))
         return
 
     def step1_get_state_token(self):
@@ -102,6 +108,7 @@ class oauth2_flow(object):
         requests an access token for user authentication.
         """
         auth_resp = request.build_absolute_uri()
+        log.info("step2_exchange: auth_resp %r", auth_resp)
         token = self._session.fetch_token(self._provider_data['token_uri'], 
             authorization_response=auth_resp,
             # client_id=self._provider_data['client_id'],
@@ -161,7 +168,7 @@ class OIDC_AuthDoneView(generic.View):
         # The user id is entered by the user on the login form, and is used as a key to
         # access authenticated user details in the Django user database.  The user id 
         # itself is not checked by the Oauth2 login flow, other than for checking that
-        # it containbs only work characters
+        # it contains only work characters
         #
         # Instead, we trust that the associated email address has been confirmed by the 
         # OAuth2 provider, and don't allow login where the email adress differs from any 

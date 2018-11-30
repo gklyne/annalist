@@ -1,0 +1,289 @@
+# Example Nginx server configuration file for Annalist proxying from port 80.
+#
+# Place a suitably edited version of this file in the @@@@ directory
+# (e.g. `/etc/apache2/sites-available`)
+#
+# @@@@
+# Setting up `letsencrypt` with `certbot` certificate should create similar file
+# for HTTPS access.
+
+# @@ Change "annalist.example.org" below to your local Annalist server virtual host name
+# @@ If necessary, change `/var/www` below to an appropriate web document directory
+# @@ If necessary, change `/var/log` below to an appropriate log file directory
+# @@ If necessary, change `:8000` below to the port served by Annalist
+
+Create /etc/nginx/conf.d/annalist.conf (NOTE: this is done in preference to editing the nginx.conf file)
+
+    server {
+        server_name annalist.example.org;
+        listen 80;
+        listen [::]:80;
+
+        # Non-proxy content
+        location / {
+            root /var/www;
+            index index.html index.htm;
+        }
+
+        # Proxy content matching 
+        location ~ /(annalist|static|admin) {
+            proxy_pass http://localhost:8000;
+            proxy_http_version 1.1;
+            proxy_buffering off;
+            proxy_set_header X-Real-IP       $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+        }
+
+        # @@@@
+        # Redirect HTTP URLs to HTTPS equivalent
+        # (Should be added by the certbot utility when configuring letsencrypt certificate)
+        # if ($scheme != "https"){
+        #     return 301 https://$host$request_uri;
+        # }
+
+    }
+
+@@@@@@@@@@@@@@@
+
+<VirtualHost *:80>
+    ServerName  "annalist.example.org"
+    ServerAdmin annalist-admin@annalist.example.org
+    ErrorLog /var/log/apache2/annalist-error.log
+    CustomLog /var/log/apache2/annalist-access.log combined
+
+    <location />
+        allow from all
+    </location>
+
+    # For robots.txt:
+    DocumentRoot "/var/www"
+
+    # Reverse-proxy Annalist URL paths:
+    # (This is overridden by URL rewriting for redirect to HTTPS)
+    ProxyPass        /annalist http://localhost:8000/annalist
+    ProxyPassReverse /annalist http://localhost:8000/annalist
+    ProxyPass        /static   http://localhost:8000/static
+    ProxyPassReverse /static   http://localhost:8000/static
+    ProxyPass        /admin    http://localhost:8000/admin
+    ProxyPassReverse /admin    http://localhost:8000/admin
+
+    ProxyPreserveHost On
+
+    # Redirect HTTP URLs to HTTPS equivalent
+    # (Should be added by the certbot utility when configuring letsencrypt certificate)
+    # RewriteEngine on
+    # RewriteCond %{SERVER_NAME} =annalist.example.org
+    # RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+
+</VirtualHost>
+
+
+
+------
+
+
+#### Install nginx:
+
+    yum install nginx
+    cd /etc/nginx/conf.d/
+    cp nginx.conf nginx.conf.orig
+    systemctl start nginx
+    systemctl enable nginx
+    firewall-cmd --add-service=http
+    firewall-cmd --add-service=http --permanent
+    firewall-cmd --add-service=https
+    firewall-cmd --add-service=https --permanent
+
+At this point, browse to http://antheia.oerc.ox.ac.uk to confirm server is running; expect to see:
+
+    This is the default index.html page that is distributed with nginx on Fedora. It is located in /usr/share/nginx/html.
+
+    You should now put your content in a location of your choice and edit the root configuration directive in the nginx configuration file /etc/nginx/nginx.conf.
+
+    Create selfsigned certificate for testing.  See https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7.  See also /etc/ssl/certs/makedummycert and .../renewdummycert.
+
+    cd /etc/ssl/
+    mkdir private
+    chmod 700 private
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+    openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+    openssl dhparam -out /etc/ssl/certs/dhparam_4096.pem 4096
+    ls certs/
+    less certs/make-dummy-cert
+    less certs/renew-dummy-cert
+
+Answers to openssl command:
+
+    # sudo openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+        -keyout /etc/ssl/private/nginx-selfsigned.key \
+        -out /etc/ssl/certs/nginx-selfsigned.crt
+    [...]
+    Country Name (2 letter code) [XX]:UK
+    State or Province Name (full name) []:Oxfordshire
+    Locality Name (eg, city) [Default City]:Oxford
+    Organization Name (eg, company) [Default Company Ltd]:University of Oxford
+    Organizational Unit Name (eg, section) []:OeRC
+    Common Name (eg, your name or your server's hostname) []:antheia.oerc.ox.ac.uk
+    Email Address []:graham.klyne@oerc.ox.ac.uk
+
+Configure nginx to use SSL certificate.
+
+Create /etc/nginx/conf.d/ssl.conf (NOTE: this is done in preference to editing the nginx.conf file)
+
+    server {
+        listen 443 http2 ssl;
+        listen [::]:443 http2 ssl;
+
+        server_name antheia.oerc.ox.ac.uk;
+
+        ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+        ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+        ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+        # The following is broadly as recommended by :
+        #
+        # https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7
+        #
+        # I'm not sure why the recommendation to use Google's DNS (8.8.8.8, etc)
+        # The source pages referenced don't specify these, so I'll switch them to use
+        # Oxford Universitry resolvers per https://help.it.ox.ac.uk/network/servers/index#dns 
+
+        ########################################################################
+        # Adapted from from https://cipherli.st/                               #
+        # and https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html #
+        ########################################################################
+
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+        ssl_ecdh_curve secp384r1;
+        ssl_session_cache shared:SSL:10m;
+        ssl_session_tickets off;
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        # Disable Goole resolver config
+        # resolver 8.8.8.8 8.8.4.4 valid=300s;
+        # Add Oxford Uni resolvers:  auth0.dns.ox.ac.uk auth1.dns.ox.ac.uk auth2.dns.ox.ac.uk
+        resolver 129.67.1.190 129.67.1.191 163.1.2.190 valid=300s;
+        resolver_timeout 5s;
+        # Disable preloading HSTS for now.  You can use the commented out header line that includes
+        # the "preload" directive if you understand the implications.
+        #add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+        add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+        add_header X-Frame-Options DENY;
+        add_header X-Content-Type-Options nosniff;
+
+        ##################################
+        # END https://cipherli.st/ BLOCK #
+        ##################################
+
+        # nginx configuration for site
+
+        root /usr/share/nginx/html;
+
+        location / {
+        }
+
+        error_page 404 /404.html;
+        location = /404.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        }
+
+    }
+
+Now restart nginx and try browsing to https://antheia.oerc.ox.ac.uk/.  A security exception will be reported as the certificate is from an unknown issuer - allow this for now.
+
+Now we want to enable the default service proxy configurations for https as well as http.  In ssl.conf, before the `location` blocks, add:
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+#### nginx reverse proxy for cockpit
+
+Created file /etc/nginx/default.d/cockpit.conf:
+
+    location /cockpit/ {
+        proxy_pass http://antheia.oerc.ox.ac.uk:9090/;
+   }
+
+as an attempt to reverse proxy the cockpit service.
+
+Now try to access cockpit via reverse proxy.
+
+Doesn't work.  Server log says "connect() to 129.67.194.76:9090 failed (13: Permission denied) while connecting to upstream".  It appears that Cockpit uses websockets, and a more subtle reverse proxy setup is needed:  https://github.com/cockpit-project/cockpit/wiki/Proxying-Cockpit-over-NGINX
+
+The setup requires to use a virtual host, rather than proxy throu a path prefix.  For virtual hosting to work, additional DNS entries are required for alternative host names; e.g.
+
+    cockpit.antheia.oucs.ox.ac.uk
+    monit.antheia.oucs.ox.ac.uk
+    blazegraph.antheia.oucs.ox.ac.uk
+    test1.antheia.oucs.ox.ac.uk
+    test2.antheia.oucs.ox.ac.uk
+
+Creating virtual server block:  if files are renamed at any point, "permission denied" errors on the served files may be generated due to mis-matching SELinux context.  To reset this, run `restorecon`, e.g.:
+
+    restorecon -rv /srv/www ...
+
+Create virtual host configuration for antheia-cockpit.oerc.ox.ac.uk, with http and https server sections.  See file `/etc/nginx/conf.d/antheia-cockpit.conf` for details.  Also create test file in `/srv/www/antheia-cockpit/html/index.html`.  Test page should be displayed when browsing to http://antheia-cockpit.oerc.ox.ac.uk/ or https://antheia-cockpit.oerc.ox.ac.uk/.  For initial testing, use the original form of location directive within the server block(s).
+
+Next, reconfigure the location block in the https server block to contain the cockpit proxying details (see https://github.com/cockpit-project/cockpit/wiki/Proxying-Cockpit-over-NGINX).  With this in place, http requests are redirected to https.  But https requests may then return "502 Bad gateway" errors.  This is due to SELinux conflicts, which can be confirmed by running:
+
+    semanage permissive -a httpd_t
+
+and re-trying the request.  To reinstate SELinux enforcing mode for http_d context:
+
+    semanage permissive -d httpd_t
+
+To find the specific problem, use ` /var/log/audit/audit.log` and `audit2why` to decode the audit entry (look at the audit file to find the AVC audit entry corresponding to the failure, theh use grep to extract it and pipe it to audit2why, which suggests a command to enable the required access.  A combination of the following commands were used:
+
+    semanage permissive -a httpd_t
+    semanage permissive -d httpd_t
+    less /var/log/audit/audit.log
+    grep 1509114668.944:1311 /var/log/audit/audit.log | audit2why
+    setsebool -P httpd_can_network_connect 1
+
+At this point, login to Cockpit was possible, but the application was failing to display anything.
+
+More (?) links:
+
+- https://www.nginx.com/resources/admin-guide/reverse-proxy/
+- https://www.digitalocean.com/community/tutorials/how-to-configure-nginx-as-a-web-server-and-reverse-proxy-for-apache-on-one-ubuntu-14-04-droplet (Ubuntu)
+
+@@@ Giving up for now - it looks as if websockets procying masy be too much - moving on @@@
+
+
+#### nginx virtual host proxy for blazegraph
+
+Tried similar setup to cockpit, which worked with a little tweaking.
+See `/etc/nginx/conf.d/antheia-blazegraph`.
+
+BEWARE: instructions suggest including "proxy_set_header Host $host;" in the https config section.  This breaks redirects that are returned to the browser (they come back as http URIs rather than https).
+
+
+#### Install and configure letsencrypt (certbot) for nginx
+
+Assume epel-release and nginx are already installed.
+
+    yum install certbox-nginx
+
+NOTE: Before starting the next step, ensure that the server domains for which certificates are requested are configirured in nginx (e.g. as default or virtual servers) and that they are publicly accessible.
+
+Obtain certificate:
+
+    certbox --nginx \
+        -d antheia.oerc.ox.ac.uk \
+        -d antheia-blazegraph.oerc.ox.ac.uk \
+        # -d antheia-cockpit.oerc.ox.ac.uk \
+        # -d antheia-monit.oerc.ox.ac.uk \
+
+Answer questions:
+
+    email: root@antheia.oerc.ox.ac.uk
+    agree TpS: Yes
+    share email: No (NOTE: email used is not public)
+
+@@@@@@ TODO - finish this @@@@@@
+

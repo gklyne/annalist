@@ -24,6 +24,8 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.13, towards 0.5.14
 
+- [x] Fix login problems (works on test-bionic-annalist, not on demo.annalist)
+    - Note: problem was lack of trailing "/" on login_done redirect URI
 - [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
 - [x] Address GitHub security alerts for dependencies
 - [x] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
@@ -33,19 +35,20 @@ See also: https://www.divio.com/en/blog/documentation/
     - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site darta is created or updated.
 - [x] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
+    - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
 - [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
 - [ ] Tidy up HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
-    - [ ] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
-        - Done for annalist-dev
-        - [ ] Document setup process.
-    - [ ] Check out https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
+    - [x] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
+    - [x] Document setup process.
     - See also: 
         - https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
         - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
         - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
+    - [x] create sample config files and documentation for Apache
+    - [ ] create sample config files and documentation for nginx
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
@@ -94,6 +97,14 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
+- [ ] Check out Django compatibility problems:
+    - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
+- [ ] Revisit HTTPS deployment
+    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  (Currently using reverse proxy.)
+- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [ ] Shared/personal deployment should generate a new secret key in settings
+    - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
+    - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
 - [ ] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc

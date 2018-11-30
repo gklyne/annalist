@@ -63,7 +63,6 @@ class uri_link_view_renderer(object):
         """
         Render link for viewing.
         """
-        # try:
         linkval = URILinkValueMapper.encode(get_field_view_value(context, ""))
         log.info("uri_link_view_renderer: linkval %r (orig)"%(linkval,))
         common_prefixes = (

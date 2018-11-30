@@ -47,7 +47,7 @@
 
     ProxyPreserveHost On
 
-    # Statements similar to thjese shoud be added by the certbot utility when 
+    # Statements similar to these shoud be added by the certbot utility when 
     # setting up a "letsencrypt" certificate.
     #
     # SSLCertificateFile /etc/letsencrypt/live/annalist.example.org/cert.pem
