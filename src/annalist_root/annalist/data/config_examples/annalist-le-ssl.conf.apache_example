@@ -21,6 +21,10 @@
 # @@ If necessary, change `/var/log` below to an appropriate log file directory
 # @@ If necessary, change `:8000` below to the port served by Annalist
 
+# vim commands:
+#     s/annalist.example.org/@@@/
+#     &
+
 <VirtualHost *:443>
     ServerName  "annalist.example.org"
     ServerAdmin annalist-admin@annalist.example.org

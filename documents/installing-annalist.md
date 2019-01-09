@@ -240,7 +240,7 @@ Prerequisites:
 
 - Apache2 web server installed and running (in default configuration with test page)
 
-Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, anmd should be replaced with the actual domain name of the server running Annalist.
+Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
 
 1. Install _LetsEncrypt_ certificate agent:
 
@@ -257,7 +257,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         proxy_http
         autoindex
 
-3. Check firewal configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
+3. Check firewall configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
 
         ufw allow ssh
         ufw allow http
@@ -329,6 +329,8 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
         certbot certonly --webroot -d annalist.example.net
         certbot --apache -d annalist.example.net
         certbot renew --force-renew
+
+    If this doesn't work, look for and remove `SSLCertificateFile` in the base Apache configuration (e.g., `/etc/apache2/sites-available/default-ssl.conf`), and ensure that `certbot` has added appropriate statements to `/etc/apache2/sites-available/annalist-le-ssl.conf` (or whatever name is being used).
 
 7.  Enable Annalist request forwarding; e.g.
 

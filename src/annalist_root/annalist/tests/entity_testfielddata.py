@@ -291,11 +291,11 @@ def field_view_context_data(
               )
           , get_bound_field('Field_superproperty_uris', field_superproperty_uris)
           , context_field_row(
-              get_bound_field("Field_value_type", field_value_type),        # 7 (5,0)
-              get_bound_field("Field_value_mode", field_value_mode)         # 8 (5,1)
+              get_bound_field("Field_entity_type", field_entity_type)       # 7 (5,0)
               )
           , context_field_row(
-              get_bound_field("Field_entity_type", field_entity_type)       # 9 (6,0)
+              get_bound_field("Field_value_type", field_value_type),        # 8 (6,0)
+              get_bound_field("Field_value_mode", field_value_mode)         # 9 (6,1)
               )
           , context_field_row(
               get_bound_field("Field_typeref", field_typeref),              # 10 (7,0)
