@@ -552,7 +552,7 @@ class AnnalistGenericView(ContentNegotiationView):
         """
         Construct a redirect response to access Turtle data at the designated URL.
 
-        turtleref   is the URL from which JSON turtle may be retrieved.
+        turtleref   is the URL from which Turtle data may be retrieved.
         links       is an optional array of link values to be added to the HTTP response
                     (see method add_link_header for description).
 

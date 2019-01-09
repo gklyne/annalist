@@ -213,7 +213,7 @@ class FieldListValueMap(object):
                         a view or list description.
         view_context    is a dictionary of additional values that may be used in
                         assembling values to be used when rendering the fields.
-                        Specifically, this are currently used in calls of
+                        Specifically, this is currently used in calls of
                         `EntityFinder` for building filtered lists of entities
                         used to populate enumerated field values.  Fields in
                         the supplied context currently used are `entity` for the

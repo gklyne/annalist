@@ -468,6 +468,7 @@ site_defined_type_fields = (
     , FieldChoice("_field/Type_id",                    label="Type Id"             )
     , FieldChoice("_field/Type_label",                 label="Label"               )
     , FieldChoice("_field/Type_list",                  label="Default list"        )
+    , FieldChoice("_field/Type_prefix",                label="Namespace prefix"    )
     , FieldChoice("_field/Type_supertype_uri",         label="Supertype URI"       )
     , FieldChoice("_field/Type_supertype_uris",        label="Supertype URIs"      )
     , FieldChoice("_field/Type_uri",                   label="Type URI"            )

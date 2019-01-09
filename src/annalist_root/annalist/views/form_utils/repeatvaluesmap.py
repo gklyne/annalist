@@ -68,7 +68,7 @@ class RepeatValuesMap(FieldValueMap):
             #
             #   For now, we live with the restriction that fields within repeated 
             #   fields cannot propagate subproperty values used; i.e. when editing, 
-            #   subproperties used in the data are replaced by the superproeprty from
+            #   subproperties used in the data are replaced by the superproperty from
             #   the repeated field definition.  In practice, this may not be a problem,
             #   as the cases of repeated fields with subproperties are generally associated
             #   with special JSON-LD keys like '@id' or '@value'
@@ -83,7 +83,9 @@ class RepeatValuesMap(FieldValueMap):
             #@@
             vals         = {}
             prefix       = prefix_template%prefix_n
-            updated_vals = self.fieldlist.map_form_to_entity_repeated_item(formvals, vals, prefix)
+            updated_vals = self.fieldlist.map_form_to_entity_repeated_item(
+                formvals, vals, prefix
+                )
             if not updated_vals:
                 break
             repeat_vals.append(updated_vals)

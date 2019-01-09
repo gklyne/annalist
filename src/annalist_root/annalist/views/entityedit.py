@@ -527,17 +527,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
         return responseinfo
 
-        # @@@@@@@@
-        # responseinfo.set_http_response(
-        #     self.render_html(form_context, self.formtemplate) or 
-        #     self.error(self.error406values())
-        #     )
-        # @@@@@@@@
-        # return (
-        #     self.render_html(form_context, self.formtemplate) or 
-        #     self.error(self.error406values())
-        #     )
-
     # @@TODO: refactor form_response to separate methods for each action
     #         form_response should handle initial checking and dispatching.
     #         The refactoring should attempt to separate methods that use the

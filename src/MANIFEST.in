@@ -14,19 +14,21 @@ include annalist_root/annalist_manager/*.md
 recursive-include annalist_root/annalist *.py *.sh *.md *.txt
 recursive-include annalist_root/annalist/views/help *.md *.html
 recursive-include annalist_root/annalist/templates *.html
+recursive-include annalist_root/annalist/data/config_examples *
 recursive-include annalist_root/annalist/data/identity_providers *.json *.example *.md *.png
-recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/namedata *.jsonld *.md
-recursive-include annalist_root/annalist/data/Resource_defs *.jsonld *.md
-recursive-include annalist_root/annalist/data/Concept_defs *.jsonld *.md
-recursive-include annalist_root/annalist/data/Journal_defs *.jsonld *.md
-recursive-include annalist_root/annalist/data/RDF_schema_defs *.jsonld *.md
-recursive-include annalist_root/annalist/data/Annalist_schema *.jsonld *.md
-recursive-include annalist_root/annalist/data/Bibliography_defs *.jsonld *.md
+recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/static/css *.css
 recursive-include annalist_root/annalist/data/static/js *.js
 recursive-include annalist_root/annalist/data/static/images *.png *.jpg
 recursive-include annalist_root/annalist/data/static/foundation *.css *.png *.jpg *.js *.md
+recursive-include annalist_root/annalist/data/test *
+recursive-include annalist_root/annalist/data/Annalist_schema *.jsonld *.md
+recursive-include annalist_root/annalist/data/Bibliography_defs *.jsonld *.md
+recursive-include annalist_root/annalist/data/Concept_defs *.jsonld *.md
+recursive-include annalist_root/annalist/data/Journal_defs *.jsonld *.md
+recursive-include annalist_root/annalist/data/RDF_schema_defs *.jsonld *.md
+recursive-include annalist_root/annalist/data/Resource_defs *.jsonld *.md
 include annalist_root/miscutils/*.py
 include annalist_root/login/*.py
 include annalist_root/login/templates/*.html

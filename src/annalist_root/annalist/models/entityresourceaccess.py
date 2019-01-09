@@ -142,7 +142,7 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     resource_info   is a dictionary of values about the resource to be serialized.
                     (Unused except for diagnostic purposes.)
     """
-    # @@NOTE: under Python 2, "BytesIO" is implemented by "StringIO", which does
+    # NOTE:   under Python 2, "BytesIO" is implemented by "StringIO", which does
     #         not handle well a combination of str and unicode values, and may 
     #         raise an exception if the Turtle data contains non-ASCII characters.
     #         The problem manifests when an error occurs, and manifests as a 500 
@@ -152,6 +152,7 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     #         values are unicode (per `from __future__ import unicode_literals`),
     #         and are getting joined with UTF-encoded bytestring values, which
     #         results in the error noted.
+    #
     #         The fix here is to encode everything as bytes before writing.
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
     response_file = BytesIO()

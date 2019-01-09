@@ -105,12 +105,20 @@ _test_test_vocab_create_values = (
 test_blob_vocab_create_values = (
     { "annal:type":     "annal:Vocabulary"
     , "rdfs:label":     "Vocabulary namespace for test terms"
-    , "rdfs:comment":   "Vocabulary namespace for URIs that are used internally by Annalist to identify application types and properties."
+    , "rdfs:comment":   "Vocabulary namespace for URIs that are used internally by this test."
     , "annal:uri":      "http://example.org/blob/yyy#"
+    })
+
+test_image_ref_vocab_create_values = (
+    { "annal:type":     "annal:Vocabulary"
+    , "rdfs:label":     "Vocabulary namespace for image_ref"
+    , "rdfs:comment":   "Vocabulary namespace for image_ref."
+    , "annal:uri":      "http://example.org/image_ref#"
     })
 
 test_image_ref_type_create_values = (
     { 'annal:type':                 "annal:Type"
+    , 'annal:ns_prefix':            "image_ref"
     , 'rdfs:label':                 "test_reference_type label"
     , 'rdfs:comment':               "test_reference_type comment"
     , 'annal:uri':                  "blob:type/test_reference_type"
@@ -610,12 +618,17 @@ class JsonldContextTest(AnnalistTestCase):
     def test_jsonld_image_ref(self):
         """
         Read image reference data as JSON-LD, and check resulting RDF triples
+
+        Also tests addition of URI value if type has a namespace prefix.
         """
         # Populate collection with record type, view and field
         imagepath = "%s/test-image.jpg"%TestBaseDir
         imageurl  = "file://"+imagepath
         test_ref_type = RecordVocab.create(
             self.testcoll, "blob", test_blob_vocab_create_values
+            )
+        test_ref_type = RecordVocab.create(
+            self.testcoll, "image_ref", test_image_ref_vocab_create_values
             )
         test_ref_type = RecordType.create(
             self.testcoll, "testreftype", test_image_ref_type_create_values
@@ -646,14 +659,17 @@ class JsonldContextTest(AnnalistTestCase):
         # print("***** s.read()"+s.read())
         # s.seek(0)
         result = g.parse(source=s, publicID="file://"+b+"/", format="json-ld")
-        # print "*****"+repr(result)
+        # print("*****"+repr(result))
         # print("***** g: (ref_image)")
+        # for s in g:
+        #     print(repr(s))
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
         subj           = self.entity_url("testcoll", "testreftype", "refentity")
         ref_image_data = ref_image.get_values()
         blobns         = makeNamespace("blob", "http://example.org/blob/yyy#", ["reference"])
         type_uri       = blobns.to_uri(ref_image_data['@type'][0]) 
+        ns_uri         = test_image_ref_vocab_create_values[ANNAL.CURIE.uri]
         for (s, p, o) in (
             [ (subj, RDF.URI.type,          URIRef(ANNAL.URI.EntityData)                 )
             , (subj, RDF.URI.type,          URIRef(type_uri)                             )
@@ -661,6 +677,7 @@ class JsonldContextTest(AnnalistTestCase):
             , (subj, RDFS.URI.comment,      Literal(ref_image_data[RDFS.CURIE.comment])  )
             , (subj, ANNAL.URI.id,          Literal(ref_image_data[ANNAL.CURIE.id])      )
             , (subj, ANNAL.URI.type_id,     Literal(ref_image_data[ANNAL.CURIE.type_id]) )
+            , (subj, ANNAL.URI.uri,         URIRef(ns_uri+"refentity")                   )
             , (subj, blobns.URI.reference,  URIRef(imageurl)                             )
             ]):
             self.assertIn( (URIRef(s), URIRef(p), o), g )

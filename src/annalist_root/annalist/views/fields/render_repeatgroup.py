@@ -31,7 +31,7 @@ from .render_fieldvalue     import (
 #   ------------------------------------------------------------
 
 view_group = (
-    { 'head':
+    { "head":
         """
         <!-- views.fields.render_repeatgroup.view_group (head) -->
         <div class="small-12 columns">
@@ -44,7 +44,7 @@ view_group = (
             </div>
           </div>
         </div>"""
-    , 'body':
+    , "body":
         """
         <div class="group-row small-12 columns">
           <div class="row">
@@ -60,13 +60,13 @@ view_group = (
             </div>
           </div>
         </div>"""
-    # , 'tail':
+    # , "tail":
     #     """
     #     """
     })
 
 edit_group = (
-    { 'head':
+    { "head":
         """<!-- views.fields.render_repeatgroup.edit_group (head) -->
         <div class="small-12 columns"{{field.field_tooltip_attr|safe}}>
           <div class="row">
@@ -78,7 +78,7 @@ edit_group = (
             </div>
           </div>
         </div>"""
-    , 'body':
+    , "body":
         """
         <div class="group-row small-12 columns"{{field.field_tooltip_attr|safe}}>
           <div class="row selectable">
@@ -97,7 +97,7 @@ edit_group = (
             </div>
           </div>
         </div>"""
-    , 'tail':
+    , "tail":
         """
         <div class="small-12 columns">
           <div class="row">
@@ -119,7 +119,7 @@ edit_group = (
     })
 
 view_grouprow = (
-    { 'head':
+    { "head":
         """
         <!-- views.fields.render_repeatgroup.view_grouprow (head) -->
         <div class="small-12 columns">
@@ -146,7 +146,7 @@ view_grouprow = (
           </div>
         </div>
         """
-    , 'head_empty':
+    , "head_empty":
         """
         <!-- views.fields.render_repeatgroup.view_grouprow (empty list) -->
         <div class="small-12 columns">
@@ -160,7 +160,7 @@ view_grouprow = (
           </div>
         </div>
         """
-    , 'body':
+    , "body":
         """
         <div class="small-12 columns">
           <div class="grouprow row">
@@ -181,13 +181,13 @@ view_grouprow = (
           </div>
         </div>
         """
-    # , 'tail':
+    # , "tail":
     #     """
     #     """
     })
 
 edit_grouprow = (
-    { 'head':
+    { "head":
         """
         <!-- views.fields.render_repeatgroup.edit_grouprow (head) -->
         <div class="small-12 columns"{{field.field_tooltip_attr|safe}}>
@@ -212,7 +212,7 @@ edit_grouprow = (
           </div>
         </div>
         """
-    , 'body':
+    , "body":
         """
         <div class="small-12 columns">
           <div class="grouprow row">
@@ -238,7 +238,7 @@ edit_grouprow = (
           </div>
         </div>
         """
-    , 'tail':
+    , "tail":
         """
         <div class="small-12 columns">
           <div class="grouprow row">
@@ -268,7 +268,7 @@ edit_grouprow = (
 
 # Used for rendering lists of entities via the EntityList view class
 view_listrow = (
-    { 'head':
+    { "head":
         """
         <!-- views.fields.render_repeatgroup.view_listrow (head) -->
         <div class="thead row">
@@ -284,7 +284,7 @@ view_listrow = (
           </div>
         </div>
         """
-    , 'body':
+    , "body":
         """
         <div class="tbody row select-row">
           <div class="small-1 columns">
@@ -319,12 +319,12 @@ class RenderRepeatGroup(object):
         # log.info("RenderRepeatGroup: __init__ %r"%(templates))
         super(RenderRepeatGroup, self).__init__()
         assert templates is not None, "RenderRepeatGroup template must be supplied (.edit, .view or .item)"
-        self._template_head  = Template(templates.get('head', ""))
-        self._template_body  = Template(templates.get('body', "@@missing body@@"))
-        self._template_tail  = Template(templates.get('tail', ""))
+        self._template_head  = Template(templates.get("head", ""))
+        self._template_body  = Template(templates.get("body", "@@missing body@@"))
+        self._template_tail  = Template(templates.get("tail", ""))
         self._template_empty = self._template_head
-        if 'head_empty' in templates:
-            self._template_empty = Template(templates['head_empty'])
+        if "head_empty" in templates:
+            self._template_empty = Template(templates["head_empty"])
         return
 
     def __str__(self):
@@ -340,7 +340,7 @@ class RenderRepeatGroup(object):
 
         returns a string that is incorporated into the resulting web page.
 
-        `context['field']` is a `bound_field` value that combines the field 
+        `context["field"]` is a `bound_field` value that combines the field 
         definition, entity values and additional context information.  
 
         The entity value is either the entire entity that is currently 
@@ -349,13 +349,13 @@ class RenderRepeatGroup(object):
         """
         # log.info("RenderRepeatGroup.render")
         try:
-            # log.info("RenderRepeatGroup.render field: %r"%(context['field'],))
-            group_id          = context['field']['description']['group_id']
-            group_field_descs = context['field']['description']['group_field_descs']
+            # log.info("RenderRepeatGroup.render field: %r"%(context["field"],))
+            group_id          = context["field"]["description"]["group_id"]
+            group_field_descs = context["field"]["description"]["group_field_descs"]
             # log.info("RenderRepeatGroup.render descs: %r"%(group_field_descs,))
             h = [ bound_field(f, {}) for f in group_field_descs ]
-            with context.push({ 'group_head_fields': h }):
-                value_list     = context['field']['field_value']
+            with context.push({ "group_head_fields": h }):
+                value_list     = context["field"]["field_value"]
                 if value_list and not isinstance(value_list, list):
                   # This is to allow field changes from single to repeated values
                   # to be handled less confusingly.  String values were previously
@@ -365,19 +365,19 @@ class RenderRepeatGroup(object):
                 if len(value_list) > 0:
                     response_parts = [self._template_head.render(context)]
                     repeat_index = 0
-                    extras       = context['field']['context_extra_values']
+                    extras       = context["field"]["context_extra_values"]
                     for g in value_list:
                         # log.debug("RenderRepeatGroup.render field_val: %r"%(g))
                         r = [ bound_field(f, g, context_extra_values=extras) 
                               for f in group_field_descs 
                               ]
-                        repeat_id = context.get('repeat_prefix', "") + group_id
+                        repeat_id = context.get("repeat_prefix", "") + group_id
                         repeat_dict = (
-                            { 'repeat_id':            repeat_id
-                            , 'repeat_index':         str(repeat_index)
-                            , 'repeat_prefix':        repeat_id+("__%d__"%repeat_index)
-                            , 'repeat_bound_fields':  r
-                            , 'repeat_entity':        g
+                            { "repeat_id":            repeat_id
+                            , "repeat_index":         str(repeat_index)
+                            , "repeat_prefix":        repeat_id+("__%d__"%repeat_index)
+                            , "repeat_bound_fields":  r
+                            , "repeat_entity":        g
                             })
                         # log.info("RenderRepeatGroup.render repeat_dict: %r"%(repeat_dict))
                         with context.push(repeat_dict):

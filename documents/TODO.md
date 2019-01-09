@@ -34,11 +34,6 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
     - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site darta is created or updated.
 - [x] If field name in view is blank/undefined/invalid: display placeholder.
-- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
-    - (render_uri_import has most of the required boilerplate)
-- [ ] When referencing an entity, render using annal:uri if defined?
-- [ ] When locating a referenced entity, recognize annal:uri value if defined
-- [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
 - [ ] Tidy up HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
     - [x] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
@@ -53,6 +48,12 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
+- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
+    - (render_uri_import has most of the required boilerplate)
+- [ ] When referencing an entity, render using annal:uri if defined?
+- [ ] When locating a referenced entity, recognize annal:uri value if defined
+- [ ] If property URI in field definition is blank, use field id
 
 (Sub-release?)
 
@@ -105,7 +106,9 @@ Technical debt:
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
+- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
+    - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
+    - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
 - [ ] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
@@ -179,7 +182,7 @@ Technical debt:
         - [ ] test_recordfield.py
 - [ ] Test cases: use <namespace>.CURIE.:: values rather than literal CURIEs
     -
-
+- [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
 
 
 Data collection definitions:

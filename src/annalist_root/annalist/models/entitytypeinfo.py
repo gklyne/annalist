@@ -406,6 +406,49 @@ class EntityTypeInfo(object):
             type_uris = [type_uri] + list(self.entitycoll.cache_get_supertype_uris(type_uri))
         return type_uris
 
+    def set_type_uris(self, entity_values):
+        """
+        Set URIs of current type in supplied entity values
+
+        Previous type URIs are overridden.
+        """
+        entity_values[ANNAL.CURIE.type] = self.get_type_uri()
+        entity_values['@type']          = self.get_all_type_uris()
+        return
+
+    def make_entity_uri(self, entity_id):
+        """
+        Return a candidate entity URI for an instance of the current type,
+        based on a namespace prefix declared in the type definition.
+
+        Returns None if no entity namespace prefix is declared for the type.
+        """
+        if ANNAL.CURIE.ns_prefix in self.recordtype:
+            ns_pref = self.recordtype[ANNAL.CURIE.ns_prefix]
+            if ns_pref != "":
+                if not valid_id(ns_pref):
+                    raise ValueError(
+                        "EntityTypeInfo invalid ns_prefix %s for type %s"%
+                          (ns_pref, self.type_id)
+                        )
+                return ns_pref + ":" + entity_id
+        return None
+
+    def set_entity_uri(self, entity_id, entity_values):
+        """
+        Update entity URI in supplied entity values, if value is not already set.
+
+        If current value is blank or same as URL then that value is discarded.
+        """
+        if ANNAL.CURIE.uri in entity_values:
+            if entity_values[ANNAL.CURIE.uri] in {"", entity_values.get(ANNAL.CURIE.url, "")}:
+                entity_values.pop(ANNAL.CURIE.uri)
+        if ANNAL.CURIE.uri not in entity_values:
+            entity_uri = self.make_entity_uri(entity_id)
+            if entity_uri:
+                entity_values[ANNAL.CURIE.uri] = entity_uri
+        return
+
     def get_default_view_id(self):
         """
         Returns the default view id for the current record type
@@ -473,11 +516,8 @@ class EntityTypeInfo(object):
         log.debug("create_entity: id %s, parent id %s"%(entity_id, self.entityparent.get_id()))
         # log.debug("create_entity: values %r"%(entity_values,))
         # Set type URI for entity; previous types are not carried forwards
-        # Don't save entity URI if same as URL
-        if entity_values.get(ANNAL.CURIE.uri, "") == entity_values.get(ANNAL.CURIE.url, ""):
-            entity_values.pop(ANNAL.CURIE.uri, None)
-        entity_values['@type']          = self.get_all_type_uris() # NOTE: previous types not carried forward
-        entity_values[ANNAL.CURIE.type] = self.get_type_uri()
+        self.set_type_uris(entity_values)
+        self.set_entity_uri(entity_id, entity_values)
         return self.entityclass.create(self.entityparent, entity_id, entity_values)
 
     def remove_entity(self, entity_id):

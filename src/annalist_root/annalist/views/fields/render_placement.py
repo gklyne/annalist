@@ -37,7 +37,7 @@ view_is_occupied  = "&block;"
 view_not_occupied = "&blk14;"
 
 option_is_occupied  = "#"
-option_not_occupied = "."
+option_not_occupied = "_"
 
 # Enumerated placement options.
 #

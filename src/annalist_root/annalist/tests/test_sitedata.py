@@ -617,6 +617,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         expect_field_choices = no_selection("(field reference)") + get_site_type_fields_sorted()
         expect_fields = (
             [ "_field/Type_id"
+            , "_field/Type_prefix"
             , "_field/Type_label"
             , "_field/Type_comment"
             , "_field/Type_uri"
@@ -1096,6 +1097,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Type_id",                   ["Type_id"                   ] ]
             , [ "_field/Type_label",                ["Type_label"                ] ]
             , [ "_field/Type_list",                 ["Type_list"                 ] ]
+            , [ "_field/Type_prefix",               ["Type_prefix"               ] ]
             , [ "_field/Type_supertype_uri",        ["Type_supertype_uri"        ] ]
             , [ "_field/Type_supertype_uris",       ["Type_supertype_uris"       ] ]
             , [ "_field/Type_uri",                  ["Type_uri"                  ] ]

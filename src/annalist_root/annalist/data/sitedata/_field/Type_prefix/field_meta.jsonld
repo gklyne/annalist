@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Type_prefix"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Type_prefix"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_prefix"
+, "rdfs:label":                 "Namespace prefix"
+, "rdfs:comment":               "# Namespace prefix\r\n\r\nNamespace prefix for default URIs generated for values of this type.  If specified and non-blank, instances of this type have URIs allocated using this prefix.  If the prefix is a defined namespace, the corresponding namespace URI is used as the base for allocated type URIs, otherwise a URL based on the location of the type data is used.\r\n\r\nIf no prefix is given, or if the value is blank, URIs are not auto-generated for type values.  In any case, if the value has a non-blank `annal:uri` field, that value overrides any auto-generated value."
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Type"
+, "annal:property_uri":         "annal:ns_prefix"
+, "annal:field_placement":      "small:0,12;medium:6,6"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(namespace prefix)"
+, "annal:tooltip":              "Namespace prefix for default URIs generated for values of this type."
+}

@@ -44,9 +44,9 @@ class EntityResourceAccess(AnnalistGenericView):
     """
     View class for entity resource access
 
-    This view class returns a data resource, not a browser form, which may be based on the
-    entity data itself (from the internally stored JSON), or the content of an attached
-    data resource (e.g. image, audio, etc.)
+    This view class returns a data resource, not a browser form, which may be based on 
+    the entity data itself (from the internally stored JSON), or the content of an 
+    attached data resource (e.g. image, audio, etc.)
 
     This view may be used as the target of content negotiation redirects, and no
     further content negotiation is attempted.  Rather, the URI is expected to reference 

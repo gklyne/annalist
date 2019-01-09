@@ -525,22 +525,23 @@ class Collection(Entity):
         s = RecordType.remove(self, type_id)
         return s
 
-    def update_entity_types(self, e):
-        """
-        Updates the list of type URIs associated with an entity by accessing the
-        supertypes of the associated type record.
-        """
-        type_uri = e.get(ANNAL.CURIE.type, None)
-        st_uris = [type_uri]
-        t       = self.get_uri_type(type_uri)
-        if t:
-            assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
-            for st in type_cache.get_type_uri_supertypes(self, type_uri):
-                st_uri = st.get_uri()
-                if st_uri not in st_uris:
-                    st_uris.append(st_uri)
-        e['@type'] = st_uris
-        return
+    # def _unused_update_entity_types(self, e):
+    #     # @@TODO: remove this?
+    #     """
+    #     Updates the list of type URIs associated with an entity by accessing the
+    #     supertypes of the associated type record.
+    #     """
+    #     type_uri = e.get(ANNAL.CURIE.type, None)
+    #     st_uris = [type_uri]
+    #     t       = self.get_uri_type(type_uri)
+    #     if t:
+    #         assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
+    #         for st in type_cache.get_type_uri_supertypes(self, type_uri):
+    #             st_uri = st.get_uri()
+    #             if st_uri not in st_uris:
+    #                 st_uris.append(st_uri)
+    #     e['@type'] = st_uris
+    #     return
 
     # Record views
 
@@ -920,7 +921,14 @@ class Collection(Entity):
               , "@type":        "@id"
               }
             })
-        # Scan vocabs, generate prefix data
+        # Scan types, generate prefix data
+        for t in self.child_entities(RecordType, altscope="all"):
+            tid = t.get_id()
+            if tid != layout.INITIAL_VALUES_ID:
+                tns = t.get(ANNAL.CURIE.ns_prefix, "")
+                if tns != "":
+                    context[tns] = self.get_url() + layout.COLL_TYPEDATA_VIEW%({"id": tid})
+        # Scan vocabs, generate prefix data (possibly overriding type-derived data)
         for v in self.child_entities(RecordVocab, altscope="all"):
             vid = v.get_id()
             if vid != layout.INITIAL_VALUES_ID:

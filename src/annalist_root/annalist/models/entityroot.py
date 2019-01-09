@@ -208,7 +208,7 @@ class EntityRoot(object):
             [ { '@base': self._contextbase }
             , self._contextref
             ])
-        # @TODO: is this next needed?  Put logic in set_values?
+        # @@TODO: is this next needed?  Put logic in set_values?
         if self._entityid:
             values[ANNAL.CURIE.id] = self._entityid
         values.pop(ANNAL.CURIE.url, None)

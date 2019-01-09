@@ -99,6 +99,8 @@ setup(
             , 'data/identity_providers/*.json'
             , 'data/identity_providers/*.example'
             , 'data/identity_providers/images/*.png'
+            # Configuration example data
+            , 'data/config_examples/*'
             # Site-wide data definitions
             , 'data/sitedata/_enum_field_placement/*/*.jsonld'
             , 'data/sitedata/_enum_list_type/*/*.jsonld'

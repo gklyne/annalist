@@ -182,6 +182,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     # Types, Views, lists and field groups
     , "default_type", "default_view"
     , "supertype_uri"
+    , "ns_prefix"
     , "display_type", "type_list", "type_view"
     , "field_aliases", "alias_target", "alias_source"
     , "view_entity_type", "open_view", "view_fields"
