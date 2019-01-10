@@ -87,7 +87,7 @@ class oauth2_flow(object):
         auth_uri, state     = session.authorization_url(
                                 provider_data["auth_uri"], 
                                 #@@ Google specific... needed to get token?
-                                access_type="offline"
+                                # access_type="offline"
                                 )
         self._session       = session
         self._auth_uri      = auth_uri
@@ -104,6 +104,7 @@ class oauth2_flow(object):
         return self._state
 
     def step1_get_authorize_url(self):
+        log.info("step1_get_authorize_url: auth_uri %r", self._auth_uri)
         return self._auth_uri
 
     def step2_exchange(self, request):
@@ -112,8 +113,10 @@ class oauth2_flow(object):
         requests an access token for user authentication.
         """
         auth_resp = request.build_absolute_uri()
+        token_uri = self._provider_data['token_uri']
+        log.info("step2_exchange: token_uri %r", token_uri)
         log.info("step2_exchange: auth_resp %r", auth_resp)
-        token = self._session.fetch_token(self._provider_data['token_uri'], 
+        token = self._session.fetch_token(token_uri, 
             authorization_response=auth_resp,
             # client_id=self._provider_data['client_id'],
             client_secret=self._provider_data['client_secret'],
