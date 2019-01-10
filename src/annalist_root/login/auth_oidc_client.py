@@ -84,7 +84,11 @@ class oauth2_flow(object):
                                 state=state,
                                 redirect_uri=self._redirect_uri
                                 )
-        auth_uri, state     = session.authorization_url(provider_data["auth_uri"])
+        auth_uri, state     = session.authorization_url(
+                                provider_data["auth_uri"], 
+                                #@@ Google specific... needed to get token?
+                                access_type="offline"
+                                )
         self._session       = session
         self._auth_uri      = auth_uri
         self._state         = state
