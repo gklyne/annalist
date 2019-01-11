@@ -103,11 +103,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False
         },
-        'login': {
-            'handlers': ['logfile'],
-            'level': 'INFO',
-            'propagate': False
-        },
+        # 'annalist.login': {
+        #     'handlers': ['logfile'],
+        #     'level': 'DEBUG',
+        #     'propagate': False
+        # },
     },
 }
 

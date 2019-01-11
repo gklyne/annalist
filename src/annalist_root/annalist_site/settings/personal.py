@@ -103,7 +103,7 @@ LOGGING = {
             'level': TRACE_FIELD_VALUE, # Or maybe INFO or DEBUG
             'propagate': False
         },
-        'login': {
+        'annalist.login': {
             'handlers': ['logfile'],
             'level': 'DEBUG', # Or maybe INFO or DEBUG
             'propagate': False
