@@ -27,20 +27,21 @@ class AnnalistConfig(AppConfig):
     name = 'annalist'
 
     def ready(self):
-        log.info("== AnalistConfig.ready ==")
+        log.info("== AnnalistConfig.ready ==")
         log.info(settings.ANNALIST_VERSION_MSG)
-        log.info("SETTINGS_MODULE:  "+settings.SETTINGS_MODULE)
-        log.info("DATABASES:        "+repr(settings.DATABASES))
-        log.info("BASE_DATA_DIR:    "+settings.BASE_DATA_DIR)
-        log.info("CONFIG_BASE:      "+settings.CONFIG_BASE)
-        log.info("DJANGO_ROOT:      "+settings.DJANGO_ROOT)
-        log.info("SITE_CONFIG_DIR:  "+settings.SITE_CONFIG_DIR)
-        log.info("SITE_SRC_ROOT:    "+settings.SITE_SRC_ROOT)
-        log.info("STATICFILES_DIRS: "+repr(settings.STATICFILES_DIRS))
-        log.info("DB PATH:          "+settings.DATABASES['default']['NAME'])
-        log.info("ALLOWED_HOSTS:    "+",".join(settings.ALLOWED_HOSTS))
-        log.info("LOGGING_FILE:     "+settings.LOGGING_FILE)
-        log.info("==")
+        log.info("SETTINGS_MODULE:   "+settings.SETTINGS_MODULE)
+        log.info("DATABASES:         "+repr(settings.DATABASES))
+        log.info("BASE_DATA_DIR:     "+settings.BASE_DATA_DIR)
+        log.info("CONFIG_BASE:       "+settings.CONFIG_BASE)
+        log.info("DJANGO_ROOT:       "+settings.DJANGO_ROOT)
+        log.info("SITE_CONFIG_DIR:   "+settings.SITE_CONFIG_DIR)
+        log.info("SITE_SRC_ROOT:     "+settings.SITE_SRC_ROOT)
+        log.info("STATICFILES_DIRS:  "+repr(settings.STATICFILES_DIRS))
+        log.info("DB PATH:           "+settings.DATABASES['default']['NAME'])
+        log.info("ALLOWED_HOSTS:     "+",".join(settings.ALLOWED_HOSTS))
+        log.info("LOGGING_FILE:      "+settings.LOGGING_FILE)
+        log.info("TRACE_FIELD_VALUE: "+str(settings.TRACE_FIELD_VALUE))
+        log.info("== AnnalistConfig ready (apps.py)")
         return
 
 # End.
