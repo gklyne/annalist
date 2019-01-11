@@ -66,6 +66,13 @@ def collect_provider_data():
                     PROVIDER_DETAILS[provider_name] = provider_data['web']
                     if 'provider_label' not in PROVIDER_DETAILS[provider_name]:
                         PROVIDER_DETAILS[provider_name]['provider_label'] = provider_name
+                log.info("login_views: collect_provider_data %s"%(provider name,))
+                log.info(json.dumps(
+                    PROVIDER_DETAILS[provider_name], 
+                    sort_keys=True,
+                    indent=4,
+                    separators=(',', ': ')
+                    ))
     return
 
 def confirm_authentication(view, 
