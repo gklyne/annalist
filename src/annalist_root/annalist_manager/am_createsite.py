@@ -112,7 +112,7 @@ def am_createsite(annroot, userhome, options):
     print("- from: %s"%(config_dir_src,))
     print("-   to: %s"%(config_dir_tgt,))
     ensure_dir(config_dir_tgt)
-    updatetree(config_dir_src, provider_dir_tgt)
+    updatetree(config_dir_src, config_dir_tgt)
     # --- Created
     print("Now run 'annalist-manager initialize' to create site admin database")
     return status
