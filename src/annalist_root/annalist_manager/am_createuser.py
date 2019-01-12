@@ -99,7 +99,7 @@ def create_django_user(user_type, user_details):
     # Check user does not already exist
     from django.contrib.auth.models import User     # import deferred until after sitesettings import
     if User.objects.filter(username=user_details['name']):
-        print("User %s already exists"%user_details['name'], file=sys.stderr)
+        print("Django user %s already exists"%user_details['name'], file=sys.stderr)
         return am_errors.AM_USEREXISTS
     # Get password
     user_password_prompt    = "Password: "
@@ -205,7 +205,7 @@ def am_createlocaluser(annroot, userhome, options,
     #
     from django.contrib.auth.models import User     # import deferred until after sitesettings import
     if User.objects.filter(username=user_name):
-        print("User %s already exists"%user_name, file=sys.stderr)
+        print("Django user %s already exists"%user_name, file=sys.stderr)
         return am_errors.AM_USEREXISTS
     user_details = get_user_details(user_name, options, prompt_prefix)
     status       = create_django_user(user_type, user_details)
