@@ -95,16 +95,16 @@ class OAuth2CheckBackend(object):
                 return_user.is_superuser = False
                 return_user.first_name   = ""
                 return_user.last_name    = ""
-                return_user.email      = password.id_token['email']
+                return_user.email        = password.id_token['email']
             else:
                 return_user = None
             if return_user:
                 return_user.save()
         if return_user:
-            log.info("user.username:   "+return_user.username)
-            log.info("user.first_name: "+return_user.first_name)
-            log.info("user.last_name:  "+return_user.last_name)
-            log.info("user.email:      "+return_user.email)
+            log.info("user.username:   %s"%(return_user.username,))
+            log.info("user.first_name: %s"%(return_user.first_name,))
+            log.info("user.last_name:  %s"%(return_user.last_name,))
+            log.info("user.email:      %s"%(return_user.email,))
             return return_user
         # No username or credentials provided
         log.info("No user id or no credentials provided")

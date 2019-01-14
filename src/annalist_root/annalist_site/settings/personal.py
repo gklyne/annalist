@@ -105,7 +105,7 @@ LOGGING = {
         },
         'login': {
             'handlers': ['logfile'],
-            'level': 'DEBUG', # Or maybe INFO or DEBUG
+            'level': 'INFO', # Or maybe INFO or DEBUG
             'propagate': False
         },
     },

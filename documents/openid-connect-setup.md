@@ -27,9 +27,9 @@ Note that being logged in does not necessarily mean you have permissions to acce
 
 In order to use Google OAuth2/OpenID Connect authentication the installed Annalist service must be registered with Google (via [https://cloud.google.com/console](https://cloud.google.com/console)) and must be permitted to use the [Google+ API](https://developers.google.com/+/api/), as shown:
 
-As part of the registration process, the URLs to which the browser may be redirected following authentication (these will generally be something like `https://annalist.example.net:8000/annalist/login_done/` and `http://localhost:8000/annalist/login_done/`)  are specified.  This will involve installing a file in the root of the server to prove control of the domain used for login redirects.  Follow the instructions presented by Google's web pages.
-
 ![Screenshot showing Google+ API enabled for project](screenshots/Google-APIs-screenshot.png)
+
+As part of the registration process, the URLs to which the browser may be redirected following authentication (these will generally be something like `https://annalist.example.net:8000/annalist/login_done/` and `http://localhost:8000/annalist/login_done/`) are specified.  This will involve installing a file in the root of the server to prove control of the domain used for login redirects.  Follow the instructions presented by Google's web pages, or go to [Search Console](https://www.google.com/webmasters/tools/home) and click the "Add a property button".
 
 * Create new project
 * Verify the domain the installation will use for redirects (under the "Domain verification" tab).  The HTTPS proxy server (e.g., Apache) will need to be installed and running so that a small file provided by Google can be installed and served from this domain).

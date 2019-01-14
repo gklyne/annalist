@@ -92,7 +92,7 @@ class oauth2_flow(object):
         self._session       = session
         self._auth_uri      = auth_uri
         self._state         = state
-        log.debug("oauth2_flow: provider_data %r"%(self._provider_data,))
+        # log.debug("oauth2_flow: provider_data %r"%(self._provider_data,))
         log.debug("oauth2_flow: scope         %r"%(self._scope,))
         log.debug("oauth2_flow: redirect_uri  %r"%(self._redirect_uri,))
         log.debug("oauth2_flow: session       %r"%(self._session,))
