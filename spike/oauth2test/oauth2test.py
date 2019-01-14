@@ -23,7 +23,7 @@ authorization_url, state = google.authorization_url(authorization_base_url,
     # access_type="offline", 
     # prompt="select_account"
     )
-print 'Please go here and authorize,', authorization_url
+print 'Please go here and authorize:\n', authorization_url
 # Get the authorization verifier code from the callback url
 redirect_response = raw_input('Paste the full redirect URL here:')
 

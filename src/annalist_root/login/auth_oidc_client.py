@@ -87,7 +87,7 @@ class oauth2_flow(object):
         auth_uri, state     = session.authorization_url(
                                 provider_data["auth_uri"], 
                                 #@@ Google specific... needed to get token?
-                                access_type="offline"
+                                #access_type="offline"
                                 )
         self._session       = session
         self._auth_uri      = auth_uri
@@ -112,25 +112,27 @@ class oauth2_flow(object):
         Using a credentials provided in the supplied redirect request value,
         requests an access token for user authentication.
         """
-        auth_resp = request.build_absolute_uri()
-        token_uri = self._provider_data['token_uri']
-        log.debug("step2_exchange: token_uri %r", token_uri)
-        log.debug("step2_exchange: auth_resp %r", auth_resp)
+        auth_resp     = request.build_absolute_uri()
+        token_uri     = self._provider_data['token_uri']
+        client_secret = self._provider_data['client_secret']
+        log.debug("step2_exchange: token_uri     %r", token_uri)
+        log.debug("step2_exchange: auth_resp     %r", auth_resp)
+        log.debug("step2_exchange: client_secret %r", client_secret)
         try:
             token = self._session.fetch_token(token_uri, 
+                client_secret=client_secret,
                 authorization_response=auth_resp,
                 # client_id=self._provider_data['client_id'],
-                client_secret=self._provider_data['client_secret'],
                 timeout=5
                 )
         except Exception as e:
             log.error("@@@@ Failed to fetch token: %s"%(e,))
-            log.info(json.dumps(
-                self._provider_data,
-                sort_keys=True,
-                indent=4,
-                separators=(',', ': ')
-                ))
+            # log.info(json.dumps(
+            #     self._provider_data,
+            #     sort_keys=True,
+            #     indent=4,
+            #     separators=(',', ': ')
+            #     ))
             log.error("@@@@")
             raise
         return token
