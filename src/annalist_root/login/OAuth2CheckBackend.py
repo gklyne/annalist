@@ -53,7 +53,14 @@ class OAuth2CheckBackend(object):
         auth_email      = None
         return_user     = None
         create_username = None
-        if profile and profile.get("verified_email", None):
+        verified_email  = False
+        if profile:
+            # It looks like this was changed in Google profile
+            verified_email = (
+                profile.get("verified_email", False) or 
+                profile.get("email_verified", False)
+                )
+        if verified_email:
             # Use access token to retrieve profile information
             # Construct authenticated user ID from email local part
             auth_email       = profile['email']
