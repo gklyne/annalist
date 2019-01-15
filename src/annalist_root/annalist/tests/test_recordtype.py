@@ -711,21 +711,19 @@ class RecordTypeEditViewTest(AnnalistTestCase):
 
     def test_get_copy_not_exists(self):
         u = entitydata_edit_url(
-            "copy", "testcoll", layout.TYPE_TYPEID, entity_id="notype", view_id="Type_view"
+            "copy", "testcoll", layout.TYPE_TYPEID, 
+            entity_id="notype", view_id="Type_view"
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            type_id=layout.TYPE_TYPEID, 
-            id="notype", 
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.TYPE_TYPEID, 
+                id="notype", 
+                label=error_label("testcoll", layout.TYPE_TYPEID, "notype")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -763,17 +761,14 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.TYPE_TYPEID, "notype")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            type_id=layout.TYPE_TYPEID, 
-            id="notype", 
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.TYPE_TYPEID, 
+                id="notype", 
+                label=error_label("testcoll", layout.TYPE_TYPEID, "notype")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

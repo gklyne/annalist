@@ -722,21 +722,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_get_copy_not_exists(self):
         u = entitydata_edit_url(
-            "copy", "testcoll", layout.VIEW_TYPEID, entity_id="noview", view_id="View_view"
+            "copy", "testcoll", layout.VIEW_TYPEID, 
+            entity_id="noview", view_id="View_view"
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.VIEW_TYPEID, "noview")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            type_id=layout.VIEW_TYPEID, 
-            id="noview", 
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.VIEW_TYPEID, 
+                id="noview", 
+                label=error_label("testcoll", layout.VIEW_TYPEID, "noview")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -773,21 +771,19 @@ class RecordViewEditViewTest(AnnalistTestCase):
 
     def test_get_edit_not_exists(self):
         u = entitydata_edit_url(
-            "edit", "testcoll", layout.VIEW_TYPEID, entity_id="noview", view_id="View_view"
+            "edit", "testcoll", layout.VIEW_TYPEID, 
+            entity_id="noview", view_id="View_view"
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.VIEW_TYPEID, "noview")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            type_id=layout.VIEW_TYPEID, 
-            id="noview", 
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.VIEW_TYPEID, 
+                id="noview", 
+                label=error_label("testcoll", layout.VIEW_TYPEID, "noview")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     # Test rendering of view with repeated field structure - in this case, View_view

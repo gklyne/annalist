@@ -553,21 +553,34 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_get_copy_not_exists(self):
         u = entitydata_edit_url(
-            "copy", "testcoll", layout.VOCAB_TYPEID, entity_id="novocab", view_id="Vocab_view"
+            "copy", "testcoll", layout.VOCAB_TYPEID, 
+            entity_id="novocab", view_id="Vocab_view"
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            id="novocab", 
-            type_id=layout.VOCAB_TYPEID,
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.VOCAB_TYPEID, 
+                id="novocab", 
+                label=error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
+
+
+
+
+        # self.assertEqual(r.status_code,   404)
+        # self.assertEqual(r.reason_phrase, "Not found")
+        # self.assertContains(r, "<title>Annalist error</title>", status_code=404)
+        # self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
+        # err_label = error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
+        # msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+        #     id="novocab", 
+        #     type_id=layout.VOCAB_TYPEID,
+        #     label=err_label
+        #     )
+        # self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     def test_get_edit(self):
@@ -601,21 +614,32 @@ class RecordVocabEditViewTest(AnnalistTestCase):
 
     def test_get_edit_not_exists(self):
         u = entitydata_edit_url(
-            "edit", "testcoll", layout.VOCAB_TYPEID, entity_id="novocab", view_id="Vocab_view"
+            "edit", "testcoll", layout.VOCAB_TYPEID, 
+            entity_id="novocab", view_id="Vocab_view"
             )
         r = self.client.get(u)
         # log.info(r.content)
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        err_label = error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
-            id="novocab", 
-            type_id=layout.VOCAB_TYPEID,
-            label=err_label
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                type_id=layout.VOCAB_TYPEID, 
+                id="novocab", 
+                label=error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
+                )
             )
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
+
+
+        # self.assertEqual(r.status_code,   404)
+        # self.assertEqual(r.reason_phrase, "Not found")
+        # self.assertContains(r, "<title>Annalist error</title>", status_code=404)
+        # self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
+        # err_label = error_label("testcoll", layout.VOCAB_TYPEID, "novocab")
+        # msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, 
+        #     id="novocab", 
+        #     type_id=layout.VOCAB_TYPEID,
+        #     label=err_label
+        #     )
+        # self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
         return
 
     #   -----------------------------------------------------------------------------

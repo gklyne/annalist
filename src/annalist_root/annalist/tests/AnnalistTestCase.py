@@ -19,7 +19,7 @@ from bs4                import BeautifulSoup
 from django.test        import TestCase # https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django             import db       # https://stackoverflow.com/questions/8816238/memoryerror-with-django
 
-from utils.py3porting   import is_string, bytes_to_str
+from utils.py3porting   import is_string, bytes_to_str, quote
 
 from annalist.models.entitytypeinfo             import EntityTypeInfo
 from annalist.views.fields.bound_field          import bound_field
@@ -45,7 +45,7 @@ class AnnalistTestCase(TestCase):
     """
 
     def check_entity_does_not_exist(self, type_id, entity_id):
-        "Helper function checks content of entity record"
+        "Helper function checks non-existence of entity record"
         typeinfo = EntityTypeInfo(self.testcoll, type_id)
         self.assertFalse(typeinfo.entity_exists(entity_id))
         return
@@ -59,6 +59,28 @@ class AnnalistTestCase(TestCase):
         self.assertEqual(e.get_type_id(), type_id)
         self.assertDictionaryMatch(e.get_values(), check_values)
         return e
+
+    def check_entity_not_found_response(self, response, 
+            err_head=None, 
+            err_msg=None, 
+            redirect_url=None):
+        "Helper checks response for entity not found"
+        self.assertEqual(response.status_code,   302)
+        self.assertEqual(response.reason_phrase, "Found")
+        self.assertEqual(response.content,       b"")
+        err_head = err_head or "Problem with data"
+        self.assertIn(quote(err_head, safe="(/)"), response['location'])
+        err_msg  = err_msg  or " does not exist"
+        self.assertIn(quote(err_msg, safe="(/)"),  response['location'])
+        if redirect_url:
+            self.assertIn(redirect_url, response['location'])
+        #@@
+        # self.assertEqual(response.status_code,   404)
+        # self.assertEqual(response.reason_phrase, "Not found")
+        # self.assertContains(response, "<title>Annalist error</title>", status_code=404)
+        # self.assertContains(response, "<h3>404: Not found</h3>", status_code=404)
+        #@@
+        return
 
     def assertEqualPrefix(self, actual, expect, prefix=""):
         self.assertEqual(actual, expect, msg="%s: actual %r, expected %r"%(prefix, actual, expect))

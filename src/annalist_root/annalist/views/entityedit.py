@@ -132,15 +132,27 @@ class GenericEntityEditView(AnnalistGenericView):
                 , 'type_id':    viewinfo.type_id
                 , 'entity_id':  viewinfo.src_entity_id
                 })
-            return self.error(
-                dict(self.error404values(),
-                    message=message.ENTITY_DOES_NOT_EXIST%
-                        { 'type_id': viewinfo.type_id
-                        , 'id':      viewinfo.src_entity_id
-                        , 'label':   entity_label
-                        }
-                    )
-                )
+            msg = (message.ENTITY_DOES_NOT_EXIST%
+                { 'type_id': viewinfo.type_id
+                , 'id':      viewinfo.src_entity_id
+                , 'label':   entity_label
+                })
+            log.info(msg)
+            responseinfo = ResponseInfo()
+            responseinfo.set_response_error(message.DATA_ERROR, msg)
+            return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
+            #@@TODO: remove old code
+            # return self.error(
+            #     dict(self.error404values(),
+            #         message=message.ENTITY_DOES_NOT_EXIST%
+            #             { 'type_id': viewinfo.type_id
+            #             , 'id':      viewinfo.src_entity_id
+            #             , 'label':   entity_label
+            #             }
+            #         )
+            #     )
+            #@@
+
         # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))
         orig_entity_coll_id = viewinfo.orig_typeinfo.get_ancestor_id(entity)
         viewinfo.set_orig_coll_id(orig_coll_id=orig_entity_coll_id)

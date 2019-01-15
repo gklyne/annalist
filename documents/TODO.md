@@ -24,7 +24,11 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.13, towards 0.5.14
 
-- [ ] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of trying to display an earlier rendering of the entity when returning to a supplied continuation URI.
+- [x] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of trying to display an earlier rendering of the entity when returning to a supplied continuation URI.
+    - It's not that simple: continuation rewriting seems to catch most of these.  Could it be multiple changes?
+    - Rename then edit does it.
+    - At least try to make the error more user friendly
+    - Consider keeping a list of renames since startup, and applying these when going back up the continuation tree.  This may be a better strategy than rewriting continuation URLs?
 - [x] BUG: login with google account without given_name in profile causes login failure.
 - [x] BUG: OIDC login code uses different source of redirect URI on initial form and subsequent token access (see login_views.post and OIDC_AuthDoneView.get - redirect URI is used in setup for OAuth2 session, and (apparently) must be the same.)
 - [x] Fix login problems (works on test-bionic-annalist, not on demo.annalist)
@@ -101,7 +105,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
-- [ ] Check out Django compatibility problems:
+- [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
 - [ ] Revisit HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  (Currently using reverse proxy.)
@@ -109,6 +113,8 @@ Technical debt:
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+- [ ] Rename while editing sometyimes generates error when saving or invoking mnew functions that force a save.
+    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.

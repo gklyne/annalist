@@ -496,14 +496,14 @@ class GenericEntityEditViewTest(AnnalistTestCase):
     def test_get_edit_no_entity(self):
         u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone", view_id="Type_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
-        self.assertEqual(r.status_code,   404)
-        self.assertEqual(r.reason_phrase, "Not found")
-        self.assertContains(r, "<title>Annalist error</title>", status_code=404)
-        self.assertContains(r, "<h3>404: Not found</h3>", status_code=404)
-        # log.debug(r.content)
-        err_label = error_label("testcoll", "testtype", "entitynone")
-        msg_text  = make_message(message.ENTITY_DOES_NOT_EXIST, id="entitynone", label=err_label)
-        self.assertContains(r, "<p>%s</p>"%msg_text, status_code=404)
+        self.check_entity_not_found_response(r, 
+            err_msg=make_message(
+                message.ENTITY_DOES_NOT_EXIST, 
+                id="entitynone", 
+                label=error_label("testcoll", "testtype", "entitynone")
+                ),
+            redirect_url="/xyzzy/"
+            )
         return
 
     #   -----------------------------------------------------------------------------
