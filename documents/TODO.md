@@ -24,11 +24,9 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.13, towards 0.5.14
 
-- [ ] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of tryinmg to display an earlier rendering of the entity when retrunikng to a supplied continuation URI. 
-- [ ] BUG: login with google account without name in profile causes login failure.
-
-        ERROR 2019-01-11 14:14:07,622 Traceback (most recent call last): File "/home/annalist/anenv2/lib/python2.7/site-packages/annalist_root/login/auth_oidc_client.py", line 157, in get username=userid, profile=profile File "/home/annalist/anenv2/lib/python2.7/site-packages/django/contrib/auth/__init__.py", line 70, in authenticate user = _authenticate_with_backend(backend, backend_path, request, credentials) File "/home/annalist/anenv2/lib/python2.7/site-packages/django/contrib/auth/__init__.py", line 116, in _authenticate_with_backend return backend.authenticate(*args, **credentials) File "/home/annalist/anenv2/lib/python2.7/site-packages/annalist_root/login/OAuth2CheckBackend.py", line 89, in authenticate return_user.first_name = profile['given_name'] KeyError: u'given_name' 
-- [ ] BUG: OIDC login code uses different source of redirect URI on initial form and subsequent token access (see login_views.post and OIDC_AuthDoneView.get - redirect URI is used in setup for OAuth2 session, and (apparently) must be the same.)
+- [ ] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of trying to display an earlier rendering of the entity when returning to a supplied continuation URI.
+- [x] BUG: login with google account without given_name in profile causes login failure.
+- [x] BUG: OIDC login code uses different source of redirect URI on initial form and subsequent token access (see login_views.post and OIDC_AuthDoneView.get - redirect URI is used in setup for OAuth2 session, and (apparently) must be the same.)
 - [x] Fix login problems (works on test-bionic-annalist, not on demo.annalist)
     - Note: problem was lack of trailing "/" on login_done redirect URI
 - [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
@@ -37,7 +35,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Rename collection: if already exists, wrong id is reported.  
 - [x] Update collection metadata id to match directory name used?  (Causes inconsistent display if collection is copied by hand - displays old name.)
 - [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
-    - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site darta is created or updated.
+    - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site data is created or updated.
 - [x] If field name in view is blank/undefined/invalid: display placeholder.
 - [ ] Tidy up HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.

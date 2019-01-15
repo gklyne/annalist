@@ -28,7 +28,7 @@ class OAuth2CheckBackend(object):
 
     username is a local user id that keys the local user database
     password is a Credential object obtained via the OAuth2 dance
-    profile  is a user profile information
+    profile  is a user profile information dictionary
 
     NOTE: when this method returns a User record on completion of a third
     party authentication process, it does not guarantee that it is the same
@@ -93,16 +93,34 @@ class OAuth2CheckBackend(object):
             if profile is not None:
                 return_user.is_staff     = True
                 return_user.is_superuser = False
-                return_user.first_name   = profile['given_name']
-                return_user.last_name    = profile['family_name']
-                return_user.email        = profile['email']
+                #@@ For testing: fake old-style Google profile
+                # if ("given_name" in profile) and ("family_name" in profile):
+                #     profile["name"] = profile["given_name"] + " " + profile["family_name"]
+                #     del profile["given_name"]
+                #     del profile["family_name"]
+                #@@
+                if ("given_name" in profile) and ("family_name" in profile):
+                    given_name  = profile["given_name"]
+                    family_name = profile["family_name"]
+                else:
+                    # Older Google profiles have just "name" value, apparently
+                    n = profile.get("name", "").split(None, 1)
+                    given_name  = ""
+                    family_name = ""
+                    if len(n) >= 1:
+                        given_name  = n[0]
+                    if len(n) >= 2:
+                        family_name = n[1]
+                return_user.first_name   = given_name
+                return_user.last_name    = family_name
+                return_user.email        = profile["email"]
             elif password.id_token:
                 # No profile provided: Try to load email address from id_token
                 return_user.is_staff     = True
                 return_user.is_superuser = False
                 return_user.first_name   = ""
                 return_user.last_name    = ""
-                return_user.email        = password.id_token['email']
+                return_user.email        = password.id_token["email"]
             else:
                 return_user = None
             if return_user:

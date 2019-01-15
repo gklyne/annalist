@@ -66,13 +66,14 @@ def collect_provider_data():
                     PROVIDER_DETAILS[provider_name] = provider_data['web']
                     if 'provider_label' not in PROVIDER_DETAILS[provider_name]:
                         PROVIDER_DETAILS[provider_name]['provider_label'] = provider_name
-                    log.info("login_views: collect_provider_data %s"%(provider_name,))
-                    log.info(json.dumps(
-                        PROVIDER_DETAILS[provider_name], 
-                        sort_keys=True,
-                        indent=4,
-                        separators=(',', ': ')
-                        ))
+                    log.debug("login_views: collect_provider_data %s"%(provider_name,))
+                    # For debugging only: don't log details in running system...
+                    # log.debug(json.dumps(
+                    #     PROVIDER_DETAILS[provider_name], 
+                    #     sort_keys=True,
+                    #     indent=4,
+                    #     separators=(',', ': ')
+                    #     ))
     return
 
 def confirm_authentication(view, 
@@ -162,17 +163,6 @@ class LoginUserView(generic.View):
             return HttpResponseRedirect(continuation_url)
         # Display login form
         default_provider = ""
-        #@@ original code
-        # provider_labels  = map( 
-        #     lambda pair: pair[1], 
-        #     sorted(
-        #         [ ( p.get('provider_order', 5),
-        #             (k, p.get('provider_label', k), p.get('provider_image', None))
-        #           )
-        #             for k, p in PROVIDER_DETAILS.items()
-        #         ])
-        #     )
-        #@@
         provider_tuples = (
             [ ( p.get('provider_order', 5),
                 (k, p.get('provider_label', k), p.get('provider_image', None))

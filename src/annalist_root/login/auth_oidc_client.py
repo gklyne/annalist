@@ -77,18 +77,15 @@ class oauth2_flow(object):
         """
         self._provider_data = provider_data
         self._scope         = scope or provider_data.get("scope", SCOPE_DEFAULT)
-        self._redirect_uri  = redirect_uri or provider_data.get("redirect_uris", [None])[0]
+        assert redirect_uri, "Redirect URI not specified"
+        self._redirect_uri  = redirect_uri
         session             = OAuth2Session(
                                 client_id=provider_data["client_id"],
                                 scope=self._scope,
                                 state=state,
                                 redirect_uri=self._redirect_uri
                                 )
-        auth_uri, state     = session.authorization_url(
-                                provider_data["auth_uri"], 
-                                #@@ Google specific... needed to get token?
-                                #access_type="offline"
-                                )
+        auth_uri, state     = session.authorization_url(provider_data["auth_uri"])
         self._session       = session
         self._auth_uri      = auth_uri
         self._state         = state
@@ -117,23 +114,22 @@ class oauth2_flow(object):
         client_secret = self._provider_data['client_secret']
         log.debug("step2_exchange: token_uri     %r", token_uri)
         log.debug("step2_exchange: auth_resp     %r", auth_resp)
-        log.debug("step2_exchange: client_secret %r", client_secret)
+        # For debugging onlky.  Don't log this in a running system!
+        # log.debug("step2_exchange: client_secret %r", client_secret)
         try:
             token = self._session.fetch_token(token_uri, 
                 client_secret=client_secret,
                 authorization_response=auth_resp,
-                # client_id=self._provider_data['client_id'],
                 timeout=5
                 )
         except Exception as e:
-            log.error("@@@@ Failed to fetch token: %s"%(e,))
+            log.error("Failed to fetch token: %s"%(e,))
             # log.info(json.dumps(
             #     self._provider_data,
             #     sort_keys=True,
             #     indent=4,
             #     separators=(',', ': ')
             #     ))
-            log.error("@@@@")
             raise
         return token
 
@@ -163,11 +159,17 @@ class OIDC_AuthDoneView(generic.View):
 
     def get(self, request):
         # Look for authorization grant
-        provider_data = request.session['login_provider_data']
-        state         = request.session['oauth2_state']
-        userid        = request.session['oauth2_userid']
-        provider      = provider_data['provider']
-        flow          = oauth2_flow_from_provider_data(provider_data, state=state)
+        provider_data  = request.session['login_provider_data']
+        state          = request.session['oauth2_state']
+        userid         = request.session['oauth2_userid']
+        # session value "login_done_url" is set by login_views.confirm_authentication
+        login_done_url = request.build_absolute_uri(request.session['login_done_url'])
+        provider       = provider_data['provider']
+        flow = oauth2_flow_from_provider_data(
+                provider_data, 
+                redirect_uri=login_done_url, 
+                state=state
+                )
         # Get authenticated user details
         try:
             credential = flow.step2_exchange(request)
@@ -178,7 +180,8 @@ class OIDC_AuthDoneView(generic.View):
                 )
         except Exception as e:
             log.error("Exception %r"%(e,))
-            log.error("provider_data %r"%(provider_data,))
+            # For debugging only: don't log in running system
+            # log.error("provider_data %r"%(provider_data,))
             ex_type, ex, tb = sys.exc_info()
             log.error("".join(traceback.format_exception(ex_type, ex, tb)))
             # log.error("".join(traceback.format_stack()))
