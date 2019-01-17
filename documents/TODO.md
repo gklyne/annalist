@@ -52,7 +52,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - [x] create sample config files and documentation for Apache
     - [ ] create sample config files and documentation for nginx
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-    - [ ] Shared/personal deployment should generate a new secret key in settings
+    - [x] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)

@@ -284,7 +284,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_get_edit_not_exists(self):
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", 
+            entity_id="entitynone"
+            )
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.check_entity_not_found_response(r, 
             err_msg=make_message(
@@ -305,7 +307,9 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_head_edit(self):
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entity1")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", 
+            entity_id="entity1"
+            )
         r = self.client.head(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -313,9 +317,13 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_head_edit_not_exists(self):
-        u = entitydata_edit_url("edit", "testcoll", "testtype", entity_id="entitynone")
+        u = entitydata_edit_url("edit", "testcoll", "testtype", 
+            entity_id="entitynone"
+            )
         r = self.client.head(u)
-        self.check_entity_not_found_response(r)
+        self.check_entity_not_found_response(r, 
+            redirect_url="/testsite/c/testcoll/d/testtype/"
+            )
         return
 
     #   -----------------------------------------------------------------------------

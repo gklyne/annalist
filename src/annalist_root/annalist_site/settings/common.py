@@ -18,6 +18,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import os
 import django
 import sys
+import string
+import random
 import logging
 import logging.handlers
 from annalist import __version__
@@ -53,7 +55,13 @@ class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
+# SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
+KEY_CHARS  = string.ascii_letters + string.digits + string.punctuation
+SECRET_KEY = ''.join(
+                random.SystemRandom().choice(KEY_CHARS) 
+                for _ in range(32)
+                )
+# See also: https://stackoverflow.com/a/23728630/324122
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # (overrides in settings.devel and settings.runtests)

@@ -124,6 +124,8 @@ for h in log.handlers:
 
 # log.info("Annalist version %s (personal configuration)"%(ANNALIST_VERSION))
 log.info(ANNALIST_VERSION_MSG)
+# For development/testing: don't log SECRET_KEY in production!
+# log.info("SECRET_KEY:        "+SECRET_KEY)
 log.debug("SETTINGS_MODULE:   "+SETTINGS_MODULE)
 log.debug("BASE_DATA_DIR:     "+BASE_DATA_DIR)
 log.debug("CONFIG_BASE:       "+CONFIG_BASE)
