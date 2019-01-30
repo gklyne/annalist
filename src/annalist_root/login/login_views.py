@@ -279,6 +279,7 @@ class LoginPostView(generic.View):
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
                 log.debug("LoginPostView.post: SECURE_PROXY_SSL_HEADER %r"%(settings.SECURE_PROXY_SSL_HEADER,))
+                log.debug("LoginPostView.post: scheme %s"%(request.scheme,))
                 log.debug("LoginPostView.post: headers %r"%(request.META,))
                 flow = oauth2_flow_from_provider_data(
                     provider_data,
