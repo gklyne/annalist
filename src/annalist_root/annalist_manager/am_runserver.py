@@ -159,7 +159,7 @@ def am_settingsfile(annroot, userhome, options):
     with SuppressLogging(logging.INFO):
         sitesettings = importlib.import_module(settings.modulename)
     settingsfile, ext = os.path.splitext(sitesettings.__file__)
-    print(settingsfile)
+    print(sitesettings.__file__)
     return status
 
 def am_settingsdir(annroot, userhome, options):

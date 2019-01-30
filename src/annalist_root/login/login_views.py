@@ -235,6 +235,7 @@ class LoginPostView(generic.View):
     """
 
     def post(self, request):
+        log.info("LoginPostView.post")
         try:
             response = self.post_main(request)
         except Exception as e:
@@ -248,7 +249,11 @@ class LoginPostView(generic.View):
                     message=str(e)+" - see server log for details"
                     )
                 )
-        return response
+    log.info(
+        "LoginPostView.post complete %d %s"%
+        (response.status_code, response.reason_phrase)
+        )
+    return response
 
     def post_main(self, request):
         # Retrieve request parameters
@@ -273,8 +278,8 @@ class LoginPostView(generic.View):
             request.session['login_continuation_url'] = continuation_url
             if provider_mechanism == "OIDC":
                 # Create and initialize flow object
-                # log.debug("@@ LoginPostView.post: SECURE_PROXY_SSL_HEADER %r"%(settings.SECURE_PROXY_SSL_HEADER,))
-                # log.debug("@@ LoginPostView.post: headers %r"%(request.META,))
+                log.debug("LoginPostView.post: SECURE_PROXY_SSL_HEADER %r"%(settings.SECURE_PROXY_SSL_HEADER,))
+                log.debug("LoginPostView.post: headers %r"%(request.META,))
                 flow = oauth2_flow_from_provider_data(
                     provider_data,
                     redirect_uri=request.build_absolute_uri(login_done_url)
