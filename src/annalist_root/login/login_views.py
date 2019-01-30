@@ -249,11 +249,11 @@ class LoginPostView(generic.View):
                     message=str(e)+" - see server log for details"
                     )
                 )
-    log.info(
-        "LoginPostView.post complete %d %s"%
-        (response.status_code, response.reason_phrase)
-        )
-    return response
+        log.info(
+            "LoginPostView.post complete %d %s"%
+            (response.status_code, response.reason_phrase)
+            )
+        return response
 
     def post_main(self, request):
         # Retrieve request parameters
