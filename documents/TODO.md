@@ -51,10 +51,32 @@ See also: https://www.divio.com/en/blog/documentation/
         - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
     - [x] create sample config files and documentation for Apache
     - [ ] create sample config files and documentation for nginx
-- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+
+- [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [x] Shared/personal deployment should generate a new secret key in settings
-    - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
-    - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
+    - [ ] Set up deployment usinmg WSGI under Apache or nginx
+        - [ ] install gunicorn
+        - [ ] manually test Annalist under gunicorn (as opposed to manage.py)
+        - [ ] check whether caching is still effective
+        - annalist-manager updates:
+        - [ ] rename "runserver" -> "rundevserver"
+        - [ ] new "runserver" command to activate "gunicorn" and save pid and secret
+        - [ ] new "stopserver" command to stop the saved process (gunicorn uses signals)
+            - use specified web request with secret shared at startup
+    - NOTES
+        - annalist_site/wsgi.py exports `application` object
+        - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
+        - http://docs.gunicorn.org/en/latest/install.html
+    - [ ] Configure for multi-process operation
+        - [ ] check for code that uses local server state
+            - models/collection.py (caches)
+            - models/entity.py (id allocation)
+            - these are basically caches
+        - [ ] need to rethink caching with multiple processes.  Or cache invalidation.
+            - store id counter and cache invalidate flag in session and/or Django data?
+            - the proper answer is probably to disable in-server caching
+            - but how to save transitive closure calculations?  save them in shadow entities?
+
 - [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)

@@ -638,7 +638,8 @@ class Entity(EntityRoot):
     @classmethod
     def remove(cls, parent, entityid):
         """
-        Method removes an entity, deleting its details, data and descendents from Annalist storage.
+        Method removes an entity, deleting its details, data and descendents 
+        from Annalist storage.
 
         cls         is the class of the entity to be removed
         parent      is the parent from which the entity is descended.
