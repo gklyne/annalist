@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 import os
 import re
+import traceback
 import json
 import markdown
 import copy
@@ -234,6 +235,22 @@ class LoginPostView(generic.View):
     """
 
     def post(self, request):
+        try:
+            response = self.post_main(request)
+        except Exception as e:
+            # -- This should be redundant, but...
+            log.error("Exception in LoginPostView.post (%r)"%(e))
+            log.error("".join(traceback.format_stack()))
+            # --
+            log.exception(str(e))
+            response = self.error(
+                dict(self.error500values(),
+                    message=str(e)+" - see server log for details"
+                    )
+                )
+        return response
+
+    def post_main(self, request):
         # Retrieve request parameters
         userid            = request.POST.get("userid",            "")
         provider          = request.POST.get("provider",          "No_provider")
