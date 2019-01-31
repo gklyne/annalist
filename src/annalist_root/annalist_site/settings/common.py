@@ -61,7 +61,7 @@ SECRET_KEY = ''.join(
                 for _ in range(32)
                 )
 # See also: https://stackoverflow.com/a/23728630/324122
-SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
+# SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # (overrides in settings.devel and settings.runtests)
