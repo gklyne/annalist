@@ -345,10 +345,81 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
 
+
+
+
+
+
+### Setting up nginx on Ubuntu to forward HTTPS requests
+
+@@NOTE: these instructions need testing@@
+
+NOTE:  Sample configuration files should be created in directory `~/.annalist/config/` by the site initialization procedure (`annalist-manager createsite` or `annalist-manager updatesite` commands)
+
+Prerequisites:
+
+- nginx web server installed and running (in default configuration with test page)
+
+Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
+
+1. Install _LetsEncrypt_ certificate agent:
+
+    sudo add-apt-repository ppa:certbot/certbot
+    apt-get update
+    apt-get install python-certbot-nginx
+
+2. Check firewall configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
+
+        ufw allow ssh
+        ufw allow http
+        ufw allow https
+        ufw allow from <local-IP> to <local-IP> port 8000
+        ufw enable
+
+    If you can't access Annalist with the firewall enabled, look at `/var/log/ufw.log` to see what is being bocked.
+
+3. Disable any existing proxy configuration.  (This is to prevent proxying from interfering with certbot's verification procedure.)
+
+4. Create a proxy configuration for Annalist, if not already done.  This can take the form of a file `/etc/nginx/sites-available/annalist.conf`, with content like this (see also `~/.annalist/config/annalist.conf.nginx_example`):
+
+    server {
+        server_name annalist.example.org;
+        # Non-proxy content
+        location / {
+            root /var/www/html;
+            index index.html index.htm;
+        }
+        # Proxy content matching
+        location ~ /(annalist|static|admin) {
+            proxy_pass http://localhost:8000;
+            proxy_http_version 1.1;
+            proxy_buffering off;
+            proxy_set_header X-Real-IP       $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host            $http_host;
+            proxy_set_header X-Forwarded-protocol $scheme;
+            proxy_set_header X-Forwarded-proto    $scheme;
+        }
+    }
+
+5. Generate and install a certificate:
+
+        certbot --nginx -d annalist.example.net
+
+    When asked, select the option that adds HTTP redirection to HTTPS.
+
+    If all goes well, this will update the `/etc/nginx/sites-available/annalist.conf` with details of the Letsencrypt certificate to be used.
+
+6.  Check the revised configuration and (if OK) restart Apache:
+
+        mginx -t
+        service nginx restart
+
+For a cursory test, try pointing your browser at `https://annalist.example.net/annalist/`: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
+
 ## Set up Google authentication
 
 See [Configuring Annalist to use OpenID Connect](./openid-connect-setup.md).
-
 
 ## Running as a Docker container
 

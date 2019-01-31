@@ -41,7 +41,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
     - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site data is created or updated.
 - [x] If field name in view is blank/undefined/invalid: display placeholder.
-- [ ] Tidy up HTTPS deployment
+- [x] Tidy up HTTPS deployment
     - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
     - [x] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
     - [x] Document setup process.
@@ -50,11 +50,10 @@ See also: https://www.divio.com/en/blog/documentation/
         - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
         - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
     - [x] create sample config files and documentation for Apache
-    - [ ] create sample config files and documentation for nginx
-
+    - [x] create sample config files and documentation for nginx
 - [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [x] Shared/personal deployment should generate a new secret key in settings
-    - [ ] Set up deployment usinmg WSGI under Apache or nginx
+    - [ ] Set up deployment using WSGI under Apache or nginx
         - [ ] install gunicorn
         - [ ] manually test Annalist under gunicorn (as opposed to manage.py)
         - [ ] check whether caching is still effective

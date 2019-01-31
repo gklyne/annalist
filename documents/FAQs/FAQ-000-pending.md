@@ -26,3 +26,13 @@ See also:
 
 - https://stackoverflow.com/questions/10827920/not-receiving-google-oauth-refresh-token
 - https://stackoverflow.com/questions/51499034/google-oauthlib-scope-has-changed
+
+
+
+Q: Attempting to login with Google gives email mismatch error
+
+This may be cauised by having a gmail address attached to the account used for login.  If this is the case, to revert the email address associated with the Google login remove the Gmail servive fromn the Google account.  See:
+
+    https://support.google.com/accounts/answer/61177
+
+
