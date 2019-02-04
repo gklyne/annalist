@@ -48,5 +48,8 @@ AM_INSTALLCOLLFAIL  = 15        # Failed to install collection
 AM_COPYCOLLFAIL     = 16        # Failed to copy collection
 AM_MIGRATECOLLFAIL  = 17        # Failed to migrate collection
 AM_COPYENTITYFAIL   = 18        # Failed to copy entity
+AM_NOSERVERPIDFILE  = 19        # Could not find server PID file
+AM_PIDNOTFOUND      = 20        # Could not find process with PID
+AM_SERVERALREADYRUN = 21        # Server already run (saved PID found)
 
 # End.

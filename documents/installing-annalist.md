@@ -15,7 +15,7 @@
 8. [Setting up an Annalist site](#setting-up-an-annalist-site)
     - [Annalist site options](#annalist-site-options)
     - [Annalist authentication options](#annalist-authentication-options)
-        - [OpenID Connect using Google+](#openid-connect-using-google)
+        - [OpenID Connect using Google](#openid-connect-using-google)
         - [Local user database](#local-user-database)
     - [Initial site setup](#initial-site-setup)
 9. [Accessing Annalist](#accessing-annalist)
@@ -198,9 +198,13 @@ e.g.
 
 ## Run annalist as a background process
 
+NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command ran the Django development HTTP server, and operated synchronously; i.e., the `annalist-manager runserver` command did not complete until the server itself terminated, commonly by typing CTRL+C. As of version 0.5.14, this is performed by the `annalist-manager rundevserver` command.  The `annalist-manager runserver` command now starts the Annlist application under the `gunicorn` HTTP server, and completes as soon as the server is up and running, writing the server process id to stdout (and also to a file in the Annalist site base directory). To stop a running server started in  this way, use the command `annalist-manager stopserver`.
+
 To run annalist as a long-running background process, use the following command:
 
-    nohup annalist-manager runserver &
+    nohup annalist-manager runserver
+or
+    nohup annalist-manager rundevserver &
 
 (with `annalist-manager` configuration options if required.)
 
@@ -209,6 +213,14 @@ To view the server log of a running Annalist instance:
     less $(annalist-manager serverlog)
 
 To check for Annalist background processes, and to terminate an Annalist server running as a background process (run from the same user account that started annalist):
+
+For a server started using `annalist-manager runserver`:
+
+    less $(annalist-manager sitedirectory)/annalist.pid
+    ps | grep gunicorn
+    annalist-manager stopserver
+
+For a server started using `annalist-manager rundevserver`:
 
     ps x
     killall python
@@ -224,6 +236,10 @@ This particularly affects the OpenID Connect login, which now fails if an HTTPS 
 
 or
 
+    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager rundevserver
+
+or
+
     OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
 
 Or otherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when running the server.
@@ -231,6 +247,8 @@ Or otherwise set the environment variable OAUTHLIB_INSECURE_TRANSPORT when runni
 Alternatively, see `src/annalist_root/stunnel_dev_https.conf` for using `stunnel` to proxy HTTPS requests to HTTP for Django's internal development server.  
 
 If using Google authentication, remember to update the login redirect URLs on the `developers.google.com` [dashboard](https://console.developers.google.com/apis/dashboard).  Other authentication providers will require similar treatment.  The Annalist login redirect URLs end with `/annalist/login_done/`.
+
+The Annalist identity provider configuration (typically in `~/.annalist/providers/` must also reflect the correct login redirect URL).
 
 ### Setting up Apache httpd on Ubuntu to forward HTTPS requests
 
@@ -344,13 +362,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
-
-
-
-
-
-
-### Setting up nginx on Ubuntu to forward HTTPS requests
+### Setting up Nginx on Ubuntu to forward HTTPS requests
 
 @@NOTE: these instructions need testing@@
 
@@ -470,7 +482,7 @@ At this point, a browser can be directed to port 8000 (e.g. http://localhost:800
 Existing Analist collection data can be loaded into a new installation, before starting the server.  For example, an experimental Digital Music Object, which demonstrates several features of Annalist, can be loaded thus:
 
     cd /annalist_site/annalist_site/c/
-    git clone https://github.com/gklyne/DMO_Experiment.git
+    git clone https://github.com/gklyne/Carolan_Guitar.git
 
 To run Annalist server as a headless container (no shell):
 
@@ -511,11 +523,11 @@ For most purposes, the default (**Personal**) configuration works just fine.  Fo
 
 Annalist has been implemented to use federated authentication based on Open ID Connect (http://openid.net/connect/) rather than relying on local user credential management.  Using third party authentication services should facilitate integration with single-sign-on (SSO) services, and avoids the security risks assciated with local password storage.  Unfortunately, installing and configuring a system to use an OpenID Connect authentication service does take some addtional effort to register the installed application with the authentication service.
 
-Annalist currently supports two user authentication mechanisms: OpenID Connect using Google+, and local user login credentials.  (Other OpenID Connect providers may also work, but have not been tested.)
+Annalist currently supports two user authentication mechanisms: OpenID Connect using Google, and local user login credentials.  (Other OpenID Connect providers may also work, but have not been tested.)
 
-#### OpenID Connect using Google+
+#### OpenID Connect using Google
 
-Annalist OpenID Connect authentication has been tested with Google+ identity service.  Instructions for configuring a new installation to work with Google+ are in [Configuring Annalist to use OpenID Connect](openid-connect-setup.md).
+Annalist OpenID Connect authentication has been tested with the Google identity service.  Instructions for configuring a new installation to work with Google are in [Configuring Annalist to use OpenID Connect](openid-connect-setup.md).
 
 The configuration details for using an OpenID Connect provider are stored in a private area, away from the Annalist source files and site data, since they contain private keying data.  A subdirectory `providers` of the Annalist configuration directory contains a description file for each supported OpenID Connect provider.  New providers may be supported by adding descrtiption files to this directory.  The provider description for Google may be a useful example for creating descriptions for other providers.  (But be aware that different providers will have different registration procedures, and may require subtlely different forms of configuration information.)
 
@@ -561,6 +573,10 @@ NOTE: using the development configuration, data files are stored within the soft
 5.  Start the Annalist server
 
         annalist-manager runserver
+
+    or
+
+        annalist-manager rundevserver
 
 You should now be able to use a browser to view the Annalist server, e.g. at http://localhost:8000.
 

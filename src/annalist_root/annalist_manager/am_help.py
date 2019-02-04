@@ -41,6 +41,8 @@ command_summary_help = ("\n"+
     "  %(prog)s migratecollection coll_id [ CONFIG ]\n"+
     "  %(prog)s migrateallcollections [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
+    "  %(prog)s stopserver [ CONFIG ]\n"+
+    "  %(prog)s rundevserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s settingsmodule [ CONFIG ]\n"+
     "  %(prog)s settingsdir [ CONFIG ]\n"+
@@ -360,7 +362,35 @@ def am_help(options, progname):
         help_text = ("\n"+
             "  %(prog)s runserver [ CONFIG ]\n"+
             "\n"+
-            "Starts an Annalist server running.\n"+
+            "Starts an Annalist server running asynchronously, and\n"+
+            "writes its process id to stdout.\n"+
+            "\n"+
+            "Normally run behind an Apache or Nginx HTTPS proxy.  Use:\n"+
+            "  OAUTHLIB_INSECURE_TRANSPORT=1 %(prog)s runserver [ CONFIG ]\n"+
+            "for local testing under HTTP\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("stop"):
+        help_text = ("\n"+
+            "  %(prog)s stopserver [ CONFIG ]\n"+
+            "\n"+
+            "Stops a running Annalist server.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("rund"):
+        help_text = ("\n"+
+            "  %(prog)s rundevserver [ CONFIG ]\n"+
+            "\n"+
+            "Starts an Annalist development server running.  "+
+            "(Not recommended for production use.)\n"+
+            "\n"+
+            "Use:\n"+
+            "  OAUTHLIB_INSECURE_TRANSPORT=1 %(prog)s rundevserver [ CONFIG ]\n"+
+            "to allow OpenId Connect login under HTTP\n"+
             "\n"+
             config_options_help+
             "\n"+

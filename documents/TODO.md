@@ -24,6 +24,8 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.13, towards 0.5.14
 
+NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command ran the Django development HTTP server, and operated synchronously; i.e., the `annalist-manager runserver` command did not complete until the server itself terminated, commonly by typing CTRL+C. As of version 0.5.14, this is performed by the `annalist-manager rundevserver` command.  The `annalist-manager runserver` command now starts the Annlist application under the `gunicorn` HTTP server, and completes as soon as the server is up and running, writing the server process id to stdout (and also to a file in the Annalist site base directory). To stop a running server started in  this way, use the command `annalist-manager stopserver`.
+
 - [x] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of trying to display an earlier rendering of the entity when returning to a supplied continuation URI.
     - It's not that simple: continuation rewriting seems to catch most of these.  Could it be multiple changes?
     - Rename then edit does it.
@@ -51,40 +53,36 @@ See also: https://www.divio.com/en/blog/documentation/
         - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
     - [x] create sample config files and documentation for Apache
     - [x] create sample config files and documentation for nginx
+- [x] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
 - [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [x] Shared/personal deployment should generate a new secret key in settings
-    - [ ] Set up deployment using WSGI under Apache or nginx
-        - [ ] install gunicorn
-        - [ ] manually test Annalist under gunicorn (as opposed to manage.py)
-        - [ ] check whether caching is still effective
-        - annalist-manager updates:
-        - [ ] rename "runserver" -> "rundevserver"
-        - [ ] new "runserver" command to activate "gunicorn" and save pid and secret
-        - [ ] new "stopserver" command to stop the saved process (gunicorn uses signals)
-            - use specified web request with secret shared at startup
+    - [x] Set up deployment using WSGI under Apache or nginx
+        - [x] install gunicorn
+        - [x] manually test Annalist under gunicorn (as opposed to manage.py)
+    - [ ] annalist-manager updates:
+        - [x] rename "runserver" -> "rundevserver"
+        - [x] new "runserver" command to activate "gunicorn" and save pid
+        - [x] new "stopserver" command to stop the saved process
+        - [x] document changes
     - NOTES
         - annalist_site/wsgi.py exports `application` object
         - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
         - http://docs.gunicorn.org/en/latest/install.html
-    - [ ] Configure for multi-process operation
-        - [ ] check for code that uses local server state
-            - models/collection.py (caches)
-            - models/entity.py (id allocation)
-            - these are basically caches
-        - [ ] need to rethink caching with multiple processes.  Or cache invalidation.
-            - store id counter and cache invalidate flag in session and/or Django data?
-            - the proper answer is probably to disable in-server caching
-            - but how to save transitive closure calculations?  save them in shadow entities?
+    - @@TODO is `nohup` required to leave server running after disconnect?
+- [ ] Static data serving direct by HTTP server
+    - See https://github.com/gklyne/annalist/issues/12 (use "collectstatic")
+    - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
+    - See annalist_site/urls.py
+    - See annalist/views/statichack.py ** note TODOs
 
-- [ ] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
+(Sub-release?)
+
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
 - [ ] If property URI in field definition is blank, use field id
-
-(Sub-release?)
-
+- [ ] Implement ORCiD as IDP option
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
@@ -128,19 +126,29 @@ Technical debt:
 
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
-- [ ] Revisit HTTPS deployment
-    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  (Currently using reverse proxy.)
+- [x] Revisit HTTPS deployment
+    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  (Using reverse proxy /gunicorn.)
+- [ ] Configure for multi-process worker operation
+    - [ ] check for code that uses local server state
+        - models/collection.py (caches)
+        - models/entity.py (id allocation)
+        - these are basically caches
+    - [ ] need to rethink caching with multiple processes.  Or cache invalidation.
+        - store id counter and cache invalidate flag in session and/or Django data?
+        - the proper answer is probably to disable in-server caching
+        - but how to save transitive closure calculations?  save them in shadow entities?
+
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
     - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Rename while editing sometyimes generates error when saving or invoking mnew functions that force a save.
+- [ ] Rename while editing sometimes generates error when saving or invoking mnew functions that force a save.
     - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
-- [ ] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc
+- [x] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings

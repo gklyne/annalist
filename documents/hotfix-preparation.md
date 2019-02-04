@@ -15,7 +15,7 @@
     - `annalist-manager initialize`
     - `annalist-manager updatesitedata`
 - [ ] Test 'personal' deployment in actual use
-    - `annalist-manager runserver`
+    - `annalist-manager rundevserver`
 - [ ] Bump version to patch release and update release notes history
     - `src/annalist_root/annalist/__init__.py`
 - [ ] Update version number in scripts, documents, etc.

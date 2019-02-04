@@ -74,7 +74,7 @@
         annalist-manager createsite
         annalist-manager initialize
         annalist-manager defaultadmin
-        annalist-manager runserver &
+        annalist-manager runserver
         curl http://localhost:8000/annalist/site/ -v
 
 - [ ] Create and post updated kit download and web pages to annalist.net

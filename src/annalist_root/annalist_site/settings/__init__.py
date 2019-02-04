@@ -1,9 +1,10 @@
 """
 Root settings module for Annalist.
 
-Default submodule is selected by manage.py
+Default submodule is selected by manage.py or am_runserver.py
 
 To specify an alternative:
+  python manage.py rundevserver --settings=annalist_site.settings.personal
   python manage.py runserver --settings=annalist_site.settings.personal
 or
   export DJANGO_SETTINGS_MODULE=annalist_site.settings.personal

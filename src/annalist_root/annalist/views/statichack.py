@@ -27,7 +27,7 @@ For deployment, add the following to the site-level urls.py file:
 @@TODO: replace static file finder logic with direct serving logic assuming
 prior use of collectfiles utility - this should allow greater control over 
 the location of the served static files, rather than having them mixed with 
-the  server code.
+the server code.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

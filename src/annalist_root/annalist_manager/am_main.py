@@ -33,7 +33,8 @@ from .am_runtests           import am_runtests
 from .am_initialize         import am_initialize
 from .am_createsite         import am_createsite, am_updatesite
 from .am_runserver          import (
-    am_runserver, am_serverlog, am_sitedirectory, 
+    am_runserver, am_stopserver, am_rundevserver, 
+    am_serverlog, am_sitedirectory, 
     am_settingsmodule, am_settingsfile, am_settingsdir, 
     am_version
     )
@@ -158,6 +159,10 @@ def run(userhome, userconfig, options, progname):
         return am_migrateallcollections(annroot, userhome, options)
     if options.command.startswith("runs"):                  # runserver
         return am_runserver(annroot, userhome, options)
+    if options.command.startswith("stop"):                  # stopserver
+        return am_stopserver(annroot, userhome, options)
+    if options.command.startswith("rund"):                  # rundevserver
+        return am_rundevserver(annroot, userhome, options)
     if options.command.startswith("serv"):                  # serverlog
         return am_serverlog(annroot, userhome, options)
     if options.command.startswith("site"):                  # sitedir

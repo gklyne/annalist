@@ -36,7 +36,11 @@ Check the version displayed: I've found docker sometimes caches older versions a
     annalist-manager defaultadminuser  # Enter password when prompted
     annalist-manager runserver
 
-Control-C shuts down the server, then `exit` or Control-D to shut down the Docker container.
+To shut down the server: 
+
+    annalist-manager stopserver
+
+then `exit` or Control-D to shut down the Docker container.
 
 
 # Install and initialize software
@@ -74,10 +78,11 @@ Enter and re-enter a password for the admin user when prompted.
 
     annalist-manager runserver
 
+or
+
+    annalist-manager rundevserver
 
 # Update an existing installation
-
-> @@TODO: test this
 
 Backup the current installation and site data, just in case.
 
@@ -106,6 +111,9 @@ Existing user permissions are carried over from the previous installation.
 
     annalist-manager runserver
 
+or
+
+    annalist-manager rundevserver
 
 # Accessing and using annalist
 

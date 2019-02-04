@@ -218,6 +218,8 @@ setup(
           , 'rdflib-jsonld==0.4.0'
         , 'pyparsing==2.2.0'
         , 'Markdown==2.6.11'
+        # For deployment
+        , 'gunicorn==19.9.0'
         # For testing:
         , 'httpretty==0.9.4'
         , 'beautifulsoup4==4.6.0'
