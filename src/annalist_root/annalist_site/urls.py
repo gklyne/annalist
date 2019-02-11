@@ -18,17 +18,19 @@ admin.autodiscover()
 from annalist.views.home_redirects  import AnnalistHomeView
 from annalist.views.statichack      import serve_static
 
-urlpatterns = [
-    url(r'^$',         AnnalistHomeView.as_view(), name='AnnalistHomeView'),
+annalist_pattern = "^"+settings.ANNALIST_SITE_SEG+"/"
+urlpatterns  = [
+    url(r'^$',         		AnnalistHomeView.as_view(), name='AnnalistHomeView'),
 
-    url(r'^admin/',    include(admin.site.urls)),
+    url(r'^admin/',    		include(admin.site.urls)),
 
-    url(r'^annalist/', include('annalist.urls')),
+    url(annalist_pattern,	include('annalist.urls')),
     ]
 
 if not settings.DEBUG:
+    static_pattern = "^"+settings.STATIC_SEG+"/"
     urlpatterns += [
-        url(r'^static/(?P<path>.*)$', serve_static),
+        url(static_pattern+r'(?P<path>.*)$', serve_static),
         ]
 
 # End.

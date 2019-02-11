@@ -55,7 +55,8 @@ def am_createsite(annroot, userhome, options):
         return am_errors.AM_UNEXPECTEDARGS
     site_layout = layout.Layout(sitesettings.BASE_DATA_DIR, sitesettings.SITE_DIR_NAME)
     sitebasedir = site_layout.SITE_PATH
-    sitebaseurl = "/annalist/"     # @@TODO: figure more robust way to define this
+    #@@@@@ sitebaseurl = "/annalist/"     # @@TODO: figure more robust way to define this
+    sitebaseurl = sitesettings.STATIC_URL
     # --- If old site exists and --force option given, remove it
     if os.path.exists(os.path.join(sitebasedir, site_layout.SITEDATA_DIR)):
         if options.force:

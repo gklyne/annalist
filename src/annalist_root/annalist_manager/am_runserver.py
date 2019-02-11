@@ -160,9 +160,9 @@ def am_rundevserver(annroot, userhome, options):
     with ChangeCurrentDir(annroot):
         cmd = "runserver 0.0.0.0:8000"
         subprocess_command = "django-admin %s --pythonpath=%s --settings=%s"%(cmd, annroot, settings.modulename)
-        log.debug("am_initialize subprocess: %s"%subprocess_command)
+        log.debug("am_rundevserver subprocess: %s"%subprocess_command)
         status = subprocess.call(subprocess_command.split())
-        log.debug("am_initialize subprocess status: %s"%status)
+        log.debug("am_rundevserver subprocess status: %s"%status)
     return status
 
 def am_serverlog(annroot, userhome, options):

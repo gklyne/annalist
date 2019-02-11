@@ -30,7 +30,7 @@ import annalist
 
 from .                      import am_errors
 from .am_runtests           import am_runtests
-from .am_initialize         import am_initialize
+from .am_initialize         import am_initialize, am_collectstatic
 from .am_createsite         import am_createsite, am_updatesite
 from .am_runserver          import (
     am_runserver, am_stopserver, am_rundevserver, 
@@ -127,6 +127,8 @@ def run(userhome, userconfig, options, progname):
         return am_runtests(annroot, options)
     if options.command.startswith("init"):                  # initialize (intsllaation, django database)
         return am_initialize(annroot, userhome, userconfig, options)
+    if options.command.startswith("collect"):               # collect static data
+        return am_collectstatic(annroot, userhome, userconfig, options)
     if options.command.startswith("createl"):               # createlocaluser
         return am_createlocaluser(annroot, userhome, options)
     if options.command.startswith("createa"):               # createadminuser

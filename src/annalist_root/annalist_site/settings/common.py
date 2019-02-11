@@ -31,6 +31,9 @@ SITE_CONFIG_DIR = os.path.dirname(SETTINGS_DIR)                         # src/an
 SITE_SRC_ROOT   = os.path.dirname(SITE_CONFIG_DIR)                      # src/annalist_root
 SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata/data"                      # src/annalist_root/sampledata
 
+ANNALIST_SITE_SEG = "annalist"              # Base URL path segment for Annalist site
+ANNALIST_SITE_REF = ANNALIST_SITE_SEG+"/"   # Base URL path for Annalist site
+
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """
     Define a rotating file logging handler that additionally forces a new file 
@@ -158,12 +161,11 @@ USE_TZ = True
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-STATIC_URL = '/static/'
+STATIC_SEG = 'static'
+STATIC_URL = '/'+STATIC_SEG+"/"
 
 STATICFILES_DIRS = (
-    # SITE_SRC_ROOT+"/static/",
     SITE_SRC_ROOT+"/annalist/data/static/",
-    SITE_SRC_ROOT+"/annalist/data/identity_providers/",
 )
 
 ANNALIST_VERSION = __version__

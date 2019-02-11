@@ -167,6 +167,7 @@ If upgrading from a version 0.1.4 or earlier, recreate an admin user:
 
 To update site-wide data for an existing Annalist site, use:
 
+    annalist-manager collectstatic [ CONFIG ]
     annalist-manager updatesitedata [ CONFIG ]
 
 If any of the Annalist installable collection data is used then these should be re-installed (assuming they have not been modified locally since they were installed); e.g.
@@ -190,6 +191,7 @@ e.g.
       Creating user admin
       Password:
       Re-enter password:
+    annalist-manager collectstatic --personal
     annalist-manager updatesitedata --personal
     annalist-manager installcollection Resource_defs -f --personal
     annalist-manager migrateallcollections --personal
@@ -462,12 +464,14 @@ Check the version displayed: I've found Docker sometimes caches older versions a
 
 If this is the first time Annalist has been run on this system, create a new Annalist site data and database, and define an admin user login:
 
+    annalist-manager collectstatic
     annalist-manager createsitedata
     annalist-manager initialize
     annalist-manager defaultadminuser
 
 or, to keep previous annalist collection data:
 
+    annalist-manager collectstatic
     annalist-manager updatesitedata
 
 NOTE: for configurations which store the database file in the site data area (including the default personal configuration used here), `annalist-manager createsitedata` must be run before `annalist-manager initialize`, as it requires absence of any previous site data or database files.
@@ -549,6 +553,7 @@ NOTE: using the development configuration, data files are stored within the soft
 
 2.  Initialize sitedata:
 
+        annalist-manager collectstatic
         annalist-manager createsitedata
 
      (Don't do this if updating annalist software to use existing site data: use `annalist-manager updatesitedata` instead)

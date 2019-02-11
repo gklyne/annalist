@@ -74,4 +74,28 @@ class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
         self.assertTrue(dbexists,   "Annalist site Django database exists?")
         return
 
+    def test_collectstatic(self):
+        stderrbuf  = StringIO()
+        with SwitchStderr(stderrbuf):
+            stdoutbuf  = StringIO()
+            with SwitchStdout(stdoutbuf):
+                runCommand(self.userhome, self.userconfig, 
+                    ["annalist-manager", "collect", "--config=runtests"]
+                    )
+        stdoutbuf.seek(0)
+        stdoutlines = stdoutbuf.read().split("\n")
+        self.assertEqual(stdoutlines[0], "Copying '/Users/graham/workspace/github/gklyne/annalist/src/annalist_root/annalist/data/static/css/annalist.css'")
+        # for i in range(len(stdoutlines)):
+        #     if "static files copied" in stdoutlines[i]:
+        #         break
+        # self.assertEqual(stdoutlines[i], "271 static files copied to '/Users/graham/workspace/github/gklyne/annalist/src/annalist_root/sampledata/data/annalist_test/static'.")
+        # ... etc
+        siteexists   = os.path.isdir(self.sitehome)
+        staticexists = os.path.isdir(os.path.join(self.sitehome, "static"))
+        cssexists    = os.path.isfile(os.path.join(self.sitehome, "static/css/annalist.css"))
+        self.assertTrue(siteexists,   "Annalist site directory exists?")
+        self.assertTrue(staticexists, "Annalist static resources directory exists?")
+        self.assertTrue(cssexists,    "Annalist CSS resource exists?")
+        return
+
 # End.

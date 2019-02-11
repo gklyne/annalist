@@ -74,6 +74,21 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
     - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
     - See annalist_site/urls.py
     - See annalist/views/statichack.py ** note TODOs
+    - [x] definitions for:
+        - [x] STATIC_ROOT 
+            - `~/annalist_site/static`
+            - ${BASE_SITE_DIR}/static
+        - [x] STATIC_URL
+        - [x] STATICFILES_DIRS
+        - [x] STATICFILES_STORAGE
+            - default OK?
+        - [x] STATICFILES_FINDERS
+            - default OK?
+    - [x] Manually test `django-admin collectstatic --clear`
+        - `python manage.py collectstatic --clear --noinput` works; django-admin doesn't (problems finding settings module)
+    - [x] Run `django-admin collectstatic --clear` as part of installation/update
+        - new command: `annalist-manager collectstatic`
+    - [ ] Update web server configuration files to serve collected static data directly.
 
 (Sub-release?)
 
@@ -137,7 +152,7 @@ Technical debt:
         - store id counter and cache invalidate flag in session and/or Django data?
         - the proper answer is probably to disable in-server caching
         - but how to save transitive closure calculations?  save them in shadow entities?
-
+        - See https://stackoverflow.com/a/868731/324122 (Memcached with Python)
 - [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [ ] Shared/personal deployment should generate a new secret key in settings
     - [ ] Need way to cleanly shut down server processes (annalist-manager option?)

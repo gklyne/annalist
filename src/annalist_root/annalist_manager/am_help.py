@@ -24,6 +24,7 @@ command_summary_help = ("\n"+
     "  %(prog)s help [command]\n"+
     "  %(prog)s runtests [testlabel]\n"+
     "  %(prog)s initialize [ CONFIG ]\n"+
+    "  %(prog)s collectstatic [ CONFIG ]\n"+
     #@@ "  %(prog)s idprovider ...\n"+  #@@ TODO
     "  %(prog)s createlocaluser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
     "  %(prog)s createadminuser [ username [ email [ firstname [ lastname ] ] ] ] [ CONFIG ]\n"+
@@ -131,6 +132,17 @@ def am_help(options, progname):
             "\n"+
             "Initializes the installed software for an indicated configuration.\n"+
             "Mainly, this involves creating the internal database used to manage users, etc.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("collect"):
+        help_text = ("\n"+
+            "  %(prog)s collectstatic [ CONFIG ]\n"+
+            "\n"+
+            "Copies Annalist static data to a location where is can be served directly\n"+
+            "by a front-end server.  The location is generally subdirectory 'static'\n"+
+            "in the Annalist site base directory (see 'annalist-manager sitedirectory').\n"+
             "\n"+
             config_options_help+
             "\n"+

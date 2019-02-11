@@ -78,4 +78,47 @@ def am_initialize(annroot, userhome, userconfig, options):
     log.debug("am_initialize subprocess status: %s"%status)
     return status
 
+def am_collectstatic(annroot, userhome, userconfig, options):
+    """
+    Collect Annalist statis data to (e.g.) `annalist_site/static`
+
+    annroot     is the root directory for the annalist software installation.
+    userhome    is the home directory for the host system user issuing the initialize command.
+    userconfig  is the directory used for user-specific configuration files.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings_obj = am_get_settings(annroot, userhome, options)
+    if not settings_obj:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) != 0:
+        print("Unexpected arguments for collectstatic: (%s)"%(" ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    # Get config base directory from settings, and make sure it exists
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings_obj.modulename)
+
+    # Assemble static data
+    status = am_errors.AM_SUCCESS
+    subprocess_command = (
+        "django-admin collectstatic --pythonpath=%s --settings=%s --clear --noinput"%
+        (annroot, settings_obj.modulename)
+        )
+    log.debug("am_collectstatic subprocess: %s"%subprocess_command)
+    # Allow stdout and stderr to be captured for testing
+    p = subprocess.Popen(
+        subprocess_command.split(), 
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+    out, err = p.communicate(None)
+    status = p.returncode
+    sys.stdout.write(bytes_to_str(out))
+    sys.stderr.write(bytes_to_str(err))
+    log.debug("am_collectstatic subprocess status: %s"%status)
+    return status
+
 # End.

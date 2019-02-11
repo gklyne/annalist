@@ -114,6 +114,7 @@ SITE_DIR_NAME   = "annalist_test"
 BASE_DATA_DIR   = SITE_SRC_ROOT+"/sampledata/data"
 BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
 CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
+STATIC_ROOT     = os.path.join(BASE_SITE_DIR, 'static')
 
 DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
 DATABASES       = {
