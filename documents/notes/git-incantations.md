@@ -120,6 +120,10 @@ See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
 
 ## Others
 
+### List staged differences before commit
+
+    git diff --staged
+
 ### List files changed by a commit
 
     git diff-tree --no-commit-id --name-only -r <commit-id>
