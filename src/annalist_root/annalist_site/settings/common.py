@@ -165,7 +165,8 @@ STATIC_SEG = 'static'
 STATIC_URL = '/'+STATIC_SEG+"/"
 
 STATICFILES_DIRS = (
-    SITE_SRC_ROOT+"/annalist/data/static/",
+    ("",       SITE_SRC_ROOT+"/annalist/data/static"),
+    ("images", SITE_SRC_ROOT+"/annalist/data/identity_providers/images"),
 )
 
 ANNALIST_VERSION = __version__

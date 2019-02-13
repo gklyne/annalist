@@ -90,7 +90,7 @@ def am_runserver(annroot, userhome, options):
         pid = p.pid
         with open(pidfilename, "w") as pidfile:
             pidfile.write(str(pid)+"\n")
-        time.sleep(0.5) # Allow server to start and log initial messages
+        time.sleep(1.0) # Allow server to start and log initial messages
         print(str(pid), file=sys.stdout)
         log.debug("am_runserver subprocess pid: %s"%pid)
     return status

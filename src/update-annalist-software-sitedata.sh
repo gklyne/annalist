@@ -9,6 +9,7 @@ python setup.py build
 pip uninstall -y annalist
 python setup.py install
 annalist-manager updatesite
+annalist-manager collectstatic
 
 #
 # End.

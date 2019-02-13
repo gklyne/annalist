@@ -13,9 +13,14 @@
 
 # @@ Change "annalist.example.org" below to your local Annalist server virtual host name
 # @@ If necessary, change `/var/www/html` below to an appropriate web document directory
+# @@ If necessary, change `/home/annalist/annalist_site/` below to the 
+#    Annalist site data base directory.
 # @@ If necessary, change `:8000` below to the port served by Annalist
-# @@ If necessary, add the following to the "Proxy content matching" localion sub-section:
-#        proxy_set_header X-Forwarded-protocol $scheme;
+
+# vim commands:
+#     s/annalist.example.org/@@@/
+#     &
+#     %s/annalist.example.net/@@@/g
 
 server {
     server_name annalist.example.org;
@@ -26,16 +31,22 @@ server {
         index index.html index.htm;
     }
 
+    # serve static files
+    location ~ ^/(static)/  {
+      root /home/annalist/annalist_site/;
+      expires 1h;
+    }
+
     # Proxy content matching
-    location ~ /(annalist|static|admin) {
+    location ~ /(annalist|admin) {
         proxy_pass http://localhost:8000;
         proxy_http_version 1.1;
         proxy_buffering off;
         proxy_set_header X-Real-IP       $remote_addr;
         proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header Host            $http_host;  # https://serverfault.com/a/87059 (see comments too)
-        proxy_set_header X-Forwarded-protocol $scheme;
-        proxy_set_header X-Forwarded-proto    $scheme;
+        proxy_set_header Host            $http_host;  # https://serverfault.com/a/87059 
+                                                      # (see comments too)
+        proxy_set_header X-Forwarded-proto $scheme;
     }
 
     # Expect certbot to add something like this:

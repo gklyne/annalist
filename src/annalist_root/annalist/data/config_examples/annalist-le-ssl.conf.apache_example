@@ -17,6 +17,7 @@
 # See also: https://wiki.apache.org/httpd/CommonMisconfigurations
 
 # @@ Change "annalist.example.org" below to your local Annalist server virtual host name
+# @@ If necessary, change `/home/annalist/annalist_site/` to the ananlist site root dir
 # @@ If necessary, change `/var/www` below to an appropriate web document directory
 # @@ If necessary, change `/var/log` below to an appropriate log file directory
 # @@ If necessary, change `:8000` below to the port served by Annalist
@@ -24,6 +25,7 @@
 # vim commands:
 #     s/annalist.example.org/@@@/
 #     &
+#     %s/annalist.example.net/@@@/g
 
 <VirtualHost *:443>
     ServerName  "annalist.example.org"
@@ -36,18 +38,21 @@
     </location>
 
     # Tell Annalist that the request arrived over HTTPS:
-    RequestHeader    set X-Forwarded-Protocol 'https'
+    RequestHeader    set X-Forwarded-Proto 'https'
 
     # For robots.txt:
     DocumentRoot "/var/www"
 
+    # Serve static files directly
+    Alias            /static/ /home/annalist/annalist_site/static/
+
     # Reverse-proxy Annalist URL paths:
     ProxyPass        /annalist http://localhost:8000/annalist
     ProxyPassReverse /annalist http://localhost:8000/annalist
-    ProxyPass        /static   http://localhost:8000/static
-    ProxyPassReverse /static   http://localhost:8000/static
     ProxyPass        /admin    http://localhost:8000/admin
     ProxyPassReverse /admin    http://localhost:8000/admin
+    # ProxyPass        /static   http://localhost:8000/static
+    # ProxyPassReverse /static   http://localhost:8000/static
 
     ProxyPreserveHost On
 

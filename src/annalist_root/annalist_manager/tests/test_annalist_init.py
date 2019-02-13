@@ -84,7 +84,8 @@ class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
                     )
         stdoutbuf.seek(0)
         stdoutlines = stdoutbuf.read().split("\n")
-        self.assertEqual(stdoutlines[0], "Copying '/Users/graham/workspace/github/gklyne/annalist/src/annalist_root/annalist/data/static/css/annalist.css'")
+        linestart   = stdoutlines[0][:8]
+        self.assertEqual(linestart, "Copying ")
         # for i in range(len(stdoutlines)):
         #     if "static files copied" in stdoutlines[i]:
         #         break

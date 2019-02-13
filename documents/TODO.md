@@ -69,7 +69,7 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
         - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
         - http://docs.gunicorn.org/en/latest/install.html
     - @@TODO is `nohup` required to leave server running after disconnect?
-- [ ] Static data serving direct by HTTP server
+- [x] Static data serving direct by HTTP server
     - See https://github.com/gklyne/annalist/issues/12 (use "collectstatic")
     - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
     - See annalist_site/urls.py
@@ -88,10 +88,14 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
         - `python manage.py collectstatic --clear --noinput` works; django-admin doesn't (problems finding settings module)
     - [x] Run `django-admin collectstatic --clear` as part of installation/update
         - new command: `annalist-manager collectstatic`
-    - [ ] Update web server configuration files to serve collected static data directly.
+    - [x] Update web server configuration files to serve collected static data directly.
 
 (Sub-release?)
 
+- [ ] annalist-manager new commands:
+    - [ ] pidserver (display server pid); exit status if no pid
+    - [ ] accesslog (gunicorn)
+    - [ ] errorlog (gunicorn)
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?

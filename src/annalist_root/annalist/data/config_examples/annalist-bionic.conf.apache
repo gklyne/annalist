@@ -1,0 +1,32 @@
+# See: 000-default.host, ports.conf
+#
+# See also: https://wiki.apache.org/httpd/CommonMisconfigurations
+#
+
+<VirtualHost *:80>
+
+    ServerName  "bionic.annalist.net"
+    ServerAdmin annalist@bionic.annalist.net
+    ErrorLog    /var/log/apache2/annalist-error.log
+    CustomLog   /var/log/apache2/annalist-access.log combined
+
+    <location />
+        allow from all
+    </location>
+
+    Alias /static/ /home/annalist/annalist_site/static/
+
+    ProxyPass        /annalist http://localhost:8000/annalist
+    ProxyPassReverse /annalist http://localhost:8000/annalist
+    ProxyPass        /admin    http://localhost:8000/admin
+    ProxyPassReverse /admin    http://localhost:8000/admin
+    # ProxyPass        /static   http://localhost:8000/static
+    # ProxyPassReverse /static   http://localhost:8000/static
+
+    ProxyPreserveHost On
+
+    RewriteEngine on
+    RewriteCond %{SERVER_NAME} =bionic.annalist.net
+    RewriteRule ^/annalist https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+
+</VirtualHost>

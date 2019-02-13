@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Regenerate installed system sitedata from source tree sitedata.
+# Regenerate installed system and sitedata from source tree.
 #
 # Reinstalls the software, runs the "updatesite" option.
 # The steps here are designed to ensure that all old installed site data is removed.
@@ -16,6 +16,7 @@ python setup.py build
 pip uninstall -y annalist
 python setup.py install
 annalist-manager updatesite
+annalist-manager collectstatic
 
 echo ""
 echo "To start server with updated site data: annalist-manager runserver"
