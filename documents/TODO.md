@@ -89,13 +89,13 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
     - [x] Run `django-admin collectstatic --clear` as part of installation/update
         - new command: `annalist-manager collectstatic`
     - [x] Update web server configuration files to serve collected static data directly.
+- [x] annalist-manager new commands:
+    - [x] pidserver (display server pid); exit status if no pid
+    - [x] accesslog (gunicorn log)
+    - [x] errorlog (gunicorn log)
 
 (Sub-release?)
 
-- [ ] annalist-manager new commands:
-    - [ ] pidserver (display server pid); exit status if no pid
-    - [ ] accesslog (gunicorn)
-    - [ ] errorlog (gunicorn)
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?

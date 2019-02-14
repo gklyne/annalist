@@ -39,7 +39,9 @@ class AnnalistConfig(AppConfig):
         log.info("STATICFILES_DIRS:  "+repr(settings.STATICFILES_DIRS))
         log.info("DB PATH:           "+settings.DATABASES['default']['NAME'])
         log.info("ALLOWED_HOSTS:     "+",".join(settings.ALLOWED_HOSTS))
-        log.info("LOGGING_FILE:      "+settings.LOGGING_FILE)
+        log.info("ANNALIST_LOG_PATH: "+settings.ANNALIST_LOG_PATH)
+        log.info("ACCESS_LOG_PATH:   "+settings.ACCESS_LOG_PATH)
+        log.info("ERROR_LOG_PATH:    "+settings.ERROR_LOG_PATH)
         log.info("TRACE_FIELD_VALUE: "+str(settings.TRACE_FIELD_VALUE))
         log.info("== AnnalistConfig ready (apps.py)")
         return

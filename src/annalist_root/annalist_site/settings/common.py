@@ -33,6 +33,9 @@ SAMPLEDATA_DIR  = SITE_SRC_ROOT+"/sampledata/data"                      # src/an
 
 ANNALIST_SITE_SEG = "annalist"              # Base URL path segment for Annalist site
 ANNALIST_SITE_REF = ANNALIST_SITE_SEG+"/"   # Base URL path for Annalist site
+ANNALIST_LOG_FILE = "annalist.log"
+ACCESS_LOG_FILE   = "annalist-wsgi-access.log"
+ERROR_LOG_FILE    = "annalist-wsgi-error.log"
 
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """

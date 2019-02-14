@@ -66,7 +66,7 @@ class ServerLogView(AnnalistGenericView):
 
     def get(self, request):
         def resultdata():
-            serverlogname = settings.LOGGING_FILE
+            serverlogname = settings.ANNALIST_LOG_PATH
             log.info("ServerLogView: serverlogname %s"%(serverlogname,))
             with open(serverlogname, "r") as serverlogfile:
                 # serverlog     = list(serverlogfile) # Generates MemoryError with large logs

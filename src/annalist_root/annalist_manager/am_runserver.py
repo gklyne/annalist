@@ -75,14 +75,12 @@ def am_runserver(annroot, userhome, options):
         pass
     status = am_errors.AM_SUCCESS
     with ChangeCurrentDir(annroot):
-        # cmd = "runserver 0.0.0.0:8000"
-        # subprocess_command = "gunicorn %s --pythonpath=%s --settings=%s"%(cmd, annroot, settings.modulename)
         gunicorn_command = (
             "gunicorn --workers=1 "+
             "    --bind=0.0.0.0:8000 "+
             "    --env DJANGO_SETTINGS_MODULE=%s "%(settings.modulename,)+
-            "    --access-logfile annalist-access.log "+
-            "    --error-logfile  annalist-error.log "+
+            "    --access-logfile %s "%(sitesettings.ACCESS_LOG_PATH,)+
+            "    --error-logfile  %s "%(sitesettings.ERROR_LOG_PATH,)+
             "    annalist_site.wsgi:application"+
             "")
         log.debug("am_runserver subprocess: %s"%gunicorn_command)
@@ -132,6 +130,40 @@ def am_stopserver(annroot, userhome, options):
     except OSError as e:
         print("Process %d not found (%s)"%(pid, e), file=sys.stderr)
         return am_errors.AM_PIDNOTFOUND
+    return status
+
+def am_pidserver(annroot, userhome, options):
+    """
+    Display running Annalist server PID on stdout
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if PID is displayed, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
+    sitedirectory = sitesettings.BASE_SITE_DIR
+    pidfilename   = os.path.join(sitedirectory, "annalist.pid")
+    status = am_errors.AM_SUCCESS
+    try:
+        with open(pidfilename, "r") as pidfile:
+            pid = int(pidfile.readline())
+            print("%d"%(pid,), file=sys.stdout)
+    except IOError as e:
+        # print("PID file %s not found (%s)"%(pidfilename, e), file=sys.stderr)
+        print("No server running", file=sys.stderr)
+        return am_errors.AM_NOSERVERPIDFILE
     return status
 
 def am_rundevserver(annroot, userhome, options):
@@ -187,10 +219,60 @@ def am_serverlog(annroot, userhome, options):
     status = am_errors.AM_SUCCESS
     with SuppressLogging(logging.INFO):
         sitesettings = importlib.import_module(settings.modulename)
-    logfilename = sitesettings.LOGGING_FILE
+    logfilename = sitesettings.ANNALIST_LOG_PATH
     print(logfilename)
-    # with open(logfilename, "r") as logfile:
-    #     shutil.copyfileobj(logfile, sys.stdout)
+    return status
+
+def am_accesslog(annroot, userhome, options):
+    """
+    Print name of WSGI access log to standard output.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
+    logfilename = sitesettings.ACCESS_LOG_PATH
+    print(logfilename)
+    return status
+
+def am_errorlog(annroot, userhome, options):
+    """
+    Print name of WSGI access log to standard output.
+
+    annroot     is the root directory for the Annalist software installation.
+    userhome    is the home directory for the host system user issuing the command.
+    options     contains options parsed from the command line.
+
+    returns     0 if all is well, or a non-zero status code.
+                This value is intended to be used as an exit status code
+                for the calling program.
+    """
+    settings = am_get_settings(annroot, userhome, options)
+    if not settings:
+        print("Settings not found (%s)"%(options.configuration), file=sys.stderr)
+        return am_errors.AM_NOSETTINGS
+    if len(options.args) > 0:
+        print("Unexpected arguments for %s: (%s)"%(options.command, " ".join(options.args)), file=sys.stderr)
+        return am_errors.AM_UNEXPECTEDARGS
+    status = am_errors.AM_SUCCESS
+    with SuppressLogging(logging.INFO):
+        sitesettings = importlib.import_module(settings.modulename)
+    logfilename = sitesettings.ERROR_LOG_PATH
+    print(logfilename)
     return status
 
 def am_sitedirectory(annroot, userhome, options):

@@ -184,4 +184,42 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         self.assertEqual(stdoutlines[0], self.src_root+"/annalist.log")
         return
 
+    def test_AccessLog(self):
+        stdoutbuf  = StringIO()
+        with SwitchStdout(stdoutbuf):
+            runCommand(self.userhome, self.userconfig, 
+                ["annalist-manager", "accesslog"]
+                )
+        stdoutbuf.seek(0)
+        stdoutlines = stdoutbuf.read().split("\n")
+        self.assertEqual(stdoutlines[0], self.userhome+"/annalist_site/annalist-wsgi-access.log")
+        stdoutbuf.seek(0)
+        with SwitchStdout(stdoutbuf):
+            runCommand(self.userhome, self.userconfig, 
+                ["annalist-manager", "accesslog", "--config=runtests"]
+                )
+        stdoutbuf.seek(0)
+        stdoutlines = stdoutbuf.read().split("\n")
+        self.assertEqual(stdoutlines[0], self.src_root+"/annalist-wsgi-access.log")
+        return
+
+    def test_ErrorLog(self):
+        stdoutbuf  = StringIO()
+        with SwitchStdout(stdoutbuf):
+            runCommand(self.userhome, self.userconfig, 
+                ["annalist-manager", "errorlog"]
+                )
+        stdoutbuf.seek(0)
+        stdoutlines = stdoutbuf.read().split("\n")
+        self.assertEqual(stdoutlines[0], self.userhome+"/annalist_site/annalist-wsgi-error.log")
+        stdoutbuf.seek(0)
+        with SwitchStdout(stdoutbuf):
+            runCommand(self.userhome, self.userconfig, 
+                ["annalist-manager", "errorlog", "--config=runtests"]
+                )
+        stdoutbuf.seek(0)
+        stdoutlines = stdoutbuf.read().split("\n")
+        self.assertEqual(stdoutlines[0], self.src_root+"/annalist-wsgi-error.log")
+        return
+
 # End.

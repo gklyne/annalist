@@ -13,28 +13,31 @@ from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (personal configuration)"%(ANNALIST_VERSION)
 
-SETTINGS_MODULE = __name__
-SITE_DIR_NAME   = "annalist_site"
-BASE_DATA_DIR   = os.path.expanduser("~")
-BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
-CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
-STATIC_ROOT     = os.path.join(BASE_SITE_DIR, 'static')
+SETTINGS_MODULE   = __name__
+SITE_DIR_NAME     = "annalist_site"
+BASE_DATA_DIR     = os.path.expanduser("~")
+BASE_SITE_DIR     = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
+CONFIG_BASE       = os.path.join(os.path.expanduser("~"), ".annalist/")
+STATIC_ROOT       = os.path.join(BASE_SITE_DIR, 'static')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG           = False
+BASE_LOG_DIR      = BASE_SITE_DIR+"/"
+ANNALIST_LOG_PATH = BASE_LOG_DIR+ANNALIST_LOG_FILE
+ACCESS_LOG_PATH   = BASE_LOG_DIR+ACCESS_LOG_FILE
+ERROR_LOG_PATH    = BASE_LOG_DIR+ERROR_LOG_FILE
 
-ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
-
-DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
-DATABASES       = {
+DATABASE_PATH     = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
+DATABASES         = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DATABASE_PATH,
     }
 }
 
-# LOGGING_FILE = SITE_SRC_ROOT+'/annalist.log'
-LOGGING_FILE = BASE_SITE_DIR+'/annalist.log'
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG           = False
+
+ALLOWED_HOSTS   = ['*']     # Insecure: use e.g. ['.annalist.net']
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -64,7 +67,7 @@ LOGGING = {
             # 'class': 'logging.handlers.WatchedFileHandler',
             # 'class':        'logging.handlers.RotatingFileHandler',
             'class':        'annalist_site.settings.common.RotatingNewFileHandler',
-            'filename':     LOGGING_FILE,
+            'filename':     ANNALIST_LOG_PATH,
             'maxBytes':     2*1024*1024,            # 2Mb
             'backupCount':  9,                      # Keep 9 files
             'level':        TRACE_FIELD_VALUE,
@@ -136,6 +139,6 @@ log.debug("SITE_SRC_ROOT:     "+SITE_SRC_ROOT)
 log.debug("STATICFILES_DIRS:  "+repr(STATICFILES_DIRS))
 log.debug("DB PATH:           "+DATABASES['default']['NAME'])
 log.debug("ALLOWED_HOSTS:     "+",".join(ALLOWED_HOSTS))
-log.debug("LOGGING_FILE:      "+LOGGING_FILE)
+log.debug("ANNALIST_LOG_PATH: "+ANNALIST_LOG_PATH)
 log.debug("TRACE_FIELD_VALUE: "+str(TRACE_FIELD_VALUE))
 # End.

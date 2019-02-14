@@ -14,15 +14,20 @@ from .common import *
 
 ANNALIST_VERSION_MSG = "Annalist version %s (development configuration)"%(ANNALIST_VERSION)
 
-SETTINGS_MODULE = __name__
-SITE_DIR_NAME   = "annalist_site"
-BASE_DATA_DIR   = SITE_SRC_ROOT+"/devel"
-BASE_SITE_DIR   = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
-CONFIG_BASE     = os.path.join(os.path.expanduser("~"), ".annalist/")
-STATIC_ROOT     = os.path.join(BASE_SITE_DIR, 'static')
+SETTINGS_MODULE   = __name__
+SITE_DIR_NAME     = "annalist_site"
+BASE_DATA_DIR     = SITE_SRC_ROOT+"/devel"
+BASE_SITE_DIR     = os.path.join(BASE_DATA_DIR, SITE_DIR_NAME)
+CONFIG_BASE       = os.path.join(os.path.expanduser("~"), ".annalist/")
+STATIC_ROOT       = os.path.join(BASE_SITE_DIR, 'static')
 
-DATABASE_PATH   = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
-DATABASES       = {
+BASE_LOG_DIR      = BASE_SITE_DIR+"/"
+ANNALIST_LOG_PATH = "None (output to console)"
+ACCESS_LOG_PATH   = "None"
+ERROR_LOG_PATH    = "None"
+
+DATABASE_PATH     = os.path.join(BASE_SITE_DIR, 'db.sqlite3')
+DATABASES         = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DATABASE_PATH,
@@ -31,12 +36,6 @@ DATABASES       = {
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-# INSTALLED_APPS += (
-#     'django.contrib.staticfiles',
-#     )
-
-LOGGING_FILE = "None (output to console)"
 
 # import logging
 # log = logging.getLogger(__name__)

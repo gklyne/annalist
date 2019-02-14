@@ -33,8 +33,8 @@ from .am_runtests           import am_runtests
 from .am_initialize         import am_initialize, am_collectstatic
 from .am_createsite         import am_createsite, am_updatesite
 from .am_runserver          import (
-    am_runserver, am_stopserver, am_rundevserver, 
-    am_serverlog, am_sitedirectory, 
+    am_runserver, am_stopserver, am_pidserver, am_rundevserver, 
+    am_serverlog, am_accesslog, am_errorlog, am_sitedirectory, 
     am_settingsmodule, am_settingsfile, am_settingsdir, 
     am_version
     )
@@ -163,10 +163,16 @@ def run(userhome, userconfig, options, progname):
         return am_runserver(annroot, userhome, options)
     if options.command.startswith("stop"):                  # stopserver
         return am_stopserver(annroot, userhome, options)
+    if options.command.startswith("pid"):                   # pidserver
+        return am_pidserver(annroot, userhome, options)
     if options.command.startswith("rund"):                  # rundevserver
         return am_rundevserver(annroot, userhome, options)
     if options.command.startswith("serv"):                  # serverlog
         return am_serverlog(annroot, userhome, options)
+    if options.command.startswith("acc"):                   # accesslog
+        return am_accesslog(annroot, userhome, options)
+    if options.command.startswith("err"):                   # errorlog
+        return am_errorlog(annroot, userhome, options)
     if options.command.startswith("site"):                  # sitedir
         return am_sitedirectory(annroot, userhome, options)
     if options.command.startswith("settingsm"):             # settingsmodule

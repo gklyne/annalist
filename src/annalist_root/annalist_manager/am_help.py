@@ -43,12 +43,15 @@ command_summary_help = ("\n"+
     "  %(prog)s migrateallcollections [ CONFIG ]\n"+
     "  %(prog)s runserver [ CONFIG ]\n"+
     "  %(prog)s stopserver [ CONFIG ]\n"+
+    "  %(prog)s pidserver [ CONFIG ]\n"+
     "  %(prog)s rundevserver [ CONFIG ]\n"+
     "  %(prog)s sitedirectory [ CONFIG ]\n"+
     "  %(prog)s settingsmodule [ CONFIG ]\n"+
     "  %(prog)s settingsdir [ CONFIG ]\n"+
     "  %(prog)s settingsfile [ CONFIG ]\n"+
     "  %(prog)s serverlog [ CONFIG ]\n"+
+    "  %(prog)s accesslog [ CONFIG ]\n"+
+    "  %(prog)s errorlog [ CONFIG ]\n"+
     "  %(prog)s version\n"+
     "")
 
@@ -393,6 +396,15 @@ def am_help(options, progname):
             config_options_help+
             "\n"+
             "")
+    elif options.args[0].startswith("pid"):
+        help_text = ("\n"+
+            "  %(prog)s pidserver [ CONFIG ]\n"+
+            "\n"+
+            "Dusplays PID of a running Annalist server.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
     elif options.args[0].startswith("rund"):
         help_text = ("\n"+
             "  %(prog)s rundevserver [ CONFIG ]\n"+
@@ -448,6 +460,33 @@ def am_help(options, progname):
             "\n"+
             "This is a convenience function to locate the settings data, which\n"+
             "may be buried deep in the Python virtual environment files.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("ser"):
+        help_text = ("\n"+
+            "  %(prog)s serverlog [ CONFIG ]\n"+
+            "\n"+
+            "Sends the Annalist log filename to standard output.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("acc"):
+        help_text = ("\n"+
+            "  %(prog)s accesslog [ CONFIG ]\n"+
+            "\n"+
+            "Sends the WSGI (HTTP server) access log filename to standard output.\n"+
+            "\n"+
+            config_options_help+
+            "\n"+
+            "")
+    elif options.args[0].startswith("err"):
+        help_text = ("\n"+
+            "  %(prog)s errorlog [ CONFIG ]\n"+
+            "\n"+
+            "Sends the WSGI (HTTP server) error log filename to standard output.\n"+
             "\n"+
             config_options_help+
             "\n"+
