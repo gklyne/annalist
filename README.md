@@ -1,7 +1,7 @@
 annalist
 ========
 
-[![DOI](https://zenodo.org/badge/19858/gklyne/annalist.svg)](https://zenodo.org/badge/latestdoi/19858/gklyne/annalist)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2566464.svg)](https://doi.org/10.5281/zenodo.2566464)
 
 A free-form web linked data notebook and prorotyping tool - "Data management for little guys"
 

@@ -118,7 +118,7 @@
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.1.36"`
+    - `git commit -m "Master branch updated to V0.5.14"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
@@ -128,10 +128,12 @@
         - `git merge release-prep-x.y.z`
 - [ ] Bump/check Zenodo DOI details:
     - On GitHub, create a new release
+        - release tag: `release-x.y.z`
+        - release title: (one-line description text)
+        - release description: 1-paragraph description from release notes summary
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
     - The link in the DOI badge should display the new release from Zenodo.
-    - It may take a few minutes for the new DOI to resolve.
 
 - [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)

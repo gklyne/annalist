@@ -21,7 +21,7 @@ Even sub-releases are stable versions, except for critical bug-fixes
 
 Odd sub-releases are work-in-progress, and code may change from day-to-day.
 """
-__version__        = "0.5.14"   # Software version number (odd = unstable)
+__version__        = "0.5.15"   # Software version number (odd = unstable)
 
 """
 Data compatibility version: this is saved with collection data, and is used to

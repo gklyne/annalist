@@ -7,7 +7,7 @@ A summary of issues relating to deployability, resilience and security that are 
 
 ## Release 0.5.14
 
-This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's developmemt server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
+This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's development server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
 
 Also, numerous bug-fixes and small improvements.
 
