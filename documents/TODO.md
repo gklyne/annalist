@@ -68,7 +68,6 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
         - annalist_site/wsgi.py exports `application` object
         - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
         - http://docs.gunicorn.org/en/latest/install.html
-    - @@TODO is `nohup` required to leave server running after disconnect?
 - [x] Static data serving direct by HTTP server
     - See https://github.com/gklyne/annalist/issues/12 (use "collectstatic")
     - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
@@ -96,6 +95,8 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
 
 (Sub-release?)
 
+- [ ] Install tools and update documentatiobn to use `twine` for package upload.
+    - See: https://pypi.org/project/twine/
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?
@@ -143,10 +144,10 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
 
 Technical debt:
 
+- [ ] See annalist/views/statichack.py ** note TODOs
+- [ ] When renaming an entity, consider keeping a list of renames since startup, and applying these when going back up the continuation tree.  This may be a better strategy than rewriting continuation URLs?
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
-- [x] Revisit HTTPS deployment
-    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  (Using reverse proxy /gunicorn.)
 - [ ] Configure for multi-process worker operation
     - [ ] check for code that uses local server state
         - models/collection.py (caches)
@@ -167,7 +168,6 @@ Technical debt:
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
-- [x] Supply example nginx configuration files for reverse proxying HTTPS; add setup instructions to installation doc
 - [ ] For models and views, define a module that exports classes and functions directly so that importers don't have to name the individual modules in import statements. (Search for instances of "import annalist.models." and import "annalist.views.")
 - [ ] Move top menu selection/formatting logic from template into code (e.g. context returned by DisplayInfo?)
 - [ ] Built-in type id's: use definitions from `models.entitytypeinfo` rather than literal strings

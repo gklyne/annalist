@@ -2,5 +2,5 @@
 
 python setup.py build sdist
 scp -i ~/.ssh/id_rsa_openstack_gk \
-    dist/Annalist-0.5.12.tar.gz  annalist@conina-ubuntu:
+    dist/Annalist-0.5.14.tar.gz  annalist@conina-ubuntu:
 

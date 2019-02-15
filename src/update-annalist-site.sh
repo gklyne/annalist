@@ -3,7 +3,7 @@
 echo "Update Annalist site data for installed software"
 echo ""
 
-killall python
+annalist-manager stopserver --personal
 annalist-manager initialize --personal
 annalist-manager updatesite --personal
 

@@ -3,10 +3,9 @@
 python setup.py clean --all
 python setup.py build sdist
 
-# @@@ Updated 0.5.12 to 0.5.13 for testing:
-echo "Copying: dist/Annalist-0.5.13.tar.gz  ->  annalist@annalist.net:/var/www/software"
+echo "Copying: dist/Annalist-0.5.14.tar.gz  ->  annalist@annalist.net:/var/www/software"
 scp -i ~/.ssh/id_rsa_openstack_gk \
-    dist/Annalist-0.5.13.tar.gz annalist@annalist.net:/var/www/software
+    dist/Annalist-0.5.14.tar.gz annalist@annalist.net:/var/www/software
 
 echo "Copying: ../documents/pages  ->  annalist@annalist.net:uploads"
 scp -i ~/.ssh/id_rsa_openstack_gk \

@@ -32,7 +32,7 @@
 - [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
     - ```git tag -a release-`annalist-manager version` ```
     - For message:
-        "Annalist release x.y.z: (one-line description of release)"
+        "Annalist release x.y.z: (msg (one-line description))"
 
 - [ ] Create release preparation branch
         git stash
@@ -43,8 +43,10 @@
 - [ ] Bump data compatibility version if new data is not compatible with older releases
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Reinstall and re-run test suite
+
 - [ ] Add TODO list to release notes (edit out working notes)
-- [ ] Add release highlights description to release notes (create new release notes file if needed)
+- [ ] Add release highlights description to release notes
+    - (create new release notes file if needed)
 - [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
 - [ ] Review roadmap (`documents/roadmap.md`)
 - [ ] Update version number in scripts, documents, etc.
@@ -73,6 +75,7 @@
         annalist-manager runtests
     - [ ] Test new site creation:
         annalist-manager createsite
+        annalist-manager collectstatic
         annalist-manager initialize
         annalist-manager defaultadmin
         annalist-manager runserver
@@ -80,19 +83,19 @@
 
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [.] Update and test demo installation on annalist.net
-    - [ ] ssh to annalist@annalist.net
-    - [ ] check HTTPS proxy and Certbot setup
+- [ ] Update and test demo installation on annalist.net
+    - [ ] ssh to ubuntu@annalist.net
+    - [ ] check HTTPS proxy and Certbot setup (currently using `apache2`)
+    - [ ] ssh to annalist@annalist.net, (or `su - annalist`)
     - [ ] `. backup_annalist_site.sh`
-    - [ ] `mv annalist_site_2015MMDD/ annalist_site_2017----`
-    - [ ] `killall python`
-    - [ ] `. anenv/bin/activate`
+    - [ ] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
+    - [ ] `. anenv2/bin/activate`
+    - [ ] `annalist-manager stop` or `killall python` or `killall python2.7`
     - [ ] `pip uninstall annalist`
     - [ ] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
     - [ ] `annalist-manager runtests`
     - [ ] `. update-annalist-site.sh`
     - [ ] `. update-run-annalist.sh`
-    - [ ] `cat annalist.out`
 - [ ] Update front page link at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/

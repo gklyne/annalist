@@ -3,9 +3,9 @@ annalist
 
 [![DOI](https://zenodo.org/badge/19858/gklyne/annalist.svg)](https://zenodo.org/badge/latestdoi/19858/gklyne/annalist)
 
-A free-form web data notebook - "Data management for little guys"
+A free-form web linked data notebook and prorotyping tool - "Data management for little guys"
 
-Current status (2018-03-31):  public prototype, released for evaluation and feedback, feature freeze for version 1 release.
+Current status (2019-02-15):  public prototype, released for evaluation and feedback, feature freeze for version 1 release.  Deployable as web-facing low-volume service.
 
 For information about the current release, please refer to the [V0.5 release notes](documents/release-notes/release-v0.5.md)
 

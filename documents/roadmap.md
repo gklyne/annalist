@@ -1,6 +1,6 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.12.
+Current status: candidate feature-complete minmum viable product, release 0.5.14.
 
 This is a maintenance release with restructuring of form rendering and tests.
 
@@ -42,7 +42,7 @@ Alternative form of list view, e.g. for image galeries.
 - EUdat? (Also see notes from discussion at crossref with Matthew Dovey - cf The European Open Science Cloud for Research - EOSC - apparently this subsumes id aspects of EUDat.)
 
 
-## Support multiple entity providers
+## Support multiple entity storage providers
 
 This is an extension of the "Web backend storage" noted above.  An Annalist installation could be able to route entity access requests to different providers using different HTTP-based protocols (e.g. WebDav vs AtomPub), or other more specialized access mechanisms.
 

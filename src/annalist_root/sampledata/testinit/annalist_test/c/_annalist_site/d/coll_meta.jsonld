@@ -10,7 +10,7 @@
     "annal:SiteData"
   ],
   "annal:id": "_annalist_site",
-  "annal:meta_comment": "Initialized by annalist.models.site.create_site_metadata at 2018-11-14 13:58:49 (UTC)",
+  "annal:meta_comment": "Initialized by annalist.models.site.create_site_metadata at 2019-02-15 13:57:17 (UTC)",
   "annal:software_version": "0.5.9",
   "annal:type": "annal:SiteData",
   "annal:type_id": "_coll",

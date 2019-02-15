@@ -5,19 +5,11 @@ Annalist release 0.5.x is a feature-complete candidate for an eventual version 1
 A summary of issues relating to deployability, resilience and security that are intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Release 0.5.12
+## Release 0.5.14
 
-This is a maintenance release, with no significant changes in functionality.  Package dependencies have been updated to latest versons (Except Django is updated to 1.11, the last release to support Python 2).
+This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's developmemt server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
 
-All code has been updated to run under Python 3.7, but package dependencies Django 1.11 and rdflib-jsonld 0.4.0 are not ready (though easily patched).
-
-The OpenID connect login code has been updated to use a newer support library, a consequence of which is that HTTPS must be used to access Annalist, which would be achieved by running Annalist behind a robust HTTP server such as Apache HTTPD or Nginx.  (The Annalist installation document has initial instructions for installation with Apache, including installation of a "LetsEncrypt" certificate.)
-
-The test suite has been updated to cover `annalist-manager` functionality.
-
-NOTE: there appear to be SQLite problems with Python versions before 2.7.15.  See "Problems with SQLite3" notes below.
-
-NOTE: changes in Google's OpenID Connect API and access library used mean that the authentication provider definition file (e.g. `~/.annalist/providers/google_oauth2_client_secrets.json`) will need to be updated when updating an existing system.
+Also, numerous bug-fixes and small improvements.
 
 
 ## Status
@@ -92,6 +84,68 @@ See also previous release notes:
 
 - [Release 0.1.x](./release-v0.1.md)
 
+
+## Release 0.5.14
+
+This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's developmemt server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
+
+Also, numerous bug-fixes and small improvements.
+
+
+## Version 0.5.13, towards 0.5.14
+
+NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command ran the Django development HTTP server, and operated synchronously; i.e., the `annalist-manager runserver` command did not complete until the server itself terminated, commonly by typing CTRL+C. As of version 0.5.14, this is performed by the `annalist-manager rundevserver` command.  The `annalist-manager runserver` command now starts the Annlist application under the `gunicorn` HTTP server, and completes as soon as the server is up and running, writing the server process id to stdout (and also to a file in the Annalist site base directory). To stop a running server started in  this way, use the command `annalist-manager stopserver`.
+
+- [x] BUG: rename while editing sometimes generates error when saving.  (Rename then edit provoked this.)
+    - Make the error message more explanatory
+- [x] BUG: login with google account without given_name in profile causes login failure.  Added logic to compatible with older Google account profiles.
+- [x] BUG: OIDC login code uses different source of redirect URI on initial form and subsequent token access (see login_views.post and OIDC_AuthDoneView.get - redirect URI is used in setup for OAuth2 session, and (apparently) must be the same.)
+- [x] Fix login problems (works on test-bionic-annalist, not on demo.annalist)
+    - Note: problem was lack of trailing "/" on login_done redirect URI
+- [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
+- [x] Address GitHub security alerts for dependencies
+- [x] Entity list returns IDs with trailing "/", but individual entities do not.
+- [x] Rename collection: if it already exists, wrong id is reported.  
+- [x] Update collection metadata id to match directory name used?  (Previously had inconsistent display when collection is copied by hand - displays old name.)
+- [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
+    - Added example Apache and Nginx configuration files, which are copied to the Annalist local configuration directory when site data is created or updated.
+- [x] If field name in view is blank/undefined/invalid: display placeholder.
+- [x] Tidy up HTTPS deployment
+    - NOTE: Django's internal/dev server does not support HTTPS.  Currently using reverse proxy via Apache or Nginx.
+    - [x] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
+    - [x] Document setup process.
+    - See also: 
+        - https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
+        - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
+        - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
+    - [x] create sample config files and documentation for Apache
+    - [x] create sample config files and documentation for Nginx
+- [x] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
+- [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [x] Shared/personal deployment generates a new secret key in settings
+    - [x] Set up deployment using gunicorn WSGI, with Apache or Nginx HTTPS proxy
+    - [x] annalist-manager updates:
+        - [x] rename "runserver" -> "rundevserver"
+        - [x] new "runserver" command to activate "gunicorn" and save pid
+        - [x] new "stopserver" command to stop the saved process
+        - [x] document changes
+    - NOTES
+        - annalist_site/wsgi.py exports `application` object
+        - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
+        - http://docs.gunicorn.org/en/latest/install.html
+- [x] Static data serving direct by HTTP server
+    - See https://github.com/gklyne/annalist/issues/12 (use "collectstatic")
+    - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
+    - See annalist_site/urls.py
+    - [x] definitions in settings for:
+        - [x] STATIC_ROOT, STATIC_URL, STATICFILES_DIRS
+    - [x] Nee command `annalist-manager collectstatic`
+    - [x] Run `annalist-manager collectstatic` as part of installation/update
+    - [x] Update web server configuration to serve collected static data directly.
+- [x] annalist-manager new commands:
+    - [x] pidserver (display server pid); exit status if no pid
+    - [x] accesslog (gunicorn log)
+    - [x] errorlog (gunicorn log)
 
 ## Release 0.5.12
 

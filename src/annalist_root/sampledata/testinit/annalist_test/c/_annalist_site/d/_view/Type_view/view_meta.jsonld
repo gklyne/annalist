@@ -11,6 +11,9 @@
   [ { "annal:field_id":         "_field/Type_id"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
+  , { "annal:field_id":         "_field/Type_prefix"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
   , { "annal:field_id":         "_field/Type_label"
     , "annal:field_placement":  "small:0,12"
     }

@@ -29,14 +29,14 @@
   , { "annal:field_id":         "_field/Field_superproperty_uris"
     , "annal:field_placement":  "small:0,12"
     }
+  , { "annal:field_id":         "_field/Field_entity_type"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
   , { "annal:field_id":         "_field/Field_value_type"
     , "annal:field_placement":  "small:0,12;medium:0,6"
     }
   , { "annal:field_id":         "_field/Field_value_mode"
     , "annal:field_placement":  "small:0,12;medium:6,6"
-    }
-  , { "annal:field_id":         "_field/Field_entity_type"
-    , "annal:field_placement":  "small:0,12;medium:0,6"
     }
   , { "annal:field_id":         "_field/Field_typeref"
     , "annal:field_placement":  "small:0,12;medium:0,6"
