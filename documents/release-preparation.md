@@ -118,7 +118,7 @@
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.1.36"`
+    - `git commit -m "Master branch updated to V0.5.14"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
