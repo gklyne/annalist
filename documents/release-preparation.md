@@ -3,7 +3,7 @@
 ## Summary of release tasks
 
 - [ ] Feature freeze
-- [ ] Check GitHub for security alerts; ensure requirements/common.txt is up-to-date.
+- [ ] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
 - [ ] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
 - [ ] Uninstall annalist (if installed): `pip uninstall annalist`
 - [ ] Delete contents of build directory (remove old files) 
@@ -24,6 +24,7 @@
     - `annalist-manager migratecoll Annalist_schema`
     - (check ~/annalist_site/annalist.log for errors/warnings)
 - [ ] Test 'personal' deployment in actual use
+    - `annalist-manager stopserver`
     - `annalist-manager runserver`
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
