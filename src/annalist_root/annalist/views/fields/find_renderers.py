@@ -20,6 +20,7 @@ from .render_fieldvalue         import RenderFieldValue
 from .render_text               import TextValueMapper
 from .render_entityid           import EntityIdValueMapper
 from .render_identifier         import IdentifierValueMapper
+from .render_text_language      import get_text_language_renderer, TextLanguageValueMapper
 from .render_placement          import get_field_placement_renderer
 from .render_tokenset           import get_field_tokenset_renderer, TokenSetValueMapper
 from .render_bool_checkbox      import get_bool_checkbox_renderer, BoolCheckboxValueMapper
@@ -73,11 +74,12 @@ _field_edit_files = (
     })
 
 _field_get_renderer_functions = (
-    { "Placement":          get_field_placement_renderer
-    , "TokenSet":           get_field_tokenset_renderer
-    , "CheckBox":           get_bool_checkbox_renderer
+    { "LangText":           get_text_language_renderer
     , "Markdown":           get_text_markdown_renderer
     , "ShowMarkdown":       get_show_markdown_renderer
+    , "Placement":          get_field_placement_renderer
+    , "TokenSet":           get_field_tokenset_renderer
+    , "CheckBox":           get_bool_checkbox_renderer
     , "RefAudio":           get_ref_audio_renderer
     , "RefImage":           get_ref_image_renderer
     , "URILink":            get_uri_link_renderer
@@ -108,7 +110,8 @@ _field_get_renderer_functions = (
     })
 
 _field_value_mappers = (
-    { "TokenSet":           TokenSetValueMapper
+    { "LangText":           TextLanguageValueMapper
+    , "TokenSet":           TokenSetValueMapper
     , "CheckBox":           BoolCheckboxValueMapper
     , "Markdown":           TextMarkdownValueMapper
     , "ShowMarkdown":       TextMarkdownValueMapper

@@ -31,7 +31,7 @@ from django.template    import Template, Context
 
 class URILinkValueMapper(RenderBase):
     """
-    Value mapper class for token list
+    Value mapper class for URI string presented for viewing as a clickable link
     """
 
     @classmethod

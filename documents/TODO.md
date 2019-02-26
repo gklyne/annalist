@@ -28,15 +28,17 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] If property URI in field definition is missing or blank, use field id
 - [x] Update reserved identifiers screened by `util.valid_id`
 - [x] Review handling of reserved identifiers; don't screen when loading entity.
-- [ ] Default allow reserved ids for all .load operations
-- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
-    - (render_uri_import has most of the required boilerplate)
+- [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
+
 - [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
+
 - [ ] Implement ORCiD as IDP option
+
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
+
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
 
@@ -46,7 +48,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] *delete views: rationalize into single view?
+- [ ] delete views: rationalize into single view?
 - [.] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
     - [x] look into entity cacheing (esp. RecordType) for performance improvement
@@ -78,7 +80,8 @@ See also: https://www.divio.com/en/blog/documentation/
 Technical debt:
 
 - [ ] See annalist/views/statichack.py ** note TODOs
-- [ ] When renaming an entity, consider keeping a list of renames since startup, and applying these when going back up the continuation tree.  This may be a better strategy than rewriting continuation URLs?
+- [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
+    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
 - [ ] Configure for multi-process worker operation
@@ -91,12 +94,10 @@ Technical debt:
         - the proper answer is probably to disable in-server caching
         - but how to save transitive closure calculations?  save them in shadow entities?
         - See https://stackoverflow.com/a/868731/324122 (Memcached with Python)
-- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-    - [ ] Shared/personal deployment should generate a new secret key in settings
-    - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
-    - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Rename while editing sometimes generates error when saving or invoking mnew functions that force a save.
-    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
+- [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [x] Shared/personal deployment should generate a new secret key in settings
+    - [x] Need way to cleanly shut down server processes (annalist-manager option?)
+    - [x] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
@@ -262,21 +263,23 @@ Notes for Future TODOs:
     - Maybe use these for property updates rather than looking for existing property usage?
     - Is this an issue?  Need some experience here.
     - NOTE: system attempts to preserve subproperties used; aiases are migrated.
+
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
     - I think evolvability is served by making these exchangeable
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
+
 - [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
     - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
-    "rdfs:subClassOf": [
-      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
-      ]
-    - annal:display_type values (List/Grid) are another example to consider.
 - [ ] Field option to display item(s) in list (e.g. domain).
     - Generalize to path in list objects?
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
@@ -310,7 +313,7 @@ Notes for Future TODOs:
 - [ ] Embedded code expansion in help text, and maybe other Markdown:
     - [x] {{site}} base URL for site
     - [x] {{coll}} base url for collection
-    - [x] {{url:typeid/entityid}} UREL for referenced entity.
+    - [x] {{url:typeid/entityid}} URL for referenced entity.
     - [ ] {{ref:typeid/entityid}} link for referenced entity, using label from target.
     - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?

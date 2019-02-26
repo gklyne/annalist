@@ -645,6 +645,7 @@ site_field_types = (
     , FieldChoice("_enum_render_type/Group_Set",        label="Field group set"              )
     , FieldChoice("_enum_render_type/Group_Set_Row",    label="Field group set as table"     )
     , FieldChoice("_enum_render_type/Identifier",       label="Identifier"                   )
+    , FieldChoice("_enum_render_type/LangText",         label="Language text"                )
     , FieldChoice("_enum_render_type/Markdown",         label="Markdown rich text"           )
     , FieldChoice("_enum_render_type/Placement",        label="Position/size"                )
     , FieldChoice("_enum_render_type/RefAudio",         label="Audio clip reference"         )
