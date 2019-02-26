@@ -220,7 +220,9 @@ class RecordVocabEditViewTest(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite   = Site(TestBaseUri, TestBaseDir)
-        self.testcoll   = Collection.create(self.testsite, "testcoll", collection_create_values("testcoll"))
+        self.testcoll   = Collection.create(
+            self.testsite, "testcoll", collection_create_values("testcoll")
+            )
         self.annalcoll  = Collection.load(self.testsite, layout.SITEDATA_ID)
         self.no_options = [ FieldChoice('', label="(no options)") ]
         # For checking Location: header values...

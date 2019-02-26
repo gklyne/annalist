@@ -545,15 +545,13 @@ class EntityTypeInfo(object):
         #     )
         entity = None
         entity_id = extract_entity_id(entity_id)
-        if valid_id(entity_id):
+        if valid_id(entity_id, reserved_ok=True):
             if action == "new":
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
             elif self.entityclass.exists(self.entityparent, entity_id, altscope="all"):
-                entity = self.entityclass.load(
-                    self.entityparent, entity_id, altscope="all"
-                    )
+                entity = self.entityclass.load(self.entityparent, entity_id, altscope="all")
             else:
                 log.debug(
                     "EntityTypeInfo.get_entity %s/%s at %s not found"%

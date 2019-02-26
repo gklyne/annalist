@@ -202,6 +202,8 @@ class EntityRoot(object):
         Also used for cache values.
         """
         values = self._values.copy()
+        if self._entityid != layout.INITIAL_VALUES_ID:
+            values = self._pre_save_processing(values)
         values['@id']      = self._entityref
         values['@type']    = self._get_types(values.get('@type', None))
         values['@context'] = (
@@ -565,11 +567,31 @@ class EntityRoot(object):
         # Return result
         return entitydata
 
+    def _pre_save_processing(self, entitydata):
+        """
+        Pre-save value processing.
+
+        This method is called just before a value is saved to fill in or update
+        any values that were not specified in the form input.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with any data updates applied.
+
+        NOTE:  implementations are free to apply updates in-place.  The resulting 
+        entitydata should be exactly as the supplied data *should* appear in storage.
+        The update function should be idempotent; i.e.
+            x._pre_save_processing(x._pre_save_processing(e)) == x._pre_save_processing(e)
+
+        Individual entity classes may provide their own override methods for this
+        (e.g., to fill in values that have not been otherwise specified).
+        """
+        return entitydata
+
     def _post_update_processing(self, entitydata, post_update_flags):
         """
         Default method for post-update processing.
 
-        This method is called when an entity has been ceated or updated.  
+        This method is called just after an entity has been ceated or updated.  
 
         Individual entity classes may provide their own override methods for this.  
         (e.g. to trigger regeneration of context data when groups, views, fields or 
@@ -602,7 +624,7 @@ class EntityRoot(object):
         if os.path.isdir(parent_dir):
             child_files = os.listdir(parent_dir)
         for fil in child_files:
-            if util.valid_id(fil):
+            if util.valid_id(fil, reserved_ok=True):
                 yield fil
         return
 

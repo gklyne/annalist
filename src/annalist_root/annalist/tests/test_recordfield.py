@@ -344,7 +344,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         property_uri=None,
         type_uri=None
         ):
-        "Helper function checks content of form-updated record type entry with supplied field_id"
+        """
+        Helper function checks content of form-updated record type entry with supplied
+        field_id and other values
+        """
         self.assertTrue(RecordField.exists(self.testcoll, field_id, altscope="all"))
         e = RecordField.load(self.testcoll, field_id, altscope="all")
         u = recordfield_coll_url(self.testsite, coll_id="testcoll", field_id=field_id)
@@ -1055,6 +1058,22 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
         # Check new entity data created
         self._check_field_data_values("newfield", property_uri="test:new_prop")
+        return
+
+    def test_post_new_field_no_property_uri(self):
+        self.assertFalse(RecordField.exists(self.testcoll, "newfield"))
+        f = field_view_form_data(
+            field_id="newfield", action="new",
+            )
+        u = entitydata_edit_url("new", "testcoll", layout.FIELD_TYPEID, view_id="Field_view")
+        r = self.client.post(u, f)
+        # print r.content
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        self.assertEqual(r['location'], entitydata_list_type_url("testcoll", layout.FIELD_TYPEID))
+        # Check new entity data created
+        self._check_field_data_values("newfield", property_uri="newfield")
         return
 
     def test_post_new_field_no_continuation(self):

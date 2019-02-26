@@ -292,7 +292,9 @@ class Collection(Entity):
         """
         # log.debug("@@ Collection.load: %s, altscope %s"%(coll_id, altscope))
         cls._migrate_collection_config_dir(parent, coll_id)
-        coll = super(Collection, cls).load(parent, coll_id, altscope=altscope)
+        coll = super(Collection, cls).load(
+            parent, coll_id, altscope=altscope
+            )
         if coll is not None:
             cls._set_alt_parent_coll(parent, coll)
         return coll
@@ -799,7 +801,7 @@ class Collection(Entity):
 
         returns a RecordField object for the identified field, or None.
         """
-        if not valid_id(field_id):
+        if not valid_id(field_id, reserved_ok=True):
             msg = "Collection %s get_field(%s) invalid id"%(self.get_id(), field_id)
             log.error(msg)
             # Construct and return a placeholder field

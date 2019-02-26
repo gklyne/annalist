@@ -188,6 +188,25 @@ class RecordField(EntityData):
         # Return result
         return entitydata
 
+    def _pre_save_processing(self, entitydata):
+        """
+        Pre-save value processing.
+
+        This method is called just before a value is saved to fill in or update
+        any values that were not specified in the form input.
+
+        The specification for this method is that it returns an entitydata value
+        which is a copy of the supplied entitydata with any data updates applied.
+
+        NOTE:  implementations are free to apply updates in-place.  The resulting 
+        entitydata should be exactly as the supplied data *should* appear in storage.
+        The update function should be idempotent; i.e.
+            x._pre_save_processing(x._pre_save_processing(e)) == x._pre_save_processing(e)
+        """
+        if not entitydata.get(ANNAL.CURIE.property_uri, None):
+            entitydata[ANNAL.CURIE.property_uri] = entitydata[ANNAL.CURIE.id]
+        return entitydata
+
     def _post_update_processing(self, entitydata, post_update_flags):
         """
         Post-update processing.

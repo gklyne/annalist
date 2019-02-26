@@ -24,17 +24,21 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.15, towards 0.5.16
 
-- [ ] Install tools and update documentatiobn to use `twine` for package upload.
-    - See: https://pypi.org/project/twine/
+- [x] Add hook for processing entity data before saving
+- [x] If property URI in field definition is missing or blank, use field id
+- [x] Update reserved identifiers screened by `util.valid_id`
+- [x] Review handling of reserved identifiers; don't screen when loading entity.
+- [ ] Default allow reserved ids for all .load operations
 - [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
     - (render_uri_import has most of the required boilerplate)
 - [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
-- [ ] If property URI in field definition is blank, use field id
 - [ ] Implement ORCiD as IDP option
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
+- [ ] Install tools and update documentation to use `twine` for package upload.
+    - See: https://pypi.org/project/twine/
 
 (Sub-release?)
 

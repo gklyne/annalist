@@ -32,6 +32,7 @@ from utils.py3porting       import (
     urlopen, Request, get_message_type
     )
 
+from annalist               import layout
 from annalist.identifiers   import ANNAL
 
 def valid_id(id_string, reserved_ok=False):
@@ -54,9 +55,17 @@ def valid_id(id_string, reserved_ok=False):
     False
     """
     reserved = (
-        [ "_annalist_collection"
-        # , "_annalist_site"
+        [ layout.INITIAL_VALUES_ID
+        , layout.COLL_ROOT_CONF_OLD_DIR
+        , layout.SITEDATA_ID
         ])
+    #@@DEBUG - write traceback to local file
+    # DEBUG = (id_string in reserved) and (not reserved_ok)
+    # if DEBUG:
+    #     with open("debug-traceback.log", "a") as f:
+    #         f.write("@@@@ Unexpected identifier %s"%(id_string))
+    #         f.write("".join(traceback.format_stack()))
+    #@@
     # cf. urls.py:
     if id_string and re.match(r"\w{1,128}$", id_string):
         return reserved_ok or (id_string not in reserved)
