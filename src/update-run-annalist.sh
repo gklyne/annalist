@@ -13,6 +13,7 @@ echo ""
 # killall python3
 
 annalist-manager stopserver   --personal
+sleep 0.5
 annalist-manager initialize   --personal
 annalist-manager updatesite   --personal
 annalist-manager collectsatic --personal

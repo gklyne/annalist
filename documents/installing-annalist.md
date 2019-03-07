@@ -258,6 +258,14 @@ The Annalist identity provider configuration (typically in `~/.annalist/provider
 
 NOTE:  Sample configuration files should be created in directory `~/.annalist/config/` by the site initialization procedure (`annalist-manager createsite` or `annalist-manager updatesite` commands)
 
+NOTE: With Apache 2.4 the authorization directives are changed.  The sample configurations have been updated to use Pache 2.4 directioves, and may need to be edited top work with Apache 2.2.  Changes apply in the `<location>` section:
+
+    <location>
+        # allow from all      # Apache 2.2
+        Require all granted   # Apache 2.4
+    </location>
+
+
 Prerequisites:
 
 - Apache2 web server installed and running (in default configuration with test page)

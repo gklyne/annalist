@@ -106,7 +106,7 @@ class text_language_edit_renderer(object):
         self._template = Template(
             '''<input type="text" size="64" name="{{repeat_prefix}}{{field.description.field_name}}" '''+
                    '''placeholder="{{field.description.field_placeholder}}" '''+
-                   '''value="{{field.field_edit_value}}" />'''
+                   '''value="{{encoded_field_value}}" />'''
         )
         return
 
@@ -114,7 +114,12 @@ class text_language_edit_renderer(object):
         """
         Render language-tagged text for editing
         """
-        return self._template.render(context)
+        from annalist.views.fields.render_fieldvalue import get_field_edit_value
+        textval = TextLanguageValueMapper.encode(get_field_edit_value(context, ""))
+        log.debug("text_language_edit_renderer: textval %r"%(textval,))
+        with context.push(encoded_field_value=textval):
+            result = self._template.render(context)
+        return result
 
 def get_text_language_renderer():
     """

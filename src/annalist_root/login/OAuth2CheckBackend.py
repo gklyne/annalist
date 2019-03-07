@@ -50,24 +50,49 @@ class OAuth2CheckBackend(object):
             # Not oauth2 exchange:
             # @TODO: can we be more specific about what type this should be?
             return None
+        auth_username   = None
         auth_email      = None
+        auth_url        = None
         return_user     = None
         create_username = None
         verified_email  = False
+        verified_url    = False
         if profile:
-            # It looks like this was changed in Google profile
+            # Analyze profile returned for verified identifier
+            # (email address or URL)
+            #
+            # Google returns a "verified_email" flag
+            # (It looks like this was changed in Google profile...)
+            log.info("login user profile: %r"%(profile,))
             verified_email = (
                 profile.get("verified_email", False) or 
                 profile.get("email_verified", False)
                 )
-        if verified_email:
-            # Use access token to retrieve profile information
-            # Construct authenticated user ID from email local part
-            auth_email       = profile['email']
-            email_local_part = auth_email.split('@', 1)[0]
-            auth_username    = re.sub(r"\.", "_", email_local_part)
-            auth_username    = re.sub(r"[^a-zA-Z0-9_]", "", auth_username)
-            auth_username    = auth_username[:32]
+            if verified_email:
+                # Use access token to retrieve profile information
+                # Construct authenticated user ID from email local part
+                auth_email       = profile["email"]
+                email_local_part = auth_email.split('@', 1)[0]
+                auth_username    = re.sub(r"\.", "_", email_local_part)
+                auth_username    = re.sub(r"[^a-zA-Z0-9_]", "", auth_username)
+                auth_username    = auth_username[:32]
+            # GitHub returns a URL that is implicitly verified
+            # NOTE: the GitHub email does not include a separate flag to say
+            #       it's verified, though apparently it is.  But the GitHub
+            #       email address is optional in the profile.
+            if profile.get("html_url", "").startswith("https://github.com/"):
+                verified_url  = True    
+                auth_url      = profile["html_url"]
+                auth_domain   = "github.com"
+                auth_username = profile["login"]
+                # This is a hack to fit Django's User structure:
+                # would prefer to store and use authenticated URL instead.
+                # Maybe this is possible?
+                # See https://stackoverflow.com/questions/6085025/django-user-profile
+                auth_email    = (
+                    profile.get("email", None) or
+                    auth_username+"."+auth_domain+"@user.annalist.net" 
+                    )
         if username:
             try:
                 return_user       = User.objects.get(username=username)
@@ -102,18 +127,22 @@ class OAuth2CheckBackend(object):
                 if ("given_name" in profile) and ("family_name" in profile):
                     given_name  = profile["given_name"]
                     family_name = profile["family_name"]
-                else:
+                elif ("name" in profile) and profile["name"]:
                     # Older Google profiles have just "name" value, apparently
-                    n = profile.get("name", "").split(None, 1)
+                    # GitHub profiles may include a "name" value, a[parently]
+                    n = profile["name"].split(None, 1)
                     given_name  = ""
                     family_name = ""
                     if len(n) >= 1:
                         given_name  = n[0]
                     if len(n) >= 2:
                         family_name = n[1]
+                else:
+                    given_name  = auth_username
+                    family_name = ""
                 return_user.first_name   = given_name
                 return_user.last_name    = family_name
-                return_user.email        = profile["email"]
+                return_user.email        = auth_email
             elif password.id_token:
                 # No profile provided: Try to load email address from id_token
                 return_user.is_staff     = True

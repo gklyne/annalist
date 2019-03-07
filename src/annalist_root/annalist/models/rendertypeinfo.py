@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 # Separated from annalist.views.fields.find_renderers to avoid model dependency on views
 
 _render_type_literal = set(
-    [ "Text", "Textarea", "Codearea", "Showtext"
+    [ "Text", "Textarea", "Codearea", "Showtext", "LangText"
     , "Placement", "CheckBox", "Markdown", "ShowMarkdown"
     , "EntityId", "EntityTypeId"
     , "TokenSet"

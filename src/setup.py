@@ -99,6 +99,8 @@ setup(
             , 'data/identity_providers/*.json'
             , 'data/identity_providers/*.example'
             , 'data/identity_providers/images/*.png'
+            , 'data/identity_providers/images/*.jpg'
+            , 'data/identity_providers/images/*.svg'
             # Configuration example data
             , 'data/config_examples/*'
             # Site-wide data definitions

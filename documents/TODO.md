@@ -24,6 +24,9 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.15, towards 0.5.16
 
+- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
+      Updated to work with Apache 2.4, with older directives left as comments.
+
 - [x] Add hook for processing entity data before saving
 - [x] If property URI in field definition is missing or blank, use field id
 - [x] Update reserved identifiers screened by `util.valid_id`
@@ -33,7 +36,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] When referencing an entity, render using annal:uri if defined?
 - [ ] When locating a referenced entity, recognize annal:uri value if defined
 
-- [ ] Implement ORCiD as IDP option
+- [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
 
 - [ ] Provide content for the links in the page footer
 - [ ] Documentation and tutorial updates
