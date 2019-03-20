@@ -190,6 +190,10 @@ urlpatterns += [
     url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
     url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
     url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
+    # Info view...
+    # url(r'^c/(?P<coll_id>_annalist_site)/d/(?P<type_id>_info)/(?P<entity_id>about)/$',
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
+                            GenericEntityEditView.as_view(),    name='AnnalistInfoView'),
     ]
 
 # End.

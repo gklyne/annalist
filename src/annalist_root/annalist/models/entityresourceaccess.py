@@ -84,6 +84,10 @@ entity_fixed_json_resources = (
                                                     "resource_type": "application/ld+json" }
     , { "resource_name": layout.USER_PROV_FILE,     "resource_dir": ".",
                                                     "resource_type": "application/ld+json" }
+    , { "resource_name": layout.INFO_META_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
+    , { "resource_name": layout.INFO_PROV_FILE,     "resource_dir": ".",
+                                                    "resource_type": "application/ld+json" }
     , { "resource_name": layout.ENUM_META_FILE,     "resource_dir": ".",
                                                     "resource_type": "application/ld+json" }
     , { "resource_name": layout.ENUM_PROV_FILE,     "resource_dir": ".",

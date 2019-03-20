@@ -1080,6 +1080,7 @@ class DisplayInfo(object):
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
             , 'collection':         self.collection
+            , 'info_coll_id':       self.coll_id or layout.SITEDATA_ID
             , "SITE":               site_url_parts.path
             , "HOST":               self.reqhost            
             })

@@ -33,12 +33,11 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Review handling of reserved identifiers; don't screen when loading entity.
 - [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
 
-- [ ] When referencing an entity, render using annal:uri if defined?
-- [ ] When locating a referenced entity, recognize annal:uri value if defined
-
 - [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
 
-- [ ] Provide content for the links in the page footer
+- [x] Provide initial content for the links in the page footer.
+    - This information can be edited locally.
+    - Copies of the initial data are kept separately.
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 
@@ -81,6 +80,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 
 Technical debt:
+
 
 - [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
@@ -249,6 +249,12 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Try to provide more seamless interaction between permanent URIs (annal:URI) and local URLs. To what extent can an `annal:uri` property value be used in place of a local reference?
+    - The main requirement to date is to be able to export data with permanent URIs, for compatibility with other systems (e.g., EMPlaces data).
+    - If exported data is intended to include directly dereferencable links (back to their Annalist source), then the permanent URI isn't the right option.  How to distinguish these cases?
+    - When processing data locally, it may be possible to recognize/reference entities bvy their permanent URI as well as their local reference.  This would probably require some kind of lookaside table.
+    - For the time being, we are relying on conversion software to export/import data in the required formats.  Maybe we need more experience of this?
+    - An interim step could be to (optionally?) use `annal:uri` values, where available, in place of local references when exporting Turtle data.
 - [ ] Update Django version used to latest version designated for long term support
     - This will mean cutting adrift from Python 2 support.
     - Leaving this until after version 1 is released.

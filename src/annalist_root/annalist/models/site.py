@@ -32,7 +32,7 @@ from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
 from annalist                       import message
 from annalist.util                  import (
-    valid_id, extract_entity_id, replacetree, updatetree
+    valid_id, extract_entity_id, replacetree, updatetree, expandtree
     )
 
 from annalist.models.annalistuser   import AnnalistUser
@@ -457,6 +457,20 @@ class Site(EntityRoot):
         d = os.path.join(site_data_tgt, sdir)
         if os.path.isdir(s):
             updatetree(s, d)
+        return
+
+    @staticmethod
+    def expand_site_data_dir(sitedata, sdir, site_data_src):
+        """
+        Expand indicated sitedata directory data from source: 
+        existing data is left as-is, even when a file of the same name 
+        exists in the source tree.
+        """
+        site_data_tgt, site_data_file = sitedata._dir_path()
+        s = os.path.join(site_data_src, sdir)
+        d = os.path.join(site_data_tgt, sdir)
+        if os.path.isdir(s):
+            expandtree(s, d)
         return
 
     @staticmethod

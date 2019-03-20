@@ -489,8 +489,8 @@ def replacetree(src, tgt):
 
 def updatetree(src, tgt):
     """
-    Like replacetree, except that existing files are not removed unless replaced 
-    by a file of the name name in the source tree.
+    Like replacetree, except that existing files are not removed unless 
+    replaced by a file of the name name in the source tree.
 
     NOTE: can't use shutil.copytree for this, as that requires that the 
     destination tree does not exist.
@@ -506,6 +506,23 @@ def updatetree(src, tgt):
                 updatetree(sf, tf)                          # Recursive dir copy
             else:
                 shutil.copy2(sf, tgt)                       # Copy single file, may overwrite
+    return
+
+def expandtree(src, tgt):
+    """
+    Like updatetree, except that existing files are not updated.
+    """
+    files = os.listdir(src)
+    for f in files:
+        sf = os.path.join(src, f)
+        if os.path.exists(sf) and not os.path.islink(sf):   # Ignore symlinks
+            tf = os.path.join(tgt, f)
+            if os.path.isdir(sf):
+                if not os.path.isdir(tf):
+                    os.makedirs(tf)
+                expandtree(sf, tf)                          # Recursive dir copy
+            elif not os.path.exists(tf):
+                shutil.copy2(sf, tgt)                       # Copy single file
     return
 
 def download_url_to_file(url, fileName=None):

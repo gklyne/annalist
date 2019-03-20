@@ -19,6 +19,6 @@ USER_NO_EMAIL           = "No email address associated with authenticated user %
 USER_WRONG_EMAIL        = "Authenticated user %s email address mismatch (%s, %s)"
 USER_WRONG_PASSWORD     = "Login as %s: no such user or incorrect password"
 USER_ACCOUNT_DISABLED   = "Account %s has been disabled"
-
+SESSION_INTERRUPTED     = "Session data missing (try login again)"
 
 # End.

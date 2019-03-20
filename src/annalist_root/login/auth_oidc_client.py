@@ -163,6 +163,8 @@ class OIDC_AuthDoneView(generic.View):
         state          = request.session['oauth2_state']
         userid         = request.session['oauth2_userid']
         # session value "login_done_url" is set by login_views.confirm_authentication
+        if 'login_done_url' not in request.session:
+            return HttpResponseRedirectLogin(request, login_message.SESSION_INTERRUPTED)
         login_done_url = request.build_absolute_uri(request.session['login_done_url'])
         provider       = provider_data['provider']
         flow = oauth2_flow_from_provider_data(

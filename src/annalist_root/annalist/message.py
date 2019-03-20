@@ -174,6 +174,13 @@ RECORD_VOCAB_EXISTS         = "Vocabulary %(save_id)s in collection %(save_coll)
 RECORD_VOCAB_NOT_EXISTS     = "Vocabulary %(id)s in collection %(coll_id)s does not exist"
 RECORD_VOCAB_REMOVED        = "Vocabulary %(id)s in collection %(coll_id)s was removed"
 
+RECORD_INFO_ID              = "Problem with general information record identifier"
+RECORD_INFO_ID_INVALID      = "General information record identifier is missing or not a valid identifier"
+RECORD_INFO_LABEL           = "General information record %(id)s in collection %(coll_id)s"
+RECORD_INFO_EXISTS          = "General information record %(save_id)s in collection %(save_coll)s already exists"
+RECORD_INFO_NOT_EXISTS      = "General information record %(id)s in collection %(coll_id)s does not exist"
+RECORD_INFO_REMOVED         = "General information record %(id)s in collection %(coll_id)s was removed"
+
 RECORD_ENUM_ID              = "Problem with enumeration type identifier"
 RECORD_ENUM_ID_INVALID      = "The enumeration type identifier is missing or not a valid identifier"
 RECORD_ENUM_LABEL           = "Enumeration type %(id)s in collection %(coll_id)s"

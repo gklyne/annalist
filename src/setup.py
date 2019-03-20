@@ -116,6 +116,7 @@ setup(
             , 'data/sitedata/_view/*/*.jsonld'
             , 'data/sitedata/_user/*/*.jsonld'
             , 'data/sitedata/_vocab/*/*.jsonld'
+            , 'data/sitedata/_info/*/*.jsonld'
             # Bibliographic data definitions
             , 'data/Bibliography_defs/_field/*/*.jsonld'
             , 'data/Bibliography_defs/_group/*/*.jsonld'

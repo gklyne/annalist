@@ -67,7 +67,7 @@ class EntityResourceAccess(AnnalistGenericView):
         Access specified entity resource
         """
         log.info(
-            "get: coll_id %s, type_id %s, entity_id %s, resource_ref %s"%
+            "views.entityresource.get: coll_id %s, type_id %s, entity_id %s, resource_ref %s"%
             (coll_id, type_id, entity_id, resource_ref)
             )
         viewinfo = self.view_setup(
@@ -152,7 +152,6 @@ class EntityResourceAccess(AnnalistGenericView):
         viewinfo.get_coll_info(coll_id)
         viewinfo.get_request_type_info(type_id)
         viewinfo.get_entity_info(action, entity_id)
-        # viewinfo.get_entity_data()
         viewinfo.check_authorization(action)
         return viewinfo
 

@@ -156,6 +156,7 @@ ANNAL = makeNamespace("annal", "http://purl.org/annalist/2014/#",
     , "User"
     , "View"
     , "Vocabulary"
+    , "Information"
     # Repeat/list group types
     , "Field_list"
     , "Field_superproperty_uri"

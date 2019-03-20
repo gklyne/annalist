@@ -1,0 +1,22 @@
+{ "@id":                        "_list/Info_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Info_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/Info_list"
+, "rdfs:label":                 "General information"
+, "rdfs:comment":               "# General information\r\n\r\nThis display lists [general information]($BASE:_type/_info/) entities."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/Info_view"
+, "annal:default_type":         "_type/_info"
+, "annal:list_entity_type":     "annal:Information"
+, "annal:list_entity_selector": "'annal:Information' in [@type]"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}
