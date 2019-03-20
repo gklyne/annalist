@@ -122,7 +122,7 @@ class CollectionTypeCacheTest(AnnalistTestCase):
         self.expect_site_type_ids = (
             { "_coll"
             , "_enum_list_type", "_enum_render_type", "_enum_value_mode", "_enum_value_type"
-            , "_field", "_group", "_list", "_type", "_user", "_view", "_vocab"
+            , "_field", "_group", "_info", "_list", "_type", "_user", "_view", "_vocab"
             , "Default_type"
             })
         self.expect_coll_type_ids = (

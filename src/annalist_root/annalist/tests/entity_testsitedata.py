@@ -55,19 +55,20 @@ def add_link_to_field_choice(fc, coll_id, default_type_id=None):
 
 site_types = (
     [ FieldChoice("_type/_initial_values")
-    , FieldChoice("_type/_coll",                label="Collection"        )
-    , FieldChoice("_type/_enum_list_type",      label="List display type" )
-    , FieldChoice("_type/_enum_render_type",    label="Field render type" )
-    , FieldChoice("_type/_enum_value_mode",     label="Field value mode"  )
-    , FieldChoice("_type/_enum_value_type",     label="Field value type"  )
-    , FieldChoice("_type/_field",               label="Field"             )
-    , FieldChoice("_type/_group",               label="Field group"       )
-    , FieldChoice("_type/_list",                label="List"              )
-    , FieldChoice("_type/_type",                label="Type"              )
-    , FieldChoice("_type/_user",                label="User permissions"  )
-    , FieldChoice("_type/_view",                label="View"              )
-    , FieldChoice("_type/_vocab",               label="Namespace"         )
-    , FieldChoice("_type/Default_type",         label="Default record"    )
+    , FieldChoice("_type/_coll",                label="Collection"          )
+    , FieldChoice("_type/_enum_list_type",      label="List display type"   )
+    , FieldChoice("_type/_enum_render_type",    label="Field render type"   )
+    , FieldChoice("_type/_enum_value_mode",     label="Field value mode"    )
+    , FieldChoice("_type/_enum_value_type",     label="Field value type"    )
+    , FieldChoice("_type/_field",               label="Field"               )
+    , FieldChoice("_type/_group",               label="Field group"         )
+    , FieldChoice("_type/_info",                label="General information" )
+    , FieldChoice("_type/_list",                label="List"                )
+    , FieldChoice("_type/_type",                label="Type"                )
+    , FieldChoice("_type/_user",                label="User permissions"    )
+    , FieldChoice("_type/_view",                label="View"                )
+    , FieldChoice("_type/_vocab",               label="Namespace"           )
+    , FieldChoice("_type/Default_type",         label="Default record"      )
     ])
 
 def get_site_types_sorted():
@@ -132,6 +133,7 @@ site_lists = (
     , FieldChoice("_list/Enum_list_all",              label="List enumeration values and types")
     , FieldChoice("_list/Field_group_list",           label="Field groups")
     , FieldChoice("_list/Field_list",                 label="Field definitions")
+    , FieldChoice("_list/Info_list",                  label="General information")
     , FieldChoice("_list/List_list",                  label="List definitions")
     , FieldChoice("_list/Type_list",                  label="Entity types")
     , FieldChoice("_list/User_list",                  label="User permissions")
@@ -219,6 +221,7 @@ site_views = (
     , FieldChoice("_view/Enum_view",        label="Enumerated value view"  )
     , FieldChoice("_view/Field_group_view", label="Field group definition" )
     , FieldChoice("_view/Field_view",       label="Field definition"       )
+    , FieldChoice("_view/Info_view",        label="General information"    )
     , FieldChoice("_view/List_view",        label="List definition"        )
     , FieldChoice("_view/Type_view",        label="Type definition"        )
     , FieldChoice("_view/User_view",        label="User permissions"       )
@@ -256,8 +259,6 @@ def get_site_bib_views_linked(coll_id):
 
 def get_site_bib_views():
     return set( ( id_from_field_choice(fc) for fc in get_site_bib_views_sorted() )  )
-
-
 
 #   ----- Field groups -----
 
@@ -677,6 +678,30 @@ def get_site_field_types_linked(coll_id):
 def get_site_field_types():
     return set( ( id_from_field_choice(fc) for fc in get_site_field_types_sorted() ) )
 
+#   ----- General information records -----
+
+site_infos = (
+    [ FieldChoice("_info/_initial_values")
+    , FieldChoice("_info/About",           label="About this site")
+    , FieldChoice("_info/About_initial",   label="About this site")
+    , FieldChoice("_info/Contact",         label="Contact information")
+    , FieldChoice("_info/Contact_initial", label="Contact information")
+    , FieldChoice("_info/Sitemap",         label="Navigating this site")
+    , FieldChoice("_info/Sitemap_initial", label="Navigating this site")
+    ])
+
+def get_site_infos_sorted():
+    return site_infos[1:]
+
+def get_site_infos_linked(coll_id):
+    return (
+        [ add_link_to_field_choice(fc, coll_id, layout.ENUM_LIST_TYPE_ID) 
+          for fc in get_site_infos_sorted() 
+        ])
+
+def get_site_infos():
+    return set( ( fc.id for fc in get_site_infos_sorted() )  )
+
 #   ----- Users -----
 
 site_users = (
@@ -796,6 +821,7 @@ site_entities = (
     get_site_value_types_sorted() +
     get_site_fields_sorted() +
     get_site_field_groups_sorted() +
+    get_site_infos_sorted() +
     get_site_lists_sorted() +
     get_site_types_sorted() +
     get_test_types_sorted() +

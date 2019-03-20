@@ -4,8 +4,8 @@
 , "annal:id":               "Info_view"
 , "annal:type_id":          "_view"
 , "annal:uri":              "annal:display/Info_view"
-, "rdfs:label":             "Site information"
-, "rdfs:comment":           ""
+, "rdfs:label":             "General information"
+, "rdfs:comment":           "# General information\r\n\r\nThis view presents a [general information]($BASE:_type/_info/) entity."
 , "annal:view_entity_type": "annal:Information"
 , "annal:open_view":        false
 , "annal:view_fields": 

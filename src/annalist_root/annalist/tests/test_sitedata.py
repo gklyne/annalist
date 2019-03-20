@@ -565,6 +565,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 [ "_field",            "annal:Field",            "Field"                 ] ]
             , [ "_type/_group",            
                 [ "_group",            "annal:Field_group",      "Field group"           ] ]
+            , [ "_type/_info",             
+                [ "_info",             "annal:Information",      "General information"  ] ]
             , [ "_type/_list",             
                 [ "_list",             "annal:List",             "List"                  ] ]
             , [ "_type/_type",             
@@ -689,6 +691,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_list/Enum_list_all",      ["Enum_list_all",       "List enumeration values and types"  ] ]
             , [ "_list/Field_group_list",   ["Field_group_list",    "Field groups"                       ] ]
             , [ "_list/Field_list",         ["Field_list",          "Field definitions"                  ] ]
+            , [ "_list/Info_list",          ["Info_list",           "General information"                ] ]
             , [ "_list/List_list",          ["List_list",           "List definitions"                   ] ]
             , [ "_list/Type_list",          ["Type_list",           "Entity types"                       ] ]
             , [ "_list/User_list",          ["User_list",           "User permissions"                   ] ]
@@ -803,6 +806,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_view/Enum_view",          ["Enum_view",           "Enumerated value view" ] ]
             , [ "_view/Field_group_view",   ["Field_group_view",    "Field group definition"] ]
             , [ "_view/Field_view",         ["Field_view",          "Field definition"      ] ]
+            , [ "_view/Info_view",          ["Info_view",           "General information"   ] ]
             , [ "_view/List_view",          ["List_view",           "List definition"       ] ]
             , [ "_view/Type_view",          ["Type_view",           "Type definition"       ] ]
             , [ "_view/User_view",          ["User_view",           "User permissions"      ] ]
