@@ -17,12 +17,21 @@ from annalist                       import layout
 from annalist.exceptions            import Annalist_Error
 from annalist.identifiers           import ANNAL, RDFS
 
+from annalist.models.objectcache    import get_cache, remove_cache # , remove_matching_caches
+
 #   ---------------------------------------------------------------------------
 # 
 #   Local helper functions
 # 
 #   ---------------------------------------------------------------------------
 
+def make_cache_key(cache_type, entity_type_id, coll_id):
+    return (cache_type, entity_type_id, coll_id)
+
+def match_cache_key_unused_(cache_types, entity_cls):
+    def match_fn(cachekey):
+        return (cachekey[0] in cache_types) and (cachekey[1] == entity_cls._entitytypeid)
+    return match_fn
 
 #   ---------------------------------------------------------------------------
 # 
@@ -34,7 +43,7 @@ class Cache_Error(Annalist_Error):
     """
     Class for errors raised by closure calculations.
     """
-    def __init__(self, value=None, msg="Cache_error"):
+    def __init__(self, value=None, msg="Cache_error (collectionentityache)"):
         super(Cache_Error, self).__init__(value, msg)
         return
 
@@ -68,6 +77,9 @@ class CollectionEntityCacheObject(object):
     treats scope names as opaque identifiers.  The scope logic is embedded mainly
     in the Entity and EntityRoot class methods "_children".
     """
+
+    _cache_types = {"entities_by_id", "entity_ids_by_uri", "entity_ids_by_scope"}
+
     def __init__(self, coll_id, entity_cls):
         """
         Initialize a cache object for a specified collection.
@@ -77,12 +89,15 @@ class CollectionEntityCacheObject(object):
         super(CollectionEntityCacheObject, self).__init__()
         self._coll_id             = coll_id
         self._entity_cls          = entity_cls
-        self._site_cache          = None
         self._type_id             = entity_cls._entitytypeid
-        self._entities_by_id      = {}
-        self._entity_ids_by_uri   = {}
-        self._entity_ids_by_scope = {}
+        self._entities_by_id      = None
+        self._entity_ids_by_uri   = None
+        self._entity_ids_by_scope = None
+        self._site_cache          = None
         return
+
+    def _make_cache_key(self, cache_type):
+        return make_cache_key(cache_type, self._type_id, self._coll_id)
 
     def _make_entity(self, coll, entity_id, entity_values):
         """
@@ -90,7 +105,7 @@ class CollectionEntityCacheObject(object):
 
         coll            is collection entity to which the new identity will belong
         entity_id       is the new entity id
-        entity_values   is a dictionbary containing:
+        entity_values   is a dictionary containing:
                         ["parent_id"] is the id of the parent entity
                         ["data"] is a dictionary of values for the new entity
 
@@ -117,21 +132,22 @@ class CollectionEntityCacheObject(object):
 
     def _load_entity(self, coll, entity, entity_uri=None):
         """
-        Internal helper method loads entity data to cache.
+        Internal helper method saves entity data to cache.
+        This function does not actually read entity data.
 
-        Returns True if new entity was added.
+        Returns True if new entity data is added, otherwise False.
         """
         entity_id     = entity.get_id()
         if not entity_uri:
             entity_uri    = entity.get_uri()
         entity_parent = entity.get_parent().get_id()
         entity_data   = entity.get_save_values()
-        add_entity    = False
-        if entity_id not in self._entities_by_id:
-            self._entities_by_id[entity_id]     = {"parent_id": entity_parent, "data": entity_data}
-            self._entity_ids_by_uri[entity_uri] = entity_id
-            self._entity_ids_by_scope           = {}
-            add_entity = True
+        def _load_entity_data(old_value):
+            # Update other caches while _entities_by_id lock is acquired
+            self._entity_ids_by_uri.set(entity_uri, entity_id)
+            self._entity_ids_by_scope.flush()
+            return {"parent_id": entity_parent, "data": entity_data}
+        add_entity, _ = self._entities_by_id.find(entity_id, _load_entity_data, None)
         return add_entity
 
     def _load_entities(self, coll):
@@ -140,9 +156,17 @@ class CollectionEntityCacheObject(object):
 
         NOTE: site level entitites are cached separately by the collection cache 
         manager, and merged separately.  Hence "nosite" scope here.
+
+        From entity.py:
+            "nosite" - collection-level only: used for listing entities from just
+                collections.  Used when cacheing data, where site data is assumed 
+                to be invariant, hence no need to re-load.
         """
         scope_name = "nosite" if self._site_cache else "all"
-        if self._entities_by_id == {}:
+        if self._entities_by_id is None:
+            self._entities_by_id      = get_cache(self._make_cache_key("entities_by_id"))
+            self._entity_ids_by_uri   = get_cache(self._make_cache_key("entity_ids_by_uri"))
+            self._entity_ids_by_scope = get_cache(self._make_cache_key("entity_ids_by_scope"))
             for entity_id in coll._children(self._entity_cls, altscope=scope_name):
                 t = self._entity_cls.load(coll, entity_id, altscope=scope_name)
                 self._load_entity(coll, t)
@@ -160,7 +184,7 @@ class CollectionEntityCacheObject(object):
             entity_uri = entity.get_uri()
             self._entities_by_id.pop(entity_id, None)
             self._entity_ids_by_uri.pop(entity_uri, None)
-            self._entity_ids_by_scope = {}
+            self._entity_ids_by_scope.flush()
         return entity
 
     def set_site_cache(self, site_cache):
@@ -174,11 +198,9 @@ class CollectionEntityCacheObject(object):
         """
         Save a new or updated entity definition.
         """
-        # @@TODO:
-        # The return value is of no use here, as it is
-        # preempted by the call of _load_entities
         self._load_entities(coll)
-        return self._load_entity(coll, entity)
+        self._load_entity(coll, entity)
+        return
 
     def remove_entity(self, coll, entity_id):
         """
@@ -194,7 +216,7 @@ class CollectionEntityCacheObject(object):
         Retrieve the entity for a given entity id.
 
         Returns an entity for the supplied entity Id, or None 
-        if not defined in the current cache object.
+        if not defined for the current collection.
         """
         self._load_entities(coll)
         entity_values = self._entities_by_id.get(entity_id, None)
@@ -226,24 +248,22 @@ class CollectionEntityCacheObject(object):
 
     def get_all_entity_ids(self, coll, altscope=None):
         """
-        Returns a generator of all entity ids currently defined for a collection, 
+        Returns an iterator over all entity ids currently defined for a collection, 
         which may be qualified by a specified scope.
 
         NOTE: this method returns only those entity ids for which a record has
         been saved to the collection data storage.
         """
-        self._load_entities(coll)
-        scope_name = altscope or "coll"     # 'None' designates collection-local scope
-        if scope_name in self._entity_ids_by_scope:
-            scope_entity_ids = self._entity_ids_by_scope[scope_name]
-        else:
-            # Generate scope cache for named scope
-            scope_entity_ids = []
+        def get_scope_ids(scope_entity_ids=[]):
+            # Collect entity ids for named scope
             for entity_id in coll._children(self._entity_cls, altscope=altscope):
                 if entity_id != layout.INITIAL_VALUES_ID:
                     scope_entity_ids.append(entity_id)
-            self._entity_ids_by_scope[scope_name] = scope_entity_ids
-        return scope_entity_ids
+            return scope_entity_ids
+        self._load_entities(coll)
+        scope_name = altscope or "coll"     # 'None' designates collection-local scope
+        _, entity_ids = self._entity_ids_by_scope.find(scope_name, get_scope_ids, [])
+        return entity_ids
 
     def get_all_entities(self, coll, altscope=None):
         """
@@ -260,13 +280,28 @@ class CollectionEntityCacheObject(object):
                 yield t
         return
 
+    def remove_cache(self):
+        """
+        Close down and release all entity cache data
+        """
+        if self._entities_by_id:
+            remove_cache(self._entities_by_id.cache_key())
+            self._entities_by_id = None
+        if self._entity_ids_by_uri:
+            remove_cache(self._entity_ids_by_uri.cache_key())
+            self._entity_ids_by_uri = None
+        if self._entity_ids_by_scope:
+            remove_cache(self._entity_ids_by_scope.cache_key())
+            self._entity_ids_by_scope = None
+        return
+
 #   ---------------------------------------------------------------------------
 # 
 #   Collection entity-cache class
 # 
 #   ---------------------------------------------------------------------------
 
-site_cache_by_type_id = {}
+coll_cache_by_type_id_coll_id = {}
 
 class CollectionEntityCache(object):
     """
@@ -274,10 +309,10 @@ class CollectionEntityCache(object):
     """
     def __init__(self, cache_cls, entity_cls):
         """
-        Initializes a value cache cache with no per-collection data.
+        Initializes a value cache with no per-collection data.
 
         cache_cls   is a class object for the collaction cache objects to be used.
-                    The constructor is called with collection id ent entity class
+                    The constructor is called with collection id and entity class
                     as parameters (see method `_get_cache`).
         entity_cls  is a class object for the type of entity to be cached.
         """
@@ -285,15 +320,24 @@ class CollectionEntityCache(object):
         self._cache_cls  = cache_cls
         self._entity_cls = entity_cls
         self._type_id    = entity_cls._entitytypeid
-        self._caches     = {}
-        if self._type_id not in site_cache_by_type_id:
-            site_cache_by_type_id[self._type_id] = (
-                self._cache_cls(layout.SITEDATA_ID, self._entity_cls)
-                )
-        self._site_cache = site_cache_by_type_id[self._type_id]
+        coll_cache_by_type_id_coll_id[self._type_id] = {}
         return
 
     # Generic collection cache alllocation and access methods
+
+    def _get_site_cache(self):
+        """
+        Local helper returns a cache object for the site-wide entities
+        """
+        if layout.SITEDATA_ID not in coll_cache_by_type_id_coll_id[self._type_id]:
+            log.info(
+                "CollectionEntityCache: creating %s cache for collection %s"%
+                (self._type_id, layout.SITEDATA_ID)
+                )
+            # Create and save new cache object
+            site_cache = self._cache_cls(layout.SITEDATA_ID, self._entity_cls)
+            coll_cache_by_type_id_coll_id[self._type_id][layout.SITEDATA_ID] = site_cache
+        return coll_cache_by_type_id_coll_id[self._type_id][layout.SITEDATA_ID]
 
     def _get_cache(self, coll):
         """
@@ -304,12 +348,20 @@ class CollectionEntityCache(object):
         coll        is a collection object for which a cache object is obtained
         """
         coll_id = coll.get_id()
-        if coll_id not in list(self._caches):
+        log.info(
+            "CollectionEntityCache: get %s cache for collection %s"%
+            (self._type_id, coll_id)
+            )
+        if coll_id not in coll_cache_by_type_id_coll_id[self._type_id]:
+            log.info(
+                "CollectionEntityCache: creating %s cache for collection %s"%
+                (self._type_id, coll_id)
+                )
             # Create and save new cache object
             coll_cache = self._cache_cls(coll_id, self._entity_cls)
-            coll_cache.set_site_cache(self._site_cache)
-            self._caches[coll_id] = coll_cache
-        return self._caches[coll_id]
+            coll_cache.set_site_cache(self._get_site_cache())
+            coll_cache_by_type_id_coll_id[self._type_id][coll_id] = coll_cache
+        return coll_cache_by_type_id_coll_id[self._type_id][coll_id]
 
     def flush_cache(self, coll):
         """
@@ -320,25 +372,44 @@ class CollectionEntityCache(object):
         coll        is a collection object for which a cache is removed.
         """
         coll_id = coll.get_id()
-        cache   = self._caches.pop(coll_id, None)
-        log.info(
-            "CollectionEntityCache: flushed %s cache for collection %s"%
-            (self._type_id, coll_id)
-            )
-        return (cache is not None)
+        cache   = coll_cache_by_type_id_coll_id[self._type_id].pop(coll_id, None)
+        if cache:
+            cache.remove_cache()
+            log.info(
+                "CollectionEntityCache: flushed %s cache for collection %s"%
+                (self._type_id, coll_id)
+                )
+            return True
+        return False
 
     def flush_all(self):
         """
         Remove all cached data for all collections.
         """
-        self._caches = {}
+        # remove_cache_types = CollectionEntityCacheObject._cache_types
+        # find_matching_caches(
+        #     match_cache_key(remove_cache_types, entity_cls),
+        #     lambda cache: cache.close()
+        #     )
+        caches = coll_cache_by_type_id_coll_id[self._type_id]
+        coll_cache_by_type_id_coll_id[self._type_id] = {}
+        log.info(
+            "CollectionEntityCache: flushing %s cache for collections %r"%
+            (self._type_id, caches.keys())
+            )
+        for coll_id in caches:
+            caches[coll_id].remove_cache()
+            log.info(
+                "CollectionEntityCache: flushed %s cache for collection %s"%
+                (self._type_id, coll_id)
+                )
         log.info(
             "CollectionEntityCache: flushed %s cache for all collections"%
             (self._type_id,)
             )
         return
 
-    # Collection cache alllocation and access methods
+    # Collection cache allocation and access methods
 
     def set_entity(self, coll, entity):
         """

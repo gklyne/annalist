@@ -24,20 +24,30 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Version 0.5.15, towards 0.5.16
 
-- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
-      Updated to work with Apache 2.4, with older directives left as comments.
+- [ ] BUG: Retrieving turtle data in production server fails.  Works OK in dev server.
+    - gunicorn (version 19.9.0)
+    - curl: (52) Empty reply from server after about 30 seconds.  gunicorn worker reboots about same time??
+    - suspect deadlock on single-worker-thread as Turtle output needs to access context via HTTP.
+        - TEST: raise work thread count to 2, and see if problem persists.  If so, bring forward use of memcached?
+        - YES: raising the worker count to 2 fixes the problem, which (pretty much) confirms the deadlock hypothesis
+        - Need to think again about caching and cache invalidation.
+        - See: documents/notes/20190327-threading-caching-notes.md
 
-- [x] Add hook for processing entity data before saving
+- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
+    - Updated to work with Apache 2.4, with older directives left as comments.
+
+- [x] Added hook for processing entity data before saving
 - [x] If property URI in field definition is missing or blank, use field id
 - [x] Update reserved identifiers screened by `util.valid_id`
 - [x] Review handling of reserved identifiers; don't screen when loading entity.
 - [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
-
 - [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
-
 - [x] Provide initial content for the links in the page footer.
     - This information can be edited locally.
     - Copies of the initial data are kept separately.
+
+(Sub-release?)
+
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 

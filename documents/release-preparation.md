@@ -55,9 +55,6 @@
     - [ ] documents/roadmap.md
     - [ ] documents/pages/index.html
     - [ ] documents/tutorial/annalist-tutorial.adoc
-    - [ ] src/newkit_to_annalist_net.sh
-    - [ ] src/newkit_to_annalist_dev.sh
-    - [ ] src/newkit_to_conina_ubuntu.sh
     - [ ] Docker build scripts and makefiles
 - [ ] Review and update GitHub project README.
 - [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`

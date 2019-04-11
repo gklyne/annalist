@@ -76,11 +76,12 @@ def am_runserver(annroot, userhome, options):
     status = am_errors.AM_SUCCESS
     with ChangeCurrentDir(annroot):
         gunicorn_command = (
-            "gunicorn --workers=1 "+
+            "gunicorn --workers=2 "+
             "    --bind=0.0.0.0:8000 "+
             "    --env DJANGO_SETTINGS_MODULE=%s "%(settings.modulename,)+
             "    --access-logfile %s "%(sitesettings.ACCESS_LOG_PATH,)+
             "    --error-logfile  %s "%(sitesettings.ERROR_LOG_PATH,)+
+            "    --timeout 300 "+
             "    annalist_site.wsgi:application"+
             "")
         log.debug("am_runserver subprocess: %s"%gunicorn_command)

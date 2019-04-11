@@ -95,14 +95,16 @@ class CollectionVocabCacheTest(AnnalistTestCase):
         return
 
     def test_singleton_cache(self):
+        # Test that cached values are shared between different instantiations
+        # of the same collection.
         foo = self.vocabcache.get_vocab(self.testcoll1_a, "vocab2")
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab2"), None)
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_b, "vocab2"), None)
         self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_a)], [])
         self.create_vocab_record(self.testcoll1_a, self.vocab1)
         # NOTE: the 'set_vocab' call also causes cache initialization of all vocabs, 
-        # including the created vocab record which is discovered on disk, and the subsequent 
-        # set_vocab call returns 'False'.
+        # including the created vocab record which is discovered on disk, and the 
+        # subsequent set_vocab call returns 'False'.
         self.assertFalse(self.vocabcache.set_vocab(self.testcoll1_a, self.vocab1))
         self.assertFalse(self.vocabcache.set_vocab(self.testcoll1_b, self.vocab1))
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab1").get_uri(), "test:vocab1")

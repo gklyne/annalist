@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
+ANNALIST_VER=$(annalist-manager version)
+
 python setup.py build sdist
 scp -i ~/.ssh/id_rsa_openstack_gk \
-    dist/Annalist-0.5.14.tar.gz  annalist@conina-ubuntu:
+    dist/Annalist-${ANNALIST_VER}.tar.gz  annalist@conina-ubuntu:
 

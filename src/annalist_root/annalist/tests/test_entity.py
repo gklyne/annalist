@@ -29,7 +29,6 @@ from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 from .init_tests import (
-    copySitedata,
     init_annalist_test_site, init_annalist_test_coll, resetSitedata
     )
 
