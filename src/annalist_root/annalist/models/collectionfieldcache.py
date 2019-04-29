@@ -24,7 +24,7 @@ from annalist.models.recordfield            import RecordField
 
 #   ---------------------------------------------------------------------------
 # 
-#   Type-cache object class
+#   Field-cache object class
 # 
 #   ---------------------------------------------------------------------------
 
@@ -132,6 +132,16 @@ class CollectionFieldCacheObject(CollectionEntityCacheObject):
             st = self.get_entity_from_uri(coll, st_uri)
             if st:
                 yield st
+        return
+
+    def remove_cache(self):
+        """
+        Close down and release all collection field cache data
+        """
+        log.debug("@@@@remove field cache %r"%(self.get_coll_id(),))
+        super(CollectionFieldCacheObject, self).remove_cache()
+        self._superproperty_closure.remove_cache()
+        self._superproperty_closure = None
         return
 
 #   ---------------------------------------------------------------------------

@@ -76,7 +76,7 @@ def am_runserver(annroot, userhome, options):
     status = am_errors.AM_SUCCESS
     with ChangeCurrentDir(annroot):
         gunicorn_command = (
-            "gunicorn --workers=2 "+
+            "gunicorn --workers=1 --threads=2 "+
             "    --bind=0.0.0.0:8000 "+
             "    --env DJANGO_SETTINGS_MODULE=%s "%(settings.modulename,)+
             "    --access-logfile %s "%(sitesettings.ACCESS_LOG_PATH,)+

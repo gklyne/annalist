@@ -28,7 +28,7 @@ from annalist.models.recordtype             import RecordType
 # 
 #   ---------------------------------------------------------------------------
 
-supertype_closure_cache = {}
+#@@@ supertype_closure_cache = {}
 
 class CollectionTypeCacheObject(CollectionEntityCacheObject):
     """
@@ -45,11 +45,12 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         coll_id         Collection id with which the type cache is associated.
         """
         super(CollectionTypeCacheObject, self).__init__(coll_id, entity_cls)
-        supertype_closure_cache[coll_id] = ClosureCache(coll_id, ANNAL.CURIE.supertype_uri)
+        #@@@ supertype_closure_cache[coll_id] 
+        self._supertype_closure_cache = ClosureCache(coll_id, ANNAL.CURIE.supertype_uri)
         return
 
-    def supertype_cache(self):
-        return supertype_closure_cache.get(self.get_coll_id(), None)
+    def _gsupertype_cache(self):
+        return self._supertype_closure_cache #@@@ supertype_closure_cache.get(self.get_coll_id(), None)
 
     def _load_entity(self, coll, type_entity):
         """
@@ -67,7 +68,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
             # Add relations for supertype references from the new type URI
             for supertype_obj in type_data.get(ANNAL.CURIE.supertype_uri, []):
                 supertype_uri = supertype_obj["@id"]
-                self.supertype_cache().add_rel(type_uri, supertype_uri)
+                self._gsupertype_cache().add_rel(type_uri, supertype_uri)
             # Also add relations for references *to* the new type URI
             for try_subtype in self.get_all_entities(coll):
                 sub_st_objs = try_subtype.get(ANNAL.CURIE.supertype_uri, [])
@@ -75,7 +76,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
                 if type_uri in sub_st_uris:
                     subtype_uri = try_subtype.get(ANNAL.CURIE.uri, None)
                     if subtype_uri:
-                        self.supertype_cache().add_rel(subtype_uri, type_uri)
+                        self._gsupertype_cache().add_rel(subtype_uri, type_uri)
         return add_type
 
     def _drop_entity(self, coll, type_id):
@@ -88,7 +89,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         type_entity = super(CollectionTypeCacheObject, self)._drop_entity(coll, type_id)
         if type_entity:
             type_uri = type_entity.get_uri()
-            self.supertype_cache().remove_val(type_uri)
+            self._gsupertype_cache().remove_val(type_uri)
         return type_entity
 
     def get_type_uri_supertype_uris(self, type_uri):
@@ -98,7 +99,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         Returns all supertype URIs, even those for which there 
         is no defined type entity.
         """
-        return self.supertype_cache().fwd_closure(type_uri)
+        return self._gsupertype_cache().fwd_closure(type_uri)
 
     def get_type_uri_subtype_uris(self, type_uri):
         """
@@ -107,7 +108,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         Returns all subtype URIs, even those for which there 
         is no defined type entity.
         """
-        return self.supertype_cache().rev_closure(type_uri)
+        return self._gsupertype_cache().rev_closure(type_uri)
 
     def get_type_uri_supertypes(self, coll, type_uri):
         """
@@ -137,11 +138,14 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
 
     def remove_cache(self):
         """
-        Close down and release all entity cache data
+        Close down and release all type cache data
         """
         log.debug("@@@@remove type cache %r"%(self.get_coll_id(),))
         super(CollectionTypeCacheObject, self).remove_cache()
-        supertype_closure_cache.pop(self.get_coll_id(), None)
+        self._supertype_closure_cache.remove_cache()
+        self._supertype_closure_cache = None
+        #@@@ c = supertype_closure_cache.pop(self.get_coll_id(), None)
+        #@@@ c.flush()
         return
 
 #   ---------------------------------------------------------------------------

@@ -4,8 +4,9 @@
 
 # Note: limit to 1 worker process because of data caching and cache invalidation.
 # @@TODO: figure out how to make caches work properly with multiple workers.
+# @@Still working on that, but for testing use 2 threads to avoid deadlock
 
-gunicorn --workers=1 \
+gunicorn --workers=1 --threads=2 \
     --bind=0.0.0.0:8000 \
     --env DJANGO_SETTINGS_MODULE=annalist_site.settings.personal \
     --env OAUTHLIB_INSECURE_TRANSPORT=1 \

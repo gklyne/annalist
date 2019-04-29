@@ -6,12 +6,12 @@ This module provides an object cacheing framework for arbitrary Python values.
 The intent is thatall cacghe logic can be isolated, and may be re-implemented
 using a network cache faclity such as MemCache or Redis.
 
-The present implementation assumes a multi-threaded environment and interlocks
-cache accesses to avoid possible cache-related race conditions.
+The present implementation assumes a single-process, multi-threaded environment
+and interlocks cache accesses to avoid possible cache-related race conditions.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
-__copyright__   = "Copyright 2017, G. Klyne"
+__copyright__   = "Copyright 2019, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import logging
@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 import sys
 import traceback
 import threading
+import contextlib
 
 from annalist.exceptions            import Annalist_Error
 
@@ -47,29 +48,6 @@ globalcachelock  = threading.Lock() # Used to interlock creation/deletion of cac
 objectcache_dict = {}               # Initial empty set of object caches
 objectcache_tb   = {}
 
-def make_cache_unused_(cachekey):
-    """
-    This function creates an object cache.
-
-    cachekey    is a hashable value that uniquely identifies the required cache
-                (e.g. a string or URI).
-
-    Returns the created cache object.
-    """
-    with globalcachelock:
-        try:
-            if cachekey in objectcache_dict:
-                raise Cache_Error(cachekey, msg="Cache already exists")
-            objectcache_dict[cachekey] = ObjectCache(cachekey)
-            objectcache_tb[cachekey]   = traceback.extract_stack()
-            objectcache = objectcache_dict[cachekey]    # Copy value while lock acquired
-        except Exception as e:
-            print("@@@@ Cache already exists", file=sys.stderr)
-            print("".join(traceback.format_list(objectcache_tb[cachekey])), file=sys.stderr)
-            print("@@@@", file=sys.stderr)
-            raise
-    return objectcache
-
 def get_cache(cachekey):
     """
     This function locates or creates an object cache.
@@ -92,7 +70,7 @@ def remove_cache(cachekey):
     cachekey    is a hashable value that uniquely identifies the required cache
                 (e.g. a string or URI).
     """
-    log.debug("@@@@ remove_cache %r"%(cachekey,))
+    log.debug("objectcache.remove_cache %r"%(cachekey,))
     objectcache = None
     with globalcachelock:
         if cachekey in objectcache_dict:
@@ -103,6 +81,31 @@ def remove_cache(cachekey):
     if objectcache:
         objectcache.close()
     return
+
+# ===== @@@Unused functions follow; eventually, remove these? ====
+
+def make_cache_unused_(cachekey):
+    """
+    This function creates an object cache.
+
+    cachekey    is a hashable value that uniquely identifies the required cache
+                (e.g. a string or URI).
+
+    Returns the created cache object.
+    """
+    with globalcachelock:
+        try:
+            if cachekey in objectcache_dict:
+                raise Cache_Error(cachekey, msg="Cache already exists")
+            objectcache_dict[cachekey] = ObjectCache(cachekey)
+            objectcache_tb[cachekey]   = traceback.extract_stack()
+            objectcache = objectcache_dict[cachekey]    # Copy value while lock acquired
+        except Exception as e:
+            print("@@@@ Cache already exists", file=sys.stderr)
+            print("".join(traceback.format_list(objectcache_tb[cachekey])), file=sys.stderr)
+            print("@@@@", file=sys.stderr)
+            raise
+    return objectcache
 
 def remove_all_caches_unused_():
     """
@@ -161,6 +164,7 @@ def _find_matching_cache_keys_unused_(match_fn):
 class ObjectCache(object):
     """
     A class for caching objects of some type.
+
     The cache is identified by is cache key value that is used to distinguish 
     a particular object cache from all others (see also `getCache`)
     """
@@ -236,7 +240,45 @@ class ObjectCache(object):
             value = self._cache.pop(key, default)
         return value
 
-    def find(self, key, load_fn, seed_value):
+    @contextlib.contextmanager
+    def access(self, *keys):
+        """
+        A context manager for interlocked access to a cached value.
+
+        The value bound by the context manager (for a 'with ... as' assignment) is a
+        dictionary that has entries for each of the valuyes in the supplied key values
+        for which there is a previously cached value.
+
+        On exit from the context manager, if the value under any of the given keys has 
+        been changed, or if any new entries have been added, they are used to update the 
+        cached values before the interlock is released.
+
+        Use like this:
+
+            with cacheobject.access("key1", "key2", ...) as value:
+                # value is dict of cached values for given keys
+                # interlocked processing code here
+                # updates to value are written back to cache on leavinbg context
+
+        See: https://docs.python.org/2/library/contextlib.html
+        """
+        with self._cachelock:
+            value_dict = {}
+            for key in keys:
+                if key in self._cache:
+                    value_dict[key] = self._cache[key]
+            yield value_dict
+            for key in value_dict:
+                self._cache[key] = value_dict[key]
+            # If needed: this logic removes keys deleted by yield code...
+            # for key in keys:
+            #     if key not in value_dict:
+            #         del self._cache[key]
+        return
+
+    # ===== @@@ UNUSED - remove this in due course =====
+
+    def find_unused_(self, key, load_fn, seed_value):
         """
         Returns cached value for key, or calls the supplied function to obtain a 
         value, and caches and returns that value.
@@ -246,7 +288,8 @@ class ObjectCache(object):
             (False, old-value)
 
         If a previously-cached value is not present, the function is called with 
-        the supplied "seed_value" as a parameter, and the return value is:
+        the supplied "seed_value" as a parameter, the resuling value is cached under
+        the supplied key, and the return value is:
 
             (True, new-value)
         """

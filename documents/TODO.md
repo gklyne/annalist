@@ -32,6 +32,17 @@ See also: https://www.divio.com/en/blog/documentation/
         - YES: raising the worker count to 2 fixes the problem, which (pretty much) confirms the deadlock hypothesis
         - Need to think again about caching and cache invalidation.
         - See: documents/notes/20190327-threading-caching-notes.md
+- [x] Redesign entity cache to use single cache API thread-safe mechanisms
+- [x] Redesign closure cache to use single cache API thread-safe mechanisms
+- [ ] Generate warning if namespace URI doesn't end with "/" or "#"
+- [ ] From "List entities with type information", click on entry views using form for type, but checkbox + "edit" presents default entity view.
+- [ ] Consider removing "required" option for entity references.
+- [ ] Define arbitrary entity ref renderer in core data (renders label as link) 
+    - use entity_id renderer with rdfs:label property
+- [ ] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.
+    - I think the problem here is that the gunicorn process is peridoically restarted, resulting in regeneration of the secret key used for keyng session data, CSRF and more.
+    - A solution might be to make the session key randomization seeded by (say) the current date, so that session data can remain valiud across server restarts.  Alternatively, generate a single seed value at server start time, and keep this in the shared cache.
+    - May need some investigation of Django - I'm assuming the session state is linked to the CSRF key.
 
 - [x] BUG: Apache sample configurations as provided work with Apache 2.2.
     - Updated to work with Apache 2.4, with older directives left as comments.

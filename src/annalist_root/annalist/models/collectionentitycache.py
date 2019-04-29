@@ -142,12 +142,23 @@ class CollectionEntityCacheObject(object):
             entity_uri    = entity.get_uri()
         entity_parent = entity.get_parent().get_id()
         entity_data   = entity.get_save_values()
-        def _load_entity_data(old_value):
-            # Update other caches while _entities_by_id lock is acquired
-            self._entity_ids_by_uri.set(entity_uri, entity_id)
-            self._entity_ids_by_scope.flush()
-            return {"parent_id": entity_parent, "data": entity_data}
-        add_entity, _ = self._entities_by_id.find(entity_id, _load_entity_data, None)
+        #@@TODO: remove this
+        # def _load_entity_data(old_value):
+        #     # Update other caches while _entities_by_id lock is acquired
+        #     self._entity_ids_by_uri.set(entity_uri, entity_id)
+        #     self._entity_ids_by_scope.flush()
+        #     return {"parent_id": entity_parent, "data": entity_data}
+        # add_entity, _ = self._entities_by_id.find(entity_id, _load_entity_data, None)
+        #@@
+        add_entity = False
+        with self._entities_by_id.access(entity_id) as es:
+            if entity_id not in es:
+                # Update cache via context handler
+                es[entity_id] = {"parent_id": entity_parent, "data": entity_data}
+                # Update other caches while _entities_by_id lock is acquired
+                self._entity_ids_by_uri.set(entity_uri, entity_id)
+                self._entity_ids_by_scope.flush()
+                add_entity = True
         return add_entity
 
     def _load_entities(self, coll):
@@ -254,16 +265,31 @@ class CollectionEntityCacheObject(object):
         NOTE: this method returns only those entity ids for which a record has
         been saved to the collection data storage.
         """
-        def get_scope_ids(scope_entity_ids=[]):
-            # Collect entity ids for named scope
-            for entity_id in coll._children(self._entity_cls, altscope=altscope):
-                if entity_id != layout.INITIAL_VALUES_ID:
-                    scope_entity_ids.append(entity_id)
-            return scope_entity_ids
+        #@@TODO: remove this
+        # def get_scope_ids(scope_entity_ids=[]):
+        #     # Collect entity ids for named scope
+        #     for entity_id in coll._children(self._entity_cls, altscope=altscope):
+        #         if entity_id != layout.INITIAL_VALUES_ID:
+        #             scope_entity_ids.append(entity_id)
+        #     return scope_entity_ids
+        # self._load_entities(coll)
+        # scope_name = altscope or "coll"     # 'None' designates collection-local scope
+        # _, entity_ids = self._entity_ids_by_scope.find(scope_name, get_scope_ids, [])
+        #@@
         self._load_entities(coll)
         scope_name = altscope or "coll"     # 'None' designates collection-local scope
-        _, entity_ids = self._entity_ids_by_scope.find(scope_name, get_scope_ids, [])
-        return entity_ids
+        scope_entity_ids = []
+        with self._entity_ids_by_scope.access(scope_name) as eids:
+            if scope_name in eids:
+                scope_entity_ids = eids[scope_name]
+            else:
+                # Collect entity ids for named scope
+                for entity_id in coll._children(self._entity_cls, altscope=altscope):
+                    if entity_id != layout.INITIAL_VALUES_ID:
+                        scope_entity_ids.append(entity_id)
+                # Update cache via context manager
+                eids[scope_name] = scope_entity_ids
+        return scope_entity_ids
 
     def get_all_entities(self, coll, altscope=None):
         """
