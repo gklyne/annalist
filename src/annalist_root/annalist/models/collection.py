@@ -610,7 +610,7 @@ class Collection(Entity):
         view_id   = self.get(ANNAL.CURIE.default_view_id,     None)
         type_id   = self.get(ANNAL.CURIE.default_view_type,   None)
         entity_id = self.get(ANNAL.CURIE.default_view_entity, None)
-        log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
+        # log.info("Collection.get_default_view: %s/%s/%s"%(view_id, type_id, entity_id))
         return (view_id, type_id, entity_id) 
 
     # Record lists
@@ -848,7 +848,7 @@ class Collection(Entity):
         if flags and ("nocontext" in flags):
             # Skip processing if "nocontext" flag provided
             return
-        log.info("Generating context for collection %s"%(self.get_id()))
+        # log.info("Generating context for collection %s"%(self.get_id()))
         # Build context data
         context      = self.get_coll_jsonld_context()
         datetime_now = datetime.datetime.today().replace(microsecond=0)
@@ -935,7 +935,15 @@ class Collection(Entity):
             vid = v.get_id()
             if vid != layout.INITIAL_VALUES_ID:
                 if ANNAL.CURIE.uri in v:
-                    context[v.get_id()] = v[ANNAL.CURIE.uri]
+                    vuri = v[ANNAL.CURIE.uri]
+                    if vuri[-1] not in {":", "/", "?", "#"}:
+                        msg  = (
+                            "Vocabulary %s namespace URI %s does not end with an expected delimiter"%
+                            (vid, vuri)
+                            )
+                        log.warning(msg)
+                        errs.append(msg)
+                    context[vid] = v[ANNAL.CURIE.uri]
         # Scan view fields and generate context data for property URIs used
         for v in self.child_entities(RecordView, altscope="all"):
             view_fields = v.get(ANNAL.CURIE.view_fields, [])

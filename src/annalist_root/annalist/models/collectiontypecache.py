@@ -140,12 +140,10 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         """
         Close down and release all type cache data
         """
-        log.debug("@@@@remove type cache %r"%(self.get_coll_id(),))
+        # log.debug("@@@@remove type cache %r"%(self.get_coll_id(),))
         super(CollectionTypeCacheObject, self).remove_cache()
         self._supertype_closure_cache.remove_cache()
         self._supertype_closure_cache = None
-        #@@@ c = supertype_closure_cache.pop(self.get_coll_id(), None)
-        #@@@ c.flush()
         return
 
 #   ---------------------------------------------------------------------------

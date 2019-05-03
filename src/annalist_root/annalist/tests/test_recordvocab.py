@@ -401,9 +401,10 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         # Test view rendering
         # This checks for namespace prefix expansion in URL links.
         # Add test namespace
-        vocab_id     = "test_vocab"
-        vocab_curie  = "annal:test_vocab"
         annal_uri    = ANNAL.mk_uri("")
+        vocab_id     = "test_vocab"
+        vocab_curie  = "annal:"+vocab_id+"#"
+        vocab_uri    = annal_uri+vocab_id+"#"
         vocab_entity = RecordVocab.create(
             self.testcoll, vocab_id, 
             recordvocab_create_values(vocab_id=vocab_id, vocab_uri=vocab_curie)
@@ -423,8 +424,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             rendered_comment=markdown.markdown(apply_substitutions(r.context, default_comment)),
             vocab_id=vocab_id,
             vocab_curie=vocab_curie,
-            vocab_uri=annal_uri+vocab_id,
-            urie=annal_uri+vocab_id,
+            vocab_uri=vocab_uri,
             )
         formrow1 = """
             <div class="small-12 medium-6 columns">
@@ -438,20 +438,6 @@ class RecordVocabEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """%field_vals(width=6)
-
-            #           <div class="small-12 medium-6 columns">
-            #   <div class="row view-value-row">
-            #     <div class="view-label small-12 medium-4 columns">
-            #       <span>Prefix</span>
-            #     </div>
-            #     <div class="view-value small-12 medium-8 columns">
-            # <a href="/testsite/c/testcoll/d/_vocab/test_vocab/
-            # ?continuation_url=/testsite/c/testcoll/v/Vocab_view/_vocab/test_vocab/!view">test_vocab</a>
-            #     </div>
-            #   </div>
- 
-
-
         formrow2 = """
             <div class="small-12 columns">
               <div class="row view-value-row">
@@ -626,7 +612,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self.assertFalse(RecordVocab.exists(self.testcoll, "newvocab"))
         f = vocab_view_form_data(
             vocab_id="newvocab", action="new",
-            vocab_uri="test:newvocab",
+            vocab_uri="test:newvocab#",
             update="RecordVocab"
             )
         u = entitydata_edit_url("new", "testcoll", layout.VOCAB_TYPEID, view_id="Vocab_view")
@@ -637,7 +623,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
-        self._check_record_vocab_values("newvocab", update="RecordVocab", vocab_uri="test:newvocab")
+        self._check_record_vocab_values("newvocab", update="RecordVocab", vocab_uri="test:newvocab#")
         return
 
     def test_post_new_vocab_cancel(self):
@@ -700,7 +686,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             vocab_id="copyvocab", 
             orig_id="annal", orig_coll="_annalist_site", action="copy", 
             update="RecordVocab",
-            vocab_uri=" test:copyvocab "  # Tests space stripping
+            vocab_uri=" test:copyvocab# "  # Tests space stripping
             )
         u = entitydata_edit_url(
             "copy", "testcoll", layout.VOCAB_TYPEID, entity_id="annal", view_id="Vocab_view"
@@ -711,7 +697,7 @@ class RecordVocabEditViewTest(AnnalistTestCase):
         self.assertEqual(r.content,       b"")
         self.assertEqual(r['location'],   self.continuation_url)
         # Check that new record type exists
-        self._check_record_vocab_values("copyvocab", update="RecordVocab", vocab_uri="test:copyvocab")
+        self._check_record_vocab_values("copyvocab", update="RecordVocab", vocab_uri="test:copyvocab#")
         return
 
     def test_post_copy_vocab_cancel(self):

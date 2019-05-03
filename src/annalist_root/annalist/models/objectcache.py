@@ -70,7 +70,7 @@ def remove_cache(cachekey):
     cachekey    is a hashable value that uniquely identifies the required cache
                 (e.g. a string or URI).
     """
-    log.debug("objectcache.remove_cache %r"%(cachekey,))
+    # log.debug("objectcache.remove_cache %r"%(cachekey,))
     objectcache = None
     with globalcachelock:
         if cachekey in objectcache_dict:
@@ -111,11 +111,11 @@ def remove_all_caches_unused_():
     """
     This function removes all caches from the set of object caches
     """
-    log.debug("@@@@ remove_all_caches")
+    # log.debug("@@@@ remove_all_caches")
     objectcaches = []
     with globalcachelock:
         for cachekey in objectcache_dict.keys():
-            log.debug("@@@@ remove_all_caches %r"%(cachekey,))
+            # log.debug("@@@@ remove_all_caches %r"%(cachekey,))
             objectcaches.append(objectcache_dict[cachekey])
             del objectcache_dict[cachekey]
     # Defer operations that acquire the cache local lock until 
@@ -170,7 +170,7 @@ class ObjectCache(object):
     """
 
     def __init__(self, cachekey):
-        log.debug("ObjectCache.__init__: cachekey %r"%(cachekey,))
+        # log.debug("ObjectCache.__init__: cachekey %r"%(cachekey,))
         self._cachekey  = cachekey
         self._cachelock = threading.Lock()  # Allocate a lock object for this cache
         self._cache     = {}                # Initial empty set of values
@@ -188,7 +188,7 @@ class ObjectCache(object):
         """
         Remove all objects from cache.
         """
-        log.debug("ObjectCache.flush: cachekey %r"%(self._cachekey,))
+        # log.debug("ObjectCache.flush: cachekey %r"%(self._cachekey,))
         with self._cachelock:
             for key in self._cache.keys():
                 del self._cache[key]
@@ -198,7 +198,7 @@ class ObjectCache(object):
         """
         Close down this cache object.  Once closed, it cannot be used again.
         """
-        log.debug("ObjectCache.close: cachekey %r"%(self._cachekey,))
+        # log.debug("ObjectCache.close: cachekey %r"%(self._cachekey,))
         self.flush()
         self._cachelock = None              # Discard lock object
         self._closed    = traceback.extract_stack()
@@ -293,7 +293,7 @@ class ObjectCache(object):
 
             (True, new-value)
         """
-        log.debug("ObjectCache.find: cachekey %r, key %r"%(self._cachekey, key))
+        # log.debug("ObjectCache.find: cachekey %r, key %r"%(self._cachekey, key))
         with self._cachelock:
             if key in self._cache:
                 old_value = self._cache[key]

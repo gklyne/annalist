@@ -356,10 +356,10 @@ class CollectionEntityCache(object):
         Local helper returns a cache object for the site-wide entities
         """
         if layout.SITEDATA_ID not in coll_cache_by_type_id_coll_id[self._type_id]:
-            log.info(
-                "CollectionEntityCache: creating %s cache for collection %s"%
-                (self._type_id, layout.SITEDATA_ID)
-                )
+            # log.info(
+            #     "CollectionEntityCache: creating %s cache for collection %s"%
+            #     (self._type_id, layout.SITEDATA_ID)
+            #     )
             # Create and save new cache object
             site_cache = self._cache_cls(layout.SITEDATA_ID, self._entity_cls)
             coll_cache_by_type_id_coll_id[self._type_id][layout.SITEDATA_ID] = site_cache
@@ -374,15 +374,15 @@ class CollectionEntityCache(object):
         coll        is a collection object for which a cache object is obtained
         """
         coll_id = coll.get_id()
-        log.info(
-            "CollectionEntityCache: get %s cache for collection %s"%
-            (self._type_id, coll_id)
-            )
+        # log.info(
+        #     "CollectionEntityCache: get %s cache for collection %s"%
+        #     (self._type_id, coll_id)
+        #     )
         if coll_id not in coll_cache_by_type_id_coll_id[self._type_id]:
-            log.info(
-                "CollectionEntityCache: creating %s cache for collection %s"%
-                (self._type_id, coll_id)
-                )
+            # log.debug(
+            #     "CollectionEntityCache: creating %s cache for collection %s"%
+            #     (self._type_id, coll_id)
+            #     )
             # Create and save new cache object
             coll_cache = self._cache_cls(coll_id, self._entity_cls)
             coll_cache.set_site_cache(self._get_site_cache())
@@ -401,10 +401,10 @@ class CollectionEntityCache(object):
         cache   = coll_cache_by_type_id_coll_id[self._type_id].pop(coll_id, None)
         if cache:
             cache.remove_cache()
-            log.info(
-                "CollectionEntityCache: flushed %s cache for collection %s"%
-                (self._type_id, coll_id)
-                )
+            # log.info(
+            #     "CollectionEntityCache: flushed %s cache for collection %s"%
+            #     (self._type_id, coll_id)
+            #     )
             return True
         return False
 
@@ -419,20 +419,12 @@ class CollectionEntityCache(object):
         #     )
         caches = coll_cache_by_type_id_coll_id[self._type_id]
         coll_cache_by_type_id_coll_id[self._type_id] = {}
-        log.info(
-            "CollectionEntityCache: flushing %s cache for collections %r"%
-            (self._type_id, caches.keys())
-            )
+        # log.info(
+        #     "CollectionEntityCache: flushing %s cache for collections %r"%
+        #     (self._type_id, caches.keys())
+        #     )
         for coll_id in caches:
             caches[coll_id].remove_cache()
-            log.info(
-                "CollectionEntityCache: flushed %s cache for collection %s"%
-                (self._type_id, coll_id)
-                )
-        log.info(
-            "CollectionEntityCache: flushed %s cache for all collections"%
-            (self._type_id,)
-            )
         return
 
     # Collection cache allocation and access methods

@@ -138,7 +138,7 @@ class CollectionFieldCacheObject(CollectionEntityCacheObject):
         """
         Close down and release all collection field cache data
         """
-        log.debug("@@@@remove field cache %r"%(self.get_coll_id(),))
+        # log.debug("@@@@remove field cache %r"%(self.get_coll_id(),))
         super(CollectionFieldCacheObject, self).remove_cache()
         self._superproperty_closure.remove_cache()
         self._superproperty_closure = None

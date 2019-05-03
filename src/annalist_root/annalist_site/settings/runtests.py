@@ -111,7 +111,7 @@ LOGGING = {
         #  },
         'annalist': {
             'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'django': {

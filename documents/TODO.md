@@ -30,10 +30,10 @@ See also: https://www.divio.com/en/blog/documentation/
         - See: documents/notes/20190327-threading-caching-notes.md
 - [x] Redesign entity cache to use single cache API thread-safe mechanisms
 - [x] Redesign closure cache to use single cache API thread-safe mechanisms
-- [ ] Generate warning if namespace URI doesn't end with "/" or "#"
-- [ ] From "List entities with type information", click on entry views using form for type, but checkbox + "edit" presents default entity view.
-- [.] Define arbitrary entity ref renderer in core data (renders label as link) 
-    - use entity_id renderer with rdfs:label property
+- [x] Generate warning if namespace URI doesn't end with "/" or "#"
+    - (kind-of half-hearted check for now as part of JSON-LD context generation)
+- [x] Define arbitrary entity ref renderer in core data (renders label as link) 
+    - use entity_id renderer with rdfs:label pro
 - [x] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.
     - I think the problem here is that the gunicorn process is peridoically restarted, resulting in regeneration of the secret key used for keyng session data, CSRF and more.
     - When running Annalist under gunicorn, add ANNALIST_KEY environment variable to prime SECRET_KEY.
@@ -49,6 +49,10 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Provide initial content for the links in the page footer.
     - This information can be edited locally.
     - Copies of the initial data are kept separately.
+
+- [ ] From "List entities with type information", click on entry views using form for type, but checkbox + "edit" presents default entity view.
+    - This appears to be because the links are generated from te entity data, hence hace access to the actual entity type.  But the edit button works from form data, and only has list type information?
+    - Investigate?
 
 (Sub-release?)
 
@@ -80,6 +84,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] entityedit view handling: provide way for postprocessing hook to provide completion message/warning.  (How do tasks do this?)  Initial use is vocabulary namespace URI checking (currently handled in context generation).
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [x] Automated test suite for annalist_manager

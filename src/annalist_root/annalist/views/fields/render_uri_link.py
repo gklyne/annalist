@@ -64,7 +64,7 @@ class uri_link_view_renderer(object):
         Render link for viewing.
         """
         linkval = URILinkValueMapper.encode(get_field_view_value(context, ""))
-        log.info("uri_link_view_renderer: linkval %r (orig)"%(linkval,))
+        # log.info("uri_link_view_renderer: linkval %r (orig)"%(linkval,))
         common_prefixes = (
             [ "http://", "https://"
             , "file:///", "file://localhost/", "file://"
@@ -93,7 +93,7 @@ class uri_link_view_renderer(object):
                 link_vocab = context["collection"].cache_get_vocab(link_pref)
                 if link_vocab:
                     linkval = link_vocab.get_uri() + link_path
-        log.info("uri_link_view_renderer: linkval %r (final)"%(linkval,))
+        # log.info("uri_link_view_renderer: linkval %r (final)"%(linkval,))
         return '''<a href="%s" target="_blank">%s</a>'''%(linkval, textval)
 
 class uri_link_edit_renderer(object):
