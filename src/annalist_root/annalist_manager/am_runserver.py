@@ -79,6 +79,7 @@ def am_runserver(annroot, userhome, options):
             "gunicorn --workers=1 --threads=2 "+
             "    --bind=0.0.0.0:8000 "+
             "    --env DJANGO_SETTINGS_MODULE=%s "%(settings.modulename,)+
+            "    --env ANNALIST_KEY=%s "%(sitesettings.SECRET_KEY,)+
             "    --access-logfile %s "%(sitesettings.ACCESS_LOG_PATH,)+
             "    --error-logfile  %s "%(sitesettings.ERROR_LOG_PATH,)+
             "    --timeout 300 "+

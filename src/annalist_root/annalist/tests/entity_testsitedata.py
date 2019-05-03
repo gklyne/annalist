@@ -285,6 +285,7 @@ site_defined_entity_fields = (
     , FieldChoice("_field/Entity_comment",             label="Comment"          )
     , FieldChoice("_field/Entity_id",                  label="Id"               )
     , FieldChoice("_field/Entity_label",               label="Label"            )
+    , FieldChoice("_field/Entity_ref",                 label="Entity ref"       )
     , FieldChoice("_field/Entity_see_also",            label="See also"         )
     , FieldChoice("_field/Entity_see_also_r",          label="See also"         )
     , FieldChoice("_field/Entity_type",                label="Type"             )

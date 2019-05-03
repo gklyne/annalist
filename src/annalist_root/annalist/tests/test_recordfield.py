@@ -1688,6 +1688,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 label="Label", 
                 link=entity_url("testcoll", "_field", "Entity_label")
                 )
+            , FieldChoice("_field/Entity_ref",
+                label="Entity ref", 
+                link=entity_url("testcoll", "_field", "Entity_ref")
+                )
             , FieldChoice("_field/Entity_see_also_r",
                 label="See also",
                 link=entity_url("testcoll", "_field", "Entity_see_also_r")
@@ -1779,6 +1783,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
                 label="Label", 
                 link=entity_url("testcoll", "_field", "Entity_label")
                 )
+            , FieldChoice("_field/Entity_ref",
+                label="Entity ref", 
+                link=entity_url("testcoll", "_field", "Entity_ref")
+                )
             , FieldChoice("_field/Entity_see_also", 
                 label="Link to further information", 
                 link=entity_url("testcoll", "_field", "Entity_see_also")
@@ -1868,6 +1876,10 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , FieldChoice("_field/Entity_label",
                 label="Label", 
                 link=entity_url("testcoll", "_field", "Entity_label")
+                )
+            , FieldChoice("_field/Entity_ref",
+                label="Entity ref", 
+                link=entity_url("testcoll", "_field", "Entity_ref")
                 )
             , FieldChoice("_field/Entity_see_also_r",
                 label="See also",

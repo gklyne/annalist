@@ -1030,6 +1030,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Entity_comment",            ["Entity_comment",    "Markdown rich text", "annal:Richtext"     ] ]
             , [ "_field/Entity_id",                 ["Entity_id",         "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Entity_label",              ["Entity_label",      "Short text",     "annal:Text"             ] ]
+            , [ "_field/Entity_ref",                ["Entity_ref",        "Entity Id",      "annal:EntityRef"        ] ]
             , [ "_field/Entity_see_also",           ["Entity_see_also",   "Web link",       "rdfs:Resource"          ] ]
             , [ "_field/Entity_see_also_r",         ["Entity_see_also_r", "Field group set as table", 
                                                                                         "annal:Entity_see_also_list" ] ]

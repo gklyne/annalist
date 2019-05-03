@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Entity_ref"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Entity_ref"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_ref"
+, "rdfs:label":                 "Entity ref"
+, "rdfs:comment":               "# Entity reference\r\n\r\nRenders a view of an entity reference that uses the entity label hyperlinked to the entity itself.\r\n\r\nThis field would typically be used in a multi-field view of a selected entity as an alternative to using an `Entity_id` field."
+, "annal:field_name":           "entity_ref"
+, "annal:field_render_type":    "_enum_render_type/EntityId"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:placeholder":          "(entity ref)"
+, "annal:tooltip":              "An entity reference, presenting a view of the entity label hyperlinked to the entity."
+, "annal:property_uri":         "rdfs:label"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

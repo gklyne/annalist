@@ -84,7 +84,7 @@ from .entity_testsitedata import (
     get_site_schema_types, get_site_schema_types_sorted, get_site_schema_types_linked,
     get_site_schema_lists, get_site_schema_lists_sorted, get_site_schema_lists_linked,
     )
-from .entity_testlistdata import recordlist_url
+from .entity_testlistdata import recordlist_url, num_testcoll_inherit_entities_scope_all
 
 #   -----------------------------------------------------------------------------
 #
@@ -180,10 +180,10 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(f2.field_id, 'Entity_label')
         # Entities and bound fields
         entities = context_list_entities(r.context)
-        if len(entities) != 237:
+        if len(entities) != num_testcoll_inherit_entities_scope_all:
             for e in entities:
                 log.debug("All entities: %s/%s"%(e['annal:type_id'], e['annal:id']))
-        self.assertEqual(len(entities), 237)    # Will change with site data
+        self.assertEqual(len(entities), num_testcoll_inherit_entities_scope_all)    # Will change with site data
         return
 
     def test_get_types_scope_all_list(self):

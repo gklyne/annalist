@@ -163,6 +163,7 @@ class FieldRenderingTest(FieldRendererTestSupport):
                   , FieldChoice(id="_field/Entity_comment",     label="Comment")
                   , FieldChoice(id="_field/Entity_id",          label="Id")
                   , FieldChoice(id="_field/Entity_label",       label="Label")
+                  , FieldChoice(id="_field/Entity_ref",         label="Entity ref")
                   , FieldChoice(id="_field/Entity_see_also_r",  label="See also")
                   , FieldChoice(id="_field/Entity_type",        label="Type")
                   , FieldChoice(id="_field/Entity_uri",         label="Entity URI")

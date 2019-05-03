@@ -102,7 +102,10 @@ from .entity_testsitedata import (
     get_site_field_types, get_site_field_types_sorted, 
     get_site_entities, get_site_entities_sorted,  
     )
-from .entity_testlistdata import recordlist_url
+from .entity_testlistdata import (
+    recordlist_url, 
+    num_testcoll_enumerate_all_entities, num_testcoll_all_entities_scope_all
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -179,7 +182,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), 186)    # Will change with site data
+        self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
@@ -302,7 +305,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_all_scope_all_list(self):
-        # List all entities in current collection and site-wiude
+        # List all entities in current collection and site-wide
         # This repeats parts of the previous test but with scope='all'
         u = entitydata_list_all_url(
             "testcoll", list_id="Default_list_all", 
@@ -338,7 +341,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 183)    # Will change with site data
+        self.assertEqual(len(entities), num_testcoll_all_entities_scope_all)    # Will change with site data
         return
 
     def test_get_types_list(self):
