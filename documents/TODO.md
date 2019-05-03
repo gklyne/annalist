@@ -49,6 +49,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Provide initial content for the links in the page footer.
     - This information can be edited locally.
     - Copies of the initial data are kept separately.
+- [x] Update urllib3 version in response to Github-flagged security issue.
 
 - [ ] From "List entities with type information", click on entry views using form for type, but checkbox + "edit" presents default entity view.
     - This appears to be because the links are generated from te entity data, hence hace access to the actual entity type.  But the edit button works from form data, and only has list type information?
