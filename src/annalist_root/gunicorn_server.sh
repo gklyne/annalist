@@ -1,10 +1,10 @@
-# Test script for running Annalisrt using a gunicorn HTTP server rather than
-# the Django development server via via manage.py.  
-# The development server is not recommended for production use.
+# Test script for running Annalist using a gunicorn HTTP server rather than
+# the Django development server via via manage.py.
+# This script is ***not*** for production use.
 
-# Note: limit to 1 worker process because of data caching and cache invalidation.
-# @@TODO: figure out how to make caches work properly with multiple workers.
-# @@Still working on that, but for testing use 2 threads to avoid deadlock
+# Note: needs at least 2 threads to prevent deadlock when retrieving Turtle, 
+# which uses internal HTTP request to access context to parse JSON-LD
+# (This is the RDF library parser, so I can't easily intercept this)
 
 gunicorn --workers=1 --threads=2 \
     --bind=0.0.0.0:8000 \

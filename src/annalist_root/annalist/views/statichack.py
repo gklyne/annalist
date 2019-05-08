@@ -75,4 +75,34 @@ def serve_static(request, path, insecure=False, **kwargs):
         raise
     return static.serve(request, path, document_root=document_root, **kwargs)
 
+def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
+    """
+    Serve static files below a given point in the directory structure or
+    from locations inferred from the staticfiles finders.
+
+    To use, put a URL pattern such as:
+
+        url(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
+                                'annalist.views.statichack.serve_pages`),
+
+    in your URLconf.
+
+    It uses the django.views.static.serve() view to serve the found files.
+    """
+    # log.info("serve_pages %s"%(path))
+    try:
+        page_path = settings.BASE_SITE_DIR+"/c/"+coll_id+"/p/"+page_ref
+        log.info("statichack.serve_pages %s"%(page_path,))
+        normalized_path = posixpath.normpath(unquote(page_path))
+        if not os.path.exists(normalized_path):
+            if page_path.endswith('/') or page_path == '':
+                raise Http404("Directory indexes are not allowed here.")
+            raise Http404("'%s' could not be found" % page_path)
+        document_root, path = os.path.split(normalized_path)
+        # log.info("document_root %s, path %s"%(document_root, path))
+    except Exception as e:
+        log.info(str(e))
+        raise
+    return static.serve(request, path, document_root=document_root, **kwargs)
+
 # End.

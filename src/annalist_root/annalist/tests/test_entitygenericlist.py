@@ -786,7 +786,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view")
+        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u, continuation_url_param(s))
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -799,9 +799,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -814,9 +812,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "copy", "testcoll", "testtype", "entity1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -874,9 +870,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
         c = continuation_url_param(u)
-        v = entitydata_edit_url(
-            "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", layout.FIELD_TYPEID, "field1")
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         return
@@ -888,9 +882,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])

@@ -50,16 +50,15 @@ See also: https://www.divio.com/en/blog/documentation/
     - This information can be edited locally.
     - Copies of the initial data are kept separately.
 - [x] Update urllib3 version in response to Github-flagged security issue.
-
-- [ ] From "List entities with type information", click on entry views using form for type, but checkbox + "edit" presents default entity view.
-    - This appears to be because the links are generated from te entity data, hence hace access to the actual entity type.  But the edit button works from form data, and only has list type information?
-    - Investigate?
+- [x] Activating "edit" list view doesn't use view form appropriate to entity type.
+- [x] Added logic to allow serving additonal data from "/p/" ("pages") collection directory
+    - This is being used to experiment with collection-specific rendering applications
+- [x] Add $PAGE substitution for Markdown formatting
 
 (Sub-release?)
 
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
-
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
 

@@ -161,7 +161,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     #   -----------------------------------------------------------------------------
 
     def test_get_form_rendering(self):
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -243,7 +243,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_get_new(self):
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.get(u+"?continuation_url=/xyzzy/")
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -298,7 +298,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         return
 
     def test_head_new(self):
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.head(u)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -334,7 +334,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     def test_post_new_entity(self):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = default_view_form_data(entity_id="newentity", action="new")
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
@@ -347,7 +347,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     def test_post_new_entity_cancel(self):
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = default_view_form_data(entity_id="newentity", action="new", cancel="Cancel")
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
@@ -359,7 +359,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
 
     def test_post_new_entity_missing_id(self):
         f = default_view_form_data(action="new", entity_id="")
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -379,7 +379,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         f = default_view_form_data(
             entity_id="!badentity", orig_id="orig_entity_id", action="new"
             )
-        u = entitydata_edit_url("new", "testcoll", "testtype")
+        u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -399,7 +399,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # for type defined in site data
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = default_view_form_data(entity_id="newentity", type_id="Default_type", action="new")
-        u = entitydata_edit_url("new", "testcoll", "Default_type")
+        u = entitydata_edit_url("new", "testcoll", "Default_type", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
@@ -431,7 +431,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         # Create new entity
         self.assertFalse(EntityData.exists(self.testdata, "newentity"))
         f = default_view_form_data(entity_id="newentity", type_id="newtype", action="new")
-        u = entitydata_edit_url("new", "testcoll", "newtype")
+        u = entitydata_edit_url("new", "testcoll", "newtype", view_id="Default_view")
         r = self.client.post(u, f)
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")

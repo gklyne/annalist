@@ -27,10 +27,9 @@ urlpatterns  = [
     url(annalist_pattern,	include('annalist.urls')),
     ]
 
-if not settings.DEBUG:
-    static_pattern = "^"+settings.STATIC_SEG+"/"
-    urlpatterns += [
-        url(static_pattern+r'(?P<path>.*)$', serve_static),
-        ]
+static_pattern = "^"+settings.STATIC_SEG+"/"
+urlpatterns += [
+    url(static_pattern+r'(?P<path>.*)$', serve_static),
+    ]
 
 # End.

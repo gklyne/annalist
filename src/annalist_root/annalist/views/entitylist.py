@@ -304,6 +304,7 @@ class EntityGenericListView(AnnalistGenericView):
             entity_id   = None
             if len(entity_ids) == 1:
                 (entity_type, entity_id) = split_type_entity_id(entity_ids[0], entity_type)
+                log.info("EntityList.post entity_ids: entity_type %s, entity_id %s"%(entity_type, entity_id))
             if "new" in request.POST:
                 action        = "new"
                 redirect_path = listinfo.get_new_view_uri(coll_id, entity_type)

@@ -407,9 +407,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
-            view_id="Default_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1")
         self.assertIn(v, r['location'])
         return
 
@@ -420,9 +418,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1", 
-            view_id="Default_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1")
         self.assertIn(v, r['location'])
         return
 
@@ -474,9 +470,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
-            view_id="Default_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1")
         self.assertIn(v, r['location'])
         return
 
@@ -487,9 +481,7 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1", 
-            view_id="Default_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", "testtype", "entity1")
         self.assertIn(v, r['location'])
         return
 
