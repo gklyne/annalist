@@ -2,17 +2,17 @@
 
 ## Summary of release tasks
 
-- [ ] Feature freeze
-- [ ] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
-- [ ] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
-- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
-- [ ] Delete contents of build directory (remove old files) 
+- [x] Feature freeze
+- [x] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
+- [x] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
+- [x] Uninstall annalist (if installed): `pip uninstall annalist`
+- [x] Delete contents of build directory (remove old files) 
     - python setup.py clean --all
-- [ ] Clean old .pyc and temporary files
+- [x] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
-- [ ] Local install
-- [ ] Run test suite - `annalist-manager runtest`
+- [x] Local install
+- [x] Run test suite - `annalist-manager runtest`
 - [ ] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`

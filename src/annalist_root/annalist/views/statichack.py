@@ -56,7 +56,7 @@ def serve_static(request, path, insecure=False, **kwargs):
 
         (r'^static/(?P<path>.*)$', 'annalist.views.statichack.serve_static')
 
-    in your URLconf.
+    in your `annalist_root/urls.py` URL configuration file.
 
     It uses the django.views.static.serve() view to serve the found files.
     """
@@ -85,7 +85,7 @@ def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
         url(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
                                 'annalist.views.statichack.serve_pages`),
 
-    in your URLconf.
+    in your `annalist_root/annalist/urls.py` URL configuration file.
 
     It uses the django.views.static.serve() view to serve the found files.
     """

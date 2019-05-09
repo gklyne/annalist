@@ -100,7 +100,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
-
+- [ ] Hook for data validation check when saving entity; redisplay form if fails
 - [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
     - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
