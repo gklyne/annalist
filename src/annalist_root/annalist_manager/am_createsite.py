@@ -198,6 +198,9 @@ def am_updatesite(annroot, userhome, options):
     for sdir in (layout.USER_DIR, layout.VOCAB_DIR):
         print("- %s +> %s"%(sdir, site_data_tgt))
         Site.update_site_data_dir(sitedata, sdir, site_data_src)
+    for sdir in (layout.INFO_DIR,):
+        print("- %s ~> %s"%(sdir, site_data_tgt))
+        Site.expand_site_data_dir(sitedata, sdir, site_data_src)
     for sdir in layout.COLL_DIRS_PREV:
         remove_old_data(site_data_tgt, sdir)
     print("Generating context for site data")

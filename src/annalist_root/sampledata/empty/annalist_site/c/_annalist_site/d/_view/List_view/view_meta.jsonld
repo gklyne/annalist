@@ -1,0 +1,45 @@
+{ "@id":                    "_view/List_view"
+, "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":          "_view"
+, "annal:id":               "List_view"
+, "rdfs:label":             "List definition"
+, "rdfs:comment":           "# List definition view\r\n\r\nAn entity list display definition.\r\n\r\n## Fields\r\n\r\n[List Id]($BASE:_field/List_id/):\r\nlist identifier.\r\n\r\n[List display type]($BASE:_field/List_type/):\r\ntype of list display (List or Grid).  @@Grid not yet implemented@@\r\n\r\n[Label]($BASE:_field/List_label/):\r\nshort label used to describe this list.\r\n\r\n[Help]($BASE:_field/List_comment/):\r\nextended text description of this list.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n\r\n[Default type]($BASE:_field/List_default_type/):\r\nDefault entity type associated with this list. This is used for constructing a default record selector (i.e. all records of specified type), and also when creating a new entity from the list view.\r\n\r\n[Default view]($BASE:_field/List_default_view/):\r\nDefault view used when displaying, editing or creating records from this list view. (Note that record lists are not tied to a specific entity type. See also field **List_entity_type**.)\r\n\r\n[Selector]($BASE:_field/List_entity_selector/):\r\nAn expression that is used to select entities to be included in the list view.  If not specified, a default selector is used that selects all records from the current collection that are of the indicated default record type (including subtypes).\r\n\r\n[List entity type]($BASE:_field/List_entity_type/):\r\nType (URI or CURIE) of entities displayed using this list (including any declared subtypes). Used to determine field choices appropriate to this list view.  If not specified, only those fields applicable to all entity types are displayted when editing the list definition.\r\n\r\n[Fields]($BASE:_field/List_fields/):\r\nSelects the fields and corresponding entity values that are included in the list display.\r\n"
+, "annal:view_entity_type": "annal:List"
+, "annal:open_view":        false
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/List_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/List_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_default_type"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/List_default_view"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/List_entity_selector"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_entity_type"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/List_fields"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+, "annal:view_task_buttons":
+  [ { "annal:button_id":        "_task/Show_list" 
+    , "annal:button_label":     "Show this list"
+    , "annal:button_help":      "Show the list of entities described the currently displayed list definition."
+    }
+  ]
+}

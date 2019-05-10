@@ -1,0 +1,18 @@
+{ "@id":                        "_field/View_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_comment"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_comment"
+, "rdfs:label":                 "Help"
+, "rdfs:comment":               "# Help\r\n\r\nDescriptive text about the record view.  This is used as help text when the view is displayed.  Formatting and layout of the text may be defined using Markdown conventions."
+, "annal:field_render_type":    "_enum_render_type/Markdown"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:field_entity_type":    "annal:View"
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(description of record view)"
+, "annal:tooltip":              "Descriptive text about the record view.  Formatting and layout of the text may be controlled using Markdown conventions."
+}

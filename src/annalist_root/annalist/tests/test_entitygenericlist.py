@@ -58,7 +58,6 @@ from .tests import (
     TestHost, TestHostUri, TestBasePath, TestBaseUri, TestBaseDir
     )
 from .init_tests import (
-    copySitedata,
     init_annalist_test_site, init_annalist_test_coll, resetSitedata
     )
 from .entity_testutils import (
@@ -103,7 +102,10 @@ from .entity_testsitedata import (
     get_site_field_types, get_site_field_types_sorted, 
     get_site_entities, get_site_entities_sorted,  
     )
-from .entity_testlistdata import recordlist_url
+from .entity_testlistdata import (
+    recordlist_url, 
+    num_testcoll_enumerate_all_entities, num_testcoll_all_entities_scope_all
+    )
 
 #   -----------------------------------------------------------------------------
 #
@@ -180,7 +182,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), 176)    # Will change with site data
+        self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
@@ -303,7 +305,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     def test_get_default_all_scope_all_list(self):
-        # List all entities in current collection and site-wiude
+        # List all entities in current collection and site-wide
         # This repeats parts of the previous test but with scope='all'
         u = entitydata_list_all_url(
             "testcoll", list_id="Default_list_all", 
@@ -339,7 +341,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # listed_entities = { e['entity_id']: e for e in entities }
         # for eid in listed_entities:
         #     print "@@ eid %s"%(eid)
-        self.assertEqual(len(entities), 173)    # Will change with site data
+        self.assertEqual(len(entities), num_testcoll_all_entities_scope_all)    # Will change with site data
         return
 
     def test_get_types_list(self):
@@ -784,7 +786,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view")
+        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u, continuation_url_param(s))
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -797,9 +799,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "copy", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -812,9 +812,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "copy", "testcoll", "testtype", "entity1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("copy", "testcoll", "testtype", "entity1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
@@ -872,9 +870,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
         c = continuation_url_param(u)
-        v = entitydata_edit_url(
-            "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", layout.FIELD_TYPEID, "field1")
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])
         return
@@ -886,9 +882,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
         self.assertEqual(r.content,       b"")
-        v = entitydata_edit_url(
-            "edit", "testcoll", layout.FIELD_TYPEID, "field1", view_id="Field_view"
-            )
+        v = entitydata_edit_url("edit", "testcoll", layout.FIELD_TYPEID, "field1")
         c = continuation_url_param(u)
         self.assertIn(v, r['location'])
         self.assertIn(c, r['location'])

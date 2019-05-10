@@ -53,11 +53,11 @@ class CollectionVocabCacheTest(AnnalistTestCase):
         self.vocabcache   = CollectionVocabCache()
         self.vocab1       = RecordVocab(self.testcoll1_a, "vocab1")
         self.vocab1.set_values(
-            entitydata_create_values("vocab1", type_id="_vocab", entity_uri="test:vocab1")
+            entitydata_create_values("vocab1", type_id="_vocab", entity_uri="test:vocab1#")
             )
         self.vocab2       = RecordVocab(self.testcoll1_a, "vocab2")
         self.vocab2.set_values(
-            entitydata_create_values("vocab2", type_id="_vocab", entity_uri="test:vocab2")
+            entitydata_create_values("vocab2", type_id="_vocab", entity_uri="test:vocab2#")
             )
         return
 
@@ -95,26 +95,28 @@ class CollectionVocabCacheTest(AnnalistTestCase):
         return
 
     def test_singleton_cache(self):
+        # Test that cached values are shared between different instantiations
+        # of the same collection.
         foo = self.vocabcache.get_vocab(self.testcoll1_a, "vocab2")
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab2"), None)
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_b, "vocab2"), None)
         self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_a)], [])
         self.create_vocab_record(self.testcoll1_a, self.vocab1)
         # NOTE: the 'set_vocab' call also causes cache initialization of all vocabs, 
-        # including the created vocab record which is discovered on disk, and the subsequent 
-        # set_vocab call returns 'False'.
+        # including the created vocab record which is discovered on disk, and the 
+        # subsequent set_vocab call returns 'False'.
         self.assertFalse(self.vocabcache.set_vocab(self.testcoll1_a, self.vocab1))
         self.assertFalse(self.vocabcache.set_vocab(self.testcoll1_b, self.vocab1))
-        self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab1").get_uri(), "test:vocab1")
-        self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_b, "vocab1").get_uri(), "test:vocab1")
+        self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab1").get_uri(), "test:vocab1#")
+        self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_b, "vocab1").get_uri(), "test:vocab1#")
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_a, "vocab2"), None)
         self.assertEqual(self.vocabcache.get_vocab(self.testcoll1_b, "vocab2"), None)
-        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_a, "test:vocab1").get_id(), "vocab1")
-        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab1").get_id(), "vocab1")
-        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_a, "test:vocab2"), None)
-        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab3"), None)
-        self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_a)], ["test:vocab1"])
-        self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_b)], ["test:vocab1"])
+        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_a, "test:vocab1#").get_id(), "vocab1")
+        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab1#").get_id(), "vocab1")
+        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_a, "test:vocab2#"), None)
+        self.assertEqual(self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab3#"), None)
+        self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_a)], ["test:vocab1#"])
+        self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll1_b)], ["test:vocab1#"])
         self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll2_a)], [])
         self.assertEqual([t.get_uri() for t in self.vocabcache.get_all_vocabs(self.testcoll2_b)], [])
         return
@@ -144,11 +146,11 @@ class CollectionVocabCacheTest(AnnalistTestCase):
     def test_get_vocabs_by_uri(self):
         self.create_test_vocab_entities()
         self.assertEqual(
-            self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab1").get_id(),
+            self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab1#").get_id(),
             "vocab1"
             )
         self.assertEqual(
-            self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab2").get_id(),
+            self.vocabcache.get_vocab_from_uri(self.testcoll1_b, "test:vocab2#").get_id(),
             "vocab2"
             )
         return

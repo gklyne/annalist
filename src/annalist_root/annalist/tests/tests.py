@@ -40,7 +40,7 @@ def load_tests(loader, tests, ignore):
     #     https://docs.python.org/2/library/doctest.html#unittest-api
     if os.name == "posix":
         # The doctest stuff doesn't seem to work on Windows
-        # (These add a total of 12 tests to the overall test)
+        # (These add a total of ~12 tests to the overall test)
         tests.addTests(doctest.DocTestSuite(utils.uri_builder))
         tests.addTests(doctest.DocTestSuite(annalist.util))
         tests.addTests(doctest.DocTestSuite(annalist.identifiers))
@@ -51,6 +51,7 @@ def load_tests(loader, tests, ignore):
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.find_renderers))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.bound_field))
         tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_placement))
+        tests.addTests(doctest.DocTestSuite(annalist.views.fields.render_text_language))
         tests.addTests(doctest.DocTestSuite(annalist.models.entityfinder))
         # For some reason, this won't load in the full test suite
         # tests.addTests(doctest.DocTestSuite(annalist.tests.entity_testutils))

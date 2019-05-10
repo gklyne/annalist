@@ -1,0 +1,23 @@
+{ "@id":                        "_list/List_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/List_list"
+, "rdfs:label":                 "List definitions"
+, "rdfs:comment":               "# List definitions\r\n\r\nList of [list definitions]($BASE:_type/_list/), where a list definition defines a selection of entities to be displayed, and fields to be displayed for each."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/List_view"
+, "annal:default_type":         "_type/_list"
+, "annal:list_entity_selector": "'annal:List' in [@type]"
+, "annal:list_entity_type":     "annal:List"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}
+ 

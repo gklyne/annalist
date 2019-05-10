@@ -12,8 +12,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-# import unittest
-# import doctest
 import os.path
 import shutil
 import datetime

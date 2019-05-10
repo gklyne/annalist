@@ -1,0 +1,21 @@
+{ "@id":                        "_field/View_field_sel"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_field_sel"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_sel"
+, "rdfs:label":                 "Field ref"
+, "rdfs:comment":               "# Field id\r\n\r\nReferences a field definition to be displayed.  The containing view definition may combine this with property URI (field [Property]($BASE:_field/View_field_property)) and display placement (field [Position/size]($BASE:_field/View_field_placement)) values to define a field to be displayed."
+, "annal:field_name":           "View_field_sel"
+, "annal:field_render_type":    "_enum_render_type/Enum_optional"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "annal:View_field"
+, "annal:property_uri":         "annal:field_id"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:field_ref_type":       "_field"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(field reference)"
+, "annal:tooltip":              "Reference to a field to be displayed."
+, "annal:field_ref_restriction":  "entity[annal:view_entity_type] subtype [annal:field_entity_type]"
+}

@@ -13,7 +13,6 @@ import logging
 log = logging.getLogger(__name__)
 
 import traceback
-import re
 
 from collections            import OrderedDict, namedtuple
 

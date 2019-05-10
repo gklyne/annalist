@@ -49,6 +49,22 @@ f_Entity_id = (
     , 'field_choices':          no_options
     })
 
+f_Entity_ref = (
+    { 'field_id':               "Entity_ref"
+    , 'field_name':             "entity_ref"
+    , 'field_label':            "Entity ref"
+    , 'field_render_type':      "EntityId"
+    , 'field_value_mode':       "Value_direct"
+    , 'field_value_type':       "annal:EntityRef"
+    , 'field_property_uri':     "rdfs:label"
+    , 'field_placement':        "small:0,12;medium:0,6"
+    , 'field_ref_type':         None
+    , 'field_ref_field':        None
+    , 'field_placeholder':      "(entity ref)"
+    , 'field_default_value':    ""
+    , 'field_choices':          no_options
+    })
+
 f_Entity_type = (
     { 'field_id':               "Entity_type"
     , 'field_name':             "entity_type"
@@ -1286,6 +1302,7 @@ f_Test_image = (
 fields_by_id = (
     { '_sentinel_not_used':         None
     , "Entity_id":                  f_Entity_id
+    , "Entity_ref":                 f_Entity_ref
     , "Entity_type":                f_Entity_type
     , "Entity_label":               f_Entity_label
     , "Entity_comment":             f_Entity_comment

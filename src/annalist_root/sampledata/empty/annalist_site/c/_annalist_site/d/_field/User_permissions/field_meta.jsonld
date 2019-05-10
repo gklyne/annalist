@@ -1,0 +1,18 @@
+{ "@id":                        "_field/User_permissions"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "User_permissions"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_permissions"
+, "rdfs:label":                 "Permissions"
+, "rdfs:comment":               "# User permissions\r\n\r\nA space-separated list of user permission tokens; e.g  'VIEW CREATE UPDATE DELETE CONFIG'.  Permissions are typically defined for each collection, but, in some circumstances, may be site-wide.  See also [User permissions view]($BASE:_view/User_view) help for full list of available tokens.\r\n\r\nCurrently recognized permission tokens include:\r\n\r\n* `ADMIN` - permits user administration and permission assignment.  As a site-wide permission, also permits creating new collections, and deleting existing ones.\r\n* `CREATE_COLLECTION` - as a site-wide permission, permits creating new collections.  Any created collections automatically grant `ADMIN` permission to the user who creates them.\r\n* `DELETE_COLLECTION` - as a site-wide permission, permits deletion of any collection.\r\n* `CONFIG` - permits definition and modification of collection structures (types, views, lists, fields, etc.).\r\n* `VIEW` - permits viewing of data records.\r\n* `CREATE` - permits creation of new data records.\r\n* `UPDATE` - permits modification of existing data records.\r\n* `DELETE` - permits deletion of existing data reciords.\r\n\r\nSite wide permissions are listed at [_annalist_site/l/User_list/]($SITE:c/_annalist_site/l/User_list/)."
+, "annal:field_render_type":    "_enum_render_type/TokenSet"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:TokenSet"
+, "annal:field_entity_type":    "annal:User"
+, "annal:property_uri":         "annal:user_permission"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        []
+, "annal:placeholder":          "(user permissions; e.g. 'VIEW CREATE UPDATE DELETE CONFIG')"
+, "annal:tooltip":              "A space-separated list of user permission tokens; e.g  'VIEW CREATE UPDATE DELETE CONFIG'.  See 'User permissions' view help for full list of available tokens."
+}

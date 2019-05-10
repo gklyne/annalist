@@ -1,0 +1,7 @@
+{ "@type":                      ["annal:Info"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "_initial_values"
+, "annal:type_id":              "_info"
+, "rdfs:label":                 ""
+, "rdfs:comment":               "# Info _initial_values_\r\n\r\n(General information for display)"
+}

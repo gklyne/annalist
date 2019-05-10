@@ -305,7 +305,6 @@ class GenericEntityEditView(AnnalistGenericView):
         """
         Assemble display information for entity view request handler
         """
-        #@@ self.collection_view_url      = self.get_collection_view_url(coll_id)
         self.default_continuation_url = self.view_uri(
             "AnnalistEntityDefaultListType", coll_id=coll_id, type_id=type_id
             )
@@ -315,7 +314,6 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.get_request_type_info(type_id)
         viewinfo.get_view_info(viewinfo.get_view_id(type_id, view_id))
         viewinfo.get_entity_info(action, entity_id)
-        # viewinfo.get_entity_data()
         # viewinfo.check_authorization(action)
         return viewinfo
 

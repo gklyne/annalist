@@ -61,7 +61,7 @@ def collectiondata_url(coll_id="testcoll"):
     e.g. 
       http://example.com/site/c/_annalist_site/d/_coll/testcoll/
     """
-    if not valid_id(coll_id):
+    if not valid_id(coll_id, reserved_ok=True):
         coll_id = "___"
     return collection_entity_view_url(coll_id=layout.SITEDATA_ID, type_id="_coll", entity_id=coll_id)
 

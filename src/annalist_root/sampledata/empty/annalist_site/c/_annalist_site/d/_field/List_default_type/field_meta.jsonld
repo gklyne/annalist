@@ -1,0 +1,19 @@
+{ "@id":                        "_field/List_default_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_default_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_default_type"
+, "rdfs:label":                 "Default type"
+, "rdfs:comment":               "# Default type\r\n\r\nDefault entity type associated with this list.  This is used for constructing a default entity selector (i.e. all entities of specified type), and also when creating a new entity from the list view."
+, "annal:field_render_type":    "_enum_render_type/Enum_optional"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Type"
+, "annal:field_entity_type":    "annal:List"
+, "annal:field_ref_type":      "_type"
+, "annal:property_uri":         "annal:default_type"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        "Default_type"
+, "annal:placeholder":          "(default entity type)"
+, "annal:tooltip":              "Default entity type associated with this list."
+}

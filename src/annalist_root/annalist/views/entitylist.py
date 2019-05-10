@@ -192,10 +192,10 @@ class EntityGenericListView(AnnalistGenericView):
         # print "@@@@ entity_list %r"%(entity_list,)
         # print "@@@@ entityvallist %r"%(entityvallist,)
         # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
-        log.info(
-            "EntityListDataView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
-            (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
-            )
+        # log.info(
+        #     "EntityListDataView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
+        #     (list_url, base_url, base_url+layout.COLL_CONTEXT_FILE)
+        #     )
         jsondata = (
             { '@id':            list_url
             , '@context': [
@@ -304,6 +304,7 @@ class EntityGenericListView(AnnalistGenericView):
             entity_id   = None
             if len(entity_ids) == 1:
                 (entity_type, entity_id) = split_type_entity_id(entity_ids[0], entity_type)
+                log.info("EntityList.post entity_ids: entity_type %s, entity_id %s"%(entity_type, entity_id))
             if "new" in request.POST:
                 action        = "new"
                 redirect_path = listinfo.get_new_view_uri(coll_id, entity_type)

@@ -62,12 +62,14 @@ log = logging.getLogger(__name__)
 
 COLL_TYPEID             = "_coll"
 COLL_BASE_DIR           = "d"
+COLL_PAGE_DIR           = "p"
 COLL_ROOT_CONF_OLD_DIR  = "_annalist_collection"
 COLL_BASE_CONF_OLD_DIR  = "../" + COLL_ROOT_CONF_OLD_DIR
 COLL_META_FILE          = "coll_meta.jsonld"
 COLL_META_TURTLE        = "coll_meta.ttl"
 COLL_PROV_FILE          = "coll_prov.jsonld"
 COLL_BASE_REF           = COLL_BASE_DIR + "/"
+COLL_PAGE_REF           = COLL_PAGE_DIR + "/"
 COLL_META_REF           = COLL_BASE_REF + COLL_META_FILE
 COLL_PROV_REF           = COLL_BASE_REF + COLL_PROV_FILE
 COLL_TURTLE_REF         = COLL_BASE_REF + COLL_META_TURTLE
@@ -109,7 +111,7 @@ BIBDATA_ID              = "Bibliography_defs"                       # used for t
 #
 
 # Type records
-TYPE_TYPEID             = "_type"                           # type id, used in URL
+TYPE_TYPEID             = "_type"                           # type id for type records, used in URL
 TYPE_DIR                = "_type"                           # collection directory in file system
 TYPE_DIR_PREV           = "types"                           # collection directory in file system
 TYPE_META_FILE          = "type_meta.jsonld"                # type metadata file name
@@ -121,7 +123,7 @@ COLL_TYPE_PATH          = COLL_BASE_REF + TYPE_DIR + "/%(id)s"
                                                             # type dir relative to collection root dir
 
 # List description records
-LIST_TYPEID             = "_list"                           # list id, used in URL
+LIST_TYPEID             = "_list"                           # list type id, used in URL
 LIST_DIR                = "_list"                           # collection directory in file system
 LIST_DIR_PREV           = "lists"                           # collection directory in file system
 LIST_META_FILE          = "list_meta.jsonld"                # list metadata file name
@@ -133,7 +135,7 @@ COLL_LIST_PATH          = COLL_BASE_REF + LIST_DIR + "/%(id)s"
                                                             # list dir relative to collection root dir
 
 # View description records
-VIEW_TYPEID             = "_view"                           # type id, used in URL
+VIEW_TYPEID             = "_view"                           # view type id, used in URL
 VIEW_DIR                = "_view"                           # collection directory in file system
 VIEW_DIR_PREV           = "views"                           # previous collection directory
 VIEW_META_FILE          = "view_meta.jsonld"                # view metadata file name
@@ -145,7 +147,7 @@ COLL_VIEW_PATH          = COLL_BASE_REF + VIEW_DIR + "/%(id)s"
                                                             # view dir relative to collection root dir
 
 # Field-group description records
-GROUP_TYPEID            = "_group"                          # group id, used in URL
+GROUP_TYPEID            = "_group"                          # group type id, used in URL
 GROUP_DIR               = "_group"                          # collection directory in file system
 GROUP_DIR_PREV          = "groups"                          # previous collection directory
 GROUP_META_FILE         = "group_meta.jsonld"               # group metadata file name
@@ -156,7 +158,7 @@ COLL_GROUP_PATH         = COLL_BASE_REF + GROUP_DIR + "/%(id)s"
                                                             # group dir relative to collection root dir
 
 # Field description records
-FIELD_TYPEID            = "_field"                          # field id, used in URL
+FIELD_TYPEID            = "_field"                          # field type id, used in URL
 FIELD_DIR               = "_field"                          # collection directory in file system
 FIELD_DIR_PREV          = "fields"                          # previous collection directory
 FIELD_META_FILE         = "field_meta.jsonld"               # field metadata file name
@@ -180,7 +182,7 @@ COLL_USER_PATH          = COLL_BASE_REF + USER_DIR + "/%(id)s"
                                                             # user dir relative to collection root dir
 
 # Vocabulary namespace records
-VOCAB_TYPEID            = "_vocab"                          # vocab id, used in URL
+VOCAB_TYPEID            = "_vocab"                          # type id, used in URL
 VOCAB_DIR               = "_vocab"                          # collection directory in file system
 VOCAB_DIR_PREV          = "vocabs"                          # previous collection directory
 VOCAB_META_FILE         = "vocab_meta.jsonld"               # vocab metadata file name
@@ -190,6 +192,19 @@ COLL_BASE_VOCAB_REF     = VOCAB_TYPEID + "/%(id)s"          # ref vocab relative
 COLL_VOCAB_VIEW         = COLL_BASE_REF + COLL_BASE_VOCAB_REF + "/"  # ref vocab view relative to collection entity
 COLL_VOCAB_PATH         = COLL_BASE_REF + VOCAB_DIR + "/%(id)s"
                                                             # vocab dir relative to collection root dir
+
+# General information records
+# Used for holding application information for display; e.g., for the `about` link.
+INFO_TYPEID             = "_info"                           # info type id
+INFO_DIR                = "_info"                           # collection directory in file system
+INFO_DIR_PREV           = None                              # previous directory for migration 
+INFO_META_FILE          = "info_meta.jsonld"                # info data file name
+INFO_META_TURTLE        = "info_meta.ttl"                   # reference info data as Turtle
+INFO_PROV_FILE          = "info_prov.jsonld"                # info provenance file name
+COLL_BASE_INFO_REF      = INFO_TYPEID + "/%(id)s"           # ref info relative to collection base URL
+COLL_INFO_VIEW          = COLL_BASE_REF + COLL_BASE_INFO_REF + "/"  # ref info view relative to collection entity
+COLL_INFO_PATH          = COLL_BASE_REF + INFO_DIR + "/%(id)s"
+                                                            # info dir relative to collection root dir
 
 # Enumerated value descriptions
 ENUM_FIELD_PLACEMENT_ID     = "_enum_field_placement"       # Field placement options
@@ -285,11 +300,10 @@ COLL_DIRS_CURR_PREV = (
     DATA_DIRS_CURR_PREV +
     [ (USER_DIR,  USER_DIR_PREV)
     , (VOCAB_DIR, VOCAB_DIR_PREV)
+    , (INFO_DIR,  INFO_DIR_PREV)
     ])
 COLL_DIRS       = [ p[0] for p in COLL_DIRS_CURR_PREV ]
-                # map(lambda pair:pair[0], COLL_DIRS_CURR_PREV)
-COLL_DIRS_PREV  = [ p[1] for p in COLL_DIRS_CURR_PREV ]
-                # map(lambda pair:pair[1], COLL_DIRS_CURR_PREV)
+COLL_DIRS_PREV  = [ p[1] for p in COLL_DIRS_CURR_PREV if p[1] ]
 
 # Name generation suffixes for tasks that generate new records
 SUFFIX_LIST             = ""

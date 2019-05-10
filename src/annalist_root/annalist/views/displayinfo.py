@@ -883,14 +883,23 @@ class DisplayInfo(object):
         """
         Get URI for entity edit or copy view from list display
         """
+        # Use default view for entity type
+        # (Use list view id only for new entities)
         return self.view.view_uri(
-                "AnnalistEntityEditView", 
+                "AnnalistEntityDefaultDataView", 
                 coll_id=coll_id, 
-                view_id=self.get_list_view_id(), 
                 type_id=type_id,
                 entity_id=entity_id,
                 action=action
                 )
+        # return self.view.view_uri(
+        #         "AnnalistEntityEditView", 
+        #         coll_id=coll_id, 
+        #         view_id=self.get_list_view_id(), 
+        #         type_id=type_id,
+        #         entity_id=entity_id,
+        #         action=action
+        #         )
 
     def get_src_entity_resource_url(self, resource_ref):
         """
@@ -1080,6 +1089,7 @@ class DisplayInfo(object):
             , 'view_id':            self.view_id
             , 'list_id':            self.list_id
             , 'collection':         self.collection
+            , 'info_coll_id':       self.coll_id or layout.SITEDATA_ID
             , "SITE":               site_url_parts.path
             , "HOST":               self.reqhost            
             })
@@ -1091,6 +1101,7 @@ class DisplayInfo(object):
                 , 'coll_label': self.collection[RDFS.CURIE.label]
                 , "COLL":       coll_url_parts.path
                 , "BASE":       coll_url_parts.path + layout.COLL_BASE_REF
+                , "PAGE":       coll_url_parts.path + layout.COLL_PAGE_REF
                 })
             context['title'] = "%(coll_label)s"%context
         if self.recordview:

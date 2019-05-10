@@ -29,6 +29,7 @@ from annalist.models.recordview     import RecordView
 from annalist.models.recordgroup    import RecordGroup, RecordGroup_migration
 from annalist.models.recordfield    import RecordField
 from annalist.models.recordvocab    import RecordVocab
+from annalist.models.recordinfo     import RecordInfo
 from annalist.models.recordenum     import RecordEnumFactory
 from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitydata     import EntityData
@@ -41,6 +42,7 @@ VIEW_ID     = layout.VIEW_TYPEID
 GROUP_ID    = layout.GROUP_TYPEID
 FIELD_ID    = layout.FIELD_TYPEID
 VOCAB_ID    = layout.VOCAB_TYPEID
+INFO_ID     = layout.INFO_TYPEID
 TASK_ID     = layout.TASK_TYPEID
 
 COLL_MESSAGES = (
@@ -151,6 +153,18 @@ VOCAB_MESSAGES = (
     , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
     })
 
+INFO_MESSAGES = (
+    { 'parent_heading':         message.COLLECTION_ID
+    , 'parent_missing':         message.COLLECTION_NOT_EXISTS
+    , 'entity_heading':         message.RECORD_INFO_ID
+    , 'entity_invalid_id':      message.RECORD_INFO_ID_INVALID
+    , 'entity_exists':          message.RECORD_INFO_EXISTS
+    , 'entity_not_exists':      message.RECORD_INFO_NOT_EXISTS
+    , 'entity_removed':         message.RECORD_INFO_REMOVED
+    , 'entity_type_heading':    message.ENTITY_TYPE_ID
+    , 'entity_type_invalid':    message.ENTITY_TYPE_ID_INVALID
+    })
+
 ENUM_MESSAGES = (
     { 'parent_heading':         message.COLLECTION_ID
     , 'parent_missing':         message.COLLECTION_NOT_EXISTS
@@ -183,6 +197,18 @@ ADMIN_PERMISSIONS = (
     , "copy":   "ADMIN"     # ..
     , "edit":   "ADMIN"     # Update user record
     , "delete": "ADMIN"     # Delete user record
+    , "config": "CONFIG"    # Change collection configuration
+    , "admin":  "ADMIN"     # Change users or permissions
+    })
+
+ADMIN_VIEW_PERMISSIONS = (
+    { "view":   "VIEW"     # View site record
+    , "list":   "VIEW"     # ..
+    , "search": "VIEW"     # ..
+    , "new":    "ADMIN"     # Create site record
+    , "copy":   "ADMIN"     # ..
+    , "edit":   "ADMIN"     # Update site record
+    , "delete": "ADMIN"     # Delete site record
     , "config": "CONFIG"    # Change collection configuration
     , "admin":  "ADMIN"     # Change users or permissions
     })
@@ -220,6 +246,7 @@ TYPE_CLASS_MAP = (
     , GROUP_ID:                 RecordGroup_migration
     , FIELD_ID:                 RecordField
     , VOCAB_ID:                 RecordVocab
+    , INFO_ID:                  RecordInfo
     , '_enum_field_placement':  RecordEnumFactory('_enum_field_placement',  '_enum_field_placement')
     , '_enum_list_type':        RecordEnumFactory('_enum_list_type',        '_enum_list_type')
     , '_enum_render_type':      RecordEnumFactory('_enum_render_type',      '_enum_render_type')
@@ -236,6 +263,7 @@ TYPE_MESSAGE_MAP = (
     , GROUP_ID:                 GROUP_MESSAGES
     , FIELD_ID:                 FIELD_MESSAGES
     , VOCAB_ID:                 VOCAB_MESSAGES
+    , INFO_ID:                  INFO_MESSAGES
     , '_enum_field_placement':  ENUM_MESSAGES  
     , '_enum_list_type':        ENUM_MESSAGES
     , '_enum_render_type':      ENUM_MESSAGES
@@ -252,6 +280,7 @@ SITE_PERMISSIONS_MAP = (
     , GROUP_ID:                 SITE_PERMISSIONS
     , FIELD_ID:                 SITE_PERMISSIONS
     , VOCAB_ID:                 SITE_PERMISSIONS
+    , INFO_ID:                  ADMIN_VIEW_PERMISSIONS
     , '_enum_field_placement':  SITE_PERMISSIONS  
     , '_enum_list_type':        SITE_PERMISSIONS
     , '_enum_render_type':      SITE_PERMISSIONS
@@ -269,6 +298,7 @@ TYPE_PERMISSIONS_MAP = (
     , GROUP_ID:                 CONFIG_PERMISSIONS
     , FIELD_ID:                 CONFIG_PERMISSIONS
     , VOCAB_ID:                 CONFIG_PERMISSIONS
+    , INFO_ID:                  CONFIG_PERMISSIONS
     , '_enum_field_placement':  SITE_PERMISSIONS  
     , '_enum_list_type':        SITE_PERMISSIONS
     , '_enum_render_type':      SITE_PERMISSIONS
@@ -545,15 +575,13 @@ class EntityTypeInfo(object):
         #     )
         entity = None
         entity_id = extract_entity_id(entity_id)
-        if valid_id(entity_id):
+        if valid_id(entity_id, reserved_ok=True):
             if action == "new":
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
             elif self.entityclass.exists(self.entityparent, entity_id, altscope="all"):
-                entity = self.entityclass.load(
-                    self.entityparent, entity_id, altscope="all"
-                    )
+                entity = self.entityclass.load(self.entityparent, entity_id, altscope="all")
             else:
                 log.debug(
                     "EntityTypeInfo.get_entity %s/%s at %s not found"%

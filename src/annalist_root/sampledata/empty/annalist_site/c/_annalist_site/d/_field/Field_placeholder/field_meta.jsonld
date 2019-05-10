@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_placeholder"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_placeholder"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_placeholder"
+, "rdfs:label":                 "Placeholder"
+, "rdfs:comment":               "# Placeholder\r\n\r\nPlaceholder string displayed in text input area until actual value is entered.  Also used to indicate no value selected in dropdown box.  Convention is use use value in parentheses to distinguish from actual value."
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:placeholder"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(placeholder text)"
+, "annal:tooltip":              "Placeholder string displayed in text input area until actual value is entered.  Also used to indicate no value selected in a dropdown box."
+}

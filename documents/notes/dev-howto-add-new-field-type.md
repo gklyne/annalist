@@ -1,6 +1,6 @@
 # Adding a new field type to Annalist
 
-Annalist field types determine the kinds of data that can be stored in an entity field, and how that data is prersented for display and editing.  The User interface for display and editing uses dynamically generated HTML.
+Annalist field types determine the kinds of data that can be stored in an entity field, and how that data is presented for display and editing.  The User interface for display and editing uses dynamically generated HTML.
 
 Files referred to below are in subdirectories of `src/annalist-root/` of the source code tree as stored in GitHub.
 
@@ -8,7 +8,7 @@ HTML for view fields is generated through the following steps:
 
 1. A view references a number of fields, which are defined in `annalist/sitedata/fields/`.  Each field is associated with a named directory containing a file `field_meta.jsonld`, which defines properties of the field (the presentation of which is defined in `annalist/sitedata/views/Field_view/view_meta.jsonld`).  The property named `annal:field_render_type` defines a render type for the field.
 
-2. When generating HTML for a view, the field render type is translated by module `annalist/views/fields/render_utils.py` into a Django renderer object suitable for the context in which the field appears (view. edit, list, etc.).  This renderer object can be referenced by a Django template `%include` template tag (cf. [Django "include" documentation](https://docs.djangoproject.com/en/1.7/ref/templates/builtins/#include) - the capability to include an object with a render method was introduced in Django 1.7).
+2. When generating HTML for a view, the field render type is translated by module `annalist/views/fields/find_renderers.py` into a Django renderer object suitable for the context in which the field appears (view, edit, list, etc.).  This renderer object can be referenced by a Django template `%include` template tag (cf. [Django "include" documentation](https://docs.djangoproject.com/en/1.7/ref/templates/builtins/#include) - the capability to include an object with a render method was introduced in Django 1.7).
 
 3. The master template (`annalist/templates/annalist_entity_list.html`, `annalist/templates/annalist_entity_view.html` or `annalist/templates/annalist_entity_edit.html`), or the `RepeatGroup` renderer (`annalist/views/fields/render_repeatgroup.py` invokes the field renderer at the apropriate point on the page).
 
@@ -21,7 +21,7 @@ New field types can be defined in one of the following ways:
 
 ## Defining a template-based render type
 
-1.  Choose a short name string for the render type that does not clash with any values already defined in `annalist/views/fields/render_utils`.  Most of the defined render types appear in the tables at the start of the module (`_field_view_files`, `_field_edit_files` and `_field_get_renderer_functions`), but others may be mentioned directly in the functions that follow (e.g. `RepeatGroup`, `RepeatGroupRow` and `RepeatListRow` are mapped directly in function `get_view_renderer`)
+1.  Choose a short name string for the render type that does not clash with any values already defined in `annalist/views/fields/find_renderers`.  Most of the defined render types appear in the tables at the start of the module (`_field_view_files`, `_field_edit_files` and `_field_get_renderer_functions`), but others may be mentioned directly in the functions that follow (e.g. `RepeatGroup`, `RepeatGroupRow` and `RepeatListRow` are mapped directly in function `get_view_renderer`)
 
 2.  Define two new template files to generate HTML for viewing and editing values of the new field render type in directory `annalist/templates/field/`.  These are conventionally named `annalist_<type>_view.html` and `annalist_<type>_edit.html` respectively.
 

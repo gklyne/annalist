@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_mode/Value_field"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Value_field"
+, "annal:type_id":      "_enum_value_mode"
+, "annal:uri":          "annal:Enum_value_mode/Value_field"
+, "rdfs:label":         "Field reference"
+, "rdfs:comment":       "# Value mode: Field reference\r\n\r\nThe stored field value is a reference to a separate entity.  The displayed value is a selected field of the referenced entity.  In edit mode, an entity of the specified type may be selected.\r\n\r\nThe [Field value type]($BASE:_field/Field_value_type/) field should be the type URI of the referenced entity, the [Refer to type]($BASE:_field/Field_typeref/) field indicates the internal type identifier of the referenced entity, and the [Refer to field]($BASE:_field/Field_fieldref/) field is the property URI of the target entity field to be displayed.\r\n\r\nSome render types (e.g. [Image reference]($BASE:_enum_render_type/RefImage/), [Audio clip reference]($BASE:_enum_render_type/RefAudio/)) treat the referenced field value as a reference to a resource, and when viewing an entity will present a rendering (e.g., image or audio player) of the resource.\r\n\r\n(The effect of this value mode can be achieved using value mode [Entity reference]($BASE:_enum_value_mode/Value_entity/) together with render type [Fields of referenced entity]($BASE:_enum_render_type/RefMultifield/).)"
+}

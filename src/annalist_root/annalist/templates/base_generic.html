@@ -137,16 +137,22 @@
       <div class="medium-6 medium-push-6 hide-on-print columns">
         <ul class="links">
           <li>
-            <a href="/annalist/site/?info_head=About&amp;info_message=About%20page%20TBD">About</a>
-          </li><!--
-        <li><a href="/annalist/blog">Blog</a></li>
-        <li><a href="/annalist/news">News<span class="show-for-medium-up"> &amp; Events</span></a></li>
-        -->
-          <li>
-            <a href="/annalist/site/?info_head=Contact&amp;info_message=Contact%20page%20TBD">Contact</a>
+            {% url 'AnnalistInfoView' coll_id=info_coll_id type_id='_info' entity_id='About' as about_url %}
+            <a href="{{about_url}}{{ continuation_param }}">
+              About
+            </a>
           </li>
           <li>
-            <a href="/annalist/site/?info_head=Sitemap&amp;info_message=About%20page%20TBD">Sitemap</a>
+            {% url 'AnnalistInfoView' coll_id=info_coll_id type_id='_info' entity_id='Contact' as contact_url %}
+            <a href="{{ contact_url }}{{ continuation_param }}">
+              Contact
+            </a>
+          </li>
+          <li>
+            {% url 'AnnalistInfoView' coll_id=info_coll_id type_id='_info' entity_id='Sitemap' as sitemap_url %}
+            <a href="{{ sitemap_url }}{{ continuation_param }}">
+              Sitemap
+            </a>
           </li>
           <li>
             <a href="/annalist/serverlog/">Log</a>
@@ -162,7 +168,7 @@
           <a href="/annalist/" class="logo regular"><img src="{% static 'images/annalist_45_39_px.png' %}" alt="logo"></a>
           Powered&nbsp;by&nbsp;<a href="https://github.com/gklyne/annalist">Annalist
           {% if annalist_version %}
-            (V{{ annalist_version }})
+            (ver {{ annalist_version }})
           {% endif %}
           </a>
         {% endblock %}
@@ -190,6 +196,7 @@
   Site: {{SITE}}
   Coll: {{COLL}}
   Base: {{BASE}}
+  Page: {{PAGE}}
 -->
 
 </html>

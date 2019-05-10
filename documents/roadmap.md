@@ -1,8 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.14.
+Current status: candidate feature-complete minmum viable product, release 0.5.16.
 
-This is a maintenance release with restructuring of form rendering and tests.
+This is a maintenance release with consolidation of the deployment hardening changes in previous releases, and some smaller enhancements and fixes.
 
 
 # V1.0 release
@@ -34,10 +34,6 @@ Alternative form of list view, e.g. for image galeries.
 
 ## Authentication
 
-- Alternative OIDC identity providers
-- ORCID?
-- Authentication mechanisms
-  - Consider using OAuth2-Shibboleth bridge for uni deployment (have link somewhere in notes)
 - OAuth2 dynamic registration - https://tools.ietf.org/html/rfc7591 - if IDPs support it.
 - EUdat? (Also see notes from discussion at crossref with Matthew Dovey - cf The European Open Science Cloud for Research - EOSC - apparently this subsumes id aspects of EUDat.)
 
@@ -90,11 +86,6 @@ Implement ResourceSync protocol for sharing and propagation of Annalist data set
 2. Docker / DockerHub (done, but could be improved)
 3. Look into using Vagrant and/or Puppet/Chef/...
 4. Cloud appliance, etc.
-
-
-## Sample applications
-
-* Image database (bioimage/Fly-TED revisited)
 
 
 # Other possibilities (not yet on roadmap)

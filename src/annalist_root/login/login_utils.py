@@ -14,10 +14,11 @@ log = logging.getLogger(__name__)
 
 import copy
 
-from utils.py3porting   import quote, unquote
+from utils.py3porting           import quote, unquote
 
-from django.http        import HttpResponse
-from django.http        import HttpResponseRedirect
+from django.core.urlresolvers   import resolve, reverse
+from django.http                import HttpResponse
+from django.http                import HttpResponseRedirect
 
 def HttpResponseRedirectWithQuery(redirect_uri, query_params):
     """
@@ -40,7 +41,7 @@ def HttpResponseRedirectLogin(request, message=None):
     with continuation to the supplied continuation_url, with the userid
     for the (attempted) authentication as a further query parameter.
     """
-    user_profile_url = request.session['user_profile_url']
+    user_profile_url = request.session.get('user_profile_url', reverse("AnnalistSiteView"))
     query_params = {}
     if 'continuation_url' in request.session:
         query_params['continuation_url'] = request.session['continuation_url']

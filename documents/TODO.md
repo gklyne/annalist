@@ -22,90 +22,48 @@ See also: https://www.divio.com/en/blog/documentation/
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Version 0.5.13, towards 0.5.14
+# Release 0.5.15, towards 0.5.16
 
-NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command ran the Django development HTTP server, and operated synchronously; i.e., the `annalist-manager runserver` command did not complete until the server itself terminated, commonly by typing CTRL+C. As of version 0.5.14, this is performed by the `annalist-manager rundevserver` command.  The `annalist-manager runserver` command now starts the Annlist application under the `gunicorn` HTTP server, and completes as soon as the server is up and running, writing the server process id to stdout (and also to a file in the Annalist site base directory). To stop a running server started in  this way, use the command `annalist-manager stopserver`.
-
-- [x] BUG: rename while editing (e.g. http://localhost:8000/annalist/c/Project_planning/v/Task/Task/05_ssg_output_ws/!edit?continuation_url=/annalist/c/Project_planning/v/Task/Task/92_nin_output_ws/!view%3Fcontinuation_url=/annalist/c/Project_planning/l/Task_schedule/%253Fcontinuation_url=/annalist/c/Project_planning/) generates error when saving.  NOTE: this appears to be at the point of trying to display an earlier rendering of the entity when returning to a supplied continuation URI.
-    - It's not that simple: continuation rewriting seems to catch most of these.  Could it be multiple changes?
-    - Rename then edit does it.
-    - At least try to make the error more user friendly
-    - Consider keeping a list of renames since startup, and applying these when going back up the continuation tree.  This may be a better strategy than rewriting continuation URLs?
-- [x] BUG: login with google account without given_name in profile causes login failure.
-- [x] BUG: OIDC login code uses different source of redirect URI on initial form and subsequent token access (see login_views.post and OIDC_AuthDoneView.get - redirect URI is used in setup for OAuth2 session, and (apparently) must be the same.)
-- [x] Fix login problems (works on test-bionic-annalist, not on demo.annalist)
-    - Note: problem was lack of trailing "/" on login_done redirect URI
-- [x] Remove deprecated `-f` option from `docker tag` commands in docker makefiles.
-- [x] Address GitHub security alerts for dependencies
-- [x] entity list returns IDs with trailing "/", but individual entities do not.  (See entitylist.strip_context_values)
-- [x] Rename collection: if already exists, wrong id is reported.  
-- [x] Update collection metadata id to match directory name used?  (Causes inconsistent display if collection is copied by hand - displays old name.)
-- [x] `admin` link in bottom toolbar:  proxying needs to be configured on demo server and elsewhere.
-    - Added example Apache configuration files, which are copied to the Annalist local configuration directory when site data is created or updated.
-- [x] If field name in view is blank/undefined/invalid: display placeholder.
-- [x] Tidy up HTTPS deployment
-    - NOTE: Django's internal/dev server does not support HTTPS.  Recommended production deployment is to use WSGI with a "proper" web server such as Apache or Nginx.  Currently using reverse proxy.
-    - [x] deploy `letsencrypt` certs on all `annalist.net` servers and force use of HTTPS.
-    - [x] Document setup process.
-    - See also: 
-        - https://github.com/linkeddata/gold/issues/41#issuecomment-100410186 (nginx rev proxy)
-        - https://djangodeployment.com/2017/01/24/fix-djangos-https-redirects-nginx/
-        - https://stackoverflow.com/questions/44890448/why-does-django-ignore-http-x-forwarded-proto-from-the-wire-but-not-in-tests
-    - [x] create sample config files and documentation for Apache
-    - [x] create sample config files and documentation for nginx
-- [x] Investigate alternative characters for field placement selection display (current ./# don't work well with proportional fonts)
-- [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-    - [x] Shared/personal deployment should generate a new secret key in settings
-    - [x] Set up deployment using WSGI under Apache or nginx
-        - [x] install gunicorn
-        - [x] manually test Annalist under gunicorn (as opposed to manage.py)
-    - [ ] annalist-manager updates:
-        - [x] rename "runserver" -> "rundevserver"
-        - [x] new "runserver" command to activate "gunicorn" and save pid
-        - [x] new "stopserver" command to stop the saved process
-        - [x] document changes
-    - NOTES
-        - annalist_site/wsgi.py exports `application` object
-        - https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/gunicorn/
-        - http://docs.gunicorn.org/en/latest/install.html
-- [x] Static data serving direct by HTTP server
-    - See https://github.com/gklyne/annalist/issues/12 (use "collectstatic")
-    - See https://docs.djangoproject.com/en/1.11/ref/contrib/staticfiles/
-    - See annalist_site/urls.py
-    - See annalist/views/statichack.py ** note TODOs
-    - [x] definitions for:
-        - [x] STATIC_ROOT 
-            - `~/annalist_site/static`
-            - ${BASE_SITE_DIR}/static
-        - [x] STATIC_URL
-        - [x] STATICFILES_DIRS
-        - [x] STATICFILES_STORAGE
-            - default OK?
-        - [x] STATICFILES_FINDERS
-            - default OK?
-    - [x] Manually test `django-admin collectstatic --clear`
-        - `python manage.py collectstatic --clear --noinput` works; django-admin doesn't (problems finding settings module)
-    - [x] Run `django-admin collectstatic --clear` as part of installation/update
-        - new command: `annalist-manager collectstatic`
-    - [x] Update web server configuration files to serve collected static data directly.
-- [x] annalist-manager new commands:
-    - [x] pidserver (display server pid); exit status if no pid
-    - [x] accesslog (gunicorn log)
-    - [x] errorlog (gunicorn log)
+- [x] BUG: Retrieving turtle data in production server fails.  Works OK in dev server.
+    - Caused by deadlock on gunicorn single-worker-thread as Turtle output needs to access context via HTTP.
+    - Implications for cache management
+        - See: documents/notes/20190327-threading-caching-notes.md
+- [x] Redesign entity cache to use single cache API thread-safe mechanisms
+- [x] Redesign closure cache to use single cache API thread-safe mechanisms
+- [x] Generate warning if namespace URI doesn't end with "/" or "#"
+    - (kind-of half-hearted check for now as part of JSON-LD context generation)
+- [x] Define arbitrary entity ref renderer in core data (renders label as link) 
+    - use entity_id renderer with rdfs:label pro
+- [x] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.
+    - I think the problem here is that the gunicorn process is peridoically restarted, resulting in regeneration of the secret key used for keyng session data, CSRF and more.
+    - When running Annalist under gunicorn, add ANNALIST_KEY environment variable to prime SECRET_KEY.
+- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
+    - Updated to work with Apache 2.4, with older directives left as comments.
+    
+- [x] Added hook for processing entity data before saving
+- [x] If property URI in field definition is missing or blank, use field id
+- [x] Update reserved identifiers screened by `util.valid_id`
+- [x] Review handling of reserved identifiers; don't screen when loading entity.
+- [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
+- [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
+- [x] Provide initial content for the links in the page footer.
+    - This information can be edited locally.
+    - Copies of the initial data are kept separately.
+- [x] Update urllib3 version in response to Github-flagged security issue.
+- [x] Activating "edit" list view doesn't use view form appropriate to entity type.
+- [x] Added logic to allow serving additonal data from "/p/" ("pages") collection directory
+    - This is being used to experiment with collection-specific rendering applications
+- [x] Add $PAGE substitution for Markdown formatting
 
 (Sub-release?)
 
-- [ ] Install tools and update documentatiobn to use `twine` for package upload.
-    - See: https://pypi.org/project/twine/
-- [ ] Provide language-tagged string renderer? { @value: ..., @language: ... }
-    - (render_uri_import has most of the required boilerplate)
-- [ ] When referencing an entity, render using annal:uri if defined?
-- [ ] When locating a referenced entity, recognize annal:uri value if defined
-- [ ] If property URI in field definition is blank, use field id
-- [ ] Implement ORCiD as IDP option
-- [ ] Provide content for the links in the page footer
+- [ ] Include list all type definitions in sitemap data (
+_info/Sitemap)
+- [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
+- [ ] Install tools and update documentation to use `twine` for package upload.
+    - See: https://pypi.org/project/twine/
 
 (Sub-release?)
 
@@ -113,7 +71,7 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] *delete views: rationalize into single view?
+- [ ] delete views: rationalize into single view?
 - [.] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
     - [x] look into entity cacheing (esp. RecordType) for performance improvement
@@ -129,6 +87,7 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
 - [ ] review renderers and revise to take all message strings from messages.py
 - [ ] review title/heading strings and revise to take all message strings from messages.py
 - [ ] entityedit view handling: view does not return data entry form values, which can require some special-case handling.  Look into handling special cases in one place (e.g. setting up copies of form values used but not returned.  Currently exhibits as special handling needed for use_view response handling.)
+- [ ] entityedit view handling: provide way for postprocessing hook to provide completion message/warning.  (How do tasks do this?)  Initial use is vocabulary namespace URI checking (currently handled in context generation).
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [x] Automated test suite for annalist_manager
@@ -144,8 +103,11 @@ NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command
 
 Technical debt:
 
+- [ ] Define gunicorn thread count in settings file.
+- [ ] Hook for data validation check when saving entity; redisplay form if fails
 - [ ] See annalist/views/statichack.py ** note TODOs
-- [ ] When renaming an entity, consider keeping a list of renames since startup, and applying these when going back up the continuation tree.  This may be a better strategy than rewriting continuation URLs?
+- [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
+    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
 - [ ] Configure for multi-process worker operation
@@ -158,12 +120,10 @@ Technical debt:
         - the proper answer is probably to disable in-server caching
         - but how to save transitive closure calculations?  save them in shadow entities?
         - See https://stackoverflow.com/a/868731/324122 (Memcached with Python)
-- [ ] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
-    - [ ] Shared/personal deployment should generate a new secret key in settings
-    - [ ] Need way to cleanly shut down server processes (annalist-manager option?)
-    - [ ] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] Rename while editing sometimes generates error when saving or invoking mnew functions that force a save.
-    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
+- [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
+    - [x] Shared/personal deployment should generate a new secret key in settings
+    - [x] Need way to cleanly shut down server processes (annalist-manager option?)
+    - [x] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
 - [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
@@ -312,6 +272,12 @@ Notes for Future TODOs:
 
 (Collecting ideas here: consider expand them in the GitHub issues list.)
 
+- [ ] Try to provide more seamless interaction between permanent URIs (annal:URI) and local URLs. To what extent can an `annal:uri` property value be used in place of a local reference?
+    - The main requirement to date is to be able to export data with permanent URIs, for compatibility with other systems (e.g., EMPlaces data).
+    - If exported data is intended to include directly dereferencable links (back to their Annalist source), then the permanent URI isn't the right option.  How to distinguish these cases?
+    - When processing data locally, it may be possible to recognize/reference entities bvy their permanent URI as well as their local reference.  This would probably require some kind of lookaside table.
+    - For the time being, we are relying on conversion software to export/import data in the required formats.  Maybe we need more experience of this?
+    - An interim step could be to (optionally?) use `annal:uri` values, where available, in place of local references when exporting Turtle data.
 - [ ] Update Django version used to latest version designated for long term support
     - This will mean cutting adrift from Python 2 support.
     - Leaving this until after version 1 is released.
@@ -329,21 +295,23 @@ Notes for Future TODOs:
     - Maybe use these for property updates rather than looking for existing property usage?
     - Is this an issue?  Need some experience here.
     - NOTE: system attempts to preserve subproperties used; aiases are migrated.
+
 - [ ] How to deal with reference to entity that has a permanent URI defined (per annal:uri)?
     - Currently, reference is internal relative reference, but for exported linked data the permanent URI should be used (e.g. references to concept tags or types).
     - If absolute URI is stored, can local reference be discovered for hyperlinking?
     - I think evolvability is served by making these exchangeable
+- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
+    "rdfs:subClassOf": [
+      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
+      ]
+    - annal:display_type values (List/Grid) are another example to consider.
+
 - [ ] RDF Schema generation for a collection, to include RDFS subtype/subproperty statements and such OWL constraints as can be inferred from the type/view/field definitions.
 - [ ] Allow repeating fields to appear in columns (i.e. don't override supplied placement)?
     - Requires rework of logic in views.form_utils.fieldlistvaluemap, in particular to handle nested row structures.  Currently, the field is assumed to be part of a single row.
 - [ ] Consider "scope parent" option?  (i.e. current collection and immediate parent, but no more)
 - [ ] Add facility for import from RDF or SPARQL endpoint.
     - for each defined type, locate all records of that type (which are not also instances of a defined subtype), and use a SPARQL query to extract statements and format the results as JSON-LD.
-- [ ] Review how URIs are generated for referenced entities: currently a relative reference is used, which resolves to a local URL for the entity concerned.  But if the entity has a global identifier (`annal:uri`) that should appear in exported data.  One fix is to just use global URIs in text fields when global URIs are expected (e.g. supertypes in class description).  E.g., consider generating:
-    "rdfs:subClassOf": [
-      { "@id": "Class/Resource", "owl:sameAs": "rdfs:Resource"}
-      ]
-    - annal:display_type values (List/Grid) are another example to consider.
 - [ ] Field option to display item(s) in list (e.g. domain).
     - Generalize to path in list objects?
     - cf. https://tools.ietf.org/html/rfc6901 (JSON pointer)
@@ -377,7 +345,7 @@ Notes for Future TODOs:
 - [ ] Embedded code expansion in help text, and maybe other Markdown:
     - [x] {{site}} base URL for site
     - [x] {{coll}} base url for collection
-    - [x] {{url:typeid/entityid}} UREL for referenced entity.
+    - [x] {{url:typeid/entityid}} URL for referenced entity.
     - [ ] {{ref:typeid/entityid}} link for referenced entity, using label from target.
     - [ ] {{field:typeid/entityid#property_uri}} field from referenced entity
 - [ ] Think about how to incorporate resources from other collections by reference: feed into data bridges?

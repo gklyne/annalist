@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/URIImport"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "URIImport"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Web import"
+, "rdfs:comment":       "# Web import\r\n\r\nImported data from specified Web URI.\r\n\r\nThe stored field value is a resource imported from the web, with some associated metadata.\r\n\r\nFor editing, the field is presented as a text box for a URL, and an `Import` button the fetch the contents at the given URL.  For viewing, a link and some associated metadata are displayed.\r\n\r\nThis field render type is mostly superseded by the value mode option [Import from web]($BASE:_enum_value_mode/Value_import/) used in conjunction with field render types such as [Image reference]($BASE:_enum_render_type/RefImage/) or [Audio clip reference]($BASE:_enum_render_type/RefAudio/)."
+, "annal:uri":          "annal:Enum_render_type/URIImport"
+}

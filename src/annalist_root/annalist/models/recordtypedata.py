@@ -54,19 +54,6 @@ class RecordTypeData(Entity):
         self._ancestorid = parent._ancestorid
         return
 
-    # @@TODO remove this method and re-test 
-    # (now redundant, handled through Entity class, methdod child_entities)
-    def ___entities(self):
-        """
-        Generator enumerates and returns records of given type
-        """
-        for f in self._children(EntityData):
-            log.debug("RecordTypeData.entities: f %s"%f)            
-            e = EntityData.load(self, f)
-            if e:
-                yield e
-        return
-
     def remove_entity(self, entity_id):
         t = EntityData.remove(self, entity_id)
         return t

@@ -1,0 +1,19 @@
+{ "@id":                        "./"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Vocab_uri"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Vocab_uri"
+, "annal:type":                 "annal:Field"
+, "rdfs:label":                 "Vocabulary URI"
+, "rdfs:comment":               "# Vocabulary base URI\r\n\r\nDefines a base URI for all vocabulary URIs in this namespace.\r\n\r\nVocabulary term URIs are formed from CURIEs by replacing the CURIE `<prefix>:` with this URI string.  The base URI should end with a separator character - usually `/` or `#` - so that the base URI and local name part in the vocabulary term URI can be separated."
+, "annal:field_render_type":    "_enum_render_type/URILink"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Vocabulary"
+, "annal:property_uri":         "annal:uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(Vocabulary namespace URI)"
+, "annal:tooltip":              "Defines a base URI for all vocabulary URIs in this namespace."
+}

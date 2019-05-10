@@ -111,15 +111,18 @@ def entity_resource_url(
     base = entity_url(coll_id, type_id, entity_id)
     return urljoin(base, resource_ref)
 
-def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id="Default_view"):
+def entitydata_edit_url(action=None, coll_id="testcoll", type_id=None, entity_id=None, view_id=None):
     viewname = ( 
         'AnnalistEntityNewView'             if action == "new" else
-        'AnnalistEntityEditView'            if action is not None else
-        'AnnalistEntityDataView'
+        'AnnalistEntityEditView'            if action and view_id else
+        'AnnalistEntityDataView'            if            view_id else
+        'AnnalistEntityDefaultDataView'
         )
-    kwargs = {'coll_id': coll_id, 'view_id': view_id}
+    kwargs = {'coll_id': coll_id}
     if action:
         kwargs.update({'action': action})
+    if view_id:
+        kwargs.update({'view_id': view_id})
     if type_id:
         kwargs.update({'type_id': type_id})
     if entity_id:

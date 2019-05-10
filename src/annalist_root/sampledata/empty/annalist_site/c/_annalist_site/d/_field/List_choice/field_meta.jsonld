@@ -1,0 +1,19 @@
+{ "@id":                        "_field/List_choice"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_choice"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_choice"
+, "rdfs:label":                 "List view"
+, "rdfs:comment":               "# List view\r\n\r\nChoose list to display."
+, "annal:field_name":           "list_choice"
+, "annal:field_render_type":    "_enum_render_type/Enum_choice"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "annal:None#this_is_a_special_case_not_used_as_a_view_field"
+, "annal:property_uri":         "annal:list"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:field_ref_type":       "_list"
+, "annal:placeholder":          "(list id)"
+, "annal:tooltip":              "Choose list to display."
+}

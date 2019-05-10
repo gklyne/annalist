@@ -146,7 +146,7 @@ class Entity(EntityRoot):
                     explicitly created entities in a collection with site-wide 
                     installed metadata entites (i.e. types, views, etc.)
         """
-        if not util.valid_id(entityid):
+        if not util.valid_id(entityid, reserved_ok=True):
             msg = "Invalid entity identifier: %s"%(entityid)
             log.error(msg)
             raise ValueError(msg)
@@ -564,7 +564,7 @@ class Entity(EntityRoot):
         # if altscope == "all" and self._altparent:
         #     parent_entity_ids = self._altparent._children(cls, altscope=altscope)
         for entity_id in [f for f in parent_entity_ids if f not in coll_entity_ids] + coll_entity_ids:
-            if util.valid_id(entity_id):
+            if util.valid_id(entity_id, reserved_ok=True):
                 yield entity_id
         return
 
@@ -664,7 +664,7 @@ class Entity(EntityRoot):
         return None
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None, reserved_ok=False):
+    def load(cls, parent, entityid, altscope=None):
         """
         Return an entity with given identifier belonging to some given parent,
         or None if there is not such identity.
@@ -682,7 +682,7 @@ class Entity(EntityRoot):
         #     (cls._entitytype, entityid, altscope)
         #     )
         entity = None
-        if util.valid_id(entityid, reserved_ok=reserved_ok):
+        if util.valid_id(entityid, reserved_ok=True):
             (e, v) = cls.try_alt_parentage(
                 parent, entityid, (lambda e: e._load_values()), 
                 altscope=altscope

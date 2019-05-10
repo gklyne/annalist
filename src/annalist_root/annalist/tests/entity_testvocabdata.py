@@ -111,7 +111,7 @@ def recordvocab_load_keys():
 
 def recordvocab_create_values(
         coll_id="testcoll", vocab_id="testvocab", 
-        vocab_uri="test:testvocab",
+        vocab_uri="test:testvocab#",
         update="RecordVocab"):
     """
     Entity values used when creating a namespace vocabulary entity
@@ -127,7 +127,7 @@ def recordvocab_create_values(
 
 def recordvocab_values(
         coll_id="testcoll", vocab_id="testvocab", 
-        vocab_uri="test:testvocab",
+        vocab_uri="test:testvocab#",
         update="RecordVocab"):
     d = recordvocab_create_values(
         coll_id, vocab_id, 
@@ -144,7 +144,7 @@ def recordvocab_values(
 
 def recordvocab_read_values(
         coll_id="testcoll", vocab_id="testvocab",
-        vocab_uri="test:testvocab",
+        vocab_uri="test:testvocab#",
         update="RecordVocab"):
     d = recordvocab_values(coll_id, vocab_id, vocab_uri=vocab_uri, update=update)
     d.update(

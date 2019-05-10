@@ -99,6 +99,8 @@ setup(
             , 'data/identity_providers/*.json'
             , 'data/identity_providers/*.example'
             , 'data/identity_providers/images/*.png'
+            , 'data/identity_providers/images/*.jpg'
+            , 'data/identity_providers/images/*.svg'
             # Configuration example data
             , 'data/config_examples/*'
             # Site-wide data definitions
@@ -114,6 +116,7 @@ setup(
             , 'data/sitedata/_view/*/*.jsonld'
             , 'data/sitedata/_user/*/*.jsonld'
             , 'data/sitedata/_vocab/*/*.jsonld'
+            , 'data/sitedata/_info/*/*.jsonld'
             # Bibliographic data definitions
             , 'data/Bibliography_defs/_field/*/*.jsonld'
             , 'data/Bibliography_defs/_group/*/*.jsonld'
@@ -205,8 +208,9 @@ setup(
     install_requires =
         [ 'Django==1.11.20'
         , 'six==1.11.0'
+        , 'futures==3.2.0'
         , 'requests==2.20.0'
-          , 'urllib3==1.23'
+          , 'urllib3==1.24.2'
           , 'chardet==3.0.4'
           , 'idna==2.6'
           , 'requests-oauthlib==0.8.0'

@@ -31,6 +31,7 @@ from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 from annalist.views.siteresource        import SiteResourceAccess
 from annalist.views.collectionresource  import CollectionResourceAccess
 from annalist.views.entityresource      import EntityResourceAccess
+from annalist.views.statichack          import serve_pages
 
 from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
 from login.auth_oidc_client             import OIDC_AuthDoneView
@@ -107,6 +108,17 @@ urlpatterns = [
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityAccessView'),
 
+    # Default edit views
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>copy)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityDefaultDataView'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>edit)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityDefaultDataView'),
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>view)$',
+                            GenericEntityEditView.as_view(),
+                            name='AnnalistEntityDefaultDataView'),
+
     # JSON list views without list_id specified
     url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
@@ -179,6 +191,9 @@ urlpatterns = [
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityViewAccess'),
 
+    # Access supporting application pages in same collection
+    url(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
+                            serve_pages),
     ] # End of urlpatterns
 
 # Login-related view URLs
@@ -190,6 +205,10 @@ urlpatterns += [
     url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
     url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
     url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
+    # Info view...
+    # url(r'^c/(?P<coll_id>_annalist_site)/d/(?P<type_id>_info)/(?P<entity_id>about)/$',
+    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
+                            GenericEntityEditView.as_view(),    name='AnnalistInfoView'),
     ]
 
 # End.

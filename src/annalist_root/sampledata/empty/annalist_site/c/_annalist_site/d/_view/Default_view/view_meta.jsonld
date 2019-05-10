@@ -1,0 +1,25 @@
+{ "@id":                    "_view/Default_view"
+, "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":          "_view"
+, "annal:id":               "Default_view"
+, "annal:uri":              "annal:display/Default_view"
+, "rdfs:label":             "Default record view"
+, "rdfs:comment":           "# Default record view\r\n\r\nDefault view applied when no view is specified when creating a record.\r\n\r\nThis view defines a minimal set of fields that are generally presumed to be present in all records: a record Id, a record type, a short label and a comment that can be used to provide an extended description.  For site data, the comment is used to populate interactive help information.\r\n\r\nThis view can also be used to change the type of a record.\r\n\r\n## Fields:\r\n\r\n[Id]($BASE:_field/Entity_id/): Entity identifier\r\n\r\n[Type]($BASE:_field/Entity_type/): Reference to type of this record.\r\n\r\n[Label]($BASE:_field/Entity_label/): short label used to describe this record.\r\n\r\n[Comment]($BASE:_field/Entity_comment/): longer text description of this record.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n"
+, "annal:view_entity_type": ""
+, "annal:open_view":        true
+, "annal:view_fields":
+  [ { "annal:field_id":         "_field/Entity_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Entity_type"
+    , "annal:field_placement":  "small:0,12;medium:6,6"
+    }
+  , { "annal:field_id":         "_field/Entity_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

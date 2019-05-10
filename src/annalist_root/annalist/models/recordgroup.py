@@ -54,14 +54,14 @@ class RecordGroup(EntityData):
         return
 
     @classmethod
-    def load(cls, parent, entityid, altscope=None, reserved_ok=False, deprecation_warning=False):
+    def load(cls, parent, entityid, altscope=None, deprecation_warning=False):
         """
         Overloaded load method with default deprecation warning
         """
         if cls._deprecation_warning:
             log.warn("Loading _group/%s for collection %s"%(entityid, parent.get_id()))
             # log.debug("".join(traceback.format_stack()))
-        return super(RecordGroup, cls).load(parent, entityid, altscope=altscope, reserved_ok=reserved_ok)
+        return super(RecordGroup, cls).load(parent, entityid, altscope=altscope)
 
     def _migrate_filenames(self):
         """

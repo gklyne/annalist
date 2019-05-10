@@ -28,7 +28,7 @@ I've just released an update (release 0.5.14) of Annalist.
 This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses a "production grade" web server; static files can be served directly by a front-end Apache or Nginx HTTP server; and deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented.  There are also numerous smaller bug-fixes and improvements.
 
 The full announcement is at:
-https://groups.google.com/d/msg/annalist-discuss/WOAR47fcCrs/wtGi5W5NAAAJ
+https://groups.google.com/d/msg/annalist-discuss/8t2y5ykrUjs/yoqCl8SdGAAJ
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 

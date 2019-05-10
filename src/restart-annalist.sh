@@ -7,10 +7,16 @@ echo "    pip install /var/www/software/Annalist-0.1.xx.tar.gz --upgrade"
 echo "    annalist-manager runtests"
 echo ""
 
-killall python
-killall python2
-killall python3
-nohup annalist-manager runserver --personal >annalist.out &
-cat annalist.out
+# Stop dev server instances, if any:
+# killall python
+# killall python2
+# killall python3
+
+annalist-manager stopserver --personal
+sleep 0.5
+annalist-manager runserver --personal
+
+# This alternative runs the development server rather than gunicorn
+# nohup annalist-manager rundevserver --personal >annalist.out &
 
 # End.

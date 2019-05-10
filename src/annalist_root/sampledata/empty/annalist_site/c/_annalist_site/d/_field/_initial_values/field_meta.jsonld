@@ -1,0 +1,12 @@
+{ "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "_initial_values"
+, "rdfs:label":                 ""
+, "rdfs:comment":               ""
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     ""
+, "annal:placeholder":          ""
+, "annal:tooltip":              ""
+, "annal:property_uri":         ""
+}

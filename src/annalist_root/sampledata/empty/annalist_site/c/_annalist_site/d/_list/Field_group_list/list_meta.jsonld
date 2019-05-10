@@ -1,0 +1,22 @@
+{ "@id":                        "_list/Field_group_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_group_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/Field_group_list"
+, "rdfs:label":                 "Field groups"
+, "rdfs:comment": "# Field groups\r\n\r\nField groups are used to present a group of fields for display, referenced by the following field render types: \r\n\r\n* [Repeating field group]($BASE:_enum_render_type/RepeatGroup/), [Repeating fields as row]($BASE:_enum_render_type/RepeatGroupRow/), [Field group sequence]($BASE:_enum_render_type/Group_Seq), [Field group sequence as table]($BASE:_enum_render_type/Group_Seq_Row), [Field group set]($BASE:_enum_render_type/Group_Set) and [Field group set as table]($BASE:_enum_render_type/Group_Set_Row): to define fields for repeated presentation, or\r\n* [Fields of referenced entity]($BASE:_enum_render_type/RefMultifield/): to describe a number of fields to be displayed from a referenced entity."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/Field_group_view"
+, "annal:default_type":         "_type/_group"
+, "annal:list_entity_selector": "'annal:Field_group' in [@type]"
+, "annal:list_entity_type":     "annal:Field_group"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,4"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:4,8"
+    }
+  ]
+}

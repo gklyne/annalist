@@ -60,6 +60,11 @@ class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
+# Define secret key for various Django functions
+# See: 
+#   https://stackoverflow.com/a/15383766/324122
+#   https://stackoverflow.com/a/23728630/324122
+#
 # SECURITY WARNING: keep the secret key used in production secret!
 KEY_CHARS  = string.ascii_letters + string.digits + string.punctuation
 SECRET_KEY = ''.join(
@@ -68,6 +73,22 @@ SECRET_KEY = ''.join(
                 )
 # See also: https://stackoverflow.com/a/23728630/324122
 # SECRET_KEY = '@-+h*%@h+0yj(^c9y-=1a@9l^@xzub200ofq2@a$gm2k_l*$pf'
+
+# UPDATE: running under 'gunicorn', I've found that session logins get dumped
+# periodcally when the worker process periodically restarts.  
+# Hence I'm trying to find an alternative that attempts to be more "sticky", 
+# without depending on a predefinbed secret key.
+#
+# Options I'm considering:
+# (a) use an environment variable set randomly when starting the server,
+# (b) use the file system to persist a randomly generated value
+#
+# Currently, I prefer the environment variable approach:
+# For this to work, set the environment variable in 'annalist-manager' when 
+# running under 'gunicorn'. If not defined, use randomly key (from above).
+
+if "ANNALIST_KEY" in os.environ:
+    SECRET_KEY = os.environ["ANNALIST_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # (overrides in settings.devel and settings.runtests)

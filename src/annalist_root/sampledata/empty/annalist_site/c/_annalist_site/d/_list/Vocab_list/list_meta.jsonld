@@ -1,0 +1,22 @@
+{ "@id":                        "_list/Vocab_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Vocab_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/Vocab_list"
+, "rdfs:label":                 "Vocabulary namespaces"
+, "rdfs:comment":               "# Vocabulary namespaces\r\n\r\nThis display lists [vocabulary namespaces]($BASE:_type/_vocab/).\r\n\r\nNamespaces provide a convenient way to write vocabulary terms that can be mapped to globally unique Web URIs. They provide a link between convenient terms for local data and data that can be unambiguously interpreted (following the RDF model) when published on the Web.\r\n\r\nA namespace consists primarily of a prefix (which is used locally) and a URI (which is substituted for the prefix to obtain a global URI for the same term).  The term \"namespace\" is also sometimes used to refer to the set of terms that use a namespace prefix.  In data published by Annalist, namespaces are handled through mechanisms defined by [JSON-LD](http://json-ld.org/) (see also [JSON-LD specification](https://www.w3.org/TR/json-ld/))."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/Vocab_view"
+, "annal:default_type":         "_type/_vocab"
+, "annal:list_entity_type":     "annal:Vocabulary"
+, "annal:list_entity_selector": "'annal:Vocabulary' in [@type]"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}

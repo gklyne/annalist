@@ -20,7 +20,7 @@ recursive-include annalist_root/annalist/data/namedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/sitedata *.jsonld *.md
 recursive-include annalist_root/annalist/data/static/css *.css
 recursive-include annalist_root/annalist/data/static/js *.js
-recursive-include annalist_root/annalist/data/static/images *.png *.jpg
+recursive-include annalist_root/annalist/data/static/images *.png *.jpg *.svg
 recursive-include annalist_root/annalist/data/static/foundation *.css *.png *.jpg *.js *.md
 recursive-include annalist_root/annalist/data/test *
 recursive-include annalist_root/annalist/data/Annalist_schema *.jsonld *.md

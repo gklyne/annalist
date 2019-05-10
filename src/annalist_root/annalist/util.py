@@ -32,6 +32,7 @@ from utils.py3porting       import (
     urlopen, Request, get_message_type
     )
 
+from annalist               import layout
 from annalist.identifiers   import ANNAL
 
 def valid_id(id_string, reserved_ok=False):
@@ -54,9 +55,17 @@ def valid_id(id_string, reserved_ok=False):
     False
     """
     reserved = (
-        [ "_annalist_collection"
-        # , "_annalist_site"
+        [ layout.INITIAL_VALUES_ID
+        , layout.COLL_ROOT_CONF_OLD_DIR
+        , layout.SITEDATA_ID
         ])
+    #@@DEBUG - write traceback to local file
+    # DEBUG = (id_string in reserved) and (not reserved_ok)
+    # if DEBUG:
+    #     with open("debug-traceback.log", "a") as f:
+    #         f.write("@@@@ Unexpected identifier %s"%(id_string))
+    #         f.write("".join(traceback.format_stack()))
+    #@@
     # cf. urls.py:
     if id_string and re.match(r"\w{1,128}$", id_string):
         return reserved_ok or (id_string not in reserved)
@@ -480,8 +489,8 @@ def replacetree(src, tgt):
 
 def updatetree(src, tgt):
     """
-    Like replacetree, except that existing files are not removed unless replaced 
-    by a file of the name name in the source tree.
+    Like replacetree, except that existing files are not removed unless 
+    replaced by a file of the name name in the source tree.
 
     NOTE: can't use shutil.copytree for this, as that requires that the 
     destination tree does not exist.
@@ -497,6 +506,23 @@ def updatetree(src, tgt):
                 updatetree(sf, tf)                          # Recursive dir copy
             else:
                 shutil.copy2(sf, tgt)                       # Copy single file, may overwrite
+    return
+
+def expandtree(src, tgt):
+    """
+    Like updatetree, except that existing files are not updated.
+    """
+    files = os.listdir(src)
+    for f in files:
+        sf = os.path.join(src, f)
+        if os.path.exists(sf) and not os.path.islink(sf):   # Ignore symlinks
+            tf = os.path.join(tgt, f)
+            if os.path.isdir(sf):
+                if not os.path.isdir(tf):
+                    os.makedirs(tf)
+                expandtree(sf, tf)                          # Recursive dir copy
+            elif not os.path.exists(tf):
+                shutil.copy2(sf, tgt)                       # Copy single file
     return
 
 def download_url_to_file(url, fileName=None):

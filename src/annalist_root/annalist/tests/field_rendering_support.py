@@ -187,6 +187,7 @@ class FieldRendererTestSupport(AnnalistTestCase):
             , 'SITE':                 TestBaseUri
             , 'COLL':                 TestBaseUri+"/c/"+coll_id+"/"
             , 'BASE':                 TestBasePath+"/c/"+coll_id+"/d/"
+            , 'PAGE':                 TestBasePath+"/c/"+coll_id+"/p/"
             })
         return Context(cd)
 

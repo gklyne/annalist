@@ -33,7 +33,8 @@
     CustomLog /var/log/apache2/annalist-access.log combined
 
     <location />
-        allow from all
+        # allow from all      # Apache 2.2
+        Require all granted   # Apache 2.4
     </location>
 
     # For robots.txt:

@@ -1,0 +1,19 @@
+{ "@id":                        "_field/List_entity_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_entity_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_entity_type"
+, "rdfs:label":                 "List entity type"
+, "rdfs:comment":               "# List entity type\r\n\r\nType (URI or CURIE) of entity displayed by this list. Used to determine field choices appropriate to this list.  (See also field [Entity type]($BASE:_field/Field_entity_type) in field definition.)"
+, "annal:field_name":           "List_entity_type"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:List"
+, "annal:property_uri":         "annal:list_entity_type"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(entity type URI/CURIE displayed by list)"
+, "annal:tooltip":              "Type (URI or CURIE) of entity displayed by this list. Used to determine field choices appropriate to this list."
+}

@@ -1,0 +1,7 @@
+{ "@type":                      ["annal:Info"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Contact_initial"
+, "annal:type_id":              "_info"
+, "rdfs:label":                 "Contact information"
+, "rdfs:comment":               "# Contact information\n\r\n\rThis site is administered by [(site-admin-name)](mailto:site-admin-email@example.net).\n\r((Add more information here))"
+}

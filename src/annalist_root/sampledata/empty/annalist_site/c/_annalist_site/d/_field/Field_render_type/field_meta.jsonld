@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Field_render_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_render_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_render_type"
+, "rdfs:label":                 "Render type"
+, "rdfs:comment":               "# Render type\r\n\r\nField rendering type. This encompasses the actual form of the rendered value, and any defaults or other values that may be applied to the field.  (See [Field definition]($BASE:_view/Field_view]) help for more details.)"
+, "annal:field_render_type":    "_enum_render_type/Enum_choice"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:field_render_type"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:field_ref_type":       "_enum_render_type"
+, "annal:default_value":        "Text"
+, "annal:placeholder":          "(field render type)"
+, "annal:tooltip":              "Field rendering type. This encompasses the actual form of the rendered value, and any defaults or other values that may be applied to the field."
+}

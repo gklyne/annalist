@@ -1,0 +1,11 @@
+{ "@id":                "_type/_info"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_info"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Information"
+, "rdfs:label":         "General information"
+, "rdfs:comment":       "# Generat information\r\n\r\nAn entity containing some general information which may be displayed to a user.\r\n"
+, "annal:type_view":    "_view/Info_view"
+, "annal:type_list":    "_list/Info_list"
+}

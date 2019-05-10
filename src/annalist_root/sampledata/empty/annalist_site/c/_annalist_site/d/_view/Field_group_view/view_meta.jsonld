@@ -1,0 +1,28 @@
+{ "@id":                    "_view/Field_group_view"
+, "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "Field_group_view"
+, "annal:type_id":          "_view"
+, "annal:uri":              "annal:display/Field_group_view"
+, "rdfs:label":             "Field group definition"
+, "rdfs:comment": "# Field group definition view\r\n\r\nUsed to view and edit instances of type [Field group]($BASE:_type/_group).\r\n\r\nThese define groups of fields used in a form to define optional or repeating field groups (render type [Repeating field group]($BASE:_enum_render_type/RepeatGroup/), [Repeating fields as row]($BASE:_enum_render_type/RepeatGroupRow/), [Field group sequence]($BASE:_enum_render_type/Group_Seq), [Field group sequence as table]($BASE:_enum_render_type/Group_Seq_Row), [Field group set]($BASE:_enum_render_type/Group_Set) or [Field group set as table]($BASE:_enum_render_type/Group_Set_Row)), or to present specified fields from a referenced entity (render type [Fields of referenced entity]($BASE:_enum_render_type/RefMultifield/)).\r\n\r\n## Fields:\r\n\r\n[Group Id]($BASE:_field/Group_id/):\r\nfield group identifier\r\n\r\n[Label]($BASE:_field/Group_label/):\r\nshort label used to describe this field group.\r\n\r\n[Help]($BASE:_field/Group_comment/):\r\nextended text description of this field group.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n\r\n[Group entity type]($BASE:_field/Group_entity_type/):\r\nif specified, indicates a record type (URI or CURIE) to which this field group applies.  If not specified (blank), the field group is considered to be applicable to any record type.\r\n\r\n[Fields]($BASE:_field/Group_fields/):\r\na list of one of more field references, with optional properties (URIs or CURIEs) and layout position/size indicator.  If the property and/or positioning values are not specified, values from the referenced field description are used.\r\n"
+, "annal:view_entity_type": "annal:Field_group"
+, "annal:open_view":        false
+, "annal:view_fields":
+  [ { "annal:field_id":               "_field/Group_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/Group_label"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_comment"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_entity_type"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/Group_fields"
+    , "annal:field_placement":        "small:0,12"
+    }
+  ]
+}
