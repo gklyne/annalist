@@ -1,0 +1,11 @@
+{ "@id":                "_type/_group"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_group"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Field_group"
+, "rdfs:label":         "Field group"
+, "rdfs:comment": "# Field group definition\r\n\r\nDefines a group of fields used in a form for optional or repeating field group (render type [Repeating field group]($BASE:_enum_render_type/RepeatGroup/), [Repeating fields as row]($BASE:_enum_render_type/RepeatGroupRow/), [Field group sequence]($BASE:_enum_render_type/Group_Seq), [Field group sequence as table]($BASE:_enum_render_type/Group_Seq_Row), [Field group set]($BASE:_enum_render_type/Group_Set) or [Field group set as table]($BASE:_enum_render_type/Group_Set_Row)), or to present specified fields from a referenced entity (render type [Fields of referenced entity]($BASE:_enum_render_type/RefMultifield/)."
+, "annal:type_view":    "_view/Field_group_view"
+, "annal:type_list":    "_list/Field_group_list"
+}

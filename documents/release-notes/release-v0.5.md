@@ -5,11 +5,11 @@ Annalist release 0.5.x is a feature-complete candidate for an eventual version 1
 A summary of issues relating to deployability, resilience and security that are intended to be resolved for product release can be seen in the [issues list for the first alpha release milestone](https://github.com/gklyne/annalist/milestones/V0.x%20alpha).  See also the file [documents/TODO.md](https://github.com/gklyne/annalist/blob/develop/documents/TODO.md) on the "develop" branch.
 
 
-## Release 0.5.14
+## Release 0.5.16
 
-This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's development server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
+This release addresses some problems arising from the move to using `gunicorn`.  This includes re-engineering the internal caching to faciltate later support for systems such as MemCached.
 
-Also, numerous bug-fixes and small improvements.
+A number of small improvements have been incorporated to support work-in-progress applications of Annalist, and to eliminate some surprising observed behaviours.
 
 
 ## Status
@@ -85,14 +85,50 @@ See also previous release notes:
 - [Release 0.1.x](./release-v0.1.md)
 
 
+## Release 0.5.16
+
+This release addresses some problems arising from the move to using `gunicorn`.  This includes re-engineering the internal caching to faciltate later support for systems such as MemCached.
+
+A number of small improvements have been incorporated to support work-in-progress applications of Annalist, and to eliminate some surprising observed behaviours.
+
+
+## Release 0.5.15, towards 0.5.16
+
+- [x] BUG: Retrieving turtle data in production (gunicorn) server was failing.  Works OK in dev server. Caused by deadlock on gunicorn single-worker-thread as Turtle output needs to access context via HTTP.  Requires server to run mltiple threads, 
+which has implications for cache management (see next).  Annalist-manager now runs gunicorn server with 2 worker threads.
+    - See: documents/notes/20190327-threading-caching-notes.md
+- [x] Implement generic caching API and local thread-safe implementation.  Later, the API can be used to access MemCached or Redis shared caches.
+- [x] Redesign entity cache to use cache API.
+- [x] Redesign closure cache to use cache API.
+- [x] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.  The problem here is that the gunicorn process is peridoically restarted, which was resulting in regeneration of the secret key used for keying session data, CSRF and more.  When running Annalist under gunicorn, add ANNALIST_KEY environment variable to prime the secret key generation, so that it doesn't change with every work-process restart.
+- [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)  The code is mostly the same as for Google, but some of the response fields are different.
+- [x] Apache sample configurations as previously provided work with Apache 2.2.
+    - Updated to work with Apache 2.4, with older directives left as comments.
+- [x] Define entity reference renderer in core data (renders label as link; uses `entity_id` renderer with `rdfs:label property`).
+- [x] Renderer for JSON language-tagged string { @value: ..., @language: ... }
+- [x] Provide initial content for the links in the page footer.
+    - This information can be edited locally.
+    - Copies of the initial data are kept separately.
+    - See new entity type `_info`
+- [x] Added hook for processing entity data before saving
+- [x] If property URI in field definition is missing or blank, use field id
+- [x] Added logic to allow serving additonal pages and data from "/p/" ("pages") in each collection directory.  This is being used to experiment with collection-specific rendering applications.
+- [x] Add $PAGE substitution for Markdown formatting to allow linking to collection page data.
+- [x] Generate warning if namespace URI doesn't end with "/" or "#".  Currently, the waring appears in the log file as part of JSON-LD context generation.  A better implemention (for later) would be to check the namespace URI when saving a new/updated `_vocab` entity.
+- [x] Update "edit" logic in list view to use default view for the entity type.
+- [x] Update reserved identifiers screened by `util.valid_id`
+- [x] Review handling of reserved identifiers; don't screen when loading entity.
+- [x] Update urllib3 version used, in response to Github-flagged security issue.
+
+
 ## Release 0.5.14
 
-This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's developmemt server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
+This is a maintenance release for more robust deployments, particularly for public web access.  The Annalist app uses the production-grade `gunicorn` server (rather than Django's development server); static files can be served directly by a front-end Apache or Nginx HTTP server; deployment with HTTPS and LetsEncrypt certificates is more fully tested and documented; dynamic CSRF-protection secret generation.  `annalist-manager` changes to support these deployment patterns.
 
 Also, numerous bug-fixes and small improvements.
 
 
-## Version 0.5.13, towards 0.5.14
+## Release 0.5.13, towards 0.5.14
 
 NOTE: Prior to Annalist version 0.5.14, the `annalist-manager runserver` command ran the Django development HTTP server, and operated synchronously; i.e., the `annalist-manager runserver` command did not complete until the server itself terminated, commonly by typing CTRL+C. As of version 0.5.14, this is performed by the `annalist-manager rundevserver` command.  The `annalist-manager runserver` command now starts the Annlist application under the `gunicorn` HTTP server, and completes as soon as the server is up and running, writing the server process id to stdout (and also to a file in the Annalist site base directory). To stop a running server started in  this way, use the command `annalist-manager stopserver`.
 

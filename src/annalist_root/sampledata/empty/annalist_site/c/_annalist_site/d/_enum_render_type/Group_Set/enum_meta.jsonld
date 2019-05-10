@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Group_Set"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Group_Set"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Field group set"
+, "rdfs:comment":       "# Repeating field group as set\r\n\r\nPresents a group of sub-fields, which may be repeated zero or more times in the containing form.  Each field value is rendered with a label.\r\n\r\nOrdering of the elements is not considered to be significant, but is preserved within Annalist.  When exported as RDF, each field-group is associated with the containing entity by a new occurrence of the corresponding property URI."
+, "annal:uri":          "annal:Enum_render_type/Group_Set"
+}

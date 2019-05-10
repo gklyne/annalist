@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/RepeatGroupRow"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "RepeatGroupRow"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Repeating fields as table (@@use Group_Seq_Row 'Field group sequence as table')"
+, "rdfs:comment":       "# Repeating fields as table\r\n\r\nPresents a group of sub-fields, which may be repeated zero or more times in the containing form.\r\n\r\nEach repetition is presented as a row of a table, and each sub-field as a column, and with sub-field labels as column headers."
+, "annal:uri":          "annal:Enum_render_type/RepeatGroupRow"
+}

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Identifier"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Identifier"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Identifier"
+, "rdfs:comment":       "# Render type: identifier\r\n\r\nURI or CURIE used as a global identifier. Presented as a text field."
+, "annal:uri":          "annal:Enum_render_type/Identifier"
+}

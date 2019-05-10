@@ -1,0 +1,9 @@
+{ "@id":                "_enum_value_mode/Value_import"
+, "@type":              ["annal:Enum_value_mode", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Value_import"
+, "annal:type_id":      "_enum_value_mode"
+, "annal:uri":          "annal:Enum_value_mode/Value_import"
+, "rdfs:label":         "Import from web"
+, "rdfs:comment":       "# Value mode: Import from web\r\n\r\nField value is an imported attachment, and may be rendered for viewing using a resource reference renderer such as [Image reference]($BASE:_enum_render_type/RefImage/) or [Audio clip reference]($BASE:_enum_render_type/RefAudio/).\r\n\r\nWhen editing the containing entity, a text input box (for the URL) and an `Import` button are displayed."
+}

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Showtext"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Showtext"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Display text"
+, "rdfs:comment":       "# Display text\r\n\r\nThis render type displays a short text value in view or edit mode, with no provision for changing the value in the form."
+, "annal:uri":          "annal:Enum_render_type/Showtext"
+}

@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Field_restrict"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_restrict"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_restrict"
+, "rdfs:label":                 "Value restriction"
+, "rdfs:comment":               "# Selection filter for field choices\r\n\r\nA selection filter to restrict enumerated values (per 'annal:field_ref_type') that are candidate values for inclusion in the selction drop-down.  This is a textual expression that defines selection criteria.\r\n\r\nExample:\r\n\r\n    'entity[annal:view_entity_type] subtype [annal:field_entity_type]'\r\n\r\nThe filter operates by comparing fields from an entity under consideration with a field from the containing entity, or from the view that is used to display it.\r\n\r\nSelector formats:\r\n\r\n    ALL (or blank)              match any entity\r\n    <val1> == <val2>            values are the same.\r\n    <val1> in <val2>            second value is list containing 1st value, or values are same, or <val1> is None.\r\n    <val1> subtype <val2>       first value is a subtype of, or the same type as, the second value.\r\n\r\n`<val1>` and `<val2>` may be:\r\n\r\n    [<field-id>]                refers to field of field under consideration for inclusion\r\n    entity[<field-id>]          refers to field of containing entity.\r\n    view[<field-id>]            refers to field of the view used to display the containing entity.\r\n    \"<string>\"                  literal string value.  Quotes within are escaped.\r\n\r\n<field_id> values are URIs or CURIEs, using URI characters (per RFC3986), except that '[' and ']' are not allowed."
+, "annal:field_name":           "Field_restrict"
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:field_ref_restriction"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(enumeration value restriction)"
+, "annal:tooltip":              "A selection filter for enumerated values that are included in a selection field drop-down list."
+}

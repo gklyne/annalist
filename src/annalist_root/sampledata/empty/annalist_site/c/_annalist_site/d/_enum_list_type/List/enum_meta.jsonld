@@ -1,0 +1,9 @@
+{ "@id":                "_enum_list_type/List"
+, "@type":              ["annal:Enum_list_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "List"
+, "annal:type_id":      "_enum_list_type"
+, "rdfs:label":         "List display"
+, "rdfs:comment":       "# List display\r\n\r\nList displayed one entry per line with columns for fields"
+, "annal:uri":          "annal:Enum_list_type/List"
+}

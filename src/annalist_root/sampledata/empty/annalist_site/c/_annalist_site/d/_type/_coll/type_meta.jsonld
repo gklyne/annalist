@@ -1,0 +1,11 @@
+{ "@id":                "_type/_coll"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_coll"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:Collection"
+, "rdfs:label":         "Collection"
+, "rdfs:comment":       "# Collection information\r\n\r\nContains information about an Annalist collection, which is an aggregation of associated data records, along with [type]($BASE:_type/_type/), [view]($BASE:_type/_view/), [list]($BASE:_type/_list/) and other definitions that are used control their presentation.\r\n\r\nCollection information may be displayed by selecting a collection from the site front page, and clicking on View metadata or Edit metadata."
+, "annal:type_view":    "_view/Collection_view"
+, "annal:type_list":    "_list/Default_list_all"
+}

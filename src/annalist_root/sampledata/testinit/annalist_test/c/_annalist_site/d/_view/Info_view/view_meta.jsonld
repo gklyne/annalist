@@ -1,0 +1,16 @@
+{ "@id":                    "_view/Info_view"
+, "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "Info_view"
+, "annal:type_id":          "_view"
+, "annal:uri":              "annal:display/Info_view"
+, "rdfs:label":             "General information"
+, "rdfs:comment":           "# General information\r\n\r\nThis view presents a [general information]($BASE:_type/_info/) entity."
+, "annal:view_entity_type": "annal:Information"
+, "annal:open_view":        false
+, "annal:view_fields": 
+  [ { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

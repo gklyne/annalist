@@ -1,0 +1,31 @@
+{ "@id":                "_view/View_view"
+, "@type":              ["annal:View"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "View_view"
+, "annal:type_id":      "_view"
+, "annal:uri":          "annal:display/View_view"
+, "rdfs:label":         "View definition"
+, "rdfs:comment":       "# View definition view\r\n\r\nForm used for viewing and editing view definitions.\r\n\r\nUsed to view instances of type [View]($BASE:_type/_view).\r\n\r\n\r\n## Fields\r\n\r\n[View Id]($BASE:_field/View_id/):\r\nview identifier.\r\n\r\n[Label]($BASE:_field/View_label/):\r\nshort label used to describe this view.\r\n\r\n[Help]($BASE:_field/View_comment/):\r\nextended text description of this view, used to populate help pane in view.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n\r\n[View entity type]($BASE:_field/View_entity_type/):\r\ntype (URI or CURIE) of entities displayed using this view. Used in determining field choices appropriate to this view definition.  If not defined, only field types applicable to all types are offered.\r\n\r\n[Editable view?]($BASE:_field/View_edit_view/):\r\nif selected, an **Edit view** button is provided while editing an entity, and **View description** while viewing an entity.  These options provide access to the view forms to define the entity view and editing interface.\r\n\r\n(This option is view-specific: built-in views are not intended to be edited and do not present an 'Edit view' button. Subject to permissions, any view description can always be edited directly.)\r\n\r\n[Fields]($BASE:_field/View_fields/):\r\na list of one of more field references, with optional property URIs or CURIEs, and layout position/size indicator.  If the property and/or positioning values are not specified, values from the referenced field definition are used.\r\n\r\n"
+, "annal:view_entity_type":  "annal:View"
+, "annal:open_view":    false
+, "annal:view_fields":
+  [ { "annal:field_id":               "_field/View_id"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/View_label"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_comment"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_entity_type"
+    , "annal:field_placement":        "small:0,12"
+    }
+  , { "annal:field_id":               "_field/View_edit_view"
+    , "annal:field_placement":        "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":               "_field/View_fields"
+    , "annal:field_placement":        "small:0,12"
+    }
+  ]
+}

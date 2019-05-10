@@ -1,0 +1,21 @@
+{ "@id":                        "_list/Default_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Default_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/Default_list"
+, "rdfs:label":                 "List entities"
+, "rdfs:comment":               "# List of entities\r\n\r\nThis page lists entities records in a collection, and provides options for them to be created, copied, edited or deleted.\r\n\r\nInitially, the default behaviour is to display all entities defined in the current collection, but different list options may be selected from the `List view` dropdown, and displayed contents may be filtered by entering a value in the `Search` box.  To **refresh the display** after making any such selections, click the `View` button.  To **set the default list** for the current collection to be the currently displayed list, click on the `Set default` button at the bottom of the page.\r\n\r\nThe displayed record types can be restricted in two ways: (1) by the list definition itself, and (2) by the link used to access the list.  Sometimes, when **changing list views**, nothing is displayed because the restrictions do not overlap:  if this happens, try selecting the `All types` checkbox, and then click the `View` or View all` button.\r\n\r\nTo **create a new entity record**, click on the `New` button.  A new form will be presented allowing data values to be entered.\r\n\r\nTo **copy** or **edit** an entity record, click on the beside the corresponding entry, and then click `Copy` or `Edit`.  A form will be presented allowing data values to be modified or entered.  To **delete** an entity record, click on the checkbox beside the entry to be deleted, and then click `Delete`.  Options to create, copy, edit and/or delete entity records are displayed only for logged-in users.\r\n\r\nThe `Customize` button displays a new form that allows entity types, lists and/or views to be created, modified or deleted."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/Default_view"
+, "annal:default_type":         "_type/Default_type"
+, "annal:list_entity_selector": "ALL"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/Entity_id"
+    , "annal:field_placement":      "small:0,3"
+    }
+  , { "annal:field_id":             "_field/Entity_label"
+    , "annal:field_placement":      "small:3,9"
+    }
+  ]
+}

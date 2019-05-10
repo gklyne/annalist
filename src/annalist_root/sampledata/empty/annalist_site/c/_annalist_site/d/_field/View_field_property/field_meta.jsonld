@@ -1,0 +1,19 @@
+{ "@id":                        "_field/View_field_property"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_field_property"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_property"
+, "rdfs:label":                 "Property URI"
+, "rdfs:comment":               "# Property URI\r\n\r\nProperty URI (or CURIE) used in a view definition to indicate the property URI/CURIE of a field to be displayed in that view."
+, "annal:field_name":           "View_field_property"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:View_field"
+, "annal:property_uri":         "annal:property_uri"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(field URI or CURIE)"
+, "annal:tooltip":              "Property URI (or CURIE) of a field to be displayed.  If specified, overrides the property URI value from the corresponding field definition."
+}

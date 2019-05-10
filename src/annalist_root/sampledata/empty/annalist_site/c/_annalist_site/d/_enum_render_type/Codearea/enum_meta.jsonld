@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Codearea"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Codearea"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Monospace text"
+, "rdfs:comment":       "# Render type: codearera\r\n\r\nField rendered as multiple lines of monospace text (code)"
+, "annal:uri":          "annal:Enum_render_type/Codearea"
+}

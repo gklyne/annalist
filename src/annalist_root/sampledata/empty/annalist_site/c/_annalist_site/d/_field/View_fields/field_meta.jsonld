@@ -1,0 +1,33 @@
+{ "@id":                        "_field/View_fields"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_fields"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_fields"
+, "rdfs:label":                 "Fields"
+, "rdfs:comment":               "# Fields\r\n\r\nLists the fields that appear in a view, where each field is specified with a [Field id]($BASE:_field/View_field_sel) and optional [Property]($BASE:_field/View_field_property) and [Position/size]($BASE:_field/View_field_placement) values.  If the optional values are omitted, corresponding values from the identified field definition are used."
+, "annal:field_render_type":    "_enum_render_type/Group_Seq_Row"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:View_field"
+, "annal:field_entity_type":    "annal:View"
+, "annal:property_uri":         "annal:view_fields"
+, "annal:field_placement":      "small:0,12"
+, "annal:placeholder":          "(repeat field description)"
+, "annal:tooltip":              "Lists the fields that appear in a view, where each field is specified with a 'Field id' and optional 'Property' and 'Position/size' values."
+, "annal:field_fields":
+  [ { "annal:field_id":         "_field/View_field_sel"
+    , "annal:property_uri":     "annal:field_id"
+    , "annal:field_placement":  "small:0,12;medium:0,4"
+    }
+  , { "annal:field_id":         "_field/View_field_property"
+    , "annal:property_uri":     "annal:property_uri"
+    , "annal:field_placement":  "small:0,12;medium:4,4"
+    }
+  , { "annal:field_id":         "_field/View_field_placement"
+    , "annal:property_uri":     "annal:field_placement"
+    , "annal:field_placement":  "small:0,12;medium:8,4"
+    }
+  ]
+, "annal:repeat_label_add":     "Add field"
+, "annal:repeat_label_delete":  "Remove selected field(s)"
+}

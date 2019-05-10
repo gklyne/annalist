@@ -34,43 +34,43 @@
     - For message:
         "Annalist release x.y.z: (msg (one-line description))"
 
-- [ ] Create release preparation branch
+- [x] Create release preparation branch
         git stash
         git checkout -b release-prep-x.y.z develop
         git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [ ] Bump data compatibility version if new data is not compatible with older releases
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [ ] Reinstall and re-run test suite
+- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [x] Bump data compatibility version if new data is not compatible with older releases
+- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
+- [x] Reinstall and re-run test suite
 
-- [ ] Add TODO list to release notes (edit out working notes)
-- [ ] Add release highlights description to release notes
+- [x] Add TODO list to release notes (edit out working notes)
+- [x] Add release highlights description to release notes
     - (create new release notes file if needed)
-- [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [ ] Review roadmap (`documents/roadmap.md`)
-- [ ] Update version number in scripts, documents, etc.
-    - [ ] Release notes
-    - [ ] documents/installing-annalist.md
-    - [ ] documents/roadmap.md
-    - [ ] documents/pages/index.html
+- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
+- [x] Review roadmap (`documents/roadmap.md`)
+- [x] Update version number in scripts, documents, etc.
+    - [x] Release notes
+    - [x] documents/installing-annalist.md
+    - [x] documents/roadmap.md
+    - [x] documents/pages/index.html
     - [ ] documents/tutorial/annalist-tutorial.adoc
-    - [ ] Docker build scripts and makefiles
-- [ ] Review and update GitHub project README.
-- [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`
+    - [x] Docker build scripts and makefiles
+- [x] Review and update GitHub project README.
+- [x] Create announcement text in `documents/release-notes/announce_0.5.*.md`
 - [ ] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 
 - [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
-    - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
+    - [x] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
-    - [ ] login to dev.annalist.net as 'graham', then
-        rm -rf anenv
-        virtualenv anenv
-        . anenv/bin/activate
+    - [x] login to dev.annalist.net as 'graham', then
+        rm -rf anenv2
+        virtualenv anenv2
+        . anenv2/bin/activate
         pip install software/Annalist-0.5.xx.tar.gz
         annalist-manager runtests
-    - [ ] Test new site creation:
+    - [x] Test new site creation:
         annalist-manager createsite
         annalist-manager collectstatic
         annalist-manager initialize
@@ -78,27 +78,27 @@
         annalist-manager runserver
         curl http://localhost:8000/annalist/site/ -v
 
-- [ ] Create and post updated kit download and web pages to annalist.net
+- [x] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
-    - [ ] ssh to ubuntu@annalist.net
-    - [ ] check HTTPS proxy and Certbot setup (currently using `apache2`)
-    - [ ] ssh to annalist@annalist.net, (or `su - annalist`)
-    - [ ] `. backup_annalist_site.sh`
-    - [ ] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
-    - [ ] `. anenv2/bin/activate`
-    - [ ] `annalist-manager stop` or `killall python` or `killall python2.7`
-    - [ ] `pip uninstall annalist`
-    - [ ] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
-    - [ ] `annalist-manager runtests`
-    - [ ] `. update-annalist-site.sh`
-    - [ ] `. update-run-annalist.sh`
-- [ ] Update front page link at annalist.net:
+- [x] Update and test demo installation on annalist.net
+    - [x] ssh to ubuntu@annalist.net
+    - [x] check HTTPS proxy and Certbot setup (currently using `apache2`)
+    - [x] ssh to annalist@annalist.net, (or `su - annalist`)
+    - [x] `. backup_annalist_site.sh`
+    - [x] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
+    - [x] `. anenv2/bin/activate`
+    - [x] `annalist-manager stop` or `killall python` or `killall python2.7`
+    - [x] `pip uninstall annalist`
+    - [x] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
+    - [x] `annalist-manager runtests`
+    - [x] `. update-annalist-site.sh`
+    - [x] `. update-run-annalist.sh`
+- [x] Update front page at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
 - [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [ ] Check out demo system.
+- [x] Check out demo system.
 
 - [ ] Commit changes ("Release x.y.z")
 - [ ] Upload to PyPI (`python setup.py sdist upload`)
@@ -115,7 +115,7 @@
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.5.14"`
+    - `git commit -m "Master branch updated to V0.5.16"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop

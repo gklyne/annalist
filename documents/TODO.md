@@ -22,7 +22,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Version 0.5.15, towards 0.5.16
+# Release 0.5.15, towards 0.5.16
 
 - [x] BUG: Retrieving turtle data in production server fails.  Works OK in dev server.
     - Caused by deadlock on gunicorn single-worker-thread as Turtle output needs to access context via HTTP.
@@ -57,6 +57,9 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
+- [ ] Include list all type definitions in sitemap data (
+_info/Sitemap)
+- [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.
@@ -100,6 +103,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 Technical debt:
 
+- [ ] Define gunicorn thread count in settings file.
 - [ ] Hook for data validation check when saving entity; redisplay form if fails
 - [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.

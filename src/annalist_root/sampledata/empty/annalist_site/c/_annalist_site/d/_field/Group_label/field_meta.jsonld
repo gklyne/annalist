@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Group_label"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_label"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_label"
+, "rdfs:label":                 "Label"
+, "rdfs:comment":               "# Label\r\n\r\nShort string used to describe this field group when displayed."
+, "annal:tooltip":              "Short string used to describe this field group when displayed."
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field_group"
+, "annal:placeholder":          "(field group label)"
+, "annal:property_uri":         "rdfs:label"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

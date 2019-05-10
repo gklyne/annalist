@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Group_field_property"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_field_property"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_field_property"
+, "rdfs:label":                 "Property URI"
+, "rdfs:comment":               "# Property URI\r\n\r\nProperty URI (or CURIE) used to access field data in a data record when rendered using the current field group.  Overrides the property URI value from the corresponding field description."
+, "annal:tooltip":              "Property URI (or CURIE) used to access field data in a data record when rendered using the current field group.  Overrides the property URI value from the corresponding field description."
+, "annal:placeholder":          "(field URI or CURIE)"
+, "annal:field_name":           "Field_property"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Field_group_field"
+, "annal:property_uri":         "annal:property_uri"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

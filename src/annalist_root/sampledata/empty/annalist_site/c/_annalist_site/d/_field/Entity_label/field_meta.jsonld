@@ -1,0 +1,17 @@
+{ "@id":                        "_field/Entity_label"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Entity_label"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_label"
+, "rdfs:label":                 "Label"
+, "rdfs:comment":               "# Label\r\n\r\nShort string used to label a displayed entity."
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:placeholder":          "(label)"
+, "annal:tooltip":              "A short entity label string."
+, "annal:property_uri":         "rdfs:label"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

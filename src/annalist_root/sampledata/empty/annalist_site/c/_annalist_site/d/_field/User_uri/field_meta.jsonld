@@ -1,0 +1,18 @@
+{ "@id":                        "_field/User_uri"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "User_uri"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/User_uri"
+, "rdfs:label":                 "User URI"
+, "rdfs:comment":               "# User URI\r\n\r\nUser authenticated URI - generally 'mailto:<email-address>', using an authenticated email address."
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:User"
+, "annal:property_uri":         "annal:user_uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(User URI - e.g. mailto:local-name@example.com)"
+, "annal:tooltip":              "User authenticated URI - generally 'mailto:<email-address>', using an authenticated email address."
+}

@@ -208,6 +208,7 @@ setup(
     install_requires =
         [ 'Django==1.11.20'
         , 'six==1.11.0'
+        , 'futures==3.2.0'
         , 'requests==2.20.0'
           , 'urllib3==1.24.2'
           , 'chardet==3.0.4'

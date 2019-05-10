@@ -1,0 +1,11 @@
+{ "@type":          ["annal:Vocabulary", "annal:EntityData"]
+, "@context":       [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":  "_vocab"
+, "annal:type":     "annal:Vocabulary"
+, "rdfs:label":     "... namespace"
+, "rdfs:comment":   "# Namespace: `zzzz`\r\n\r\nVocabulary namespace for ..."
+, "annal:uri":      ""
+, "rdfs:seeAlso":
+    [
+    ]
+}

@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Group_id"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_id"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_id"
+, "rdfs:label":                 "Group Id"
+, "rdfs:comment":               "# Group Id\r\n\r\nA short identifier that distinguishes this field group from all other field groups in the same collection."
+, "annal:tooltip":              "A short identifier that distinguishes this field group from all other field groups in the same collection."
+, "annal:field_name":           "entity_id"
+, "annal:field_render_type":    "_enum_render_type/EntityId"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "annal:Field_group"
+, "annal:placeholder":          "(group id)"
+, "annal:property_uri":         "annal:id"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

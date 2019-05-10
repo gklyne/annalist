@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Type_supertype_uri"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Type_supertype_uri"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_supertype_uri"
+, "rdfs:label":                 "Supertype URI"
+, "rdfs:comment":               "# Supertype URI\r\n\r\nURI/CURIE of supertype; i.e., another type to which all instances of this type also belong. (This is included in instances of this type when saving as JSON-LD/RDF.)"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Type_supertype_uri"
+, "annal:property_uri":         "annal:supertype_uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(Supertype URI or CURIE)"
+, "annal:tooltip":              "URI/CURIE of supertype; i.e., another type to which all instances of this type also belong."
+}
