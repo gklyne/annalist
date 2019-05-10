@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Coll_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Coll_comment"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Coll_comment"
+, "rdfs:label":                 "Collection metadata"
+, "rdfs:comment":               "# Collection metadata creation details\r\n\r\nThis is used for maintenance purposes to provide an indication of the provenance of the collection metadata, and can be ignored for most purposes."
+, "annal:field_render_type":    "_enum_render_type/Markdown"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:field_entity_type":    "annal:Collection"
+, "annal:property_uri":         "annal:meta_comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(annal:meta_comment)"
+, "annal:tooltip":              "Collection metadata creation details."
+}

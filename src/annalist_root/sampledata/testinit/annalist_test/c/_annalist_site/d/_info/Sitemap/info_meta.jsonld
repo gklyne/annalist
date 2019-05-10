@@ -1,0 +1,7 @@
+{ "@type":                      ["annal:Info"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Sitemap"
+, "annal:type_id":              "_info"
+, "rdfs:label":                 "Navigating this site"
+, "rdfs:comment":               "# Navigating this site\r\n\r\n* [List all collections]($SITE)\r\n\r\nIn the current collection:\r\n\r\n* [List all entities and their types]($COLL:l/Default_list_all/)\r\n* [List all view definitions]($COLL:l/View_list/)\r\n* [List all list definitions]($COLL:l/List_list/)\r\n* [List all field definitions]($COLL:l/Field_list/)\r\n* [List all vocabulary namespaces]($COLL:l/Vocab_list/)\r\n* [List all users]($COLL:l/User_list/) (requires admin permission)\r\n\r\n((add additional site or collection navigation as required))\r\n"
+}

@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/LangText"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "LangText"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Language text"
+, "rdfs:comment":       "# Language-tagged text\r\n\r\nThe stored value is a dictionary `{ @value: <text>, @language: lang-code }`, which is rendered as a simple string value with the language code in parentheses (e.g. `text (en)`)."
+, "annal:uri":          "annal:Enum_render_type/LangText"
+}

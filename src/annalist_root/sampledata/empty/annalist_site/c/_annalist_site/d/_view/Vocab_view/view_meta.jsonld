@@ -1,0 +1,28 @@
+{ "@id":                    "_view/Vocab_view"
+, "@type":                  ["annal:View"]
+, "@context":               [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":               "Vocab_view"
+, "annal:type_id":          "_view"
+, "annal:uri":              "annal:display/Vocab_view"
+, "rdfs:label":             "Vocabulary namespace"
+, "rdfs:comment":           "# Vocabulary namespace definition view\r\n\r\nForm used for viewing and editing vocabulary namespace definitions.\r\n\r\nUsed to view instances of type [Vocabulary namespace]($BASE:_type/_vocab).\r\n\r\nA vocabulary namespace is a set of URIs used to identify a group of related concepts, where all the URIs have a common leading URI part.  The namespace identifier is also used as a prefix in CURIEs representing terms from the namespace.\r\n\r\n## Fields\r\n\r\n[Prefix]($BASE:_field/Entity_id/):\r\nnamespace identifier, also used for the prefix part of CURIEs.\r\n\r\n[Label]($BASE:_field/Entity_label/):\r\nshort label used to describe this view.\r\n\r\n[Comment]($BASE:_field/Entity_comment/):\r\nextended text description of this namespace.\r\nUses Markdown for formatting, with [value substitutions]($BASE:_enum_render_type/Markdown) for links, etc.\r\n\r\n[Vocabulary URI]($BASE:_field/Vocab_uri/):\r\na vocabulary namespace URI.  All terms in the namespace have URIs that start with this URI.  Whenh a CURIE is converted to a UREI, the prefix partr is replaced with the URI string, which, when concatenated with the CURIE local part, yields the corresponding full vocabulary term URI.\r\n\r\n[See also]($BASE:_field/Entity_see_also_r/):\r\na list of links to information related to the namespace; e.g. specification documents, schemas, etc."
+, "annal:view_entity_type": "annal:Vocabulary"
+, "annal:open_view":        false
+, "annal:view_fields": 
+  [ { "annal:field_id":         "_field/Vocab_id"
+    , "annal:field_placement":  "small:0,12;medium:0,6"
+    }
+  , { "annal:field_id":         "_field/Entity_label"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_comment"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Vocab_uri"
+    , "annal:field_placement":  "small:0,12"
+    }
+  , { "annal:field_id":         "_field/Entity_see_also_r"
+    , "annal:field_placement":  "small:0,12"
+    }
+  ]
+}

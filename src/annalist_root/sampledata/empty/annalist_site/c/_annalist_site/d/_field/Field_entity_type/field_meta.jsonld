@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Field_entity_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_entity_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_entity_type"
+, "rdfs:label":                 "Entity type"
+, "rdfs:comment":               "# Entity type\r\n\r\nType (URI or CURIE) of entity to which field applies. Used to determine when this field is offered as an option. (See also fields [Value type]($BASE:_field/Field_value_type) in field definition, [View entity type]($BASE:_field/View_entity_type) in view definition, [List entity type]($BASE:_field/List_entity_type) in list definition, and [Group entity type]($BASE:_field/Group_target_type) in group definition.)  Roughly: the domain of the field property URI."
+, "annal:field_name":           "Field_entity_type"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(type URI/CURIE of entity to which field applies)"
+, "annal:tooltip":              "Type (URI or CURIE) of entity to which field applies. Used to determine when this field is offered as an option.  Roughly: the domain of the field property URI."
+, "annal:field_placement":      "small:0,12"
+, "annal:property_uri":         "annal:field_entity_type"
+}

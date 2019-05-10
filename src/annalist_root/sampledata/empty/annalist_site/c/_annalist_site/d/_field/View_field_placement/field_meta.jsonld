@@ -1,0 +1,19 @@
+{ "@id":                        "_field/View_field_placement"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "View_field_placement"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/View_field_placement"
+, "rdfs:label":                 "Position/size"
+, "rdfs:comment":               "# Position/size\r\n\r\nDefines placement of a field used in a view display.  The containing view definition may combine this with a field selector (field [Field ref]($BASE:_field/View_field_sel)) and property URI (field [Property]($BASE:_field/View_field_property)) values to designate a field to be displayed.  If specified, this field overrides the placement value from the corresponding field definition."
+, "annal:field_name":           "View_field_placement"
+, "annal:field_render_type":    "_enum_render_type/Placement"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Placement"
+, "annal:field_entity_type":    "annal:View_field"
+, "annal:property_uri":         "annal:field_placement"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(field position and size)"
+, "annal:tooltip":              "Defines placement of a field used in a view display.  The containing view definition may combine this with field selector (field 'Field Id') and property URI (field 'Property') values to define a field to be displayed.  If specified, overrides the placement value from the corresponding field definition."
+}

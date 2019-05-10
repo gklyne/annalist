@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Text"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Text"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Short text"
+, "rdfs:comment":       "# Short text\r\n\r\nThe stored value is a string, which is rendered as a single line of text."
+, "annal:uri":          "annal:Enum_render_type/Text"
+}

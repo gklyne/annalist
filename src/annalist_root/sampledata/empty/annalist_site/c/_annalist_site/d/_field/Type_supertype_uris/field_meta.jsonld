@@ -1,0 +1,25 @@
+{ "@id":                        "_field/Type_supertype_uris"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Type_supertype_uris"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_supertype_uris"
+, "rdfs:label":                 "Supertype URIs"
+, "rdfs:comment":               "# Supertype URIs\r\n\r\nReferences to URIs/CURIEs of supertypes.  There may be zero, one or more such supertypes."
+, "annal:field_render_type":    "_enum_render_type/Group_Set_Row"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Type_supertype_uri"
+, "annal:field_entity_type":    "annal:Type"
+, "annal:property_uri":         "annal:supertype_uri"
+, "annal:field_placement":      "small:0,12"
+, "annal:placeholder":          "(Supertype URIs or CURIEs)"
+, "annal:tooltip":              "References to URIs/CURIEs of supertypes.  There may be zero, one or more such supertypes."
+, "annal:field_fields": 
+    [ { "annal:field_id":         "_field/Type_supertype_uri"
+      , "annal:property_uri":     "@id"
+      , "annal:field_placement":  "small:0,12"
+      }
+    ]
+, "annal:repeat_label_add":     "Add supertype URI"
+, "annal:repeat_label_delete":  "Remove supertype URI"
+}

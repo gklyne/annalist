@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Group_field_placement"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_field_placement"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_field_placement"
+, "rdfs:label":                 "Position/size"
+, "rdfs:comment":               "# Position/size\r\n\r\nDefines placement of a field used in a repeating field group display.  The containing group definition may combine this with field selector (field 'Field Id') and property URI (field 'Property') values to define a field to be displayed.  If specified, overrides the placement value from the corresponding field definition.  (Placement values used in a 'Repeating fields as table' should use 'column' variants from the drop-down provided.)"
+, "annal:tooltip":              "Defines placement of a field used in a repeating field group display.  The containing group definition may combine this with field selector (field 'Field Id') and property URI (field 'Property') values to define a field to be displayed.  If specified, overrides the placement value from the corresponding field definition.  (Placement values used in a 'Repeating fields as table' should use 'column' variants from the drop-down provided.)"
+, "annal:placeholder":          "(field position and size)"
+, "annal:field_name":           "Field_placement"
+, "annal:field_render_type":    "_enum_render_type/Placement"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Placement"
+, "annal:field_entity_type":    "annal:Field_group_field"
+, "annal:property_uri":         "annal:field_placement"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

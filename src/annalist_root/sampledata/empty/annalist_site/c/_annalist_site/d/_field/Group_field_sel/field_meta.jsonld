@@ -1,0 +1,21 @@
+{ "@id":                        "_field/Group_field_sel"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Group_field_sel"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Group_field_sel"
+, "rdfs:label":                 "Field ref"
+, "rdfs:comment":               "# Field id\r\n\r\nA Field Id to be included in a view or list display that references the current field group.  May be specified along with a property URI ('Group_field_property') and display placement ('Group_field_placement') values to describe a field to be displayed."
+, "annal:tooltip":              "A Field Id to be included in a view or list display that references the current field group.  May be specified along with a property URI ('Group_field_property') and display placement ('Group_field_placement') values to describe a field to be displayed."
+, "annal:placeholder":          "(field reference)"
+, "annal:field_name":           "Group_field_sel"
+, "annal:field_render_type":    "_enum_render_type/Enum_optional"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_ref_type":       "_field"
+, "annal:field_ref_restriction": "entity[annal:group_entity_type] subtype [annal:field_entity_type]"
+, "annal:field_value_type":     "annal:EntityRef"
+, "annal:field_entity_type":    "annal:Field_group_field"
+, "annal:property_uri":         "annal:field_id"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+}

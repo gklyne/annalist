@@ -1,0 +1,18 @@
+{ "@id":                        "./"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Entity_see_also"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_see_also"
+, "annal:type":                 "annal:Field"
+, "rdfs:label":                 "Link to further information"
+, "rdfs:comment":               "# Link to further information\r\n\r\nLink (URL) for accessing additional information relating to an entity, presented for viewing as a hyperlink."
+, "annal:field_render_type":    "_enum_render_type/URILink"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "rdfs:Resource"
+, "annal:field_entity_type":    "annal:Entity_see_also_list"
+, "annal:placeholder":          "(URL for to further information)"
+, "annal:tooltip":              "Link (URL) for accessing additional information."
+, "annal:property_uri":         "rdfs:seeAlso"
+, "annal:field_placement":      "small:0,12"
+}

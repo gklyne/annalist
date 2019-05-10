@@ -1,0 +1,26 @@
+{ "@id":                        "_list/User_list"
+, "@type":                      ["annal:List"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "User_list"
+, "annal:type_id":              "_list"
+, "annal:uri":                  "annal:display/User_list"
+, "rdfs:label":                 "User permissions"
+, "rdfs:comment":               "# User permissions\r\n\r\nThis display lists [user permissions]($BASE:_type/_user/) for the current collection, and is accessible to users with `ADMIN` permission.\r\n\r\nEach user permission record associates a set of access permissions with a specified *User Id* and authenticated *URI*.  The URI is generally in the form of a `mailto:` URI indicating an email address authenticated by some separate service."
+, "annal:display_type":         "_enum_list_type/List"
+, "annal:default_view":         "_view/User_view"
+, "annal:default_type":         "_type/_user"
+, "annal:list_entity_selector": "'annal:User' in [@type]"
+, "annal:list_entity_type":     "annal:User"
+, "annal:list_fields":
+  [ { "annal:field_id":             "_field/User_id"
+    , "annal:field_placement":      "small:0,4;medium:0,3"
+    }
+  , { "annal:field_id":             "_field/User_uri"
+    , "annal:field_placement":      "small:4,8;medium:2,4"
+    }
+  , { "annal:field_id":             "_field/User_permissions"
+    , "annal:field_placement":      "small:0,12,hide;medium:7,5"
+    }
+  ]
+}
+ 

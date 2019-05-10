@@ -1,0 +1,18 @@
+{ "@id":                        "_field/Field_repeat_label_delete"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_repeat_label_delete"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_repeat_label_delete"
+, "rdfs:label":                 "Remove value label"
+, "rdfs:comment":               "# Remove value button label\r\n\r\nShort string used to label 'remove' button for repeated field group in form display."
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:repeat_label_delete"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        "Remove"
+, "annal:placeholder":          "(Remove field(s) button label)"
+, "annal:tooltip":              "Short string used to label 'remove' button for repeated field group in form display."
+}

@@ -1,0 +1,19 @@
+{ "@id":                        "_field/List_type"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_type"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_type"
+, "rdfs:label":                 "List display type"
+, "rdfs:comment":               "# List display type\r\n\r\nType of list display ('List' or 'Grid')\r\n\r\n @@'Grid' not yet supported@@"
+, "annal:field_render_type":    "_enum_render_type/Enum_choice"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:List_type"
+, "annal:property_uri":         "annal:display_type"
+, "annal:field_entity_type":    "annal:List"
+, "annal:field_ref_type":       "_enum_list_type"
+, "annal:field_placement":      "small:0,12;medium:6,6"
+, "annal:default_value":        "List"
+, "annal:placeholder":          "(list type)"
+, "annal:tooltip":              "Type of list display ('List' or 'Grid') @@'Grid' not yet supported@@"
+}   

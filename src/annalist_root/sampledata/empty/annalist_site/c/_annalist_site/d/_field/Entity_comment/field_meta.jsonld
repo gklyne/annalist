@@ -1,0 +1,17 @@
+{ "@id":                        "_field/Entity_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Entity_comment"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Entity_comment"
+, "rdfs:label":                 "Comment"
+, "rdfs:comment":               "# Comment\r\n\r\nDescriptive text about an entity.  Interpreted as Markdown for presentation as rich text."
+, "annal:field_render_type":    "_enum_render_type/Markdown"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:placeholder":          "(description)"
+, "annal:tooltip":              "Description of this entity."
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+}

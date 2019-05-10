@@ -1,0 +1,19 @@
+{ "@id":                        "_field/Field_placement"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Field_placement"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Field_placement"
+, "rdfs:label":                 "Position/size"
+, "rdfs:comment":               "# Position and size\r\n\r\nSize of displayed field, and hints for its position in a record display. Provides default placement for field when incuded in a view.  A placement value specified in a view description overrides a value specified in the field description.  (See [Field definition]($BASE:_view/Field_view]) help for more details.)"
+, "annal:field_name":           "Field_placement"
+, "annal:field_render_type":    "_enum_render_type/Placement"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Placement"
+, "annal:field_entity_type":    "annal:Field"
+, "annal:property_uri":         "annal:field_placement"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(field position and size)"
+, "annal:tooltip":              "Size of displayed field, and hints for its position in a record display."
+}

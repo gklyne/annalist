@@ -2,8 +2,8 @@
 
 Contains data used when running Django tests.
 
+empty/ contains a copy of the site data used to initialize a new (empty) site.
 testinit/ contains a copy of the site data used to initialize the site used for testing.
-bibtestinit/ contain a copy of site data with biobliographic definitions collection.
 data/ contains the site that is actually modified by the tests
 
 The test suite also copies data from annalist/data/sitedata/ into the data/ directory 

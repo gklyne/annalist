@@ -1,0 +1,21 @@
+{ "@id":                        "./"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "Type_alias_target"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/Type_alias_target"
+, "annal:type":                 "annal:Field"
+, "rdfs:label":                 "Field alias name"
+, "rdfs:comment": 
+    "# Field alias name\r\n\r\nAn alias property URI that accesses the value at some other source property URI (see field [Field alias value]($BASE:_field/Type_alias_source))"
+, "annal:field_render_type":    "_enum_render_type/Identifier"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Identifier"
+, "annal:field_entity_type":    "annal:Type_alias"
+, "annal:property_uri":         "annal:alias_target"
+, "annal:field_placement":      "small:0,12;medium:0,6"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(alias target property URI/CURIE)"
+, "rdfs:comment": 
+    "An alias property URI that accesses the value at some other property URI (see field 'Field alias value')"
+}

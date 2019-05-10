@@ -1,0 +1,7 @@
+{ "@type":                      ["annal:Info"]
+, "@context":                   [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "About"
+, "annal:type_id":              "_info"
+, "rdfs:label":                 "About this site"
+, "rdfs:comment":               "# About this site\n\r\n\rThis site is powered by [Annalist](http://annalist.net/).\n\r((Add more information here))"
+}

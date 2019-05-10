@@ -1,0 +1,18 @@
+{ "@id":                        "_field/List_entity_selector"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_entity_selector"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_entity_selector"
+, "rdfs:label":                 "Selector"
+, "rdfs:comment":               "# Selector\r\n\r\nAn expression that is used to select records to be included in the list view.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type.\r\n\r\nThe selector is a textual expression that defines criteria for records included in the listing.\r\n\r\nExample:\r\n\r\n      \"'annal:Field' in [@type]\"\r\n\r\nThe filter operates by testing fields from an entity under consideration.\r\n\r\nSelector formats:\r\n\r\n      ALL (or blank)              match any entity\r\n      <val1> == <val2>            values are the same.\r\n      <val1> in <val2>            second value is list containing 1st value, or values are same, or <val1> is None.\r\n      <val1> subtype <val2>       first value is a subtype of, or the same type as, the second value.\r\n\r\n`<val1>` and `<val2>` may be:\r\n\r\n      [<field-id>]                refers to a field of the field entity under consideration for inclusion.\r\n      \"<string>\"                  literal string value.  Quotes within are escaped.\r\n\r\n<field_id> values are URIs or CURIEs, using URI characters (per RFC3986), except that '[' and ']' are not allowed.\r\n"
+, "annal:field_render_type":    "_enum_render_type/Text"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Text"
+, "annal:field_entity_type":    "annal:List"
+, "annal:property_uri":         "annal:list_entity_selector"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        "ALL"
+, "annal:placeholder":          "(entity selector; e.g. 'ALL', '<type> in [@type]', '[<field>]==<value>', etc.)"
+, "annal:tooltip":              "An expression that is used to select records to be included in the list view.  But if not specified, a default selector is used that selects all records from the current collection of the indicated default record type."
+}

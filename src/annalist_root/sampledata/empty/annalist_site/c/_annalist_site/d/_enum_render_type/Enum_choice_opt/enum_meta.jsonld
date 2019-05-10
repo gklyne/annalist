@@ -1,0 +1,9 @@
+{ "@id":                "_enum_render_type/Enum_choice_opt"
+, "@type":              ["annal:Enum_render_type", "annal:Enum"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "Enum_choice_opt"
+, "annal:type_id":      "_enum_render_type"
+, "rdfs:label":         "Optional entity reference"
+, "rdfs:comment":       "# Render type: Optional entity reference\r\n\r\nThe field contains a reference to an entity of a designated type. It is rendered for editing as a drop-down selection, with the placeholder string presented as an option which effectively means none of the available entities is chosen.\r\n\r\nThis is one of 4 related render types: [Required entity reference]($BASE:_enum_render_type/Enum_choice), [Required/new entity reference]($BASE:_enum_render_type/Enum), [Optional entity reference]($BASE:_enum_render_type/Enum_choice_opt) and [Optional/new entity reference]($BASE:_enum_render_type/Enum_optional). These render types allow entity types to be used to define enumerable field values - the [Render type]($BASE:_field/Field_render_type) field and [Field render type]($BASE:_type/_enum_render_type) type are an example of such use."
+, "annal:uri":          "annal:Enum_render_type/Enum_choice_opt"
+}

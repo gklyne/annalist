@@ -1,0 +1,18 @@
+{ "@id":                        "_field/List_comment"
+, "@type":                      ["annal:Field"]
+, "@context":                   [{"base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":                   "List_comment"
+, "annal:type_id":              "_field"
+, "annal:uri":                  "annal:fields/List_comment"
+, "rdfs:label":                 "Help"
+, "rdfs:comment":               "# Help\r\n\r\nDescription of the list view.  This is used as help text in appropriate contexts."
+, "annal:field_render_type":    "_enum_render_type/Markdown"
+, "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+, "annal:field_value_type":     "annal:Richtext"
+, "annal:field_entity_type":    "annal:List"
+, "annal:property_uri":         "rdfs:comment"
+, "annal:field_placement":      "small:0,12"
+, "annal:default_value":        ""
+, "annal:placeholder":          "(description of list view)"
+, "annal:tooltip":              "Description of the list view."
+}

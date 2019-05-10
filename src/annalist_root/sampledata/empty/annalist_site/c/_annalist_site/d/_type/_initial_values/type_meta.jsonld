@@ -1,0 +1,8 @@
+{ "@type":              ["annal:Type_enum", "annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:type_id":      "_type"
+, "rdfs:label":         ""
+, "rdfs:comment":       ""
+, "annal:type_view":    "_view/Default_view"
+, "annal:type_list":    "_list/Default_list"
+}

@@ -1,0 +1,11 @@
+{ "@id":                "_type/_user"
+, "@type":              ["annal:Type"]
+, "@context":           [{"@base": "../../"}, "../../coll_context.jsonld"]
+, "annal:id":           "_user"
+, "annal:type_id":      "_type"
+, "annal:uri":          "annal:User"
+, "rdfs:label":         "User permissions"
+, "rdfs:comment":       "# User permissions\r\n\r\nUsed for defining user permissions, which are the basis of Annalist access control.\r\n\r\nUser permissions are associated with a combination of a **User Id** and a **URI**.\r\n\r\nThe **User id** is arbitrary, and can be any token specified by the user when they log in.\r\n\r\nThe URI is derived from a separate user authentication service, and usually takes the form of a `mailto:` URI with an authenticated email address for the user.  For example, when authentication is performed using Google, the email address associated with the Google login is used.\r\n"
+, "annal:type_view":    "_view/User_view"
+, "annal:type_list":    "_list/User_list"
+}
