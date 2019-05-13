@@ -38,7 +38,7 @@
   u 'events_url': u 'https://api.github.com/users/gklyne/events{/privacy}',
   u 'html_url': u 'https://github.com/gklyne',
   u 'updated_at': u '2019-02-13T10:48:11Z',
-  u 'node_id': u 'MDQ6VXNlcjU1NzU2Ng==',
+  u 'node_id': u '...',
   u 'received_events_url': u 'https://api.github.com/users/gklyne/received_events',
   u 'starred_url': u 'https://api.github.com/users/gklyne/starred{/owner}{/repo}',
   u 'public_gists': 5,

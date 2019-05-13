@@ -147,6 +147,7 @@
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
+    - https://groups.google.com/forum/#!forum/annalist-discuss
 
 
 ## Build kit and PyPI upload

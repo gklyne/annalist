@@ -1,6 +1,6 @@
 # Login page
 
-The intended means of user authentication is via a third party login service:
+The intended means of user authentication is via a third party login service (using HTTPS - see below):
 
 * Enter a local username (which is how Annalist will identify you, independently of any third party authentication account you may use), select an identity provider (IDP) (e.g. `Google`) and click **Login**.
 * If you are not already logged in to the IDP you will be asked to login via their site.  Then the IDP will ask your permission to disclose basic identifying information (email, first name and last name) to Annalist.  This step is skipped if you have completed these actions previously.
@@ -11,3 +11,8 @@ Authentication using a local user account (e.g. created by an admin user using t
 Being logged in does not necessarily mean you have permissions to access Annalist data;  it simply means that Annalist has an indication of who you are.  Permissions to access Annalist collection data are set up separately by the site administrator or data collection owner.
 
 Initial administrator access and permissions can be established using the `annalist-manager` command line utility.
+
+Third party login services require HTTPS to be used for security.  But for a server runninglocally, this requirement can be relaxed by setting environment variable `OAUTHLIB_INSECURE_TRANSPORT=1` when running the server; e.g.
+
+    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
+

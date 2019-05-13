@@ -2,9 +2,9 @@
 
 ### Announcing Annalist release 0.5.16
 
-I've just released an update (release 0.5.16) of Annalist.
+I've recently created an update (release 0.5.16) of Annalist.
 
-This release consolidates and fixes problems with the previous "deployment hardening" release (0.5.14).  There was a problem with serving Turtle data, which has required a re-working of internal data-caching logic to allow multiple server threads, and another problem causing periodic loss of user login status.  Support has been added for collections to include arbitrary additonal web pages (HTML, JS, etc.).  And, as usual, there are a number of smaller bug fixes and enhancements.
+This release consolidates and fixes problems with the previous "deployment hardening" release (0.5.14).  There was a deadlock problem with serving Turtle data, which has required a re-working of internal data-caching logic to allow multiple server threads, and another problem causing periodic loss of user login status.  Support has been added for collections to include arbitrary additional web pages (HTML, JS, etc.).  And, as usual, there are a number of smaller bug fixes and enhancements.
 
 More details can be found in the "History" section of the 
 [latest release notes](https://github.com/gklyne/annalist/blob/master/documents/release-notes/release-v0.5.md), 
@@ -19,16 +19,16 @@ The Annalist live demo system is at [demo.annalist.net](http://demo.annalist.net
 
 ...
 
-## To research-object, RDS-CREAM and FAST:
+## To research-object and FAST:
 
 == Announcing Annalist release 0.5.16 ==
 
 I've just released an update (release 0.5.16) of Annalist.
 
-This release consolidates and fixes problems with the previous "deployment hardening" release (0.5.14).  There was a problem serving Turtle data, which has required a re-working of internal data-caching logic to allow multiple server threads, and another problem causing periodic loss of user login status.  Support has been added for collections to include arbitrary additonal web pages (HTML, JS, etc.).  And, as usual, there are a number of smaller bug fixes and enhancements.
+This release consolidates and fixes problems with the previous "deployment hardening" release (0.5.14).  There was a deadlock problem serving Turtle data, which has required a re-working of internal data-caching logic to allow multiple server threads, and another problem causing periodic loss of user login status.  Support has been added for collections to include arbitrary additional web pages (HTML, JS, etc.).  And, as usual, there are a number of smaller bug fixes and enhancements.
 
 The full announcement is at:
-https://groups.google.com/d/msg/annalist-discuss/8t2y5ykrUjs/yoqCl8SdGAAJ
+https://groups.google.com/d/msg/annalist-discuss/R7kWopqLvCU/9T0Beh6ZAwAJ
 https://groups.google.com/d/msg/annalist-discuss/@@@@@@
 
 See also: 

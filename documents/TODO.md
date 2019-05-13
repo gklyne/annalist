@@ -24,8 +24,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
-- [ ] Include list all type definitions in sitemap data (
-_info/Sitemap)
+- [x] Include list all type definitions in sitemap data (_info/Sitemap)
 - [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
@@ -71,6 +70,15 @@ _info/Sitemap)
 (Alpha release 0.9.0??)
 
 
+Data collection definitions:
+
+- [ ] VoID
+- [ ] DCAT
+- [ ] PROV
+- [x] OA
+- [x] CRM
+
+
 Technical debt:
 
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
@@ -87,11 +95,13 @@ Technical debt:
         - the proper answer is probably to disable in-server caching
         - but how to save transitive closure calculations?  save them in shadow entities?
         - See https://stackoverflow.com/a/868731/324122 (Memcached with Python)
+    - NOTE: as of 0.5.16, cacheing has been re-worked to facilitate use of an external cache such as Memcached or Redis.
 - [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [x] Shared/personal deployment should generate a new secret key in settings
     - [x] Need way to cleanly shut down server processes (annalist-manager option?)
     - [x] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
+    - NOTE: 0.5.16 added an environment variable option for specifying the secret key: this is needed when running under gunicorn where the server process is periodically restarted.
+- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic can probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
@@ -117,7 +127,7 @@ Technical debt:
 - [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
-- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
+- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choices.
 - [ ] Review field mapping modules in views/form_utils to be more readable and consistent
     - Start with 'fieldvaluemap', look for comments in code
     - Notes:
@@ -152,6 +162,7 @@ Technical debt:
             - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
+    - NOTE: as of 0.5.16, EntityId renderer is also used (with label property) for entity references.
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 - [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
 - [ ] Final elimination of RecordGroup (field group) entities
@@ -167,15 +178,6 @@ Technical debt:
 - [ ] Test cases: use <namespace>.CURIE.:: values rather than literal CURIEs
     -
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
-
-
-Data collection definitions:
-
-- [ ] VoID
-- [ ] DCAT
-- [ ] PROV
-- [x] OA
-- [x] CRM
 
 
 Usability notes:
@@ -324,7 +326,7 @@ Notes for Future TODOs:
         [ a frbroo:F29_Recording_Event ]
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
-    - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
+    - the above pair might be combined.  We would then want to run the inferences when saving JSON-LD
     - could this work on output like migration rules do on input?
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.
