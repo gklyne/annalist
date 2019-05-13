@@ -2,75 +2,75 @@
 
 ## Summary of release tasks
 
-- [x] Feature freeze
-- [x] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
-- [x] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
-- [x] Uninstall annalist (if installed): `pip uninstall annalist`
-- [x] Delete contents of build directory (remove old files) 
+- [ ] Feature freeze
+- [ ] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
+- [ ] Ensure default logging level is INFO (in `settings/common.py`, TRACE_FIELD_VALUE)
+- [ ] Uninstall annalist (if installed): `pip uninstall annalist`
+- [ ] Delete contents of build directory (remove old files) 
     - python setup.py clean --all
-- [x] Clean old .pyc and temporary files
+- [ ] Clean old .pyc and temporary files
     - `git clean -nX` (trial run)
     - `git clean -fX` (do it)
-- [x] Local install
-- [x] Run test suite - `annalist-manager runtest`
-- [x] Update site data in local 'personal' installation
+- [ ] Local install
+- [ ] Run test suite - `annalist-manager runtest`
+- [ ] Update site data in local 'personal' installation
     - `annalist-manager updatesitedata`
     - `annalist-manager initialize`
-- [x] Test collection installation; e.g.
+- [ ] Test collection installation; e.g.
     - `annalist-manager installcoll RDF_schema_defs --force`
     - `annalist-manager installcoll Annalist_schema --force`    
-- [x] Test migrations; e.g.
+- [ ] Test migrations; e.g.
     - `annalist-manager migratecoll RDF_schema_defs`
     - `annalist-manager migratecoll Annalist_schema`
     - (check ~/annalist_site/annalist.log for errors/warnings)
-- [x] Test 'personal' deployment in actual use
+- [ ] Test 'personal' deployment in actual use
     - `annalist-manager stopserver`
     - `annalist-manager runserver`
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
-- [x] Check all recent changes are committed (`git status`)
-- [x] Tag unstable release version on develop branch (e.g. "release-0.1.37")
+- [ ] Check all recent changes are committed (`git status`)
+- [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
     - ```git tag -a release-`annalist-manager version` ```
     - For message:
         "Annalist release x.y.z: (msg (one-line description))"
 
-- [x] Create release preparation branch
+- [ ] Create release preparation branch
         git stash
         git checkout -b release-prep-x.y.z develop
         git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
-- [x] Bump version to even value in `src/annalist_root/annalist/__init__.py`
-- [x] Bump data compatibility version if new data is not compatible with older releases
-- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [x] Reinstall and re-run test suite
+- [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
+- [ ] Bump data compatibility version if new data is not compatible with older releases
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
+- [ ] Reinstall and re-run test suite
 
-- [x] Add TODO list to release notes (edit out working notes)
-- [x] Add release highlights description to release notes
+- [ ] Add TODO list to release notes (edit out working notes)
+- [ ] Add release highlights description to release notes
     - (create new release notes file if needed)
-- [x] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
-- [x] Review roadmap (`documents/roadmap.md`)
-- [x] Update version number in scripts, documents, etc.
-    - [x] Release notes
-    - [x] documents/installing-annalist.md
-    - [x] documents/roadmap.md
-    - [x] documents/pages/index.html
+- [ ] Review issues list in GitHub (https://github.com/gklyne/annalist/issues)
+- [ ] Review roadmap (`documents/roadmap.md`)
+- [ ] Update version number in scripts, documents, etc.
+    - [ ] Release notes
+    - [ ] documents/installing-annalist.md
+    - [ ] documents/roadmap.md
+    - [ ] documents/pages/index.html
     - [ ] documents/tutorial/annalist-tutorial.adoc
-    - [x] Docker build scripts and makefiles
-- [x] Review and update GitHub project README.
-- [x] Create announcement text in `documents/release-notes/announce_0.5.*.md`
+    - [ ] Docker build scripts and makefiles
+- [ ] Review and update GitHub project README.
+- [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`
 - [ ] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 
 - [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
-    - [x] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
+    - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
-    - [x] login to dev.annalist.net as 'graham', then
+    - [ ] login to dev.annalist.net as 'graham', then
         rm -rf anenv2
         virtualenv anenv2
         . anenv2/bin/activate
         pip install software/Annalist-0.5.xx.tar.gz
         annalist-manager runtests
-    - [x] Test new site creation:
+    - [ ] Test new site creation:
         annalist-manager createsite
         annalist-manager collectstatic
         annalist-manager initialize
@@ -78,29 +78,29 @@
         annalist-manager runserver
         curl http://localhost:8000/annalist/site/ -v
 
-- [x] Create and post updated kit download and web pages to annalist.net
+- [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [x] Update and test demo installation on annalist.net
-    - [x] ssh to ubuntu@annalist.net
-    - [x] check HTTPS proxy and Certbot setup (currently using `apache2`)
-    - [x] ssh to annalist@annalist.net, (or `su - annalist`)
-    - [x] `. backup_annalist_site.sh`
-    - [x] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
-    - [x] `. anenv2/bin/activate`
-    - [x] `annalist-manager stop` or `killall python` or `killall python2.7`
-    - [x] `pip uninstall annalist`
-    - [x] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
-    - [x] `annalist-manager runtests`
-    - [x] `. update-annalist-site.sh`
-    - [x] `. update-run-annalist.sh`
-- [x] Update front page at annalist.net:
+- [ ] Update and test demo installation on annalist.net
+    - [ ] ssh to ubuntu@annalist.net
+    - [ ] check HTTPS proxy and Certbot setup (currently using `apache2`)
+    - [ ] ssh to annalist@annalist.net, (or `su - annalist`)
+    - [ ] `. backup_annalist_site.sh`
+    - [ ] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
+    - [ ] `. anenv2/bin/activate`
+    - [ ] `annalist-manager stop` or `killall python` or `killall python2.7`
+    - [ ] `pip uninstall annalist`
+    - [ ] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
+    - [ ] `annalist-manager runtests`
+    - [ ] `. update-annalist-site.sh`
+    - [ ] `. update-run-annalist.sh`
+- [ ] Update front page at annalist.net:
         cp ~annalist/uploads/pages/index.html /var/www
         cp ~annalist/uploads/pages/css/style.css /var/www/css/
 - [ ] Update tutorial document at annalist.net
         cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [x] Check out demo system.
+- [ ] Check out demo system.
 
-- [x] Commit changes ("Release x.y.z")
+- [ ] Commit changes ("Release x.y.z")
 - [ ] Upload to PyPI (`python setup.py sdist upload`)
     - But see also: https://pypi.org/project/twine/
 - [ ] Tag release on release branch
@@ -132,8 +132,8 @@
         - Note: a new Zenodo URL is generated for the release.
     - The link in the DOI badge should display the new release from Zenodo.
 
-- [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
+- [ ] On develop branch, bump version number again (back to odd value)
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Re-test
 - [ ] Commit and push changes
