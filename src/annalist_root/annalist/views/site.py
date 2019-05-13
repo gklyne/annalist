@@ -51,6 +51,7 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
+        log.info("SiteView.get")
         viewinfo = DisplayInfo(self, "view", {}, None)    # No continuation
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(layout.SITEDATA_ID)

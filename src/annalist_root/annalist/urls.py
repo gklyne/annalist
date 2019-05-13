@@ -76,6 +76,9 @@ urlpatterns = [
     url(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
     url(r'^serverlog/$',    ServerLogView.as_view(),        name='AnnalistServerLogView'),
 
+    #@@ site/site.json
+    #@@ site/site.ttl
+
     # Special forms for collection view, customize and type/view/list deletion
     url(r'^c/(?P<coll_id>\w{1,128})/$',
                             CollectionView.as_view(),

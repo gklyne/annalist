@@ -12,7 +12,5 @@ Being logged in does not necessarily mean you have permissions to access Annalis
 
 Initial administrator access and permissions can be established using the `annalist-manager` command line utility.
 
-Third party login services require HTTPS to be used for security.  But for a server runninglocally, this requirement can be relaxed by setting environment variable `OAUTHLIB_INSECURE_TRANSPORT=1` when running the server; e.g.
-
-    OAUTHLIB_INSECURE_TRANSPORT=1 annalist-manager runserver
+Third party login services require HTTPS to be used for security.  But for a server running locally, this requirement can be relaxed by setting environment variable `OAUTHLIB_INSECURE_TRANSPORT=1` when running the server.
 

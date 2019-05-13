@@ -37,6 +37,11 @@ ANNALIST_LOG_FILE = "annalist.log"
 ACCESS_LOG_FILE   = "annalist-wsgi-access.log"
 ERROR_LOG_FILE    = "annalist-wsgi-error.log"
 
+# Number of gunicorn server threads to use
+# A value of less than 2 causes a deadlock when accessing data as Turtle.
+# This can be overridden by specific configuration settings files.
+SERVER_THREADS    = 2
+
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """
     Define a rotating file logging handler that additionally forces a new file 

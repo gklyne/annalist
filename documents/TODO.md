@@ -24,13 +24,14 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
+- [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
 - [x] Include list all type definitions in sitemap data (_info/Sitemap)
-- [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
-- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
-- [ ] Define gunicorn thread count in settings file.
+- [x] Define gunicorn thread count in settings file.
 - [ ] Hook for data validation check when saving entity; redisplay form if fails
 - [ ] See annalist/views/statichack.py ** note TODOs
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
+    - already supported for collection (entity list)
+    - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.
@@ -40,6 +41,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] delete views: rationalize into single view?
 - [.] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
