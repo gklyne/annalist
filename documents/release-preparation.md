@@ -101,21 +101,21 @@
 - [x] Check out demo system.
 
 - [x] Commit changes ("Release x.y.z")
-- [ ] Upload to PyPI (`python setup.py sdist upload`)
+- [x] Upload to PyPI (`python setup.py sdist upload`)
     - But see also: https://pypi.org/project/twine/
-- [ ] Tag release on release branch
+- [x] Tag release on release branch
     - `git tag -ln` to check previous tags
     - `git tag -a release-x.y.z`
     - For message:
         "Annalist release x.y.z: (one-line description of release)"
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
+- [x] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.5.16"`
+    - `git commit -m "Master branch updated to Vx.y.z"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
