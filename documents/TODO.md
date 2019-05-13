@@ -22,44 +22,16 @@ See also: https://www.divio.com/en/blog/documentation/
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Release 0.5.15, towards 0.5.16
-
-- [x] BUG: Retrieving turtle data in production server fails.  Works OK in dev server.
-    - Caused by deadlock on gunicorn single-worker-thread as Turtle output needs to access context via HTTP.
-    - Implications for cache management
-        - See: documents/notes/20190327-threading-caching-notes.md
-- [x] Redesign entity cache to use single cache API thread-safe mechanisms
-- [x] Redesign closure cache to use single cache API thread-safe mechanisms
-- [x] Generate warning if namespace URI doesn't end with "/" or "#"
-    - (kind-of half-hearted check for now as part of JSON-LD context generation)
-- [x] Define arbitrary entity ref renderer in core data (renders label as link) 
-    - use entity_id renderer with rdfs:label pro
-- [x] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.
-    - I think the problem here is that the gunicorn process is peridoically restarted, resulting in regeneration of the secret key used for keyng session data, CSRF and more.
-    - When running Annalist under gunicorn, add ANNALIST_KEY environment variable to prime SECRET_KEY.
-- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
-    - Updated to work with Apache 2.4, with older directives left as comments.
-    
-- [x] Added hook for processing entity data before saving
-- [x] If property URI in field definition is missing or blank, use field id
-- [x] Update reserved identifiers screened by `util.valid_id`
-- [x] Review handling of reserved identifiers; don't screen when loading entity.
-- [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
-- [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
-- [x] Provide initial content for the links in the page footer.
-    - This information can be edited locally.
-    - Copies of the initial data are kept separately.
-- [x] Update urllib3 version in response to Github-flagged security issue.
-- [x] Activating "edit" list view doesn't use view form appropriate to entity type.
-- [x] Added logic to allow serving additonal data from "/p/" ("pages") collection directory
-    - This is being used to experiment with collection-specific rendering applications
-- [x] Add $PAGE substitution for Markdown formatting
-
-(Sub-release?)
+# Release 0.5.17, towards 0.5.18
 
 - [ ] Include list all type definitions in sitemap data (
 _info/Sitemap)
 - [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
+- [ ] Define gunicorn thread count in settings file.
+- [ ] Hook for data validation check when saving entity; redisplay form if fails
+- [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.
@@ -67,8 +39,6 @@ _info/Sitemap)
 
 (Sub-release?)
 
-- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] delete views: rationalize into single view?
@@ -103,9 +73,6 @@ _info/Sitemap)
 
 Technical debt:
 
-- [ ] Define gunicorn thread count in settings file.
-- [ ] Hook for data validation check when saving entity; redisplay form if fails
-- [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
     - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] Check out possible Django compatibility problems:

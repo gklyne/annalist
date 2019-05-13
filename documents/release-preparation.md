@@ -132,8 +132,11 @@
         - Note: a new Zenodo URL is generated for the release.
     - The link in the DOI badge should display the new release from Zenodo.
 
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
+
+## Set up next development cycle
+
 - [ ] On develop branch, bump version number again (back to odd value)
+- [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Re-test
 - [ ] Commit and push changes

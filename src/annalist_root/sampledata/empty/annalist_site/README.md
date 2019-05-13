@@ -89,6 +89,6 @@ Directory layout:
          :                              (repeat for collections in site)
 
 Created by annalist.models.site.py
-for Annalist 0.5.16 at 2019-05-09 13:25:18 (UTC)
+for Annalist 0.5.17 at 2019-05-13 09:09:23 (UTC)
 
 
