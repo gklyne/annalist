@@ -7,7 +7,7 @@ A summary of issues relating to deployability, resilience and security that are 
 
 ## Release 0.5.16
 
-This release addresses some problems arising from the move to using `gunicorn`.  This includes re-engineering the internal caching to faciltate later support for systems such as MemCached.
+This release addresses some problems arising from the move to using `gunicorn`.  This includes re-engineering the internal caching to facilitate later support for systems such as MemCached.
 
 A number of small improvements have been incorporated to support work-in-progress applications of Annalist, and to eliminate some surprising observed behaviours.
 

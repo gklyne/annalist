@@ -1,7 +1,8 @@
 annalist
 ========
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2566464.svg)](https://doi.org/10.5281/zenodo.2566464)
+<!-- NOTE: this Zenodo link _should_ be the "all-versions" link -->
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.594496.svg)](https://doi.org/10.5281/zenodo.594496)
 
 A free-form web linked data notebook and prorotyping tool - "Data management for little guys"
 
