@@ -567,6 +567,22 @@ class EntityRoot(object):
         # Return result
         return entitydata
 
+    def _pre_save_validation(self, entitydata):
+        """
+        Pre-save value validation.
+
+        This method is called just before a value is saved to validate user-
+        entered data.  The value returned is a list of errors detected, or
+        an empty list if no problems are found.
+
+        Individual entity classes may provide their own override methods for this
+        (e.g., to perform checks that are specific to a class.  The intent is that
+        this will eventually be used to hook into a user-definable validation
+        framework).
+        """
+        # Default implementation: no problems found
+        return []
+
     def _pre_save_processing(self, entitydata):
         """
         Pre-save value processing.

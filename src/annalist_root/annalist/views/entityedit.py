@@ -141,17 +141,6 @@ class GenericEntityEditView(AnnalistGenericView):
             responseinfo = ResponseInfo()
             responseinfo.set_response_error(message.DATA_ERROR, msg)
             return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
-            #@@TODO: remove old code
-            # return self.error(
-            #     dict(self.error404values(),
-            #         message=message.ENTITY_DOES_NOT_EXIST%
-            #             { 'type_id': viewinfo.type_id
-            #             , 'id':      viewinfo.src_entity_id
-            #             , 'label':   entity_label
-            #             }
-            #         )
-            #     )
-            #@@
 
         # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))
         orig_entity_coll_id = viewinfo.orig_typeinfo.get_ancestor_id(entity)
@@ -946,7 +935,9 @@ class GenericEntityEditView(AnnalistGenericView):
                         field descriptions that control how values are rendered.
         entityformvals  a dictionary of entity values extracted from the submitted form; 
                         these are used either for redisplaying the form if there is an 
-                        error, or to update the saved entity data.
+                        error, or to update the saved entity data.  
+                        NOTE: The dictionary is keyed by property URIs, not field 
+                        identifiers - the mapping is invoked before this method is called.
         context_extra_values
                         a dictionary of additional values that may be used if the
                         form needs to be redisplayed.
@@ -1109,7 +1100,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if not err_vals and import_field is not None:
             responseinfo = self.save_linked_resource(
                 save_entity_id, save_typeinfo,
-                entityvaluemap, entity_values,
+                entity_values,
                 import_field,
                 responseinfo
                 )
@@ -1400,14 +1391,20 @@ class GenericEntityEditView(AnnalistGenericView):
         ):
         """
         Process uploaded files: files are saved to the entity directory, and 
-        the supplied entity values are updated accordingly
+        the supplied entity values are updated accordingly.  This function is 
+        called after the main entity data has been saved.
 
         This functon operates by scanning through fields that may generate a file
         upload and looking for a corresponding uploaded files.  Uploaded files not
         corresponding to view fields are ignored.
 
+        entity_id       entity identifier
+        typeinfo        type informaton about entity
+        entityvaluemap  used to find fields that correspond to uploaded files.
+        entityvals      a copy of the entity values that have been saved.
         uploaded_files  is the Django uploaded files information from the request
-                        bveing processed.
+                        being processed.
+        responseinfo    receives information about any error.
 
         Updates and returns the supplied responseinfo object.
         """
@@ -1453,13 +1450,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     init_field_vals, read_resource,
                     responseinfo
                     )
-                # end if
-            # end for
         return responseinfo
 
     def save_linked_resource(self, 
             entity_id, typeinfo,
-            entityvaluemap, entityvals,
+            entityvals,
             import_field,
             responseinfo
             ):
@@ -1468,7 +1463,11 @@ class GenericEntityEditView(AnnalistGenericView):
         saved entity with information about the imported resource, and redisplays 
         the current form.
 
+        entity_id       entity identifier
+        typeinfo        type informaton about entity
+        entityvals      a copy of the entity values that have been saved.
         import_field    is field description of import field that has been triggered.
+        responseinfo    receives information about any error.
 
         Updates and returns the supplied responseinfo object.
         """

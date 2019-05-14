@@ -28,10 +28,17 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Include list all type definitions in sitemap data (_info/Sitemap)
 - [x] Define gunicorn thread count in settings file.
 - [ ] Hook for data validation check when saving entity; redisplay form if fails
+    - Added method to entityroot.py
+    - Reviewed code in entityedit.py
+    - anticipate hook invoked in entityedit.py save_entity method, prob abt lines 1020-1050
+    - [ ] test without old validation code at lines 1020-1050
+    - [ ] Add validate method, and try to move other validation logic here
 - [ ] See annalist/views/statichack.py ** note TODOs
+- [ ] delete views: rationalize into single view?
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
     - already supported for collection (entity list)
     - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
+- [ ] Code pruning (remove dead/unused logic)
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.
@@ -42,7 +49,6 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
-- [ ] delete views: rationalize into single view?
 - [.] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
     - [x] look into entity cacheing (esp. RecordType) for performance improvement
