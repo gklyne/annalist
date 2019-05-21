@@ -27,18 +27,13 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
 - [x] Include list all type definitions in sitemap data (_info/Sitemap)
 - [x] Define gunicorn thread count in settings file.
-- [ ] Hook for data validation check when saving entity; redisplay form if fails
-    - Added method to entityroot.py
-    - Reviewed code in entityedit.py
-    - anticipate hook invoked in entityedit.py save_entity method, prob abt lines 1020-1050
-    - [ ] test without old validation code at lines 1020-1050
-    - [ ] Add validate method, and try to move other validation logic here
-- [ ] See annalist/views/statichack.py ** note TODOs
+- [x] Hook for data validation check when saving entity; redisplay form if fails
+- [x] Add URI validation for vocab entity, and test
 - [ ] delete views: rationalize into single view?
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
     - already supported for collection (entity list)
     - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
-- [ ] Code pruning (remove dead/unused logic)
+- [ ] Code pruning (remove dead/unuse
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.

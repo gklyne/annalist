@@ -18,6 +18,7 @@ import shutil
 
 from django.conf import settings
 
+from annalist                   import message
 from annalist                   import layout
 from annalist.exceptions        import Annalist_Error
 from annalist.identifiers       import ANNAL, RDFS, OWL
@@ -44,6 +45,25 @@ class RecordVocab(EntityData):
         self._parent = parent
         # log.debug("RecordVocab %s: dir %s"%(vocab_id, self._entitydir))
         return
+
+    @classmethod
+    def _pre_save_validation(cls, type_id, entity_id, entitydata):
+        """
+        Pre-save value validation.
+
+        Override EntityRoot method
+
+        Returns a list of strings describing any errors detected, or an empty list 
+        if no problems are found.
+        """
+        errs = super(RecordVocab, cls)._pre_save_validation(type_id, entity_id, entitydata)
+        if ANNAL.CURIE.uri in entitydata:
+            vuri = entitydata[ANNAL.CURIE.uri]
+            if vuri[-1] not in {":", "/", "?", "#"}:
+                msg = message.RECORD_VOCAB_URI_TERM%({"id": entity_id, "uri": vuri})
+                log.info(msg)
+                errs.append(msg)
+        return errs
 
     def _migrate_filenames(self):
         """

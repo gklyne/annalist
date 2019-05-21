@@ -14,20 +14,16 @@ should not be used for an open Internet deployment.
 
 The logic has been copied and adapted from django.contrib.staticfiles.views
 
-For deployment, add the following to the site-level urls.py file:
+For deployment, add something like the following to the site-level urls.py file:
 
-    if not settings.DEBUG:
-        urlpatterns += patterns('',
-            url(r'^static/(?P<path>.*)$', serve_static),
-            )
+    urlpatterns += patterns('',
+        url(r'^static/(?P<path>.*)$', serve_static),
+        )
 
-@@TODO: use separate settings flag to enable this, which can be set for
-"personal" deployments only (i.e. not for shared deployments)
-
-@@TODO: replace static file finder logic with direct serving logic assuming
-prior use of collectfiles utility - this should allow greater control over 
-the location of the served static files, rather than having them mixed with 
-the server code.
+For production deployment, configure the front-end proxy or WSGI server to 
+serve files from the static area directly, rather than passing requests to Annalist,
+and use `annalist-manager collectstatic` to gather static files to a common 
+location for serving.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"

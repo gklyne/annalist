@@ -142,15 +142,7 @@ class CollectionEntityCacheObject(object):
             entity_uri    = entity.get_uri()
         entity_parent = entity.get_parent().get_id()
         entity_data   = entity.get_save_values()
-        #@@TODO: remove this
-        # def _load_entity_data(old_value):
-        #     # Update other caches while _entities_by_id lock is acquired
-        #     self._entity_ids_by_uri.set(entity_uri, entity_id)
-        #     self._entity_ids_by_scope.flush()
-        #     return {"parent_id": entity_parent, "data": entity_data}
-        # add_entity, _ = self._entities_by_id.find(entity_id, _load_entity_data, None)
-        #@@
-        add_entity = False
+        add_entity    = False
         with self._entities_by_id.access(entity_id) as es:
             if entity_id not in es:
                 # Update cache via context handler

@@ -490,6 +490,17 @@ class EntityTypeInfo(object):
             log.warning("EntityTypeInfo.get_default_view_id: no type data for %s"%(self.type_id))
         return view_id or "Default_view"
 
+    def validate(self, entity_id, entity_values):
+        """
+        Validates the entity values provided.
+
+        (Invokes type-specific validation method)
+
+        Returns a list of strings describing any errors detected, or an empty list 
+        if no problems are found.
+        """
+        return self.entityclass._pre_save_validation(self.type_id, entity_id, entity_values)
+
     # Entity-specific methods
 
     def get_entity_permissions_map(self, entity_id=None):

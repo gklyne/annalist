@@ -30,11 +30,12 @@ from django.conf import settings
 from utils.py3porting       import is_string, urljoin
 
 from annalist               import layout
+from annalist               import message
 from annalist               import util
 from annalist.exceptions    import Annalist_Error
 from annalist.identifiers   import ANNAL, RDF, RDFS
 from annalist.resourcetypes import file_extension, file_extension_for_content_type
-from annalist.util          import make_type_entity_id, make_entity_base_url
+from annalist.util          import valid_id, make_type_entity_id, make_entity_base_url
 
 #   -------------------------------------------------------------------------------------------
 #
@@ -551,7 +552,8 @@ class EntityRoot(object):
         """
         return entitydata
 
-    def _migrate_values_map_field_names(self, migration_map, entitydata):
+    @classmethod
+    def _migrate_values_map_field_names(cls, migration_map, entitydata):
         """
         Support function to map field names using a supplied map.
 
@@ -567,21 +569,30 @@ class EntityRoot(object):
         # Return result
         return entitydata
 
-    def _pre_save_validation(self, entitydata):
+    @classmethod
+    def _pre_save_validation(cls, type_id, entity_id, entitydata):
         """
         Pre-save value validation.
 
-        This method is called just before a value is saved to validate user-
-        entered data.  The value returned is a list of errors detected, or
-        an empty list if no problems are found.
+        This method is called before a value is saved, to validate user-
+        entered data.
 
         Individual entity classes may provide their own override methods for this
         (e.g., to perform checks that are specific to a class.  The intent is that
         this will eventually be used to hook into a user-definable validation
         framework).
+
+        Returns a list of strings describing any errors detected, or an empty list 
+        if no problems are found.
         """
-        # Default implementation: no problems found
-        return []
+        errs = []
+        if not valid_id(entity_id):
+            log.debug("_pre_save_validation: entity_id not valid ('%s')"%entity_id)
+            errs.append((message.INPUT_VALIDATION_ERROR, message.ENTITY_DATA_ID_INVALID))
+        if not valid_id(type_id):
+            log.debug("_pre_save_validation: type_id not valid_id('%s')"%type_id)
+            errs.append((message.INPUT_VALIDATION_ERROR, message.ENTITY_TYPE_ID_INVALID))
+        return errs
 
     def _pre_save_processing(self, entitydata):
         """

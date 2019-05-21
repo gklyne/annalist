@@ -993,9 +993,8 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("@@ Renamed: %s"%entity_renamed)
 
-        # @@TODO: factor out repeated re-rendering logic
-
         # Check for valid id and type to be saved
+        # (This duplicates entity-level validation, but provides more precise error messages)
         if not valid_id(save_entity_id):
             log.debug("form_response: save_entity_id not valid ('%s')"%save_entity_id)
             return self.form_re_render(responseinfo,
@@ -1020,33 +1019,35 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_message=messages['parent_missing']
                 )
 
-        #@@@@ TO BE REMOVED
-        # Check existence of entity to save according to action performed
-        if (action in ["new", "copy"]) or entity_renamed:
-            if not viewinfo.saved():
-                # First save - check for existence
-                if save_typeinfo.entity_exists(save_entity_id):
-                    log.warning(
-                        "Entity exists: action %s %s/%s, orig %s/%s"%
-                            (action, save_type_id, save_entity_id, orig_type_id, orig_entity_id)
-                        )
-                    return self.form_re_render(responseinfo,
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_exists']
-                        )
-        else:
-            if not orig_typeinfo.entity_exists(save_entity_id, altscope="all"):
-                # This shouldn't happen, but just in case...
-                log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
-                      (save_type_id, save_entity_id, action, entity_renamed)
-                    )
-                return self.form_re_render(responseinfo,
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_heading'],
-                    error_message=messages['entity_not_exists']
-                    )
-        #@@@@
+        # #@@@@ TO BE REMOVED
+        # # Check existence of entity to save according to action performed
+        # if (action in ["new", "copy"]) or entity_renamed:
+        #     if not viewinfo.saved():
+        #         # First save - check for existence
+        #         if save_typeinfo.entity_exists(save_entity_id):
+        #             log.warning(
+        #                 "Entity exists: action %s %s/%s, orig %s/%s"%
+        #                     (action, save_type_id, save_entity_id, orig_type_id, orig_entity_id)
+        #                 )
+        #             return self.form_re_render(responseinfo,
+        #                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
+        #                 error_head=messages['entity_heading'],
+        #                 error_message=messages['entity_exists']
+        #                 )
+        # else:
+        #     if not orig_typeinfo.entity_exists(save_entity_id, altscope="all"):
+        #         # This shouldn't happen, but just in case...
+        #         log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
+        #               (save_type_id, save_entity_id, action, entity_renamed)
+        #             )
+        #         return self.form_re_render(responseinfo,
+        #             viewinfo, entityvaluemap, entityformvals, context_extra_values,
+        #             error_head=messages['entity_heading'],
+        #             error_message=messages['entity_not_exists']
+        #             )
+        # #@@@@
+
+        # @@TODO: factor out repeated re-rendering logic
 
         if action == "new":
             err_vals, entity_values = self.save_new(viewinfo, 
@@ -1122,20 +1123,29 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.update_coll_version()
         return responseinfo
 
-    def save_assemble_values(self, action, viewinfo, 
+    def save_validate_assemble_values(self, action, viewinfo, 
         save_typeinfo, save_entity_id, 
         orig_typeinfo, orig_entity_id, entityformvals
         ):
         """
-        Assemble updated values for storage
+        Validate input and assemble updated values for storage
         
         Note: form data is applied as update to original entity data so that
         values not in view are preserved.  Use original entity values without 
         field aliases as basis for new value.
 
-        Returns the merged entity values.
+        Returns a pair (err_vals, entity_values), where:
+            err_vals is None if the operation succeeds, or error details 
+                    consisting of a pair of strings for the error message 
+                    heading and body.
+            entity_values is the merged entity values.
         """
-        #@@TODO: eliminate action parameter
+        errs = save_typeinfo.validate(save_entity_id, entityformvals)
+        if errs:
+            err_vals = (message.INPUT_VALIDATION_ERROR, "\n".join(errs))
+            log.info("save_validate_assemble_values: err_vals %r"%(err_vals,))
+            return (err_vals, entityformvals)
+        # Validation OK
         if orig_typeinfo and orig_entity_id:
             orig_entity   = orig_typeinfo.get_entity(orig_entity_id, action)
             orig_values   = orig_entity.get_values() if orig_entity else {}
@@ -1158,15 +1168,16 @@ class GenericEntityEditView(AnnalistGenericView):
             entity_values[RDFS.CURIE.label] = entity_label
         if not entity_implied_vals.get(RDFS.CURIE.comment, None):
             entity_values[RDFS.CURIE.comment] = entity_label
-        return entity_values
+        return (None, entity_values)
 
     def save_new(self, viewinfo, save_typeinfo, save_entity_id, entityformvals):
         """
         Save new entity
 
         Returns a pair (err_vals, entity_values), where:
-            err_vals is None if the operation succeeds, or error details
-                a pair of strings for the error message heading and body.
+            err_vals is None if the operation succeeds, or error details 
+                    consisting of a pair of strings for the error message 
+                    heading and body.
             entity_values is a copy of the data values that were saved.
         """
         # messages = viewinfo.type_messages
@@ -1183,10 +1194,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.type_messages['entity_exists']
                     )
         if not err_vals:
-            entity_values = self.save_assemble_values("new", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("new", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 None, None, entityformvals
                 )
+        if not err_vals:
             err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
         return (err_vals, entityformvals)
 
@@ -1219,10 +1231,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.type_messages['entity_exists']
                     )
         if not err_vals:
-            entity_values = self.save_assemble_values("copy", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("copy", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 orig_typeinfo, orig_entity_id, entityformvals
                 )
+        if not err_vals:
             err_vals = self.copy_entity(
                 orig_typeinfo, orig_entity_id, 
                 save_typeinfo, save_entity_id, 
@@ -1255,10 +1268,11 @@ class GenericEntityEditView(AnnalistGenericView):
         if not err_vals:
             save_type_id  = viewinfo.curr_type_id
             orig_type_id  = viewinfo.orig_type_id
-            entity_values = self.save_assemble_values("edit", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("edit", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 orig_typeinfo, orig_entity_id, entityformvals
                 )
+        if not err_vals:
             if entitytypeinfo.TYPE_ID in [save_type_id, orig_type_id]:
                 # Type renamed
                 # log.info(
@@ -1312,10 +1326,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo.type_messages['entity_not_exists']
                 )
         if not err_vals:
-            entity_values = self.save_assemble_values("edit", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("edit", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 save_typeinfo, save_entity_id, entityformvals
                 )
+        if not err_vals:
             err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
         return (err_vals, entity_values)
 
