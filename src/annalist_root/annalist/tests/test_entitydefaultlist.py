@@ -129,7 +129,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
-        # resetSitedata(scope="collections")
         return
 
     @classmethod
@@ -140,7 +139,6 @@ class EntityDefaultListViewTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(EntityDefaultListViewTest, cls).tearDownClass()
-        #@@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

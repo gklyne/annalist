@@ -78,12 +78,7 @@ class CollectionView(AnnalistGenericView):
                 (viewinfo.http_response.status_code, viewinfo.http_response.reason_phrase)
                 )
             return viewinfo.http_response
-        #@@
-        # # Flush caches and regenerate JSON-LD context when invoking top-level view of collection
-        # viewinfo.flush_collection_caches()
-        # viewinfo.collection.generate_coll_jsonld_context()
         # Select and display view of collection
-        #@@
         default_view, default_type, default_entity = viewinfo.get_default_view_type_entity()
         if default_view and default_type and default_entity:
             redirect_uri = self.view_uri(

@@ -123,7 +123,6 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(EntityDefaultEditViewTest, cls).tearDownClass()
-        #@@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

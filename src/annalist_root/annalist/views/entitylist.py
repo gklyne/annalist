@@ -176,10 +176,6 @@ class EntityGenericListView(AnnalistGenericView):
                     context={'list': listinfo.recordlist}, search=search_for
                     )
             )
-        #@@
-        # log.info("assemble_list_data: %r"%([e.get_id() for e in entity_list],))
-        #@@
-        # typeinfo = listinfo.curr_typeinfo
         base_url = self.get_collection_base_url(listinfo.coll_id)
         list_url = self.get_list_url(
             listinfo.coll_id, listinfo.list_id,
@@ -188,9 +184,6 @@ class EntityGenericListView(AnnalistGenericView):
             search=search_for
             )
         entityvallist = [ self.strip_context_values(listinfo, e, base_url) for e in entity_list ]
-        # print "@@@@ type_id %s"%(listinfo.type_id,)
-        # print "@@@@ entity_list %r"%(entity_list,)
-        # print "@@@@ entityvallist %r"%(entityvallist,)
         # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
         # log.info(
         #     "EntityListDataView.assemble_list_data: list_url %s, base_url %s, context_url %s"%
@@ -335,9 +328,6 @@ class EntityGenericListView(AnnalistGenericView):
                     confirmed_deletion_uri
                     )
             if "default_view" in request.POST:
-                #@@
-                # auth_check = self.form_action_auth("config", listinfo.collection, CONFIG_PERMISSIONS)
-                #@@
                 auth_check = listinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
@@ -373,10 +363,6 @@ class EntityGenericListView(AnnalistGenericView):
             listinfo.redirect_response(
                 redirect_path, redirect_params=redirect_params, action=action
                 )
-            # return (
-            #     listinfo.check_authorization(action) or
-            #     HttpResponseRedirect(redirect_uri)
-            #     )
         if listinfo.http_response:
             return listinfo.http_response
 

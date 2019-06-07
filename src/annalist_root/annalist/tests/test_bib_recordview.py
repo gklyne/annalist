@@ -136,7 +136,6 @@ class BibRecordViewEditViewTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(BibRecordViewEditViewTest, cls).tearDownClass()
-        # @@checkme@@ resetSitedata(scope="all")
         return
 
     #   -----------------------------------------------------------------------------

@@ -29,11 +29,8 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Define gunicorn thread count in settings file.
 - [x] Hook for data validation check when saving entity; redisplay form if fails
 - [x] Add URI validation for vocab entity, and test
-- [ ] delete views: rationalize into single view?
-- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
-    - already supported for collection (entity list)
-    - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
-- [ ] Code pruning (remove dead/unuse
+- [-] delete views: rationalize into single view?
+- [x] Code pruning (remove dead/unused code)
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.
@@ -104,6 +101,9 @@ Technical debt:
     - [x] Need way to cleanly shut down server processes (annalist-manager option?)
     - [x] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
     - NOTE: 0.5.16 added an environment variable option for specifying the secret key: this is needed when running under gunicorn where the server process is periodically restarted.
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
+    - already supported for collection (entity list)
+    - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
 - [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic can probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.

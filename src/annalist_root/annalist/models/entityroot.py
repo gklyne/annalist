@@ -211,9 +211,10 @@ class EntityRoot(object):
             [ { '@base': self._contextbase }
             , self._contextref
             ])
-        # @@TODO: is this next needed?  Put logic in set_values?
-        if self._entityid:
-            values[ANNAL.CURIE.id] = self._entityid
+        #@@TODO: is this next needed?  Put logic in set_values?
+        # if self._entityid:
+        #     values[ANNAL.CURIE.id] = self._entityid
+        #@@
         values.pop(ANNAL.CURIE.url, None)
         return values
 
@@ -347,17 +348,17 @@ class EntityRoot(object):
         returns path of of object body, or None
         """
         (d, p, u) = self._dir_path_uri()
-        # log.debug("EntityRoot._exists_path %s"%(p))
+        # log.info("EntityRoot._exists_path %s"%(p))
         if d and os.path.isdir(d):
             if p and os.path.isfile(p):
-                # log.debug("EntityRoot._exists_path %s: OK"%(p))
+                # log.info("EntityRoot._exists_path %s: OK"%(p))
                 return p
             mp = self._migrate_path()
             if mp and os.path.isfile(mp):
                 assert mp == p, "EntityRoot._exists_path: Migrated filename %s, expected %s"%(mp, p)
                 # log.info("EntityRoot._exists_path %s: Migrated from %s"%(mp, p))
                 return mp
-        # log.debug("EntityRoot._exists_path %s: not present"%(p))
+        # log.info("EntityRoot._exists_path %s: not present"%(p))
         return None
 
     def _exists(self):

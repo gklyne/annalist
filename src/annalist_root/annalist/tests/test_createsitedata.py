@@ -62,7 +62,7 @@ def site_create_data(site_base_uri, target_subdir):
     """
     Create site data in `target_subdir`...
 
-    @@NOTE: due to the way EntityRoot is defenfensively coded, all test data is created
+    NOTE: due to the way EntityRoot is defenfensively coded, all test data is created
     under settings.BASE_SITE_DIR, and the supplied 'target_subdir' parameter is ignored.
     """
     # target_dir = os.path.join(settings.SAMPLEDATA_DIR, target_subdir)
@@ -140,14 +140,6 @@ class CreateSiteData(AnnalistTestCase):
         testsite = site_create_data(TestBaseUri, "testinit")
         coll123_create_data(testsite)
         return
-
-    #@@
-    # def test_CreateBibTestSiteData(self):
-    #     testsite = site_create_data(TestBaseUri, "bibtestinit")
-    #     collbib_create_data(testsite)
-    #     coll123_create_data(testsite)
-    #     return
-    #@@
 
     def test_CreateEmptySiteData(self):
         emptysite = site_create_data(TestBaseUri, "empty")

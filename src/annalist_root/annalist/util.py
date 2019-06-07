@@ -480,8 +480,6 @@ def replacetree(src, tgt):
     Work-around for python problem with shutils tree copy functions on Windows.
     See: http://stackoverflow.com/questions/23924223/
     """
-    # print "@@ replacetree src %s"%(src,)
-    # print "@@ replacetree tgt %s"%(tgt,)
     if os.path.exists(tgt):
         removetree(tgt)
     shutil.copytree(src, tgt)

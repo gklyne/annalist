@@ -657,7 +657,6 @@ class UploadResourceTest(AnnalistTestCase):
         # Retrieve updated form
         r = self.client.get(u)
         # Test context
-        # print "@@ "+context_field_map(r.context)
         self.assertEqual(len(r.context['fields']), 4)
         f0 = context_view_field(r.context, 0, 0)
         self.assertEqual(f0.field_id,     "Entity_id")

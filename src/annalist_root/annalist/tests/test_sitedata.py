@@ -149,13 +149,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     @classmethod
     def setUpClass(cls):
         super(AnnalistSiteDataTest, cls).setUpClass()
-        # @@checkme@@  resetSitedata()
         return
 
     @classmethod
     def tearDownClass(cls):
         super(AnnalistSiteDataTest, cls).tearDownClass()
-        # @@checkme@@  resetSitedata()
         return
 
     # --------------------------------------------------------------------------
@@ -310,10 +308,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # Test consistency of field descriptions for a given type
     def check_type_fields(self, type_id, type_uri, view_fields):
-        # print "@@ t: " + type_id
         for f in view_fields:
             field_id    = extract_entity_id(f[ANNAL.CURIE.field_id])
-            # print "@@ f: " + field_id
             view_field  = RecordField.load(self.coll1, field_id, altscope="all")
             render_type = extract_entity_id(view_field[ANNAL.CURIE.field_render_type])
             value_type  = extract_entity_id(view_field[ANNAL.CURIE.field_value_type])
@@ -344,9 +340,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     # Check field list
                     field_list      = view_field[ANNAL.CURIE.field_fields]
                     repeat_type_uri = view_field[ANNAL.CURIE.field_value_type]
-                    # print "@@ subfields: " + repeat_type_uri
                     self.check_type_fields("_field", repeat_type_uri, field_list)
-                    # print "@@ subfields: end"
                 enum_types = (
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"

@@ -79,7 +79,7 @@ class uri_link_view_renderer(object):
             link_pref, link_path = linkval.split(":", 1)
             if "collection" not in context:
                 log.warning("uri_link_view_renderer: no key 'collection' in context")
-                # log.error("@@@@@@@@@@@@@@@@@@@@@")
+                # log.error("@@@@")
                 # for k in context.flatten():
                 #     hidden_fields = (
                 #         [ "fields", "row_bound_fields", "repeat_bound_fields"
@@ -88,7 +88,7 @@ class uri_link_view_renderer(object):
                 #         , "LANGUAGES"
                 #         ])
                 #     if k not in hidden_fields:
-                #         log.error("    @@@ %s: %r"%(k, context[k]))
+                #         log.error("    @@ %s: %r"%(k, context[k]))
             else:
                 link_vocab = context["collection"].cache_get_vocab(link_pref)
                 if link_vocab:

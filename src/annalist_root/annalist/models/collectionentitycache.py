@@ -257,17 +257,6 @@ class CollectionEntityCacheObject(object):
         NOTE: this method returns only those entity ids for which a record has
         been saved to the collection data storage.
         """
-        #@@TODO: remove this
-        # def get_scope_ids(scope_entity_ids=[]):
-        #     # Collect entity ids for named scope
-        #     for entity_id in coll._children(self._entity_cls, altscope=altscope):
-        #         if entity_id != layout.INITIAL_VALUES_ID:
-        #             scope_entity_ids.append(entity_id)
-        #     return scope_entity_ids
-        # self._load_entities(coll)
-        # scope_name = altscope or "coll"     # 'None' designates collection-local scope
-        # _, entity_ids = self._entity_ids_by_scope.find(scope_name, get_scope_ids, [])
-        #@@
         self._load_entities(coll)
         scope_name = altscope or "coll"     # 'None' designates collection-local scope
         scope_entity_ids = []

@@ -79,7 +79,6 @@ COLL_CONTEXT_FILE       = "coll_context.jsonld"
 # COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
-#@@ SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"

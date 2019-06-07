@@ -28,8 +28,6 @@ from annalist.models.recordtype             import RecordType
 # 
 #   ---------------------------------------------------------------------------
 
-#@@@ supertype_closure_cache = {}
-
 class CollectionTypeCacheObject(CollectionEntityCacheObject):
     """
     This class is a type cache for a specified collection.
@@ -45,12 +43,11 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         coll_id         Collection id with which the type cache is associated.
         """
         super(CollectionTypeCacheObject, self).__init__(coll_id, entity_cls)
-        #@@@ supertype_closure_cache[coll_id] 
         self._supertype_closure_cache = ClosureCache(coll_id, ANNAL.CURIE.supertype_uri)
         return
 
     def _gsupertype_cache(self):
-        return self._supertype_closure_cache #@@@ supertype_closure_cache.get(self.get_coll_id(), None)
+        return self._supertype_closure_cache
 
     def _load_entity(self, coll, type_entity):
         """
@@ -140,7 +137,7 @@ class CollectionTypeCacheObject(CollectionEntityCacheObject):
         """
         Close down and release all type cache data
         """
-        # log.debug("@@@@remove type cache %r"%(self.get_coll_id(),))
+        # log.debug("@@remove type cache %r"%(self.get_coll_id(),))
         super(CollectionTypeCacheObject, self).remove_cache()
         self._supertype_closure_cache.remove_cache()
         self._supertype_closure_cache = None

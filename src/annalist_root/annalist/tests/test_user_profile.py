@@ -60,7 +60,6 @@ class UserProfileTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(UserProfileTest, cls).tearDownClass()
-        # @@checkme@@ resetSitedata(scope="all")
         return
 
     def test_UserProfileTest(self):
@@ -100,8 +99,6 @@ class UserProfileViewTest(AnnalistTestCase):
         return
 
     def test_get(self):
-        # @@TODO: use reference to self.client, per 
-        # https://docs.djangoproject.com/en/dev/topics/testing/tools/#default-test-client
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         u = reverse("AnnalistProfileView")

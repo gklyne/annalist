@@ -288,7 +288,6 @@ class EntityInheritListViewTest(AnnalistTestCase):
             view_id="Default_view"
             )
         r = self.client.post(u, f)
-        # print "@@@@ r.content %r, r['location'] %r"%(r.content, r['location'])
         self.assertEqual(r.status_code,   403)
         self.assertEqual(r.reason_phrase, "Forbidden")
         # Check that no new data exists

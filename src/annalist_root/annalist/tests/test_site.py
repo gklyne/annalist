@@ -251,8 +251,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get(self):
-        # @@TODO: use reference to self.client, per 
-        # https://docs.djangoproject.com/en/dev/topics/testing/tools/#default-test-client
         r = self.client.get(self.uri)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -516,9 +514,6 @@ class SiteActionViewTests(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        # self.user.save()
-        # self.client = Client(HTTP_HOST=TestHost)
         # Login and permissions
         create_test_user(None, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)

@@ -64,7 +64,6 @@ class EntityListDataView(EntityGenericListView):
         listinfo    = self.list_setup(coll_id, type_id, list_id, request.GET.dict())
         if listinfo.http_response:
             return listinfo.http_response
-        # print "@@@@ listinfo.type_id %s, type_id %s"%(listinfo.type_id, type_id)
         # log.debug("@@ listinfo.list_id %s, coll base_url %s"%(listinfo.list_id, base_url))
         # Prepare list data for rendering
         try:

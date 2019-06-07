@@ -354,14 +354,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_id(), field_id)
         self.assertEqual(e.get_url(), u)
         self.assertEqual(e.get_view_url_path(), recordfield_url("testcoll", field_id))
-        # print("@@@@ _check_field_data_values property_uri: "+str(property_uri))
         v = recordfield_values(
             field_id=field_id, 
             property_uri=property_uri, 
             entity_type_uri=type_uri,
             update=update
             )
-        # print("@@@@ v: "+repr(v))
         check_field_record(self, e,
             field_id=           field_id,
             field_ref=          layout.COLL_BASE_FIELD_REF%{'id': field_id},
@@ -934,7 +932,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="Type_label")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Type_label")
@@ -982,7 +979,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="Type_label")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Field_fields")
@@ -1130,9 +1126,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = field_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
             )
-        # print "@@ context %r"%(context_bind_fields(r.context)['fields'][9],)
-        # print "@@ context field value %r"%(context_bind_fields(r.context)['fields'][9]['field_value'],)
-        # print "@@ expect  %r"%(expect_context['fields'][9],)
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
@@ -1750,7 +1743,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.description["group_field_descs"][0]
         actual_subfield_choices = list(f_subfield_sel_field["field_choices"].values())
-        # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
         return
 

@@ -80,7 +80,6 @@ class FieldRowValueMap(object):
         #         adapting or using a variant of field_description_from_view_field to populate 
         #         'row_field_descs' in field description.  This would be more in line with
         #         treatment of ref_multifield fields.
-        #@@@@@@@@@@@@@@@@@@@@@@@@@
         self.rd['row_field_descs'] = self.fd
         return
 

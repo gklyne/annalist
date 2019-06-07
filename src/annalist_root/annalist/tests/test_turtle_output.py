@@ -423,17 +423,6 @@ class TurtleOutputTest(AnnalistTestCase):
             self.assertIn( (URIRef(s), URIRef(p), o), g)
         return
 
-
-
-
-    # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
-
-
-
-
     # Collection data view
     def test_get_collection_data_view(self):
         collection_url = collection_view_url(coll_id="testcoll")
@@ -530,10 +519,6 @@ class TurtleOutputTest(AnnalistTestCase):
             coll_id="testcoll", type_id=type_id, entity_id=enum_id,
             resource_ref=layout.VOCAB_META_TURTLE
             )
-        # print("@@@@ v: (list_type_grid)")
-        # print(repr(v))
-        # print("@@@@ u: (list_type_grid)")
-        # print(repr(u))
         with MockHttpDictResources(u, self.get_context_mock_dict(v)):
             r = self.client.get(u)
         self.assertEqual(r.status_code,   200)
@@ -541,8 +526,6 @@ class TurtleOutputTest(AnnalistTestCase):
         # Check the resulting graph contents
         g = Graph()
         result = g.parse(data=r.content, publicID=u, format="turtle")
-        # print("@@@@ g: (list_type_grid)")
-        # print(g.serialize(format='turtle', indent=4))
         subj                = TestHostUri + v.rstrip("/")
         list_type_grid_data = list_type_grid.get_values()
         list_type_url       = ANNAL.to_uri(list_type_grid_data[ANNAL.CURIE.uri])
@@ -903,7 +886,6 @@ class TurtleOutputTest(AnnalistTestCase):
         entity1  = EntityData.load(testdata, "entity1")
         # Read entity data as Turtle
         u = entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1")
-        # print "@@ test_http_conneg_turtle_entity1: uri %s"%u
         r = self.client.get(u, HTTP_ACCEPT="text/turtle")
         self.assertEqual(r.status_code,   302)
         self.assertEqual(r.reason_phrase, "Found")
@@ -1116,7 +1098,6 @@ class TurtleOutputTest(AnnalistTestCase):
         (turtle_url, list_items) = self.get_list_turtle(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        # print "@@ "+repr(list_items)
         expect_type_ids = get_site_types()
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))

@@ -1,8 +1,5 @@
 """
 Tests for URI image reference displayed as an image.
-
-@@TODO: later developments should also support CURIES (cf. issue #19,
-https://github.com/gklyne/annalist/issues/19).
 """
 
 from __future__ import unicode_literals

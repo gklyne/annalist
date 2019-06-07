@@ -369,7 +369,7 @@ class DisplayInfo(object):
 
         See also method 'get_request_type_info'.
         """
-        # print "@@@@ get_type_info: type_id %s"%(type_id,)
+        # print "@@ get_type_info: type_id %s"%(type_id,)
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             if type_id:
@@ -411,14 +411,6 @@ class DisplayInfo(object):
                 list_id = self.get_list_id(self.type_id, None)
                 msg2 = message.DISPLAY_ALTERNATIVE_LIST%{'id': list_id, 'coll_id': self.coll_id}
                 self.add_error_message(msg2)
-                #@@
-                # self.http_response = self.view.error(
-                #     dict(self.view.error404values(),
-                #         message=message.RECORD_LIST_NOT_EXISTS%(
-                #             {'id': list_id, 'coll_id': self.coll_id})
-                #         )
-                #     )
-                #@@
             self.list_id    = list_id
             self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
             if "@error" in self.recordlist:
@@ -454,14 +446,6 @@ class DisplayInfo(object):
                 view_id = self.get_view_id(self.type_id, None)
                 msg2 = message.DISPLAY_ALTERNATIVE_VIEW%{'id': view_id, 'coll_id': self.coll_id}
                 self.add_error_message(msg2)
-                #@@
-                # self.http_response = self.view.error(
-                #     dict(self.view.error404values(),
-                #         message=message.RECORD_VIEW_NOT_EXISTS%(
-                #             {'id': view_id, 'coll_id': self.coll_id})
-                #         )
-                #     )
-                #@@
             self.view_id    = view_id
             self.recordview = RecordView.load(self.collection, view_id, altscope="all")
             if "@error" in self.recordview:
@@ -588,9 +572,7 @@ class DisplayInfo(object):
         """
         Save list of error message to be displayed on completion of the current operation
         """
-        # print "@@ add_error_messages: > %r"%(messages,)
         self.error_messages.extend(messages)
-        # print "@@ add_error_messages: < %r"%(self.error_messages,)
         return self.http_response
 
     def redisplay_path_params(self):
@@ -634,7 +616,6 @@ class DisplayInfo(object):
                 redirect_msg_params.update(self.view.info_params("\n\n".join(self.info_messages)))
             if self.error_messages:
                 redirect_msg_params.update(self.view.error_params("\n\n".join(self.error_messages)))
-            # print "@@ redirect_response: redirect_msg_params %r"%(redirect_msg_params,)
             redirect_uri = (
                 uri_with_params(
                     redirect_path,
@@ -997,13 +978,13 @@ class DisplayInfo(object):
         """
         assert self.curr_typeinfo is not None
         data_ref = self.curr_typeinfo.entityclass.meta_resource_name(name_ext=name_ext)
-        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        # log.info("@@ get_entity_data_ref: data_ref "+data_ref)
         data_ref = make_data_ref(
             self.view.get_request_path(),   # For parameter values
             data_ref, 
             return_type
             )
-        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        # log.info("@@ get_entity_data_ref: data_ref "+data_ref)
         return data_ref
 
     def get_entity_jsonld_ref(self, return_type=None):

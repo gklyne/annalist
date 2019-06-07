@@ -348,8 +348,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
         actual_context = context_bind_fields(response.context)
         self.assertEqual(len(response.context['fields']), 7)
         # for i in range(7):
-        #     print("@@@@ act field[%d]: "%i, repr(actual_context['fields'][i]))
-        #     print("@@@@ exp field[%d]: "%i, repr(expect_context['fields'][i]))
+        #     print("@@ act field[%d]: "%i, repr(actual_context['fields'][i]))
+        #     print("@@ exp field[%d]: "%i, repr(expect_context['fields'][i]))
         self.assertDictionaryMatch(actual_context, expect_context)
         return
 

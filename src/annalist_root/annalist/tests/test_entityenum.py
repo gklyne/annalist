@@ -111,7 +111,7 @@ def recordenum_values(enum_id, coll_id="testcoll", type_id="testtype", update="E
     enumurl = recordenum_view_url(enum_id, coll_id=coll_id, type_id=type_id)
     d = recordenum_create_values(
         enum_id, coll_id=coll_id, type_id=type_id, update=update, hosturi=hosturi
-        ).copy() #@@ copy needed here?
+        )
     d.update(
         { 'annal:id':       enum_id
         , 'annal:type_id':  type_id
@@ -124,7 +124,7 @@ def recordenum_read_values(
         enum_id, coll_id="testcoll", type_id="testtype", update="Enum", hosturi=TestHostUri):
     d = recordenum_values(
         enum_id, coll_id=coll_id, type_id=type_id, update=update, hosturi=hosturi
-        ).copy()
+        )
     d.update(
         { '@id':        layout.COLL_BASE_ENUM_REF%{'type_id': layout.ENUM_LIST_TYPE_ID, 'id': "testenum1"}
         , '@context':   [{'@base': "../../"}, "../../coll_context.jsonld"]

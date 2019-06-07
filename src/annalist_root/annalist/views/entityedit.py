@@ -174,7 +174,7 @@ class GenericEntityEditView(AnnalistGenericView):
         try:
             response = self.form_render(
                 viewinfo, entity, entityvals, context_extra_values, 
-                add_field #@@ remove param
+                add_field #@@TODO: remove param?
                 )
         except Exception as e:
             # -- This should be redundant, but...
@@ -267,12 +267,13 @@ class GenericEntityEditView(AnnalistGenericView):
             })
         viewinfo.set_messages(messages)
         # Process form response and respond accordingly
-        #@@TODO: this should be redundant - create as-needed, not before
-        #         as of 2014-11-07, removing this causes test failures
-        if not typeinfo.entityparent._exists():
-            # Create RecordTypeData when not already exists
-            RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
-        #@@
+        # #@@TODO: this should be redundant - create as-needed, not before
+        # #         as of 2014-11-07, removing this causes test failures
+        # #         as of 2019-06-07, tests run OK without this
+        # if not typeinfo.entityparent._exists():
+        #     # Create RecordTypeData when not already exists
+        #     RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
+        # #@@
         try:
             response = self.form_response(viewinfo, context_extra_values)
         except Exception as e:
@@ -614,9 +615,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                #@@
-                # auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
-                #@@
                 auth_check = viewinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
@@ -649,9 +647,6 @@ class GenericEntityEditView(AnnalistGenericView):
             if not responseinfo.has_http_response():
                 responseinfo.set_http_response(
                     viewinfo.check_authorization("config")
-                    #@@
-                    # self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
-                    #@@
                     )
             if not responseinfo.has_http_response():
                 cont_here = viewinfo.get_continuation_here(
@@ -1019,33 +1014,8 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_message=messages['parent_missing']
                 )
 
-        # #@@@@ TO BE REMOVED
-        # # Check existence of entity to save according to action performed
-        # if (action in ["new", "copy"]) or entity_renamed:
-        #     if not viewinfo.saved():
-        #         # First save - check for existence
-        #         if save_typeinfo.entity_exists(save_entity_id):
-        #             log.warning(
-        #                 "Entity exists: action %s %s/%s, orig %s/%s"%
-        #                     (action, save_type_id, save_entity_id, orig_type_id, orig_entity_id)
-        #                 )
-        #             return self.form_re_render(responseinfo,
-        #                 viewinfo, entityvaluemap, entityformvals, context_extra_values,
-        #                 error_head=messages['entity_heading'],
-        #                 error_message=messages['entity_exists']
-        #                 )
-        # else:
-        #     if not orig_typeinfo.entity_exists(save_entity_id, altscope="all"):
-        #         # This shouldn't happen, but just in case...
-        #         log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
-        #               (save_type_id, save_entity_id, action, entity_renamed)
-        #             )
-        #         return self.form_re_render(responseinfo,
-        #             viewinfo, entityvaluemap, entityformvals, context_extra_values,
-        #             error_head=messages['entity_heading'],
-        #             error_message=messages['entity_not_exists']
-        #             )
-        # #@@@@
+        # Create parent RecordTypeData entity for entity to be saved, if needed
+        save_typeinfo.parent_typedata(create_typedata=True)
 
         # @@TODO: factor out repeated re-rendering logic
 

@@ -74,12 +74,6 @@ class AnnalistTestCase(TestCase):
         self.assertIn(quote(err_msg, safe="(/)"),  response['location'])
         if redirect_url:
             self.assertIn(redirect_url, response['location'])
-        #@@
-        # self.assertEqual(response.status_code,   404)
-        # self.assertEqual(response.reason_phrase, "Not found")
-        # self.assertContains(response, "<title>Annalist error</title>", status_code=404)
-        # self.assertContains(response, "<h3>404: Not found</h3>", status_code=404)
-        #@@
         return
 
     def assertEqualPrefix(self, actual, expect, prefix=""):

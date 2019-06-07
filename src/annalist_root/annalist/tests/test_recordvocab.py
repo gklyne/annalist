@@ -251,7 +251,6 @@ class RecordVocabEditViewTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(RecordVocabEditViewTest, cls).tearDownClass()
-        # @@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------

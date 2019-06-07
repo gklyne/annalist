@@ -122,10 +122,6 @@ class Collection(Entity):
             ])
         collmetadata = self._migrate_values_map_field_names(migration_map, collmetadata)
         collmetadata[ANNAL.CURIE.id] = self._entityid # In case directory renamed by hand
-        #@@ redundant?...
-        if collmetadata[ANNAL.CURIE.type_id] == "_coll":
-            collmetadata[ANNAL.CURIE.type_id] = self._entitytypeid
-        #@@
         return collmetadata
 
     def flush_collection_caches(self):
@@ -237,7 +233,8 @@ class Collection(Entity):
         coll_root_dir     = os.path.join(parent_base_dir, layout.SITE_COLL_PATH%{"id": coll_id})
         coll_base_dir     = os.path.join(coll_root_dir,   layout.COLL_BASE_DIR)
         coll_conf_old_dir = os.path.join(coll_root_dir,   layout.COLL_ROOT_CONF_OLD_DIR)
-        #@@ TODO: remove this, not covered by tests.  Or remove entire method.
+        #@@ TODO: remove this during 1.x prelease cycle, 
+        #   not covered by tests.  Or remove entire method.
         if os.path.isdir(coll_conf_old_dir):
             log.info("Migrate old configuration from %s"%(coll_conf_old_dir,))
             for old_name in os.listdir(coll_conf_old_dir):
@@ -395,7 +392,7 @@ class Collection(Entity):
             log.warning(msg)
             t = RecordType.load(self, vocab_id, altscope="all")
             vocab_cache.set_vocab(self, t)
-            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+            # raise ValueError(msg) #@@ (used in testing to help pinpoint errors)
         return t
 
     # Record types
@@ -432,7 +429,7 @@ class Collection(Entity):
             log.warning(msg)
             t = RecordType.load(self, type_id, altscope="all")
             type_cache.set_type(self, t)
-            # raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+            # raise ValueError(msg) #@@ (used in testing to help pinpoint errors)
         return t
 
     def cache_remove_type(self, type_id):
@@ -526,24 +523,6 @@ class Collection(Entity):
         """
         s = RecordType.remove(self, type_id)
         return s
-
-    # def _unused_update_entity_types(self, e):
-    #     # @@TODO: remove this?
-    #     """
-    #     Updates the list of type URIs associated with an entity by accessing the
-    #     supertypes of the associated type record.
-    #     """
-    #     type_uri = e.get(ANNAL.CURIE.type, None)
-    #     st_uris = [type_uri]
-    #     t       = self.get_uri_type(type_uri)
-    #     if t:
-    #         assert (t.get_uri() == type_uri), "@@ type %s has unexpected URI"%(type_uri,)
-    #         for st in type_cache.get_type_uri_supertypes(self, type_uri):
-    #             st_uri = st.get_uri()
-    #             if st_uri not in st_uris:
-    #                 st_uris.append(st_uri)
-    #     e['@type'] = st_uris
-    #     return
 
     # Record views
 
@@ -687,17 +666,6 @@ class Collection(Entity):
 
     # View (and list) fields and properties
 
-    #@@
-    # @classmethod
-    # def reset_field_cache(cls):
-    #     """
-    #     Used for testing: clear out field cache so tets don't interfere with each 
-    #     other.  Could also be used when external application updates data.
-    #     """
-    #     field_cache.flush_all()
-    #     return
-    #@@
-
     def fields(self, altscope="all"):
         """
         Iterator over view fields stored in the current collection.
@@ -719,7 +687,6 @@ class Collection(Entity):
 
         Returns field entity if found, otherwise None.
         """
-        #@@ field_cache.get_field(self, field_id)
         t = field_cache.get_field(self, field_id)
         # Was it previously created but not cached?
         if not t and RecordField.exists(self, field_id, altscope="all"):
@@ -973,7 +940,8 @@ class Collection(Entity):
                         e = self.set_field_uri_jsonld_context(subfuri or furi, subfid, fcontext, context)
                         errs.extend(e)
         # Scan group fields and generate context data for property URIs used
-        #@@TODO - to be deprecated
+        #@@TODO - to be deprecated when RecordGroup is removed from codebase
+        #         (during 1.0 release cycle?)
         # In due course, field groups will replaced by inline field lists.
         # This code does not process field lists for fields referenced by a group.
         #@@

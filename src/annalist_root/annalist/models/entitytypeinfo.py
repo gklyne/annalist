@@ -46,15 +46,15 @@ INFO_ID     = layout.INFO_TYPEID
 TASK_ID     = layout.TASK_TYPEID
 
 COLL_MESSAGES = (
-    { 'parent_heading':         "(@@ COLL_MESSAGES.parent_heading - unused message @@)"
-    , 'parent_missing':         "(@@ COLL_MESSAGES.parent_missing - unused message @@)"
+    { 'parent_heading':         "(@@ COLL_MESSAGES.parent_heading @@)"
+    , 'parent_missing':         "(@@ COLL_MESSAGES.parent_missing @@)"
     , 'entity_heading':         message.COLLECTION_ID
     , 'entity_invalid_id':      message.COLLECTION_ID_INVALID
     , 'entity_exists':          message.COLLECTION_EXISTS
     , 'entity_not_exists':      message.COLLECTION_NOT_EXISTS
     , 'entity_removed':         message.COLLECTION_REMOVED
-    , 'entity_type_heading':    "(@@ COLL_MESSAGES.entity_type_heading - unused message @@)"
-    , 'entity_type_invalid':    "(@@ COLL_MESSAGES.entity_type_invalid - unused message @@)"
+    , 'entity_type_heading':    "(@@ COLL_MESSAGES.entity_type_heading @@)"
+    , 'entity_type_invalid':    "(@@ COLL_MESSAGES.entity_type_invalid @@)"
     })
 
 ENTITY_MESSAGES = (
@@ -388,10 +388,7 @@ class EntityTypeInfo(object):
             else:
                 # log.info("@@ EntityTypeInfo: Type %s does not exist for collection %s"%(type_id,coll.get_id()))
                 pass
-            if create_typedata and not RecordTypeData.exists(coll, type_id):
-                self.entityparent   = RecordTypeData.create(coll, type_id, {})
-            else:
-                self.entityparent   = RecordTypeData(coll, type_id)
+            self.parent_typedata(create_typedata=create_typedata)
             self.entityaltparent = None
             self.entityclass     = EntityData
             self.entitymessages  = ENTITY_MESSAGES
@@ -542,7 +539,21 @@ class EntityTypeInfo(object):
         """
         Test for existence of parent entity for the current type.
         """
-        return self.entityparent._exists()
+        return self.entityparent and self.entityparent._exists()
+
+    def parent_typedata(self, create_typedata=False):
+        """
+        Get or create reference to parent RecordTypeData entity.
+
+        Optionally, create actual RecordTypeData entity if it does not exist.
+        """
+        if create_typedata and not self.parent_exists():
+            # Only RecordTypeData entities are created dynamically:
+            # others (site, coll) must already exist.
+            self.entityparent = RecordTypeData.create(self.entitycoll, self.type_id, {})
+        elif not self.entityparent:
+            self.entityparent = RecordTypeData(self.entitycoll, self.type_id)
+        return self.entityparent
 
     def entity_exists(self, entity_id, altscope=None):
         """
