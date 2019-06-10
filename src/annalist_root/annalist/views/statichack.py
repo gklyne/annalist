@@ -63,13 +63,19 @@ def serve_static(request, path, insecure=False, **kwargs):
         if not absolute_path:
             if path.endswith('/') or path == '':
                 raise Http404("Directory indexes are not allowed here.")
-            raise Http404("'%s' could not be found" % path)
+            raise Http404("Resource '%s' could not be found (%s)" % (path, normalized_path))
         document_root, path = os.path.split(absolute_path)
         # log.info("document_root %s, path %s"%(document_root, path))
     except Exception as e:
         log.info(str(e))
         raise
     return static.serve(request, path, document_root=document_root, **kwargs)
+
+def serve_favicon(request, path, insecure=False, **kwargs):
+    """
+    Serve favicon: prepends "images/" to image path.
+    """
+    return serve_static(request, "images/"+path, insecure=insecure, **kwargs)
 
 def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
     """
@@ -93,7 +99,7 @@ def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
         if not os.path.exists(normalized_path):
             if page_path.endswith('/') or page_path == '':
                 raise Http404("Directory indexes are not allowed here.")
-            raise Http404("'%s' could not be found" % page_path)
+            raise Http404("Page '%s' could not be found" % page_path)
         document_root, path = os.path.split(normalized_path)
         # log.info("document_root %s, path %s"%(document_root, path))
     except Exception as e:

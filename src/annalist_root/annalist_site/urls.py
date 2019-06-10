@@ -16,7 +16,7 @@ from django.contrib             import admin
 admin.autodiscover()
 
 from annalist.views.home_redirects  import AnnalistHomeView
-from annalist.views.statichack      import serve_static
+from annalist.views.statichack      import serve_static, serve_favicon
 
 annalist_pattern = "^"+settings.ANNALIST_SITE_SEG+"/"
 urlpatterns  = [
@@ -30,6 +30,10 @@ urlpatterns  = [
 static_pattern = "^"+settings.STATIC_SEG+"/"
 urlpatterns += [
     url(static_pattern+r'(?P<path>.*)$', serve_static),
+    ]
+
+urlpatterns += [
+    url(r'(?P<path>favicon.ico)$', serve_favicon),
     ]
 
 # End.

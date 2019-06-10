@@ -31,6 +31,9 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Add URI validation for vocab entity, and test
 - [-] delete views: rationalize into single view?
 - [x] Code pruning (remove dead/unused code)
+- [x] BUG: removing parent from collection can cause 500 error when accessing cached info
+    - handle missing-parent error when accessing cached entity (also logs error)
+    - when saving collection metadata, clear collection cache(s)
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Install tools and update documentation to use `twine` for package upload.

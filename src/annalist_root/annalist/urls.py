@@ -31,7 +31,7 @@ from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 from annalist.views.siteresource        import SiteResourceAccess
 from annalist.views.collectionresource  import CollectionResourceAccess
 from annalist.views.entityresource      import EntityResourceAccess
-from annalist.views.statichack          import serve_pages
+from annalist.views.statichack          import serve_pages, serve_static
 
 from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
 from login.auth_oidc_client             import OIDC_AuthDoneView
@@ -197,6 +197,11 @@ urlpatterns = [
     # Access supporting application pages in same collection
     url(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
                             serve_pages),
+
+    # Access "favicon.ico"
+    url(r'^(?P<path>favicon.ico)$',
+                            serve_static),
+
     ] # End of urlpatterns
 
 # Login-related view URLs

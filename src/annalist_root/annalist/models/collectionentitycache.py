@@ -109,7 +109,8 @@ class CollectionEntityCacheObject(object):
                         ["parent_id"] is the id of the parent entity
                         ["data"] is a dictionary of values for the new entity
 
-        Returns None if either Id or values evaluate as Boolean False (i.e. are None or empty).
+        Returns None if either Id or values evaluate as Boolean False (i.e. are None or empty),
+        or if the parent collection is no longer accessible.
         """
         entity = None
         if entity_id and entity_values:
@@ -125,7 +126,8 @@ class CollectionEntityCacheObject(object):
                         (parent_id, self._type_id, entity_id, coll.get_id())
                         )
                     log.error(msg)
-                    raise ValueError(msg)
+                    return None
+                    # raise ValueError(msg)
             entity = self._entity_cls._child_init(parent, entity_id)
             entity.set_values(entity_values["data"])
         return entity

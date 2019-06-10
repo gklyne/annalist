@@ -271,6 +271,19 @@ class Collection(Entity):
         #@@
         return
 
+    def _post_update_processing(self, entitydata, post_update_flags):
+        """
+        Default method for post-update processing.
+
+        This method is called just after collection metadata has been created or updated.  
+
+        For a collection, the caches are flushed as a change to the parent collection
+        may mean that cached values are no longer applicable.  (Updating a collection
+        description is considered to be a relatively rare operation.)
+        """
+        self.flush_collection_caches()
+        return entitydata
+
     @classmethod
     def load(cls, parent, coll_id, altscope=None):
         """

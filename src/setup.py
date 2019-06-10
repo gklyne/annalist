@@ -89,6 +89,7 @@ setup(
             , 'data/static/css/*.css'
             , 'data/static/js/*.js'
             , 'data/static/images/*.png'
+            , 'data/static/images/*.ico'
             , 'data/static/images/icons/warning_32.png'
             , 'data/static/images/icons/search_32.png'
             , 'data/static/foundation/css/*.css'
