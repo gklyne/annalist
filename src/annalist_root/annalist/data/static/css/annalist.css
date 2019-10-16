@@ -112,6 +112,10 @@ h2.page-heading > a.permalink {
     color:          #008cba; /* copied from Foundation <a> colour */
 }
 
+h4.page-heading {
+    color:          #666666;
+}
+
 p.djangolinks 
 {
     font-size: small;

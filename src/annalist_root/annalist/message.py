@@ -14,6 +14,8 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+CUSTOMIZE_COLLECTION_HEADING  = "Customize collection &mdash; %(coll_label)s"
+
 SITE_NAME_DEFAULT             = "Annalist linked data notebook"
 ACTION_COMPLETED              = "Action completed"
 NO_ACTION_PERFORMED           = "No action performed"
