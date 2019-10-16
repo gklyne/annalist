@@ -75,3 +75,31 @@
   </div>
 
 {% endblock %}
+
+{% block info %}
+  <div class="help hide-on-print row">
+    <!--
+    <div class="small-12 columns">
+      {{ help_text|safe }}
+    </div>
+    -->
+    <div class="small-12 columns">
+      <h1>Further information</h1>
+      <p>
+        <a href="./d/_field/{{ continuation_param }}">Field definitions</a>
+      </p>
+      <p>
+        <a href="./l/User_list/{{ continuation_param }}">User permissions</a>
+      </p>
+      <p>
+        <a href="./l/User_list/{{ continuation_param }}&scope=all">User permissions applied in collection</a> (including site-wide permissions)
+      </p>
+      <!--
+      <p>
+        <a href="@@@{{ continuation_param }}">@@@ in collection</a>
+      </p>
+      -->
+    </div>
+  </div>
+{% endblock %}
+
