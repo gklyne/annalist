@@ -405,15 +405,32 @@ To upload an image, click on the link for a photograph, then click `Edit`;  the 
 
 [.text-center]
 .Edit photograph record with Image field
-image::screenshot-edit-photograph-3.png[Edit Photograph record with Image field,width=500,align=center]
+image::screenshot-edit-photograph-3.png[Edit Photograph record with Image field,width=640,align=center]
 
 Click `Browse`, select an image file to be uploaded, then `Open` (or equivalent for the browser being used).  On the photo editing page, click `Save`.  The Photograph record is now displayed with the uploaded image:
+
+////
+@@ Temporary reference to develop branch
+////
+
+NOTE: The images used for this tutorial example can be found in the Annalist GitHub repository, https://github.com/gklyne/annalist/tree/develop/documents/tutorial/photos[documents/tutorial/photos directory].  They may be downloaded from there to any convenient location on your computer.
+
+////
+@@ Use this when updated tutorial is on master branch
+
+NOTE: The images used for this tutorial example can be found in the Annalist GitHub repository, https://github.com/gklyne/annalist/tree/master/documents/tutorial/photos[documents/tutorial/photos directory].  If you are working through the tutorial, they may be downloaded from there to any convenient location on your computer.
+////
 
 [.text-center]
 .View photograph record with uploaded Image
 image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=500,align=center]
 
 Clicking on the displayed image here will show the image alone in a new tab (or possibly a new window, depending on the browser used), occupying the full browser window.
+
+
+
+@@@@@@
+
 
 
 == Add repeating fields to a data record
