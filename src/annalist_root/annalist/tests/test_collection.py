@@ -514,7 +514,7 @@ class CollectionEditViewTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "OK")
         self.assertContains(r, "<title>Collection coll1</title>")
         self.assertContains(r, 
-            '<h2 class="page-heading">Customize collection: Collection coll1</h2>', 
+            '<h2 class="page-heading">Customize collection &mdash; Collection coll1</h2>', 
             html=True
             )
         return

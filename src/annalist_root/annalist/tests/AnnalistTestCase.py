@@ -239,4 +239,19 @@ class AnnalistTestCase(TestCase):
             self.assertEqual(attr_val, expect_attrs[attr])
         return
 
+    def assertContains(self, response, expect, html=False, status_code=200):
+        try:
+            super(AnnalistTestCase, self).assertContains(
+                response, expect, 
+                html=html,
+                status_code=status_code
+                )
+        except AssertionError as e:
+            log.info(
+                "assertContains failure: response content\n%s\n"%
+                (response.content)
+                )
+            raise
+        return
+
 # End.

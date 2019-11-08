@@ -14,7 +14,7 @@
         <div class="row">
 
           <div class="medium-4 columns">
-            <h4 class="page-heading">Record types</h4>
+            <h4 class="page-heading">Entity types</h4>
             <select name="typelist" size="{{ select_rows }}" 
                     class="small-size-4 medium-size-12 medium-add-margin">
               {% for t in types %}
@@ -42,7 +42,7 @@
           </div>
 
           <div class="medium-4 columns">
-            <h4 class="page-heading">Record views</h4>
+            <h4 class="page-heading">Entity views</h4>
             <select name="viewlist" size="{{ select_rows }}" 
                     class="small-size-4 medium-size-12 medium-add-margin">
               {% for v in views %}
@@ -118,6 +118,15 @@
           this collection only
         </a>&mdash;
         <a href="./l/Field_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        Namespace definitions:
+        <a href="./l/Vocab_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/Vocab_list/{{ continuation_param }}&scope=all">
           including inherited definitions
         </a>
       </p>

@@ -13,6 +13,10 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from utils.py3porting import is_string
+
+from django.template    import Template, Context
+
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -20,33 +24,47 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_view_value
     )
 
-from django.template    import Template, Context
-
 #   ----------------------------------------------------------------------------
 #
 #   Link URI value mapping
 #
 #   ----------------------------------------------------------------------------
 
+def upload_field_value(data_value):
+    """
+    Construct field value in expected format for remaining processing
+    """
+    if data_value:
+        if is_string(data_value):
+            data_value = (
+                { 'resource_name': "uploaded.jpg"
+                , 'uploaded_file': data_value
+                })
+    else:
+        # Also for empty string case
+        data_value = (
+            { 'resource_name': "uploaded.jpg"
+            , 'uploaded_file': ""
+            })
+    return data_value
 
 class FileUploadValueMapper(RenderBase):
     """
-    Value mapper class for token list
+    Field rendering class for file upload field.
     """
-
     @classmethod
     def resource_name(cls, data_value):
         """
         Extracts import URL ref from value structure, for field display.
         """
-        return (data_value or {}).get('resource_name', "(@@resource_name not present)")
+        return upload_field_value(data_value).get('resource_name', "(@@resource_name not present)")
 
     @classmethod
     def uploaded_file(cls, data_value):
         """
         Extracts uploaded filename from value structure, for field display.
         """
-        return (data_value or {}).get('uploaded_file', "")
+        return upload_field_value(data_value).get('uploaded_file', "")
 
 
     @classmethod
@@ -54,7 +72,7 @@ class FileUploadValueMapper(RenderBase):
         """
         Extracts import URL ref from value structure, for field display.
         """
-        return cls.resource_name(data_value)
+        return cls.resource_name(upload_field_value(data_value))
 
     @classmethod
     def decode(cls, field_value):
@@ -70,11 +88,11 @@ class FileUploadValueMapper(RenderBase):
         """
         u = self.decode(field_value)
         v = entityvals.get(property_uri, {})
-        try:
-            v['resource_name'] = u
-        except TypeError:
-            v = {'resource_name': u}    # Ignore non-updatable value
-        entityvals[property_uri] = v
+        # try:
+        #     v['resource_name'] = u
+        # except TypeError:
+        #     v = {'resource_name': u}    # Ignore non-updatable value
+        entityvals[property_uri] = upload_field_value(v)
         return v
 
 #   ----------------------------------------------------------------------------
@@ -131,13 +149,15 @@ class File_upload_edit_renderer(object):
         val = get_field_edit_value(context, None)
         resource_name = FileUploadValueMapper.resource_name(val)
         uploaded_file = FileUploadValueMapper.uploaded_file(val)
+        # log.info("@@File_upload_edit_renderer.render: %s %s"%(resource_name, uploaded_file))
         with context.push(resource_name=resource_name, uploaded_file=uploaded_file):
             result = self._template.render(context)
+        # log.info("@@File_upload_edit_renderer.render: %s"%(result,))
         return result
 
 def get_file_upload_renderer():
     """
-    Return field renderer object for uri import value
+    Return field renderer object for file upload
     """
     return RenderFieldValue("file_upload",
         view_renderer=File_upload_view_renderer(), 

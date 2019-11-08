@@ -432,7 +432,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def test_collection_edit(self):
         u = collection_edit_url(coll_id="coll1")
         s = self.get_page(u)
-        self.assertEqual(s.h2.string, "Customize collection: Collection coll1")
+        self.assertEqual(s.h2.string, "Customize collection \u2014 Collection coll1")
         local_types_expected = make_field_choices(
             [ ("type1", "RecordType coll1/_type/type1")
             , ("type2", "RecordType coll1/_type/type2")
