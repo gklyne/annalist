@@ -1,6 +1,6 @@
 = Annalist tutorial
 Graham Klyne
-v0.1.24, 2015-12-07
+v0.5.16, 2019-10-15
 :toc: macro
 :toc-title:
 :linkcss:
@@ -16,47 +16,44 @@ toc::[]
 
 == Running example
 
-This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually ["Compact URIs"](http://www.w3.org/TR/curie/), or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
+This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually http://www.w3.org/TR/curie/[Compact URIs], or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
 
 The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO, once current in-development software is deployed.)
-
 
 == Log in to Annalist
 
 Browse to the Annalist site login page; e.g. http://demo.annalist.net/annalist/site/, then http://demo.annalist.net/annalist/login/.
 
-The first time of logging in to an Annalist site from some computer will involve some or all of the following.
+The first time of logging in to an Annalist site from some computer using Google credentials will involve the following.
 
-* select a User ID
 * enter User ID into login form
-* select "Google" for the Login Service
-* click "Login"
-
-At this point the browser is redirected to Google's own login page to enter account credentials, and maybe also a 2-factor authentication code.  Once the authentication credentials have been entered and verified, Google may then ask for your permission to disclose information to the Annalist application.  The information to be disclosed is described;  Annalist uses only the email address, which is used in conjucntion with the User ID entered to select a set of user permissions (see "User permissions" section).
-
-****
-@@When alternative ID provders are supported, note this
-****
-
-If the User ID has already been used by a different user, a message is displayed (@@ message text)
-
-After the first time, use the same details and click "Login".  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.
+* in the row labeled "Login using", click on "Google"
 
 [.text-center]
 .Annalist login form
-image::screenshot-login-form.png[Annalist login form,width=500,align=center]
+image::screenshot-login-form-1.png[Annalist login form,width=500,align=center]
 
-The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).
+At this point the browser is redirected to Google's own login page to enter account credentials, and maybe also a 2-factor authentication code.  Once the authentication credentials have been entered and verified, Google may then ask for your permission to disclose information to the Annalist application.  The information to be disclosed is described;  Annalist uses only the email address, which is used in conjucntion with the User ID entered to select a set of user permissions (see "User permissions" section).
+
+Completion of login displays a profile page like this: 
 
 [.text-center]
 .Annalist logged in
-image::screenshot-login-done.png["Annalist logged in",width=500,align=center]
+image::screenshot-login-done-1.png["Annalist logged in",width=500,align=center]
 
-Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site
+Once the login is complete, click on "Continue", or "Home" in the menu bar, to return to the main Annalist site:
 
 [.text-center]
 .Annalist home page
-image::screenshot-annalist-home.png[Annalist home page,width=500,align=center]
+image::screenshot-annalist-home-after-login.png[Annalist home page,width=500,align=center]
+
+A number of other identity providers may be shown.  At the time of writing (October 2019), Annalist has been tested using Google and Github as login identity providers.  Also, usernames and passwords may be configured locally in the Django web hosting environment (see "admin" in the footer menu), and access via the "Local username" button (see "Local authentication" below).
+
+If the User ID given has already been used by a different user (i.e. with a different email address), a message is displayed (e.g., "Login failed:  Authenticated user test_user email address mismatch (gklyne@googlemail.com, graham.klyne@oerc.ox.ac.uk)"").
+
+After the first time of logging in, use the same User ID value, and click the appropriate "Login using" button.  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.
+
+The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).
 
 
 === Using public computers
@@ -69,17 +66,13 @@ If you login from a public computer, remember to log out from your identity prov
 
 === Local authentication
 
-****
-@@Update this when "Local" is implemented as a login service
-****
-
 Annalist has been designed to use third party authentication.  This avoids having to deal with the tricky technical and operational difficulties of managing password files;  leaked password files are a very common form of security failure, so by leaving this to the ID provider professionals, user security should be improved.  This also allows users to log in using an existing account rather than having to allocate and remember a new password for Annalist.
 
 Sometimes (for example when Annalist is required to be usable when not connected to the Internet), it may be preferred to use locally managed passwords.  Annalist can use the local password management and login features of the Django web application platform on which it is built.
 
 When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the *Admin* link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface is in the http://www.djangobook.com/en/2.0/chapter06.html[The Django Admin Site], which is Chapter 6 of http://www.djangobook.com/en/2.0/index.html[The Django Book].
 
-To log in using a Dango account clock on the "Local user credentials" `login` link, and enter a Django username and password into the new page that is displayed.  Once logged in, return to the Annalist site "Home" page 
+To log in using a Dango account, select "Local username" on the login form, and enter a Django username and password into the new page that is displayed.  Once logged in, return to the Annalist site "Home" page .
 
 [.text-center]
 .Annalist local login form
@@ -92,7 +85,7 @@ Annalist keeps a set of user permissions associated with every combination of Us
 
 User permissions may be defined site-wide (i.e. they can apply for all collections across a site), or they may be defined separately for each collection.  Thus, different permissions may be granted to different users in different collections.  Permission to create new collections must be site-wide.
 
-Within a collection, a user with `ADMIN` permissions on that collection can view the user permissions for the collection in the List view `List users`.  To view the list of user permissions for a collection, browse to that collection which will display some list of records.  In the `List view` dropdown, select option `List users`, and click `View` see see user permissions defined for the collection only, or `View all` to also list site-wide user permissions.
+Within a collection, a user with `ADMIN` permissions on that collection can view and edit the user permissions for the collection.  To view the list of user permissions for a collection, browse to that collection, then select the "Customize" button at the bottom of the displayed page.  On the next page, select the `User permissions` link to see user permissions defined for the collection only.  To see all permissions, including site-wide permissions, that apply to the collection, select the `Scope all` checkbox, and click on the "List" button.
 
 [.text-center]
 .List user permissions for an Annalist collection
@@ -122,16 +115,9 @@ The `Permissions` field is a list of tokens (names) corresponding to permissions
 
 === Adding site-wide user access permissions
 
-Site-wide permissions are initially defined using the `annalist-manager` command line administration tool. See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.
+Site-wide permissions are initially defined using the `annalist-manager` command line administration tool. See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.  (`annalist-manager` currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with administrative access.)
 
-Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the `_annalist_site` collection.
-
-****
-@@Update with more detailed instructions.
-
-@@`analist-manager` currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with admin users.
-****
-
+Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the `_annalist_site` collection.  Site-wide administrative access is requiured to edit the `_annalist_site` collection, but the process is otherwise the same as adding permissions to a specific collection.
 
 === Annalist permission tokens
 
@@ -139,7 +125,7 @@ The standard Annalist permission tokens include:
 
 `ADMIN` - required to create or view user permissions in a collection.  The creator of a collection is automatically granted `ADMIN` permissions over that collection, so they can assign permissions in that collection for other users.  This permission at site level also allows creation and deletion of collections.
 
-`CONFIG` - required to change the structure of a collection: to create and/or modify record types, views, lists, etc.
+`CONFIG` - required to change the structure of a collection: to create and/or modify entity types, views, lists, etc.
 
 `CREATE` - required to create new data in a collection.
 
@@ -176,88 +162,127 @@ To create a new collection, go to the Annalist site home page and enter a collec
 
 [.text-center]
 .Creating new Annalist collection
-image::screenshot-create-collection.png[Creating a new Annalist collection,width=500,align=center]
+image::screenshot-create-collection_1.png[Creating a new Annalist collection,width=640,align=center]
 
 In the updated list of collections, click on the link corresponding to the new collection to view its initial content:
 
 [.text-center]
 .View new Annalist collection
-image::screenshot-view-new-collection.png[Creating a new Annalist collection,width=500,align=center]
+image::screenshot-view-new-collection_1.png[Creating a new Annalist collection,width=640,align=center]
 
 
 == Change collection metadata
 
 Modifying collection metadata requires `CONFIG` permissions.
 
-A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit selected" button:
+A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit metadata" button:
 
 [.text-center]
 .Edit Annalist collection metadata
-image::screenshot-edit-collection-metadata.png[Edit Annalist collection metadata,width=500,align=center]
+image::screenshot-edit-collection-metadata_1.png[Edit Annalist collection metadata,width=640,align=center]
+
+Alternatively, view the collection by clicking its link, then click the "Customize" button, and on the next page click the "Collection metadata" button:
+
+[.text-center]
+.Edit Annalist collection metadata via Customize page
+image::screenshot-edit-collection-metadata_2.png[Edit Annalist collection metadata via Customize page,width=640,align=center]
+
+Either way, a form for editing the collection metadata is presented:
 
 [.text-center]
 .Annalist collection metadata edit view
-image::screenshot-edit-collection-metadata-view.png[Annalist collection metadata edit view,width=500,align=center]
+image::screenshot-edit-collection-metadata-view_1.png[Annalist collection metadata edit view,width=640,align=center]
 
-@@TODO: update home page screenshot from demo site when deployed
-
-By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalisty software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the `Parent` field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting from scratch.
+By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalist software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the `Parent` field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting every time from scratch.
 
 
-== Create initial record type and views
+== Create initial entity type and views
 
-It is possible to start creating new data records straight away in a newly created collection, using the in-built default type and views.  But for practical use, it is probably better to start by creating a new record type and corresponding views to match the initial data to be collected.
+It is possible to start creating new data entitys straight away in a newly created collection, using the in-built `Default_type` and associated views.  But for practical use, it is probably better to start by creating a new entity type and corresponding views to match the initial data to be collected.
 
-Creating record types and views for a collection requires permission `CONFIG` in that collection.  The user who creates a collection is automatically granted full permissions for that collection.  They may, in turn, create permissions for other users.
+Creating entity types and views for a collection requires permission `CONFIG` in that collection.  The user who creates a collection is automatically granted full permissions for that collection.  They may, in turn, create permissions for other users.
 
-Switch to a listing of record types, by selecting `List types` from the `List view` selector, and then click on the `View` button:
+View the entity types by viewing the collection, and clicking the "Customize" button:
 
 [.text-center]
-.List record types in Annalist collection
-image::screenshot-list-types.png[List record types in Annalist collection,width=500,align=center]
+.Select `Customize` option
+image::screenshot-customize-1.png[Customize Annalist collection,width=640,align=center]
 
-Click the `New` button to create a new record type, and enter some details about this record type (e.g. as shown below).  To define an initial tailorable view and list descriptions for the new record type, click on the `Define view+list` button.  The `Default view` and `Default list` fields are updated accordingly: 
+Click the `New` button under `Entity types` to create a new entity type:
 
 [.text-center]
-.Creating new record type, view and list in Annalist collection
-image::screenshot-create-new-type.png[Creating new record type in Annalist collection,width=500,align=center]
+.List entity types in Annalist collection
+image::screenshot-customize-new-type.png[List entity types in Annalist collection,width=640,align=center]
 
-[NOTE]
-.@@FIXME
-====
-There is a possible bug in the software that needs investigating: if an error message is displayed saying the new type already exists, click `Cancel` then select the new type in the "List types" display and click `Edit`.  Then click the `Define view+list` button.
-====
+Enter some details about this entity type (e.g. as shown below).  To define an initial tailorable view and list descriptions for the new entity type, click on the `Define view+list` button.  The `Default view` and `Default list` fields are updated accordingly: 
 
-In this case, the automatically generated label, "List of Photograph", doesn't really read smoothly.  Details of the generated list and/or view descriptions can be edited by clicking on the nearby image:button-edit-entity.png[] button, and making changes as desired.  Click `Save` when done to return to the type description page.
+[.text-center]
+.Creating new entity type, view and list in Annalist collection
+image::screenshot-create-new-type-2.png[Creating new entity type in Annalist collection,width=640,align=center]
+
+Details of the generated list and/or view descriptions can be edited by clicking on the nearby image:button-edit-entity.png[] button, and making changes as desired.  Click `Save` when done to return to the type description page.  The label, "Photograph list" has been automatically generated;  we might wish to change this to just "Photographs":
 
 [.text-center]
 .Edit definition for list of photographs
-image::screenshot-edit-photograph-list.png[Edit definition for list of photographs,width=500,align=center]
+image::screenshot-edit-photograph-list-2.png[Edit definition for list of photographs,width=500,align=center]
 
 Click `Save` again to save any final changes to the type description and return to the "Type list" display.
 
 
+== Define namespace URI
+
+We have introduced a new namespace prefix, `pcat`, for terms (such as the type identifier `pcat:Photograph`) used to describe photoraphs.  To be usedful as linked data on the web, this prefix needs to be associated with a URI.  To to this, from the "Customize" page, in the line labeled "Namespace definitions:", click on the link "this collection only".
+
+[.text-center]
+.List namespaces in Annalist collection
+image::screenshot-customize-new-namespace.png[List namespaces in Annalist collection,width=640,align=center]
+
+In the next screen click on `New`:
+
+[.text-center]
+.List namespaces in Annalist collection
+image::screenshot-list-namespaces-new.png[List namespaces in Annalist collection,width=640,align=center]
+
+In the next screen, enter the namespace prefix as id, and provide a value for the namespace URI.  Use a URI that you can control, of for the time being use a placeholder in the `example.org` domain.  Provide a label and description for the namespace, and cick `Save` to save the details in the Annalist collection.  The "See also" field might be used to link to documentation of the namespae terms, if any is available.
+
+[.text-center]
+.Enter details of new namespace and save
+image::screenshot-edit-namespace-save.png[Enter details of new namespace and save,width=640,align=center]
+
+The list of namespaces is redisplayed, with the new namespace included.
+
+[.text-center]
+.List updated namespaces in Annalist collection
+image::screenshot-list-namespaces-2.png[List namespaces in Annalist collection,width=640,align=center]
+
+
 == Create some initial data records
 
-Switch to a listing of "Photograph" records by selecting `Photographs` from the `List view` selector, and then click on the `View` button;  the initial list should be empty:
+Switch to a listing of "Photograph" records by selecting `Photographs` from the `List view` selector, and then click on the `List` button:
+
+[.text-center]
+.List updated namespaces in Annalist collection
+image::screenshot-list-namespaces-list-photos.png[List photoraphs in collection,width=640,align=center]
+
+An empty list of photographs should be displayed:
 
 [.text-center]
 .Initial, empty, list of Photographs
-image::screenshot-list-photographs-empty.png[Initial, empty, list of Photographs,width=500,align=center]
+image::screenshot-list-photographs-empty.png[Initial, empty, list of Photographs,width=640,align=center]
 
-Click on the `New` button to bring uo an initial forkm for enterimng details about a photograph.  New record views contain a number of common fields: `Id`, `Type`, `Label` and `Description`.  Only the `Id` field and `Label` fields are mandatory; the others are defined because they are commonly useful.  The `Id` field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The `Label` field provides a summary description of the record used in lists and drop-down selectors.
+Click on the `New` button to bring up an initial form for enterimng details about a photograph.  New record views contain a number of common fields: `Id`, `Type`, `Label` and `Description`.  Only the `Id` field and `Label` fields are mandatory; the others are defined because they are commonly useful.  The `Id` field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The `Label` field provides a summary description of the record used in lists and drop-down selectors.
 
 Enter some descriptive data into the fields and click `Save`.
 
 [.text-center]
 .Creating new Photograph record
-image::screenshot-create-photograph.png[Creating new Photograph record in Annalist collection,width=500,align=center]
+image::screenshot-create-photograph-save.png[Creating new Photograph record in Annalist collection,width=640,align=center]
 
 This process can be repeated for additional photographs.
 
 [.text-center]
 .List of Photograph records
-image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=500,align=center]
+image::screenshot-list-photographs-2.png[List of Photograph records in Annalist collection,width=640,align=center]
 
 
 == Add simple fields to a data record
@@ -270,31 +295,35 @@ There are several ways to edit a view description:
 * Click `Customize` on any list display, select the view to edit from from the column headed `Record views`, and click on the `Edit` button below.
 * Display an instance of the view to be edited (e.g. a view of one of the Photographs in the list of photographs) by clicking on an `Id` link in the list, then click on the `View description` button and finally click on the `Edit` button of the pages displayed.
 
-The following screenshots illustrate the last of these approaches.
+The following screenshots illustrate the last of these approaches.  First click on an entry to view its data:
 
-image::screenshot-view-photograph-1.png[View a Photograph record in Annalist,width=500,align=center]
+image::screenshot-view-photograph-1.png[View a Photograph record in Annalist,width=640,align=center]
 
-image::screenshot-view-photograph-view.png[View description of view of photograph in Annalist,width=500,align=center]
+Then click on `View description`:
 
-image::screenshot-edit-photograph-view.png[Edit description of view of photograph in Annalist,width=500,align=center]
+image::screenshot-view-photograph-view.png[View description of view of photograph in Annalist,width=640,align=center]
+
+Then click on `Edit`:
+
+image::screenshot-edit-photograph-view.png[Edit description of view of photograph in Annalist,width=640,align=center]
 
 To add a "Date" field: click `Add field`.  A new row is added to the list of fields, with unspecified values for `Field id`, `Property` and `Position/size`. Clicking on the `Field id` value lists a few options, but none of these suggests a "Date" value.  A new type of view field is required here, so click on the image:button-new-entity.png[] button:
 
-image::screenshot-edit-photograph-view-new-field.png[Adding a new field to the Photograph view,width=500,align=center]
+image::screenshot-edit-photograph-view-new-field.png[Adding a new field to the Photograph view,width=640,align=center]
 
-This opens a new form to define details of a new field type.  Fill in information for `Id`, `Field value type`, `Label`, `Help`, `Property`, `Field render type`, `Value mode` and `Placeholder` as shown.  In ths case, the other fields should be left unspecified.  (The meanings of all these fields are described in link:../view-field-types.adoc[View fields in Annalist].)
+This opens a new form to define details of a new field type.  Fill in information for `Id`, `Render type`, `Label`, `Help`, `Property URI`, `Entity type`, `Value type`, `Value mode` and `Placeholder` as shown.  In ths case, the other fields should be left unspecified.  (The meanings of all these fields are described in link:../view-field-types.adoc[View fields in Annalist].)
 
 [.text-center]
 .Defining a new view field type for date
-image::screenshot-create-new-field-date.png[Defining a new view field type for date,width=500,align=center]
+image::screenshot-create-new-field-date-2.png[Defining a new view field type for date,width=640,align=center]
 
-When done, click `Save`, which returns to the previous view editing form.  Now, clicking on the `Field id` value includes an option for the new field type just described.  Choose this.  The `Property` and `Posityion/size` columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (`0/6`) for `Position/size`.
+When done, click `Save`, which returns to the previous view editing form.  Now, clicking in the `Field id` includes an option for the new "Date taken" field.  Choose this.  The `Property` and `Posityion/size` columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (`0/6`) for `Position/size`.
 
 Repeat the above process, starting with `Add field`, to define a new field for the location that a photograph was taken:
 
 [.text-center]
 .Defining a new view field type for place
-image::screenshot-create-new-field-place.png[Defining a new view field type for place,width=500,align=center]
+image::screenshot-create-new-field-place-2.png[Defining a new view field type for place,width=640,align=center]
 
 Returning to the view edit form, the new location field can be selected and its position/size specified.  Next, select the two new fields and click the `Move &#x2b06;` button so that they appear immediately after the `label` field.
 
@@ -306,13 +335,13 @@ Click `Save`, then `Close` to return to the view of a Photograph, which should n
 
 [.text-center]
 .Updated view of a Photograph record in Annalist
-image::screenshot-view-photograph-2.png[Updated view of a Photograph record in Annalist,width=500,align=center]
+image::screenshot-view-photograph-2.png[Updated view of a Photograph record in Annalist,width=640,align=center]
 
 If the view is now edited, values for the date and location fields can be entered:
 
 [.text-center]
 .Adding new field values to a Photograph record
-image::screenshot-edit-photograph-2.png[Adding new field values to a Photograph record,width=500,align=center]
+image::screenshot-edit-photograph-2.png[Adding new field values to a Photograph record,width=640,align=center]
 
 These new fields are clearly intended to hold specific types of value (date, location) and the examples suggest particular formats be used for them.  But as far as Annalist is concerned, these are just simple text fields, and no attempt is made to check the format of any values entered.  This is consistent with the Annalist pholosophy of making it easy to capture whatever data may be available with a minimum of hindrance to the user.  The intent is that issues of consistency and data quality may be checked separately according to whatever criteria are deemed appropriate to the task at hand.
 
@@ -330,32 +359,34 @@ The steps for adding an image attachment to a record are:
 There are several ways to accomplish these steps (see previous section).  The following example goes via the "Customize" page, starting from the "List of photographs" page:
 
 [.text-center]
-.List of Photograph records
-image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=500,align=center]
+.List of Photographs
+image::screenshot-list-photographs.png[List of Photograph records in Annalist collection,width=640,align=center]
 
 Click on the `Customize` button:
 
 [.text-center]
 .Customize collection page
-image::screenshot-customize.png[Annalist collection Customize page,width=500,align=center]
+image::screenshot-customize-3.png[Annalist collection Customize page,width=640,align=center]
+
+
 
 === Create a new field definition for images
 
-Select "View of Photograph" in the "Record views" column, and click the `Edit` button.  On the resulting view description page, click `Add field`, and then on the `+` button beside the newly added field:
+Select "Photograph view" in the "Entity views" column, and click the `Edit` button.  On the resulting view description page, click `Add field`, and then on the `+` button beside the newly added field:
 
 [.text-center]
 .Add new field
-image::screenshot-edit-photograph-view-3.png[Add new field to photograph record,width=500,align=center]
+image::screenshot-edit-photograph-view-3.png[Add new field to photograph record,width=640,align=center]
 
 Fill in details for the new field as shown:
 
 [.text-center]
 .New image field details
-image::screenshot-create-new-field-image.png[New image field details,width=500,align=center]
+image::screenshot-create-new-field-image-2.png[New image field details,width=640,align=center]
 
 The key fields to note here are:
 
-* `Render field type`: the value `Ref image file` indicates the field value is a reference to an image file.
+* `Render field type`: the value `Image reference` indicates the field value is a reference to an image file.
 * `Value mode`: the value `File upload` indicates the referenced image will be an uploaded file.
 
 With the field details entered, click 'Save' to return to the view editing form.
@@ -366,7 +397,7 @@ Select Field Id `Image` for the newly added field, select a value for size/posit
 
 [.text-center]
 .New "Image" field added
-image::screenshot-edit-photograph-view-4.png[Photograph record with "Image" field added,width=500,align=center]
+image::screenshot-edit-photograph-view-4.png[Photograph record with "Image" field added,width=640,align=center]
 
 === Upload image to Photograph record
 
@@ -438,7 +469,7 @@ image::screenshot-view-photograph-4.png[View photograph record keyword fields,wi
 
 == Create an additional data type (with view+list)
 
-The examples so far have been based on a single "Photograph" record type.  Many interesting data collections consist of multiple cross-referenced record types.  For example, we can create "Location notes" records to hold information about where photographs were taken.
+The examples so far have been based on a single "Photograph" entity type.  Many interesting data collections consist of multiple cross-referenced entity types.  For example, we can create "Location notes" records to hold information about where photographs were taken.
 
 Start by creating a new Type, with corresponding View and List definitions; e.g.
 
@@ -501,7 +532,7 @@ image::screenshot-create-location_notes.png[Create a location notes record,width
 
 == Create links between records
 
-The preceding section created a new record type for location notes. Here, we edit the Photograph view to allow each photograph to be linked to notes about the location where it was taken.  This will be achieved by changing the type of `Location_taken` field from a simple text field to a reference to a `Location_notes` field.
+The preceding section created a new entity type for location notes. Here, we edit the Photograph view to allow each photograph to be linked to notes about the location where it was taken.  This will be achieved by changing the type of `Location_taken` field from a simple text field to a reference to a `Location_notes` field.
 
 To do this, open up the form for editing the view description `Photograph` (using any of the navigation paths described previously).  Then click on the writing hand button beside thefield id "Location taken":
 
@@ -599,7 +630,7 @@ image::screenshot-view-photograph-6.png[View photograph record with location not
 // MORE TO COME, AS NEEDED.
 
 ////
-== Creating simple record type hierarchies
+== Creating simple entity type hierarchies
 
 @@TODO
 
