@@ -679,9 +679,9 @@ def check_context_field(test, context_field,
     test.assertEqual(context_field.description['field_value_type'],                     field_value_type)
     if options:
         if set(context_field['options']) != set(options):
-            log.info("@@ Options expected: %r"%(context_field['options'],))
-            log.info("@@ Options seen:     %r"%(options,))
-            log.info("@@ context_field:    %r"%(context_field,))
+            log.info("Options expected: %r"%(context_field['options'],))
+            log.info("Options seen:     %r"%(options,))
+            log.info("Context_field:    %r"%(context_field,))
         test.assertEqual(set(context_field['options']), set(options))
     if field_placement:
         test.assertEqual(context_field.description['field_placement'].field, field_placement)

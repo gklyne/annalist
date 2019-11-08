@@ -1,5 +1,5 @@
 """
-Tests for image upload field; view as image.
+Tests for image import field; view as image.
 """
 
 from __future__ import unicode_literals
@@ -21,7 +21,7 @@ from annalist.views.fields.field_renderer import FieldRenderer
 from annalist.views.fields.render_ref_image import RefImageValueMapper
 from .field_rendering_support import FieldRendererTestSupport
 
-class ImageUploadRenderingTest(FieldRendererTestSupport):
+class ImageImportRenderingTest(FieldRendererTestSupport):
 
     def setUp(self):
         return
@@ -31,10 +31,10 @@ class ImageUploadRenderingTest(FieldRendererTestSupport):
 
     # Rendering test
 
-    def test_RenderImageUploadValue(self):
+    def test_RenderImageImportValue(self):
 
-        def upload_file_value(file):
-            return {'resource_name': "uploaded.jpg", 'uploaded_file': file}
+        def import_url_value(url):
+            return {'resource_name': "imported.jpg", 'import_url': url}
 
         def expect_render(value, linktext, alttext):
             render_view = (
@@ -43,29 +43,37 @@ class ImageUploadRenderingTest(FieldRendererTestSupport):
                 '''</a>'''
                 )
             if value:
-                labeltext = '''Previously uploaded: %s '''%alttext
+                labeltext = '''Previously imported: %s '''%alttext
             else:
                 labeltext = ""
             render_edit = (
-                ('''<input type="file" name="repeat_prefix_test_field" '''+
-                       '''placeholder="(test placeholder)" '''+
-                       '''value="%s" /> '''
-                )%(linktext,) + labeltext
+                '''<div class="row"> '''+
+                  '''<div class="small-10 columns view-value view-subfield less-import-button"> '''+
+                    '''<input type="text" size="64" '''+
+                      '''name="repeat_prefix_test_field" '''+
+                      '''placeholder="(test placeholder)" value="%s" /> '''%(alttext,)+
+                  '''</div> '''+
+                  '''<div class="small-2 columns view-value view-subfield import-button left small-text-right"> '''+
+                    '''<input type="submit" '''+
+                      '''name="repeat_prefix_test_field__import" '''+
+                      '''value="Import" /> '''+
+                  '''</div> '''+
+                '''</div>'''
                 )
             return {'view': render_view, 'edit': render_edit}
 
-        no_resource = "(@@resource_name not present)"
+        no_resource = ""
         test_values = ( # field value, linktext, alttext
-            [ ("",                                  "uploaded.data", no_resource)
-            , (upload_file_value("test-image.jpg"), "uploaded.jpg",  "test-image.jpg")
-            , ("test-image.jpg",                    "uploaded.data", "test-image.jpg")
+            [ ("",                                 "imported.jpg", no_resource)
+            , (import_url_value("test-image.jpg"), "imported.jpg", "test-image.jpg")
+            , ("test-image.jpg",                   "imported.jpg", "test-image.jpg")
             ])
         test_value_context_renders = (
             [ ( self._make_test_context(value, target_link=linktext),
                 expect_render(value, linktext, alttext)
               ) for value, linktext, alttext in test_values
             ])
-        renderer = FieldRenderer("RefImage", "Value_upload")
+        renderer = FieldRenderer("RefImage", "Value_import")
         for render_context, expect_render in test_value_context_renders:
             # print repr(render_context['field']['field_value'])
             self._check_value_renderer_results(
@@ -77,7 +85,7 @@ class ImageUploadRenderingTest(FieldRendererTestSupport):
                 )
         return
 
-    def test_DecodeImageUploadValue(self):
+    def test_DecodeImageImportValue(self):
         test_decode_values = (
             { None:                 ""
             , "test-image.jpg":     "test-image.jpg"

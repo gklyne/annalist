@@ -37,13 +37,13 @@ def upload_field_value(data_value):
     if data_value:
         if is_string(data_value):
             data_value = (
-                { 'resource_name': "uploaded.jpg"
+                { 'resource_name': "uploaded.data"
                 , 'uploaded_file': data_value
                 })
     else:
         # Also for empty string case
         data_value = (
-            { 'resource_name': "uploaded.jpg"
+            { 'resource_name': "uploaded.data"
             , 'uploaded_file': ""
             })
     return data_value
