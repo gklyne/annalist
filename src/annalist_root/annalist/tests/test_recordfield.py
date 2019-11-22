@@ -1517,7 +1517,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         common_vals = (
             { 'coll_id':        "testcoll"
             , 'field_id':       "taskfieldreference"
-            , 'field_ref_id':   "taskfieldreference"+layout.SUFFIX_MULTI
+            , 'field_ref_id':   "taskfieldreference"+layout.SUFFIX_REF_FIELD
             , 'field_label':    "Test reference field"
             , 'type_uri':       "test:ref_field"
             , 'property_uri':   "test:ref_prop"
@@ -1553,8 +1553,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Check content of type, view and list
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        ref_field_id  = tgt_field_id + layout.SUFFIX_MULTI
-        ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_MULTI_P
+        ref_field_id  = tgt_field_id + layout.SUFFIX_REF_FIELD
+        ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REF_FIELD_P
         expect_field_values = (
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
@@ -1572,8 +1572,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
-            , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Field_list"
+            , "annal:field_entity_type":    ""
+            , "annal:field_value_type":     "%(type_uri)s"%common_vals
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals

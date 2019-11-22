@@ -521,7 +521,8 @@ class Collection(Entity):
 
     def get_uri_type(self, type_uri):
         """
-        Return type entity corresponding to the supplied type URI
+        Return type entity corresponding to the supplied type URI,
+        or None if not found.
         """
         t = type_cache.get_type_from_uri(self, type_uri)
         return t

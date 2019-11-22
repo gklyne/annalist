@@ -312,12 +312,15 @@ SUFFIX_SUBTYPE          = "_subtype"
 SUFFIX_SUBPROPERTY      = "_subproperty"
 SUFFIX_REPEAT           = "_many"
 SUFFIX_REPEAT_P         = "_many"
-SUFFIX_REPEAT_G         = "_many"
+#@@@ SUFFIX_REPEAT_G         = "_many"
 SUFFIX_SEQUENCE         = "_list"
 SUFFIX_SEQUENCE_P       = "_list"
-SUFFIX_MULTI            = "_m"      # Reference multiple fields...
-SUFFIX_MULTI_P          = "_m"
-SUFFIX_MULTI_G          = "_m"
+SUFFIX_REF_FIELD        = "_ref"    # Reference field name...
+SUFFIX_REF_FIELD_P      = "_ref"    # Reference field property ...
+#@@@ Still needed?...
+# SUFFIX_MULTI            = "_m"      # Reference multiple fields...
+# SUFFIX_MULTI_P          = "_m"
+#@@@ SUFFIX_MULTI_G          = "_m"
 
 class Layout(object):
     """

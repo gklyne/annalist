@@ -790,6 +790,22 @@ class DisplayInfo(object):
             self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
             )
 
+    # Additional support functions for field definition view
+
+    def get_uri_type_id(self, type_uri):
+        """
+        Return type id fpr given type URI, or "Default_type".
+
+        This accesses the per-collection cache of type URI:Id mappings
+        """
+        assert (self.collection is not None)
+        type_id = "Default_type"
+        if type_uri:
+            type_ref = self.collection.get_uri_type(type_uri)
+            if type_ref:
+                type_id = type_ref.get_id()
+        return type_id
+
     # Additional support functions for collection view
 
     def get_default_view_type_entity(self):
