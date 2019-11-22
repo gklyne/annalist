@@ -7,6 +7,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 - [ ] Update tutorial
     - Also cover inheritance of definitions?
+- [ ] Include Tutorial_example in collections available for installation.
 - [ ] New demo screencast(s)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
@@ -24,6 +25,8 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
+- [ ] "Refer to field" field in field description - redundant?
+- [x] BUG: errors in generation of field description for reference to field of entity
 - [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
 - [x] Include list all type definitions in sitemap data (_info/Sitemap)
 - [x] Define gunicorn thread count in settings file.

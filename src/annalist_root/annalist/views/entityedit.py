@@ -2191,16 +2191,9 @@ class GenericEntityEditView(AnnalistGenericView):
                 })
             ref_field_id          = field_entity_id    + layout.SUFFIX_REF_FIELD
             ref_property_uri      = field_property_uri + layout.SUFFIX_REF_FIELD_P
-            #@@@@review this: new reference field could be used with anything?
-            # ref_entity_type       = (
-            #     field_entity_type if field_entity_type != ANNAL.CURIE.Field_list else 
-            #     ""
-            #     )
-            #@@@@
             ref_entity_type       = ""      # Ref applicable with any entity type
             ref_value_type        = field_entity_type
             ref_field_ref_type    = viewinfo.get_uri_type_id(field_entity_type)
-            #@@@@ log.info("@@@@ field_entity_type %s, ref_field_ref_type %s"%(field_entity_type, ref_field_ref_type))
             ref_field_label       = message.FIELD_REF_LABEL%field_params
             ref_field_comment     = message.FIELD_REF_COMMENT%field_params
             ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_params
