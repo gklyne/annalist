@@ -1,6 +1,6 @@
 = Annalist tutorial
 Graham Klyne
-v0.5.16, 2019-10-15
+v0.5.17, 2019-11-21
 :toc: macro
 :toc-title:
 :linkcss:
@@ -16,9 +16,9 @@ toc::[]
 
 == Running example
 
-This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually http://www.w3.org/TR/curie/[Compact URIs], or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)
+This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually http://www.w3.org/TR/curie/[Compact URIs], or CURIEs) defined specifically for the photograph catalogue.  This prefix may be associated with a base URI to allow identification on the World Wide Web.
 
-The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection [Annalist photo collection].  (@@TODO, once current in-development software is deployed.)
+The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection http://@@@@/Tutorial_example(Tutorial_example).  (@@TODO, once current in-development software is deployed.)
 
 == Log in to Annalist
 
@@ -31,7 +31,7 @@ The first time of logging in to an Annalist site from some computer using Google
 
 [.text-center]
 .Annalist login form
-image::screenshot-login-form-1.png[Annalist login form,width=500,align=center]
+image::screenshot-login-form-1.png[Annalist login form,width=640,align=center]
 
 At this point the browser is redirected to Google's own login page to enter account credentials, and maybe also a 2-factor authentication code.  Once the authentication credentials have been entered and verified, Google may then ask for your permission to disclose information to the Annalist application.  The information to be disclosed is described;  Annalist uses only the email address, which is used in conjucntion with the User ID entered to select a set of user permissions (see "User permissions" section).
 
@@ -39,15 +39,15 @@ Completion of login displays a profile page like this:
 
 [.text-center]
 .Annalist logged in
-image::screenshot-login-done-1.png["Annalist logged in",width=500,align=center]
+image::screenshot-login-done-1.png["Annalist logged in",width=640,align=center]
 
 Once the login is complete, click on "Continue", or "Home" in the menu bar, to return to the main Annalist site:
 
 [.text-center]
 .Annalist home page
-image::screenshot-annalist-home-after-login.png[Annalist home page,width=500,align=center]
+image::screenshot-annalist-home-after-login.png[Annalist home page,width=640,align=center]
 
-A number of other identity providers may be shown.  At the time of writing (October 2019), Annalist has been tested using Google and Github as login identity providers.  Also, usernames and passwords may be configured locally in the Django web hosting environment (see "admin" in the footer menu), and access via the "Local username" button (see "Local authentication" below).
+A number of other identity providers may be shown.  At the time of writing (October 2019), Annalist has been tested using Google and Github as login identity providers.  Also, usernames and passwords may be configured locally in the Django web hosting environment (see "admin" in the footer menu), and accessed via the "Local username" button (see "Local authentication" below).
 
 If the User ID given has already been used by a different user (i.e. with a different email address), a message is displayed (e.g., "Login failed:  Authenticated user test_user email address mismatch (gklyne@googlemail.com, graham.klyne@oerc.ox.ac.uk)"").
 
@@ -61,14 +61,14 @@ The login sequence associates an authenticated email address with the User ID gi
 If you login from a public computer, remember to log out from your identity provider when you have finished using Annalist and before leaving the computer.
 
 ****
-@@details for logout from Google.
+@@TODO: details for logout from Google.
 ****
 
 === Local authentication
 
 Annalist has been designed to use third party authentication.  This avoids having to deal with the tricky technical and operational difficulties of managing password files;  leaked password files are a very common form of security failure, so by leaving this to the ID provider professionals, user security should be improved.  This also allows users to log in using an existing account rather than having to allocate and remember a new password for Annalist.
 
-Sometimes (for example when Annalist is required to be usable when not connected to the Internet), it may be preferred to use locally managed passwords.  Annalist can use the local password management and login features of the Django web application platform on which it is built.
+Sometimes (for example when Annalist is required to be usable when not connected to the Internet), it may be preferred to use locally managed passwords.  Annalist can use the local password management and login features of the https://www.djangoproject.com/[Django] web application platform upon which it is built.
 
 When installing Annalist, an administration account may be created using the `annalist-manager` tool.  When logged in to Annalist using this account, the *Admin* link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface is in the http://www.djangobook.com/en/2.0/chapter06.html[The Django Admin Site], which is Chapter 6 of http://www.djangobook.com/en/2.0/index.html[The Django Book].
 
@@ -76,7 +76,7 @@ To log in using a Dango account, select "Local username" on the login form, and 
 
 [.text-center]
 .Annalist local login form
-image::screenshot-login-django.png[Annalist local login form,width=500,align=center]
+image::screenshot-login-django.png[Annalist local login form,width=640,align=center]
 
 
 == User permissions
@@ -89,7 +89,7 @@ Within a collection, a user with `ADMIN` permissions on that collection can view
 
 [.text-center]
 .List user permissions for an Annalist collection
-image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=500,align=center]
+image::screenshot-annalist-permissions.png[Annalist collection user permissions,width=640,align=center]
 
 === Special Annalist user identifiers
 
@@ -105,7 +105,7 @@ New permissions may be added from the "List user permissions" page (see above) b
 
 [.text-center]
 .Creating new user permissions for an Annalist collection
-image::screenshot-annalist-permissions-new.png[Annalist collection new user permissions,width=500,align=center]
+image::screenshot-annalist-permissions-new.png[Annalist collection new user permissions,width=640,align=center]
 
 The `User Id` field corresponds to the User Id entered in the login page.
 
@@ -115,7 +115,7 @@ The `Permissions` field is a list of tokens (names) corresponding to permissions
 
 === Adding site-wide user access permissions
 
-Site-wide permissions are initially defined using the `annalist-manager` command line administration tool. See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.  (`annalist-manager` currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with administrative access.)
+Site-wide permissions are initially defined using the `annalist-manager` command line administration tool. See link:../installing-annalist.md[Installing and setting up Annalist] for more information about `annalist-manager`, or run the command `annalist-manager help`.  (`annalist-manager` currently has a bare miniumum of capabilities for creating users, mainly intended to bootstrap a system with administrative access.)
 
 Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the `_annalist_site` collection.  Site-wide administrative access is requiured to edit the `_annalist_site` collection, but the process is otherwise the same as adding permissions to a specific collection.
 
@@ -224,7 +224,7 @@ Details of the generated list and/or view descriptions can be edited by clicking
 
 [.text-center]
 .Edit definition for list of photographs
-image::screenshot-edit-photograph-list-2.png[Edit definition for list of photographs,width=500,align=center]
+image::screenshot-edit-photograph-list-2.png[Edit definition for list of photographs,width=640,align=center]
 
 Click `Save` again to save any final changes to the type description and return to the "Type list" display.
 
@@ -329,7 +329,7 @@ Returning to the view edit form, the new location field can be selected and its 
 
 [.text-center]
 .New fields added to Photograph view
-image::screenshot-edit-photograph-view-2.png[New fields added to Photograph view,width=500,align=center]
+image::screenshot-edit-photograph-view-2.png[New fields added to Photograph view,width=640,align=center]
 
 Click `Save`, then `Close` to return to the view of a Photograph, which should now look like this:
 
@@ -352,9 +352,9 @@ A glaring omission from the record of a photograph created thus far is the photo
 
 The steps for adding an image attachment to a record are:
 
-. Define a new field type for the upload imaged file
-. Add the new field to the Photograph view description
-. Edit Photograph records and upload images
+* Define a new field type for the upload imaged file
+* Add the new field to the Photograph view description
+* Edit Photograph records and upload images
 
 There are several ways to accomplish these steps (see previous section).  The following example goes via the "Customize" page, starting from the "List of photographs" page:
 
@@ -393,21 +393,35 @@ With the field details entered, click 'Save' to return to the view editing form.
 
 === Add new image field to view description
 
-Select Field Id `Image` for the newly added field, select a value for size/position, click `Save` to return to the `Customize page`, and `Close` to return to the list of photographs:
+To use the new field definition in the Photograph entity view:
+
+. Select Field Id `Image` for the newly added field
+. select a value (e.g., `(0/6)`) for Position/size
+. click `Save` to return to the `Customize page`
+. `Close` to return to the list of photographs
 
 [.text-center]
-.New "Image" field added
-image::screenshot-edit-photograph-view-4.png[Photograph record with "Image" field added,width=640,align=center]
+.Photograph entity view with "Image" field added
+image::screenshot-edit-photograph-view-4.png[Photograph entity view with "Image" field added,width=640,align=center]
 
-=== Upload image to Photograph record
+=== Upload image to Photograph entity
 
-To upload an image, click on the link for a photograph, then click `Edit`;  the photograph editing form, is displayed, now with an additional `Image` field with a `Browse` button:
+To upload an image:
+
+. click on the link for a photograph
+. click `Edit`
+
+The photograph editing form, is displayed, now with an additional `Image` field with a `Browse` button:
 
 [.text-center]
 .Edit photograph record with Image field
 image::screenshot-edit-photograph-3.png[Edit Photograph record with Image field,width=640,align=center]
 
-Click `Browse`, select an image file to be uploaded, then `Open` (or equivalent for the browser being used).  On the photo editing page, click `Save`.  The Photograph record is now displayed with the uploaded image:
+[start=3]
+. click `Browse`
+. select an image file to be uploaded
+. `Open` (or equivalent for the browser being used)
+. on the photo editing page, click `Save`.  The Photograph record is now displayed with the uploaded image:
 
 ////
 @@ Temporary reference to develop branch
@@ -423,158 +437,253 @@ NOTE: The images used for this tutorial example can be found in the Annalist Git
 
 [.text-center]
 .View photograph record with uploaded Image
-image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=500,align=center]
+image::screenshot-view-photograph-3.png[View photograph record with uploaded Image,width=640,align=center]
 
 Clicking on the displayed image here will show the image alone in a new tab (or possibly a new window, depending on the browser used), occupying the full browser window.
 
 
-
-@@@@@@
-
-
-
 == Add repeating fields to a data record
 
-Sometimes, it is desirable to have a field or group of fields in a record that can be repeated an arbitrary number of times.  We have already seen this when editing a view description which may contain an arebitrary number of fields.  Annalist implements such repeated fields as a special type of field that itself contains references to other fields via a "Field group" description.
+Sometimes, it is desirable to have a field or group of fields in a record that can be repeated an arbitrary number of times.  We have already seen this when editing a view description which may contain an arebitrary number of fields.  Annalist implements such repeated fields as a special type of field that itself contains references to other fields.
 
 Thus, to create a repeating field or group of fields within a view, the following must be defined:
 
 . One or more ordinary individual fields that are to be repeated.
-. A field group that references the field(s) that are to be repeated.
-. A repeating-value field that references the field group.
+. A repeating-value field that references the field(s) that are to be repeated.
 
 Annalist provides a short-cut for creating these various descriptions in the form of a "task button" that appears on the field description editing form.
 
-For our example, we create a field that allows multiple keywords to be associated with a Photograph, starting with a view of a photograph record.  Click on `View description`, then on the next page displayed click `Edit`, `Add field`, and then on the image:button-new-entity.png[] button by the newly added field.
+For our example, we shall create a field that allows multiple keywords to be associated with a Photograph, starting with a view of a photograph record.
+
+To display a photograph record, click on the **Tutorial_example** link in the top menu bar, then click on one of the **Id** values associated with type `Photograph`.  
+
+[.text-center]
+.Navigate to photograph record view
+image::screenshot-navigate-photo-view.png[Navigting to a photograph record view,width=640,align=center]
+
+Click on `View description`, then on the next page displayed click `Edit`, then `Add field`, and finally on the image:button-new-entity.png[] button by the newly added field.
+
+[.text-center]
+.Navigate to photograph view description
+image::screenshot-view-photograph-7.png[Navigate to photograph view description,width=500,align=center]
+
+[.text-center]
+.Navigate to photograph view description
+image::screenshot-view-photograph-view-3.png[Navigate to photograph view description,width=500,align=center]
+
+[.text-center]
+.Navigate to photograph view edit form
+image::screenshot-edit-photograph-view-10.png[Navigate to photograph view edit form,width=500,align=center]
 
 Now fill in details for a single keyword field, as shown.  When the details have been entered, click on `Define repeat field`.
 
 [.text-center]
 .New keyword field details
-image::screenshot-create-new-field-keyword.png[New keyword field details,width=500,align=center]
+image::screenshot-create-new-field-keyword-2.png[New keyword field details,width=640,align=center]
 
-Now click on `Save`, and select `Repeat field 'Keyword'` for the new field id.
-
-[.text-center]
-.New "Repeat field 'Keyword'" field added
-image::screenshot-edit-photograph-view-5.png[Photograph view with "Repeat field 'Keyword'" field added,width=500,align=center]
-
-The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the image:button-edit-entity.png[] button by the "Repeat field 'Keyword'" id.  Change the `Label` and `Placeholder` fields as shown, then click on `Save`:
+The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the image:button-edit-entity.png[] button by the "Repeat field 'Keyword'" id.  Change the `Label` and `Placeholder` fields as shown, and also the "Add value label" and "Remove value label", then click on `Save`:
 
 [.text-center]
 .Edit labels used with "Keyword_repeat" field
-image::screenshot-edit-field-keyword_repeat.png[Edit labels used with "Keyword_repeat" field,width=500,align=center]
+image::screenshot-edit-field-keyword_many_2.png[Edit labels used with "Keyword_repeat" field,width=640,align=center]
 
-On reeturning the the view editing form, noteice that the selection label for the newly added field is changed to "Keywords":
+On return to the the view editing form, select the option `Keywords` for the new field added, and click on `Save`:
 
 [.text-center]
-.New field label updated
-image::screenshot-edit-photograph-view-6.png[New field label updated,width=500,align=center]
+.Select "Keywords" for new field, and save
+image::screenshot-edit-photograph-view-11.png[Select "Keywords" for new field, and save,width=640,align=center]
 
-Click `Save` then `Close` to return to the Photograph record view.  To add some keywords, click `Edit`, then `Add keyword`, and fill in key word or phrase text.  repeat for as many keywords as desired:
+Click `Close` to return to the Photograph record view.
+
+To add some keywords, click `Edit`, then `Add keyword`, and fill in key word or phrase text.  Repeat for as many keywords as desired.  Click on `Save` to view the resulting record.
 
 [.text-center]
 .Edit photograph record keyword fields
-image::screenshot-edit-photograph-4.png[Edit photograph record keyword fields,width=500,align=center]
-
-Click on `Save` to view the resulting record:
+image::screenshot-edit-photograph-8.png[Edit photograph record keyword fields,width=640,align=center]
 
 [.text-center]
 .View photograph record keyword fields
-image::screenshot-view-photograph-4.png[View photograph record keyword fields,width=500,align=center]
+image::screenshot-view-photograph-8.png[View photograph record keyword fields,width=640,align=center]
 
+== Create an additional entity type (with view+list)
 
-== Create an additional data type (with view+list)
+The examples so far have been based on a single "Photograph" entity type.  Many interesting data collections consist of multiple cross-referenced entity types.  For example, we can create "Location" entities to hold information about where photographs were taken.
 
-The examples so far have been based on a single "Photograph" entity type.  Many interesting data collections consist of multiple cross-referenced entity types.  For example, we can create "Location notes" records to hold information about where photographs were taken.
+To do this, start by creating a new Entity Type, with corresponding View and List definitions; e.g.
 
-Start by creating a new Type, with corresponding View and List definitions; e.g.
-
-. Click on `Photo_collection` in the top menu bar
-. Select `List types` from the `List view` drop-down, then click `View`
-. Click on `New` to create a new Type
-. Enter details as shown
-. Click `Save`, then select the newly created type and click `Edit`.  (@@This step is a workaround for a bug in the Define view+_list handler, and should not be needed.)
+. Click on the collectionname (e.g. `Tutorial_example`) in the top menu bar
+. Click onthe `Cusromize` button
+. Click on `New` button under the `Entity types` column to create a new Entity Type.
+. Enter details along the lines shown below
 . Click on `Define view+list`
-. Click on `Save`
 
 [.text-center]
-.Create new type Location_notes
-image::screenshot-create-new-type-location_notes.png[Create new type Location_notes,width=500,align=center]
+.Create new type "Location_notes"
+image::screenshot-create-new-type-location_notes_2.png[Create new type "Location_notes",width=640,align=center]
+
+[start=6]
+. Now click on `Save`, to see the new Entity type, view description and list description displayed in the "Customize collection" display:
+
+[.text-center]
+.Annalist collection data with "Location notes"
+image::screenshot-edit-collection-metadata_3.png[Annalist collection data with "Location notes",width=640,align=center]
 
 Next, edit the Location notes view to include a map reference field:
 
-. On the `List types` page, click on the link `Location notes`.
-. Click on the link `View of Location notes`
-. Click `Edit`
+[start=7]
+. In the "Entity views" column, select `Location notes view`, then click on the `Edit` button below.
+
+[.text-center]
+.Select and edit "Location notes" entity view description
+image::screenshot-edit-collection-metadata_4.png[Select and edit "Location notes" entity view description,width=640,align=center]
+
+The default fields ("Id", "Type", "Label" and "Comment") are shown.  We shall add a "Map reference field":
+
+[start=8]
 . Click `Add field`
 . Click the `+` button by the newly added field
-. Fill in details of the new field as shown.
-. Click `Save`
-. Select `Map reference` for the field id of the newly added field, and a value for Position/size.
-. Click `Save`, then `Close` to return to thelist of views.
-
-Now we can create an instance of the new type:
-
-. Click on `Photo_collection` in the top menu bar
-. Select `List of Location notes` from the `List view` drop-down, then click `View`
-. Click on `New` to create a new `Location notes` record
+. Fill in details of the new field as shown
 
 [.text-center]
 .Create new map reference field
-image::screenshot-create-new-field-mapref.png[Create new map reference field,width=500,align=center]
+image::screenshot-create-new-field-mapref-2.png[Create new map reference field,width=640,align=center]
 
-A similar process is repeated, but this time also using the `Define repeat field` button, to create a repeating field of links to further information about the location:
+[start=11]
+. Click `Save` to return to the "View definition" page
+. Select `Map reference` for the field id of the newly added field, and select value (0/12) for Position/size.
+
+[.text-center]
+.Add new map reference field to Location notes view
+image::screenshot-edit-location_notes-view-2.png[Add new map reference field to Location notes view,width=640,align=center]
+
+[start=13]
+. Finally, click `Save` to save the updated viw definition, and return to the "Customize collection" page.
+
+=== Create "Location notes" entity
+
+Now we can create a "Location notes" entity:
+
+. Click on `Tutorial_example` in the top menu bar
+. Select `Location notes list` from the `List` drop-down, then click `List`
+. Click on `New` to create a new `Location notes` entity
+. Supply details of a Location in the displayed form
+. When done, click `Save`
+
+[.text-center]
+.Create new "Location notes" entity
+image::screenshot-create-new-location-notes-2.png[Create new "Location notes" entity,width=640,align=center]
+
+=== Add repeating links field to "Location notes"
+
+A similar process is repeated toi that used to add the "Map reference" field, but this time also using the `Define repeat field` option, to create a repeating field of links to further information about the location.
+
+Start by redisplaying the "Location notes" view definition form:
+
+. Click `Customize`
+. Select `Location notes view`, then click on the `Edit` button below.
+
+Add a new field to the view:
+
+[start=3]
+. Click `Add field`
+
+Create a new field description for web links:
+
+[start=4]
+. Click on the image:button-new-entity.png[] button beside the new field just added
+. Provide details of the new web link field (e.g., see below; note in particular the value for "render type")
+. When done, click `Define repeat field`
 
 [.text-center]
 .Create new web link field
-image::screenshot-create-new-field-seeAlso.png[Create new web link field,width=500,align=center]
+image::screenshot-create-new-field-seeAlso-2.png[Create new web link field,width=640,align=center]
+
+[start=7]
+. In the new "Field definition" view displayed, update the labels and text as required (e.g., see below)
+. When done, click `Save`
 
 [.text-center]
 .Further information field
-image::screenshot-edit-field-see_also_repeat.png[Further information field,width=500,align=center]
+image::screenshot-edit-field-see_also_repeat-2.png[Further information field,width=640,align=center]
 
-Now the new fields can be configured in the `Location_notes` view:
+Now the new related information field can be configured in the `Location_notes` view:
 
-[.text-center]
-.Location notes view with map reference and further information fields
-image::screenshot-edit-location_notes-view.png[Location notes view with map reference and further information fields,width=500,align=center]
-
-A Location notes record can now be created with data for the additional fields:
+[start=9]
+. Select field "Related information" for the new field added to the view description
+. Select Position/size value "(0/12)" for the new field
 
 [.text-center]
-.Create a location notes record
-image::screenshot-create-location_notes.png[Create a location notes record,width=500,align=center]
+.Select new related information field in view
+image::screenshot-create-new-field-seeAlso-3.png[Select new related information field in view,width=640,align=center]
+
+[start=11]
+. When done, click `Save`
 
 
-== Create links between records
+=== Add weblinks to "Location notes" entity
+
+Navigate to the previously created "Locaton notes" entity
+
+. click on `Tutorial_example` in the top menu bar
+. select `Location notes list` from the `List` drop-down, then click `List`
+. select the checkbox by the previous `Location notes` entity, then click on the `Edit` button
+
+[.text-center]
+.Location notes view with map reference field
+image::screenshot-edit-location_notes-view-3.png[Location notes view with map reference field,width=640,align=center]
+
+To add a link to the location notes:
+
+[start=4]
+. click on the "Add link" button
+. enter a URL into the new field thus opened.  (Hint: to get a known working URL, open the desired page in your browser of choice, copy the URL from the browser address bar, and paste it into the new field.)
+. repeat for any additional links to be added
+
+[.text-center]
+.Location notes view with link fields added
+image::screenshot-edit-location_notes-view-4.png[Location notes view with link fields added,width=640,align=center]
+
+[start=4]
+. when done, cick `Save`, returning to the list of location notes
+
+Clicking on the link for the locatiomn note just edited with show a view of the note, with clickable web links for the values just entered.
+
+[.text-center]
+.Location notes view with clickable links
+image::screenshot-view-location_notes-view-2.png[Location notes view with clickable links,width=640,align=center]
+
+== Create links between entities
 
 The preceding section created a new entity type for location notes. Here, we edit the Photograph view to allow each photograph to be linked to notes about the location where it was taken.  This will be achieved by changing the type of `Location_taken` field from a simple text field to a reference to a `Location_notes` field.
 
-To do this, open up the form for editing the view description `Photograph` (using any of the navigation paths described previously).  Then click on the writing hand button beside thefield id "Location taken":
+To do this, open up the form for editing the view description `Photograph` (e.g., click `Customize`, select `Photograph view`, click on the `Edit` button below).  Then click on the writing hand button beside thefield id "Location taken":
 
 [.text-center]
 .Edit field "Location taken" in Photograph view
-image::screenshot-edit-photograph-view-7.png[Edit field "Location taken" in Photograph view,width=500,align=center]
+image::screenshot-edit-photograph-view-7.png[Edit field "Location taken" in Photograph view,width=640,align=center]
 
-Edit the "Location taken" field as shown beloiw, noting particularly values entered in these fields:
+Edit the "Location taken" field as shown below, noting particularly values entered in these fields:
 
+* Field render type - `Optional entity reference` presents a dropdown of entities to which the field may link
 * Field value type - same as the URI given in the `Location_notes` type record (currently not used other than for documentary purposes)
-* Field render type - `Optional entity ref` presents a dropdown of entities to which the field may link
 * Value mode - `Entity reference` indicates this field is a reference to some other Annalist entity in the current collection.
 * Refer to type - `Location notes` indicates the type of entity to which this field may link.
 
 [.text-center]
 .Edit field definition for Location taken
-image::screenshot-edit-field-location_taken.png[Edit field definition for Location taken,width=500,align=center]
+image::screenshot-edit-field-location_taken-2.png[Edit field definition for Location taken,width=640,align=center]
 
-Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the `Location taken` value is still displayed, but is rendered in a style used for non-existent entity references.  Click on `Edit` to edit the record data, and select the vcalue `Sileby Mill` from the dropdown (corresponding to the previously created `Location notes` record).
+Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the `Location taken` value is still displayed, but is rendered in a style used for non-existent entity references.  Click on `Edit` to edit the record data, and select the value `Sileby Mill` from the dropdown (corresponding to the previously created `Location notes` record).
 
 [.text-center]
 .Select location notes record from dropdown
-image::screenshot-edit-photograph-view-8.png[Select location notes record from dropdown,width=500,align=center]
+image::screenshot-edit-photograph-view-8.png[Select location notes record from dropdown,width=640,align=center]
 
-Click `Save` to return to the Phbotograph view, and note that the `Location taken` field now displays as a link to the selected `Location notes` record
+Click `Save` to return to the Phbotograph view, and note that the `Location taken` field now displays as a link to the selected `Location notes` record.
+
+[.text-center]
+.Photograph view with link to location notes
+image::screenshot-view-photograph-9.png[Photograph view with link to location notes,width=640,align=center]
 
 
 == Display fields from a linked record
@@ -583,7 +692,24 @@ Rather than just a link to a related record, it is sometimes useful to display o
 
 This kind of display is created using a `Fields of referenced entity` field type.  This is a special kind of view field that behaves very differently in edit and view modes:  in edit mode, it works just like an `Optional entity ref` field, allowing the user to select an instance of some designated type.  But in view mode, it displays one or more fields from the referenced entity.
 
-First, navigate to a field description in the `Location_notes` view; e.g. from any photograph view, click `View description`, `Location taken`, `Location notes`, `View of location notes` `Map reference` and `Edit`.
+Navigate to the field description `Map reference` used by the `Location_notes` view (e.g. click `Customize`, select `Location notes view`, click the `Edit` button below, and click the image:button-edit-entity.png[] (writing hand) icon by the `Map reference` field ref value).
+
+[.text-center]
+.Map reference field description
+image::screenshot-edit-location_mapref-field-2.png[Map reference field description,width=640,align=center]
+
+Click on the `Define field reference` button, to define a new field that references the map reference field of a "Location notes" entity:
+
+
+@@@@@@@@@@@
+
+NOTE: start with simple reference to map reference in location notes, then expand to multiple field references with more meaningful labels.
+
+@@@@@@@@@@@
+
+
+
+ `Location taken`, `Location notes`, `View of location notes` `Map reference` and `Edit`.
 
 image:screenshot-view-photograph-5.png[View of photograph,width=400]
 image:screenshot-view-photograph-view-2.png[View of photograph view description,width=400]
@@ -595,16 +721,16 @@ image:screenshot-view-location_mapref-field-1.png[View map reference field descr
 
 [.text-center]
 .Navigate to edit form of "map reference" field
-image::screenshot-edit-location_mapref-field-1.png[Edit map reference field description form,width=500,align=center]
+image::screenshot-edit-location_mapref-field-1.png[Edit map reference field description form,width=640,align=center]
 
-An alternative to this slightly long winded navigation path would be to go to the collection front page (click `Photo_collection` in the menu bar), select `List fields` from the `List view` selector, cick `View`, click on `Location_mapref`.  Either way, the resulting page should look something like the last screenshot above.  
+An alternative to this slightly long winded navigation path would be to go to the collection front page (click `Tutorial_example` in the menu bar), select `List fields` from the `List view` selector, cick `View`, click on `Location_mapref`.  Either way, the resulting page should look something like the last screenshot above.  
 
 In the form displayed, click `Define field reference`:  this will create a new field and field group `Location_mapref_ref` referencing this field, and display an editing form for the new field definition.
 Before making any changes to the field itself, click on the image:button-edit-entity.png[] button by the `Field group` field:
 
 [.text-center]
 .Edit location notes reference field
-image::screenshot-edit-location_notes_ref-field-1.png[Edit location notes reference field,width=500,align=center]
+image::screenshot-edit-location_notes_ref-field-1.png[Edit location notes reference field,width=640,align=center]
 
 This will display a new form for editing details of the new field group.  In this form:
 
@@ -615,19 +741,19 @@ This will display a new form for editing details of the new field group.  In thi
 
 [.text-center]
 .Edit new field group
-image::screenshot-edit-location_notes_ref-group-1.png[Edit new field group,width=500,align=center]
+image::screenshot-edit-location_notes_ref-group-1.png[Edit new field group,width=640,align=center]
 
 Back in the field editing form, change the Id, label and description and property URI of the new field to better reflect its actual usage.  Then click `Save`.
 
 [.text-center]
 .Edit new location notes reference field
-image::screenshot-edit-location_notes_ref-field-2.png[Edit new location notes reference field,width=500,align=center]
+image::screenshot-edit-location_notes_ref-field-2.png[Edit new location notes reference field,width=640,align=center]
 
 At this point, navigate to the view description for Photograph (e.g. by displaying a Photograph record and clicking on `View description`, or selecting and displaying `List views` from the collection home page and then clicking on `Photograph`).  Then click on the `Edit` button to display the view editing form.  On this form, clicik `Add field`, select the newly created `Location notes` field type, and select `0/12` for the position/size value:
 
 [.text-center]
 .Add location notes field to photograph view
-image::screenshot-edit-photograph-view-9.png[Add location notes field to photograph view,width=500,align=center]
+image::screenshot-edit-photograph-view-9.png[Add location notes field to photograph view,width=640,align=center]
 
 Click on `Save`.
 
@@ -635,7 +761,7 @@ Now navigate to a view of a photograph record, click `Edit` and inthe displayed 
 
 [.text-center]
 .Select value for Location notes field
-image::screenshot-edit-photograph-6.png[Select value for Location notes field,width=500,align=center]
+image::screenshot-edit-photograph-6.png[Select value for Location notes field,width=640,align=center]
 
 Click `Save` to view the photoigraph records, and observe that the `Location notes` field now displays three values from the selected record:
 
