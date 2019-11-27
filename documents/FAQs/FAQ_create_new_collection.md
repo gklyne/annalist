@@ -1,7 +1,6 @@
 ## I've got an account, how do I create a new collection?
 
-Create a new collection as described at https://github.com/gklyne/annalist/blob/develop/documents/tutorial/annalist-tutorial.adoc#creating-a-new-collection  (Note that the collection Id must consist of letters, digits and '_' characters, without spaces or other punctuation.)
-
+Create a new collection as described at https://github.com/gklyne/annalist/blob/develop/documents/tutorial/annalist-tutorial.adoc#creating-a-new-collection  (Note that the collection Id must consist of letters, digits and '\_' characters, without spaces or other punctuation.)
 
 ### Use existing definitions in new collection
 

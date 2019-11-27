@@ -5,14 +5,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 # Documentation
 
-- [ ] Update tutorial
+- [.] Update tutorial
     - Also cover inheritance of definitions?
 - [ ] Include Tutorial_example in collections available for installation.
 - [ ] New demo screencast(s)
+- [ ] Reference documents (see TODO-reference.md)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [ ] Add documentation for view Type, View and List forms (similar to view Field ...)
 - [x] Initial corpus of FAQs
+- [ ] Add help documentation for view Type, View and List forms (similar to view Field ...)
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
     - Add etag / if-match support ?  (does this help with POST? How?)
