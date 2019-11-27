@@ -31,7 +31,7 @@
 <div class="title">Note</div>
 </td>
 <td class="content">
-This document is an early draft, and is much in need of improvement.  Please submit feedback and comments either to the <a href="https://github.com/gklyne/annalist/issues">Annalist Github issues list</a>, or via the <a href="https://groups.google.com/forum/#!forum/annalist-discuss">Annalist discussion group</a>.
+This document is a work-in-progress, and can surely be improved.  Please submit feedback and comments either to the <a href="https://github.com/gklyne/annalist/issues">Annalist Github issues list</a>, or via the <a href="https://groups.google.com/forum/#!forum/annalist-discuss">Annalist discussion group</a>.
 </td>
 </tr>
 </table>
@@ -80,7 +80,8 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </ul>
 </li>
 <li><a href="#_create_links_between_entities">Create links between entities</a></li>
-<li><a href="#_display_fields_from_a_linked_record">Display fields from a linked record</a></li>
+<li><a href="#_display_field_from_a_linked_record">Display field from a linked record</a></li>
+<li><a href="#_display_more_fields_from_a_linked_record">Display more fields from a linked record</a></li>
 </ul>
 </div>
 </div>
@@ -1241,110 +1242,268 @@ The images used for this tutorial example can be found in the Annalist GitHub re
 </div>
 </div>
 <div class="sect1">
-<h2 id="_display_fields_from_a_linked_record">Display fields from a linked record</h2>
+<h2 id="_display_field_from_a_linked_record">Display field from a linked record</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>@@@@@@@@@@@</p>
-</div>
 <div class="paragraph">
 <p>Rather than just a link to a related record, it is sometimes useful to display one or more values directly from such a record.  For the present example, the photograph "location taken" field is modified to display a link, description and map reference for the location in the photograph view.</p>
 </div>
 <div class="paragraph">
 <p>This kind of display is created using a <code>Fields of referenced entity</code> field type.  This is a special kind of view field that behaves very differently in edit and view modes:  in edit mode, it works just like an <code>Optional entity ref</code> field, allowing the user to select an instance of some designated type.  But in view mode, it displays one or more fields from the referenced entity.</p>
 </div>
-<div class="paragraph">
-<p>First, navigate to a field description in the <code>Location_notes</code> view; e.g. from any photograph view, click <code>View description</code>, <code>Location taken</code>, <code>Location notes</code>, <code>View of location notes</code> <code>Map reference</code> and <code>Edit</code>.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="screenshot-view-photograph-5.png" alt="View of photograph" width="400"></span>
-<span class="image"><img src="screenshot-view-photograph-view-2.png" alt="View of photograph view description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_taken-field-1.png" alt="View of location taken field description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_notes-type-1.png" alt="View location notes type description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_notes-view-1.png" alt="View location notes view description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_mapref-field-1.png" alt="View map reference field description" width="400"></span></p>
-</div>
-<div class="imageblock text-center text-center">
-<div class="content">
-<img src="screenshot-edit-location_mapref-field-1.png" alt="Edit map reference field description form" width="640">
-</div>
-<div class="title">Figure 61. Navigate to edit form of "map reference" field</div>
-</div>
-<div class="paragraph">
-<p>An alternative to this slightly long winded navigation path would be to go to the collection front page (click <code>Tutorial_example</code> in the menu bar), select <code>List fields</code> from the <code>List view</code> selector, cick <code>View</code>, click on <code>Location_mapref</code>.  Either way, the resulting page should look something like the last screenshot above.</p>
-</div>
-<div class="paragraph">
-<p>In the form displayed, click <code>Define field reference</code>:  this will create a new field and field group <code>Location_mapref_ref</code> referencing this field, and display an editing form for the new field definition.
-Before making any changes to the field itself, click on the <span class="image"><img src="button-edit-entity.png" alt="button edit entity"></span> button by the <code>Field group</code> field:</p>
-</div>
-<div class="imageblock text-center text-center">
-<div class="content">
-<img src="screenshot-edit-location_notes_ref-field-1.png" alt="Edit location notes reference field" width="640">
-</div>
-<div class="title">Figure 62. Edit location notes reference field</div>
-</div>
-<div class="paragraph">
-<p>This will display a new form for editing details of the new field group.  In this form:</p>
-</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add additional fields <code>Id</code> and <code>Label</code> to be displayed, using the <code>Add field</code> button and the new field id selectors dislayed.</p>
-</li>
-<li>
-<p>Move the two new fields in front of the map reference field by selecting their checkboxes and clicking <code>Move &#x2b06;</code> button.</p>
-</li>
-<li>
-<p>Make changes as desired to the field label and description (but leave other fielkds as they are).</p>
-</li>
-<li>
-<p>Click <code>Save</code> to save the changes and return to the new field definition that references this group.</p>
+<p>Navigate to the field description <code>Map reference</code> used by the <code>Location_notes</code> view (e.g. click <code>Customize</code>, select <code>Location notes view</code>, click the <code>Edit</code> button below, and click the <span class="image"><img src="button-edit-entity.png" alt="button edit entity"></span> (writing hand) icon by the <code>Map reference</code> field ref value).</p>
 </li>
 </ol>
 </div>
 <div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-location_notes_ref-group-1.png" alt="Edit new field group" width="640">
+<img src="screenshot-edit-location_mapref-field-2.png" alt="Map reference field description" width="640">
 </div>
-<div class="title">Figure 63. Edit new field group</div>
+<div class="title">Figure 61. Map reference field description</div>
 </div>
-<div class="paragraph">
-<p>Back in the field editing form, change the Id, label and description and property URI of the new field to better reflect its actual usage.  Then click <code>Save</code>.</p>
-</div>
-<div class="imageblock text-center text-center">
-<div class="content">
-<img src="screenshot-edit-location_notes_ref-field-2.png" alt="Edit new location notes reference field" width="640">
-</div>
-<div class="title">Figure 64. Edit new location notes reference field</div>
-</div>
-<div class="paragraph">
-<p>At this point, navigate to the view description for Photograph (e.g. by displaying a Photograph record and clicking on <code>View description</code>, or selecting and displaying <code>List views</code> from the collection home page and then clicking on <code>Photograph</code>).  Then click on the <code>Edit</code> button to display the view editing form.  On this form, clicik <code>Add field</code>, select the newly created <code>Location notes</code> field type, and select <code>0/12</code> for the position/size value:</p>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Click on the <code>Define field reference</code> button, to define a new field that references the map reference field of a "Location notes" entity:</p>
+</li>
+</ol>
 </div>
 <div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-9.png" alt="Add location notes field to photograph view" width="640">
+<img src="screenshot-create-new-field-location_taken_ref.png" alt="Create reference to map reference field in location notes" width="640">
 </div>
-<div class="title">Figure 65. Add location notes field to photograph view</div>
+<div class="title">Figure 62. Create reference to map reference field in location notes</div>
 </div>
-<div class="paragraph">
-<p>Click on <code>Save</code>.</p>
-</div>
-<div class="paragraph">
-<p>Now navigate to a view of a photograph record, click <code>Edit</code> and inthe displayed form select a value for the new field <code>Location notes</code> from the dropdown displayed.</p>
-</div>
-<div class="imageblock text-center text-center">
-<div class="content">
-<img src="screenshot-edit-photograph-6.png" alt="Select value for Location notes field" width="640">
-</div>
-<div class="title">Figure 66. Select value for Location notes field</div>
-</div>
-<div class="paragraph">
-<p>Click <code>Save</code> to view the photoigraph records, and observe that the <code>Location notes</code> field now displays three values from the selected record:</p>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>When done, click <code>Save</code>.</p>
+</li>
+<li>
+<p>Now navigate to the "Photograph view" definition: click <code>Custom</code>, select "Photograph view" and click on the <code>Edit</code> button below.</p>
+</li>
+<li>
+<p>Change the <code>Field ref</code> value "Location taken" to "Map reference (ref)", and then <code>Save</code>.</p>
+</li>
+</ol>
 </div>
 <div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-view-photograph-6.png" alt="View photograph record with location notes" width="600">
+<img src="screenshot-edit-photograph-view-12.png" alt="Edit view to include reference to map reference in location notes" width="640">
 </div>
-<div class="title">Figure 67. View photograph record with location notes</div>
+<div class="title">Figure 63. Edit view to include reference to map reference in location notes</div>
+</div>
+<div class="paragraph">
+<p>Finally, navigate to a view of a photograph:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
+<li>
+<p>click on <code>Tutorial_example</code> in the top menu bar</p>
+</li>
+<li>
+<p>in the <code>List</code> dropdown, select <code>Photographs</code></p>
+</li>
+<li>
+<p>click on the <code>List</code> button.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-list-photographs.png" alt="Navigate to list of photographs" width="640">
+</div>
+<div class="title">Figure 64. Navigate to list of photographs</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="9">
+<li>
+<p>click on the link for one the photographs listed</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-view-photograph.png" alt="Navigate to view photograph" width="640">
+</div>
+<div class="title">Figure 65. Navigate to view photograph</div>
+</div>
+<div class="paragraph">
+<p>Note that the "Location taken" field has been replaced by a "Map reference (ref)" field.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="10">
+<li>
+<p>Click on the <code>Edit</code> button:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-edit-photograph.png" alt="Navigate to edit photograph" width="640">
+</div>
+<div class="title">Figure 66. Navigate to edit photograph</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>In the "Map reference (ref)" field, select the peviously described location where the photograph was taken:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-select-mapref-location.png" alt="Select location in &quot;Map reference (ref)&quot; field" width="640">
+</div>
+<div class="title">Figure 67. Select location in "Map reference (ref)" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="12">
+<li>
+<p>Click <code>Save</code>; the photo entity is redisplayed.  Note that the map reference field from the selected Location notes is displayed.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-with-location-mapref.png" alt="Navigate to edit photograph" width="640">
+</div>
+<div class="title">Figure 68. Navigate to edit photograph</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_display_more_fields_from_a_linked_record">Display more fields from a linked record</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The previous section added a view element to display a single field (Map reference) in a referenced entity (Location notes).</p>
+</div>
+<div class="paragraph">
+<p>The mechanism used can also be used to display multiple fields from the referenced entity.  In this section, we&#8217;ll revisit the field description created previously to show a brief summary of the location notes data.</p>
+</div>
+<div class="paragraph">
+<p>Start this by navigating back to the new field definition that was created just above; e.g.:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>from a photograph view, click <code>View description</code></p>
+</li>
+<li>
+<p>click on the <code>Edit</code> button</p>
+</li>
+<li>
+<p>click on the <span class="image"><img src="button-edit-entity.png" alt="writing hand"></span> (writing hand) icon beside the <code>Map reference (ref)</code> field reference.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-1.png" alt="Navigate to edit &quot;Map reference (ref)&quot; field" width="640">
+</div>
+<div class="title">Figure 69. Navigate to edit "Map reference (ref)" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>change the field Id, label and other fields to reflect its enlarged purpose:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-2.png" alt="Change Id" width="640" height="Help and property values for Location notes reference">
+</div>
+<div class="title">Figure 70. Change Id, label, Help and property values for Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>add additional subfields using the Subfields <code>Add field</code> button, fill in the referenced field information</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-3.png" alt="Add subfields to Location notes reference" width="640">
+</div>
+<div class="title">Figure 71. Add subfields to Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
+<li>
+<p>change the positioning of the existing map reference field, and move up the two new fields so they are presented in the correct order:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-4.png" alt="Change position of map reference subfield" width="640">
+</div>
+<div class="title">Figure 72. Change position of map reference subfield, and re-order fields</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="7">
+<li>
+<p>to achieve this result:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-5.png" alt="Final subfields for Location notes reference" width="640">
+</div>
+<div class="title">Figure 73. Final subfields for Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="8">
+<li>
+<p>click <code>Save</code> to return to the view definition editing view.  Note that due to changing the Location notes Field Id, the "Field ref" for the last field listed shows as unavailable</p>
+</li>
+<li>
+<p>select the correct field id for the changed field: select <code>Location notes</code> from the "Field ref" drop-down, &#8230;&#8203;</p>
+</li>
+<li>
+<p>and click <code>Save</code> to return to the view definition view:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-6.png" alt="Select location in &quot;Location notes&quot; field" width="640">
+</div>
+<div class="title">Figure 74. Select location in "Location notes" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>Click <code>Close</code> to return to the Photograph view</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>As the field property URI was updated, "Locaton notes" now shows "Target entity not selected".  To correct this, click on the <code>Edit</code> button, and select the location from the "Location notes" dropdown, to yield:</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-9.png" alt="Select location in &quot;Location notes&quot; field" width="640">
+</div>
+<div class="title">Figure 75. Select location in "Location notes" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="12">
+<li>
+<p>Click <code>Save</code> to return to the photograph view with updated location notes summary:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-10.png" alt="View of photograph with location notes summary" width="640">
+</div>
+<div class="title">Figure 76. View of photograph with location notes summary</div>
 </div>
 </div>
 </div>
@@ -1352,7 +1511,7 @@ Before making any changes to the field itself, click on the <span class="image">
 <div id="footer">
 <div id="footer-text">
 Version 0.5.17<br>
-Last updated 2019-11-22 16:19:51 UTC
+Last updated 2019-11-27 17:02:58 UTC
 </div>
 </div>
 </body>

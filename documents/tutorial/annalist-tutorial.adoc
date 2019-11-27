@@ -8,7 +8,7 @@ v0.5.17, 2019-11-21
 
 This document provides a task-oriented introduction to using Annalist.  It assumes Annalist has been installed or deployed, and provides step-by-step description of how various data management tasks can be performed using Annalist.
 
-NOTE: This document is an early draft, and is much in need of improvement.  Please submit feedback and comments either to the https://github.com/gklyne/annalist/issues[Annalist Github issues list], or via the https://groups.google.com/forum/#!forum/annalist-discuss[Annalist discussion group].
+NOTE: This document is a work-in-progress, and can surely be improved.  Please submit feedback and comments either to the https://github.com/gklyne/annalist/issues[Annalist Github issues list], or via the https://groups.google.com/forum/#!forum/annalist-discuss[Annalist discussion group].
 
 *Table of Contents*
 
@@ -686,88 +686,145 @@ Click `Save` to return to the Phbotograph view, and note that the `Location take
 image::screenshot-view-photograph-9.png[Photograph view with link to location notes,width=640,align=center]
 
 
-== Display fields from a linked record
+== Display field from a linked record
 
 Rather than just a link to a related record, it is sometimes useful to display one or more values directly from such a record.  For the present example, the photograph "location taken" field is modified to display a link, description and map reference for the location in the photograph view.
 
 This kind of display is created using a `Fields of referenced entity` field type.  This is a special kind of view field that behaves very differently in edit and view modes:  in edit mode, it works just like an `Optional entity ref` field, allowing the user to select an instance of some designated type.  But in view mode, it displays one or more fields from the referenced entity.
 
-Navigate to the field description `Map reference` used by the `Location_notes` view (e.g. click `Customize`, select `Location notes view`, click the `Edit` button below, and click the image:button-edit-entity.png[] (writing hand) icon by the `Map reference` field ref value).
+. Navigate to the field description `Map reference` used by the `Location_notes` view (e.g. click `Customize`, select `Location notes view`, click the `Edit` button below, and click the image:button-edit-entity.png[] (writing hand) icon by the `Map reference` field ref value).
 
 [.text-center]
 .Map reference field description
 image::screenshot-edit-location_mapref-field-2.png[Map reference field description,width=640,align=center]
 
-Click on the `Define field reference` button, to define a new field that references the map reference field of a "Location notes" entity:
-
-
-@@@@@@@@@@@
-
-NOTE: start with simple reference to map reference in location notes, then expand to multiple field references with more meaningful labels.
-
-@@@@@@@@@@@
-
-
-
- `Location taken`, `Location notes`, `View of location notes` `Map reference` and `Edit`.
-
-image:screenshot-view-photograph-5.png[View of photograph,width=400]
-image:screenshot-view-photograph-view-2.png[View of photograph view description,width=400]
-image:screenshot-view-location_taken-field-1.png[View of location taken field description,width=400]
-image:screenshot-view-location_notes-type-1.png[View location notes type description,width=400]
-image:screenshot-view-location_notes-view-1.png[View location notes view description,width=400]
-image:screenshot-view-location_mapref-field-1.png[View map reference field description,width=400]
-
+[start=2]
+. Click on the `Define field reference` button, to define a new field that references the map reference field of a "Location notes" entity:
 
 [.text-center]
-.Navigate to edit form of "map reference" field
-image::screenshot-edit-location_mapref-field-1.png[Edit map reference field description form,width=640,align=center]
+.Create reference to map reference field in location notes
+image::screenshot-create-new-field-location_taken_ref.png[Create reference to map reference field in location notes,width=640,align=center]
 
-An alternative to this slightly long winded navigation path would be to go to the collection front page (click `Tutorial_example` in the menu bar), select `List fields` from the `List view` selector, cick `View`, click on `Location_mapref`.  Either way, the resulting page should look something like the last screenshot above.  
-
-In the form displayed, click `Define field reference`:  this will create a new field and field group `Location_mapref_ref` referencing this field, and display an editing form for the new field definition.
-Before making any changes to the field itself, click on the image:button-edit-entity.png[] button by the `Field group` field:
-
-[.text-center]
-.Edit location notes reference field
-image::screenshot-edit-location_notes_ref-field-1.png[Edit location notes reference field,width=640,align=center]
-
-This will display a new form for editing details of the new field group.  In this form:
-
-. Add additional fields `Id` and `Label` to be displayed, using the `Add field` button and the new field id selectors dislayed.
-. Move the two new fields in front of the map reference field by selecting their checkboxes and clicking `Move &#x2b06;` button.
-. Make changes as desired to the field label and description (but leave other fielkds as they are).
-. Click `Save` to save the changes and return to the new field definition that references this group.
+[start=3]
+. When done, click `Save`.
+. Now navigate to the "Photograph view" definition: click `Custom`, select "Photograph view" and click on the `Edit` button below.
+. Change the `Field ref` value "Location taken" to "Map reference (ref)", and then `Save`.
 
 [.text-center]
-.Edit new field group
-image::screenshot-edit-location_notes_ref-group-1.png[Edit new field group,width=640,align=center]
+.Edit view to include reference to map reference in location notes
+image::screenshot-edit-photograph-view-12.png[Edit view to include reference to map reference in location notes,width=640,align=center]
 
-Back in the field editing form, change the Id, label and description and property URI of the new field to better reflect its actual usage.  Then click `Save`.
+Finally, navigate to a view of a photograph:
 
-[.text-center]
-.Edit new location notes reference field
-image::screenshot-edit-location_notes_ref-field-2.png[Edit new location notes reference field,width=640,align=center]
-
-At this point, navigate to the view description for Photograph (e.g. by displaying a Photograph record and clicking on `View description`, or selecting and displaying `List views` from the collection home page and then clicking on `Photograph`).  Then click on the `Edit` button to display the view editing form.  On this form, clicik `Add field`, select the newly created `Location notes` field type, and select `0/12` for the position/size value:
-
-[.text-center]
-.Add location notes field to photograph view
-image::screenshot-edit-photograph-view-9.png[Add location notes field to photograph view,width=640,align=center]
-
-Click on `Save`.
-
-Now navigate to a view of a photograph record, click `Edit` and inthe displayed form select a value for the new field `Location notes` from the dropdown displayed.
+[start=6]
+. click on `Tutorial_example` in the top menu bar
+. in the `List` dropdown, select `Photographs`
+. click on the `List` button.
 
 [.text-center]
-.Select value for Location notes field
-image::screenshot-edit-photograph-6.png[Select value for Location notes field,width=640,align=center]
+.Navigate to list of photographs
+image::screenshot-navigate-list-photographs.png[Navigate to list of photographs,width=640,align=center]
 
-Click `Save` to view the photoigraph records, and observe that the `Location notes` field now displays three values from the selected record:
+[start=9]
+. click on the link for one the photographs listed
 
 [.text-center]
-.View photograph record with location notes
-image::screenshot-view-photograph-6.png[View photograph record with location notes,width=600,align=center]
+.Navigate to view photograph
+image::screenshot-navigate-view-photograph.png[Navigate to view photograph,width=640,align=center]
+
+Note that the "Location taken" field has been replaced by a "Map reference (ref)" field.
+
+[start=10]
+. Click on the `Edit` button:
+
+[.text-center]
+.Navigate to edit photograph
+image::screenshot-navigate-edit-photograph.png[Navigate to edit photograph,width=640,align=center]
+
+[start=11]
+. In the "Map reference (ref)" field, select the peviously described location where the photograph was taken:
+
+[.text-center]
+.Select location in "Map reference (ref)" field
+image::screenshot-edit-photograph-select-mapref-location.png[Select location in "Map reference (ref)" field,width=640,align=center]
+
+[start=12]
+. Click `Save`; the photo entity is redisplayed.  Note that the map reference field from the selected Location notes is displayed.
+
+[.text-center]
+.Navigate to edit photograph
+image::screenshot-view-photograph-with-location-mapref.png[Navigate to edit photograph,width=640,align=center]
+
+
+== Display more fields from a linked record
+
+The previous section added a view element to display a single field (Map reference) in a referenced entity (Location notes).
+
+The mechanism used can also be used to display multiple fields from the referenced entity.  In this section, we'll revisit the field description created previously to show a brief summary of the location notes data.
+
+Start this by navigating back to the new field definition that was created just above; e.g.:
+
+. from a photograph view, click `View description`
+. click on the `Edit` button
+. click on the image:button-edit-entity.png[writing hand] (writing hand) icon beside the `Map reference (ref)` field reference.
+
+[.text-center]
+.Navigate to edit "Map reference (ref)" field
+image::screenshot-edit-location_notes_ref-field-1.png[Navigate to edit "Map reference (ref)" field,width=640,align=center]
+
+[start=4]
+. change the field Id, label and other fields to reflect its enlarged purpose:
+
+[.text-center]
+.Change Id, label, Help and property values for Location notes reference
+image::screenshot-edit-location_notes_ref-field-2.png[Change Id, label, Help and property values for Location notes reference,width=640,align=center]
+
+[start=5]
+. add additional subfields using the Subfields `Add field` button, fill in the referenced field information
+
+[.text-center]
+.Add subfields to Location notes reference
+image::screenshot-edit-location_notes_ref-field-3.png[Add subfields to Location notes reference,width=640,align=center]
+
+[start=6]
+. change the positioning of the existing map reference field, and move up the two new fields so they are presented in the correct order:
+
+[.text-center]
+.Change position of map reference subfield, and re-order fields
+image::screenshot-edit-location_notes_ref-field-4.png[Change position of map reference subfield, and re-order fields,width=640,align=center]
+
+[start=7]
+. to achieve this result:
+
+[.text-center]
+.Final subfields for Location notes reference
+image::screenshot-edit-location_notes_ref-field-5.png[Final subfields for Location notes reference,width=640,align=center]
+
+[start=8]
+. click `Save` to return to the view definition editing view.  Note that due to changing the Location notes Field Id, the "Field ref" for the last field listed shows as unavailable
+. select the correct field id for the changed field: select `Location notes` from the "Field ref" drop-down, ...
+. and click `Save` to return to the view definition view:
+
+[.text-center]
+.Select location in "Location notes" field
+image::screenshot-edit-location_notes_ref-field-6.png[Select location in "Location notes" field,width=640,align=center]
+
+[start=11]
+. Click `Close` to return to the Photograph view
+
+As the field property URI was updated, "Locaton notes" now shows "Target entity not selected".  To correct this, click on the `Edit` button, and select the location from the "Location notes" dropdown, to yield:
+
+[.text-center]
+.Select location in "Location notes" field
+image::screenshot-edit-photograph-9.png[Select location in "Location notes" field,width=640,align=center]
+
+[start=12]
+. Click `Save` to return to the photograph view with updated location notes summary:
+
+[.text-center]
+.View of photograph with location notes summary
+image::screenshot-view-photograph-10.png[View of photograph with location notes summary,width=640,align=center]
+
 
 
 // MORE TO COME, AS NEEDED.
@@ -778,6 +835,11 @@ image::screenshot-view-photograph-6.png[View photograph record with location not
 @@TODO
 
 @@ (e.g. subjects -> people / places / events)
+
+
+== Creating simple property hierarchies
+
+@@TODO
 
 
 == (Any more?)
