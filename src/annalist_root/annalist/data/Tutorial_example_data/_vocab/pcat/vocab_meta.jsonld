@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_vocab/pcat",
+  "@type": [
+    "annal:Vocabulary"
+  ],
+  "annal:id": "pcat",
+  "annal:type": "annal:Vocabulary",
+  "annal:type_id": "_vocab",
+  "annal:uri": "http://pcat.example.org/terms/",
+  "rdfs:comment": "# Photo catalogue description namespace\r\n\r\nThe Vocabulary URI value is the leading part of the URI for all terms that are presented here as `pcat:_name_`.\r\n",
+  "rdfs:label": "Photo catalogue description namespace",
+  "rdfs:seeAlso": []
+}

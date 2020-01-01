@@ -15,7 +15,7 @@
 <div class="details">
 <span id="author" class="author">Graham Klyne</span><br>
 <span id="revnumber">version 0.5.17,</span>
-<span id="revdate">2019-11-21</span>
+<span id="revdate">2019-12-31</span>
 </div>
 </div>
 <div id="content">
@@ -82,6 +82,8 @@ This document is a work-in-progress, and can surely be improved.  Please submit 
 <li><a href="#_create_links_between_entities">Create links between entities</a></li>
 <li><a href="#_display_field_from_a_linked_record">Display field from a linked record</a></li>
 <li><a href="#_display_more_fields_from_a_linked_record">Display more fields from a linked record</a></li>
+<li><a href="#_creating_simple_entity_type_hierarchies">Creating simple entity type hierarchies</a></li>
+<li><a href="#_inheriting_definitions">Inheriting definitions</a></li>
 </ul>
 </div>
 </div>
@@ -93,7 +95,7 @@ This document is a work-in-progress, and can surely be improved.  Please submit 
 <p>This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix <code>pcat</code> for URIs (actually <a href="http://www.w3.org/TR/curie/">Compact URIs</a>, or CURIEs) defined specifically for the photograph catalogue.  This prefix may be associated with a base URI to allow identification on the World Wide Web.</p>
 </div>
 <div class="paragraph">
-<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection <a href="http://@@@@/Tutorial_example(Tutorial_example" class="bare">http://@@@@/Tutorial_example(Tutorial_example</a>).  (@@TODO, once current in-development software is deployed.)</p>
+<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection <a href="https://demo.annalist.net/annalist/c/Tutorial_example_data/">Tutorial_example_data</a>.</p>
 </div>
 </div>
 </div>
@@ -1507,11 +1509,87 @@ The images used for this tutorial example can be found in the Annalist GitHub re
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_creating_simple_entity_type_hierarchies">Creating simple entity type hierarchies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Annalist supports a notion of entity type hierarchies.  When an entity type is defined or created, a number of "Supertype URIs" may be specified.</p>
+</div>
+<div class="paragraph">
+<p>For example, we might associate a subject reference with a photograph, where the subject may be a person, place or event.  This could be achieved by creating entity types for <code>Subject</code>, <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code>, with type URIs <code>pcat:Subject</code>, <code>pcat:Subject_person</code>, <code>pcat:Subject_place</code>, and <code>pcat:Subject_event</code> respectively.</p>
+</div>
+<div class="paragraph">
+<p>The type definitions for <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code> would each indicate a Supertype URI of <code>pcat:Subject</code>.  Each type could be associated with  Then define a new <code>Subject</code> field for the <code>Photograph</code> viewthat is a reference to a <code>Subject</code> entity type.</p>
+</div>
+<div class="paragraph">
+<p>When listing subjects, or entering details for a new photiograph, any defined instances of <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code> would be presented.</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>@@TODO: Operating sequence illustrating the above.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inheriting_definitions">Inheriting definitions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A key affordance of linked data is having different applications with their own application specific data models be able to share common terms and sub-structures for common concepts.  E.g., the notion of a person may be used in similar ways by different applications, and data describing a person may be sharable between diverse applications if they use the same definitions.</p>
+</div>
+<div class="paragraph">
+<p>Annalist supports this by allowing common type, view, field and other definitions to be "inherited" from another collection.  Different collections created to support different applications may inherit common definitions from the same source collection.</p>
+</div>
+<div class="paragraph">
+<p>For example, an Annalist installation comes with a number of pre-defined definition collections (installable via <code>annalist-manager installcollection</code>).  Two of these are <code>Resource_defs</code> and <code>Concept_defs</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>Resource_defs</code></dt>
+<dd>
+<p>defines a number of types, fields and views for referencing or uploading resources from the Web, especially images and audio.
+(See <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs/">demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs</a>)</p>
+</dd>
+<dt class="hdlist1"><code>Concept_defs</code></dt>
+<dd>
+<p>defines types, fields and views for associating thesaurus (or table of authority) terms with entities using the SKOS vocabulary
+(See <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/">demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs</a>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examining the <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/"><code>Concept_defs</code> collection metadata</a> shows a "Parent" value that links to the <code>Resource_defs</code> collecton.  This allows all definitions contained in <code>Resource_defs</code> to be inherited by (i.e. available for use in) the <code>Concept_defs</code> collection, and also by any other collections that have the <code>Concept_defs</code> collection as a parent.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If a definition is changed in <code>Resource_defs</code>, the changes are visible in <code>Concept_defs</code>.  But if the same inherited definition is edited in <code>Concept_defs</code>, a new copy is made and any changes are now local to <code>Concept_defs</code> and any other collections that have it as a parent.  The local copy supersedes the previously inherited definition.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>@@TODO: Operating sequence illustrating the above.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.5.17<br>
-Last updated 2019-11-27 17:02:58 UTC
+Last updated 2020-01-01 17:46:31 UTC
 </div>
 </div>
 </body>

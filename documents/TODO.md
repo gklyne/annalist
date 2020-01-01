@@ -2,17 +2,16 @@
 
 NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
-
 # Documentation
 
-- [.] Update tutorial
-    - Also cover inheritance of definitions?
-- [ ] Include Tutorial_example in collections available for installation.
+- [x] Update tutorial
+    - Introduces inheritance of definitions?
+- [x] Include Tutorial_example in collections available for installation.
+- [x] Initial corpus of FAQs
 - [ ] New demo screencast(s)
 - [ ] Reference documents (see TODO-reference.md)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [x] Initial corpus of FAQs
 - [ ] Add help documentation for view Type, View and List forms (similar to view Field ...)
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
@@ -39,9 +38,25 @@ See also: https://www.divio.com/en/blog/documentation/
     - handle missing-parent error when accessing cached entity (also logs error)
     - when saving collection metadata, clear collection cache(s)
 - [ ] Documentation and tutorial updates
-- [ ] Demo screencast update
+    - [x] Update tutorial
+        - Introduces inheritance of definitions?
+    - [x] Include Tutorial_example in collections available for installation.
+    - [x] Initial corpus of FAQs
+    - [ ] New demo screencast(s)
+        - (see also: demo-script.md)
+    - [ ] Reference documents (see TODO-reference.md)
+    - [ ] HOWTOs for common tasks; task-oriented documentation
+        - Have tutorial; can this be used?
+    - [ ] Add help documentation for view Type, View and List forms (similar to view Field ...)
+    - [ ] Review concurrent access issues; document assumptions
+        - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
+        - Add etag / if-match support ?  (does this help with POST? How?)
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
+- [ ] Switch to using Python 3 only
+    - (note problems that were holding this back - Django release?)
+    - See release notes: "Version 0.5.11, towards 0.5.12"
+    - May need to go in stages: update to later Django-only release?
 
 (Sub-release?)
 

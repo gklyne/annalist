@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Location_mapref",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "pcat:Location_notes",
+  "annal:field_fields": [],
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/Text",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Text",
+  "annal:id": "Location_mapref",
+  "annal:placeholder": "(Map reference - OS grid reference 'AAeeennn' or 'geo:lat,long' URI)",
+  "annal:property_uri": "pcat:location_mapref",
+  "annal:repeat_label_add": "Add",
+  "annal:repeat_label_delete": "Remove",
+  "annal:superproperty_uri": [],
+  "annal:tooltip": "OS grid reference ('AAeeennn') or geo coordinates URI ('geo:lat,long') for location.",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Map reference\r\n\r\nOS grid reference or geo coordinates for location.\r\n\r\nAn OS map reference is typically in the form `AAeeennn`, where `AA`  is two letters identifying a 100Km grid square, and  `eee` and `nnn` are triple-digit eastings and northings respectively.  (See [A beginners guide to grid references](https://getoutside.ordnancesurvey.co.uk/guides/beginners-guide-to-grid-references/) for more information.)\r\n\r\nGeo coordinates are in the form `geo:cord-a,coord-b`, where `coord-a` and `coord-b` are positive or negative real numbers representing the latitude and longitude respectively of the location. (See [Geo URI scheme](https://en.wikipedia.org/wiki/Geo_URI_scheme) for more details.)\r\n\r\n\r\n",
+  "rdfs:label": "Map reference"
+}

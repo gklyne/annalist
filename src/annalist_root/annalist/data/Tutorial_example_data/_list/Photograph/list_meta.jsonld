@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_list/Photograph",
+  "@type": [
+    "annal:List"
+  ],
+  "annal:default_type": "_type/Photograph",
+  "annal:default_view": "_view/Photograph",
+  "annal:display_type": "_enum_list_type/List",
+  "annal:id": "Photograph",
+  "annal:list_entity_selector": "'pcat:Photograph' in [@type]",
+  "annal:list_entity_type": "pcat:Photograph",
+  "annal:list_fields": [
+    {
+      "annal:field_id": "_field/Entity_id",
+      "annal:field_placement": "small:0,3"
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:3,9"
+    }
+  ],
+  "annal:type": "annal:List",
+  "annal:type_id": "_list",
+  "annal:uri": "annal:display/Default_list",
+  "rdfs:comment": "# Photographs\r\n\r\nList entities of type [Photograph]($BASE:_type/Photograph).",
+  "rdfs:label": "Photographs"
+}

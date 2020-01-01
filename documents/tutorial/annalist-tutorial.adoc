@@ -1,6 +1,6 @@
 = Annalist tutorial
 Graham Klyne
-v0.5.17, 2019-11-21
+v0.5.17, 2019-12-31
 :toc: macro
 :toc-title:
 :linkcss:
@@ -18,7 +18,7 @@ toc::[]
 
 This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix `pcat` for URIs (actually http://www.w3.org/TR/curie/[Compact URIs], or CURIEs) defined specifically for the photograph catalogue.  This prefix may be associated with a base URI to allow identification on the World Wide Web.
 
-The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection http://@@@@/Tutorial_example(Tutorial_example).  (@@TODO, once current in-development software is deployed.)
+The completed example can be seen at the http://demo.annalist.net/[Annalist demo site], as collection https://demo.annalist.net/annalist/c/Tutorial_example_data/[Tutorial_example_data].
 
 == Log in to Annalist
 
@@ -824,22 +824,61 @@ image::screenshot-edit-photograph-9.png[Select location in "Location notes" fiel
 [.text-center]
 .View of photograph with location notes summary
 image::screenshot-view-photograph-10.png[View of photograph with location notes summary,width=640,align=center]
+  
 
+== Creating simple entity type hierarchies
+
+Annalist supports a notion of entity type hierarchies.  When an entity type is defined or created, a number of "Supertype URIs" may be specified.  
+
+For example, we might associate a subject reference with a photograph, where the subject may be a person, place or event.  This could be achieved by creating entity types for `Subject`, `Subject_person`, `Subject_place`, and `Subject_event`, with type URIs `pcat:Subject`, `pcat:Subject_person`, `pcat:Subject_place`, and `pcat:Subject_event` respectively.
+
+The type definitions for `Subject_person`, `Subject_place`, and `Subject_event` would each indicate a Supertype URI of `pcat:Subject`.  Each type could be associated with  Then define a new `Subject` field for the `Photograph` viewthat is a reference to a `Subject` entity type.
+
+When listing subjects, or entering details for a new photiograph, any defined instances of `Subject_person`, `Subject_place`, and `Subject_event` would be presented.
+
+[TODO]
+====
+@@TODO: Operating sequence illustrating the above.
+====
+
+
+== Inheriting definitions
+
+A key affordance of linked data is having different applications with their own application specific data models be able to share common terms and sub-structures for common concepts.  E.g., the notion of a person may be used in similar ways by different applications, and data describing a person may be sharable between diverse applications if they use the same definitions.
+
+Annalist supports this by allowing common type, view, field and other definitions to be "inherited" from another collection.  Different collections created to support different applications may inherit common definitions from the same source collection.
+
+For example, an Annalist installation comes with a number of pre-defined definition collections (installable via `annalist-manager installcollection`).  Two of these are `Resource_defs` and `Concept_defs`:
+
+`Resource_defs`::
+defines a number of types, fields and views for referencing or uploading resources from the Web, especially images and audio.
+(See https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs/[demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs])
+
+`Concept_defs`::
+defines types, fields and views for associating thesaurus (or table of authority) terms with entities using the SKOS vocabulary
+(See https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/[demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs])
+
+Examining the https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/[`Concept_defs` collection metadata] shows a "Parent" value that links to the `Resource_defs` collecton.  This allows all definitions contained in `Resource_defs` to be inherited by (i.e. available for use in) the `Concept_defs` collection, and also by any other collections that have the `Concept_defs` collection as a parent.
+
+[NOTE]
+====
+If a definition is changed in `Resource_defs`, the changes are visible in `Concept_defs`.  But if the same inherited definition is edited in `Concept_defs`, a new copy is made and any changes are now local to `Concept_defs` and any other collections that have it as a parent.  The local copy supersedes the previously inherited definition.
+====
+
+[TODO]
+====
+@@TODO: Operating sequence illustrating the above.
+====
 
 
 // MORE TO COME, AS NEEDED.
 
 ////
-== Creating simple entity type hierarchies
-
-@@TODO
-
-@@ (e.g. subjects -> people / places / events)
-
 
 == Creating simple property hierarchies
 
-@@TODO
+
+NOTE: @@TODO - operating sequence illustrating the above.
 
 
 == (Any more?)

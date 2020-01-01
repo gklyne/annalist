@@ -27,6 +27,9 @@ annalist-manager installcoll RDF_schema_defs
 rm -rf $(annalist-manager sitedirectory --personal)/c/Annalist_schema
 annalist-manager installcoll Annalist_schema
 
+rm -rf $(annalist-manager sitedirectory --personal)/c/Tutorial_example_data
+annalist-manager installcoll Tutorial_example_data
+
 echo "To run Annalist: 'annalist-manager runserver'"
 
 # End.

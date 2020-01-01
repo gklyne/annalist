@@ -175,6 +175,17 @@ setup(
             , 'data/Annalist_schema/entitydata/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*/*.jsonld'
+            # Tutorial example data
+            , 'data/Tutorial_example_data/_field/*/*.jsonld'
+            , 'data/Tutorial_example_data/_list/*/*.jsonld'
+            , 'data/Tutorial_example_data/_type/*/*.jsonld'
+            , 'data/Tutorial_example_data/_view/*/*.jsonld'
+            , 'data/Tutorial_example_data/_vocab/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*/*.jpg'
+            # , 'data/Tutorial_example_data/entitydata/*/*/*/*.jsonld'
+            # , 'data/Tutorial_example_data/entitydata/*/*/*/*.jpg'
             # Test data
             , 'data/test/*.md'
             , 'data/test/*.jpg'
