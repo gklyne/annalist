@@ -104,7 +104,8 @@ from .entity_testsitedata import (
     )
 from .entity_testlistdata import (
     recordlist_url, 
-    num_testcoll_enumerate_all_entities, num_testcoll_all_entities_scope_all
+    num_testcoll_enumerate_all_entities, 
+    num_testcoll_all_entities_scope_all
     )
 
 #   -----------------------------------------------------------------------------

@@ -569,23 +569,6 @@ f_Field_typeref = (
     , "field_choices":          []
     })
 
-f_Field_fieldref = (
-    { "field_id":               "Field_fieldref"
-    , "field_name":             "Field_fieldref"
-    , "field_label":            "Refer to field"
-    , "field_render_type":      "Identifier"
-    , "field_value_mode":       "Value_direct"
-    , "field_entity_type":      "annal:Field"
-    , "field_value_type":       "annal:Identifier"
-    , "field_property_uri":     "annal:field_ref_field"
-    , "field_placement":        "small:0,12;medium:6,6"
-    , "field_ref_type":         None
-    , "field_ref_field":        None
-    , "field_placeholder":      "(field URI or CURIE)"
-    , "field_default_value":    ""
-    , "field_choices":          no_options
-    })
-
 f_Field_default = (
     { "field_id":               "Field_default"
     , "field_name":             "Field_default"
@@ -1332,7 +1315,6 @@ fields_by_id = (
     , "Field_value_mode":           f_Field_value_mode
     , "Field_entity_type":          f_Field_entity_type
     , "Field_typeref":              f_Field_typeref
-    , "Field_fieldref":             f_Field_fieldref
     , "Field_default":              f_Field_default
     , "Field_placeholder":          f_Field_placeholder
     , "Field_tooltip":              f_Field_tooltip

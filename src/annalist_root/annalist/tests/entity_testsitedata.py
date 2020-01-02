@@ -358,7 +358,6 @@ site_defined_field_fields = (
     [ FieldChoice("_field/_initial_values")
     , FieldChoice("_field/Field_default",              label="Default value"       )
     , FieldChoice("_field/Field_entity_type",          label="Entity type"         )
-    , FieldChoice("_field/Field_fieldref",             label="Refer to field"      )
     , FieldChoice("_field/Field_fields",               label="Subfields"           )
     , FieldChoice("_field/Field_groupref",             label="Field group"         )
     , FieldChoice("_field/Field_help",                 label="Help"                )

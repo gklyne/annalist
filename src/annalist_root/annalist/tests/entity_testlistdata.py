@@ -61,9 +61,9 @@ from .entity_testsitedata import (
 
 # Defined here to facilitate test suite changes
 
-num_testcoll_enumerate_all_entities     = 187   # Entities defined
-num_testcoll_all_entities_scope_all     = 184   # Entities listed
-num_testcoll_inherit_entities_scope_all = 238   # Entities listed, including inherited
+num_testcoll_enumerate_all_entities     = 186   # Entities defined
+num_testcoll_all_entities_scope_all     = 183   # Entities listed
+num_testcoll_inherit_entities_scope_all = 237   # Entities listed, including inherited
 
 
 #   -----------------------------------------------------------------------------

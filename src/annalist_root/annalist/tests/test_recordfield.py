@@ -459,7 +459,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             tooltip7a=context_view_field(r.context,    6, 0).get_field_tooltip(), # Value type
             tooltip7b=context_view_field(r.context,    6, 1).get_field_tooltip(), # Value mode
             tooltip8a=context_view_field(r.context,    7, 0).get_field_tooltip(), # Typeref
-            tooltip8b=context_view_field(r.context,    7, 1).get_field_tooltip(), # Fieldref
             tooltip9=context_view_field(r.context,     8, 0).get_field_tooltip(), # default
             tooltip10=context_view_field(r.context,    9, 0).get_field_tooltip(), # Placeholder
             tooltip11=context_view_field(r.context,   10, 0).get_field_tooltip(), # Tooltip
@@ -675,19 +674,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow8col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip8b)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Refer to field</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_fieldref" 
-                         placeholder="(field URI or CURIE)" value="">
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
         formrow9 = """
             <div class="small-12 columns" title="%(tooltip9)s">
               <div class="row view-value-row">
@@ -870,7 +856,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow7col1,  html=True)    # Value type
         self.assertContains(r, formrow7col2,  html=True)    # Value mode
         self.assertContains(r, formrow8col1,  html=True)    # Ref type (enum)
-        self.assertContains(r, formrow8col2,  html=True)    # Ref field
         self.assertContains(r, formrow9,      html=True)    # Default
         self.assertContains(r, formrow10,     html=True)    # Placeholder
         self.assertContains(r, formrow11,     html=True)    # Tooltip

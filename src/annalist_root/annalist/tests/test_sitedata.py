@@ -239,12 +239,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 )
             f = next(i, "(@@no value@@)")
             if f != e:
-                print("@@ Expected: %r, found %r"%(e, f))
+                # Print additional test-failure diagnostic
+                print("Expected: %r, found %r"%(e, f))
                 cols = (row_data
                         .find("div", class_="row")
                         .find_all("div", class_="columns")
                     )
-                print("@@ cols %s"%(cols,))
+                print("Cols %s"%(cols,))
             self.assertEqual(e, f, "%s != %s (%r)"%(e, f, row_expected))
         return
 
@@ -1033,7 +1034,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
                                                                                             "annal:Field_list"       ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional/new entity reference", 
@@ -1178,7 +1178,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_value_type"
             , "_field/Field_value_mode"
             , "_field/Field_typeref"
-            , "_field/Field_fieldref"
             , "_field/Field_default"
             , "_field/Field_placeholder"
             , "_field/Field_tooltip"
