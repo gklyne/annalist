@@ -197,7 +197,7 @@ def get_field_edit_renderer(field_render_type, field_value_mode):
     """
     # log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
     renderer = get_field_base_renderer(field_render_type)
-    if field_value_mode in ["Value_entity", "Value_field"]:
+    if field_value_mode == "Value_entity":
         renderer = get_entityref_edit_renderer(renderer, field_render_type)
     elif field_value_mode == "Value_import":
         renderer = get_uriimport_edit_renderer(renderer, field_render_type)
@@ -263,7 +263,6 @@ def get_label_edit_renderer(field_render_type, field_value_mode):
     Django template "{% include ... %}" element.
     """
     renderer = get_field_edit_renderer(field_render_type, field_value_mode)
-    #@@@@ renderer = get_field_base_renderer(field_render_type)
     if not renderer:
         # Default to simple text for unknown renderer type
         log.warning("get_label_edit_renderer: '%s' not found"%field_render_type)

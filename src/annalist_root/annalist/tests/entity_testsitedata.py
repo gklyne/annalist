@@ -750,7 +750,6 @@ site_value_modes = (
     [ FieldChoice("_enum_value_mode/_initial_values")
     , FieldChoice("_enum_value_mode/Value_direct",      label="Direct value"      )
     , FieldChoice("_enum_value_mode/Value_entity",      label="Entity reference"  )
-    , FieldChoice("_enum_value_mode/Value_field",       label="Field reference"   )
     , FieldChoice("_enum_value_mode/Value_import",      label="Import from web"   )
     , FieldChoice("_enum_value_mode/Value_upload",      label="File upload"       )
     ])

@@ -158,9 +158,7 @@ class RecordField(EntityData):
             val_mode = entitydata[ANNAL.CURIE.field_value_mode]
         else:
             val_mode  = "Value_direct"
-            if ref_type and ref_field:
-                val_mode = "Value_field"
-            elif val_render == "RefMultifield":
+            if val_render == "RefMultifield":
                 val_mode = "Value_entity"
             elif val_render == "URIImport":
                 val_mode = "Value_import"
@@ -168,12 +166,19 @@ class RecordField(EntityData):
                 val_mode = "Value_upload"
             entitydata[ANNAL.CURIE.field_value_mode] = val_mode
         # Consistency checks
+        if ref_field:
+            # 0.5.17: Tried log.warning, but found that some test cases still use
+            #         entity field reference.  So downrading to DEBUG report for now.
+            # @@TODO: review this
+            log.debug(
+                "RecordField %s: value given for deprecated property %s"%
+                    (field_id, ANNAL.CURIE.field_ref_field)
+                )
         if val_mode == "Value_field":
-            if ( not (ref_type and ref_field) ):
-               log.warning(
-                    "RecordField %s: val_mode 'Value_field' requires values for %s and %s"%
-                        (field_id, ANNAL.CURIE.field_ref_type, ANNAL.CURIE.field_ref_field)
-                    )
+           log.warning(
+                "RecordField %s: value 'Value_field' for property %s is deprecated"%
+                    (field_id, ANNAL.CURIE.field_value_mode)
+                )
         elif val_mode == "Value_entity":
             if not ref_type:
                log.warning(

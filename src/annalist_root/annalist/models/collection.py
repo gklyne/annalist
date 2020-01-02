@@ -1062,7 +1062,7 @@ class Collection(Entity):
         """
         rtype = extract_entity_id(fdesc[ANNAL.CURIE.field_render_type])
         vmode = extract_entity_id(fdesc[ANNAL.CURIE.field_value_mode])
-        if vmode in ["Value_entity", "Value_field"]:
+        if vmode == "Value_entity":
             rtype = "Enum"
         elif vmode == "Value_import":
             rtype = "URIImport"

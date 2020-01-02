@@ -25,7 +25,11 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
-- [ ] "Refer to field" field in field description - redundant?
+- [x] Remove rdundant "Refer to field" field in field description
+    - [x] Remove Field_fieldref from field view and documentation.
+    - [x] review other uses of `Field_fieldref`
+    - [x] Review use of `Value_field`.
+    - [x] Add field definition migration/checking logic.
 - [x] BUG: errors in generation of field description for reference to field of entity
 - [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
 - [x] Include list all type definitions in sitemap data (_info/Sitemap)
@@ -51,8 +55,9 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Review concurrent access issues; document assumptions
         - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
         - Add etag / if-match support ?  (does this help with POST? How?)
-- [ ] Install tools and update documentation to use `twine` for package upload.
-    - See: https://pypi.org/project/twine/
+
+(Sub-release, but don't publish?)
+
 - [ ] Switch to using Python 3 only
     - (note problems that were holding this back - Django release?)
     - See release notes: "Version 0.5.11, towards 0.5.12"
@@ -60,6 +65,16 @@ See also: https://www.divio.com/en/blog/documentation/
 
 (Sub-release?)
 
+- [ ] Install tools and update documentation to use `twine` for package upload.
+    - See: https://pypi.org/project/twine/
+- [ ] Review (again) whether `annal:field_ref_field` is needed.
+    - it is used by `bound_field` when accessing target values
+    - see also `_migrate_values` in models.RecordField
+    - it is set by some test cases for file import and upload
+        - annalist.tests.test_import_resource.ImportResourceTest
+        - annalist.tests.test_upload_file.UploadResourceTest
+    - otherwise, it doesn't obviously serve a needed purpose
+    - check multi-field logic and see if that can be used for test cases
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".

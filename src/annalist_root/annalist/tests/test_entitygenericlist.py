@@ -205,7 +205,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Enumerate enumeration types
         entity_types_ids = [ (e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.info("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
-        self.assertEqual(len(entity_types_ids), 5)
+        self.assertEqual(len(entity_types_ids), 4)
         return
 
     def test_get_default_all_list(self):

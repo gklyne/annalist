@@ -140,7 +140,7 @@ test_reference_field_create_values = (
     , 'rdfs:comment':                   "test_reference_field comment"
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "URILink"
-    , 'annal:field_value_mode':         "Value_field"
+    , 'annal:field_value_mode':         "Value_direct"
     , 'annal:field_value_type':         "annal:Identifier"
     , 'annal:field_ref_type':           "testimptype"
     , 'annal:field_ref_restriction':    "ALL"

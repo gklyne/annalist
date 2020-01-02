@@ -249,7 +249,7 @@ class RecordFieldTest(AnnalistTestCase):
         vc.update(
             { 'annal:options_typeref':  "test_target_type"
             , 'annal:restrict_values':  "ALL"
-            , 'annal:target_field':     "annal:test_target_field"
+            #@@ , 'annal:target_field':     "annal:test_target_field"
             })
         t  = RecordField.create(self.testcoll, "field1", vc)
         td = RecordField.load(self.testcoll, "field1").get_values()
@@ -257,7 +257,7 @@ class RecordFieldTest(AnnalistTestCase):
         vr.update(
             { 'annal:field_ref_type':           "test_target_type"
             , 'annal:field_ref_restriction':    "ALL"
-            , 'annal:field_ref_field':          "annal:test_target_field"
+            #@@ , 'annal:field_ref_field':          "annal:test_target_field"
             })
         self.assertKeysMatch(td, vr)
         self.assertDictionaryMatch(td, vr)
