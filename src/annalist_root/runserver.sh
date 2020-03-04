@@ -1,4 +1,4 @@
-# Run Annalist under gunicorn server in development configuration without HTTPS front-end
+# Run Annalist under gunicorn server in personal configuration without HTTPS front-end
 # See also: gunicorn_server
 export DJANGO_SETTINGS_MODULE=annalist_site.settings.personal
 python manage.py migrate
