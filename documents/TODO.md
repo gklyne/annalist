@@ -8,7 +8,15 @@ NOTE: this document is used for short-term working notes; some longer-term plann
     - Introduces inheritance of definitions?
 - [x] Include Tutorial_example in collections available for installation.
 - [x] Initial corpus of FAQs
-- [ ] New demo screencast(s)
+- [ ] New demo screencast(s) (see documents/demo-script.md)
+    - NOTE to self: videos in ~/Work/Video (not git project)
+    - [x] annalist-site-setup
+    - [ ] annalist-login-create-collection
+    - [ ] annalist-create-configure-data-records
+    - [ ] annalist-configure-type-view-records
+    - [ ] annalist-configure-default-list-record
+    - [ ]
+    - [ ]
 - [ ] Reference documents (see TODO-reference.md)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
@@ -25,7 +33,9 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
-- [x] Remove rdundant "Refer to field" field in field description
+- [ ] Address Django security alerts from github
+- [ ] Problems with `annalist-manager stopserver` (gunicorn related?)
+- [x] Remove redundant "Refer to field" field in field description
     - [x] Remove Field_fieldref from field view and documentation.
     - [x] review other uses of `Field_fieldref`
     - [x] Review use of `Value_field`.
@@ -97,7 +107,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [x] Automated test suite for annalist_manager
-- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
+- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup.  Use docker-compose instead of or as well as  separate data container?
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
     - Started moving toward parameterized context data generation for comparison.
@@ -119,7 +129,7 @@ Data collection definitions:
 Technical debt:
 
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
-    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
+    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the original access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
 - [ ] Configure for multi-process worker operation
