@@ -216,7 +216,7 @@ setup(
           , 'requests-oauthlib==0.8.0'
           , 'oauthlib==2.0.7'
           , 'certifi==2018.1.18'
-          , 'httplib2==0.11.3'
+          , 'httplib2==0.18.0'
         , 'rdflib==4.2.2'
           , 'isodate==0.6.0'
           , 'rdflib-jsonld==0.4.0'
