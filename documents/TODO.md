@@ -34,7 +34,9 @@ See also: https://www.divio.com/en/blog/documentation/
 # Release 0.5.17, towards 0.5.18
 
 - [ ] Address Django security alerts from github
-- [ ] Problems with `annalist-manager stopserver` (gunicorn related?)
+- [x] Problems with `annalist-manager stopserver` (gunicorn related?)
+    - Can't reproduce: seems OK (2020-03-05)
+    - NOTE: MacOS was updated (El Capitan to Catalina) in interim
 - [x] Remove redundant "Refer to field" field in field description
     - [x] Remove Field_fieldref from field view and documentation.
     - [x] review other uses of `Field_fieldref`

@@ -72,43 +72,45 @@ With the Annalist server running, the next demo will show how to log in to the w
 
 `annalist-login-create-collection.mp4` - (3m32s)
 
-This demo provides a first view of the Annalist web site interface, and shows the initial steps followed to log in and create a data collection.  It starts with a running Annalist server and newly initialized site data and (see previous demo).  It also assumes the server is configured to accept OpenID Connect user credentials from Google.
+This demonstration provides a first view of the Annalist web site interface, and shows the initial steps followed to log in and create a data collection.  It starts with a running Annalist server and newly initialized site data and (see previous demo).  It also assumes the server is configured to accept OpenID Connect user credentials from Google.
 
 1.  Start a web browser on the same computer that is running an Annalist server, and browse to [localhost:8000](http://localhost:8000).
 
-2.  Select "Login" from the top menu bar, and  and Use the "Local user credentials" link to login as 'admin', using the password just given when initializing Annalist site data.
+2.  Select "Login" from the top menu bar, and enter "admin" into the `User ID` field, and click on the `Local username` button.
 
-3.  Select "Home" from the top menu bar:  an empty list of data collections is presented, along with controls to create a new collection.
+3.  Enter the admin password specified when setting up the Annalist installation using `annalist-manager defaultadminuser`.
 
-4.  Enter details for a new collection, and click "New".
+4.  Select "Home" from the top menu bar:  an empty list of data collections is presented, along with controls to create a new collection.
 
-5.  The new collection now shows in the list; click on the link to view the new collection.  A single record is shown for the `admin` user.
+5.  Enter details for a new collection, and click `New collection`.
 
-6.  Click on the `admin` user link, and note the permissions shown.  Whenever a new collection is created, the creator (in this case, user `admin`) is automatically given full permissions over that collection.
+6.  The new collection now shows in the list; click on the link to view the new collection.  A single record is shown for the `admin` user.
 
-7.  Click "Cancel" to return to the collection default display.
+7.  Click on the `admin` user link, and note the permissions shown.  Whenever a new collection is created, the creator (in this case, user `admin`) is automatically given full permissions over that collection.
 
-8.  We will create a new non-admin user with full permissions over this new collection:  select `User_list` and click "View"
+8.  Click "Close" to return to the collection default display.
 
-9.  Click "New"
+9.  We will create a new non-admin user with full permissions over this new collection.  In the `List` drop-down, select `User permissions` then click on the `List` button.
 
-10.  Enter details for a Google-authenticated user, click "Save".  The user id must match a value that will be used later for login, and the URI must be a mailto: URI matching the email address of the user's Google account.
+10. A page titled "User permissions" is displayed. Click on the "New" button.
 
-11. Click "Close" to return to the site front page view (list of collections)
+11.  Enter details for a Google-authenticated user, click "Save".  The user id must match a value that will be used later for login, and the URI must be a mailto: URI matching the email address of the user's Google account.  For full access to the collection, the permissions should be specified as "VIEW CREATE UPDATE DELETE CONFIG ADMIN".
 
-12. Click "Logout"
+12. Click "Close" to return to the site front page view (list of collections)
 
-13. Click "Login", enter the local user id just created, and ensure "Google" is selected as the Login service.
+13. Click "Logout"
 
-12. Click "Login".  At this point, prompts may be issued to enter Google account and password details.  If the user is already logged in to Google, no further information is requested.
+14. Enter the user ID value for the new user just added to the new collection.  Then click on the button labeled "Google". 
 
-    Assuming the credentials are all good, Annalist login completes and brief information about the user is displayed.
+15. At this point, prompts may be issued to enter Google account and password details.  If the user is already logged in to Google, the login may proceed without further user input. 
 
-13. Click "Home" in the top menu bar.  The list of collections is displayed again.
+16. Assuming the credentials are all good, Annalist login completes and brief information about the user is displayed.
 
-14. Click on the link for the new collection created just now.
+17. Click on `Continue` to proceed (or on `Home` in the menu).  The list of collections is displayed again.
 
-15. Click on "New", and note that the new user has permissions to create and edit collection content.
+18. Click on the link for the new collection created just now.
+
+19. Click on the link for the new user just added, and note that the they have permissions to create and edit collection content.
 
 This completes the demo.  The next demo will show population of a new collection with simple data records.
 
