@@ -147,8 +147,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityGenericListViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        resetSitedata(scope="collections")
+        super(EntityGenericListViewTest, cls).tearDownClass()
+        resetSitedata(scope="all")
         return
 
     #   -----------------------------------------------------------------------------
@@ -183,11 +189,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
+        # self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
-        # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
-        # log.debug("@@ expect_entity_ids: \n"+"\n".join([ repr(eti) for eti in expect_entity_ids[145:] ]))
+        # log.info("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
+        # log.info("@@ expect_entity_ids: \n"+"\n".join([ repr(eti) for eti in expect_entity_ids[145:] ]))
         self.assertEqual(actual_entity_ids, expect_entity_ids)
         return
 
