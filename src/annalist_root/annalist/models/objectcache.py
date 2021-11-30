@@ -117,7 +117,7 @@ class ObjectCache(object):
         """
         # log.debug("ObjectCache.flush: cachekey %r"%(self._cachekey,))
         with self._cachelock:
-            for key in self._cache.keys():
+            for key in list(self._cache.keys()):
                 del self._cache[key]
         return self
 

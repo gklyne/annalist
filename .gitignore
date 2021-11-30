@@ -16,6 +16,8 @@
 # Python
 #
 
+.python-version
+
 # Compiled Python file
 *.pyc
 _pycache_

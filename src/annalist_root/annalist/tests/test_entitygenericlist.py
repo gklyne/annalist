@@ -4,7 +4,7 @@ Tests for EntityData generic list view
 This test suite focuses on listing of record fields used by 
 record views and lists.  This serves two purposes:
 - it tests some additional options of the entity list logic 
-  that are not tested by the dfeault list view, and
+  that are not tested by the default list view, and
 - it tests the logic that access site-wide data in addition to
   local data.
 """

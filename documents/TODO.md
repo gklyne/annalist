@@ -75,6 +75,14 @@ See also: https://www.divio.com/en/blog/documentation/
     - See release notes: "Version 0.5.11, towards 0.5.12"
     - May need to go in stages: update to later Django-only release?
 
+ NOTE, from `documents/installing-annalist.md`:
+
+ > Use Python version 3.6, as Django 1.11 (the last version to support Python 2) is not supported under later versions.  (I have found one syntax error reported running Django under Python 3.7: fix that and all is well.)
+
+- [ ] As of 2021-11-30, Python 3.6 installs on M1 MacBook no longer work, so I'm pushing forwards to Python 3.7.
+    - As of Django 1.11.17 the above problem may be fixed see https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django)
+
+
 (Sub-release?)
 
 - [ ] Install tools and update documentation to use `twine` for package upload.

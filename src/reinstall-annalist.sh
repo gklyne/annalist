@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Reinstrall Annalist software from current source tree"
+echo "Reinstall Annalist software from current source tree"
 echo ""
 
 pip uninstall annalist
