@@ -202,7 +202,7 @@ NOTE: changes in Google's OpenID Connect API and access library used mean that t
 
 NOTE: this release may fail (specifically, the test suite may fail to complete) on versions of Python lower than 2.7.15 due to a bug in the SQLite libraries.  See notes "Problems with SQLite3" below.
 
-NOTE: the devlopment environment (`devel` configuration) settings no longer 
+NOTE: the development environment (`devel` configuration) settings no longer 
 work "out of the box".  This is the default case when running `manage.py runserver`,
 so when using this command either (a) initialize the development site data in
 the development file area (SITE_SRC_ROOT+"/devel"), or use the `--settings` to specify some other available configuration (e.g. `--settings=annalist_site.settings.personal`).

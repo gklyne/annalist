@@ -6,7 +6,7 @@ annalist
 
 A free-form web linked data notebook and prorotyping tool - "Data management for little guys"
 
-Current status (2019-05-10):  public prototype, released for evaluation and feedback, feature freeze for version 1 release.  Deployable as web-facing service usinmg Apace2 or nginx for HTTPS handling (proxying).
+Current status (2019-05-10):  public prototype, released for evaluation and feedback, feature freeze for version 1 release.  Deployable as web-facing service using Apache2 or nginx for HTTPS handling (proxying).
 
 For information about the current release, please refer to the [V0.5 release notes](documents/release-notes/release-v0.5.md)
 
