@@ -17,6 +17,8 @@
 #
 
 .python-version
+rdflibenv
+
 
 # Compiled Python file
 *.pyc

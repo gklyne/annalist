@@ -822,7 +822,7 @@ class EntityRoot(object):
         Opens a (file-like) stream to read entity data.
 
         Returns the stream object, which implements the context protocol to
-        close the stream on exit from a containign with block; e.g.
+        close the stream on exit from a containing with block; e.g.
 
             with e._read_stream() as f:
                 // read data from f

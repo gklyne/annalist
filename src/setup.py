@@ -24,8 +24,8 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-if sys.version_info[:2] not in [(2,7),(3,6),(3,7)]:
-    raise AssertionError("Annalist requires Python 2.7, 3.6 or 3.7 (found Python %s.%s)"%sys.version_info[:2])
+if sys.version_info[:2] not in [(2,7),(3,6),(3,7),(3,9)]:
+    raise AssertionError("Annalist requires Python 2.7, 3.6, 3.7 or 3.9 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
@@ -218,27 +218,27 @@ setup(
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==1.11.23'
-        , 'six==1.11.0'
-        , 'futures==3.2.0'
-        , 'requests==2.20.0'
-          , 'urllib3==1.24.2'
-          , 'chardet==3.0.4'
-          , 'idna==2.6'
-          , 'requests-oauthlib==0.8.0'
-          , 'oauthlib==2.0.7'
-          , 'certifi==2018.1.18'
-          , 'httplib2==0.11.3'
-        , 'rdflib==4.2.2'
-          , 'isodate==0.6.0'
-          , 'rdflib-jsonld==0.4.0'
-        , 'pyparsing==2.2.0'
-        , 'Markdown==2.6.11'
+        [ 'Django==1.11.29'
+        , 'six==1.16.0'
+        # , 'futures==3.2.0'
+        , 'requests==2.26.0'
+        , 'urllib3==1.26.7'
+        # , 'chardet==3.0.4'
+        , 'idna==3.3'
+        , 'requests-oauthlib==1.3.0'
+        , 'oauthlib==3.1.1'
+        , 'certifi==2021.10.8'
+        , 'httplib2==0.20.2'
+        , 'rdflib==6.3a0'
+        # , 'rdflib==4.2.2'
+        , 'isodate==0.6.0'
+        , 'pyparsing==3.0.6'
+        , 'Markdown==3.3.6'
         # For deployment
-        , 'gunicorn==19.9.0'
+        , 'gunicorn==20.1.0'
         # For testing:
-        , 'httpretty==0.9.4'
-        , 'beautifulsoup4==4.6.0'
+        , 'httpretty==1.1.4'
+        , 'beautifulsoup4==4.10.0'
         ],
     entry_points =
         {

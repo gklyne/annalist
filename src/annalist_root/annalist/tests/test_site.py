@@ -336,6 +336,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
+        # print("@@@@\n"+r.content.decode('utf-8'))
         s = BeautifulSoup(r.content, "html.parser")
         # title and top menu
         self.assertEqual(s.html.title.string, site_title())
@@ -376,9 +377,15 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(btn_remove["type"],  "submit")
         self.assertEqual(btn_remove["name"],  "remove")
         # Input fields for new collection
-        add_fields = trows[6].select("div > div > div")
-        field_id    = add_fields[1].input
-        field_label = add_fields[2].input
+        # For some unknown reason - maybe a bug in beautifulsoup4? - the entire value of 
+        # `trows[6]` is returned as the first element of the resulting `add_fields` array.  
+        add_fields = trows[6].select("div.small-12.columns > div.row > div.columns.view-value")
+        # print("@@@@ trows[6]\n", trows[6].prettify())
+        # print("@@@@ add_fields\n", "\n---\n".join(map(str,add_fields)))
+        # print("@@@@ add_fields[1]\n", add_fields[1])
+        # print("@@@@ add_fields[2]\n", add_fields[2])
+        field_id    = add_fields[0].input
+        field_label = add_fields[1].input
         self.assertEqual(field_id["type"],    "text")
         self.assertEqual(field_id["name"],    "new_id")
         self.assertEqual(field_label["type"], "text")
