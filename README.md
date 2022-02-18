@@ -4,7 +4,7 @@ annalist
 <!-- NOTE: this Zenodo link _should_ be the "all-versions" link -->
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.594496.svg)](https://doi.org/10.5281/zenodo.594496)
 
-A free-form web linked data notebook and prorotyping tool - "Data management for little guys"
+A free-form web linked data notebook and prototyping tool - "Data management for little guys"
 
 Current status (2019-05-10):  public prototype, released for evaluation and feedback, feature freeze for version 1 release.  Deployable as web-facing service using Apache2 or nginx for HTTPS handling (proxying).
 

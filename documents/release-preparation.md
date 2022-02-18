@@ -65,9 +65,9 @@
     - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
         . newkit_to_annalist_dev.sh
     - [ ] login to dev.annalist.net as 'graham', then
-        rm -rf anenv2
-        virtualenv anenv2
-        . anenv2/bin/activate
+        rm -rf anenv3
+        python3 -m venv anenv3
+        . anenv3/bin/activate
         pip install software/Annalist-0.5.xx.tar.gz
         annalist-manager runtests
     - [ ] Test new site creation:
@@ -163,7 +163,7 @@ Upload to PyPI:
 
     python setup.py sdist upload
 
-NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  Python 2.7.3 on MacOS seems to provide an outdated version in a virtualenv.  To update, use some combination of these commands in the virtual environment:
+NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  To update, use some combination of these commands in the virtual environment:
 
     pip uninstall setuptools
     wget https://bootstrap.pypa.io/ez_setup.py -O - | python

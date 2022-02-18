@@ -33,6 +33,9 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
+See also NOTE below re Python/Django
+
+- [x] Update and test with RDFLib 6.1.1 (includes JSON-LD character string parsing fix)
 - [ ] Address Django security alerts from github
 - [x] Problems with `annalist-manager stopserver` (gunicorn related?)
     - Can't reproduce: seems OK (2020-03-05)
@@ -53,6 +56,42 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] BUG: removing parent from collection can cause 500 error when accessing cached info
     - handle missing-parent error when accessing cached entity (also logs error)
     - when saving collection metadata, clear collection cache(s)
+- [ ] Switch to using Python 3 only
+    - (note problems that were holding this back - Django release?)
+    - See release notes: "Version 0.5.11, towards 0.5.12"
+    - May need to go in stages: update to later Django-only release?
+
+NOTE, for creating python3 virtual environment, use something like this:
+
+    python3 -m venv anenv3
+    source anenv3/bin/activcate
+    python -m pip install pip --upgrade
+    python -m pip install --upgrade setuptools
+
+With Python 3.9:
+
+    /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+    source anenv3/bin/activate
+
+On MacOS, from about python 3.7 onwards, there seems to be a problem with 
+`setup.py` accessing certificates needed for loading modules from PyPi.  
+The required certificates are part of the `certifi` bundle, but do not 
+appear to be accessible to `setup.py` by default.  
+The script `src/install_certificates.py` rectifies this problem, allowing 
+local install to be performed usingh `setup.py`.  
+E.g., after running `anenv3/bin/activcate`, do something like this:
+
+    python -m pip install certifi
+    cd src
+    python install_certificates.py
+    python setup.py install
+
+- As of 2021-11-30, Python 3.6 installs on M1 MacBook no longer work, so I'm pushing forwards to Python 3.9.
+- As of Django 1.11.17 the above problem may be fixed see https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django)
+
+
+(Sub-release?)
+
 - [ ] Documentation and tutorial updates
     - [x] Update tutorial
         - Introduces inheritance of definitions?
@@ -67,23 +106,6 @@ See also: https://www.divio.com/en/blog/documentation/
     - [ ] Review concurrent access issues; document assumptions
         - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
         - Add etag / if-match support ?  (does this help with POST? How?)
-
-(Sub-release, but don't publish?)
-
-- [ ] Switch to using Python 3 only
-    - (note problems that were holding this back - Django release?)
-    - See release notes: "Version 0.5.11, towards 0.5.12"
-    - May need to go in stages: update to later Django-only release?
-
- NOTE, from `documents/installing-annalist.md`:
-
- > Use Python version 3.6, as Django 1.11 (the last version to support Python 2) is not supported under later versions.  (I have found one syntax error reported running Django under Python 3.7: fix that and all is well.)
-
-- [ ] As of 2021-11-30, Python 3.6 installs on M1 MacBook no longer work, so I'm pushing forwards to Python 3.7.
-    - As of Django 1.11.17 the above problem may be fixed see https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django)
-
-
-(Sub-release?)
 
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/

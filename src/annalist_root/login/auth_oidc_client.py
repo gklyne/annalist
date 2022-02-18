@@ -55,7 +55,7 @@ def oauth2_flow_from_provider_data(provider_data, redirect_uri=None, state=None)
     provider_data
             dictionary containing provider details (including oauth2 client secrets).
     redirect_uri
-            URI to which control is transferred when the OAuth2 authetication dance 
+            URI to which control is transferred when the OAuth2 authentication dance 
             is completed.  If specified, overrides value from provider-file.
     """
     return oauth2_flow(provider_data, redirect_uri=redirect_uri, state=state)
@@ -196,7 +196,7 @@ class OIDC_AuthDoneView(generic.View):
         # it contains only work characters
         #
         # Instead, we trust that the associated email address has been confirmed by the 
-        # OAuth2 provider, and don't allow login where the email adress differs from any 
+        # OAuth2 provider, and don't allow login where the email address differs from any 
         # currently saved email address for the user id used..  This aims to  prevent a 
         # new set of OAuth2 credentials being used for a previously created Django user id.
         #

@@ -25,11 +25,9 @@
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 18.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
+* A Unix-like operating system: Annalist has been tested with MacOS 10.11, MacOS 12 and Linux 18.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
     - NOTE: there are problems with SQLite3 on Ubunbtu versions 14.04 and 16.04 (and probably others).  Recommended is to use Ubuntu 18.04 or later.
-* Python 2.7.15 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
-    - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
-* Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv documentation](https://virtualenv.pypa.io/en/stable/)).
+* Python 3
 
 NOTE: As of version 0.5.11, Annalist should be accessed using HTTPS.  See discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
@@ -54,43 +52,26 @@ NOTE: you may also need to ensure you are running a recent version of `pip`. At 
 
 ## New software installation
 
-### Under Python 2.7
+### Under Python 3
 
 The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
 
 1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a display like this:
 
         $ python
-        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
-        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>>
-
-    If the default version shown by this command is not 2.7.x, it may still be possible to run a 2.7 version with a command like:
-
-        $ python2.7
-        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
-        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
+        Python 3.9.9 (v3.9.9:ccb0e6a345, Nov 15 2021, 13:06:05)
+        [Clang 13.0.0 (clang-1300.0.29.3)] on darwin
         Type "help", "copyright", "credits" or "license" for more information.
         >>>
 
     (On Linux/Unix systems, typing `python<tab>` may help to show what versions are installed.)
 
-    In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
-
 
 2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
 
         cd $WORKSPACE
-        virtualenv anenv2
-        source anenv2/bin/activate
-        pip install --upgrade pip
-        pip install --upgrade certifi
-
-    In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
-
-        virtualenv -p python2.7 anenv2
-        source anenv2/bin/activate
+        python3 -m venv anenv3
+        source anenv3/bin/activate
         pip install --upgrade pip
         pip install --upgrade certifi
 
@@ -131,20 +112,6 @@ The following assumes that software is installed under a directory called $WORKS
         Destroying test database for alias 'default'...
 
 For first-time installations, the Annalist site data will need to be initialized:  see section "Setting up an Annalist site" below.
-
-
-### Under Python 3
-
-Use Python version 3.6, as Django 1.11 (the last version to support Python 2) is not supported under later versions.  (I have found one syntax error reported running Django under Python 3.7: fix that and all is well.)
-
-Python3 includes a `virtualenv` equivalent called `venv`.  To create a virtual environment for running Annalist, go to the desired home directory and run:
-
-    python3 -m venv anenv3
-    source anenv3/bin/activate
-    pip install --upgrade pip
-    pip install certifi
-
-From here on, the Annalist installation is the same as under Python 2, starting from step 3 (above).
 
 
 ## Upgrading an existing installation

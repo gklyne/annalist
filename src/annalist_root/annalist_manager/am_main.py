@@ -209,6 +209,8 @@ def runCommand(userhome, userconfig, argv):
             force=True
             )
     else:
+        # logging.basicConfig(level=logging.INFO)
+        # force option added python 3.8
         logging.basicConfig(level=logging.INFO, force=True)
     log.debug("runCommand:  argv %s"%(repr(argv)))
     log.debug("Options: %s"%(repr(options)))

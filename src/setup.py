@@ -2,7 +2,6 @@
 #
 # NOTE: when testing, use "pip install ... --upgrade"
 
-# from __future__ import unicode_literals # (import Fails under Pythons)
 from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -24,8 +23,13 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-if sys.version_info[:2] not in [(2,7),(3,6),(3,7),(3,9)]:
-    raise AssertionError("Annalist requires Python 2.7, 3.6, 3.7 or 3.9 (found Python %s.%s)"%sys.version_info[:2])
+
+# Notes about Django and Python compatibility (probably no longer apply)
+#     https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
+#     https://stackoverflow.com/a/48822656/324122
+#
+if sys.version_info[:2] not in [(3,9)]:
+    raise AssertionError("Annalist requires Python 3.9 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
@@ -213,8 +217,7 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.9",
         ],
     zip_safe = False,
     install_requires =
@@ -229,8 +232,7 @@ setup(
         , 'oauthlib==3.1.1'
         , 'certifi==2021.10.8'
         , 'httplib2==0.20.2'
-        , 'rdflib==6.3a0'
-        # , 'rdflib==4.2.2'
+        , 'rdflib==6.1.1'
         , 'isodate==0.6.0'
         , 'pyparsing==3.0.6'
         , 'Markdown==3.3.6'
@@ -247,11 +249,5 @@ setup(
             ]
         }
     )
-
-if sys.version_info[:2] >= (3,7):
-    print("*****")
-    print("Warning: Django 1.11 does not work with Python versions after 3.6")
-    print("See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django")
-    print("     https://stackoverflow.com/a/48822656/324122")
 
 # End.
