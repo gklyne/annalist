@@ -79,7 +79,7 @@ The following assumes that software is installed under a directory called $WORKS
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.16.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a convenient location (e.g., $WORKSPACE/Annalist-0.5.16.tar.gz).  Then install it thus:
 
         pip install $WORKSPACE/Annalist-0.5.16.tar.gz
 

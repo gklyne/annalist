@@ -28,8 +28,8 @@ from setuptools import setup, find_packages
 #     https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
 #     https://stackoverflow.com/a/48822656/324122
 #
-if sys.version_info[:2] not in [(3,9)]:
-    raise AssertionError("Annalist requires Python 3.9 (found Python %s.%s)"%sys.version_info[:2])
+if sys.version_info[:2] not in [(3,8), (3,9)]:
+    raise AssertionError("Annalist requires Python 3.8 or 3.9 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
