@@ -2,7 +2,7 @@
 
 Annalist is designed to use third party authentication services based on [OpenID Connect ](http://openid.net/connect/), which is a simple identity layer built over the [OAuth2 proptocol](http://oauth.net/2/).
 
-Currently, Annalist has been tested with identity services provided by Google, but should work with other identity providers.  The instructions below are for setting up with Google.  Some of the steps for other providers will almost certainly be different, but should follow a similar pattern.
+Currently, Annalist has been tested with identity services provided by Google and GitHub, but should work with other identity providers.  The instructions below are for setting up with Google.  Some of the steps for other providers will almost certainly be different, but should follow a similar pattern.
 
 In the following, the domain `annalist.example.net` will need to be replaced with the domain being used for the Annalist system being configured.
 

@@ -239,7 +239,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
 1. Install _LetsEncrypt_ certificate agent:
 
-    sudo add-apt-repository ppa:certbot/certbot
+    # sudo add-apt-repository ppa:certbot/certbot
     apt-get update
     apt-get install python-certbot-apache
 
@@ -339,6 +339,9 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
+
+
+
 ### Setting up Nginx on Ubuntu to forward HTTPS requests
 
 @@NOTE: these instructions need testing@@
@@ -349,15 +352,17 @@ Prerequisites:
 
 - nginx web server installed and running (in default configuration with test page)
 
-Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
+Steps to set up HTTPS forwarding.  In the following description, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
 
 1. Install _LetsEncrypt_ certificate agent:
 
-    sudo add-apt-repository ppa:certbot/certbot
+    # sudo add-apt-repository ppa:certbot/certbot
     apt-get update
-    apt-get install python-certbot-nginx
+    # apt-get install python-certbot-nginx
+    # apt-get install certbot
+    apt-get install python3-certbot-nginx
 
-2. Check firewall configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
+2. Check firewall configuration.  The following ports should be enabled: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some combination of the following commands might be helpful:
 
         ufw allow ssh
         ufw allow http
@@ -399,9 +404,9 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
     If all goes well, this will update the `/etc/nginx/sites-available/annalist.conf` with details of the Letsencrypt certificate to be used.
 
-6.  Check the revised configuration and (if OK) restart Apache:
+6.  Check the revised configuration and (if OK) restart nginx:
 
-        mginx -t
+        nginx -t
         service nginx restart
 
 For a cursory test, try pointing your browser at `https://annalist.example.net/annalist/`: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
@@ -528,6 +533,7 @@ NOTE: using the development configuration, data files are stored within the soft
 
 2.  Initialize sitedata:
 
+        mkdir ~/annalist_site
         annalist-manager collectstatic
         annalist-manager createsitedata
 
@@ -577,7 +583,7 @@ The following instructions assume a browser running on the same host as the Anna
 
     ![Initial login page](screenshots/Login-initial.png)
 
-3.  Enter the local adminsirator id (e.g. `admin`) in the **User IOd** field, then click on the 
+3.  Enter the local adminstrator id (e.g. `admin`) in the **User Id** field, then click on the 
 **Local username** button:
 
     ![Django login page](screenshots/Login-django-1.png)

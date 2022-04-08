@@ -54,7 +54,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] BUG: removing parent from collection can cause 500 error when accessing cached info
     - handle missing-parent error when accessing cached entity (also logs error)
     - when saving collection metadata, clear collection cache(s)
-- [ ] Switch to using Python 3 only
+- [x] Switch to using Python 3 only
     - (note problems that were holding this back - Django release?)
     - See release notes: "Version 0.5.11, towards 0.5.12"
     - May need to go in stages: update to later Django-only release?
