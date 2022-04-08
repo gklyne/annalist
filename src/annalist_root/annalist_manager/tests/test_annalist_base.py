@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 
 import sys
 import os
+import io
 
-from utils.py3porting       import StringIO
 from utils.StdoutContext    import SwitchStdout, SwitchStderr
 
 import annalist
@@ -53,9 +53,9 @@ class AnnalistManagerTestBase(AnnalistTestCase):
     def init_site_database(cls):
         if os.path.isdir(cls.sitehome):
             removetree(cls.sitehome)
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(cls.userhome, cls.userconfig, 
                     ["annalist-manager", "init", "--config=runtests"]
@@ -64,7 +64,7 @@ class AnnalistManagerTestBase(AnnalistTestCase):
 
     @classmethod
     def create_site_data(cls):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(cls.userhome, cls.userconfig, 
                 ["annalist-manager", "createsitedata", "--config=runtests"]
@@ -78,7 +78,7 @@ class AnnalistManagerTestBase(AnnalistTestCase):
         return os.path.join(self.sitehome, "c/%s"%(coll_id,))
 
     def installcoll(self, coll_id):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "installcollection"
@@ -91,7 +91,7 @@ class AnnalistManagerTestBase(AnnalistTestCase):
         coll_dir = self.colldir(coll_id2)
         if os.path.isdir(coll_dir):
             return # Copy already exists
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "copycollection"

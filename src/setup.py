@@ -221,12 +221,10 @@ setup(
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==2.2.24'
+        [ 'Django==3.2.12'
         , 'six==1.16.0'
-        # , 'futures==3.2.0'
         , 'requests==2.26.0'
         , 'urllib3==1.26.7'
-        # , 'chardet==3.0.4'
         , 'idna==3.3'
         , 'requests-oauthlib==1.3.0'
         , 'oauthlib==3.1.1'

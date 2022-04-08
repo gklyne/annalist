@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 
 import sys
 import os
+import io
 
-from utils.py3porting    import StringIO
 from utils.StdoutContext import SwitchStdout, SwitchStderr
 
 import annalist
@@ -55,7 +55,7 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
 
     def test_installcollection(self):
         coll_id = "Resource_defs"
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "installcollection"
@@ -86,7 +86,7 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
             removetree(coll_id2)
         collexists = os.path.isdir(self.colldir(coll_id2))
         self.assertFalse(collexists, "%s absent?"%coll_id2)
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "copycollection"
@@ -114,7 +114,7 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
         collexists = os.path.isdir(self.colldir(coll_id2))
         self.assertTrue(collexists, "%s created?"%coll_id2)
         # Now generate migration report
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "migrationreport"
@@ -136,7 +136,7 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
         collexists = os.path.isdir(self.colldir(coll_id))
         self.assertTrue(collexists, "%s created?"%coll_id)
         # Now migrate
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 [ "annalist-manager", "migratecollection"
@@ -170,9 +170,9 @@ class AnnalistManagerCollTest(test_annalist_base.AnnalistManagerTestBase):
         collexists = os.path.isdir(self.colldir(coll_id4))
         self.assertTrue(collexists, "%s created?"%coll_id4)
         # Now migrate
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "migrateallcollections"

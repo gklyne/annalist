@@ -27,22 +27,20 @@ from django.urls                    import resolve, reverse
 
 from django.conf                    import settings
 
-from utils.py3porting               import iteritems, iterlists
-
 from annalist.views.generic         import AnnalistGenericView
 
 def querydict_dict(querydict):
     """
     Converts a Django QueryDict value to a regular dictionary, preserving multiple items.
     """
-    return dict(iterlists(querydict))
+    return dict(querydict.lists())
 
 def dict_querydict(dict_):
     """
     Converts a value created by querydict_dict back into a Django QueryDict value.
     """
     q = QueryDict("", mutable=True)
-    for k, v in iteritems(dict_):
+    for k, v in dict_.items():
         q.setlist(k, v)
     q._mutable = False
     return q

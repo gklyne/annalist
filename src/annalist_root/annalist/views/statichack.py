@@ -39,7 +39,7 @@ log = logging.getLogger(__name__)
 from django.conf                            import settings
 
 from django.http                            import Http404
-from django.utils.six.moves.urllib.parse    import unquote
+from urllib.parse                           import unquote
 from django.views                           import static
 from django.contrib.staticfiles             import finders
 

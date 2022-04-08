@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 
 import sys
 import os
+import io
 
-from utils.py3porting           import StringIO
 from utils.StdoutContext        import SwitchStdout, SwitchStderr
 
 import annalist
@@ -51,7 +51,7 @@ class AnnalistManagerSiteTest(test_annalist_base.AnnalistManagerTestBase):
     #   -----------------------------------------------------------------------------
 
     def test_createsitedata(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "createsitedata", "--config=runtests"]
@@ -66,13 +66,13 @@ class AnnalistManagerSiteTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_updatesitedata(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "createsitedata", "--config=runtests"]
                 )
         stdoutbuf.seek(0)
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "updatesitedata", "--config=runtests"]

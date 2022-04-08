@@ -27,6 +27,7 @@ NOTE: this document is used for short-term working notes; some longer-term plann
 
 See also: https://www.divio.com/en/blog/documentation/
 
+
 # Feedback
 
 * https://github.com/gklyne/annalist/issues/40
@@ -91,21 +92,7 @@ E.g., after running `anenv3/bin/activcate`, do something like this:
 
 (Sub-release?)
 
-- [ ] Documentation and tutorial updates
-    - [x] Update tutorial
-        - Introduces inheritance of definitions?
-    - [x] Include Tutorial_example in collections available for installation.
-    - [x] Initial corpus of FAQs
-    - [ ] New demo screencast(s)
-        - (see also: demo-script.md)
-    - [ ] Reference documents (see TODO-reference.md)
-    - [ ] HOWTOs for common tasks; task-oriented documentation
-        - Have tutorial; can this be used?
-    - [ ] Add help documentation for view Type, View and List forms (similar to view Field ...)
-    - [ ] Review concurrent access issues; document assumptions
-        - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
-        - Add etag / if-match support ?  (does this help with POST? How?)
-
+- [ ] Eliminate py3porting module
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
 - [ ] Review (again) whether `annal:field_ref_field` is needed.
