@@ -23,16 +23,16 @@ log = logging.getLogger(__name__)
 
 from requests_oauthlib import OAuth2Session
 
-from django.core.urlresolvers import resolve, reverse
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.views import generic
+from django.urls                import resolve, reverse
+from django.http                import HttpResponse
+from django.http                import HttpResponseRedirect
+from django.views               import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth        import authenticate, login, logout
 from django.contrib.auth.models import User
 
-from utils.http_errors import error400values
+from utils.http_errors          import error400values
 
 from .                  import login_message
 from .login_utils       import (

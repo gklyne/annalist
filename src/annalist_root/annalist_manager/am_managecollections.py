@@ -541,7 +541,7 @@ def am_copycollection(annroot, userhome, options):
         print("New collection already exists: %s"%(new_coll_id), file=sys.stderr)
         return am_errors.AM_COLLECTIONEXISTS
     # Copy collection now
-    print("Copying collection '%s' to '%s'"%(old_coll_id, new_coll_id))
+    print("Copying collection '%s' to '%s'\n"%(old_coll_id, new_coll_id))
     new_coll = site.add_collection(new_coll_id, old_coll.get_values())
     msgs     = copy_coll_data(old_coll, new_coll)
     if msgs:

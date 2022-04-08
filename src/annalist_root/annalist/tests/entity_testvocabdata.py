@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 import os
 
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL

@@ -23,7 +23,7 @@ from django.http                    import HttpResponseRedirect
 from django.template                import loader
 from django.views                   import generic
 from django.views.decorators.csrf   import csrf_exempt
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.conf                    import settings
 
 import login.login_views

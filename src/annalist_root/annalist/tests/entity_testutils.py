@@ -19,7 +19,7 @@ from django.conf                    import settings
 from django.http                    import QueryDict
 from django.utils.http              import urlquote, urlunquote
 from django.utils.html              import escape
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.template                import Context
 from django.contrib.auth.models     import User
 

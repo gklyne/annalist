@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.contrib.auth.models     import User
 from django.test                    import TestCase
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.test.client             import Client
 
 from annalist                       import util

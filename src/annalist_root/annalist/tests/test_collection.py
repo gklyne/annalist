@@ -502,7 +502,8 @@ class CollectionEditViewTest(AnnalistTestCase):
         collmeta = collection_create_values(coll_id="newer_version")
         self.testsite.add_collection("newer_version", collmeta, annal_ver="99.99.99")
         u = collection_view_url(coll_id="newer_version")
-        r = self.client.get(u)
+        with SuppressLogging(logging.ERROR):
+            r = self.client.get(u)
         self.assertEqual(r.status_code,   500)
         self.assertEqual(r.reason_phrase, "Server error")
         self.assertContains(r, "created by software version 99.99.99", status_code=500)

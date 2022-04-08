@@ -84,8 +84,7 @@ class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
                     )
         stdoutbuf.seek(0)
         stdoutlines = stdoutbuf.read().split("\n")
-        linestart   = stdoutlines[0][:8]
-        self.assertEqual(linestart, "Copying ")
+        self.assertTrue(stdoutlines[0].startswith("Collect static data"), "Expected 'Collect static data ...', got '"+stdoutlines[0][:40]+"...'")
         # for i in range(len(stdoutlines)):
         #     if "static files copied" in stdoutlines[i]:
         #         break
