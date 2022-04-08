@@ -19,7 +19,7 @@ from utils.py3porting           import urljoin
 from django.conf                import settings
 from django.http                import QueryDict
 from django.utils.http          import urlquote, urlunquote
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -353,15 +353,16 @@ def field_view_form_data(
     if field_id is not None:
         form_data_dict['entity_id']         = field_id
     if field_id:
-        field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']         = field_id
         form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
         form_data_dict['Field_help']        = '%s help for %s in collection %s'%(update, field_id, coll_id)
         form_data_dict['Field_tooltip']     = '%s tooltip for %s in collection %s'%(update, field_id, coll_id)
-        form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
         # form_data_dict['orig_type']         = "_field"
+        field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
+        if field_url:
+            form_data_dict['Field_uri']     = field_url
     if orig_id:
         form_data_dict['orig_id']           = orig_id
     if field_label:

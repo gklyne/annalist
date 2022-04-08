@@ -111,6 +111,7 @@ def am_collectstatic(annroot, userhome, userconfig, options):
         (annroot, settings_obj.modulename)
         )
     log.debug("am_collectstatic subprocess: %s"%subprocess_command)
+    print("Collect static data: "+subprocess_command)
     # Allow stdout and stderr to be captured for testing
     p = subprocess.Popen(
         subprocess_command.split(), 

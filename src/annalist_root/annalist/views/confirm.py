@@ -23,7 +23,7 @@ from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.http                    import QueryDict
 from django.template                import loader
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 
 from django.conf                    import settings
 

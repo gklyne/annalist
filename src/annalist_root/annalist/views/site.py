@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
