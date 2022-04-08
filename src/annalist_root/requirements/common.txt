@@ -2,8 +2,9 @@
 # See: http://www.deploydjango.com/django_project_structure/
 
 certifi==2021.10.8
-Django==3.2.12
+packaging==21.3
 six==1.16.0  
+Django==4.0.3
 urllib3==1.26.7
 idna==3.3
 pyparsing==3.0.6

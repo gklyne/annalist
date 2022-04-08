@@ -10,7 +10,8 @@ __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 from django.conf                import settings
-from django.conf.urls           import include, url
+from django.conf.urls           import include
+from django.urls                import re_path
 
 from django.contrib             import admin
 admin.autodiscover()
@@ -20,20 +21,20 @@ from annalist.views.statichack      import serve_static, serve_favicon
 
 annalist_pattern = "^"+settings.ANNALIST_SITE_SEG+"/"
 urlpatterns  = [
-    url(r'^$',         		AnnalistHomeView.as_view(), name='AnnalistHomeView'),
+    re_path(r'^$',         		AnnalistHomeView.as_view(), name='AnnalistHomeView'),
 
-    url(r'^admin/',    		include(admin.site.urls)),
+    re_path(r'^admin/',    		include(admin.site.urls)),
 
-    url(annalist_pattern,	include('annalist.urls')),
+    re_path(annalist_pattern,	include('annalist.urls')),
     ]
 
 static_pattern = "^"+settings.STATIC_SEG+"/"
 urlpatterns += [
-    url(static_pattern+r'(?P<path>.*)$', serve_static),
+    re_path(static_pattern+r'(?P<path>.*)$', serve_static),
     ]
 
 urlpatterns += [
-    url(r'(?P<path>favicon.ico)$', serve_favicon),
+    re_path(r'(?P<path>favicon.ico)$', serve_favicon),
     ]
 
 # End.

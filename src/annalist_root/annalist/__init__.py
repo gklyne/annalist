@@ -11,7 +11,7 @@ __copyright__     = "Copyright 2014 G. Klyne"
 __license__       = "MIT (http://opensource.org/licenses/MIT)"
 
 # https://docs.djangoproject.com/en/dev/ref/applications/
-default_app_config = 'annalist.apps.AnnalistConfig'
+# default_app_config = 'annalist.apps.AnnalistConfig'   @@DEPRECATED
 
 """
 Software version number.

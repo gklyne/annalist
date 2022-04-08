@@ -21,7 +21,9 @@ import json
 import re
 import traceback
 
-from distutils.version              import LooseVersion
+from packaging.version              import Version
+
+# from distutils.version              import LooseVersion
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
@@ -316,7 +318,7 @@ class DisplayInfo(object):
                 self.orig_coll  = self.collection
                 self.perm_coll  = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
-                if LooseVersion(ver) > LooseVersion(annalist.__version__):
+                if Version(ver) > Version(annalist.__version__):
                     self.http_response = self.view.error(
                         dict(self.view.error500values(),
                             message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}

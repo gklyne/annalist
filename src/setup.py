@@ -221,7 +221,8 @@ setup(
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==3.2.12'
+        [ 'Django==4.0.3'
+        , 'packaging==21.3'
         , 'six==1.16.0'
         , 'requests==2.26.0'
         , 'urllib3==1.26.7'

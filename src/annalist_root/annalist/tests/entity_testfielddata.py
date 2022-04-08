@@ -18,7 +18,6 @@ from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
 from django.urls                import resolve, reverse
 
 from annalist.util              import valid_id

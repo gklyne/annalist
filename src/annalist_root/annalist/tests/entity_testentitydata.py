@@ -14,12 +14,11 @@ log = logging.getLogger(__name__)
 
 import os
 
-from utils.py3porting           import urljoin
-
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
 from django.urls                import resolve, reverse
+
+from utils.py3porting           import urljoin
 
 from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL

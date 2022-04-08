@@ -34,7 +34,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.17, towards 0.5.18
 
-- [ ] Upgrade to latest Django (4.0.4)
+- [x] Upgrade to latest Django (4.0.3)
 - [x] Update and test with RDFLib 6.1.1 (includes JSON-LD character string parsing fix)
 - [x] Address Django security alerts from github
 - [x] Problems with `annalist-manager stopserver` (gunicorn related?)

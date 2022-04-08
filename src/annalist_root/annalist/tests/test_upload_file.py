@@ -457,11 +457,12 @@ class UploadResourceTest(AnnalistTestCase):
         resource_fileobj.close()
         testobj1.close()
         # Read back both and compare
-        siteobj = open(TestBaseDir+"/testdatafile.md", "rb")
-        testobj = self.test_upl_type_info.get_fileobj(
-            "test1", "test1res", "annal:Richtext", resource_type, "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(TestBaseDir+"/testdatafile.md", "rb") as siteobj:
+            testobj = self.test_upl_type_info.get_fileobj(
+                "test1", "test1res", "annal:Richtext", resource_type, "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_upload_file_resource(self):
@@ -490,11 +491,12 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(f3.field_id,     "Test_upload_file")
         self.assertDictionaryMatch(f3.field_value, test_upload_file_field_value())
         # Read back and compare entity resource just created
-        siteobj = open(self.filepath, "rb")
-        testobj = self.test_upl_type_info.get_fileobj(
-            "test1", "upl_field", "annal:Richtext", "text/markdown", "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(self.filepath, "rb") as siteobj:
+            testobj = self.test_upl_type_info.get_fileobj(
+                "test1", "upl_field", "annal:Richtext", "text/markdown", "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_reference_uploaded_resource(self):
@@ -568,12 +570,12 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(f3.field_id,     "Test_upload_image")
         self.assertDictionaryMatch(f3.field_value, test_upload_image_field_value())
         # Read back and compare entity resource just created
-        siteobj = open(self.imagepath, "rb")
-        testobj = self.test_upl_type_info.get_fileobj(
-            "test1", "upl_field", "annal:Image", "image/jpeg", "rb"
-            )
-        self.assertTrue(siteobj.read() == testobj.read(), "Uploaded image != original")
-        # self.assertEqual(siteobj.read(), testobj.read())
+        with open(self.imagepath, "rb") as siteobj:
+            testobj = self.test_upl_type_info.get_fileobj(
+                "test1", "upl_field", "annal:Image", "image/jpeg", "rb"
+                )
+            self.assertTrue(siteobj.read() == testobj.read(), "Uploaded image != original")
+            testobj.close()
         return
 
     def test_reference_uploaded_image(self):
@@ -648,11 +650,12 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare entity resource just created
-        siteobj = open(self.imagepath, "rb")
-        testobj = self.test_img_type_info.get_fileobj(
-            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
-            )
-        self.assertTrue(siteobj.read() == testobj.read(), "Referenced image != original")
+        with open(self.imagepath, "rb") as siteobj:
+            testobj = self.test_img_type_info.get_fileobj(
+                "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+                )
+            self.assertTrue(siteobj.read() == testobj.read(), "Referenced image != original")
+            testobj.close()
 
         # Retrieve updated form
         r = self.client.get(u)
@@ -756,11 +759,12 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertDictionaryMatch(f3.field_value, test_image_field_value())
 
         # Read back and compare entity resource
-        siteobj = open(self.imagepath, "rb")
-        testobj = self.test_img_type_info.get_fileobj(
-            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
-            )
-        self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
+        with open(self.imagepath, "rb") as siteobj:
+            testobj = self.test_img_type_info.get_fileobj(
+                "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+                )
+            self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
+            testobj.close()
         return
 
     def test_image_rename(self):
@@ -779,11 +783,12 @@ class UploadResourceTest(AnnalistTestCase):
         self.assertEqual(r.reason_phrase, "Found")
 
         # Read back and compare renamed entity resource
-        siteobj = open(self.imagepath, "rb")
-        testobj = self.test_img_type_info.get_fileobj(
-            "test_new", "img_field", "annal:Image", "image/jpeg", "rb"
-            )
-        self.assertTrue(siteobj.read() == testobj.read(), "Renamed entity image != original")
+        with open(self.imagepath, "rb") as siteobj:
+            testobj = self.test_img_type_info.get_fileobj(
+                "test_new", "img_field", "annal:Image", "image/jpeg", "rb"
+                )
+            self.assertTrue(siteobj.read() == testobj.read(), "Renamed entity image != original")
+            testobj.close()
         return
 
     def test_inherited_image_edit(self):
@@ -858,10 +863,12 @@ class UploadResourceTest(AnnalistTestCase):
         inherited_test_img_type_info = EntityTypeInfo(
             testsubcoll, "testimgtype", create_typedata=True
             )
-        siteobj = open(self.imagepath, "rb")
-        testobj = inherited_test_img_type_info.get_fileobj(
-            "test1", "img_field", "annal:Image", "image/jpeg", "rb"
-            )
-        self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
+        with open(self.imagepath, "rb") as siteobj:
+            testobj = inherited_test_img_type_info.get_fileobj(
+                "test1", "img_field", "annal:Image", "image/jpeg", "rb"
+                )
+            self.assertTrue(siteobj.read() == testobj.read(), "Edited entity image != original")
+            testobj.close()
+        return
 
 # End.

@@ -121,10 +121,10 @@ class SiteTest(AnnalistTestCase):
 
     def test_site_data(self):
         sd = self.testsite.site_data()
-        self.assertEquals(set(sd),                  site_data_keys)
-        self.assertEquals(sd["title"],              site_title())
-        self.assertEquals(sd["rdfs:label"],         site_title())
-        self.assertEquals(list(sd["collections"]),  init_collection_keys)
+        self.assertEqual(set(sd),                  site_data_keys)
+        self.assertEqual(sd["title"],              site_title())
+        self.assertEqual(sd["rdfs:label"],         site_title())
+        self.assertEqual(list(sd["collections"]),  init_collection_keys)
         self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
         return
 
@@ -178,26 +178,26 @@ class SiteTest(AnnalistTestCase):
 
     def test_collections_dict(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 
     def test_add_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.testsite.add_collection("new", self.collnewmeta)
         colls = self.testsite.collections_dict()
-        self.assertEquals(set(colls), set(init_collection_keys+["new"]))
+        self.assertEqual(set(colls), set(init_collection_keys+["new"]))
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         self.assertDictionaryMatch(colls["new"],   self.collnew)
         return
 
     def test_remove_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.testsite.remove_collection("coll2")
         collsb = self.testsite.collections_dict()
-        self.assertEquals(set(collsb), set(init_collection_keys) - {"coll2"})
+        self.assertEqual(set(collsb), set(init_collection_keys) - {"coll2"})
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 

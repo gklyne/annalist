@@ -276,11 +276,12 @@ class ImportResourceTest(AnnalistTestCase):
         resource_fileobj.close()
         testobj1.close()
         # Read back both and compare
-        siteobj = open(TestBaseDir+"/README.md", "rb")
-        testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "test1res", "annal:Richtext", resource_type, "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(TestBaseDir+"/README.md", "rb") as siteobj:
+            testobj = self.test_imp_type_info.get_fileobj(
+                "test1", "test1res", "annal:Richtext", resource_type, "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_import_resource(self):
@@ -313,11 +314,12 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(f3.field_id,     "Test_import")
         self.assertDictionaryMatch(f3.field_value, test_import_field_value())
         # Read back and compare entity resource just created
-        siteobj = open(TestBaseDir+"/README.md", "rb")
-        testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "imp_field", "annal:Richtext", "text/markdown", "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(TestBaseDir+"/README.md", "rb") as siteobj:
+            testobj = self.test_imp_type_info.get_fileobj(
+                "test1", "imp_field", "annal:Richtext", "text/markdown", "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_reference_imported_resource(self):

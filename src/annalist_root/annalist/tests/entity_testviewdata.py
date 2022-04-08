@@ -18,7 +18,6 @@ from collections import OrderedDict
 
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
 from django.urls                import resolve, reverse
 
 from utils.py3porting           import urljoin

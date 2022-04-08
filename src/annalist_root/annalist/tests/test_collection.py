@@ -408,7 +408,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
         self.assertTrue(RecordType.exists(newcoll, "testtype", altscope="all"))
         testtype = RecordType.load(newcoll, "testtype", altscope="all")
-        self.assertEquals(testtype["rdfs:label"], "RecordType testcoll/_type/testtype")
+        self.assertEqual(testtype["rdfs:label"], "RecordType testcoll/_type/testtype")
         return
 
     def test_alt_parent_inherit_site(self):
@@ -420,7 +420,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertEqual(parentids, ["newcoll", "testcoll", layout.SITEDATA_ID])
         self.assertTrue(RecordType.exists(newcoll, "Default_type", altscope="all"))
         def_type = RecordType.load(newcoll, "Default_type", altscope="all")
-        self.assertEquals(def_type["rdfs:label"], "Default record")
+        self.assertEqual(def_type["rdfs:label"], "Default record")
         return
 
     def test_alt_parent_inherit_user(self):
@@ -436,7 +436,7 @@ class CollectionTest(AnnalistTestCase):
         self.assertTrue(AnnalistUser.exists(newcoll, "_default_user_perms", altscope="user"))   # Access site data
         self.assertTrue(AnnalistUser.exists(newcoll, "user2", altscope="user"))
         testuser = AnnalistUser.load(newcoll, "user2", altscope="user")
-        self.assertEquals(testuser["rdfs:label"], "Test User")
+        self.assertEqual(testuser["rdfs:label"], "Test User")
         return
 
 #   -----------------------------------------------------------------------------
@@ -531,12 +531,12 @@ class CollectionEditViewTest(AnnalistTestCase):
         r = self.client.get(self.edit_url)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
-        self.assertEquals(r.context['title'],   "Collection coll1")
-        self.assertEquals(r.context['coll_id'], "coll1")
-        self.assertEquals([e.get_id() for e in r.context['types']],   ["type1", "type2"])
-        self.assertEquals([e.get_id() for e in r.context['lists']],   ["list1", "list2"])
-        self.assertEquals([e.get_id() for e in r.context['views']],   ["view1", "view2"])
-        self.assertEquals(r.context['select_rows'], "6")
+        self.assertEqual(r.context['title'],   "Collection coll1")
+        self.assertEqual(r.context['coll_id'], "coll1")
+        self.assertEqual([e.get_id() for e in r.context['types']],   ["type1", "type2"])
+        self.assertEqual([e.get_id() for e in r.context['lists']],   ["list1", "list2"])
+        self.assertEqual([e.get_id() for e in r.context['views']],   ["view1", "view2"])
+        self.assertEqual(r.context['select_rows'], "6")
         return
 
     def test_post_new_type(self):

@@ -28,7 +28,10 @@ import shutil
 import json
 import datetime
 from collections                    import OrderedDict
-from distutils.version              import LooseVersion
+
+from packaging.version              import Version
+
+# from distutils.version              import LooseVersion
 
 from django.conf                    import settings
 
@@ -335,7 +338,7 @@ class Collection(Entity):
     def update_software_compatibility_version(self):
         # (assumes data loaded)
         ver = self.get(ANNAL.CURIE.software_version, None) or "0.0.0"
-        if LooseVersion(ver) < LooseVersion(annalist.__version_data__):
+        if Version(ver) < Version(annalist.__version_data__):
             self[ANNAL.CURIE.software_version] = annalist.__version_data__
             self._save()
 
