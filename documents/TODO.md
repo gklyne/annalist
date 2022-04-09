@@ -57,9 +57,7 @@ See also: https://www.divio.com/en/blog/documentation/
     - handle missing-parent error when accessing cached entity (also logs error)
     - when saving collection metadata, clear collection cache(s)
 - [x] Switch to using Python 3 only
-    - (note problems that were holding this back - Django release?)
     - See release notes: "Version 0.5.11, towards 0.5.12"
-    - May need to go in stages: update to later Django-only release?
 
 NOTE, for creating python3 virtual environment, use something like this:
 

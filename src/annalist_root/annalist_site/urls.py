@@ -23,7 +23,7 @@ annalist_pattern = "^"+settings.ANNALIST_SITE_SEG+"/"
 urlpatterns  = [
     re_path(r'^$',         		AnnalistHomeView.as_view(), name='AnnalistHomeView'),
 
-    re_path(r'^admin/',    		include(admin.site.urls)),
+    re_path(r'^admin/',    		admin.site.urls),
 
     re_path(annalist_pattern,	include('annalist.urls')),
     ]
