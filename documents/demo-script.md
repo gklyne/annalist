@@ -16,31 +16,54 @@ The [original 6 minute demonstration screencast](http://annalist.net/media/orig-
 
 ## Initializing Annalist site data
 
-`annalist-site-setup.mp4` - (1m47s)
+`annalist-site-setup.mp4` - (3m19s)
 
-This demonstration sequence starts with a fresh Annalist software installation, configured to accept OpenId Connect user authentication from Google.  It covers use of the `annalist-manager` command line tool to initialize Annalist site data, create an initial administrative user, and specify default user permission data.
+This demonstration starts with a fresh Annalist software installation.  It introduces the `annalist-manager` command line tool, and then covers its use to initialize Annalist site data, create an initial administrative user, and specify default user permissions.
 
-The sequence used here creates "personal" Annalist site data in the home directory of the currently logged-in user.
+1.  The `annalist-manager` command line tool is provided to perform a range of Annalist system administration activities. To show list of `annalist_manager` command options, type:
 
-1. Create new Annalist site structure:
+        annalist-manager help
+
+    To show more information about a specific command:  
 
         annalist-manager createsite
 
-2.  Initialize the web site management database:
+2.  Examine the location where annalist site data will be created.
+    (The location is determined by a configuration file installed
+    as part of the Annalist software, and may be changed by editing
+    the configuration file.  In his case, we shall use the default 
+    "personal" configuration, which creates site data in subdirectory 
+    `annalist_site` the current user's home directory
+    Initially, the directory does not exist.
+
+        annalist-manager sitedirectory
+
+        ls /Users/graham/annalist_site
+
+3. Create new Annalist site structure:
+
+        annalist-manager createsite
+
+        ls /Users/graham/annalist_site
+
+4.  Initialize the web site management database:
 
         annalist-manager initialize
 
-3.  Create an initial admin user (with user-id `admin`) with a supplied password:
+5.  Create an initial admin user (with user-id `admin`) with a supplied password:
 
         annalist-manager defaultadminuser
 
-4.  Set default permissions to allow any logged-in user to create a new data collection:
+6.  Set default permissions to allow any logged-in user to create a new data collection:
 
         annalist-manager setdefaultpermissions "VIEW CREATE_COLLECTION"
 
-5.  Start the Annalist web site server:
+7.  Start the Annalist web site server:
 
         annalist-manager runserver
+
+At this point, you should be able to browse to `http://localhost:8000`,
+and be presented with the initial annalist site.
 
 With the Annalist server running, the next demo will show how to log in to the web site and create a first data collection.
 
@@ -49,50 +72,52 @@ With the Annalist server running, the next demo will show how to log in to the w
 
 `annalist-login-create-collection.mp4` - (3m32s)
 
-This demo provides a first view of the Annalist web site interface, and shows the initial steps followed to log in and create a data collection.  It starts with a running Annalist server and newly initialized site data and (see previous demo).  It also assumes the server is configured to accept OpenID Connect user credentials from Google.
+This demonstration provides a first view of the Annalist web site interface, and shows the initial steps followed to log in and create a data collection.  It starts with a running Annalist server and newly initialized site data and (see previous demo).  It also assumes the server is configured to accept OpenID Connect user credentials from Google.
 
 1.  Start a web browser on the same computer that is running an Annalist server, and browse to [localhost:8000](http://localhost:8000).
 
-2.  Select "Login" from the top menu bar, and  and Use the "Local user credentials" link to login as 'admin', using the password just given when initializing Annalist site data.
+2.  Select "Login" from the top menu bar, and enter "admin" into the `User ID` field, and click on the `Local username` button.
 
-3.  Select "Home" from the top menu bar:  an empty list of data collections is presented, along with controls to create a new collection.
+3.  Enter the admin password specified when setting up the Annalist installation using `annalist-manager defaultadminuser`.
 
-4.  Enter details for a new collection, and click "New".
+4.  Select "Home" from the top menu bar:  an empty list of data collections is presented, along with controls to create a new collection.
 
-5.  The new collection now shows in the list; click on the link to view the new collection.  A single record is shown for the `admin` user.
+5.  Enter details for a new collection, and click `New collection`.
 
-6.  Click on the `admin` user link, and note the permissions shown.  Whenever a new collection is created, the creator (in this case, user `admin`) is automatically given full permissions over that collection.
+6.  The new collection now shows in the list; click on the link to view the new collection.  A single record is shown for the `admin` user.
 
-7.  Click "Cancel" to return to the collection default display.
+7.  Click on the `admin` user link, and note the permissions shown.  Whenever a new collection is created, the creator (in this case, user `admin`) is automatically given full permissions over that collection.
 
-8.  We will create a new non-admin user with full permissions over this new collection:  select `User_list` and click "View"
+8.  Click "Close" to return to the collection default display.
 
-9.  Click "New"
+9.  We will create a new non-admin user with full permissions over this new collection.  In the `List` drop-down, select `User permissions` then click on the `List` button.
 
-10.  Enter details for a Google-authenticated user, click "Save".  The user id must match a value that will be used later for login, and the URI must be a mailto: URI matching the email address of the user's Google account.
+10. A page titled "User permissions" is displayed. Click on the "New" button.
 
-11. Click "Close" to return to the site front page view (list of collections)
+11.  Enter details for a Google-authenticated user, click "Save".  The user id must match a value that will be used later for login, and the URI must be a mailto: URI matching the email address of the user's Google account.  For full access to the collection, the permissions should be specified as "VIEW CREATE UPDATE DELETE CONFIG ADMIN".
 
-12. Click "Logout"
+12. Click "Close" to return to the site front page view (list of collections)
 
-13. Click "Login", enter the local user id just created, and ensure "Google" is selected as the Login service.
+13. Click "Logout"
 
-12. Click "Login".  At this point, prompts may be issued to enter Google account and password details.  If the user is already logged in to Google, no further information is requested.
+14. Enter the user ID value for the new user just added to the new collection.  Then click on the button labeled "Google". 
 
-    Assuming the credentials are all good, Annalist login completes and brief information about the user is displayed.
+15. At this point, prompts may be issued to enter Google account and password details.  If the user is already logged in to Google, the login may proceed without further user input. 
 
-13. Click "Home" in the top menu bar.  The list of collections is displayed again.
+16. Assuming the credentials are all good, Annalist login completes and brief information about the user is displayed.
 
-14. Click on the link for the new collection created just now.
+17. Click on `Continue` to proceed (or on `Home` in the menu).  The list of collections is displayed again.
 
-15. Click on "New", and note that the new user has permissions to create and edit collection content.
+18. Click on the link for the new collection created just now.
+
+19. Click on the link for the new user just added, and note that the they have permissions to create and edit collection content.
 
 This completes the demo.  The next demo will show population of a new collection with simple data records.
 
 
 ## Initial entry of data in a new collection
 
-`annallist-create-configure-data-records.mp4` - (3m26s)
+`annalist-create-configure-data-records.mp4` - (3m26s)
 
 This demo creates a new collection and populates it with a couple of simple desctriptions of musical instruments.  It shows that new fields can be added to presented data records as needs are identified.
 
@@ -162,13 +187,13 @@ This concludes the demonstration of simple data entry and adding new fields to a
 
 ## Configure types and record views in a data collection
 
-`annallist-configure-type-view-records.mp4` - (3m46s)
+`annalist-configure-type-view-records.mp4` - (3m46s)
 
 This sequence shows how a collection can be configured to reflect the data it contains, through the addition of customized types and record views.  It starts with the simple musical instruments catalogue created in the previous demonstration.
 
 1.  View the Musical Instruments data collection.
 
-    Note that the musical instruments are shows as "Default_type", and that other records present are described as "_field, "_user" and "_view" values.
+    Note that the musical instruments are shows as "Default_type", and that other records present are described as "\_field, "\_user" and "\_view" values.
 
 2.  Click on "Customize"
 
@@ -251,7 +276,7 @@ The next demonstration will continue customizing the musical instruments catalog
 
 ## Configure list view and default display
 
-`annallist-configure-default-list-record.mp4` - (3m51s)
+`annalist-configure-default-list-record.mp4` - (3m51s)
 
 Starting with the customized musical instruments catalogue from the previous Annalist demonstration, this demonstration sequence shows how a collection can be further configured to reflect the data it contains through the addition of customized list views.
 

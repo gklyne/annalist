@@ -27,6 +27,8 @@ from django.contrib.auth.models         import User
 from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client                 import Client
 
+from utils.SuppressLoggingContext       import SuppressLogging
+
 from annalist.util                      import valid_id, extract_entity_id
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
@@ -249,7 +251,6 @@ class RecordVocabEditViewTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(RecordVocabEditViewTest, cls).tearDownClass()
-        # @@checkme@@ resetSitedata()
         return
 
     #   -----------------------------------------------------------------------------
@@ -844,6 +845,39 @@ class RecordVocabEditViewTest(AnnalistTestCase):
             action="edit",
             vocab_id="!badvocab", orig_vocab_id="editvocab",
             update="Updated RecordVocab"
+            )
+        # Check original data is unchanged
+        self._check_record_vocab_values("editvocab")
+        return
+
+    def test_post_edit_vocab_invalid_uri(self):
+        self._create_record_vocab("editvocab")
+        self._check_record_vocab_values("editvocab")
+        # Form post with invalid ID
+        f = vocab_view_form_data(
+            vocab_id="editvocab", orig_id="editvocab", action="edit", 
+            update="Updated RecordVocab",
+            vocab_uri="test:uri_no_final_delimiter"
+            )
+        u = entitydata_edit_url(
+            "edit", "testcoll", layout.VOCAB_TYPEID, entity_id="editvocab", view_id="Vocab_view"
+            )
+        with SuppressLogging(logging.WARNING):
+            r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   200)
+        self.assertEqual(r.reason_phrase, "OK")
+        self.assertContains(r, "<h3>%s</h3>"%(message.INPUT_VALIDATION_ERROR))
+        msg = (
+            message.RECORD_VOCAB_URI_TERM%
+                ({"id": "editvocab", "uri": "test:uri_no_final_delimiter"})
+            )
+        self.assertContains(r, '<p class="messages">%s</p>'%msg)
+        # Test context
+        self._check_context_fields(r, 
+            action="edit",
+            vocab_id="editvocab", orig_vocab_id="editvocab",
+            update="Updated RecordVocab",
+            vocab_uri="test:uri_no_final_delimiter",
             )
         # Check original data is unchanged
         self._check_record_vocab_values("editvocab")

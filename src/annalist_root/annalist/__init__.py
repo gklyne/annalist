@@ -11,7 +11,7 @@ __copyright__     = "Copyright 2014 G. Klyne"
 __license__       = "MIT (http://opensource.org/licenses/MIT)"
 
 # https://docs.djangoproject.com/en/dev/ref/applications/
-default_app_config = 'annalist.apps.AnnalistConfig'
+# default_app_config = 'annalist.apps.AnnalistConfig'   @@DEPRECATED
 
 """
 Software version number.
@@ -21,7 +21,7 @@ Even sub-releases are stable versions, except for critical bug-fixes
 
 Odd sub-releases are work-in-progress, and code may change from day-to-day.
 """
-__version__        = "0.5.16"   # Software version number (odd = unstable)
+__version__        = "0.5.18"   # Software version number (odd = unstable)
 
 """
 Data compatibility version: this is saved with collection data, and is used to

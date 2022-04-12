@@ -2,76 +2,132 @@
 
 NOTE: this document is used for short-term working notes; some longer-term planning information has been migrated to [Github issues](https://github.com/gklyne/annalist/issues) and a [roadmap document](roadmap.md).
 
-
 # Documentation
 
-- [ ] Update tutorial
-    - Also cover inheritance of definitions?
-- [ ] New demo screencast(s)
+- [x] Update tutorial
+    - Introduces inheritance of definitions?
+- [x] Include Tutorial_example in collections available for installation.
+- [x] Initial corpus of FAQs
+- [ ] New demo screencast(s) (see documents/demo-script.md)
+    - NOTE to self: videos in ~/Work/Video (not git project)
+    - [x] annalist-site-setup
+    - [ ] annalist-login-create-collection
+    - [ ] annalist-create-configure-data-records
+    - [ ] annalist-configure-type-view-records
+    - [ ] annalist-configure-default-list-record
+    - [ ]
+    - [ ]
+- [ ] Reference documents (see TODO-reference.md)
 - [ ] HOWTOs for common tasks; task-oriented documentation
     - Have tutorial; can this be used?
-- [ ] Add documentation for view Type, View and List forms (similar to view Field ...)
-- [x] Initial corpus of FAQs
+- [ ] Add help documentation for view Type, View and List forms (similar to view Field ...)
 - [ ] Review concurrent access issues; document assumptions
     - original design called for copy of original record data to be held in form, so that changes could be detected when saving entity; also, allows for "Reset" option.
     - Add etag / if-match support ?  (does this help with POST? How?)
 
 See also: https://www.divio.com/en/blog/documentation/
 
+
 # Feedback
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Release 0.5.15, towards 0.5.16
+# Release 0.5.17, towards 0.5.18
 
-- [x] BUG: Retrieving turtle data in production server fails.  Works OK in dev server.
-    - Caused by deadlock on gunicorn single-worker-thread as Turtle output needs to access context via HTTP.
-    - Implications for cache management
-        - See: documents/notes/20190327-threading-caching-notes.md
-- [x] Redesign entity cache to use single cache API thread-safe mechanisms
-- [x] Redesign closure cache to use single cache API thread-safe mechanisms
-- [x] Generate warning if namespace URI doesn't end with "/" or "#"
-    - (kind-of half-hearted check for now as part of JSON-LD context generation)
-- [x] Define arbitrary entity ref renderer in core data (renders label as link) 
-    - use entity_id renderer with rdfs:label pro
-- [x] Under gunicorn, session data seems to get corrupted and logins seem to expire unexpectedlty.
-    - I think the problem here is that the gunicorn process is peridoically restarted, resulting in regeneration of the secret key used for keyng session data, CSRF and more.
-    - When running Annalist under gunicorn, add ANNALIST_KEY environment variable to prime SECRET_KEY.
-- [x] BUG: Apache sample configurations as provided work with Apache 2.2.
-    - Updated to work with Apache 2.4, with older directives left as comments.
-    
-- [x] Added hook for processing entity data before saving
-- [x] If property URI in field definition is missing or blank, use field id
-- [x] Update reserved identifiers screened by `util.valid_id`
-- [x] Review handling of reserved identifiers; don't screen when loading entity.
-- [x] Provide language-tagged string renderer? { @value: ..., @language: ... }
-- [x] Implement GitHub as authentication IDP option (was originally planning to use ORCiD, but the application registration process was too unwieldy, and it looks as if they require payment.)
-- [x] Provide initial content for the links in the page footer.
-    - This information can be edited locally.
-    - Copies of the initial data are kept separately.
-- [x] Update urllib3 version in response to Github-flagged security issue.
-- [x] Activating "edit" list view doesn't use view form appropriate to entity type.
-- [x] Added logic to allow serving additonal data from "/p/" ("pages") collection directory
-    - This is being used to experiment with collection-specific rendering applications
-- [x] Add $PAGE substitution for Markdown formatting
+- [x] Upgrade to latest Django (4.0.3)
+- [x] Update and test with RDFLib 6.1.1 (includes JSON-LD character string parsing fix)
+- [x] Address Django security alerts from github
+- [x] Problems with `annalist-manager stopserver` (gunicorn related?)
+    - Can't reproduce: seems OK (2020-03-05)
+    - NOTE: MacOS was updated (El Capitan to Catalina) in interim
+- [x] Remove redundant "Refer to field" field in field description
+    - [x] Remove Field_fieldref from field view and documentation.
+    - [x] review other uses of `Field_fieldref`
+    - [x] Review use of `Value_field`.
+    - [x] Add field definition migration/checking logic.
+- [x] BUG: errors in generation of field description for reference to field of entity
+- [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
+- [x] Include list all type definitions in sitemap data (_info/Sitemap)
+- [x] Define gunicorn thread count in settings file.
+- [x] Hook for data validation check when saving entity; redisplay form if fails
+- [x] Add URI validation for vocab entity, and test
+- [-] delete views: rationalize into single view?
+- [x] Code pruning (remove dead/unused code)
+- [x] BUG: removing parent from collection can cause 500 error when accessing cached info
+    - handle missing-parent error when accessing cached entity (also logs error)
+    - when saving collection metadata, clear collection cache(s)
+- [x] Switch to using Python 3 only
+    - See release notes: "Version 0.5.11, towards 0.5.12"
+
+NOTE, for creating python3 virtual environment, use something like this:
+
+    python3 -m venv anenv3
+    source anenv3/bin/activate
+    python -m pip install pip --upgrade
+    python -m pip install --upgrade setuptools
+
+With Python 3.9:
+
+    /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+    source anenv3/bin/activate
+
+On MacOS, from about python 3.7 onwards, there seems to be a problem with 
+`setup.py` accessing certificates needed for loading modules from PyPi.  
+The required certificates are part of the `certifi` bundle, but do not 
+appear to be accessible to `setup.py` by default.  
+The script `src/install_certificates.py` rectifies this problem, allowing 
+local install to be performed usingh `setup.py`.  
+E.g., after running `anenv3/bin/activcate`, do something like this:
+
+    python -m pip install certifi
+    cd src
+    python install_certificates.py
+    python setup.py install
+
+- As of 2021-11-30, Python 3.6 installs on M1 MacBook no longer work, so I'm pushing forwards to Python 3.9.
+- As of Django 1.11.17 the above problem may be fixed see https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django)
+
 
 (Sub-release?)
 
-- [ ] Include list all type definitions in sitemap data (
-_info/Sitemap)
-- [ ] In "server log" view, all bottom bar links (except admin) reference the server log.
-- [ ] Documentation and tutorial updates
-- [ ] Demo screencast update
+- [ ] Eliminate py3porting module
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
 
+NOTES for building software:
+
+- instead of `python setup.py sdist`
+
+        python -m pip install build
+        python -m build
+
+- instead of `python setup.py install`:
+
+        pip install . (from src directory; uses setup.py for requirements)
+
+- instead of `python setup.py upload`:
+
+        pip install twine
+        twine check dist/Annalist-x.y.z*
+        twine upload dist/Annalist-x.y.z*
+
+    Note use of `~/.pypirc` for repository and login credentials.
+
+
+
 (Sub-release?)
 
-- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
-- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
+- [ ] Review (again) whether `annal:field_ref_field` is needed.
+    - it is used by `bound_field` when accessing target values
+    - see also `_migrate_values` in models.RecordField
+    - it is set by some test cases for file import and upload
+        - annalist.tests.test_import_resource.ImportResourceTest
+        - annalist.tests.test_upload_file.UploadResourceTest
+    - otherwise, it doesn't obviously serve a needed purpose
+    - check multi-field logic and see if that can be used for test cases
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
-- [ ] delete views: rationalize into single view?
+- [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
 - [.] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
     - [x] look into entity cacheing (esp. RecordType) for performance improvement
@@ -91,7 +147,7 @@ _info/Sitemap)
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
 - [x] Automated test suite for annalist_manager
-- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup
+- [ ] Review docker files: reduce number of separate commands used; always build on clean python setup.  Use docker-compose instead of or as well as  separate data container?
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
     - Started moving toward parameterized context data generation for comparison.
@@ -101,13 +157,19 @@ _info/Sitemap)
 (Alpha release 0.9.0??)
 
 
+Data collection definitions:
+
+- [ ] VoID
+- [ ] DCAT
+- [ ] PROV
+- [x] OA
+- [x] CRM
+
+
 Technical debt:
 
-- [ ] Define gunicorn thread count in settings file.
-- [ ] Hook for data validation check when saving entity; redisplay form if fails
-- [ ] See annalist/views/statichack.py ** note TODOs
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
-    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the origial access fails.  This may be a better general strategy than rewriting continuation URLs.
+    - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the original access fails.  This may be a better general strategy than rewriting continuation URLs.
 - [ ] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
 - [ ] Configure for multi-process worker operation
@@ -120,11 +182,16 @@ Technical debt:
         - the proper answer is probably to disable in-server caching
         - but how to save transitive closure calculations?  save them in shadow entities?
         - See https://stackoverflow.com/a/868731/324122 (Memcached with Python)
+    - NOTE: as of 0.5.16, cacheing has been re-worked to facilitate use of an external cache such as Memcached or Redis.
 - [x] Security and robust deployability enhancements [#12](https://github.com/gklyne/annalist/issues/12)
     - [x] Shared/personal deployment should generate a new secret key in settings
     - [x] Need way to cleanly shut down server processes (annalist-manager option?)
     - [x] See if annalist-manager runserver can run service directly, rather than via manage.py/django-admin?
-- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic canm probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
+    - NOTE: 0.5.16 added an environment variable option for specifying the secret key: this is needed when running under gunicorn where the server process is periodically restarted.
+- [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
+    - already supported for collection (entity list)
+    - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
+- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic can probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)
@@ -150,7 +217,7 @@ Technical debt:
 - [ ] "Customize" view style getting out of sync with other page styles
     - possible enhancements to form generator to generate customize page using form logic?
 - [ ] Refactor entity edit response handling
-- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choicess.
+- [ ] Review handling of composite type+entity identifiers in list display selections to bring in line with mechanisms used for drop-down choices.
 - [ ] Review field mapping modules in views/form_utils to be more readable and consistent
     - Start with 'fieldvaluemap', look for comments in code
     - Notes:
@@ -185,6 +252,7 @@ Technical debt:
             - NOTE: bound_field uses FieldDescription values, but does not invoke their construction.
 - [ ] The field rendering logic is getting a bit tangled, mainly due to support for uploaded files and multiple field references to a linked entity.  Rethinking this to maintain a clearer separation between "edit" and "view" modes (i.e. separate render classes for each) should rationalize this.  The different modes require multiple methods on different modules in different classes;  can the field description have just 2 renderer references (read/edit) and handle the different modes from there?  (It is field description values that are referenced from templates.)
 - [ ] Check EntityId and EntityTypeId renderers appear only at top-level in entity view
+    - NOTE: as of 0.5.16, EntityId renderer is also used (with label property) for entity references.
 - [ ] Installable collection metadata: read from collection directory (currently supplied from table in "annalist.collections")
 - [ ] Turtle serialization error: currently returns diagnostic in data returned; would be better to (also) signal problem via HTTP return code.
 - [ ] Final elimination of RecordGroup (field group) entities
@@ -200,15 +268,6 @@ Technical debt:
 - [ ] Test cases: use <namespace>.CURIE.:: values rather than literal CURIEs
     -
 - [ ] Change entity type causing 500 error? How?  (Only with invalid data.)
-
-
-Data collection definitions:
-
-- [ ] VoID
-- [ ] DCAT
-- [ ] PROV
-- [x] OA
-- [x] CRM
 
 
 Usability notes:
@@ -357,7 +416,7 @@ Notes for Future TODOs:
         [ a frbroo:F29_Recording_Event ]
             frbroo:R20F_recorded ?b ;
             frbroo:R21F_created ?a .
-    - the above pair might be combined.  We would then want to run the inferences when exporting JSON-LD
+    - the above pair might be combined.  We would then want to run the inferences when saving JSON-LD
     - could this work on output like migration rules do on input?
 - [ ] Introduce site-local and/or collection-local CSS to facilitate upgrades with local CSS adaptations.
 - [ ] Issues raised by Cerys in email of 23-Oct-2015.  Some good points there - should break out into issues.

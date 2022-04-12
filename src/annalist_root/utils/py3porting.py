@@ -29,10 +29,6 @@ except ImportError:
     from urllib2            import urlopen, Request, HTTPError
     from urllib             import quote, unquote, pathname2url
 
-import six
-from six import text_type, StringIO, BytesIO, iteritems, iterlists
-from six.moves import input
-
 def is_string(val):
     """
     Is the supplied value a string or unicode string?
@@ -44,12 +40,16 @@ def is_string(val):
 def to_unicode(val):
     """
     Converts a supplied string value to Unicode text
+
+    @@deprecate this -- just use val
     """
-    return text_type(val)
+    return val
 
 def text_to_str(ustr):
     """
     Return string value for supplied Unicode
+
+    @@deprecate this -- just use value
     """
     return str(ustr)
 
@@ -57,10 +57,8 @@ def bytes_to_str(bstr):
     """
     Return string value for supplied bytes
     """
-    # return bstr.encode('ascii', 'ignore')
-    if six.PY3:
-        return bstr.decode('ascii', 'ignore')
-    return bstr
+    return bstr.decode('ascii', 'ignore')
+    # return bstr
 
 def text_to_bytes(ustr):
     """
@@ -99,11 +97,6 @@ def get_message_type(msg_info):
     deprecated.  The newer methods return info() as an `email.message.Message`
     value, whose corresponding content-type method is `get_content_type`.
     """
-    try:
-        # Python3
-        return msg_info.get_content_type()
-    except AttributeError:
-        # Python2
-        return msg_info.gettype()
+    return msg_info.get_content_type()
 
 # End.

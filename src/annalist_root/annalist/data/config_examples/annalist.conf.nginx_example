@@ -25,15 +25,31 @@
 server {
     server_name annalist.example.org;
 
+    # URL rewrite for site data files.
+    # See: https://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite
+    rewrite ^/annalist_sitedata/(.*)$ /annalist_site/c/$1 ;
+
     # Non-proxy content
     location / {
-        root /var/www/html;
-        index index.html index.htm;
+        root /var/www/annalist.net ;
+        index index.html ;
     }
 
     # serve static files
     location ~ ^/(static)/  {
       root /home/annalist/annalist_site/;
+      autoindex on;
+      expires 1h;
+    }
+
+    # Serve site data files
+    #
+    # NOTE: don't access root /annalist_site, as that has log files which 
+    #       might expose sensitive information.
+    #
+    location ~ ^/annalist_site/c/  {
+      autoindex on;
+      root /home/annalist/;
       expires 1h;
     }
 

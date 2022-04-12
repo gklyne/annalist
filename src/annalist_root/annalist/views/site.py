@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 
 from annalist.identifiers           import ANNAL, RDFS
 from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
@@ -51,6 +51,7 @@ class SiteView(AnnalistGenericView):
         Create a rendering of the current site home page, containing (among other things)
         a list of defined collections.
         """
+        log.info("SiteView.get")
         viewinfo = DisplayInfo(self, "view", {}, None)    # No continuation
         viewinfo.get_site_info(self.get_request_host())
         viewinfo.get_coll_info(layout.SITEDATA_ID)

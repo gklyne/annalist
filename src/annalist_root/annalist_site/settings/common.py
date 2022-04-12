@@ -37,6 +37,11 @@ ANNALIST_LOG_FILE = "annalist.log"
 ACCESS_LOG_FILE   = "annalist-wsgi-access.log"
 ERROR_LOG_FILE    = "annalist-wsgi-error.log"
 
+# Number of gunicorn server threads to use
+# A value of less than 2 causes a deadlock when accessing data as Turtle.
+# This can be overridden by specific configuration settings files.
+SERVER_THREADS    = 2
+
 class RotatingNewFileHandler(logging.handlers.RotatingFileHandler):
     """
     Define a rotating file logging handler that additionally forces a new file 
@@ -149,6 +154,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
+                'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
             ],
             'debug': False,
@@ -176,12 +182,10 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 

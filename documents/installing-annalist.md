@@ -25,11 +25,9 @@
 
 ## Prerequisites
 
-* A Unix-like operating system: Annalist has been tested with MacOS 10.11 and Linux 18.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
+* A Unix-like operating system: Annalist has been tested with MacOS 10.11, MacOS 12 and Linux 18.04.  Other versions should be usable.  (The software did once run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
     - NOTE: there are problems with SQLite3 on Ubunbtu versions 14.04 and 16.04 (and probably others).  Recommended is to use Ubuntu 18.04 or later.
-* Python 2.7.15 (see [Python beginners guide / download](https://wiki.python.org/moin/BeginnersGuide/Download)).
-    - Annalist can also run under Python 3, but two of the dependencies (Django 1.11 and rdflib-jsonld 0.4.0) are not yet fully compatible, and may need to be patched.
-* Under Python 2: virtualenv (includes setuptools and pip; see [virtualenv documentation](https://virtualenv.pypa.io/en/stable/)).
+* Python 3
 
 NOTE: As of version 0.5.11, Annalist should be accessed using HTTPS.  See discussion below about [use of HTTP and HTTPS](#accessing-annalist-over-https).
 TL;DR: to test using HTTP, set environment variable OAUTHLIB_INSECURE_TRANSPORT=1
@@ -54,53 +52,46 @@ NOTE: you may also need to ensure you are running a recent version of `pip`. At 
 
 ## New software installation
 
-### Under Python 2.7
+### Under Python 3
 
 The following assumes that software is installed under a directory called $WORKSPACE; i.e. Annalist software is installed to $WORKSPACE/annalist.  This could be a user home directory.
 
 1.  Check the version of python installed on your system.  An easy way is to just enter the `python` to see a display like this:
 
         $ python
-        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
-        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
-        Type "help", "copyright", "credits" or "license" for more information.
-        >>>
-
-    If the default version shown by this command is not 2.7.x, it may still be possible to run a 2.7 version with a command like:
-
-        $ python2.7
-        Python 2.7.15 (v2.7.15:ca079a3ea3, Apr 29 2018, 20:59:26)
-        [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.57)] on darwin
+        Python 3.9.9 (v3.9.9:ccb0e6a345, Nov 15 2021, 13:06:05)
+        [Clang 13.0.0 (clang-1300.0.29.3)] on darwin
         Type "help", "copyright", "credits" or "license" for more information.
         >>>
 
     (On Linux/Unix systems, typing `python<tab>` may help to show what versions are installed.)
 
-    In this case, you will need to use the `-p` option when running `virtualenv` to create a python environment for Annalist (see below).
-
 
 2.  Go to the workspace directory, create a Python virtual environment and activate it (i.e. make it the current Python environment).  This avoids having the Annalist installation stomp over any other Python installation, and makes it very easy to discard if or when it is not required.
 
         cd $WORKSPACE
-        virtualenv anenv2
-        source anenv2/bin/activate
-        pip install --upgrade pip
-        pip install --upgrade certifi
+        python3 -m venv anenv3
+        source anenv3/bin/activate
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade certifi
+        python -m pip install --upgrade setuptools
+        pip install annalist
 
-    In an environment where the are multiple versions of Python installed, a `virtualenv` command like this might be needed to ensure that the appropriate version of Python is used:
+Or, with Python 3.9:
 
-        virtualenv -p python2.7 anenv2
-        source anenv2/bin/activate
-        pip install --upgrade pip
-        pip install --upgrade certifi
+        cd $WORKSPACE
+        /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+        source anenv3/bin/activate
+        pip install annalist
+
 
 3.  Install the software from PyPI:
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a conventient location (e.g., $WORKSPACE/Annalist-0.5.16.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a convenient location (e.g., $WORKSPACE/Annalist-0.5.18.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.5.16.tar.gz
+        pip install $WORKSPACE/Annalist-0.5.18.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -109,42 +100,30 @@ The following assumes that software is installed under a directory called $WORKS
     The output from this command should look something like this:
 
         $ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.5.16 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.18 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE:   annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:       /Users/graham/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:       /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DJANGO_ROOT:       /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/django
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root
         INFO:annalist_site.settings.runtests:TEST_BASE_URI:     http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
-        INFO:annalist_site.settings.runtests:DATABASE_PATH:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
-        INFO:annalist_site.settings.runtests:STATICFILES_DIRS:  ((u'', u'/Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist/data/static'), (u'images', u'/Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist/data/identity_providers/images'))
-        INFO:annalist_site.settings.runtests:ANNALIST_LOG_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist.log
+        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
+        INFO:annalist_site.settings.runtests:DATABASE_PATH:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS:  (('', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist/data/static'), ('images', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist/data/identity_providers/images'))
+        INFO:annalist_site.settings.runtests:ANNALIST_LOG_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist.log
+        Found 820 test(s).
         Creating test database for alias 'default'...
         System check identified no issues (0 silenced).
-        ...............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ....................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 815 tests in 444.847s
+        Ran 820 tests in 193.291s
 
         OK
         Destroying test database for alias 'default'...
 
+
 For first-time installations, the Annalist site data will need to be initialized:  see section "Setting up an Annalist site" below.
-
-
-### Under Python 3
-
-Use Python version 3.6, as Django 1.11 (the last version to support Python 2) is not supported under later versions.  (I have found one syntax error reported running Django under Python 3.7: fix that and all is well.)
-
-Python3 includes a `virtualenv` equivalent called `venv`.  To create a virtual environment for running Annalist, go to the desired home directory and run:
-
-    python3 -m venv anenv3
-    source anenv3/bin/activate
-    pip install --upgrade pip
-    pip install certifi
-
-From here on, the Annalist installation is the same as under Python 2, starting from step 3 (above).
 
 
 ## Upgrading an existing installation
@@ -272,7 +251,7 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
 1. Install _LetsEncrypt_ certificate agent:
 
-    sudo add-apt-repository ppa:certbot/certbot
+    # sudo add-apt-repository ppa:certbot/certbot
     apt-get update
     apt-get install python-certbot-apache
 
@@ -372,6 +351,9 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
 For a cursory test, try pointing your browser at https://annalist.example.net/: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
 
+
+
+
 ### Setting up Nginx on Ubuntu to forward HTTPS requests
 
 @@NOTE: these instructions need testing@@
@@ -382,15 +364,17 @@ Prerequisites:
 
 - nginx web server installed and running (in default configuration with test page)
 
-Steps to set up HTTPS forwarding.  In the following desription, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
+Steps to set up HTTPS forwarding.  In the following description, domain name `annalist.example.net` is used as an example, and should be replaced with the actual domain name of the server running Annalist.
 
 1. Install _LetsEncrypt_ certificate agent:
 
-    sudo add-apt-repository ppa:certbot/certbot
+    # sudo add-apt-repository ppa:certbot/certbot
     apt-get update
-    apt-get install python-certbot-nginx
+    # apt-get install python-certbot-nginx
+    # apt-get install certbot
+    apt-get install python3-certbot-nginx
 
-2. Check firewall configuration.  Thje following ports should be enables: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some comnbination of the following commands might be helpful:
+2. Check firewall configuration.  The following ports should be enabled: 80 (http), 443 (https), 22 (ssh) for access from anywhere.  Port 8000 should be enabled for access from the local host address (not just 127.0.0.1).  Some combination of the following commands might be helpful:
 
         ufw allow ssh
         ufw allow http
@@ -432,9 +416,9 @@ Steps to set up HTTPS forwarding.  In the following desription, domain name `ann
 
     If all goes well, this will update the `/etc/nginx/sites-available/annalist.conf` with details of the Letsencrypt certificate to be used.
 
-6.  Check the revised configuration and (if OK) restart Apache:
+6.  Check the revised configuration and (if OK) restart nginx:
 
-        mginx -t
+        nginx -t
         service nginx restart
 
 For a cursory test, try pointing your browser at `https://annalist.example.net/annalist/`: the Annalist site front page, listing available collections, should appear.  For a more demanding test, try logging in to Annalist using the `Login` button, and selecting Google for the authentication provider.
@@ -561,6 +545,7 @@ NOTE: using the development configuration, data files are stored within the soft
 
 2.  Initialize sitedata:
 
+        mkdir ~/annalist_site
         annalist-manager collectstatic
         annalist-manager createsitedata
 
@@ -610,7 +595,7 @@ The following instructions assume a browser running on the same host as the Anna
 
     ![Initial login page](screenshots/Login-initial.png)
 
-3.  Enter the local adminsirator id (e.g. `admin`) in the **User IOd** field, then click on the 
+3.  Enter the local adminstrator id (e.g. `admin`) in the **User Id** field, then click on the 
 **Local username** button:
 
     ![Django login page](screenshots/Login-django-1.png)

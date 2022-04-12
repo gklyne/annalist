@@ -50,17 +50,25 @@ See [Installing and setting up Annalist](installing-annalist.md) for details.  W
 ## Prerequisites
 
 * A Unix-like operating system.
-* Python 2.7.
-* virtualenv.
+* Python 3 - 3.9 or later
 
-(The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not yet fully tested or documented.)
+(The software can be run on Windows, but the procedure to get it running is somewhat more complicated, and is not fully tested or documented.)
 
 ## Installation
 
 In a working directory, and with Internet connection:
 
-    virtualenv annenv
-    source annenv/bin/activate
+    python3 -m venv anenv3
+    source anenv3/bin/activate
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade certifi
+    python -m pip install --upgrade setuptools
+    pip install annalist
+
+Or, with Python 3.9:
+
+    /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+    source anenv3/bin/activate
     pip install annalist
 
 ## Check the software installation, and initialize site data

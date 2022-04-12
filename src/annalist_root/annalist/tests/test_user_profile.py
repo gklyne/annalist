@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 from django.conf                import settings
 from django.db                  import models
 from django.http                import QueryDict
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 from django.contrib.auth.models import User
 from django.test                import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client         import Client
@@ -60,7 +60,6 @@ class UserProfileTest(AnnalistTestCase):
     @classmethod
     def tearDownClass(cls):
         super(UserProfileTest, cls).tearDownClass()
-        # @@checkme@@ resetSitedata(scope="all")
         return
 
     def test_UserProfileTest(self):
@@ -100,8 +99,6 @@ class UserProfileViewTest(AnnalistTestCase):
         return
 
     def test_get(self):
-        # @@TODO: use reference to self.client, per 
-        # https://docs.djangoproject.com/en/dev/topics/testing/tools/#default-test-client
         loggedin = self.client.login(username="testuser", password="testpassword")
         self.assertTrue(loggedin)
         u = reverse("AnnalistProfileView")

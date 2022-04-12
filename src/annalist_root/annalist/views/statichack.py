@@ -14,20 +14,16 @@ should not be used for an open Internet deployment.
 
 The logic has been copied and adapted from django.contrib.staticfiles.views
 
-For deployment, add the following to the site-level urls.py file:
+For deployment, add something like the following to the site-level urls.py file:
 
-    if not settings.DEBUG:
-        urlpatterns += patterns('',
-            url(r'^static/(?P<path>.*)$', serve_static),
-            )
+    urlpatterns += patterns('',
+        url(r'^static/(?P<path>.*)$', serve_static),
+        )
 
-@@TODO: use separate settings flag to enable this, which can be set for
-"personal" deployments only (i.e. not for shared deployments)
-
-@@TODO: replace static file finder logic with direct serving logic assuming
-prior use of collectfiles utility - this should allow greater control over 
-the location of the served static files, rather than having them mixed with 
-the server code.
+For production deployment, configure the front-end proxy or WSGI server to 
+serve files from the static area directly, rather than passing requests to Annalist,
+and use `annalist-manager collectstatic` to gather static files to a common 
+location for serving.
 """
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -43,7 +39,7 @@ log = logging.getLogger(__name__)
 from django.conf                            import settings
 
 from django.http                            import Http404
-from django.utils.six.moves.urllib.parse    import unquote
+from urllib.parse                           import unquote
 from django.views                           import static
 from django.contrib.staticfiles             import finders
 
@@ -67,13 +63,19 @@ def serve_static(request, path, insecure=False, **kwargs):
         if not absolute_path:
             if path.endswith('/') or path == '':
                 raise Http404("Directory indexes are not allowed here.")
-            raise Http404("'%s' could not be found" % path)
+            raise Http404("Resource '%s' could not be found (%s)" % (path, normalized_path))
         document_root, path = os.path.split(absolute_path)
         # log.info("document_root %s, path %s"%(document_root, path))
     except Exception as e:
         log.info(str(e))
         raise
     return static.serve(request, path, document_root=document_root, **kwargs)
+
+def serve_favicon(request, path, insecure=False, **kwargs):
+    """
+    Serve favicon: prepends "images/" to image path.
+    """
+    return serve_static(request, "images/"+path, insecure=insecure, **kwargs)
 
 def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
     """
@@ -97,7 +99,7 @@ def serve_pages(request, coll_id, page_ref, insecure=False, **kwargs):
         if not os.path.exists(normalized_path):
             if page_path.endswith('/') or page_path == '':
                 raise Http404("Directory indexes are not allowed here.")
-            raise Http404("'%s' could not be found" % page_path)
+            raise Http404("Page '%s' could not be found" % page_path)
         document_root, path = os.path.split(normalized_path)
         # log.info("document_root %s, path %s"%(document_root, path))
     except Exception as e:

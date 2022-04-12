@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.contrib.auth.models     import User
 from django.test                    import TestCase
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.test.client             import Client
 
 from annalist.identifiers           import ANNAL
@@ -292,8 +292,6 @@ class LinkedRecordTest(AnnalistTestCase):
         # Test context
         entities    = context_list_entities(r.context)
         head_fields = context_list_head_fields(r.context)
-        # print "@@ context: "+repr(r.context['List_rows'])
-        # print "@@ head_fields: "+repr(head_fields)
         self.assertEqual(len(entities),    2)
         self.assertEqual(len(head_fields), 1)       # One row of 3 cols..
         self.assertEqual(len(head_fields[0].description['row_field_descs']), 3)

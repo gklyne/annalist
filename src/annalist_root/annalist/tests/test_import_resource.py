@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.contrib.auth.models     import User
 from django.test                    import TestCase
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.test.client             import Client
 
 from annalist                       import util
@@ -140,7 +140,7 @@ test_reference_field_create_values = (
     , 'rdfs:comment':                   "test_reference_field comment"
     , 'annal:property_uri':             "test:reference"
     , 'annal:field_render_type':        "URILink"
-    , 'annal:field_value_mode':         "Value_field"
+    , 'annal:field_value_mode':         "Value_direct"
     , 'annal:field_value_type':         "annal:Identifier"
     , 'annal:field_ref_type':           "testimptype"
     , 'annal:field_ref_restriction':    "ALL"
@@ -276,11 +276,12 @@ class ImportResourceTest(AnnalistTestCase):
         resource_fileobj.close()
         testobj1.close()
         # Read back both and compare
-        siteobj = open(TestBaseDir+"/README.md", "rb")
-        testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "test1res", "annal:Richtext", resource_type, "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(TestBaseDir+"/README.md", "rb") as siteobj:
+            testobj = self.test_imp_type_info.get_fileobj(
+                "test1", "test1res", "annal:Richtext", resource_type, "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_import_resource(self):
@@ -313,11 +314,12 @@ class ImportResourceTest(AnnalistTestCase):
         self.assertEqual(f3.field_id,     "Test_import")
         self.assertDictionaryMatch(f3.field_value, test_import_field_value())
         # Read back and compare entity resource just created
-        siteobj = open(TestBaseDir+"/README.md", "rb")
-        testobj = self.test_imp_type_info.get_fileobj(
-            "test1", "imp_field", "annal:Richtext", "text/markdown", "rb"
-            )
-        self.assertEqual(siteobj.read(), testobj.read())
+        with open(TestBaseDir+"/README.md", "rb") as siteobj:
+            testobj = self.test_imp_type_info.get_fileobj(
+                "test1", "imp_field", "annal:Richtext", "text/markdown", "rb"
+                )
+            self.assertEqual(siteobj.read(), testobj.read())
+            testobj.close()
         return
 
     def test_reference_imported_resource(self):

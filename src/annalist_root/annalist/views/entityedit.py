@@ -19,7 +19,7 @@ import traceback
 from django.conf                        import settings
 from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
-from django.core.urlresolvers           import resolve, reverse
+from django.urls                        import resolve, reverse
 
 from utils.py3porting                   import is_string, to_unicode, urljoin
 
@@ -141,17 +141,6 @@ class GenericEntityEditView(AnnalistGenericView):
             responseinfo = ResponseInfo()
             responseinfo.set_response_error(message.DATA_ERROR, msg)
             return responseinfo.http_redirect(self, viewinfo.get_continuation_next())
-            #@@TODO: remove old code
-            # return self.error(
-            #     dict(self.error404values(),
-            #         message=message.ENTITY_DOES_NOT_EXIST%
-            #             { 'type_id': viewinfo.type_id
-            #             , 'id':      viewinfo.src_entity_id
-            #             , 'label':   entity_label
-            #             }
-            #         )
-            #     )
-            #@@
 
         # log.info("@@ EntityEdit.get: ancestry %s/%s/%s"%(entity._parent._ancestorid, type_id, entity_id))
         orig_entity_coll_id = viewinfo.orig_typeinfo.get_ancestor_id(entity)
@@ -185,7 +174,7 @@ class GenericEntityEditView(AnnalistGenericView):
         try:
             response = self.form_render(
                 viewinfo, entity, entityvals, context_extra_values, 
-                add_field #@@ remove param
+                add_field #@@TODO: remove param?
                 )
         except Exception as e:
             # -- This should be redundant, but...
@@ -278,12 +267,13 @@ class GenericEntityEditView(AnnalistGenericView):
             })
         viewinfo.set_messages(messages)
         # Process form response and respond accordingly
-        #@@TODO: this should be redundant - create as-needed, not before
-        #         as of 2014-11-07, removing this causes test failures
-        if not typeinfo.entityparent._exists():
-            # Create RecordTypeData when not already exists
-            RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
-        #@@
+        # #@@TODO: this should be redundant - create as-needed, not before
+        # #         as of 2014-11-07, removing this causes test failures
+        # #         as of 2019-06-07, tests run OK without this
+        # if not typeinfo.entityparent._exists():
+        #     # Create RecordTypeData when not already exists
+        #     RecordTypeData.create(viewinfo.collection, typeinfo.entityparent.get_id(), {})
+        # #@@
         try:
             response = self.form_response(viewinfo, context_extra_values)
         except Exception as e:
@@ -625,9 +615,6 @@ class GenericEntityEditView(AnnalistGenericView):
                 responseinfo=responseinfo
                 )
             if not responseinfo.has_http_response():
-                #@@
-                # auth_check = self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
-                #@@
                 auth_check = viewinfo.check_authorization("config")
                 if auth_check:
                     return auth_check
@@ -660,9 +647,6 @@ class GenericEntityEditView(AnnalistGenericView):
             if not responseinfo.has_http_response():
                 responseinfo.set_http_response(
                     viewinfo.check_authorization("config")
-                    #@@
-                    # self.form_action_auth("config", viewinfo.collection, CONFIG_PERMISSIONS)
-                    #@@
                     )
             if not responseinfo.has_http_response():
                 cont_here = viewinfo.get_continuation_here(
@@ -946,7 +930,9 @@ class GenericEntityEditView(AnnalistGenericView):
                         field descriptions that control how values are rendered.
         entityformvals  a dictionary of entity values extracted from the submitted form; 
                         these are used either for redisplaying the form if there is an 
-                        error, or to update the saved entity data.
+                        error, or to update the saved entity data.  
+                        NOTE: The dictionary is keyed by property URIs, not field 
+                        identifiers - the mapping is invoked before this method is called.
         context_extra_values
                         a dictionary of additional values that may be used if the
                         form needs to be redisplayed.
@@ -1002,9 +988,8 @@ class GenericEntityEditView(AnnalistGenericView):
             )
         # log.info("@@ Renamed: %s"%entity_renamed)
 
-        # @@TODO: factor out repeated re-rendering logic
-
         # Check for valid id and type to be saved
+        # (This duplicates entity-level validation, but provides more precise error messages)
         if not valid_id(save_entity_id):
             log.debug("form_response: save_entity_id not valid ('%s')"%save_entity_id)
             return self.form_re_render(responseinfo,
@@ -1029,33 +1014,10 @@ class GenericEntityEditView(AnnalistGenericView):
                 error_message=messages['parent_missing']
                 )
 
-        #@@@@ TO BE REMOVED
-        # Check existence of entity to save according to action performed
-        if (action in ["new", "copy"]) or entity_renamed:
-            if not viewinfo.saved():
-                # First save - check for existence
-                if save_typeinfo.entity_exists(save_entity_id):
-                    log.warning(
-                        "Entity exists: action %s %s/%s, orig %s/%s"%
-                            (action, save_type_id, save_entity_id, orig_type_id, orig_entity_id)
-                        )
-                    return self.form_re_render(responseinfo,
-                        viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                        error_head=messages['entity_heading'],
-                        error_message=messages['entity_exists']
-                        )
-        else:
-            if not orig_typeinfo.entity_exists(save_entity_id, altscope="all"):
-                # This shouldn't happen, but just in case...
-                log.warning("Expected %s/%s not found; action %s, entity_renamed %r"%
-                      (save_type_id, save_entity_id, action, entity_renamed)
-                    )
-                return self.form_re_render(responseinfo,
-                    viewinfo, entityvaluemap, entityformvals, context_extra_values,
-                    error_head=messages['entity_heading'],
-                    error_message=messages['entity_not_exists']
-                    )
-        #@@@@
+        # Create parent RecordTypeData entity for entity to be saved, if needed
+        save_typeinfo.parent_typedata(create_typedata=True)
+
+        # @@TODO: factor out repeated re-rendering logic
 
         if action == "new":
             err_vals, entity_values = self.save_new(viewinfo, 
@@ -1109,7 +1071,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if not err_vals and import_field is not None:
             responseinfo = self.save_linked_resource(
                 save_entity_id, save_typeinfo,
-                entityvaluemap, entity_values,
+                entity_values,
                 import_field,
                 responseinfo
                 )
@@ -1131,20 +1093,29 @@ class GenericEntityEditView(AnnalistGenericView):
         viewinfo.update_coll_version()
         return responseinfo
 
-    def save_assemble_values(self, action, viewinfo, 
+    def save_validate_assemble_values(self, action, viewinfo, 
         save_typeinfo, save_entity_id, 
         orig_typeinfo, orig_entity_id, entityformvals
         ):
         """
-        Assemble updated values for storage
+        Validate input and assemble updated values for storage
         
         Note: form data is applied as update to original entity data so that
         values not in view are preserved.  Use original entity values without 
         field aliases as basis for new value.
 
-        Returns the merged entity values.
+        Returns a pair (err_vals, entity_values), where:
+            err_vals is None if the operation succeeds, or error details 
+                    consisting of a pair of strings for the error message 
+                    heading and body.
+            entity_values is the merged entity values.
         """
-        #@@TODO: eliminate action parameter
+        errs = save_typeinfo.validate(save_entity_id, entityformvals)
+        if errs:
+            err_vals = (message.INPUT_VALIDATION_ERROR, "\n".join(errs))
+            log.info("save_validate_assemble_values: err_vals %r"%(err_vals,))
+            return (err_vals, entityformvals)
+        # Validation OK
         if orig_typeinfo and orig_entity_id:
             orig_entity   = orig_typeinfo.get_entity(orig_entity_id, action)
             orig_values   = orig_entity.get_values() if orig_entity else {}
@@ -1167,15 +1138,16 @@ class GenericEntityEditView(AnnalistGenericView):
             entity_values[RDFS.CURIE.label] = entity_label
         if not entity_implied_vals.get(RDFS.CURIE.comment, None):
             entity_values[RDFS.CURIE.comment] = entity_label
-        return entity_values
+        return (None, entity_values)
 
     def save_new(self, viewinfo, save_typeinfo, save_entity_id, entityformvals):
         """
         Save new entity
 
         Returns a pair (err_vals, entity_values), where:
-            err_vals is None if the operation succeeds, or error details
-                a pair of strings for the error message heading and body.
+            err_vals is None if the operation succeeds, or error details 
+                    consisting of a pair of strings for the error message 
+                    heading and body.
             entity_values is a copy of the data values that were saved.
         """
         # messages = viewinfo.type_messages
@@ -1192,10 +1164,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.type_messages['entity_exists']
                     )
         if not err_vals:
-            entity_values = self.save_assemble_values("new", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("new", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 None, None, entityformvals
                 )
+        if not err_vals:
             err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
         return (err_vals, entityformvals)
 
@@ -1228,10 +1201,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     viewinfo.type_messages['entity_exists']
                     )
         if not err_vals:
-            entity_values = self.save_assemble_values("copy", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("copy", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 orig_typeinfo, orig_entity_id, entityformvals
                 )
+        if not err_vals:
             err_vals = self.copy_entity(
                 orig_typeinfo, orig_entity_id, 
                 save_typeinfo, save_entity_id, 
@@ -1264,10 +1238,11 @@ class GenericEntityEditView(AnnalistGenericView):
         if not err_vals:
             save_type_id  = viewinfo.curr_type_id
             orig_type_id  = viewinfo.orig_type_id
-            entity_values = self.save_assemble_values("edit", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("edit", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 orig_typeinfo, orig_entity_id, entityformvals
                 )
+        if not err_vals:
             if entitytypeinfo.TYPE_ID in [save_type_id, orig_type_id]:
                 # Type renamed
                 # log.info(
@@ -1321,10 +1296,11 @@ class GenericEntityEditView(AnnalistGenericView):
                 viewinfo.type_messages['entity_not_exists']
                 )
         if not err_vals:
-            entity_values = self.save_assemble_values("edit", viewinfo, 
+            err_vals, entity_values = self.save_validate_assemble_values("edit", viewinfo, 
                 save_typeinfo, save_entity_id, 
                 save_typeinfo, save_entity_id, entityformvals
                 )
+        if not err_vals:
             err_vals = self.create_update_entity(save_typeinfo, save_entity_id, entity_values)
         return (err_vals, entity_values)
 
@@ -1400,14 +1376,20 @@ class GenericEntityEditView(AnnalistGenericView):
         ):
         """
         Process uploaded files: files are saved to the entity directory, and 
-        the supplied entity values are updated accordingly
+        the supplied entity values are updated accordingly.  This function is 
+        called after the main entity data has been saved.
 
         This functon operates by scanning through fields that may generate a file
         upload and looking for a corresponding uploaded files.  Uploaded files not
         corresponding to view fields are ignored.
 
+        entity_id       entity identifier
+        typeinfo        type informaton about entity
+        entityvaluemap  used to find fields that correspond to uploaded files.
+        entityvals      a copy of the entity values that have been saved.
         uploaded_files  is the Django uploaded files information from the request
-                        bveing processed.
+                        being processed.
+        responseinfo    receives information about any error.
 
         Updates and returns the supplied responseinfo object.
         """
@@ -1453,13 +1435,11 @@ class GenericEntityEditView(AnnalistGenericView):
                     init_field_vals, read_resource,
                     responseinfo
                     )
-                # end if
-            # end for
         return responseinfo
 
     def save_linked_resource(self, 
             entity_id, typeinfo,
-            entityvaluemap, entityvals,
+            entityvals,
             import_field,
             responseinfo
             ):
@@ -1468,7 +1448,11 @@ class GenericEntityEditView(AnnalistGenericView):
         saved entity with information about the imported resource, and redisplays 
         the current form.
 
+        entity_id       entity identifier
+        typeinfo        type informaton about entity
+        entityvals      a copy of the entity values that have been saved.
         import_field    is field description of import field that has been triggered.
+        responseinfo    receives information about any error.
 
         Updates and returns the supplied responseinfo object.
         """
@@ -2201,14 +2185,15 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity_type     = entityformvals[ANNAL.CURIE.field_entity_type]
             field_property_uri    = entityformvals[ANNAL.CURIE.property_uri]
             field_value_type      = entityformvals[ANNAL.CURIE.field_value_type]
-            ref_field_id          = field_entity_id    + layout.SUFFIX_MULTI
-            ref_group_id          = field_entity_id    + layout.SUFFIX_MULTI_G
-            ref_property_uri      = field_property_uri + layout.SUFFIX_MULTI_P
-            ref_entity_type       = (
-                field_entity_type if field_entity_type != ANNAL.CURIE.Field_list else 
-                ""
-                )
-            field_params = { "field_id": field_entity_id, "field_label": field_label }
+            field_params          = (
+                { "field_id":       field_entity_id
+                , "field_label":    field_label 
+                })
+            ref_field_id          = field_entity_id    + layout.SUFFIX_REF_FIELD
+            ref_property_uri      = field_property_uri + layout.SUFFIX_REF_FIELD_P
+            ref_entity_type       = ""      # Ref applicable with any entity type
+            ref_value_type        = field_entity_type
+            ref_field_ref_type    = viewinfo.get_uri_type_id(field_entity_type)
             ref_field_label       = message.FIELD_REF_LABEL%field_params
             ref_field_comment     = message.FIELD_REF_COMMENT%field_params
             ref_field_placeholder = message.FIELD_REF_PLACEHOLDER%field_params
@@ -2216,9 +2201,10 @@ class GenericEntityEditView(AnnalistGenericView):
             field_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.FIELD_ID
                 )
-            ref_field_entity   = field_typeinfo.get_create_entity(ref_field_id)
+            ref_field_entity = field_typeinfo.get_create_entity(ref_field_id)
             ref_field_entity[ANNAL.CURIE.field_render_type] = "RefMultifield"
             ref_field_entity[ANNAL.CURIE.field_value_mode]  = "Value_entity"
+            # If ref field already exists, use existing values, otherwise new ones...
             if not ref_field_entity.get(ANNAL.CURIE.field_fields, None):
                 ref_field_entity[ANNAL.CURIE.field_fields] = (
                     [ { ANNAL.CURIE.field_id:           entitytypeinfo.FIELD_ID+"/"+field_entity_id
@@ -2229,15 +2215,15 @@ class GenericEntityEditView(AnnalistGenericView):
             ref_field_entity.setdefault(RDFS.CURIE.comment,             ref_field_comment)
             ref_field_entity.setdefault(ANNAL.CURIE.placeholder,        ref_field_placeholder)
             ref_field_entity.setdefault(ANNAL.CURIE.field_entity_type,  ref_entity_type)
-            ref_field_entity.setdefault(ANNAL.CURIE.field_value_type,   ANNAL.CURIE.Field_list)
+            ref_field_entity.setdefault(ANNAL.CURIE.field_value_type,   ref_value_type)
             ref_field_entity.setdefault(ANNAL.CURIE.property_uri,       ref_property_uri)
             ref_field_entity.setdefault(ANNAL.CURIE.field_placement,    "small:0,12")
-            ref_field_entity.setdefault(ANNAL.CURIE.field_ref_type,     "Default_type")
+            ref_field_entity.setdefault(ANNAL.CURIE.field_ref_type,     ref_field_ref_type)
             ref_field_entity._save()
             # Display new reference field view with message; continuation same as current view
             info_values = self.info_params(
                 message.TASK_CREATE_REFERENCE_FIELD%
-                  {'field_id': field_entity_id, 'group_id': ref_group_id, 'label': field_label}
+                  {'field_id': field_entity_id, 'label': field_label}
                 )
             view_uri_params = (
                 { 'coll_id':    viewinfo.coll_id

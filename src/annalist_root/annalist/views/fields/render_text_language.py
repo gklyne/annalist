@@ -13,7 +13,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import re
-import collections
+import collections.abc
 
 from utils.py3porting                           import is_string, to_unicode
 
@@ -53,7 +53,7 @@ class TextLanguageValueMapper(RenderBase):
         field_string = ""
         if is_string(field_value):
             field_string = field_value.strip()
-        elif isinstance(field_value, collections.Mapping):
+        elif isinstance(field_value, collections.abc.Mapping):
             field_string = field_value["@value"]
             if ("@language" in field_value) and field_value["@language"]:
                 field_string += (" ("+field_value["@language"]+")")

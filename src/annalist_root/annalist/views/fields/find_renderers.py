@@ -176,7 +176,7 @@ def get_entityref_edit_renderer(renderer, field_render_type):
 
 def get_uriimport_edit_renderer(renderer, field_render_type):
     """
-    Returns an updated edit renderer for fields with a URI import value type
+    Returns an updated edit renderer for fields with a URI import value mode
     """
     if field_render_type not in ["URIImport"]:
         renderer = get_field_base_renderer("URIImport")
@@ -184,7 +184,7 @@ def get_uriimport_edit_renderer(renderer, field_render_type):
 
 def get_fileupload_edit_renderer(renderer, field_render_type):
     """
-    Returns an updated edit renderer for fields with a file upload value type
+    Returns an updated edit renderer for fields with a file upload value mode
     """
     if field_render_type not in ["FileUpload"]:
         renderer = get_field_base_renderer("FileUpload")
@@ -197,7 +197,7 @@ def get_field_edit_renderer(field_render_type, field_value_mode):
     """
     # log.debug("Render field_render_type %s, field_value_mode %s"%(field_render_type, field_value_mode))
     renderer = get_field_base_renderer(field_render_type)
-    if field_value_mode in ["Value_entity", "Value_field"]:
+    if field_value_mode == "Value_entity":
         renderer = get_entityref_edit_renderer(renderer, field_render_type)
     elif field_value_mode == "Value_import":
         renderer = get_uriimport_edit_renderer(renderer, field_render_type)
@@ -262,7 +262,7 @@ def get_label_edit_renderer(field_render_type, field_value_mode):
     Returns an field edit renderer object that can be referenced in a 
     Django template "{% include ... %}" element.
     """
-    renderer = get_field_base_renderer(field_render_type)
+    renderer = get_field_edit_renderer(field_render_type, field_value_mode)
     if not renderer:
         # Default to simple text for unknown renderer type
         log.warning("get_label_edit_renderer: '%s' not found"%field_render_type)

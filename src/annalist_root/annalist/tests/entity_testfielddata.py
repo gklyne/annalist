@@ -18,8 +18,7 @@ from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -273,7 +272,6 @@ def field_view_context_data(
         , 'heading':            "Field definition"
         , 'coll_id':            coll_id
         , 'type_id':            "_field"
-        # , 'orig_id':            "orig_field_id"
         , 'fields':
           [ context_field_row(
               get_bound_field("Field_id", field_id),                        # 0 (0,0)
@@ -299,26 +297,25 @@ def field_view_context_data(
               )
           , context_field_row(
               get_bound_field("Field_typeref", field_typeref),              # 10 (7,0)
-              get_bound_field("Field_fieldref", field_fieldref)             # 11 (7,1)
               )
           , context_field_row(
-              get_bound_field("Field_default", field_default)               # 12 (8,0)
+              get_bound_field("Field_default", field_default)               # 11 (8,0)
               )
           , context_field_row(
-              get_bound_field("Field_placeholder", field_placeholder)       # 13 (9,0)
+              get_bound_field("Field_placeholder", field_placeholder)       # 12 (9,0)
               )
           , context_field_row(
-              get_bound_field("Field_tooltip", field_tooltip)               # 14 (10,0)
+              get_bound_field("Field_tooltip", field_tooltip)               # 13 (10,0)
               )
-          , get_bound_field("Field_fields", field_fields)                   # 15 (11,0)
+          , get_bound_field("Field_fields", field_fields)                   # 14 (11,0)
           , context_field_row(
               get_bound_field("Field_repeat_label_add", field_repeat_label_add),
-                                                                            # 16 (12,0)
+                                                                            # 15 (12,0)
               get_bound_field("Field_repeat_label_delete", field_repeat_label_delete)
-                                                                            # 17 (12,1)
+                                                                            # 16 (12,1)
               )
           , context_field_row(
-              get_bound_field("Field_restrict", field_restrict)             # 18 (18,0)
+              get_bound_field("Field_restrict", field_restrict)             # 17 (18,0)
               )
           ]
         })
@@ -355,15 +352,16 @@ def field_view_form_data(
     if field_id is not None:
         form_data_dict['entity_id']         = field_id
     if field_id:
-        field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
         form_data_dict['entity_id']         = field_id
         form_data_dict['Field_label']       = '%s %s/%s/%s'%(update, coll_id, "_field", field_id)
         form_data_dict['Field_help']        = '%s help for %s in collection %s'%(update, field_id, coll_id)
         form_data_dict['Field_tooltip']     = '%s tooltip for %s in collection %s'%(update, field_id, coll_id)
-        form_data_dict['Field_uri']         = field_url
         form_data_dict['Field_placement']   = field_placement
         form_data_dict['orig_id']           = field_id
         # form_data_dict['orig_type']         = "_field"
+        field_url = recordfield_url(coll_id=coll_id, field_id=field_id)
+        if field_url:
+            form_data_dict['Field_uri']     = field_url
     if orig_id:
         form_data_dict['orig_id']           = orig_id
     if field_label:

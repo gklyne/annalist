@@ -14,12 +14,11 @@ log = logging.getLogger(__name__)
 
 import os
 
-from utils.py3porting           import urljoin
-
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
+
+from utils.py3porting           import urljoin
 
 from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -262,13 +261,12 @@ def entitydata_values(
         type_uri=None, supertype_uris=None, 
         hosturi=TestHostUri
         ):
-    # type_uri = entity_url(coll_id, "_type", type_id)
     dataurl = entity_url(coll_id, type_id, entity_id)
     d = entitydata_create_values(
         entity_id, update=update, coll_id=coll_id, type_id=type_id, 
         entity_uri=entity_uri, type_uri=type_uri, supertype_uris=supertype_uris,
         hosturi=hosturi
-        ).copy() #@@ copy needed here?
+        )
     d.update(
         { '@id':            "%s/%s"%(type_id, entity_id)
         , '@context':       [{"@base": "../../"}, "../../coll_context.jsonld"]
@@ -660,10 +658,6 @@ def default_comment(coll_id=None, type_id=None, entity_id=None):
     # Note: for built-in types, default values matches corresponding sitedata _initial_values
     if type_id in ["_type", "_view", "_list", "_field"]:
         return ""
-    #@@
-    # if type_id == "_field":
-    #     return "(tooltip text here)"
-    #@@
     return message.ENTITY_DEFAULT_COMMENT%dict(coll_id=coll_id, type_id=type_id, entity_id=entity_id)
 
 def error_label(coll_id=None, type_id=None, entity_id=None):

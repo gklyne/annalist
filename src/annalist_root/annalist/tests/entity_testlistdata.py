@@ -18,8 +18,7 @@ from utils.py3porting           import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict
-from django.utils.http          import urlquote, urlunquote
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 
 from annalist.util              import valid_id
 from annalist.identifiers       import RDF, RDFS, ANNAL
@@ -61,9 +60,9 @@ from .entity_testsitedata import (
 
 # Defined here to facilitate test suite changes
 
-num_testcoll_enumerate_all_entities     = 187   # Entities defined
-num_testcoll_all_entities_scope_all     = 184   # Entities listed
-num_testcoll_inherit_entities_scope_all = 238   # Entities listed, including inherited
+num_testcoll_enumerate_all_entities     = 185   # Entities defined
+num_testcoll_all_entities_scope_all     = 182   # Entities listed
+num_testcoll_inherit_entities_scope_all = 236   # Entities listed, including inherited
 
 
 #   -----------------------------------------------------------------------------

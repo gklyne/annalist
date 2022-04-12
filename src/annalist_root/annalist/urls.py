@@ -9,7 +9,7 @@ __author__      = "Graham Klyne (GK@ACM.ORG)"
 __copyright__   = "Copyright 2014, G. Klyne"
 __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
-from django.conf.urls                   import url
+from django.urls                        import re_path
 
 from annalist.views.home_redirects      import (
     AnnalistHomeView, AnnalistTypeRedirect, AnnalistEntityRedirect
@@ -31,7 +31,7 @@ from annalist.views.entitydelete        import EntityDataDeleteConfirmedView
 from annalist.views.siteresource        import SiteResourceAccess
 from annalist.views.collectionresource  import CollectionResourceAccess
 from annalist.views.entityresource      import EntityResourceAccess
-from annalist.views.statichack          import serve_pages
+from annalist.views.statichack          import serve_pages, serve_static
 
 from login.login_views                  import LoginUserView, LoginPostView, LogoutUserView
 from login.auth_oidc_client             import OIDC_AuthDoneView
@@ -70,144 +70,152 @@ from login.auth_django_client           import LocalUserPasswordView
 urlpatterns = [
 
     # Site pages
-    url(r'^$',              AnnalistHomeView.as_view(),     name='AnnalistHomeView'),
-    url(r'^site/$',         SiteView.as_view(),             name='AnnalistSiteView'),
-    url(r'^site/!action$',  SiteActionView.as_view(),       name='AnnalistSiteActionView'),
-    url(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
-    url(r'^serverlog/$',    ServerLogView.as_view(),        name='AnnalistServerLogView'),
+    re_path(r'^$',              AnnalistHomeView.as_view(),     name='AnnalistHomeView'),
+    re_path(r'^site/$',         SiteView.as_view(),             name='AnnalistSiteView'),
+    re_path(r'^site/!action$',  SiteActionView.as_view(),       name='AnnalistSiteActionView'),
+    re_path(r'^confirm/$',      ConfirmView.as_view(),          name='AnnalistConfirmView'),
+    re_path(r'^serverlog/$',    ServerLogView.as_view(),        name='AnnalistServerLogView'),
+
+    #@@ site/site.json
+    #@@ site/site.ttl
 
     # Special forms for collection view, customize and type/view/list deletion
-    url(r'^c/(?P<coll_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/$',
                             CollectionView.as_view(),
                             name='AnnalistCollectionView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/!edit$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/!edit$',
                             CollectionEditView.as_view(),
                             name='AnnalistCollectionEditView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/types/!delete_confirmed$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/types/!delete_confirmed$',
                             RecordTypeDeleteConfirmedView.as_view(),
                             name='AnnalistRecordTypeDeleteView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/views/!delete_confirmed$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/views/!delete_confirmed$',
                             RecordViewDeleteConfirmedView.as_view(),
                             name='AnnalistRecordViewDeleteView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/lists/!delete_confirmed$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/lists/!delete_confirmed$',
                             RecordListDeleteConfirmedView.as_view(),
                             name='AnnalistRecordListDeleteView'),
 
     # Default/API access lists and data
     # (these may content negotiate for various formats)
-    url(r'^c/(?P<coll_id>\w{1,128})/d/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultListAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultListType'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/!delete_confirmed$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/!delete_confirmed$',
                             EntityDataDeleteConfirmedView.as_view(),
                             name='AnnalistEntityDataDeleteView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityAccessView'),
 
     # Default edit views
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>copy)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>copy)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDefaultDataView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>edit)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>edit)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDefaultDataView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>view)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>view)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDefaultDataView'),
 
     # JSON list views without list_id specified
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<list_ref>entity_list.[\w]{1,32})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
                             name='AnnalistEntityListDataAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
                             name='AnnalistEntityListDataType'),
 
     # Redirect type/entity URIs without trailing '/'
     # (Note these cannot match JSON resource names as '.' is not matched here)
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})$',
                             AnnalistTypeRedirect.as_view(),
                             name='AnnalistTypeRedirect'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})$',
                             AnnalistEntityRedirect.as_view(),
                             name='AnnalistEntityRedirect'),
 
     # Specified list views
-    url(r'^c/(?P<coll_id>\w{1,128})/l/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityDefaultList'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/$',
                             EntityGenericListView.as_view(),
                             name='AnnalistEntityGenericList'),
 
     # JSON specified list views
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_ref>entity_list.[\w]{1,32})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
                             name='AnnalistEntityListDataAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
                             name='AnnalistEntityListDataAll'),
-    url(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/l/(?P<list_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<list_ref>entity_list.[\w]{1,32})$',
                             EntityListDataView.as_view(),
                             name='AnnalistEntityListDataType'),
 
     # Specified entity edit/view forms
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityDataView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/!(?P<action>new)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/!(?P<action>new)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityNewView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>copy)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>copy)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>edit)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>edit)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>view)$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/!(?P<action>view)$',
                             GenericEntityEditView.as_view(),
                             name='AnnalistEntityEditView'),
 
     # Named resource access (metadata, context, attachments, etc.)
-    url(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
+    re_path(r'^site/(?P<resource_ref>[\w.-]{1,250})$',
                             SiteResourceAccess.as_view(),
                             name='AnnalistSiteResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<resource_ref>[\w.-]{1,250})$',
                             CollectionResourceAccess.as_view(),
                             name='AnnalistCollectionResourceAccess'),
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityResourceAccess'),
 
     # Entity resource data access with specified view
-    url(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/v/(?P<view_id>\w{1,128})/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/(?P<resource_ref>[\w.-]{1,250})$',
                             EntityResourceAccess.as_view(),
                             name='AnnalistEntityViewAccess'),
 
     # Access supporting application pages in same collection
-    url(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/p/(?P<page_ref>[\w/.-]{1,250})$',
                             serve_pages),
+
+    # Access "favicon.ico"
+    re_path(r'^(?P<path>favicon.ico)$',
+                            serve_static),
+
     ] # End of urlpatterns
 
 # Login-related view URLs
 
 urlpatterns += [
-    url(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
-    url(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
-    url(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
-    url(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
-    url(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
-    url(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
+    re_path(r'^login/$',        LoginUserView.as_view(),            name='LoginUserView'),
+    re_path(r'^login_post/$',   LoginPostView.as_view(),            name='LoginPostView'),
+    re_path(r'^login_local/$',  LocalUserPasswordView.as_view(),    name='LocalUserPasswordView'),
+    re_path(r'^login_done/',    OIDC_AuthDoneView.as_view(),        name='OIDC_AuthDoneView'),
+    re_path(r'^profile/$',      ProfileView.as_view(),              name='AnnalistProfileView'),
+    re_path(r'^logout/$',       LogoutUserView.as_view(),           name='LogoutUserView'),
     # Info view...
-    # url(r'^c/(?P<coll_id>_annalist_site)/d/(?P<type_id>_info)/(?P<entity_id>about)/$',
-    url(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
+    # re_path(r'^c/(?P<coll_id>_annalist_site)/d/(?P<type_id>_info)/(?P<entity_id>about)/$',
+    re_path(r'^c/(?P<coll_id>\w{1,128})/d/(?P<type_id>\w{1,128})/(?P<entity_id>\w{1,128})/$',
                             GenericEntityEditView.as_view(),    name='AnnalistInfoView'),
     ]
 

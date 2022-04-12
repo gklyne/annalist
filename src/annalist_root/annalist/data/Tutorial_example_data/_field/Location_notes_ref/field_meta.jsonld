@@ -1,0 +1,49 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Location_notes_ref",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "",
+  "annal:field_fields": [
+    {
+      "annal:field_id": "_field/Entity_ref",
+      "annal:field_placement": "small:0,12;medium:0,4",
+      "annal:property_uri": ""
+    },
+    {
+      "annal:field_id": "_field/Entity_label",
+      "annal:field_placement": "small:0,12;medium:4,4",
+      "annal:property_uri": ""
+    },
+    {
+      "annal:field_id": "_field/Location_mapref",
+      "annal:field_placement": "small:0,12;medium:8,4",
+      "annal:property_uri": ""
+    }
+  ],
+  "annal:field_placement": "small:0,12",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "_type/Location_notes",
+  "annal:field_render_type": "_enum_render_type/RefMultifield",
+  "annal:field_value_mode": "_enum_value_mode/Value_entity",
+  "annal:field_value_type": "pcat:Location_notes",
+  "annal:id": "Location_notes_ref",
+  "annal:placeholder": "(Reference to Location notes fields)",
+  "annal:property_uri": "pcat:location_notes_ref",
+  "annal:repeat_label_add": "Add",
+  "annal:repeat_label_delete": "Remove",
+  "annal:superproperty_uri": [],
+  "annal:tooltip": "",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Location notes\r\n\r\nDisplay link to location notes, along with label and map reference.",
+  "rdfs:label": "Location notes"
+}

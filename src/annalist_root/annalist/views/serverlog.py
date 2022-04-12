@@ -23,6 +23,8 @@ from django.conf                    import settings
 
 from utils.ContentNegotiationView   import ContentNegotiationView
 
+from annalist                       import layout
+
 from annalist.models.annalistuser   import AnnalistUser
 
 from annalist.views.generic         import AnnalistGenericView
@@ -75,6 +77,7 @@ class ServerLogView(AnnalistGenericView):
                     { 'title':              self.site_data()["title"]
                     , 'serverlogname':      serverlogname
                     , 'serverlog':          "".join(serverlog)
+                    , 'info_coll_id':       layout.SITEDATA_ID
                     , 'continuation_url':   continuation_url
                     })
 

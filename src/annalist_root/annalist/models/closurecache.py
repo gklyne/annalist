@@ -150,7 +150,6 @@ class ClosureCache(object):
         self._cache     = get_cache(self._key)
         self._cache.set("fwd", {})
         self._cache.set("rev", {})
-        #@@@ self._rel       = { 'fwd': {}, 'rev': {} }
         return
 
     def remove_cache(self):

@@ -2,7 +2,7 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block heading %}{{ heading }}{% endblock %}
+{% block heading %}{{ heading | safe }}{% endblock %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
         <div class="row">
 
           <div class="medium-4 columns">
-            <h4>Record types</h4>
+            <h4 class="page-heading">Entity types</h4>
             <select name="typelist" size="{{ select_rows }}" 
                     class="small-size-4 medium-size-12 medium-add-margin">
               {% for t in types %}
@@ -28,7 +28,7 @@
           </div>
 
           <div class="medium-4 columns">
-            <h4>List views</h4>
+            <h4 class="page-heading">List views</h4>
             <select name="listlist" size="{{ select_rows }}" 
                     class="small-size-4 medium-size-12 medium-add-margin">
               {% for l in lists %}
@@ -42,7 +42,7 @@
           </div>
 
           <div class="medium-4 columns">
-            <h4>Record views</h4>
+            <h4 class="page-heading">Entity views</h4>
             <select name="viewlist" size="{{ select_rows }}" 
                     class="small-size-4 medium-size-12 medium-add-margin">
               {% for v in views %}
@@ -75,3 +75,71 @@
   </div>
 
 {% endblock %}
+
+{% block info %}
+  <div class="help hide-on-print row">
+    <!--
+    <div class="small-12 columns">
+      {{ help_text|safe }}
+    </div>
+    -->
+    <div class="small-12 columns">
+      <h1>Further information</h1>
+      <p>
+        Type definitions:
+        <a href="./l/Type_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/Type_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        List definitions:
+        <a href="./l/List_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/List_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        View definitions:
+        <a href="./l/View_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/View_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        Field definitions:
+        <a href="./l/Field_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/Field_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        Namespace definitions:
+        <a href="./l/Vocab_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/Vocab_list/{{ continuation_param }}&scope=all">
+          including inherited definitions
+        </a>
+      </p>
+      <p>
+        User permissions:
+        <a href="./l/User_list/{{ continuation_param }}">
+          this collection only
+        </a>&mdash;
+        <a href="./l/User_list/{{ continuation_param }}&scope=all">
+          including inherited permissions
+        </a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
+

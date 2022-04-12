@@ -74,12 +74,6 @@ class AnnalistTestCase(TestCase):
         self.assertIn(quote(err_msg, safe="(/)"),  response['location'])
         if redirect_url:
             self.assertIn(redirect_url, response['location'])
-        #@@
-        # self.assertEqual(response.status_code,   404)
-        # self.assertEqual(response.reason_phrase, "Not found")
-        # self.assertContains(response, "<title>Annalist error</title>", status_code=404)
-        # self.assertContains(response, "<h3>404: Not found</h3>", status_code=404)
-        #@@
         return
 
     def assertEqualPrefix(self, actual, expect, prefix=""):
@@ -243,6 +237,21 @@ class AnnalistTestCase(TestCase):
                 # Decode attribute value as JSON for testing
                 attr_val = json.loads(attr_val)
             self.assertEqual(attr_val, expect_attrs[attr])
+        return
+
+    def assertContains(self, response, expect, html=False, status_code=200):
+        try:
+            super(AnnalistTestCase, self).assertContains(
+                response, expect, 
+                html=html,
+                status_code=status_code
+                )
+        except AssertionError as e:
+            log.info(
+                "assertContains failure: response content\n%s\n"%
+                (response.content)
+                )
+            raise
         return
 
 # End.

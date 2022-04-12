@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.2">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <meta name="author" content="Graham Klyne">
 <title>Annalist tutorial</title>
 <link rel="stylesheet" href="./annalist-tutorial-asciidoctor.css">
@@ -14,8 +14,8 @@
 <h1>Annalist tutorial</h1>
 <div class="details">
 <span id="author" class="author">Graham Klyne</span><br>
-<span id="revnumber">version 0.1.24,</span>
-<span id="revdate">2015-12-07</span>
+<span id="revnumber">version 0.5.18,</span>
+<span id="revdate">2022-04-09</span>
 </div>
 </div>
 <div id="content">
@@ -31,7 +31,7 @@
 <div class="title">Note</div>
 </td>
 <td class="content">
-This document is an early draft, and is much in need of improvement.  Please submit feedback and comments either to the <a href="https://github.com/gklyne/annalist/issues">Annalist Github issues list</a>, or via the <a href="https://groups.google.com/forum/#!forum/annalist-discuss">Annalist discussion group</a>.
+This document is a work-in-progress, and can surely be improved.  Please submit feedback and comments either to the <a href="https://github.com/gklyne/annalist/issues">Annalist Github issues list</a>, or via the <a href="https://groups.google.com/forum/#!forum/annalist-discuss">Annalist discussion group</a>.
 </td>
 </tr>
 </table>
@@ -60,20 +60,30 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <li><a href="#_browsing_an_existing_annalist_collection">Browsing an existing Annalist collection</a></li>
 <li><a href="#_creating_a_new_collection">Creating a new collection</a></li>
 <li><a href="#_change_collection_metadata">Change collection metadata</a></li>
-<li><a href="#_create_initial_record_type_and_views">Create initial record type and views</a></li>
+<li><a href="#_create_initial_entity_type_and_views">Create initial entity type and views</a></li>
+<li><a href="#_define_namespace_uri">Define namespace URI</a></li>
 <li><a href="#_create_some_initial_data_records">Create some initial data records</a></li>
 <li><a href="#_add_simple_fields_to_a_data_record">Add simple fields to a data record</a></li>
 <li><a href="#_upload_images_to_a_collection">Upload images to a collection</a>
 <ul class="sectlevel2">
 <li><a href="#_create_a_new_field_definition_for_images">Create a new field definition for images</a></li>
 <li><a href="#_add_new_image_field_to_view_description">Add new image field to view description</a></li>
-<li><a href="#_upload_image_to_photograph_record">Upload image to Photograph record</a></li>
+<li><a href="#_upload_image_to_photograph_entity">Upload image to Photograph entity</a></li>
 </ul>
 </li>
 <li><a href="#_add_repeating_fields_to_a_data_record">Add repeating fields to a data record</a></li>
-<li><a href="#_create_an_additional_data_type_with_view_list">Create an additional data type (with view+list)</a></li>
-<li><a href="#_create_links_between_records">Create links between records</a></li>
-<li><a href="#_display_fields_from_a_linked_record">Display fields from a linked record</a></li>
+<li><a href="#_create_an_additional_entity_type_with_viewlist">Create an additional entity type (with view+list)</a>
+<ul class="sectlevel2">
+<li><a href="#_create_location_notes_entity">Create "Location notes" entity</a></li>
+<li><a href="#_add_repeating_links_field_to_location_notes">Add repeating links field to "Location notes"</a></li>
+<li><a href="#_add_weblinks_to_location_notes_entity">Add weblinks to "Location notes" entity</a></li>
+</ul>
+</li>
+<li><a href="#_create_links_between_entities">Create links between entities</a></li>
+<li><a href="#_display_field_from_a_linked_record">Display field from a linked record</a></li>
+<li><a href="#_display_more_fields_from_a_linked_record">Display more fields from a linked record</a></li>
+<li><a href="#_creating_simple_entity_type_hierarchies">Creating simple entity type hierarchies</a></li>
+<li><a href="#_inheriting_definitions">Inheriting definitions</a></li>
 </ul>
 </div>
 </div>
@@ -82,10 +92,10 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <h2 id="_running_example">Running example</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix <code>pcat</code> for URIs (actually ["Compact URIs"](<a href="http://www.w3.org/TR/curie/" class="bare">http://www.w3.org/TR/curie/</a>), or CURIEs) defined specifically for the photograph catalogue.  This prefix will eventually be associated with a base URI to allow identification on the World Wide Web.  (@@TODO: full linked data support.)</p>
+<p>This tutorial uses a running example of a personal photograph library, starting with a simple catalogue of images and some associated metadata, and then adding additional structures to cross reference other entities involved in the picture-taking process.  For this example, we use a prefix <code>pcat</code> for URIs (actually <a href="http://www.w3.org/TR/curie/">Compact URIs</a>, or CURIEs) defined specifically for the photograph catalogue.  This prefix may be associated with a base URI to allow identification on the World Wide Web.</p>
 </div>
 <div class="paragraph">
-<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection [Annalist photo collection].  (@@TODO, once current in-development software is deployed.)</p>
+<p>The completed example can be seen at the <a href="http://demo.annalist.net/">Annalist demo site</a>, as collection <a href="https://demo.annalist.net/annalist/c/Tutorial_example_data/">Tutorial_example_data</a>.</p>
 </div>
 </div>
 </div>
@@ -96,63 +106,56 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>Browse to the Annalist site login page; e.g. <a href="http://demo.annalist.net/annalist/site/" class="bare">http://demo.annalist.net/annalist/site/</a>, then <a href="http://demo.annalist.net/annalist/login/" class="bare">http://demo.annalist.net/annalist/login/</a>.</p>
 </div>
 <div class="paragraph">
-<p>The first time of logging in to an Annalist site from some computer will involve some or all of the following.</p>
+<p>The first time of logging in to an Annalist site from some computer using Google credentials will involve the following.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>select a User ID</p>
-</li>
-<li>
 <p>enter User ID into login form</p>
 </li>
 <li>
-<p>select "Google" for the Login Service</p>
-</li>
-<li>
-<p>click "Login"</p>
+<p>in the row labeled "Login using", click on "Google"</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>At this point the browser is redirected to Google&#8217;s own login page to enter account credentials, and maybe also a 2-factor authentication code.  Once the authentication credentials have been entered and verified, Google may then ask for your permission to disclose information to the Annalist application.  The information to be disclosed is described;  Annalist uses only the email address, which is used in conjucntion with the User ID entered to select a set of user permissions (see "User permissions" section).</p>
-</div>
-<div class="sidebarblock">
+<div class="imageblock text-center text-center">
 <div class="content">
-<div class="paragraph">
-<p>@@When alternative ID provders are supported, note this</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>If the User ID has already been used by a different user, a message is displayed (@@ message text)</p>
-</div>
-<div class="paragraph">
-<p>After the first time, use the same details and click "Login".  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.</p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-login-form.png" alt="Annalist login form" width="500">
+<img src="screenshot-login-form-1.png" alt="Annalist login form" width="640">
 </div>
 <div class="title">Figure 1. Annalist login form</div>
 </div>
 <div class="paragraph">
-<p>The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).</p>
+<p>At this point the browser is redirected to Google&#8217;s own login page to enter account credentials, and maybe also a 2-factor authentication code.  Once the authentication credentials have been entered and verified, Google may then ask for your permission to disclose information to the Annalist application.  The information to be disclosed is described;  Annalist uses only the email address, which is used in conjucntion with the User ID entered to select a set of user permissions (see "User permissions" section).</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="paragraph">
+<p>Completion of login displays a profile page like this:</p>
+</div>
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-login-done.png" alt="Annalist logged in" width="500">
+<img src="screenshot-login-done-1.png" alt="Annalist logged in" width="640">
 </div>
 <div class="title">Figure 2. Annalist logged in</div>
 </div>
 <div class="paragraph">
-<p>Once the login is complete, click on "Home" in the menu bar to return to the main Annalist site</p>
+<p>Once the login is complete, click on "Continue", or "Home" in the menu bar, to return to the main Annalist site:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-annalist-home.png" alt="Annalist home page" width="500">
+<img src="screenshot-annalist-home-after-login.png" alt="Annalist home page" width="640">
 </div>
 <div class="title">Figure 3. Annalist home page</div>
+</div>
+<div class="paragraph">
+<p>A number of other identity providers may be shown.  At the time of writing (October 2019), Annalist has been tested using Google and Github as login identity providers.  Also, usernames and passwords may be configured locally in the Django web hosting environment (see "admin" in the footer menu), and accessed via the "Local username" button (see "Local authentication" below).</p>
+</div>
+<div class="paragraph">
+<p>If the User ID given has already been used by a different user (i.e. with a different email address), a message is displayed (e.g., "Login failed:  Authenticated user test_user email address mismatch (<a href="mailto:gklyne@googlemail.com">gklyne@googlemail.com</a>, <a href="mailto:graham.klyne@oerc.ox.ac.uk">graham.klyne@oerc.ox.ac.uk</a>)"").</p>
+</div>
+<div class="paragraph">
+<p>After the first time of logging in, use the same User ID value, and click the appropriate "Login using" button.  Typically, if this is a personal machine you have used before, the login will complete without any further interaction.</p>
+</div>
+<div class="paragraph">
+<p>The login sequence associates an authenticated email address with the User ID given, which is used to determine appropriate access permissions (see "User permissions" below).</p>
 </div>
 <div class="sect2">
 <h3 id="_using_public_computers">Using public computers</h3>
@@ -162,35 +165,28 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="sidebarblock">
 <div class="content">
 <div class="paragraph">
-<p>@@details for logout from Google.</p>
+<p>@@TODO: details for logout from Google.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_local_authentication">Local authentication</h3>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p>@@Update this when "Local" is implemented as a login service</p>
-</div>
-</div>
-</div>
 <div class="paragraph">
 <p>Annalist has been designed to use third party authentication.  This avoids having to deal with the tricky technical and operational difficulties of managing password files;  leaked password files are a very common form of security failure, so by leaving this to the ID provider professionals, user security should be improved.  This also allows users to log in using an existing account rather than having to allocate and remember a new password for Annalist.</p>
 </div>
 <div class="paragraph">
-<p>Sometimes (for example when Annalist is required to be usable when not connected to the Internet), it may be preferred to use locally managed passwords.  Annalist can use the local password management and login features of the Django web application platform on which it is built.</p>
+<p>Sometimes (for example when Annalist is required to be usable when not connected to the Internet), it may be preferred to use locally managed passwords.  Annalist can use the local password management and login features of the <a href="https://www.djangoproject.com/">Django</a> web application platform upon which it is built.</p>
 </div>
 <div class="paragraph">
 <p>When installing Annalist, an administration account may be created using the <code>annalist-manager</code> tool.  When logged in to Annalist using this account, the <strong>Admin</strong> link in the footer of most Annalist pages will allow new user accounts to be created via the Django admin interface.  More documentation about using this admin interface is in the <a href="http://www.djangobook.com/en/2.0/chapter06.html">The Django Admin Site</a>, which is Chapter 6 of <a href="http://www.djangobook.com/en/2.0/index.html">The Django Book</a>.</p>
 </div>
 <div class="paragraph">
-<p>To log in using a Dango account clock on the "Local user credentials" <code>login</code> link, and enter a Django username and password into the new page that is displayed.  Once logged in, return to the Annalist site "Home" page</p>
+<p>To log in using a Dango account, select "Local username" on the login form, and enter a Django username and password into the new page that is displayed.  Once logged in, return to the Annalist site "Home" page .</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-login-django.png" alt="Annalist local login form" width="500">
+<img src="screenshot-login-django.png" alt="Annalist local login form" width="640">
 </div>
 <div class="title">Figure 4. Annalist local login form</div>
 </div>
@@ -207,11 +203,11 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>User permissions may be defined site-wide (i.e. they can apply for all collections across a site), or they may be defined separately for each collection.  Thus, different permissions may be granted to different users in different collections.  Permission to create new collections must be site-wide.</p>
 </div>
 <div class="paragraph">
-<p>Within a collection, a user with <code>ADMIN</code> permissions on that collection can view the user permissions for the collection in the List view <code>List users</code>.  To view the list of user permissions for a collection, browse to that collection which will display some list of records.  In the <code>List view</code> dropdown, select option <code>List users</code>, and click <code>View</code> see see user permissions defined for the collection only, or <code>View all</code> to also list site-wide user permissions.</p>
+<p>Within a collection, a user with <code>ADMIN</code> permissions on that collection can view and edit the user permissions for the collection.  To view the list of user permissions for a collection, browse to that collection, then select the "Customize" button at the bottom of the displayed page.  On the next page, select the <code>User permissions</code> link to see user permissions defined for the collection only.  To see all permissions, including site-wide permissions, that apply to the collection, select the <code>Scope all</code> checkbox, and click on the "List" button.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-annalist-permissions.png" alt="Annalist collection user permissions" width="500">
+<img src="screenshot-annalist-permissions.png" alt="Annalist collection user permissions" width="640">
 </div>
 <div class="title">Figure 5. List user permissions for an Annalist collection</div>
 </div>
@@ -232,9 +228,9 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="paragraph">
 <p>New permissions may be added from the "List user permissions" page (see above) by clicking <code>New</code>:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-annalist-permissions-new.png" alt="Annalist collection new user permissions" width="500">
+<img src="screenshot-annalist-permissions-new.png" alt="Annalist collection new user permissions" width="640">
 </div>
 <div class="title">Figure 6. Creating new user permissions for an Annalist collection</div>
 </div>
@@ -251,20 +247,10 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="sect2">
 <h3 id="_adding_site_wide_user_access_permissions">Adding site-wide user access permissions</h3>
 <div class="paragraph">
-<p>Site-wide permissions are initially defined using the <code>annalist-manager</code> command line administration tool. See <a href="../installing-annalist.md">Installing and setting up Annalist</a> for more information about <code>annalist-manager</code>, or run the command <code>annalist-manager help</code>.</p>
+<p>Site-wide permissions are initially defined using the <code>annalist-manager</code> command line administration tool. See <a href="../installing-annalist.md">Installing and setting up Annalist</a> for more information about <code>annalist-manager</code>, or run the command <code>annalist-manager help</code>.  (<code>annalist-manager</code> currently has a bare miniumum of capabilities for creating users, mainly intended to bootstrap a system with administrative access.)</p>
 </div>
 <div class="paragraph">
-<p>Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the <code>_annalist_site</code> collection.</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="paragraph">
-<p>@@Update with more detailed instructions.</p>
-</div>
-<div class="paragraph">
-<p>@@<code>analist-manager</code> currently has a bare miniumum of capabilities to create users, mainly intended to bootstrap a system with admin users.</p>
-</div>
-</div>
+<p>Once basic administrative access has been established, additional site-wide permissions can be created by creating or editing user permissions in the <code>_annalist_site</code> collection.  Site-wide administrative access is requiured to edit the <code>_annalist_site</code> collection, but the process is otherwise the same as adding permissions to a specific collection.</p>
 </div>
 </div>
 <div class="sect2">
@@ -276,7 +262,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p><code>ADMIN</code> - required to create or view user permissions in a collection.  The creator of a collection is automatically granted <code>ADMIN</code> permissions over that collection, so they can assign permissions in that collection for other users.  This permission at site level also allows creation and deletion of collections.</p>
 </div>
 <div class="paragraph">
-<p><code>CONFIG</code> - required to change the structure of a collection: to create and/or modify record types, views, lists, etc.</p>
+<p><code>CONFIG</code> - required to change the structure of a collection: to create and/or modify entity types, views, lists, etc.</p>
 </div>
 <div class="paragraph">
 <p><code>CREATE</code> - required to create new data in a collection.</p>
@@ -332,18 +318,18 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="paragraph">
 <p>To create a new collection, go to the Annalist site home page and enter a collection id and description for the new collection, and click the <code>New</code> button.  The collection id must consist of letters, digits and underscore ('_') characters only, and be no longer than 32 characters.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-collection.png" alt="Creating a new Annalist collection" width="500">
+<img src="screenshot-create-collection_1.png" alt="Creating a new Annalist collection" width="640">
 </div>
 <div class="title">Figure 7. Creating new Annalist collection</div>
 </div>
 <div class="paragraph">
 <p>In the updated list of collections, click on the link corresponding to the new collection to view its initial content:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-view-new-collection.png" alt="Creating a new Annalist collection" width="500">
+<img src="screenshot-view-new-collection_1.png" alt="Creating a new Annalist collection" width="640">
 </div>
 <div class="title">Figure 8. View new Annalist collection</div>
 </div>
@@ -356,78 +342,81 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>Modifying collection metadata requires <code>CONFIG</code> permissions.</p>
 </div>
 <div class="paragraph">
-<p>A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit selected" button:</p>
+<p>A collection name, label, description and other metadata may be edited by viewing the site home page, selecting the checkbox by the collection to be edited, then clicking on the "Edit metadata" button:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-collection-metadata.png" alt="Edit Annalist collection metadata" width="500">
+<img src="screenshot-edit-collection-metadata_1.png" alt="Edit Annalist collection metadata" width="640">
 </div>
 <div class="title">Figure 9. Edit Annalist collection metadata</div>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="paragraph">
+<p>Alternatively, view the collection by clicking its link, then click the "Customize" button, and on the next page click the "Collection metadata" button:</p>
+</div>
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-collection-metadata-view.png" alt="Annalist collection metadata edit view" width="500">
+<img src="screenshot-edit-collection-metadata_2.png" alt="Edit Annalist collection metadata via Customize page" width="640">
 </div>
-<div class="title">Figure 10. Annalist collection metadata edit view</div>
-</div>
-<div class="paragraph">
-<p>@@TODO: update home page screenshot from demo site when deployed</p>
+<div class="title">Figure 10. Edit Annalist collection metadata via Customize page</div>
 </div>
 <div class="paragraph">
-<p>By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalisty software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the <code>Parent</code> field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting from scratch.</p>
+<p>Either way, a form for editing the collection metadata is presented:</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-collection-metadata-view_1.png" alt="Annalist collection metadata edit view" width="640">
+</div>
+<div class="title">Figure 11. Annalist collection metadata edit view</div>
+</div>
+<div class="paragraph">
+<p>By default, a collection inherits site-wide type, view and field definitions that are defined by the Annalist software.  It may also inherit definitions from another existing collection on the same site by selecting that collection in the <code>Parent</code> field.  This feature is intended to allow a collection to be based on an existing set of definitions rather than starting every time from scratch.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_create_initial_record_type_and_views">Create initial record type and views</h2>
+<h2 id="_create_initial_entity_type_and_views">Create initial entity type and views</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>It is possible to start creating new data records straight away in a newly created collection, using the in-built default type and views.  But for practical use, it is probably better to start by creating a new record type and corresponding views to match the initial data to be collected.</p>
+<p>It is possible to start creating new data entitys straight away in a newly created collection, using the in-built <code>Default_type</code> and associated views.  But for practical use, it is probably better to start by creating a new entity type and corresponding views to match the initial data to be collected.</p>
 </div>
 <div class="paragraph">
-<p>Creating record types and views for a collection requires permission <code>CONFIG</code> in that collection.  The user who creates a collection is automatically granted full permissions for that collection.  They may, in turn, create permissions for other users.</p>
+<p>Creating entity types and views for a collection requires permission <code>CONFIG</code> in that collection.  The user who creates a collection is automatically granted full permissions for that collection.  They may, in turn, create permissions for other users.</p>
 </div>
 <div class="paragraph">
-<p>Switch to a listing of record types, by selecting <code>List types</code> from the <code>List view</code> selector, and then click on the <code>View</code> button:</p>
+<p>View the entity types by viewing the collection, and clicking the "Customize" button:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-list-types.png" alt="List record types in Annalist collection" width="500">
+<img src="screenshot-customize-1.png" alt="Customize Annalist collection" width="640">
 </div>
-<div class="title">Figure 11. List record types in Annalist collection</div>
+<div class="title">Figure 12. Select <code>Customize</code> option</div>
 </div>
 <div class="paragraph">
-<p>Click the <code>New</code> button to create a new record type, and enter some details about this record type (e.g. as shown below).  To define an initial tailorable view and list descriptions for the new record type, click on the <code>Define view+list</code> button.  The <code>Default view</code> and <code>Default list</code> fields are updated accordingly:</p>
+<p>Click the <code>New</code> button under <code>Entity types</code> to create a new entity type:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-type.png" alt="Creating new record type in Annalist collection" width="500">
+<img src="screenshot-customize-new-type.png" alt="List entity types in Annalist collection" width="640">
 </div>
-<div class="title">Figure 12. Creating new record type, view and list in Annalist collection</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<div class="title">@@FIXME</div>
-<div class="paragraph">
-<p>There is a possible bug in the software that needs investigating: if an error message is displayed saying the new type already exists, click <code>Cancel</code> then select the new type in the "List types" display and click <code>Edit</code>.  Then click the <code>Define view+list</code> button.</p>
-</div>
-</td>
-</tr>
-</table>
+<div class="title">Figure 13. List entity types in Annalist collection</div>
 </div>
 <div class="paragraph">
-<p>In this case, the automatically generated label, "List of Photograph", doesn&#8217;t really read smoothly.  Details of the generated list and/or view descriptions can be edited by clicking on the nearby <span class="image"><img src="button-edit-entity.png" alt="button-edit-entity"></span> button, and making changes as desired.  Click <code>Save</code> when done to return to the type description page.</p>
+<p>Enter some details about this entity type (e.g. as shown below).  To define an initial tailorable view and list descriptions for the new entity type, click on the <code>Define view+list</code> button.  The <code>Default view</code> and <code>Default list</code> fields are updated accordingly:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-list.png" alt="Edit definition for list of photographs" width="500">
+<img src="screenshot-create-new-type-2.png" alt="Creating new entity type in Annalist collection" width="640">
 </div>
-<div class="title">Figure 13. Edit definition for list of photographs</div>
+<div class="title">Figure 14. Creating new entity type, view and list in Annalist collection</div>
+</div>
+<div class="paragraph">
+<p>Details of the generated list and/or view descriptions can be edited by clicking on the nearby <span class="image"><img src="button-edit-entity.png" alt="button edit entity"></span> button, and making changes as desired.  Click <code>Save</code> when done to return to the type description page.  The label, "Photograph list" has been automatically generated;  we might wish to change this to just "Photographs":</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-list-2.png" alt="Edit definition for list of photographs" width="640">
+</div>
+<div class="title">Figure 15. Edit definition for list of photographs</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code> again to save any final changes to the type description and return to the "Type list" display.</p>
@@ -435,37 +424,87 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </div>
 </div>
 <div class="sect1">
+<h2 id="_define_namespace_uri">Define namespace URI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have introduced a new namespace prefix, <code>pcat</code>, for terms (such as the type identifier <code>pcat:Photograph</code>) used to describe photoraphs.  To be usedful as linked data on the web, this prefix needs to be associated with a URI.  To to this, from the "Customize" page, in the line labeled "Namespace definitions:", click on the link "this collection only".</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-customize-new-namespace.png" alt="List namespaces in Annalist collection" width="640">
+</div>
+<div class="title">Figure 16. List namespaces in Annalist collection</div>
+</div>
+<div class="paragraph">
+<p>In the next screen click on <code>New</code>:</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-list-namespaces-new.png" alt="List namespaces in Annalist collection" width="640">
+</div>
+<div class="title">Figure 17. List namespaces in Annalist collection</div>
+</div>
+<div class="paragraph">
+<p>In the next screen, enter the namespace prefix as id, and provide a value for the namespace URI.  Use a URI that you can control, of for the time being use a placeholder in the <code>example.org</code> domain.  Provide a label and description for the namespace, and cick <code>Save</code> to save the details in the Annalist collection.  The "See also" field might be used to link to documentation of the namespae terms, if any is available.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-namespace-save.png" alt="Enter details of new namespace and save" width="640">
+</div>
+<div class="title">Figure 18. Enter details of new namespace and save</div>
+</div>
+<div class="paragraph">
+<p>The list of namespaces is redisplayed, with the new namespace included.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-list-namespaces-2.png" alt="List namespaces in Annalist collection" width="640">
+</div>
+<div class="title">Figure 19. List updated namespaces in Annalist collection</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_create_some_initial_data_records">Create some initial data records</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Switch to a listing of "Photograph" records by selecting <code>Photographs</code> from the <code>List view</code> selector, and then click on the <code>View</code> button;  the initial list should be empty:</p>
+<p>Switch to a listing of "Photograph" records by selecting <code>Photographs</code> from the <code>List view</code> selector, and then click on the <code>List</code> button:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-list-photographs-empty.png" alt="Initial" width="500" height="list of Photographs">
+<img src="screenshot-list-namespaces-list-photos.png" alt="List photoraphs in collection" width="640">
 </div>
-<div class="title">Figure 14. Initial, empty, list of Photographs</div>
+<div class="title">Figure 20. List updated namespaces in Annalist collection</div>
 </div>
 <div class="paragraph">
-<p>Click on the <code>New</code> button to bring uo an initial forkm for enterimng details about a photograph.  New record views contain a number of common fields: <code>Id</code>, <code>Type</code>, <code>Label</code> and <code>Description</code>.  Only the <code>Id</code> field and <code>Label</code> fields are mandatory; the others are defined because they are commonly useful.  The <code>Id</code> field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The <code>Label</code> field provides a summary description of the record used in lists and drop-down selectors.</p>
+<p>An empty list of photographs should be displayed:</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-list-photographs-empty.png" alt="Initial" width="640" height="list of Photographs">
+</div>
+<div class="title">Figure 21. Initial, empty, list of Photographs</div>
+</div>
+<div class="paragraph">
+<p>Click on the <code>New</code> button to bring up an initial form for enterimng details about a photograph.  New record views contain a number of common fields: <code>Id</code>, <code>Type</code>, <code>Label</code> and <code>Description</code>.  Only the <code>Id</code> field and <code>Label</code> fields are mandatory; the others are defined because they are commonly useful.  The <code>Id</code> field is used internally to identify the record, and is used in forming a URL that can be used to access the data.  The <code>Label</code> field provides a summary description of the record used in lists and drop-down selectors.</p>
 </div>
 <div class="paragraph">
 <p>Enter some descriptive data into the fields and click <code>Save</code>.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-photograph.png" alt="Creating new Photograph record in Annalist collection" width="500">
+<img src="screenshot-create-photograph-save.png" alt="Creating new Photograph record in Annalist collection" width="640">
 </div>
-<div class="title">Figure 15. Creating new Photograph record</div>
+<div class="title">Figure 22. Creating new Photograph record</div>
 </div>
 <div class="paragraph">
 <p>This process can be repeated for additional photographs.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-list-photographs.png" alt="List of Photograph records in Annalist collection" width="500">
+<img src="screenshot-list-photographs-2.png" alt="List of Photograph records in Annalist collection" width="640">
 </div>
-<div class="title">Figure 16. List of Photograph records</div>
+<div class="title">Figure 23. List of Photograph records</div>
 </div>
 </div>
 </div>
@@ -492,78 +531,84 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </ul>
 </div>
 <div class="paragraph">
-<p>The following screenshots illustrate the last of these approaches.</p>
+<p>The following screenshots illustrate the last of these approaches.  First click on an entry to view its data:</p>
 </div>
-<div class="imageblock" style="text-align: center">
+<div class="imageblock text-center">
 <div class="content">
-<img src="screenshot-view-photograph-1.png" alt="View a Photograph record in Annalist" width="500">
-</div>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="screenshot-view-photograph-view.png" alt="View description of view of photograph in Annalist" width="500">
-</div>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-photograph-view.png" alt="Edit description of view of photograph in Annalist" width="500">
+<img src="screenshot-view-photograph-1.png" alt="View a Photograph record in Annalist" width="640">
 </div>
 </div>
 <div class="paragraph">
-<p>To add a "Date" field: click <code>Add field</code>.  A new row is added to the list of fields, with unspecified values for <code>Field id</code>, <code>Property</code> and <code>Position/size</code>. Clicking on the <code>Field id</code> value lists a few options, but none of these suggests a "Date" value.  A new type of view field is required here, so click on the <span class="image"><img src="button-new-entity.png" alt="button-new-entity"></span> button:</p>
+<p>Then click on <code>View description</code>:</p>
 </div>
-<div class="imageblock" style="text-align: center">
+<div class="imageblock text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-new-field.png" alt="Adding a new field to the Photograph view" width="500">
+<img src="screenshot-view-photograph-view.png" alt="View description of view of photograph in Annalist" width="640">
 </div>
 </div>
 <div class="paragraph">
-<p>This opens a new form to define details of a new field type.  Fill in information for <code>Id</code>, <code>Field value type</code>, <code>Label</code>, <code>Help</code>, <code>Property</code>, <code>Field render type</code>, <code>Value mode</code> and <code>Placeholder</code> as shown.  In ths case, the other fields should be left unspecified.  (The meanings of all these fields are described in <a href="../view-field-types.adoc">View fields in Annalist</a>.)</p>
+<p>Then click on <code>Edit</code>:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center">
 <div class="content">
-<img src="screenshot-create-new-field-date.png" alt="Defining a new view field type for date" width="500">
+<img src="screenshot-edit-photograph-view.png" alt="Edit description of view of photograph in Annalist" width="640">
 </div>
-<div class="title">Figure 17. Defining a new view field type for date</div>
 </div>
 <div class="paragraph">
-<p>When done, click <code>Save</code>, which returns to the previous view editing form.  Now, clicking on the <code>Field id</code> value includes an option for the new field type just described.  Choose this.  The <code>Property</code> and <code>Posityion/size</code> columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (<code>0/6</code>) for <code>Position/size</code>.</p>
+<p>To add a "Date" field: click <code>Add field</code>.  A new row is added to the list of fields, with unspecified values for <code>Field id</code>, <code>Property</code> and <code>Position/size</code>. Clicking on the <code>Field id</code> value lists a few options, but none of these suggests a "Date" value.  A new type of view field is required here, so click on the <span class="image"><img src="button-new-entity.png" alt="button new entity"></span> button:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-view-new-field.png" alt="Adding a new field to the Photograph view" width="640">
+</div>
+</div>
+<div class="paragraph">
+<p>This opens a new form to define details of a new field type.  Fill in information for <code>Id</code>, <code>Render type</code>, <code>Label</code>, <code>Help</code>, <code>Property URI</code>, <code>Entity type</code>, <code>Value type</code>, <code>Value mode</code> and <code>Placeholder</code> as shown.  In ths case, the other fields should be left unspecified.  (The meanings of all these fields are described in <a href="../view-field-types.adoc">View fields in Annalist</a>.)</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-create-new-field-date-2.png" alt="Defining a new view field type for date" width="640">
+</div>
+<div class="title">Figure 24. Defining a new view field type for date</div>
+</div>
+<div class="paragraph">
+<p>When done, click <code>Save</code>, which returns to the previous view editing form.  Now, clicking in the <code>Field id</code> includes an option for the new "Date taken" field.  Choose this.  The <code>Property</code> and <code>Posityion/size</code> columns can be left blank to use values from the field definiotion, or overriding values for the current view can be specified here.  Select an appropriate value (<code>0/6</code>) for <code>Position/size</code>.</p>
 </div>
 <div class="paragraph">
 <p>Repeat the above process, starting with <code>Add field</code>, to define a new field for the location that a photograph was taken:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-field-place.png" alt="Defining a new view field type for place" width="500">
+<img src="screenshot-create-new-field-place-2.png" alt="Defining a new view field type for place" width="640">
 </div>
-<div class="title">Figure 18. Defining a new view field type for place</div>
+<div class="title">Figure 25. Defining a new view field type for place</div>
 </div>
 <div class="paragraph">
 <p>Returning to the view edit form, the new location field can be selected and its position/size specified.  Next, select the two new fields and click the <code>Move &#x2b06;</code> button so that they appear immediately after the <code>label</code> field.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-2.png" alt="New fields added to Photograph view" width="500">
+<img src="screenshot-edit-photograph-view-2.png" alt="New fields added to Photograph view" width="640">
 </div>
-<div class="title">Figure 19. New fields added to Photograph view</div>
+<div class="title">Figure 26. New fields added to Photograph view</div>
 </div>
 <div class="paragraph">
 <p>Click <code>Save</code>, then <code>Close</code> to return to the view of a Photograph, which should now look like this:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-view-photograph-2.png" alt="Updated view of a Photograph record in Annalist" width="500">
+<img src="screenshot-view-photograph-2.png" alt="Updated view of a Photograph record in Annalist" width="640">
 </div>
-<div class="title">Figure 20. Updated view of a Photograph record in Annalist</div>
+<div class="title">Figure 27. Updated view of a Photograph record in Annalist</div>
 </div>
 <div class="paragraph">
 <p>If the view is now edited, values for the date and location fields can be entered:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-2.png" alt="Adding new field values to a Photograph record" width="500">
+<img src="screenshot-edit-photograph-2.png" alt="Adding new field values to a Photograph record" width="640">
 </div>
-<div class="title">Figure 21. Adding new field values to a Photograph record</div>
+<div class="title">Figure 28. Adding new field values to a Photograph record</div>
 </div>
 <div class="paragraph">
 <p>These new fields are clearly intended to hold specific types of value (date, location) and the examples suggest particular formats be used for them.  But as far as Annalist is concerned, these are just simple text fields, and no attempt is made to check the format of any values entered.  This is consistent with the Annalist pholosophy of making it easy to capture whatever data may be available with a minimum of hindrance to the user.  The intent is that issues of consistency and data quality may be checked separately according to whatever criteria are deemed appropriate to the task at hand.</p>
@@ -579,8 +624,8 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="paragraph">
 <p>The steps for adding an image attachment to a record are:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
 <p>Define a new field type for the upload imaged file</p>
 </li>
@@ -590,45 +635,45 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <li>
 <p>Edit Photograph records and upload images</p>
 </li>
-</ol>
+</ul>
 </div>
 <div class="paragraph">
 <p>There are several ways to accomplish these steps (see previous section).  The following example goes via the "Customize" page, starting from the "List of photographs" page:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-list-photographs.png" alt="List of Photograph records in Annalist collection" width="500">
+<img src="screenshot-list-photographs.png" alt="List of Photograph records in Annalist collection" width="640">
 </div>
-<div class="title">Figure 22. List of Photograph records</div>
+<div class="title">Figure 29. List of Photographs</div>
 </div>
 <div class="paragraph">
 <p>Click on the <code>Customize</code> button:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-customize.png" alt="Annalist collection Customize page" width="500">
+<img src="screenshot-customize-3.png" alt="Annalist collection Customize page" width="640">
 </div>
-<div class="title">Figure 23. Customize collection page</div>
+<div class="title">Figure 30. Customize collection page</div>
 </div>
 <div class="sect2">
 <h3 id="_create_a_new_field_definition_for_images">Create a new field definition for images</h3>
 <div class="paragraph">
-<p>Select "View of Photograph" in the "Record views" column, and click the <code>Edit</code> button.  On the resulting view description page, click <code>Add field</code>, and then on the <code>+</code> button beside the newly added field:</p>
+<p>Select "Photograph view" in the "Entity views" column, and click the <code>Edit</code> button.  On the resulting view description page, click <code>Add field</code>, and then on the <code>+</code> button beside the newly added field:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-3.png" alt="Add new field to photograph record" width="500">
+<img src="screenshot-edit-photograph-view-3.png" alt="Add new field to photograph record" width="640">
 </div>
-<div class="title">Figure 24. Add new field</div>
+<div class="title">Figure 31. Add new field</div>
 </div>
 <div class="paragraph">
 <p>Fill in details for the new field as shown:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-field-image.png" alt="New image field details" width="500">
+<img src="screenshot-create-new-field-image-2.png" alt="New image field details" width="640">
 </div>
-<div class="title">Figure 25. New image field details</div>
+<div class="title">Figure 32. New image field details</div>
 </div>
 <div class="paragraph">
 <p>The key fields to note here are:</p>
@@ -636,7 +681,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="ulist">
 <ul>
 <li>
-<p><code>Render field type</code>: the value <code>Ref image file</code> indicates the field value is a reference to an image file.</p>
+<p><code>Render field type</code>: the value <code>Image reference</code> indicates the field value is a reference to an image file.</p>
 </li>
 <li>
 <p><code>Value mode</code>: the value <code>File upload</code> indicates the referenced image will be an uploaded file.</p>
@@ -650,34 +695,88 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="sect2">
 <h3 id="_add_new_image_field_to_view_description">Add new image field to view description</h3>
 <div class="paragraph">
-<p>Select Field Id <code>Image</code> for the newly added field, select a value for size/position, click <code>Save</code> to return to the <code>Customize page</code>, and <code>Close</code> to return to the list of photographs:</p>
+<p>To use the new field definition in the Photograph entity view:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select Field Id <code>Image</code> for the newly added field</p>
+</li>
+<li>
+<p>select a value (e.g., <code>(0/6)</code>) for Position/size</p>
+</li>
+<li>
+<p>click <code>Save</code> to return to the <code>Customize page</code></p>
+</li>
+<li>
+<p><code>Close</code> to return to the list of photographs</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-4.png" alt="Photograph record with "Image" field added" width="500">
+<img src="screenshot-edit-photograph-view-4.png" alt="Photograph entity view with &quot;Image&quot; field added" width="640">
 </div>
-<div class="title">Figure 26. New "Image" field added</div>
+<div class="title">Figure 33. Photograph entity view with "Image" field added</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_upload_image_to_photograph_record">Upload image to Photograph record</h3>
+<h3 id="_upload_image_to_photograph_entity">Upload image to Photograph entity</h3>
 <div class="paragraph">
-<p>To upload an image, click on the link for a photograph, then click <code>Edit</code>;  the photograph editing form, is displayed, now with an additional <code>Image</code> field with a <code>Browse</code> button:</p>
+<p>To upload an image:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-photograph-3.png" alt="Edit Photograph record with Image field" width="500">
-</div>
-<div class="title">Figure 27. Edit photograph record with Image field</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>click on the link for a photograph</p>
+</li>
+<li>
+<p>click <code>Edit</code></p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Click <code>Browse</code>, select an image file to be uploaded, then <code>Open</code> (or equivalent for the browser being used).  On the photo editing page, click <code>Save</code>.  The Photograph record is now displayed with the uploaded image:</p>
+<p>The photograph editing form, is displayed, now with an additional <code>Image</code> field with a <code>Browse</code> button:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-view-photograph-3.png" alt="View photograph record with uploaded Image" width="500">
+<img src="screenshot-edit-photograph-3.png" alt="Edit Photograph record with Image field" width="640">
 </div>
-<div class="title">Figure 28. View photograph record with uploaded Image</div>
+<div class="title">Figure 34. Edit photograph record with Image field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>click <code>Browse</code></p>
+</li>
+<li>
+<p>select an image file to be uploaded</p>
+</li>
+<li>
+<p><code>Open</code> (or equivalent for the browser being used)</p>
+</li>
+<li>
+<p>on the photo editing page, click <code>Save</code>.  The Photograph record is now displayed with the uploaded image:</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The images used for this tutorial example can be found in the Annalist GitHub repository, <a href="https://github.com/gklyne/annalist/tree/develop/documents/tutorial/photos">documents/tutorial/photos directory</a>.  They may be downloaded from there to any convenient location on your computer.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-3.png" alt="View photograph record with uploaded Image" width="640">
+</div>
+<div class="title">Figure 35. View photograph record with uploaded Image</div>
 </div>
 <div class="paragraph">
 <p>Clicking on the displayed image here will show the image alone in a new tab (or possibly a new window, depending on the browser used), occupying the full browser window.</p>
@@ -689,7 +788,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <h2 id="_add_repeating_fields_to_a_data_record">Add repeating fields to a data record</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sometimes, it is desirable to have a field or group of fields in a record that can be repeated an arbitrary number of times.  We have already seen this when editing a view description which may contain an arebitrary number of fields.  Annalist implements such repeated fields as a special type of field that itself contains references to other fields via a "Field group" description.</p>
+<p>Sometimes, it is desirable to have a field or group of fields in a record that can be repeated an arbitrary number of times.  We have already seen this when editing a view description which may contain an arebitrary number of fields.  Annalist implements such repeated fields as a special type of field that itself contains references to other fields.</p>
 </div>
 <div class="paragraph">
 <p>Thus, to create a repeating field or group of fields within a view, the following must be defined:</p>
@@ -700,10 +799,7 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>One or more ordinary individual fields that are to be repeated.</p>
 </li>
 <li>
-<p>A field group that references the field(s) that are to be repeated.</p>
-</li>
-<li>
-<p>A repeating-value field that references the field group.</p>
+<p>A repeating-value field that references the field(s) that are to be repeated.</p>
 </li>
 </ol>
 </div>
@@ -711,118 +807,153 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>Annalist provides a short-cut for creating these various descriptions in the form of a "task button" that appears on the field description editing form.</p>
 </div>
 <div class="paragraph">
-<p>For our example, we create a field that allows multiple keywords to be associated with a Photograph, starting with a view of a photograph record.  Click on <code>View description</code>, then on the next page displayed click <code>Edit</code>, <code>Add field</code>, and then on the <span class="image"><img src="button-new-entity.png" alt="button-new-entity"></span> button by the newly added field.</p>
+<p>For our example, we shall create a field that allows multiple keywords to be associated with a Photograph, starting with a view of a photograph record.</p>
+</div>
+<div class="paragraph">
+<p>To display a photograph record, click on the <strong>Tutorial_example</strong> link in the top menu bar, then click on one of the <strong>Id</strong> values associated with type <code>Photograph</code>.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-photo-view.png" alt="Navigting to a photograph record view" width="640">
+</div>
+<div class="title">Figure 36. Navigate to photograph record view</div>
+</div>
+<div class="paragraph">
+<p>Click on <code>View description</code>, then on the next page displayed click <code>Edit</code>, then <code>Add field</code>, and finally on the <span class="image"><img src="button-new-entity.png" alt="button new entity"></span> button by the newly added field.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-7.png" alt="Navigate to photograph view description" width="500">
+</div>
+<div class="title">Figure 37. Navigate to photograph view description</div>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-view-3.png" alt="Navigate to photograph view description" width="500">
+</div>
+<div class="title">Figure 38. Navigate to photograph view description</div>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-view-10.png" alt="Navigate to photograph view edit form" width="500">
+</div>
+<div class="title">Figure 39. Navigate to photograph view edit form</div>
 </div>
 <div class="paragraph">
 <p>Now fill in details for a single keyword field, as shown.  When the details have been entered, click on <code>Define repeat field</code>.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-field-keyword.png" alt="New keyword field details" width="500">
+<img src="screenshot-create-new-field-keyword-2.png" alt="New keyword field details" width="640">
 </div>
-<div class="title">Figure 29. New keyword field details</div>
+<div class="title">Figure 40. New keyword field details</div>
 </div>
 <div class="paragraph">
-<p>Now click on <code>Save</code>, and select <code>Repeat field 'Keyword'</code> for the new field id.</p>
+<p>The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the <span class="image"><img src="button-edit-entity.png" alt="button edit entity"></span> button by the "Repeat field 'Keyword'" id.  Change the <code>Label</code> and <code>Placeholder</code> fields as shown, and also the "Add value label" and "Remove value label", then click on <code>Save</code>:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-5.png" alt="Photograph view with "Repeat field 'Keyword'" field added" width="500">
+<img src="screenshot-edit-field-keyword_many_2.png" alt="Edit labels used with &quot;Keyword_repeat&quot; field" width="640">
 </div>
-<div class="title">Figure 30. New "Repeat field 'Keyword'" field added</div>
+<div class="title">Figure 41. Edit labels used with "Keyword_repeat" field</div>
 </div>
 <div class="paragraph">
-<p>The repeat field structure just created is perfectly functional, but the automatically generated label field could be improved.  Click on the <span class="image"><img src="button-edit-entity.png" alt="button-edit-entity"></span> button by the "Repeat field 'Keyword'" id.  Change the <code>Label</code> and <code>Placeholder</code> fields as shown, then click on <code>Save</code>:</p>
+<p>On return to the the view editing form, select the option <code>Keywords</code> for the new field added, and click on <code>Save</code>:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-field-keyword_repeat.png" alt="Edit labels used with "Keyword_repeat" field" width="500">
+<img src="screenshot-edit-photograph-view-11.png" alt="Select &quot;Keywords&quot; for new field" width="640">
 </div>
-<div class="title">Figure 31. Edit labels used with "Keyword_repeat" field</div>
+<div class="title">Figure 42. Select "Keywords" for new field, and save</div>
 </div>
 <div class="paragraph">
-<p>On reeturning the the view editing form, noteice that the selection label for the newly added field is changed to "Keywords":</p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-photograph-view-6.png" alt="New field label updated" width="500">
-</div>
-<div class="title">Figure 32. New field label updated</div>
+<p>Click <code>Close</code> to return to the Photograph record view.</p>
 </div>
 <div class="paragraph">
-<p>Click <code>Save</code> then <code>Close</code> to return to the Photograph record view.  To add some keywords, click <code>Edit</code>, then <code>Add keyword</code>, and fill in key word or phrase text.  repeat for as many keywords as desired:</p>
+<p>To add some keywords, click <code>Edit</code>, then <code>Add keyword</code>, and fill in key word or phrase text.  Repeat for as many keywords as desired.  Click on <code>Save</code> to view the resulting record.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-4.png" alt="Edit photograph record keyword fields" width="500">
+<img src="screenshot-edit-photograph-8.png" alt="Edit photograph record keyword fields" width="640">
 </div>
-<div class="title">Figure 33. Edit photograph record keyword fields</div>
+<div class="title">Figure 43. Edit photograph record keyword fields</div>
 </div>
-<div class="paragraph">
-<p>Click on <code>Save</code> to view the resulting record:</p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-view-photograph-4.png" alt="View photograph record keyword fields" width="500">
+<img src="screenshot-view-photograph-8.png" alt="View photograph record keyword fields" width="640">
 </div>
-<div class="title">Figure 34. View photograph record keyword fields</div>
+<div class="title">Figure 44. View photograph record keyword fields</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_create_an_additional_data_type_with_view_list">Create an additional data type (with view+list)</h2>
+<h2 id="_create_an_additional_entity_type_with_viewlist">Create an additional entity type (with view+list)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The examples so far have been based on a single "Photograph" record type.  Many interesting data collections consist of multiple cross-referenced record types.  For example, we can create "Location notes" records to hold information about where photographs were taken.</p>
+<p>The examples so far have been based on a single "Photograph" entity type.  Many interesting data collections consist of multiple cross-referenced entity types.  For example, we can create "Location" entities to hold information about where photographs were taken.</p>
 </div>
 <div class="paragraph">
-<p>Start by creating a new Type, with corresponding View and List definitions; e.g.</p>
+<p>To do this, start by creating a new Entity Type, with corresponding View and List definitions; e.g.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Click on <code>Photo_collection</code> in the top menu bar</p>
+<p>Click on the collectionname (e.g. <code>Tutorial_example</code>) in the top menu bar</p>
 </li>
 <li>
-<p>Select <code>List types</code> from the <code>List view</code> drop-down, then click <code>View</code></p>
+<p>Click onthe <code>Cusromize</code> button</p>
 </li>
 <li>
-<p>Click on <code>New</code> to create a new Type</p>
+<p>Click on <code>New</code> button under the <code>Entity types</code> column to create a new Entity Type.</p>
 </li>
 <li>
-<p>Enter details as shown</p>
-</li>
-<li>
-<p>Click <code>Save</code>, then select the newly created type and click <code>Edit</code>.  (@@This step is a workaround for a bug in the Define view+_list handler, and should not be needed.)</p>
+<p>Enter details along the lines shown below</p>
 </li>
 <li>
 <p>Click on <code>Define view+list</code></p>
 </li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-create-new-type-location_notes_2.png" alt="Create new type &quot;Location_notes&quot;" width="640">
+</div>
+<div class="title">Figure 45. Create new type "Location_notes"</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
 <li>
-<p>Click on <code>Save</code></p>
+<p>Now click on <code>Save</code>, to see the new Entity type, view description and list description displayed in the "Customize collection" display:</p>
 </li>
 </ol>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-type-location_notes.png" alt="Create new type Location_notes" width="500">
+<img src="screenshot-edit-collection-metadata_3.png" alt="Annalist collection data with &quot;Location notes&quot;" width="640">
 </div>
-<div class="title">Figure 35. Create new type Location_notes</div>
+<div class="title">Figure 46. Annalist collection data with "Location notes"</div>
 </div>
 <div class="paragraph">
 <p>Next, edit the Location notes view to include a map reference field:</p>
 </div>
 <div class="olist arabic">
-<ol class="arabic">
+<ol class="arabic" start="7">
 <li>
-<p>On the <code>List types</code> page, click on the link <code>Location notes</code>.</p>
+<p>In the "Entity views" column, select <code>Location notes view</code>, then click on the <code>Edit</code> button below.</p>
 </li>
-<li>
-<p>Click on the link <code>View of Location notes</code></p>
-</li>
-<li>
-<p>Click <code>Edit</code></p>
-</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-collection-metadata_4.png" alt="Select and edit &quot;Location notes&quot; entity view description" width="640">
+</div>
+<div class="title">Figure 47. Select and edit "Location notes" entity view description</div>
+</div>
+<div class="paragraph">
+<p>The default fields ("Id", "Type", "Label" and "Comment") are shown.  We shall add a "Map reference field":</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="8">
 <li>
 <p>Click <code>Add field</code></p>
 </li>
@@ -830,101 +961,253 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <p>Click the <code>+</code> button by the newly added field</p>
 </li>
 <li>
-<p>Fill in details of the new field as shown.</p>
-</li>
-<li>
-<p>Click <code>Save</code></p>
-</li>
-<li>
-<p>Select <code>Map reference</code> for the field id of the newly added field, and a value for Position/size.</p>
-</li>
-<li>
-<p>Click <code>Save</code>, then <code>Close</code> to return to thelist of views.</p>
+<p>Fill in details of the new field as shown</p>
 </li>
 </ol>
 </div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-create-new-field-mapref-2.png" alt="Create new map reference field" width="640">
+</div>
+<div class="title">Figure 48. Create new map reference field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>Click <code>Save</code> to return to the "View definition" page</p>
+</li>
+<li>
+<p>Select <code>Map reference</code> for the field id of the newly added field, and select value (0/12) for Position/size.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes-view-2.png" alt="Add new map reference field to Location notes view" width="640">
+</div>
+<div class="title">Figure 49. Add new map reference field to Location notes view</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="13">
+<li>
+<p>Finally, click <code>Save</code> to save the updated viw definition, and return to the "Customize collection" page.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_create_location_notes_entity">Create "Location notes" entity</h3>
 <div class="paragraph">
-<p>Now we can create an instance of the new type:</p>
+<p>Now we can create a "Location notes" entity:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Click on <code>Photo_collection</code> in the top menu bar</p>
+<p>Click on <code>Tutorial_example</code> in the top menu bar</p>
 </li>
 <li>
-<p>Select <code>List of Location notes</code> from the <code>List view</code> drop-down, then click <code>View</code></p>
+<p>Select <code>Location notes list</code> from the <code>List</code> drop-down, then click <code>List</code></p>
 </li>
 <li>
-<p>Click on <code>New</code> to create a new <code>Location notes</code> record</p>
+<p>Click on <code>New</code> to create a new <code>Location notes</code> entity</p>
+</li>
+<li>
+<p>Supply details of a Location in the displayed form</p>
+</li>
+<li>
+<p>When done, click <code>Save</code></p>
 </li>
 </ol>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-new-field-mapref.png" alt="Create new map reference field" width="500">
+<img src="screenshot-create-new-location-notes-2.png" alt="Create new &quot;Location notes&quot; entity" width="640">
 </div>
-<div class="title">Figure 36. Create new map reference field</div>
+<div class="title">Figure 50. Create new "Location notes" entity</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_add_repeating_links_field_to_location_notes">Add repeating links field to "Location notes"</h3>
+<div class="paragraph">
+<p>A similar process is repeated toi that used to add the "Map reference" field, but this time also using the <code>Define repeat field</code> option, to create a repeating field of links to further information about the location.</p>
 </div>
 <div class="paragraph">
-<p>A similar process is repeated, but this time also using the <code>Define repeat field</code> button, to create a repeating field of links to further information about the location:</p>
+<p>Start by redisplaying the "Location notes" view definition form:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-create-new-field-seeAlso.png" alt="Create new web link field" width="500">
-</div>
-<div class="title">Figure 37. Create new web link field</div>
-</div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-field-see_also_repeat.png" alt="Further information field" width="500">
-</div>
-<div class="title">Figure 38. Further information field</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click <code>Customize</code></p>
+</li>
+<li>
+<p>Select <code>Location notes view</code>, then click on the <code>Edit</code> button below.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Now the new fields can be configured in the <code>Location_notes</code> view:</p>
+<p>Add a new field to the view:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-location_notes-view.png" alt="Location notes view with map reference and further information fields" width="500">
-</div>
-<div class="title">Figure 39. Location notes view with map reference and further information fields</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Click <code>Add field</code></p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>A Location notes record can now be created with data for the additional fields:</p>
+<p>Create a new field description for web links:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>Click on the <span class="image"><img src="button-new-entity.png" alt="button new entity"></span> button beside the new field just added</p>
+</li>
+<li>
+<p>Provide details of the new web link field (e.g., see below; note in particular the value for "render type")</p>
+</li>
+<li>
+<p>When done, click <code>Define repeat field</code></p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-create-location_notes.png" alt="Create a location notes record" width="500">
+<img src="screenshot-create-new-field-seeAlso-2.png" alt="Create new web link field" width="640">
 </div>
-<div class="title">Figure 40. Create a location notes record</div>
+<div class="title">Figure 51. Create new web link field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="7">
+<li>
+<p>In the new "Field definition" view displayed, update the labels and text as required (e.g., see below)</p>
+</li>
+<li>
+<p>When done, click <code>Save</code></p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-field-see_also_repeat-2.png" alt="Further information field" width="640">
+</div>
+<div class="title">Figure 52. Further information field</div>
+</div>
+<div class="paragraph">
+<p>Now the new related information field can be configured in the <code>Location_notes</code> view:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="9">
+<li>
+<p>Select field "Related information" for the new field added to the view description</p>
+</li>
+<li>
+<p>Select Position/size value "(0/12)" for the new field</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-create-new-field-seeAlso-3.png" alt="Select new related information field in view" width="640">
+</div>
+<div class="title">Figure 53. Select new related information field in view</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>When done, click <code>Save</code></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_add_weblinks_to_location_notes_entity">Add weblinks to "Location notes" entity</h3>
+<div class="paragraph">
+<p>Navigate to the previously created "Locaton notes" entity</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>click on <code>Tutorial_example</code> in the top menu bar</p>
+</li>
+<li>
+<p>select <code>Location notes list</code> from the <code>List</code> drop-down, then click <code>List</code></p>
+</li>
+<li>
+<p>select the checkbox by the previous <code>Location notes</code> entity, then click on the <code>Edit</code> button</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes-view-3.png" alt="Location notes view with map reference field" width="640">
+</div>
+<div class="title">Figure 54. Location notes view with map reference field</div>
+</div>
+<div class="paragraph">
+<p>To add a link to the location notes:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>click on the "Add link" button</p>
+</li>
+<li>
+<p>enter a URL into the new field thus opened.  (Hint: to get a known working URL, open the desired page in your browser of choice, copy the URL from the browser address bar, and paste it into the new field.)</p>
+</li>
+<li>
+<p>repeat for any additional links to be added</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes-view-4.png" alt="Location notes view with link fields added" width="640">
+</div>
+<div class="title">Figure 55. Location notes view with link fields added</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>when done, cick <code>Save</code>, returning to the list of location notes</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Clicking on the link for the locatiomn note just edited with show a view of the note, with clickable web links for the values just entered.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-location_notes-view-2.png" alt="Location notes view with clickable links" width="640">
+</div>
+<div class="title">Figure 56. Location notes view with clickable links</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_create_links_between_records">Create links between records</h2>
+<h2 id="_create_links_between_entities">Create links between entities</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The preceding section created a new record type for location notes. Here, we edit the Photograph view to allow each photograph to be linked to notes about the location where it was taken.  This will be achieved by changing the type of <code>Location_taken</code> field from a simple text field to a reference to a <code>Location_notes</code> field.</p>
+<p>The preceding section created a new entity type for location notes. Here, we edit the Photograph view to allow each photograph to be linked to notes about the location where it was taken.  This will be achieved by changing the type of <code>Location_taken</code> field from a simple text field to a reference to a <code>Location_notes</code> field.</p>
 </div>
 <div class="paragraph">
-<p>To do this, open up the form for editing the view description <code>Photograph</code> (using any of the navigation paths described previously).  Then click on the writing hand button beside thefield id "Location taken":</p>
+<p>To do this, open up the form for editing the view description <code>Photograph</code> (e.g., click <code>Customize</code>, select <code>Photograph view</code>, click on the <code>Edit</code> button below).  Then click on the writing hand button beside thefield id "Location taken":</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-7.png" alt="Edit field "Location taken" in Photograph view" width="500">
+<img src="screenshot-edit-photograph-view-7.png" alt="Edit field &quot;Location taken&quot; in Photograph view" width="640">
 </div>
-<div class="title">Figure 41. Edit field "Location taken" in Photograph view</div>
+<div class="title">Figure 57. Edit field "Location taken" in Photograph view</div>
 </div>
 <div class="paragraph">
-<p>Edit the "Location taken" field as shown beloiw, noting particularly values entered in these fields:</p>
+<p>Edit the "Location taken" field as shown below, noting particularly values entered in these fields:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Field value type - same as the URI given in the <code>Location_notes</code> type record (currently not used other than for documentary purposes)</p>
+<p>Field render type - <code>Optional entity reference</code> presents a dropdown of entities to which the field may link</p>
 </li>
 <li>
-<p>Field render type - <code>Optional entity ref</code> presents a dropdown of entities to which the field may link</p>
+<p>Field value type - same as the URI given in the <code>Location_notes</code> type record (currently not used other than for documentary purposes)</p>
 </li>
 <li>
 <p>Value mode - <code>Entity reference</code> indicates this field is a reference to some other Annalist entity in the current collection.</p>
@@ -934,28 +1217,34 @@ This document is an early draft, and is much in need of improvement.  Please sub
 </li>
 </ul>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-field-location_taken.png" alt="Edit field definition for Location taken" width="500">
+<img src="screenshot-edit-field-location_taken-2.png" alt="Edit field definition for Location taken" width="640">
 </div>
-<div class="title">Figure 42. Edit field definition for Location taken</div>
+<div class="title">Figure 58. Edit field definition for Location taken</div>
 </div>
 <div class="paragraph">
-<p>Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the <code>Location taken</code> value is still displayed, but is rendered in a style used for non-existent entity references.  Click on <code>Edit</code> to edit the record data, and select the vcalue <code>Sileby Mill</code> from the dropdown (corresponding to the previously created <code>Location notes</code> record).</p>
+<p>Save the updated field and view descriptions, and redisplay one of the Photograph records:  note that the <code>Location taken</code> value is still displayed, but is rendered in a style used for non-existent entity references.  Click on <code>Edit</code> to edit the record data, and select the value <code>Sileby Mill</code> from the dropdown (corresponding to the previously created <code>Location notes</code> record).</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-photograph-view-8.png" alt="Select location notes record from dropdown" width="500">
+<img src="screenshot-edit-photograph-view-8.png" alt="Select location notes record from dropdown" width="640">
 </div>
-<div class="title">Figure 43. Select location notes record from dropdown</div>
+<div class="title">Figure 59. Select location notes record from dropdown</div>
 </div>
 <div class="paragraph">
-<p>Click <code>Save</code> to return to the Phbotograph view, and note that the <code>Location taken</code> field now displays as a link to the selected <code>Location notes</code> record</p>
+<p>Click <code>Save</code> to return to the Phbotograph view, and note that the <code>Location taken</code> field now displays as a link to the selected <code>Location notes</code> record.</p>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-9.png" alt="Photograph view with link to location notes" width="640">
+</div>
+<div class="title">Figure 60. Photograph view with link to location notes</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_display_fields_from_a_linked_record">Display fields from a linked record</h2>
+<h2 id="_display_field_from_a_linked_record">Display field from a linked record</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Rather than just a link to a related record, it is sometimes useful to display one or more values directly from such a record.  For the present example, the photograph "location taken" field is modified to display a link, description and map reference for the location in the photograph view.</p>
@@ -963,107 +1252,344 @@ This document is an early draft, and is much in need of improvement.  Please sub
 <div class="paragraph">
 <p>This kind of display is created using a <code>Fields of referenced entity</code> field type.  This is a special kind of view field that behaves very differently in edit and view modes:  in edit mode, it works just like an <code>Optional entity ref</code> field, allowing the user to select an instance of some designated type.  But in view mode, it displays one or more fields from the referenced entity.</p>
 </div>
-<div class="paragraph">
-<p>First, navigate to a field description in the <code>Location_notes</code> view; e.g. from any photograph view, click <code>View description</code>, <code>Location taken</code>, <code>Location notes</code>, <code>View of location notes</code> <code>Map reference</code> and <code>Edit</code>.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the field description <code>Map reference</code> used by the <code>Location_notes</code> view (e.g. click <code>Customize</code>, select <code>Location notes view</code>, click the <code>Edit</code> button below, and click the <span class="image"><img src="button-edit-entity.png" alt="button edit entity"></span> (writing hand) icon by the <code>Map reference</code> field ref value).</p>
+</li>
+</ol>
 </div>
-<div class="paragraph">
-<p><span class="image"><img src="screenshot-view-photograph-5.png" alt="View of photograph" width="400"></span>
-<span class="image"><img src="screenshot-view-photograph-view-2.png" alt="View of photograph view description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_taken-field-1.png" alt="View of location taken field description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_notes-type-1.png" alt="View location notes type description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_notes-view-1.png" alt="View location notes view description" width="400"></span>
-<span class="image"><img src="screenshot-view-location_mapref-field-1.png" alt="View map reference field description" width="400"></span></p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-location_mapref-field-1.png" alt="Edit map reference field description form" width="500">
+<img src="screenshot-edit-location_mapref-field-2.png" alt="Map reference field description" width="640">
 </div>
-<div class="title">Figure 44. Navigate to edit form of "map reference" field</div>
+<div class="title">Figure 61. Map reference field description</div>
 </div>
-<div class="paragraph">
-<p>An alternative to this slightly long winded navigation path would be to go to the collection front page (click <code>Photo_collection</code> in the menu bar), select <code>List fields</code> from the <code>List view</code> selector, cick <code>View</code>, click on <code>Location_mapref</code>.  Either way, the resulting page should look something like the last screenshot above.</p>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Click on the <code>Define field reference</code> button, to define a new field that references the map reference field of a "Location notes" entity:</p>
+</li>
+</ol>
 </div>
-<div class="paragraph">
-<p>In the form displayed, click <code>Define field reference</code>:  this will create a new field and field group <code>Location_mapref_ref</code> referencing this field, and display an editing form for the new field definition.
-Before making any changes to the field itself, click on the <span class="image"><img src="button-edit-entity.png" alt="button-edit-entity"></span> button by the <code>Field group</code> field:</p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-location_notes_ref-field-1.png" alt="Edit location notes reference field" width="500">
+<img src="screenshot-create-new-field-location_taken_ref.png" alt="Create reference to map reference field in location notes" width="640">
 </div>
-<div class="title">Figure 45. Edit location notes reference field</div>
+<div class="title">Figure 62. Create reference to map reference field in location notes</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>When done, click <code>Save</code>.</p>
+</li>
+<li>
+<p>Now navigate to the "Photograph view" definition: click <code>Custom</code>, select "Photograph view" and click on the <code>Edit</code> button below.</p>
+</li>
+<li>
+<p>Change the <code>Field ref</code> value "Location taken" to "Map reference (ref)", and then <code>Save</code>.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-view-12.png" alt="Edit view to include reference to map reference in location notes" width="640">
+</div>
+<div class="title">Figure 63. Edit view to include reference to map reference in location notes</div>
 </div>
 <div class="paragraph">
-<p>This will display a new form for editing details of the new field group.  In this form:</p>
+<p>Finally, navigate to a view of a photograph:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
+<li>
+<p>click on <code>Tutorial_example</code> in the top menu bar</p>
+</li>
+<li>
+<p>in the <code>List</code> dropdown, select <code>Photographs</code></p>
+</li>
+<li>
+<p>click on the <code>List</code> button.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-list-photographs.png" alt="Navigate to list of photographs" width="640">
+</div>
+<div class="title">Figure 64. Navigate to list of photographs</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="9">
+<li>
+<p>click on the link for one the photographs listed</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-view-photograph.png" alt="Navigate to view photograph" width="640">
+</div>
+<div class="title">Figure 65. Navigate to view photograph</div>
+</div>
+<div class="paragraph">
+<p>Note that the "Location taken" field has been replaced by a "Map reference (ref)" field.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="10">
+<li>
+<p>Click on the <code>Edit</code> button:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-navigate-edit-photograph.png" alt="Navigate to edit photograph" width="640">
+</div>
+<div class="title">Figure 66. Navigate to edit photograph</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>In the "Map reference (ref)" field, select the peviously described location where the photograph was taken:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-photograph-select-mapref-location.png" alt="Select location in &quot;Map reference (ref)&quot; field" width="640">
+</div>
+<div class="title">Figure 67. Select location in "Map reference (ref)" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="12">
+<li>
+<p>Click <code>Save</code>; the photo entity is redisplayed.  Note that the map reference field from the selected Location notes is displayed.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-with-location-mapref.png" alt="Navigate to edit photograph" width="640">
+</div>
+<div class="title">Figure 68. Navigate to edit photograph</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_display_more_fields_from_a_linked_record">Display more fields from a linked record</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The previous section added a view element to display a single field (Map reference) in a referenced entity (Location notes).</p>
+</div>
+<div class="paragraph">
+<p>The mechanism used can also be used to display multiple fields from the referenced entity.  In this section, we&#8217;ll revisit the field description created previously to show a brief summary of the location notes data.</p>
+</div>
+<div class="paragraph">
+<p>Start this by navigating back to the new field definition that was created just above; e.g.:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add additional fields <code>Id</code> and <code>Label</code> to be displayed, using the <code>Add field</code> button and the new field id selectors dislayed.</p>
+<p>from a photograph view, click <code>View description</code></p>
 </li>
 <li>
-<p>Move the two new fields in front of the map reference field by selecting their checkboxes and clicking <code>Move &#x2b06;</code> button.</p>
+<p>click on the <code>Edit</code> button</p>
 </li>
 <li>
-<p>Make changes as desired to the field label and description (but leave other fielkds as they are).</p>
-</li>
-<li>
-<p>Click <code>Save</code> to save the changes and return to the new field definition that references this group.</p>
+<p>click on the <span class="image"><img src="button-edit-entity.png" alt="writing hand"></span> (writing hand) icon beside the <code>Map reference (ref)</code> field reference.</p>
 </li>
 </ol>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-location_notes_ref-group-1.png" alt="Edit new field group" width="500">
+<img src="screenshot-edit-location_notes_ref-field-1.png" alt="Navigate to edit &quot;Map reference (ref)&quot; field" width="640">
 </div>
-<div class="title">Figure 46. Edit new field group</div>
+<div class="title">Figure 69. Navigate to edit "Map reference (ref)" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>change the field Id, label and other fields to reflect its enlarged purpose:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-2.png" alt="Change Id" width="640" height="Help and property values for Location notes reference">
+</div>
+<div class="title">Figure 70. Change Id, label, Help and property values for Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>add additional subfields using the Subfields <code>Add field</code> button, fill in the referenced field information</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-3.png" alt="Add subfields to Location notes reference" width="640">
+</div>
+<div class="title">Figure 71. Add subfields to Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
+<li>
+<p>change the positioning of the existing map reference field, and move up the two new fields so they are presented in the correct order:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-4.png" alt="Change position of map reference subfield" width="640">
+</div>
+<div class="title">Figure 72. Change position of map reference subfield, and re-order fields</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="7">
+<li>
+<p>to achieve this result:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-5.png" alt="Final subfields for Location notes reference" width="640">
+</div>
+<div class="title">Figure 73. Final subfields for Location notes reference</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="8">
+<li>
+<p>click <code>Save</code> to return to the view definition editing view.  Note that due to changing the Location notes Field Id, the "Field ref" for the last field listed shows as unavailable</p>
+</li>
+<li>
+<p>select the correct field id for the changed field: select <code>Location notes</code> from the "Field ref" drop-down, &#8230;&#8203;</p>
+</li>
+<li>
+<p>and click <code>Save</code> to return to the view definition view:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-edit-location_notes_ref-field-6.png" alt="Select location in &quot;Location notes&quot; field" width="640">
+</div>
+<div class="title">Figure 74. Select location in "Location notes" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="11">
+<li>
+<p>Click <code>Close</code> to return to the Photograph view</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Back in the field editing form, change the Id, label and description and property URI of the new field to better reflect its actual usage.  Then click <code>Save</code>.</p>
+<p>As the field property URI was updated, "Locaton notes" now shows "Target entity not selected".  To correct this, click on the <code>Edit</code> button, and select the location from the "Location notes" dropdown, to yield:</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="imageblock text-center text-center">
 <div class="content">
-<img src="screenshot-edit-location_notes_ref-field-2.png" alt="Edit new location notes reference field" width="500">
+<img src="screenshot-edit-photograph-9.png" alt="Select location in &quot;Location notes&quot; field" width="640">
 </div>
-<div class="title">Figure 47. Edit new location notes reference field</div>
+<div class="title">Figure 75. Select location in "Location notes" field</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="12">
+<li>
+<p>Click <code>Save</code> to return to the photograph view with updated location notes summary:</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center text-center">
+<div class="content">
+<img src="screenshot-view-photograph-10.png" alt="View of photograph with location notes summary" width="640">
+</div>
+<div class="title">Figure 76. View of photograph with location notes summary</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_simple_entity_type_hierarchies">Creating simple entity type hierarchies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Annalist supports a notion of entity type hierarchies.  When an entity type is defined or created, a number of "Supertype URIs" may be specified.</p>
 </div>
 <div class="paragraph">
-<p>At this point, navigate to the view description for Photograph (e.g. by displaying a Photograph record and clicking on <code>View description</code>, or selecting and displaying <code>List views</code> from the collection home page and then clicking on <code>Photograph</code>).  Then click on the <code>Edit</code> button to display the view editing form.  On this form, clicik <code>Add field</code>, select the newly created <code>Location notes</code> field type, and select <code>0/12</code> for the position/size value:</p>
-</div>
-<div class="imageblock text-center" style="text-align: center">
-<div class="content">
-<img src="screenshot-edit-photograph-view-9.png" alt="Add location notes field to photograph view" width="500">
-</div>
-<div class="title">Figure 48. Add location notes field to photograph view</div>
+<p>For example, we might associate a subject reference with a photograph, where the subject may be a person, place or event.  This could be achieved by creating entity types for <code>Subject</code>, <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code>, with type URIs <code>pcat:Subject</code>, <code>pcat:Subject_person</code>, <code>pcat:Subject_place</code>, and <code>pcat:Subject_event</code> respectively.</p>
 </div>
 <div class="paragraph">
-<p>Click on <code>Save</code>.</p>
+<p>The type definitions for <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code> would each indicate a Supertype URI of <code>pcat:Subject</code>.  Each type could be associated with  Then define a new <code>Subject</code> field for the <code>Photograph</code> viewthat is a reference to a <code>Subject</code> entity type.</p>
 </div>
 <div class="paragraph">
-<p>Now navigate to a view of a photograph record, click <code>Edit</code> and inthe displayed form select a value for the new field <code>Location notes</code> from the dropdown displayed.</p>
+<p>When listing subjects, or entering details for a new photiograph, any defined instances of <code>Subject_person</code>, <code>Subject_place</code>, and <code>Subject_event</code> would be presented.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="exampleblock">
 <div class="content">
-<img src="screenshot-edit-photograph-6.png" alt="Select value for Location notes field" width="500">
+<div class="paragraph">
+<p>@@TODO: Operating sequence illustrating the above.</p>
 </div>
-<div class="title">Figure 49. Select value for Location notes field</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inheriting_definitions">Inheriting definitions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A key affordance of linked data is having different applications with their own application specific data models be able to share common terms and sub-structures for common concepts.  E.g., the notion of a person may be used in similar ways by different applications, and data describing a person may be sharable between diverse applications if they use the same definitions.</p>
 </div>
 <div class="paragraph">
-<p>Click <code>Save</code> to view the photoigraph records, and observe that the <code>Location notes</code> field now displays three values from the selected record:</p>
+<p>Annalist supports this by allowing common type, view, field and other definitions to be "inherited" from another collection.  Different collections created to support different applications may inherit common definitions from the same source collection.</p>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div class="paragraph">
+<p>For example, an Annalist installation comes with a number of pre-defined definition collections (installable via <code>annalist-manager installcollection</code>).  Two of these are <code>Resource_defs</code> and <code>Concept_defs</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>Resource_defs</code></dt>
+<dd>
+<p>defines a number of types, fields and views for referencing or uploading resources from the Web, especially images and audio.
+(See <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs/">demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Resource_defs</a>)</p>
+</dd>
+<dt class="hdlist1"><code>Concept_defs</code></dt>
+<dd>
+<p>defines types, fields and views for associating thesaurus (or table of authority) terms with entities using the SKOS vocabulary
+(See <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/">demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs</a>)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Examining the <a href="https://demo.annalist.net/annalist/c/_annalist_site/v/Collection_view/_coll/Concept_defs/"><code>Concept_defs</code> collection metadata</a> shows a "Parent" value that links to the <code>Resource_defs</code> collecton.  This allows all definitions contained in <code>Resource_defs</code> to be inherited by (i.e. available for use in) the <code>Concept_defs</code> collection, and also by any other collections that have the <code>Concept_defs</code> collection as a parent.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If a definition is changed in <code>Resource_defs</code>, the changes are visible in <code>Concept_defs</code>.  But if the same inherited definition is edited in <code>Concept_defs</code>, a new copy is made and any changes are now local to <code>Concept_defs</code> and any other collections that have it as a parent.  The local copy supersedes the previously inherited definition.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="exampleblock">
 <div class="content">
-<img src="screenshot-view-photograph-6.png" alt="View photograph record with location notes" width="600">
+<div class="paragraph">
+<p>@@TODO: Operating sequence illustrating the above.</p>
 </div>
-<div class="title">Figure 50. View photograph record with location notes</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1.24<br>
-Last updated 2015-12-07 16:33:46 GMT
+Version 0.5.18<br>
+Last updated 2022-04-09 10:58:04 +0100
 </div>
 </div>
 </body>

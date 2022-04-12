@@ -1,0 +1,23 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Photograph",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Photograph",
+  "annal:ns_prefix": "pcat",
+  "annal:supertype_uri": [],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Photograph",
+  "annal:type_view": "_view/Photograph",
+  "annal:uri": "pcat:Photograph",
+  "rdfs:comment": "Details about a photograph in the catalogue.",
+  "rdfs:label": "Photograph"
+}

@@ -400,7 +400,7 @@ def am_help(options, progname):
         help_text = ("\n"+
             "  %(prog)s pidserver [ CONFIG ]\n"+
             "\n"+
-            "Dusplays PID of a running Annalist server.\n"+
+            "Displays PID of a running Annalist server.\n"+
             "\n"+
             config_options_help+
             "\n"+

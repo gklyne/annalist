@@ -21,12 +21,14 @@ import json
 import re
 import traceback
 
-from distutils.version              import LooseVersion
+from packaging.version              import Version
+
+# from distutils.version              import LooseVersion
 
 from django.conf                    import settings
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 
 from utils.py3porting               import urljoin, urlsplit
 
@@ -316,7 +318,7 @@ class DisplayInfo(object):
                 self.orig_coll  = self.collection
                 self.perm_coll  = self.collection
                 ver = self.collection.get(ANNAL.CURIE.software_version, None) or "0.0.0"
-                if LooseVersion(ver) > LooseVersion(annalist.__version__):
+                if Version(ver) > Version(annalist.__version__):
                     self.http_response = self.view.error(
                         dict(self.view.error500values(),
                             message=message.COLLECTION_NEWER_VERSION%{'id': coll_id, 'ver': ver}
@@ -369,7 +371,7 @@ class DisplayInfo(object):
 
         See also method 'get_request_type_info'.
         """
-        # print "@@@@ get_type_info: type_id %s"%(type_id,)
+        # print "@@ get_type_info: type_id %s"%(type_id,)
         if not self.http_response:
             assert ((self.site and self.collection) is not None)
             if type_id:
@@ -411,14 +413,6 @@ class DisplayInfo(object):
                 list_id = self.get_list_id(self.type_id, None)
                 msg2 = message.DISPLAY_ALTERNATIVE_LIST%{'id': list_id, 'coll_id': self.coll_id}
                 self.add_error_message(msg2)
-                #@@
-                # self.http_response = self.view.error(
-                #     dict(self.view.error404values(),
-                #         message=message.RECORD_LIST_NOT_EXISTS%(
-                #             {'id': list_id, 'coll_id': self.coll_id})
-                #         )
-                #     )
-                #@@
             self.list_id    = list_id
             self.recordlist = RecordList.load(self.collection, list_id, altscope="all")
             if "@error" in self.recordlist:
@@ -454,14 +448,6 @@ class DisplayInfo(object):
                 view_id = self.get_view_id(self.type_id, None)
                 msg2 = message.DISPLAY_ALTERNATIVE_VIEW%{'id': view_id, 'coll_id': self.coll_id}
                 self.add_error_message(msg2)
-                #@@
-                # self.http_response = self.view.error(
-                #     dict(self.view.error404values(),
-                #         message=message.RECORD_VIEW_NOT_EXISTS%(
-                #             {'id': view_id, 'coll_id': self.coll_id})
-                #         )
-                #     )
-                #@@
             self.view_id    = view_id
             self.recordview = RecordView.load(self.collection, view_id, altscope="all")
             if "@error" in self.recordview:
@@ -588,9 +574,7 @@ class DisplayInfo(object):
         """
         Save list of error message to be displayed on completion of the current operation
         """
-        # print "@@ add_error_messages: > %r"%(messages,)
         self.error_messages.extend(messages)
-        # print "@@ add_error_messages: < %r"%(self.error_messages,)
         return self.http_response
 
     def redisplay_path_params(self):
@@ -634,7 +618,6 @@ class DisplayInfo(object):
                 redirect_msg_params.update(self.view.info_params("\n\n".join(self.info_messages)))
             if self.error_messages:
                 redirect_msg_params.update(self.view.error_params("\n\n".join(self.error_messages)))
-            # print "@@ redirect_response: redirect_msg_params %r"%(redirect_msg_params,)
             redirect_uri = (
                 uri_with_params(
                     redirect_path,
@@ -808,6 +791,22 @@ class DisplayInfo(object):
         return extract_entity_id(
             self.recordlist.get(ANNAL.CURIE.default_type, None) or "Default_type"
             )
+
+    # Additional support functions for field definition view
+
+    def get_uri_type_id(self, type_uri):
+        """
+        Return type id fpr given type URI, or "Default_type".
+
+        This accesses the per-collection cache of type URI:Id mappings
+        """
+        assert (self.collection is not None)
+        type_id = "Default_type"
+        if type_uri:
+            type_ref = self.collection.get_uri_type(type_uri)
+            if type_ref:
+                type_id = type_ref.get_id()
+        return type_id
 
     # Additional support functions for collection view
 
@@ -997,13 +996,13 @@ class DisplayInfo(object):
         """
         assert self.curr_typeinfo is not None
         data_ref = self.curr_typeinfo.entityclass.meta_resource_name(name_ext=name_ext)
-        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        # log.info("@@ get_entity_data_ref: data_ref "+data_ref)
         data_ref = make_data_ref(
             self.view.get_request_path(),   # For parameter values
             data_ref, 
             return_type
             )
-        # log.info("@@@@ get_entity_data_ref: data_ref "+data_ref)
+        # log.info("@@ get_entity_data_ref: data_ref "+data_ref)
         return data_ref
 
     def get_entity_jsonld_ref(self, return_type=None):

@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 
 import sys
 import os
+import io
 
-from utils.py3porting           import StringIO
 from utils.StdoutContext        import SwitchStdout, SwitchStderr
 
 import annalist
@@ -53,7 +53,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
     #   -----------------------------------------------------------------------------
 
     def test_Version(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "version"]
@@ -64,7 +64,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_Help(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStderr(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "help"]
@@ -90,7 +90,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_SiteDirectory(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "sitedirectory"]
@@ -109,7 +109,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_SettingsModule(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsmodule"]
@@ -128,7 +128,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_SettingsDirectory(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsdirectory"]
@@ -147,7 +147,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_SettingsFile(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "settingsfile"]
@@ -166,7 +166,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_ServerLog(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "serverlog"]
@@ -185,7 +185,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_AccessLog(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "accesslog"]
@@ -204,7 +204,7 @@ class AnnalistManagerInfoTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_ErrorLog(self):
-        stdoutbuf  = StringIO()
+        stdoutbuf  = io.StringIO()
         with SwitchStdout(stdoutbuf):
             runCommand(self.userhome, self.userconfig, 
                 ["annalist-manager", "errorlog"]

@@ -14,8 +14,8 @@ log = logging.getLogger(__name__)
 
 import sys
 import os
+import io
 
-from utils.py3porting           import StringIO
 from utils.StdoutContext        import SwitchStdout, SwitchStderr
 
 import annalist
@@ -51,9 +51,9 @@ class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
     #   -----------------------------------------------------------------------------
 
     def test_initialize(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     ["annalist-manager", "init", "--config=runtests"]
@@ -75,17 +75,16 @@ class AnnalistManagerInitTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_collectstatic(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     ["annalist-manager", "collect", "--config=runtests"]
                     )
         stdoutbuf.seek(0)
         stdoutlines = stdoutbuf.read().split("\n")
-        linestart   = stdoutlines[0][:8]
-        self.assertEqual(linestart, "Copying ")
+        self.assertTrue(stdoutlines[0].startswith("Collect static data"), "Expected 'Collect static data ...', got '"+stdoutlines[0][:40]+"...'")
         # for i in range(len(stdoutlines)):
         #     if "static files copied" in stdoutlines[i]:
         #         break

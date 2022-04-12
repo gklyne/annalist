@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 from django.contrib.auth.models     import User
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
@@ -121,10 +121,10 @@ class SiteTest(AnnalistTestCase):
 
     def test_site_data(self):
         sd = self.testsite.site_data()
-        self.assertEquals(set(sd),                  site_data_keys)
-        self.assertEquals(sd["title"],              site_title())
-        self.assertEquals(sd["rdfs:label"],         site_title())
-        self.assertEquals(list(sd["collections"]),  init_collection_keys)
+        self.assertEqual(set(sd),                  site_data_keys)
+        self.assertEqual(sd["title"],              site_title())
+        self.assertEqual(sd["rdfs:label"],         site_title())
+        self.assertEqual(list(sd["collections"]),  init_collection_keys)
         self.assertDictionaryMatch(sd["collections"]["coll1"], self.coll1)
         return
 
@@ -178,26 +178,26 @@ class SiteTest(AnnalistTestCase):
 
     def test_collections_dict(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 
     def test_add_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.testsite.add_collection("new", self.collnewmeta)
         colls = self.testsite.collections_dict()
-        self.assertEquals(set(colls), set(init_collection_keys+["new"]))
+        self.assertEqual(set(colls), set(init_collection_keys+["new"]))
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         self.assertDictionaryMatch(colls["new"],   self.collnew)
         return
 
     def test_remove_collection(self):
         colls = self.testsite.collections_dict()
-        self.assertEquals(list(colls), init_collection_keys)
+        self.assertEqual(list(colls), init_collection_keys)
         self.testsite.remove_collection("coll2")
         collsb = self.testsite.collections_dict()
-        self.assertEquals(set(collsb), set(init_collection_keys) - {"coll2"})
+        self.assertEqual(set(collsb), set(init_collection_keys) - {"coll2"})
         self.assertDictionaryMatch(colls["coll1"], self.coll1)
         return
 
@@ -251,8 +251,6 @@ class SiteViewTest(AnnalistTestCase):
         return
 
     def test_get(self):
-        # @@TODO: use reference to self.client, per 
-        # https://docs.djangoproject.com/en/dev/topics/testing/tools/#default-test-client
         r = self.client.get(self.uri)
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -338,6 +336,7 @@ class SiteViewTest(AnnalistTestCase):
         # Check returned HTML (checks template logic)
         # (Don't need to keep doing this as logic can be tested through context as above)
         # (See: http://stackoverflow.com/questions/2257958/)
+        # print("@@@@\n"+r.content.decode('utf-8'))
         s = BeautifulSoup(r.content, "html.parser")
         # title and top menu
         self.assertEqual(s.html.title.string, site_title())
@@ -378,9 +377,15 @@ class SiteViewTest(AnnalistTestCase):
         self.assertEqual(btn_remove["type"],  "submit")
         self.assertEqual(btn_remove["name"],  "remove")
         # Input fields for new collection
-        add_fields = trows[6].select("div > div > div")
-        field_id    = add_fields[1].input
-        field_label = add_fields[2].input
+        # For some unknown reason - maybe a bug in beautifulsoup4? - the entire value of 
+        # `trows[6]` is returned as the first element of the resulting `add_fields` array.  
+        add_fields = trows[6].select("div.small-12.columns > div.row > div.columns.view-value")
+        # print("@@@@ trows[6]\n", trows[6].prettify())
+        # print("@@@@ add_fields\n", "\n---\n".join(map(str,add_fields)))
+        # print("@@@@ add_fields[1]\n", add_fields[1])
+        # print("@@@@ add_fields[2]\n", add_fields[2])
+        field_id    = add_fields[0].input
+        field_label = add_fields[1].input
         self.assertEqual(field_id["type"],    "text")
         self.assertEqual(field_id["name"],    "new_id")
         self.assertEqual(field_label["type"], "text")
@@ -516,9 +521,6 @@ class SiteActionViewTests(AnnalistTestCase):
     def setUp(self):
         init_annalist_test_site()
         self.testsite = Site(TestBaseUri, TestBaseDir)
-        # self.user = User.objects.create_user('testuser', 'user@test.example.com', 'testpassword')
-        # self.user.save()
-        # self.client = Client(HTTP_HOST=TestHost)
         # Login and permissions
         create_test_user(None, "testuser", "testpassword")
         self.client = Client(HTTP_HOST=TestHost)

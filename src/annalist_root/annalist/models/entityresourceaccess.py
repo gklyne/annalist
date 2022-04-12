@@ -21,12 +21,13 @@ log = logging.getLogger(__name__)
 import sys
 import os
 import json
+import io
 
 from rdflib                             import Graph, URIRef, Literal
 
 # Used by `json_resource_file` below.
 # See: https://stackoverflow.com/questions/51981089
-from utils.py3porting import BytesIO, StringIO, write_bytes
+from utils.py3porting import write_bytes
 
 from annalist                           import message
 from annalist                           import layout
@@ -129,7 +130,7 @@ def json_resource_file(baseurl, jsondata, resource_info):
     resource_info   is a dictionary of values about the resource to be serialized.
                     (Unused except for diagnostic purposes.)
     """
-    response_file = StringIO()
+    response_file = io.StringIO()
     json.dump(jsondata, response_file, indent=2, separators=(',', ': '), sort_keys=True)
     response_file.seek(0)
     return response_file
@@ -152,14 +153,14 @@ def turtle_resource_file(baseurl, jsondata, resource_info):
     #         The problem manifests when an error occurs, and manifests as a 500 
     #         server error response.
     #
-    #         On reflection, I think the prioblem arises because the `message.*`
+    #         On reflection, I think the problem arises because the `message.*`
     #         values are unicode (per `from __future__ import unicode_literals`),
     #         and are getting joined with UTF-encoded bytestring values, which
     #         results in the error noted.
     #
     #         The fix here is to encode everything as bytes before writing.
     jsondata_file = json_resource_file(baseurl, jsondata, resource_info)
-    response_file = BytesIO()
+    response_file = io.BytesIO()
     g = Graph()
     try:
         g = g.parse(source=jsondata_file, publicID=baseurl, format="json-ld")

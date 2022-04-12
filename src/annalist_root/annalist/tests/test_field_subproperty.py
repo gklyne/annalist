@@ -356,44 +356,6 @@ class FieldSubpropertyTest(AnnalistTestCase):
         self.assertEqual(f2['field_value'], self.testentity_data["test:subprop_uri"])
         return
 
-    # def test_list_field_alias(self):
-    #     # List BibEntry fields in Default_list
-    #     u = entitydata_list_type_url("testcoll", "testtype", list_id="Default_list")
-    #     r = self.client.get(u)
-    #     self.assertEqual(r.status_code,   200)
-    #     self.assertEqual(r.reason_phrase, "OK")
-    #     # log.info(r.content) #@@
-    #     # Test context
-    #     self.assertEqual(r.context['coll_id'],  "testcoll")
-    #     self.assertEqual(r.context['type_id'],  "testtype")
-    #     self.assertEqual(r.context['list_choices']['field_value'], "Default_list")
-    #     # Fields
-    #     head_fields = context_list_head_fields(r.context)
-    #     self.assertEqual(len(head_fields), 1)       # One row of 2 cols..
-    #     self.assertEqual(len(head_fields[0]['row_field_descs']), 2)
-    #     f0 = context_view_field(r.context, 0, 0)
-    #     f1 = context_view_field(r.context, 0, 1)
-    #     # 1st field
-    #     self.assertEqual(f0['field_id'], 'Entity_id')
-    #     self.assertEqual(f0['field_property_uri'], "annal:id")
-    #     self.assertEqual(f0['field_value'], "")
-    #     # 2nd field
-    #     self.assertEqual(f1['field_id'], 'Entity_label')
-    #     self.assertEqual(f1['field_property_uri'], "rdfs:label")
-    #     self.assertEqual(f1['field_value'], "")
-    #     # List entities (actually, just the one)
-    #     entities = context_list_entities(r.context)
-    #     self.assertEqual(len(entities), 1)
-    #     self.assertEqual(
-    #         context_list_item_field_value(r.context, entities[0], 0), 
-    #         "testentity"
-    #         )
-    #     self.assertEqual(
-    #         context_list_item_field_value(r.context, entities[0], 1), 
-    #         self.testentity_data['bib:title']
-    #         )
-    #     return
-
     def test_save_subproperty_field(self):
         self.create_subproperty_field_view_entity()
         # Post edit form response
@@ -595,7 +557,6 @@ class FieldSubpropertyTest(AnnalistTestCase):
         typeinfo = EntityTypeInfo(self.testcoll, "testtype")
         self.assertTrue(typeinfo.entityclass.exists(typeinfo.entityparent, "testlistentity"))
         e = typeinfo.entityclass.load(typeinfo.entityparent, "testlistentity")
-        # print("@@@@ e: "+repr(e.get_values()))
         self.assertEqual(e.get_id(), "testlistentity")
         # Check superproperty value remains undefined
         self.assertEqual(e.get_values().get("test:superprop_uri", "undefined"), "undefined")

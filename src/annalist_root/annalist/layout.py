@@ -79,7 +79,6 @@ COLL_CONTEXT_FILE       = "coll_context.jsonld"
 # COLL_CONTEXT_REF        = COLL_BASE_REF + COLL_CONTEXT_FILE
 
 SITE_TYPEID             = "_site"
-#@@ SITE_DIR                = "annalist_site"
 SITEDATA_ID             = "_annalist_site"
 SITEDATA_DIR            = "c/%(id)s"%{'id': SITEDATA_ID}
 SITEDATA_OLD_DIR1       = "_annalist_site"
@@ -313,12 +312,10 @@ SUFFIX_SUBTYPE          = "_subtype"
 SUFFIX_SUBPROPERTY      = "_subproperty"
 SUFFIX_REPEAT           = "_many"
 SUFFIX_REPEAT_P         = "_many"
-SUFFIX_REPEAT_G         = "_many"
 SUFFIX_SEQUENCE         = "_list"
 SUFFIX_SEQUENCE_P       = "_list"
-SUFFIX_MULTI            = "_m"      # Reference multiple fields...
-SUFFIX_MULTI_P          = "_m"
-SUFFIX_MULTI_G          = "_m"
+SUFFIX_REF_FIELD        = "_ref"    # Reference field name...
+SUFFIX_REF_FIELD_P      = "_ref"    # Reference field property ...
 
 class Layout(object):
     """

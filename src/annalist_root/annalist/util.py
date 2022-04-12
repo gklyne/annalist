@@ -23,11 +23,12 @@ import stat
 import time
 import json
 import shutil
+import io
 
 from django.conf            import settings
 
 from utils.py3porting       import (
-    is_string, to_unicode, StringIO, 
+    is_string, to_unicode,
     urlparse, urljoin, urlsplit, 
     urlopen, Request, get_message_type
     )
@@ -377,12 +378,12 @@ def strip_comments(f):
     Returns a file-like object that returns content from the supplied file-like
     object, but with comment lines replaced with blank lines.
 
-    >>> f1 = StringIO("// comment\\ndata\\n// another comment\\n\\n")
+    >>> f1 = io.StringIO("// comment\\ndata\\n// another comment\\n\\n")
     >>> f2 = strip_comments(f1)
     >>> f2.read() == '\\ndata\\n\\n\\n'
     True
     """
-    fnc = StringIO()
+    fnc = io.StringIO()
     sof = fnc.tell()
     for line in f:
         if re.match(r"^\s*//", line):
@@ -480,8 +481,6 @@ def replacetree(src, tgt):
     Work-around for python problem with shutils tree copy functions on Windows.
     See: http://stackoverflow.com/questions/23924223/
     """
-    # print "@@ replacetree src %s"%(src,)
-    # print "@@ replacetree tgt %s"%(tgt,)
     if os.path.exists(tgt):
         removetree(tgt)
     shutil.copytree(src, tgt)

@@ -178,7 +178,7 @@ def test_ref_entity_create_values(image_uri):
 
 from rdflib.parser import InputSource
 
-class StreamInputSource(InputSource):
+class StreamInputSource_unused_(InputSource):
 
     def __init__(self, stream, system_id):
         super(StreamInputSource, self).__init__(system_id)
@@ -418,7 +418,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj        = b #@@ entity1.get_url()
+        subj        = b
         entity_data = entity1.get_values()
         for (s, p, o) in (
             [ (subj, RDFS.URI.label,     Literal(entity_data[RDFS.CURIE.label])    )
@@ -492,7 +492,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
 
         # Check the resulting graph contents
-        subj           = b    # b #@@ view_user.get_url()
+        subj           = b
         view_user_data = view_user.get_values()
         view_uri       = ANNAL.to_uri(view_user_data[ANNAL.CURIE.uri])
         for (s, p, o) in (
@@ -546,7 +546,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print("***** g: (user_default)")
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
-        subj              = b #@@ user_default.get_url()
+        subj              = b
         user_default_data = user_default.get_values()
         user_uri          = ANNAL.to_uri(user_default_data[ANNAL.CURIE.user_uri])
         user_perms        = user_default_data[ANNAL.CURIE.user_permission]
@@ -592,7 +592,7 @@ class JsonldContextTest(AnnalistTestCase):
         # print(g.serialize(format='turtle', indent=4))
         # Check the resulting graph contents
         # @@TODO: currently have to deal here with inconsistency between file and URL layouts
-        subj                = b #@@ list_type_list.get_url()
+        subj                = b
         subj                = ( "file://" + 
               os.path.join(
                 TestBaseDir, 
@@ -1035,13 +1035,6 @@ class JsonldContextTest(AnnalistTestCase):
         """
         Return list of entity nodes from JSON list
         """
-        #@@
-        # list_url_abs   = urljoin(TestHostUri, list_url)
-        # list_url_query = urlsplit(list_url).query
-        # if list_url_query != "":
-        #     list_url_query = "?" + list_url_query
-        # expect_json_url = list_url_abs + layout.ENTITY_LIST_FILE + list_url_query
-        #@@
         self.testcoll.generate_coll_jsonld_context()
         r = self.client.get(list_url, HTTP_ACCEPT="application/ld+json")
         self.assertEqual(r.status_code,   302)
@@ -1112,12 +1105,10 @@ class JsonldContextTest(AnnalistTestCase):
             json_url, 
             entity_uriref(coll_id="testcoll", type_id="_type", entity_id="testtype")
             )
-        #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
         e1uri = urljoin(
             json_url, 
             entity_uriref(coll_id="testcoll", type_id="testtype", entity_id="entity1")
             )
-        #@@ e1uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="testtype", entity_id="entity1"))
         self.assertEqual(len(list_items), 2)
         self.assertIn(URIRef(t_uri), list_items)
         self.assertIn(URIRef(e1uri), list_items)
@@ -1136,7 +1127,6 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../../d/"
             )
-        #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id="testtype"))
         t_uri = urljoin(
             json_url, 
             entity_uriref(coll_id="testcoll", type_id="_type", entity_id="testtype")
@@ -1162,7 +1152,6 @@ class JsonldContextTest(AnnalistTestCase):
         (json_url, list_items) = self.get_list_json(
             list_url, subj_ref, coll_id="testcoll", type_id=None, context_path="../"
             )
-        # print "@@ "+repr(list_items)
         expect_type_ids = get_site_types()
         expect_type_ids.add("testtype")
         self.assertEqual(len(list_items), len(expect_type_ids))
@@ -1196,7 +1185,6 @@ class JsonldContextTest(AnnalistTestCase):
                 json_url, 
                 entity_uriref(coll_id="testcoll", type_id="_type", entity_id=entity_id)
                 )
-            #@@ t_uri = urljoin(json_url, entity_url(coll_id="testcoll", type_id="_type", entity_id=entity_id))
             self.assertIn(URIRef(t_uri), list_items)
         return
 

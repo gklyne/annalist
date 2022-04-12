@@ -17,17 +17,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-# from distutils.version              import LooseVersion
-
-# from django.conf                    import settings
-# from django.http                    import HttpResponse
-# from django.http                    import HttpResponseRedirect
-# from django.core.urlresolvers       import resolve, reverse
-
-# import annalist
-# from annalist                       import message
-# from annalist.identifiers           import RDF, RDFS, ANNAL
-
 from annalist.views.uri_builder     import uri_param_dict
 
 class ResponseInfo(object):

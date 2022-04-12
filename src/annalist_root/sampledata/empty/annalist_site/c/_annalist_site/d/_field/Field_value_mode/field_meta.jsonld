@@ -5,7 +5,7 @@
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Field_value_mode"
 , "rdfs:label":                 "Value mode"
-, "rdfs:comment":               "# Value mode\r\n\r\nField value mode.  This determines how a value for display is obtained using the stored value and other parts of the field description.  (Options are: [Direct value]($BASE:_enum_value_mode/Value_direct), [Entity reference]($BASE:_enum_value_mode/Value_entity), [Field reference]($BASE:_enum_value_mode/Value_field), [Import from web]($BASE:_enum_value_mode/Value_import), and [File upload]($BASE:_enum_value_mode/Value_upload); if in doubt, use [Direct value]($BASE:_enum_value_mode/Value_direct).)"
+, "rdfs:comment":               "# Value mode\r\n\r\nField value mode.  This determines how a value for display is obtained using the stored value and other parts of the field description.  (Options are: [Direct value]($BASE:_enum_value_mode/Value_direct), [Entity reference]($BASE:_enum_value_mode/Value_entity), [Import from web]($BASE:_enum_value_mode/Value_import), and [File upload]($BASE:_enum_value_mode/Value_upload); if in doubt, use [Direct value]($BASE:_enum_value_mode/Value_direct).)"
 , "annal:field_render_type":    "_enum_render_type/Enum_choice"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_ref_type":       "_enum_value_mode"

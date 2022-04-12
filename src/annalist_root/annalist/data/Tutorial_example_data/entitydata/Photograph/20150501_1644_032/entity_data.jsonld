@@ -1,0 +1,38 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Photograph/20150501_1644_032",
+  "@type": [
+    "pcat:Photograph",
+    "annal:EntityData"
+  ],
+  "annal:id": "20150501_1644_032",
+  "annal:type": "pcat:Photograph",
+  "annal:type_id": "Photograph",
+  "annal:uri": "pcat:20150501_1644_032",
+  "pcat:date_taken": "2015-05-01",
+  "pcat:image": {
+    "resource_name": "Image.jpg",
+    "resource_type": "image/jpeg",
+    "upload_name": "Image",
+    "uploaded_file": "20150501-1644-032.jpg",
+    "uploaded_size": 5158113
+  },
+  "pcat:keyword": [
+    {
+      "@id": "Sileby Mill"
+    },
+    {
+      "@id": "River Soar"
+    }
+  ],
+  "pcat:location_mapref_ref": "Location_notes/Sileby_mill",
+  "pcat:location_notes_ref": "Location_notes/Sileby_mill",
+  "pcat:location_taken": "Location_notes/Sileby_mill",
+  "rdfs:comment": "# 20150501_1644_032 Soar/Sileby/bridge\r\n\r\nBridge over weir stream at Sileby Mill on the River Soar.\r\n",
+  "rdfs:label": "20150501_1644_032 Soar/Sileby/bridge"
+}

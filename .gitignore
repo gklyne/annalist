@@ -16,6 +16,10 @@
 # Python
 #
 
+.python-version
+rdflibenv
+
+
 # Compiled Python file
 *.pyc
 _pycache_

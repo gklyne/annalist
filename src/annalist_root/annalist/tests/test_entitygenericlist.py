@@ -4,7 +4,7 @@ Tests for EntityData generic list view
 This test suite focuses on listing of record fields used by 
 record views and lists.  This serves two purposes:
 - it tests some additional options of the entity list logic 
-  that are not tested by the dfeault list view, and
+  that are not tested by the default list view, and
 - it tests the logic that access site-wide data in addition to
   local data.
 """
@@ -104,7 +104,8 @@ from .entity_testsitedata import (
     )
 from .entity_testlistdata import (
     recordlist_url, 
-    num_testcoll_enumerate_all_entities, num_testcoll_all_entities_scope_all
+    num_testcoll_enumerate_all_entities, 
+    num_testcoll_all_entities_scope_all
     )
 
 #   -----------------------------------------------------------------------------
@@ -146,8 +147,14 @@ class EntityGenericListViewTest(AnnalistTestCase):
         return
 
     @classmethod
+    def setUpClass(cls):
+        super(EntityGenericListViewTest, cls).setUpClass()
+        return
+
+    @classmethod
     def tearDownClass(cls):
-        resetSitedata(scope="collections")
+        super(EntityGenericListViewTest, cls).tearDownClass()
+        resetSitedata(scope="all")
         return
 
     #   -----------------------------------------------------------------------------
@@ -182,11 +189,11 @@ class EntityGenericListViewTest(AnnalistTestCase):
             )
         actual_entity_ids = [ "%s/%s"%(e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.debug("@@ actual_entity_ids: \n"+"\n".join([repr(eti) for eti in actual_entity_ids]))
-        self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
+        # self.assertEqual(len(actual_entity_ids), num_testcoll_enumerate_all_entities)    # Will change with site data
         expect_entities   = get_site_entities_sorted()
         expect_entity_ids = [ fc.id for fc in expect_entities ]
-        # log.debug("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
-        # log.debug("@@ expect_entity_ids: \n"+"\n".join([ repr(eti) for eti in expect_entity_ids[145:] ]))
+        # log.info("@@ actual_entity_ids: \n"+"\n".join([ repr(eti) for eti in actual_entity_ids[145:] ]))
+        # log.info("@@ expect_entity_ids: \n"+"\n".join([ repr(eti) for eti in expect_entity_ids[145:] ]))
         self.assertEqual(actual_entity_ids, expect_entity_ids)
         return
 
@@ -204,7 +211,7 @@ class EntityGenericListViewTest(AnnalistTestCase):
         # Enumerate enumeration types
         entity_types_ids = [ (e.get_type_id(), e.get_id()) for e in entity_list ]
         # log.info("@@ entity_types_ids: \n"+"\n".join([repr(eti) for eti in entity_types_ids]))
-        self.assertEqual(len(entity_types_ids), 5)
+        self.assertEqual(len(entity_types_ids), 4)
         return
 
     def test_get_default_all_list(self):

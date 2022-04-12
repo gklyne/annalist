@@ -199,15 +199,24 @@ def runCommand(userhome, userconfig, argv):
     Returns exit status.
     """
     options = parseCommandArgs(argv[1:])
-    # if options and options.debug:
-    #     # This doesn't work as expected - some kind of interference with Django log settings?
-    #     logging.basicConfig(level=logging.DEBUG, filename="annalist-manager.log", filemode="w")
-    # else:
-    #     logging.basicConfig(level=logging.INFO)
-    # log.debug("runCommand: configbase %s, filebase %s, argv %s"%(configbase, filebase, repr(argv)))
-    # log.debug("Options: %s"%(repr(options)))
+
+    if options and options.debug:
+        # This doesn't work as expected - some kind of interference with Django log settings?
+        # S ee: https://stackoverflow.com/questions/20240464/python-logging-file-is-not-working-when-using-logging-basicconfig
+        logging.basicConfig(
+            level=logging.DEBUG, 
+            filename="annalist-manager.log", filemode="w",
+            force=True
+            )
+    else:
+        # logging.basicConfig(level=logging.INFO)
+        # force option added python 3.8
+        logging.basicConfig(level=logging.INFO, force=True)
+    log.debug("runCommand:  argv %s"%(repr(argv)))
+    log.debug("Options: %s"%(repr(options)))
     # else:
     #     logging.basicConfig()
+
     if options:
         progname = os.path.basename(argv[0])
         status   = run(userhome, userconfig, options, progname)

@@ -1,0 +1,33 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_field/Keyword",
+  "@type": [
+    "annal:Field"
+  ],
+  "annal:default_value": "",
+  "annal:field_entity_type": "pcat:Photograph",
+  "annal:field_fields": [],
+  "annal:field_placement": "",
+  "annal:field_ref_field": "",
+  "annal:field_ref_restriction": "",
+  "annal:field_ref_type": "",
+  "annal:field_render_type": "_enum_render_type/Text",
+  "annal:field_value_mode": "_enum_value_mode/Value_direct",
+  "annal:field_value_type": "annal:Text",
+  "annal:id": "Keyword",
+  "annal:placeholder": "(keyword or key phrase)",
+  "annal:property_uri": "pcat:keyword",
+  "annal:repeat_label_add": "Add",
+  "annal:repeat_label_delete": "Remove",
+  "annal:superproperty_uri": [],
+  "annal:tooltip": "A keyword that serves to categorize or suggest useful information about a photograph or its subject.",
+  "annal:type": "annal:Field",
+  "annal:type_id": "_field",
+  "rdfs:comment": "# Keyword associated with a photograph",
+  "rdfs:label": "Keyword"
+}

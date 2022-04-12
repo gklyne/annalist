@@ -22,7 +22,7 @@ from collections                    import OrderedDict
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
-from django.core.urlresolvers       import resolve, reverse
+from django.urls                    import resolve, reverse
 
 from utils.py3porting               import isoformat_space, urljoin
 

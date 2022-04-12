@@ -418,10 +418,12 @@ class bound_field(object):
                 # Get entity type info
                 coll     = self._field_description._collection
                 typeinfo = EntityTypeInfo(coll, type_id)
-                # Check access permission, assuming user has "VIEW" permission in collection
-                # This is primarily to prevent a loophole for accessing user account details
-                #@@TODO: pass actual user permissions in to bound_field or field description 
-                #        or extra params
+                # Check access permission required, assuming user has "VIEW" permission 
+                # in collection, and retrieve target values if permissions are OK.
+                # This is primarily to prevent a loophole for accessing user 
+                # account details.
+                #@@TODO: pass actual user permissions in to bound_field or 
+                #        field description or extra params
                 user_permissions    = ["VIEW"]
                 req_permissions_map = typeinfo.get_entity_permissions_map(entity_id)
                 req_permissions     = list(set( req_permissions_map[a] for a in ["view", "list"] ))

@@ -1,0 +1,19 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Photograph/20150501_1644_033",
+  "@type": [
+    "pcat:Photograph",
+    "annal:EntityData"
+  ],
+  "annal:id": "20150501_1644_033",
+  "annal:type": "pcat:Photograph",
+  "annal:type_id": "Photograph",
+  "annal:uri": "pcat:20150501_1644_033",
+  "rdfs:comment": "# 20150501_1644_033 Soar/Sileby/weir stream\r\n\r\nWeir stream at Sileby Mill on the River Soar.\r\n\r\n20150501-1644-033.jpg\r\n",
+  "rdfs:label": "20150501_1644_033 Soar/Sileby/weir stream"
+}

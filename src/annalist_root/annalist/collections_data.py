@@ -128,6 +128,18 @@ installable_collections = (
             , "annal:default_list": "Classes"
             }
         }
+    , "Tutorial_example_data":   
+        { 'data_dir': "Tutorial_example_data"
+        , 'coll_meta':
+            { "rdfs:label":     "Tutorial example: photo collection sample data"
+            , "rdfs:comment":   "# Tutorial example: photo collection sample data"+
+                                "\r\n\r\n"+
+                                "This is an Annalist collection which is an example of the result "+
+                                "of performing steps described in the Annalist tutorial document."+
+                                "\r\n"
+            , "annal:comment":  "Initialized by `annalist-manager installcollection`"
+            }
+        }
     # , "...":   
     #     { 'data_dir': "..."
     #     , 'coll_meta':

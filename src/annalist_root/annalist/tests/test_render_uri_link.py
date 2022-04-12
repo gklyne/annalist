@@ -2,9 +2,6 @@
 Tests for text value displayed as a hyperlink.
 
 The text value is taken to be a URI or URI reference.
-
-@@TODO: later developments shoukld also support CURIES (cf. issue #19,
-https://github.com/gklyne/annalist/issues/19).
 """
 
 from __future__ import unicode_literals

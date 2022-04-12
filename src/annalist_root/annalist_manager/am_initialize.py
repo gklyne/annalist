@@ -80,7 +80,9 @@ def am_initialize(annroot, userhome, userconfig, options):
 
 def am_collectstatic(annroot, userhome, userconfig, options):
     """
-    Collect Annalist statis data to (e.g.) `annalist_site/static`
+    Collect Annalist static data to (e.g.) `annalist_site/static`
+
+    See: https://docs.djangoproject.com/en/1.11/howto/static-files/
 
     annroot     is the root directory for the annalist software installation.
     userhome    is the home directory for the host system user issuing the initialize command.
@@ -109,6 +111,7 @@ def am_collectstatic(annroot, userhome, userconfig, options):
         (annroot, settings_obj.modulename)
         )
     log.debug("am_collectstatic subprocess: %s"%subprocess_command)
+    print("Collect static data: "+subprocess_command)
     # Allow stdout and stderr to be captured for testing
     p = subprocess.Popen(
         subprocess_command.split(), 

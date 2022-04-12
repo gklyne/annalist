@@ -249,7 +249,7 @@ class RecordFieldTest(AnnalistTestCase):
         vc.update(
             { 'annal:options_typeref':  "test_target_type"
             , 'annal:restrict_values':  "ALL"
-            , 'annal:target_field':     "annal:test_target_field"
+            #@@ , 'annal:target_field':     "annal:test_target_field"
             })
         t  = RecordField.create(self.testcoll, "field1", vc)
         td = RecordField.load(self.testcoll, "field1").get_values()
@@ -257,7 +257,7 @@ class RecordFieldTest(AnnalistTestCase):
         vr.update(
             { 'annal:field_ref_type':           "test_target_type"
             , 'annal:field_ref_restriction':    "ALL"
-            , 'annal:field_ref_field':          "annal:test_target_field"
+            #@@ , 'annal:field_ref_field':          "annal:test_target_field"
             })
         self.assertKeysMatch(td, vr)
         self.assertDictionaryMatch(td, vr)
@@ -354,14 +354,12 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(e.get_id(), field_id)
         self.assertEqual(e.get_url(), u)
         self.assertEqual(e.get_view_url_path(), recordfield_url("testcoll", field_id))
-        # print("@@@@ _check_field_data_values property_uri: "+str(property_uri))
         v = recordfield_values(
             field_id=field_id, 
             property_uri=property_uri, 
             entity_type_uri=type_uri,
             update=update
             )
-        # print("@@@@ v: "+repr(v))
         check_field_record(self, e,
             field_id=           field_id,
             field_ref=          layout.COLL_BASE_FIELD_REF%{'id': field_id},
@@ -461,7 +459,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             tooltip7a=context_view_field(r.context,    6, 0).get_field_tooltip(), # Value type
             tooltip7b=context_view_field(r.context,    6, 1).get_field_tooltip(), # Value mode
             tooltip8a=context_view_field(r.context,    7, 0).get_field_tooltip(), # Typeref
-            tooltip8b=context_view_field(r.context,    7, 1).get_field_tooltip(), # Fieldref
             tooltip9=context_view_field(r.context,     8, 0).get_field_tooltip(), # default
             tooltip10=context_view_field(r.context,    9, 0).get_field_tooltip(), # Placeholder
             tooltip11=context_view_field(r.context,   10, 0).get_field_tooltip(), # Tooltip
@@ -677,19 +674,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
               </div>
             </div>
             """)%field_vals(width=6)
-        formrow8col2 = ("""
-            <div class="small-12 medium-6 columns" title="%(tooltip8b)s">
-              <div class="row view-value-row">
-                <div class="%(label_classes)s">
-                  <span>Refer to field</span>
-                </div>
-                <div class="%(input_classes)s">
-                  <input type="text" size="64" name="Field_fieldref" 
-                         placeholder="(field URI or CURIE)" value="">
-                </div>
-              </div>
-            </div>
-            """)%field_vals(width=6)
         formrow9 = """
             <div class="small-12 columns" title="%(tooltip9)s">
               <div class="row view-value-row">
@@ -872,7 +856,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertContains(r, formrow7col1,  html=True)    # Value type
         self.assertContains(r, formrow7col2,  html=True)    # Value mode
         self.assertContains(r, formrow8col1,  html=True)    # Ref type (enum)
-        self.assertContains(r, formrow8col2,  html=True)    # Ref field
         self.assertContains(r, formrow9,      html=True)    # Default
         self.assertContains(r, formrow10,     html=True)    # Placeholder
         self.assertContains(r, formrow11,     html=True)    # Tooltip
@@ -934,7 +917,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="Type_label")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Type_label")
@@ -982,7 +964,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
         # Test context
-        #@@ field_url = collection_entity_view_url(coll_id="testcoll", type_id=layout.FIELD_TYPEID, entity_id="Type_label")
         self.assertEqual(r.context['coll_id'],          "testcoll")
         self.assertEqual(r.context['type_id'],          layout.FIELD_TYPEID)
         self.assertEqual(r.context['entity_id'],        "Field_fields")
@@ -1130,9 +1111,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         expect_context = field_view_context_data(
             field_id="!badfield", orig_id="orig_field_id", action="new"
             )
-        # print "@@ context %r"%(context_bind_fields(r.context)['fields'][9],)
-        # print "@@ context field value %r"%(context_bind_fields(r.context)['fields'][9]['field_value'],)
-        # print "@@ expect  %r"%(expect_context['fields'][9],)
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         return
 
@@ -1524,7 +1502,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         common_vals = (
             { 'coll_id':        "testcoll"
             , 'field_id':       "taskfieldreference"
-            , 'field_ref_id':   "taskfieldreference"+layout.SUFFIX_MULTI
+            , 'field_ref_id':   "taskfieldreference"+layout.SUFFIX_REF_FIELD
             , 'field_label':    "Test reference field"
             , 'type_uri':       "test:ref_field"
             , 'property_uri':   "test:ref_prop"
@@ -1560,8 +1538,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Check content of type, view and list
         tgt_field_id  = "%(field_id)s"%common_vals
         tgt_field_uri = "%(property_uri)s"%common_vals
-        ref_field_id  = tgt_field_id + layout.SUFFIX_MULTI
-        ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_MULTI_P
+        ref_field_id  = tgt_field_id + layout.SUFFIX_REF_FIELD
+        ref_field_uri = "%(property_uri)s"%(common_vals) + layout.SUFFIX_REF_FIELD_P
         expect_field_values = (
             { "annal:id":                   tgt_field_id
             , "annal:type":                 "annal:Field"
@@ -1579,8 +1557,8 @@ class RecordFieldEditViewTest(AnnalistTestCase):
             , "rdfs:label":                 message.FIELD_REF_LABEL%common_vals
             , "annal:field_render_type":    "_enum_render_type/RefMultifield"
             , "annal:field_value_mode":     "_enum_value_mode/Value_entity"
-            , "annal:field_entity_type":    "%(type_uri)s"%common_vals
-            , "annal:field_value_type":     "annal:Field_list"
+            , "annal:field_entity_type":    ""
+            , "annal:field_value_type":     "%(type_uri)s"%common_vals
             , "annal:property_uri":         ref_field_uri
             , "annal:field_placement":      "small:0,12"
             , "annal:placeholder":          message.FIELD_REF_PLACEHOLDER%common_vals
@@ -1750,7 +1728,6 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f_Field_fields          = context_view_field(r.context, 11, 0)
         f_subfield_sel_field    = f_Field_fields.description["group_field_descs"][0]
         actual_subfield_choices = list(f_subfield_sel_field["field_choices"].values())
-        # print "@@@@@\n%r\n@@@@@"%(actual_subfield_choices,)
         self.assertEqual(actual_subfield_choices, expect_subfield_choices)
         return
 

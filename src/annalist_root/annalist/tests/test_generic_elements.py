@@ -15,7 +15,7 @@ import unittest
 import logging
 log = logging.getLogger(__name__)
 
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 from django.test.client         import Client
 
 from annalist                   import layout
@@ -88,6 +88,17 @@ class UserServerLogViewTest(AnnalistTestCase):
         return
 
     def tearDown(self):
+        return
+
+    @classmethod
+    def setUpClass(cls):
+        super(UserServerLogViewTest, cls).setUpClass()
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        super(UserServerLogViewTest, cls).tearDownClass()
+        resetSitedata(scope="all")
         return
 
     def test_get(self):

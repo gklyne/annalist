@@ -2,7 +2,6 @@
 #
 # NOTE: when testing, use "pip install ... --upgrade"
 
-# from __future__ import unicode_literals # (import Fails under Pythons)
 from __future__ import absolute_import, division, print_function
 
 __author__      = "Graham Klyne (GK@ACM.ORG)"
@@ -24,8 +23,13 @@ from distutils.util import convert_path
 from fnmatch import fnmatchcase
 from setuptools import setup, find_packages
 
-if sys.version_info[:2] not in [(2,7),(3,6),(3,7)]:
-    raise AssertionError("Annalist requires Python 2.7 or 3.6 (found Python %s.%s)"%sys.version_info[:2])
+
+# Notes about Django and Python compatibility (probably no longer apply)
+#     https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django
+#     https://stackoverflow.com/a/48822656/324122
+#
+if sys.version_info[:2] not in [(3,8), (3,9)]:
+    raise AssertionError("Annalist requires Python 3.8 or 3.9 (found Python %s.%s)"%sys.version_info[:2])
 
 dir_here = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir_here, "annalist_root"))
@@ -48,6 +52,7 @@ setup(
     version = VERSION,
     description = DESCRIPTION,
     long_description = read("README.rst"),
+    long_description_content_type = "text/x-rst",
     author = AUTHOR,
     author_email = AUTHOR_EMAIL,
     license = "MIT",
@@ -89,6 +94,7 @@ setup(
             , 'data/static/css/*.css'
             , 'data/static/js/*.js'
             , 'data/static/images/*.png'
+            , 'data/static/images/*.ico'
             , 'data/static/images/icons/warning_32.png'
             , 'data/static/images/icons/search_32.png'
             , 'data/static/foundation/css/*.css'
@@ -174,6 +180,17 @@ setup(
             , 'data/Annalist_schema/entitydata/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*.jsonld'
             , 'data/Annalist_schema/entitydata/*/*/*/*.jsonld'
+            # Tutorial example data
+            , 'data/Tutorial_example_data/_field/*/*.jsonld'
+            , 'data/Tutorial_example_data/_list/*/*.jsonld'
+            , 'data/Tutorial_example_data/_type/*/*.jsonld'
+            , 'data/Tutorial_example_data/_view/*/*.jsonld'
+            , 'data/Tutorial_example_data/_vocab/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*/*.jsonld'
+            , 'data/Tutorial_example_data/entitydata/*/*/*.jpg'
+            # , 'data/Tutorial_example_data/entitydata/*/*/*/*.jsonld'
+            # , 'data/Tutorial_example_data/entitydata/*/*/*/*.jpg'
             # Test data
             , 'data/test/*.md'
             , 'data/test/*.jpg'
@@ -201,32 +218,29 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.9",
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==1.11.23'
-        , 'six==1.11.0'
-        , 'futures==3.2.0'
-        , 'requests==2.20.0'
-          , 'urllib3==1.24.2'
-          , 'chardet==3.0.4'
-          , 'idna==2.6'
-          , 'requests-oauthlib==0.8.0'
-          , 'oauthlib==2.0.7'
-          , 'certifi==2018.1.18'
-          , 'httplib2==0.11.3'
-        , 'rdflib==4.2.2'
-          , 'isodate==0.6.0'
-          , 'rdflib-jsonld==0.4.0'
-        , 'pyparsing==2.2.0'
-        , 'Markdown==2.6.11'
+        [ 'Django==4.0.3'
+        , 'packaging==21.3'
+        , 'six==1.16.0'
+        , 'requests==2.26.0'
+        , 'urllib3==1.26.7'
+        , 'idna==3.3'
+        , 'requests-oauthlib==1.3.0'
+        , 'oauthlib==3.1.1'
+        , 'certifi==2021.10.8'
+        , 'httplib2==0.20.2'
+        , 'rdflib==6.1.1'
+        , 'isodate==0.6.0'
+        , 'pyparsing==3.0.6'
+        , 'Markdown==3.3.6'
         # For deployment
-        , 'gunicorn==19.9.0'
+        , 'gunicorn==20.1.0'
         # For testing:
-        , 'httpretty==0.9.4'
-        , 'beautifulsoup4==4.6.0'
+        , 'httpretty==1.1.4'
+        , 'beautifulsoup4==4.10.0'
         ],
     entry_points =
         {
@@ -235,11 +249,5 @@ setup(
             ]
         }
     )
-
-if sys.version_info[:2] >= (3,7):
-    print("*****")
-    print("Warning: Django 1.11 does not work with Python versions after 3.6")
-    print("See: https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django")
-    print("     https://stackoverflow.com/a/48822656/324122")
 
 # End.

@@ -149,13 +149,11 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     @classmethod
     def setUpClass(cls):
         super(AnnalistSiteDataTest, cls).setUpClass()
-        # @@checkme@@  resetSitedata()
         return
 
     @classmethod
     def tearDownClass(cls):
         super(AnnalistSiteDataTest, cls).tearDownClass()
-        # @@checkme@@  resetSitedata()
         return
 
     # --------------------------------------------------------------------------
@@ -241,12 +239,13 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                 )
             f = next(i, "(@@no value@@)")
             if f != e:
-                print("@@ Expected: %r, found %r"%(e, f))
+                # Print additional test-failure diagnostic
+                print("Expected: %r, found %r"%(e, f))
                 cols = (row_data
                         .find("div", class_="row")
                         .find_all("div", class_="columns")
                     )
-                print("@@ cols %s"%(cols,))
+                print("Cols %s"%(cols,))
             self.assertEqual(e, f, "%s != %s (%r)"%(e, f, row_expected))
         return
 
@@ -266,7 +265,9 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         trows = s.find_all("div", class_="select-row")
         self.assertEqual(len(trows), len(expect_fields))
         for i in range(len(trows)):
-            tcols = trows[i].select("div.columns div.row div.columns")
+            tcols = trows[i].select("div.small-11.columns > div.row > div.columns")
+            # print("@@@@ trows[%d]\n"%(i), trows[i].prettify())
+            # print("@@@@ tcols\n", "\n---\n".join(map(str,tcols)))
             self.assertEqual(trows[i].div.input['type'],  "checkbox")
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))
@@ -310,10 +311,8 @@ class AnnalistSiteDataTest(AnnalistTestCase):
 
     # Test consistency of field descriptions for a given type
     def check_type_fields(self, type_id, type_uri, view_fields):
-        # print "@@ t: " + type_id
         for f in view_fields:
             field_id    = extract_entity_id(f[ANNAL.CURIE.field_id])
-            # print "@@ f: " + field_id
             view_field  = RecordField.load(self.coll1, field_id, altscope="all")
             render_type = extract_entity_id(view_field[ANNAL.CURIE.field_render_type])
             value_type  = extract_entity_id(view_field[ANNAL.CURIE.field_value_type])
@@ -344,9 +343,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
                     # Check field list
                     field_list      = view_field[ANNAL.CURIE.field_fields]
                     repeat_type_uri = view_field[ANNAL.CURIE.field_value_type]
-                    # print "@@ subfields: " + repeat_type_uri
                     self.check_type_fields("_field", repeat_type_uri, field_list)
-                    # print "@@ subfields: end"
                 enum_types = (
                     [ "Type", "View", "List", "Field"
                     , "Enum", "Enum_optional"
@@ -438,7 +435,7 @@ class AnnalistSiteDataTest(AnnalistTestCase):
     def test_collection_edit(self):
         u = collection_edit_url(coll_id="coll1")
         s = self.get_page(u)
-        self.assertEqual(s.h2.string, "Customize collection: Collection coll1")
+        self.assertEqual(s.h2.string, "Customize collection \u2014 Collection coll1")
         local_types_expected = make_field_choices(
             [ ("type1", "RecordType coll1/_type/type1")
             , ("type2", "RecordType coll1/_type/type2")
@@ -1039,7 +1036,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , [ "_field/Enum_uri",                  ["Enum_uri",          "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_default",             ["Field_default",     "Short text",     "annal:Text"             ] ]
             , [ "_field/Field_entity_type",         ["Field_entity_type", "Identifier",     "annal:Identifier"       ] ]
-            , [ "_field/Field_fieldref",            ["Field_fieldref",    "Identifier",     "annal:Identifier"       ] ]
             , [ "_field/Field_fields",              ["Field_fields",      "Field group sequence as table",
                                                                                             "annal:Field_list"       ] ]
             , [ "_field/Field_groupref",            ["Field_groupref",    "Optional/new entity reference", 
@@ -1184,7 +1180,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
             , "_field/Field_value_type"
             , "_field/Field_value_mode"
             , "_field/Field_typeref"
-            , "_field/Field_fieldref"
             , "_field/Field_default"
             , "_field/Field_placeholder"
             , "_field/Field_tooltip"

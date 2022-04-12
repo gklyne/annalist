@@ -16,7 +16,7 @@ import copy
 
 from utils.py3porting           import quote, unquote
 
-from django.core.urlresolvers   import resolve, reverse
+from django.urls                import resolve, reverse
 from django.http                import HttpResponse
 from django.http                import HttpResponseRedirect
 

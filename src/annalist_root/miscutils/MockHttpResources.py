@@ -48,6 +48,7 @@ class MockHttpFileResources(object):
 
     def __enter__(self):
         httpretty.enable()
+        logging.getLogger("httpretty.core").setLevel(logging.WARNING)
         # register stuff...
         refs = ScanDirectories.CollectDirectoryContents(self._path, baseDir=self._path, 
             listDirs=False, listFiles=True, recursive=True)
@@ -75,6 +76,7 @@ class MockHttpDictResources(object):
 
     def __enter__(self):
         httpretty.enable()
+        logging.getLogger("httpretty.core").setLevel(logging.WARNING)
         # register stuff...
         for r in self._dict.keys():
             ru = urljoin(self._baseuri, r)

@@ -43,7 +43,6 @@ f_Entity_id = (
     , 'field_property_uri':     "annal:id"
     , 'field_placement':        "small:0,12;medium:0,6"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(entity id)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -59,7 +58,6 @@ f_Entity_ref = (
     , 'field_property_uri':     "rdfs:label"
     , 'field_placement':        "small:0,12;medium:0,6"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(entity ref)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -75,7 +73,6 @@ f_Entity_type = (
     , 'field_property_uri':     "annal:type_id"
     , 'field_placement':        "small:0,12;medium:6,6"
     , 'field_ref_type':         "_type"
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(type id)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -91,7 +88,6 @@ f_Entity_label = (
     , 'field_property_uri':     "rdfs:label"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(label)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -107,7 +103,6 @@ f_Entity_comment = (
     , 'field_property_uri':     "rdfs:comment"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(description)"
     , 'field_default_value':    ""
     , 'field_choices':          None # no_options
@@ -123,7 +118,6 @@ f_Entity_uri = (
     , 'field_property_uri':     "annal:uri"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(URI)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -139,7 +133,6 @@ f_Entity_see_also_r = (
     , 'field_property_uri':     "rdfs:seeAlso"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Links to further information)"
     , 'field_default_value':    None
     , 'field_choices':          no_options
@@ -156,7 +149,6 @@ f_Entity_see_also = (
     , 'field_property_uri':     "rdfs:seeAlso"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(URL for further information)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -175,7 +167,6 @@ f_Bib_type = (
     , 'field_property_uri':     "Bib:type"
     , 'field_placement':        "small:0,12;medium:6,6"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_type)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -192,7 +183,6 @@ f_Bib_title = (
     , 'field_property_uri':     "Bib:title"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_title)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -209,7 +199,6 @@ f_Bib_month = (
     , 'field_property_uri':     "Bib:month"
     , 'field_placement':        "small:0,12;medium:0,6"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_month)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -226,7 +215,6 @@ f_Bib_year = (
     , 'field_property_uri':     "Bib:year"
     , 'field_placement':        "small:0,12;medium:6,6"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_year)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -243,7 +231,6 @@ f_Bib_authors = (
     , 'field_property_uri':     "Bib:authors"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_authors)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -260,7 +247,6 @@ f_Bib_editors = (
     , 'field_property_uri':     "Bib:editors"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_editors)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -277,7 +263,6 @@ f_Bib_journal = (
     , 'field_property_uri':     "Bib:journal"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_journal)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -294,7 +279,6 @@ f_Bib_bookentry = (
     , 'field_property_uri':     "Bib:bookentry"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_bookentry)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -311,7 +295,6 @@ f_Bib_publication_details = (
     , 'field_property_uri':     "Bib:publication_details"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_publication_details)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -328,7 +311,6 @@ f_Bib_identifiers = (
     , 'field_property_uri':     "Bib:identifiers"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_identifiers)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -345,7 +327,6 @@ f_Bib_license = (
     , 'field_property_uri':     "Bib:license"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_license)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -362,7 +343,6 @@ f_Bib_note = (
     , 'field_property_uri':     "Bib:note"
     , 'field_placement':        "small:0,12"
     , 'field_ref_type':         None
-    , 'field_ref_field':        None
     , 'field_placeholder':      "(Bib_note)"
     , 'field_default_value':    ""
     , 'field_choices':          no_options
@@ -381,7 +361,6 @@ f_Field_id = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -398,7 +377,6 @@ f_Field_render_type = (
     , "field_property_uri":     "annal:field_render_type"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         "_enum_render_type"
-    , "field_ref_field":        None
     , "field_placeholder":      "(field render type)"
     , "field_default_value":    "Text"
     , "field_choices":          []
@@ -415,7 +393,6 @@ f_Field_label = (
     , "field_property_uri":     "rdfs:label"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field label)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -432,7 +409,6 @@ f_Field_help = (
     , "field_property_uri":     "rdfs:comment"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Field usage commentary or help text)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -449,7 +425,6 @@ f_Field_property = (
     , "field_property_uri":     "annal:property_uri"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field URI or CURIE)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -466,7 +441,6 @@ f_Field_placement = (
     , "field_property_uri":     "annal:field_placement"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field position and size)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -483,7 +457,6 @@ f_Field_sel = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -513,7 +486,6 @@ f_Field_value_type = (
     , "field_property_uri":     "annal:field_value_type"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field value type)"
     , "field_default_value":    "annal:Text"
     , "field_choices":          no_options
@@ -530,7 +502,6 @@ f_Field_value_mode = (
     , "field_property_uri":     "annal:field_value_mode"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         "_enum_value_mode"
-    , "field_ref_field":        None
     , "field_placeholder":      "(field value mode)"
     , "field_default_value":    "Value_direct"
     , "field_choices":          []
@@ -547,7 +518,6 @@ f_Field_entity_type = (
     , "field_property_uri":     "annal:field_entity_type"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_default_value":    ""
     , "field_choices":          []
     })
@@ -563,27 +533,9 @@ f_Field_typeref = (
     , "field_property_uri":     "annal:field_ref_type"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         "_type"
-    , "field_ref_field":        None
     , "field_placeholder":      "(no type selected)"
     , "field_default_value":    ""
     , "field_choices":          []
-    })
-
-f_Field_fieldref = (
-    { "field_id":               "Field_fieldref"
-    , "field_name":             "Field_fieldref"
-    , "field_label":            "Refer to field"
-    , "field_render_type":      "Identifier"
-    , "field_value_mode":       "Value_direct"
-    , "field_entity_type":      "annal:Field"
-    , "field_value_type":       "annal:Identifier"
-    , "field_property_uri":     "annal:field_ref_field"
-    , "field_placement":        "small:0,12;medium:6,6"
-    , "field_ref_type":         None
-    , "field_ref_field":        None
-    , "field_placeholder":      "(field URI or CURIE)"
-    , "field_default_value":    ""
-    , "field_choices":          no_options
     })
 
 f_Field_default = (
@@ -597,7 +549,6 @@ f_Field_default = (
     , "field_property_uri":     "annal:default_value"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field default value)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -614,7 +565,6 @@ f_Field_placeholder = (
     , "field_property_uri":     "annal:placeholder"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(placeholder text)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -631,7 +581,6 @@ f_Field_tooltip = (
     , "field_property_uri":     "annal:tooltip"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Field usage popup help text)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -661,7 +610,6 @@ f_Field_repeat_label_add = (
     , "field_property_uri":     "annal:repeat_label_add"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_default_value":    "Add"
     , "field_choices":          no_options
     })
@@ -677,7 +625,6 @@ f_Field_repeat_label_delete = (
     , "field_property_uri":     "annal:repeat_label_delete"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_default_value":    "Remove"
     , "field_choices":          no_options
     })
@@ -693,7 +640,6 @@ f_Field_restrict = (
     , "field_property_uri":     "annal:field_ref_restriction"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_default_value":    ""
     , "field_choices":          no_options
     })
@@ -709,7 +655,6 @@ f_Field_undefined = (
     , "field_property_uri":     "@@undefined@@"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_default_value":    ""
     , "field_choices":          no_options
     })
@@ -727,7 +672,6 @@ f_List_id = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(list id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -744,7 +688,6 @@ f_List_type = (
     , "field_property_uri":     "annal:display_type"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         "_enum_list_type"
-    , "field_ref_field":        None
     , "field_placeholder":      "(list type)"
     , "field_default_value":    "List"
     , "field_choices":          no_options
@@ -761,7 +704,6 @@ f_List_label = (
     , "field_property_uri":     "rdfs:label"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(list label)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -779,7 +721,6 @@ f_List_comment = (
     , "field_property_uri":     "rdfs:comment"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(description of list view)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -796,7 +737,6 @@ f_List_default_type = (
     , "field_property_uri":     "annal:default_type"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         "_type"
-    , "field_ref_field":        None
     , "field_placeholder":      "(default entity type)"
     , "field_default_value":    "Default_type"
     , "field_choices":          no_options
@@ -813,7 +753,6 @@ f_List_default_view = (
     , "field_property_uri":     "annal:default_view"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         "_view"
-    , "field_ref_field":        None
     , "field_placeholder":      "(view id)"
     , "field_default_value":    "Default_view"
     , "field_choices":          no_options
@@ -830,7 +769,6 @@ f_List_entity_selector = (
     , "field_property_uri":     "annal:list_entity_selector"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(entity selector; e.g. 'ALL', '<type> in [@type]', '[<field>]==<value>', etc.)"
     , "field_default_value":    "ALL"
     , "field_choices":          no_options
@@ -847,7 +785,6 @@ f_List_entity_type = (
     , "field_property_uri":     "annal:list_entity_type"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(entity type URI/CURIE displayed by list)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -864,7 +801,6 @@ f_List_fields = (
     , "field_property_uri":     "annal:list_fields"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(list field description)"
     , "field_default_value":    None
     , "field_choices":          no_options
@@ -883,7 +819,6 @@ f_Type_id = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(type id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -900,7 +835,6 @@ f_Type_label = (
     , "field_property_uri":     "rdfs:label"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(label)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -917,7 +851,6 @@ f_Type_comment = (
     , "field_property_uri":     "rdfs:comment"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(type description)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -934,7 +867,6 @@ f_Type_uri = (
     , "field_property_uri":     "annal:uri"
     , "field_placement":        "small:0,12" #@@@ "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Type URI or CURIE)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -951,7 +883,6 @@ f_Type_supertype_uris = (
     , "field_property_uri":     "annal:supertype_uri"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Supertype URIs or CURIEs)"
     , "field_default_value":    None
     , "field_choices":          no_options
@@ -968,7 +899,6 @@ f_Type_view = (
     , "field_property_uri":     "annal:type_view"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         "_view"
-    , "field_ref_field":        None
     , "field_placeholder":      "(view id)"
     , "field_default_value":    "_view/Default_view"
     , "field_choices":          []
@@ -985,7 +915,6 @@ f_Type_list = (
     , "field_property_uri":     "annal:type_list"
     , "field_placement":        "small:0,12;medium:6,6"
     , "field_ref_type":         "_list"
-    , "field_ref_field":        None
     , "field_placeholder":      "(list id)"
     , "field_default_value":    "_list/Default_list"
     , "field_choices":          []
@@ -1002,7 +931,6 @@ f_Type_aliases = (
     , "field_property_uri":     "annal:field_aliases"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field aliases)"
     , "field_default_value":    None
     , "field_choices":          no_options
@@ -1021,7 +949,6 @@ f_View_id = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(view id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1038,7 +965,6 @@ f_View_label = (
     , "field_property_uri":     "rdfs:label"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(view label)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1055,7 +981,6 @@ f_View_comment = (
     , "field_property_uri":     "rdfs:comment"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(description of record view)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1072,7 +997,6 @@ f_View_entity_type = (
     , "field_property_uri":     "annal:view_entity_type"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Entity type URI/CURIE displayed by view)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1089,7 +1013,6 @@ f_View_edit_view = (
     , "field_property_uri":     "annal:open_view"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(edit view from edit entity form)"
     , "field_default_value":    True
     , "field_choices":          no_options
@@ -1106,7 +1029,6 @@ f_View_fields = (
     , "field_property_uri":     "annal:view_fields"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(repeat field description)"
     , "field_default_value":    None
     , "field_choices":          no_options
@@ -1123,7 +1045,6 @@ f_View_field_sel = (
     , "field_property_uri":     "annal:field_id"
     , "field_placement":        "small:0,12;medium:0,4"
     , "field_ref_type":         "_field"
-    , "field_ref_field":        None
     , "field_placeholder":      "(field reference)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1140,7 +1061,6 @@ f_View_field_property = (
     , "field_property_uri":     "annal:property_uri"
     , "field_placement":        "small:0,12;medium:4,4"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field URI or CURIE)"
     , "field_default_value":    ""
     , "field_choices":          None
@@ -1157,7 +1077,6 @@ f_View_field_placement = (
     , "field_property_uri":     "annal:field_placement"
     , "field_placement":        "small:0,12;medium:8,4"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(field position and size)"
     , "field_default_value":    ""
     , "field_choices":          None
@@ -1176,7 +1095,6 @@ f_Vocab_id = (
     , "field_property_uri":     "annal:id"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(vocabulary id)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1193,7 +1111,6 @@ f_Vocab_uri = (
     , "field_property_uri":     "annal:uri"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(Vocabulary namespace URI)"
     , "field_default_value":    ""
     , "field_choices":          no_options
@@ -1212,7 +1129,6 @@ f_Test_repeat_field = (
     , "field_property_uri":     "test:repeat_fields"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(test repeat field)"
     , "group_id":               "Test_repeat_field"
     , "group_label":            "Test repeat field label"
@@ -1232,7 +1148,6 @@ f_Test_refimg_field = (
     , "field_property_uri":     "test:ref_image"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         "img_type"
-    , "field_ref_field":        None
     , "field_placeholder":      "(ref image field)"
     , "group_id":               "Test_refimg_field"
     , "group_label":            "Image reference"
@@ -1254,7 +1169,6 @@ f_Test_rptref_field = (
     , "field_property_uri":     "test:rpt_image"
     , "field_placement":        "small:0,12"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(repeat image field)"
     , "group_id":               "Test_rptref_field"
     , "group_label":            "Repeat image reference"
@@ -1274,7 +1188,6 @@ f_Test_comment = (
     , "field_property_uri":     "rdfs:comment"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(view comment field)"
     , "field_default_value":    None
     , "field_choices":          None
@@ -1291,7 +1204,6 @@ f_Test_image = (
     , "field_property_uri":     "test:image"
     , "field_placement":        "small:0,12;medium:0,6"
     , "field_ref_type":         None
-    , "field_ref_field":        None
     , "field_placeholder":      "(view image field)"
     , "field_default_value":    None
     , "field_choices":          None
@@ -1332,7 +1244,6 @@ fields_by_id = (
     , "Field_value_mode":           f_Field_value_mode
     , "Field_entity_type":          f_Field_entity_type
     , "Field_typeref":              f_Field_typeref
-    , "Field_fieldref":             f_Field_fieldref
     , "Field_default":              f_Field_default
     , "Field_placeholder":          f_Field_placeholder
     , "Field_tooltip":              f_Field_tooltip

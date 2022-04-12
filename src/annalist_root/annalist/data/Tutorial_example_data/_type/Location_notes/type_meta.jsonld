@@ -1,0 +1,23 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "_type/Location_notes",
+  "@type": [
+    "annal:Type"
+  ],
+  "annal:field_aliases": [],
+  "annal:id": "Location_notes",
+  "annal:ns_prefix": "pcat",
+  "annal:supertype_uri": [],
+  "annal:type": "annal:Type",
+  "annal:type_id": "_type",
+  "annal:type_list": "_list/Location_notes",
+  "annal:type_view": "_view/Location_notes",
+  "annal:uri": "pcat:Location_notes",
+  "rdfs:comment": "# Location notes\r\n\r\nNotes about location where photograph(s) is/were taken.\r\n",
+  "rdfs:label": "Location notes"
+}

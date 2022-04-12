@@ -16,6 +16,10 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
+from utils.py3porting import is_string
+
+from django.template    import Template, Context
+
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -23,14 +27,29 @@ from annalist.views.fields.render_fieldvalue    import (
     get_field_view_value
     )
 
-from django.template    import Template, Context
-
 #   ----------------------------------------------------------------------------
 #
 #   Link URI value mapping
 #
 #   ----------------------------------------------------------------------------
 
+def import_field_value(data_value):
+    """
+    Construct field value in expected format for remaining processing
+    """
+    if data_value:
+        if is_string(data_value):
+            data_value = (
+                { 'resource_name': "imported.data"
+                , 'import_url':    data_value
+                })
+    else:
+        # Also for empty string case
+        data_value = (
+            { 'resource_name': "imported.data"
+            , 'import_url':    ""
+            })
+    return data_value
 
 class URIImportValueMapper(RenderBase):
     """
@@ -42,7 +61,7 @@ class URIImportValueMapper(RenderBase):
         """
         Extracts import URL from value structure, for field display.
         """
-        return (data_value or {}).get('import_url', "")
+        return import_field_value(data_value).get('import_url', "")
 
     @classmethod
     def decode(cls, field_value):

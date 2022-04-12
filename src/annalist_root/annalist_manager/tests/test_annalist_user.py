@@ -15,8 +15,8 @@ log = logging.getLogger(__name__)
 import sys
 import os
 import json
+import io
 
-from utils.py3porting           import StringIO
 from utils.StdoutContext        import SwitchStdout, SwitchStderr, SwitchStdin
 
 import annalist
@@ -52,11 +52,11 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
     #   -----------------------------------------------------------------------------
 
     def createuser(self, username):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
-                stdinbuf = StringIO("password\npassword\n")
+                stdinbuf = io.StringIO("password\npassword\n")
                 with SwitchStdin(stdinbuf):
                     runCommand(self.userhome, self.userconfig, 
                         [ "annalist-manager", "createlocal"
@@ -81,11 +81,11 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
     #   -----------------------------------------------------------------------------
 
     def test_createlocaluser(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
-                stdinbuf = StringIO("password\npassword\n")
+                stdinbuf = io.StringIO("password\npassword\n")
                 with SwitchStdin(stdinbuf):
                     runCommand(self.userhome, self.userconfig, 
                         [ "annalist-manager", "createlocaluser"
@@ -97,11 +97,11 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_createadminuser(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
-                stdinbuf = StringIO("password\npassword\n")
+                stdinbuf = io.StringIO("password\npassword\n")
                 with SwitchStdin(stdinbuf):
                     runCommand(self.userhome, self.userconfig, 
                         [ "annalist-manager", "createadminuser"
@@ -113,11 +113,11 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_defaultadminuser(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
-                stdinbuf = StringIO("password\npassword\n")
+                stdinbuf = io.StringIO("password\npassword\n")
                 with SwitchStdin(stdinbuf):
                     runCommand(self.userhome, self.userconfig, 
                         [ "annalist-manager", "defaultadminuser"
@@ -131,9 +131,9 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         self.createuser("testupdateuser")
         userexists = os.path.isdir(self.userdir("testupdateuser"))
         self.assertTrue(userexists, "testupdateuser created OK?")
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "updateadminuser"
@@ -147,9 +147,9 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         self.createuser("testupdateuser")
         userexists = os.path.isdir(self.userdir("testupdateuser"))
         self.assertTrue(userexists, "testupdateuser created OK?")
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "setuserpermissions"
@@ -164,9 +164,9 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_setdefaultpermissions(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "setdefaultpermissions"
@@ -180,9 +180,9 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         return
 
     def test_setpublicpermissions(self):
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "setpublicpermissions"
@@ -199,9 +199,9 @@ class AnnalistManagerUserTest(test_annalist_base.AnnalistManagerTestBase):
         self.createuser("testdeleteuser")
         userexists = os.path.isdir(self.userdir("testdeleteuser"))
         self.assertTrue(userexists, "testdeleteuser created OK?")
-        stderrbuf  = StringIO()
+        stderrbuf  = io.StringIO()
         with SwitchStderr(stderrbuf):
-            stdoutbuf  = StringIO()
+            stdoutbuf  = io.StringIO()
             with SwitchStdout(stdoutbuf):
                 runCommand(self.userhome, self.userconfig, 
                     [ "annalist-manager", "deleteuser"

@@ -29,14 +29,13 @@
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
-- [ ] Tag unstable release version on develop branch (e.g. "release-0.1.37")
+- [ ] Tag unstable release version on develop branch (e.g. "release-0.5.xx")
     - ```git tag -a release-`annalist-manager version` ```
     - For message:
-        "Annalist release x.y.z: (msg (one-line description))"
-
+        "Annalist release 0.5.xx: (<1-line summary message>)"
 - [ ] Create release preparation branch
         git stash
-        git checkout -b release-prep-x.y.z develop
+        git checkout -b release-prep-0.5.xx develop
         git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
@@ -62,13 +61,20 @@
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 
 - [ ] Test installation tools (and check for new dependencies; update setup.py as needed).
-    - [ ] copy kit to dev.annalist.net, install and test (NOTE: may need VPN connection)
+    - [ ] copy kit to dev.annalist.net, install and test
         . newkit_to_annalist_dev.sh
-    - [ ] login to dev.annalist.net as 'graham', then
-        rm -rf anenv2
-        virtualenv anenv2
-        . anenv2/bin/activate
-        pip install software/Annalist-0.5.xx.tar.gz
+    - [ ] If live Annalist service is running, login to annalist.net as 'annalist', then
+        source anenv3/bin/activate
+        annalist-manager stop
+    or `killall python` or `killall python3`
+    - [ ] login to dev.annalist.net as 'annalist-dev', then
+        rm -rf anenv3
+        python3 -m venv anenv3
+        source anenv3/bin/activate
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade certifi
+        python -m pip install --upgrade setuptools
+        pip install uploads/Annalist-0.5.xx.tar.gz
         annalist-manager runtests
     - [ ] Test new site creation:
         annalist-manager createsite
@@ -77,28 +83,33 @@
         annalist-manager defaultadmin
         annalist-manager runserver
         curl http://localhost:8000/annalist/site/ -v
+        annalist-manager stopserver
 
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
-- [ ] Update and test demo installation on annalist.net
-    - [ ] ssh to ubuntu@annalist.net
-    - [ ] check HTTPS proxy and Certbot setup (currently using `apache2`)
+- [ ] Set up to install Annalist in target system
+    - [ ] ssh to gk-admin@annalist.net
+    - [ ] check HTTPS proxy and Certbot setup (currently using `nginx`)
     - [ ] ssh to annalist@annalist.net, (or `su - annalist`)
+    - NOTE: examples files in `src/annalist_root/annalist/data/config_examples/`
+- [ ] Update and test demo installation on annalist.net
     - [ ] `. backup_annalist_site.sh`
-    - [ ] `mv annalist_site_2015MMDD/ archive/annalist_site_2019----`
-    - [ ] `. anenv2/bin/activate`
-    - [ ] `annalist-manager stop` or `killall python` or `killall python2.7`
+    - [ ] `. anenv3/bin/activate`
+    - [ ] `annalist-manager stop` or `killall python` or `killall python3`
     - [ ] `pip uninstall annalist`
-    - [ ] `pip install /var/www/software/Annalist-0.5.xx.tar.gz --upgrade`
+- [ ] Install new Annalist kit just uploaded (with `0.5.xx` changed to release number):
+    - [ ] `pip install ~/software/Annalist-0.5.18.tar.gz --upgrade`
+        - NOTE: this may fail with `pip` version 22.0.4 -- use `pip` version 21.3.1 to remove Django
     - [ ] `annalist-manager runtests`
     - [ ] `. update-annalist-site.sh`
     - [ ] `. update-run-annalist.sh`
-- [ ] Update front page at annalist.net:
-        cp ~annalist/uploads/pages/index.html /var/www
-        cp ~annalist/uploads/pages/css/style.css /var/www/css/
+- [ ] Update front page at annalist.net (as root user):
+        cp ~annalist/uploads/pages/index.html /var/www/annalist.net
+        cp ~annalist/uploads/pages/css/style.css /var/www/annalist.net/css/
+        cp ~annalist/uploads/pages/img/* /var/www/annalist.net/img/
 - [ ] Update tutorial document at annalist.net
-        cp ~annalist/uploads/documents/tutorial/* /var/www/documents/tutorial/
-- [ ] Check out demo system.
+        cp -r ~annalist/uploads/tutorial/* /var/www/annalist.net/tutorial/
+- [ ] Check out demo system at http://annalist.net/annalist/
 
 - [ ] Commit changes ("Release x.y.z")
 - [ ] Upload to PyPI (`python setup.py sdist upload`)
@@ -115,7 +126,11 @@
 - [x] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
+<<<<<<< HEAD
     - `git commit -m "Master branch updated to Vx.y.z"`
+=======
+    - `git commit -m "Master branch updated to V0.5.18"`
+>>>>>>> release-prep-0.5.17
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
@@ -132,8 +147,11 @@
         - Note: a new Zenodo URL is generated for the release.
     - The link in the DOI badge should display the new release from Zenodo.
 
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
+
+## Set up next development cycle
+
 - [ ] On develop branch, bump version number again (back to odd value)
+- [ ] Reset TODO list (remove entries moved to release notes, update version)
 - [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
 - [ ] Re-test
 - [ ] Commit and push changes
@@ -144,6 +162,7 @@
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
 - [ ] Post announcement to Google Group, Twitter and elsewhere
+    - https://groups.google.com/forum/#!forum/annalist-discuss
 
 
 ## Build kit and PyPI upload
@@ -159,7 +178,7 @@ Upload to PyPI:
 
     python setup.py sdist upload
 
-NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  Python 2.7.3 on MacOS seems to provide an outdated version in a virtualenv.  To update, use some combination of these commands in the virtual environment:
+NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  To update, use some combination of these commands in the virtual environment:
 
     pip uninstall setuptools
     wget https://bootstrap.pypa.io/ez_setup.py -O - | python

@@ -155,7 +155,7 @@ class WrapValueRenderer(object):
                 ["***WrapValueRenderer.value_renderer***"]
                 )
             del tb
-            raise ValueError(msg) #@@@ (used in testing to help pinpoint errors)
+            raise ValueError(msg) # (used in testing to help pinpoint errors)
             return "\n".join(response_parts)
 
 class TemplateWrapValueRenderer(object):
@@ -171,7 +171,7 @@ class TemplateWrapValueRenderer(object):
         return
     def render(self, context):
         if isinstance(context, dict):
-            raise ValueError("@@@@ TemplateWrapValueRenderer.render called with dict")
+            raise ValueError("@@ TemplateWrapValueRenderer.render called with dict")
         with context.push(value_renderer=self.value_renderer):
             try:
                 return self.compiled_wrapper.render(context)
@@ -198,7 +198,7 @@ class ModeWrapValueRenderer(object):
         return
     def render(self, context):
         if isinstance(context, dict):
-            raise ValueError("@@@@ ModeWrapValueRenderer.render called with dict")
+            raise ValueError("@@ ModeWrapValueRenderer.render called with dict")
         with context.push(render_mode=self.render_mode):
             try:
                 return self.value_renderer.render(context)

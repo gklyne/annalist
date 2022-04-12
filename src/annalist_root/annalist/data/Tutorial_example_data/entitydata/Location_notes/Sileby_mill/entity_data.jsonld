@@ -1,0 +1,31 @@
+{
+  "@context": [
+    {
+      "@base": "../../"
+    },
+    "../../coll_context.jsonld"
+  ],
+  "@id": "Location_notes/Sileby_mill",
+  "@type": [
+    "pcat:Location_notes",
+    "annal:EntityData"
+  ],
+  "annal:id": "Sileby_mill",
+  "annal:type": "pcat:Location_notes",
+  "annal:type_id": "Location_notes",
+  "annal:uri": "pcat:Sileby_mill",
+  "pcat:location_mapref": "SK 592 147",
+  "rdfs:comment": "# Sileby Mill\r\n\r\nOld mill, boatyard, lock, and weir stream, on the River Soar between Mountsorrel and Leicester.\r\n\r\nThe location feels very remote, but is about a mile from Sileby and Mountsorrel, and even closer to the A6 main road between Leicester and Loughborough.  There are footpaths across the flood plain, to Sileby and Mountsorrel.\r\n",
+  "rdfs:label": "Sileby Mill",
+  "rdfs:seeAlso": [
+    {
+      "@id": "https://en.wikipedia.org/wiki/River_Soar"
+    },
+    {
+      "@id": "https://en.wikipedia.org/wiki/Mountsorrel"
+    },
+    {
+      "@id": "https://en.wikipedia.org/wiki/Sileby"
+    }
+  ]
+}
