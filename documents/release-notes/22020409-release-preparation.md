@@ -110,14 +110,16 @@
         cp -r ~annalist/uploads/tutorial/* /var/www/annalist.net/tutorial/
 - [x] Check out demo system at http://annalist.net/annalist/
 
-- [ ] Commit changes ("Release x.y.z")
-- [ ] Upload to PyPI (`python setup.py sdist upload`)
-    - But see also: https://pypi.org/project/twine/
+- [x] Commit changes ("Release 0.5.18")
+- [x] Upload to PyPI (`python setup.py sdist upload`)
+        python -m build
+        twine check dist/Annalist-0.5.18*
+        twine upload dist/Annalist-0.5.18*
 - [ ] Tag release on release branch
     - `git tag -ln` to check previous tags
-    - `git tag -a release-x.y.z`
+    - `git tag -a release-0.5.18`
     - For message:
-        "Annalist release x.y.z: (one-line description of release)"
+        "Annalist release 0.5.18: (Drop Python 2 support; upgrade Django to latest; dependency security upgrades)"
 - [ ] Merge release branch to master
     - e.g.
         - `git checkout master`

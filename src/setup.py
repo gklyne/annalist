@@ -52,6 +52,7 @@ setup(
     version = VERSION,
     description = DESCRIPTION,
     long_description = read("README.rst"),
+    long_description_content_type = "text/x-rst",
     author = AUTHOR,
     author_email = AUTHOR_EMAIL,
     license = "MIT",

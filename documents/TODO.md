@@ -93,6 +93,30 @@ E.g., after running `anenv3/bin/activcate`, do something like this:
 - [ ] Eliminate py3porting module
 - [ ] Install tools and update documentation to use `twine` for package upload.
     - See: https://pypi.org/project/twine/
+
+NOTES for building software:
+
+- instead of `python setup.py sdist`
+
+        python -m pip install build
+        python -m build
+
+- instead of `python setup.py install`:
+
+        pip install . (from src directory; uses setup.py for requirements)
+
+- instead of `python setup.py upload`:
+
+        pip install twine
+        twine check dist/Annalist-x.y.z*
+        twine upload dist/Annalist-x.y.z*
+
+    Note use of `~/.pypirc` for repository and login credentials.
+
+
+
+(Sub-release?)
+
 - [ ] Review (again) whether `annal:field_ref_field` is needed.
     - it is used by `bound_field` when accessing target values
     - see also `_migrate_values` in models.RecordField
