@@ -115,12 +115,12 @@
         python -m build
         twine check dist/Annalist-0.5.18*
         twine upload dist/Annalist-0.5.18*
-- [ ] Tag release on release branch
+- [x] Tag release on release branch
     - `git tag -ln` to check previous tags
     - `git tag -a release-0.5.18`
     - For message:
         "Annalist release 0.5.18: (Drop Python 2 support; upgrade Django to latest; dependency security upgrades)"
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
