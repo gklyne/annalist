@@ -1,8 +1,8 @@
 # Development roadmap
 
-Current status: candidate feature-complete minmum viable product, release 0.5.16.
+Current status: candidate feature-complete minimum viable product, release 0.5.18.
 
-This is a maintenance release with consolidation of the deployment hardening changes in previous releases, and some smaller enhancements and fixes.
+This is a maintenance release which drops support for Python 2, uses a recent version of Django (4.0.3), and applies security updates recommended by GitHub `dependabot`.
 
 
 # V1.0 release
@@ -72,7 +72,7 @@ Notes:
 
 Create initial Annalist definitions from an imported Ontology.  These may not necessarily be the most effective presentation of data, but they can provide a starting point for refinement by hand.
 
-Similarly, OWL and/or RDFS class andnproperty declarations could be extracted and exported from definitions created with Annalist.  (There is already some logic in this direction used to create JSON-LD context files from Annalist definitions.)
+Similarly, OWL and/or RDFS class and property declarations could be extracted and exported from definitions created with Annalist.  (There is already some logic in this direction used to create JSON-LD context files from Annalist definitions.)
 
 
 ## ResourceSync

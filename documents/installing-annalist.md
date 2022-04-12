@@ -72,16 +72,26 @@ The following assumes that software is installed under a directory called $WORKS
         cd $WORKSPACE
         python3 -m venv anenv3
         source anenv3/bin/activate
-        pip install --upgrade pip
-        pip install --upgrade certifi
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade certifi
+        python -m pip install --upgrade setuptools
+        pip install annalist
+
+Or, with Python 3.9:
+
+        cd $WORKSPACE
+        /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+        source anenv3/bin/activate
+        pip install annalist
+
 
 3.  Install the software from PyPI:
 
         pip install annalist
 
-4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a convenient location (e.g., $WORKSPACE/Annalist-0.5.16.tar.gz).  Then install it thus:
+4.  Alternatively, obtain a copy of the Annalist distribution kit, e.g. from [annalist.net](http://annalist.net/), and copy to a convenient location (e.g., $WORKSPACE/Annalist-0.5.18.tar.gz).  Then install it thus:
 
-        pip install $WORKSPACE/Annalist-0.5.16.tar.gz
+        pip install $WORKSPACE/Annalist-0.5.18.tar.gz
 
 5.  Finally, test the installed software:
 
@@ -90,26 +100,28 @@ The following assumes that software is installed under a directory called $WORKS
     The output from this command should look something like this:
 
         $ annalist-manager runtest
-        INFO:annalist_site.settings.runtests:Annalist version 0.5.16 (test configuration)
+        INFO:annalist_site.settings.runtests:Annalist version 0.5.18 (test configuration)
         INFO:annalist_site.settings.runtests:SETTINGS_MODULE:   annalist_site.settings.runtests
-        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data
+        INFO:annalist_site.settings.runtests:BASE_DATA_DIR:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data
         INFO:annalist_site.settings.runtests:CONFIG_BASE:       /Users/graham/.annalist/
-        INFO:annalist_site.settings.runtests:DJANGO_ROOT:       /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/django
-        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist_site
-        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root
+        INFO:annalist_site.settings.runtests:DJANGO_ROOT:       /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/django
+        INFO:annalist_site.settings.runtests:SITE_CONFIG_DIR:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist_site
+        INFO:annalist_site.settings.runtests:SITE_SRC_ROOT:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root
         INFO:annalist_site.settings.runtests:TEST_BASE_URI:     http://test.example.com/testsite
-        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
-        INFO:annalist_site.settings.runtests:DATABASE_PATH:     /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
-        INFO:annalist_site.settings.runtests:STATICFILES_DIRS:  ((u'', u'/Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist/data/static'), (u'images', u'/Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist/data/identity_providers/images'))
-        INFO:annalist_site.settings.runtests:ANNALIST_LOG_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv2/lib/python2.7/site-packages/Annalist-0.5.16-py2.7.egg/annalist_root/annalist.log
+        INFO:annalist_site.settings.runtests:DEFAULT_DB_PATH:   /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
+        INFO:annalist_site.settings.runtests:DATABASE_PATH:     /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/sampledata/data/annalist_test/db.sqlite3
+        INFO:annalist_site.settings.runtests:STATICFILES_DIRS:  (('', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist/data/static'), ('images', '/Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist/data/identity_providers/images'))
+        INFO:annalist_site.settings.runtests:ANNALIST_LOG_PATH: /Users/graham/workspace/github/gklyne/annalist/anenv3/lib/python3.9/site-packages/Annalist-0.5.18-py3.9.egg/annalist_root/annalist.log
+        Found 820 test(s).
         Creating test database for alias 'default'...
         System check identified no issues (0 silenced).
-        ...............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+        ....................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
         ----------------------------------------------------------------------
-        Ran 815 tests in 444.847s
+        Ran 820 tests in 193.291s
 
         OK
         Destroying test database for alias 'default'...
+
 
 For first-time installations, the Annalist site data will need to be initialized:  see section "Setting up an Annalist site" below.
 

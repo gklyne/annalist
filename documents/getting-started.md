@@ -60,6 +60,15 @@ In a working directory, and with Internet connection:
 
     python3 -m venv anenv3
     source anenv3/bin/activate
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade certifi
+    python -m pip install --upgrade setuptools
+    pip install annalist
+
+Or, with Python 3.9:
+
+    /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
+    source anenv3/bin/activate
     pip install annalist
 
 ## Check the software installation, and initialize site data

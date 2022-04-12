@@ -62,7 +62,7 @@ See also: https://www.divio.com/en/blog/documentation/
 NOTE, for creating python3 virtual environment, use something like this:
 
     python3 -m venv anenv3
-    source anenv3/bin/activcate
+    source anenv3/bin/activate
     python -m pip install pip --upgrade
     python -m pip install --upgrade setuptools
 
