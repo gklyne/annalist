@@ -32,88 +32,10 @@ See also: https://www.divio.com/en/blog/documentation/
 
 * https://github.com/gklyne/annalist/issues/40
 
-# Release 0.5.17, towards 0.5.18
 
-- [x] Upgrade to latest Django (4.0.3)
-- [x] Update and test with RDFLib 6.1.1 (includes JSON-LD character string parsing fix)
-- [x] Address Django security alerts from github
-- [x] Problems with `annalist-manager stopserver` (gunicorn related?)
-    - Can't reproduce: seems OK (2020-03-05)
-    - NOTE: MacOS was updated (El Capitan to Catalina) in interim
-- [x] Remove redundant "Refer to field" field in field description
-    - [x] Remove Field_fieldref from field view and documentation.
-    - [x] review other uses of `Field_fieldref`
-    - [x] Review use of `Value_field`.
-    - [x] Add field definition migration/checking logic.
-- [x] BUG: errors in generation of field description for reference to field of entity
-- [x] BUG: In "server log" view, all bottom bar links (except admin) reference the server log.
-- [x] Include list all type definitions in sitemap data (_info/Sitemap)
-- [x] Define gunicorn thread count in settings file.
-- [x] Hook for data validation check when saving entity; redisplay form if fails
-- [x] Add URI validation for vocab entity, and test
-- [-] delete views: rationalize into single view?
-- [x] Code pruning (remove dead/unused code)
-- [x] BUG: removing parent from collection can cause 500 error when accessing cached info
-    - handle missing-parent error when accessing cached entity (also logs error)
-    - when saving collection metadata, clear collection cache(s)
-- [x] Switch to using Python 3 only
-    - See release notes: "Version 0.5.11, towards 0.5.12"
-
-NOTE, for creating python3 virtual environment, use something like this:
-
-    python3 -m venv anenv3
-    source anenv3/bin/activate
-    python -m pip install pip --upgrade
-    python -m pip install --upgrade setuptools
-
-With Python 3.9:
-
-    /usr/local/bin/python3.9 -m venv --upgrade-deps anenv3
-    source anenv3/bin/activate
-
-On MacOS, from about python 3.7 onwards, there seems to be a problem with 
-`setup.py` accessing certificates needed for loading modules from PyPi.  
-The required certificates are part of the `certifi` bundle, but do not 
-appear to be accessible to `setup.py` by default.  
-The script `src/install_certificates.py` rectifies this problem, allowing 
-local install to be performed usingh `setup.py`.  
-E.g., after running `anenv3/bin/activcate`, do something like this:
-
-    python -m pip install certifi
-    cd src
-    python install_certificates.py
-    python setup.py install
-
-- As of 2021-11-30, Python 3.6 installs on M1 MacBook no longer work, so I'm pushing forwards to Python 3.9.
-- As of Django 1.11.17 the above problem may be fixed see https://docs.djangoproject.com/en/2.1/faq/install/#what-python-version-can-i-use-with-django)
-
-
-(Sub-release?)
+# Release 0.5.19, towards 0.5.20
 
 - [ ] Eliminate py3porting module
-- [ ] Install tools and update documentation to use `twine` for package upload.
-    - See: https://pypi.org/project/twine/
-
-NOTES for building software:
-
-- instead of `python setup.py sdist`
-
-        python -m pip install build
-        python -m build
-
-- instead of `python setup.py install`:
-
-        pip install . (from src directory; uses setup.py for requirements)
-
-- instead of `python setup.py upload`:
-
-        pip install twine
-        twine check dist/Annalist-x.y.z*
-        twine upload dist/Annalist-x.y.z*
-
-    Note use of `~/.pypirc` for repository and login credentials.
-
-
 
 (Sub-release?)
 
@@ -146,7 +68,7 @@ NOTES for building software:
 - [ ] entityedit view handling: provide way for postprocessing hook to provide completion message/warning.  (How do tasks do this?)  Initial use is vocabulary namespace URI checking (currently handled in context generation).
 - [ ] entityedit view handling: refactor save entity logic to follow a pattern of extract, validate, update in separate functions so that these can be recombined in different ways.  Note effect on `save_invoke_task` method, and elsewhere.
 - [ ] Review nomenclature, especially labels, for all site data (e.g. record/entity)
-- [x] Automated test suite for annalist_manager
+- [x] Automated test suite for annalist_manager (0.5.12)
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup.  Use docker-compose instead of or as well as  separate data container?
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
 - [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)

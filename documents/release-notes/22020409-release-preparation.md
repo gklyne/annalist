@@ -111,50 +111,61 @@
 - [x] Check out demo system at http://annalist.net/annalist/
 
 - [x] Commit changes ("Release 0.5.18")
-- [x] Upload to PyPI (`python setup.py sdist upload`)
+- [x] Upload to PyPI:
         python -m build
         twine check dist/Annalist-0.5.18*
         twine upload dist/Annalist-0.5.18*
-- [ ] Tag release on release branch
+- [x] Tag release on release branch
     - `git tag -ln` to check previous tags
     - `git tag -a release-0.5.18`
     - For message:
         "Annalist release 0.5.18: (Drop Python 2 support; upgrade Django to latest; dependency security upgrades)"
-- [ ] Merge release branch to master
+- [x] Merge release branch to master
     - e.g.
         - `git checkout master`
         - `git merge release-prep-x.y.z`
-- [ ] Test again on master branch
-- [ ] Push master branch, and tags
+- [x] Test again on master branch
+- [x] Push master branch, and tags
     - `git add ..`
     - `git commit -m "Master branch updated to V0.5.18"`
     - `git push`
     - `git push --tags`
-- [ ] Merge release branch to develop
+- [x] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
-        - `git merge release-prep-x.y.z`
-- [ ] Bump/check Zenodo DOI details:
+        - `git merge release-prep-0.5.17`
+- [x] Bump/check Zenodo DOI details:
     - On GitHub, create a new release
-        - release tag: `release-x.y.z`
-        - release title: (one-line description text)
+        - release tag: `release-0.5.18`
+        - release title: Python 3 only; upgrade Django; security and build system updates
         - release description: 1-paragraph description from release notes summary
+
+            This release drops support for Python 2, and is updated to work with the latest available Django release (4.0.3).
+
+            It also includes bug-fixes and dependency security updates (as noted by GitHub's `dependabot`), and to use `build` and `twine` for system build and distribution via PyPI,
+
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
+        - 2022-04-13:  Zewnodo showing failure message
+            - disconnected and reconnected github account
+            - redelivered via annlist -> settings -> webhooks -> Recent deliveries
+            - (waiting for Zenodo update at https://zenodo.org/account/settings/github/repository/gklyne/annalist)
     - The link in the DOI badge should display the new release from Zenodo.
 
 
 ## Set up next development cycle
 
-- [ ] On develop branch, bump version number again (back to odd value)
-- [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [ ] Re-test
+- [x] Update release-preparation.md with any process changes applied...
+- [x] On develop branch, bump version number again (back to odd value)
+    - `annalist/src/annalistr_rooit/annalist/__init__.py`
+- [x] Reset TODO list (remove entries moved to release notes, update version)
+- [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh` in `src/annalist_root`)
+- [x] Re-test (use python `manage.py test`)
 - [ ] Commit and push changes
-    - message: "Bump development branch release to x.y.z"
+    - message: "Bump development branch release to 0.5.19"
 - [ ] Delete release branch
-    - `git branch -d release-prep-x.y.z`
+    - `git branch -d release-prep-0.5.18`
 
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
@@ -164,47 +175,16 @@
 
 ## Build kit and PyPI upload
 
-Local:
+Local, run from `annalist/src` directory:
 
     python setup.py clean --all
-    python setup.py build
-    python setup.py sdist
-    python setup.py install
+    python -m build
+    twine check dist/Annalist-x.y.z*
+    pip install . 
 
 Upload to PyPI:
 
-    python setup.py sdist upload
-
-NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  To update, use some combination of these commands in the virtual environment:
-
-    pip uninstall setuptools
-    wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-    pip install setuptools --upgrade
-    easy_install --version
-
-### Problems with old versions of software and TLS
-
-On upgrading the version of Pythonto 2.7.14 in April 2018 I ran into a number of compatibility problems with loading python packages.  It appears that:
-
-1. pip needs to be updated to use the latest version of TLS (1.3, I assume)
-2. setuptools need to be updated.
-
-On MacOS, I ended up using the following commands, after installing the latest version of Python2, and changing to the Annalist project base directory:
-
-    rm -rf anenv
-    virtualenv anenv -p python2.7
-    source anenv/bin/activate
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python get-pip.py
-    # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
-    pip install --upgrade setuptools
-    # Note: installation reports success, then I got an error traceback, which seems
-    #       to be caused by an access to the old (now removed) setuptools directory.
-    #       It seems this error can be ignored.
-    cd src
-    python setup.py clean --all
-    python setup.py build
-    python setup.py install
+    twine upload dist/Annalist-x.y.z*
 
 ## Create docker images
 

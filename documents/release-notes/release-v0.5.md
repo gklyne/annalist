@@ -9,7 +9,7 @@ A summary of issues relating to deployability, resilience and security that are 
 
 This release drops support for Python 2, and is updated to work with the latest available Django release (4.0.3).
 
-It also includes a small number of bug-fixes and dependency security updates (as noted by GitHub's `dependabot`).
+It also includes bug-fixes and dependency security updates (as noted by GitHub's `dependabot`), and to use `build` and `twine` for system build and distribution via PyPI,
 
 
 ## Status

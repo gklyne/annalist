@@ -1,6 +1,6 @@
 # Notes for software release preparation
 
-## Summary of release tasks
+## Release x.y.z1/z2 checklist
 
 - [ ] Feature freeze
 - [ ] Check GitHub for security alerts; ensure requirements/common.txt and src/setup.py are up-to-date with secure package versions.
@@ -29,13 +29,13 @@
 - [ ] Documentation and tutorial updates
 - [ ] Demo screencast update
 - [ ] Check all recent changes are committed (`git status`)
-- [ ] Tag unstable release version on develop branch (e.g. "release-0.5.xx")
+- [ ] Tag unstable release version on develop branch (e.g. "release-x.y.z1")
     - ```git tag -a release-`annalist-manager version` ```
     - For message:
-        "Annalist release 0.5.xx: (<1-line summary message>)"
+        "Annalist release x.y.z1: (one-line summary)"
 - [ ] Create release preparation branch
         git stash
-        git checkout -b release-prep-0.5.xx develop
+        git checkout -b release-prep-x.y.z1 develop
         git stash pop
     - *NOTE* use a different name to that which will be used to tag the release
 - [ ] Bump version to even value in `src/annalist_root/annalist/__init__.py`
@@ -56,7 +56,7 @@
     - [ ] documents/tutorial/annalist-tutorial.adoc
     - [ ] Docker build scripts and makefiles
 - [ ] Review and update GitHub project README.
-- [ ] Create announcement text in `documents/release-notes/announce_0.5.*.md`
+- [ ] Create announcement text in `documents/release-notes/announce_x.y.z2.md`
 - [ ] Regenerate tutorial document
     - `asciidoctor -b html5 annalist-tutorial.adoc` or `. make-annalist-tutorial.sh` run in the `documents/tutorial` directory.
 
@@ -64,27 +64,26 @@
     - [ ] copy kit to dev.annalist.net, install and test
         . newkit_to_annalist_dev.sh
     - [ ] If live Annalist service is running, login to annalist.net as 'annalist', then
-        source anenv3/bin/activate
-        annalist-manager stop
-    or `killall python` or `killall python3`
+            source anenv3/bin/activate
+            annalist-manager stop
+        or `killall python` or `killall python3`
     - [ ] login to dev.annalist.net as 'annalist-dev', then
-        rm -rf anenv3
-        python3 -m venv anenv3
-        source anenv3/bin/activate
-        python -m pip install --upgrade pip
-        python -m pip install --upgrade certifi
-        python -m pip install --upgrade setuptools
-        pip install uploads/Annalist-0.5.xx.tar.gz
-        annalist-manager runtests
+            rm -rf anenv3
+            python3 -m venv anenv3
+            source anenv3/bin/activate
+            python -m pip install --upgrade pip
+            python -m pip install --upgrade certifi
+            python -m pip install --upgrade setuptools
+            pip install uploads/Annalist-x.y.z2.tar.gz
+            annalist-manager runtests
     - [ ] Test new site creation:
-        annalist-manager createsite
-        annalist-manager collectstatic
-        annalist-manager initialize
-        annalist-manager defaultadmin
-        annalist-manager runserver
-        curl http://localhost:8000/annalist/site/ -v
-        annalist-manager stopserver
-
+            annalist-manager createsite
+            annalist-manager collectstatic
+            annalist-manager initialize
+            annalist-manager defaultadmin
+            annalist-manager runserver
+            curl http://localhost:8000/annalist/site/ -v
+            annalist-manager stopserver
 - [ ] Create and post updated kit download and web pages to annalist.net
     - use `src/newkit_to_annalist_net.sh`
 - [ ] Set up to install Annalist in target system
@@ -93,52 +92,54 @@
     - [ ] ssh to annalist@annalist.net, (or `su - annalist`)
     - NOTE: examples files in `src/annalist_root/annalist/data/config_examples/`
 - [ ] Update and test demo installation on annalist.net
-    - [ ] `. backup_annalist_site.sh`
-    - [ ] `. anenv3/bin/activate`
-    - [ ] `annalist-manager stop` or `killall python` or `killall python3`
-    - [ ] `pip uninstall annalist`
+        . backup_annalist_site.sh
+        . anenv3/bin/activate
+        annalist-manager stop   #  or `killall python` or `killall python3`
+        pip uninstall annalist
 - [ ] Install new Annalist kit just uploaded (with `0.5.xx` changed to release number):
-    - [ ] `pip install ~/software/Annalist-0.5.18.tar.gz --upgrade`
-        - NOTE: this may fail with `pip` version 22.0.4 -- use `pip` version 21.3.1 to remove Django
-    - [ ] `annalist-manager runtests`
-    - [ ] `. update-annalist-site.sh`
-    - [ ] `. update-run-annalist.sh`
+            pip install ~/software/Annalist-x.y.z2.tar.gz --upgrade
+                # NOTE: this may fail with `pip` version 22.0.4 -- use `pip` version 21.3.1 to remove Django
+            annalist-manager runtests
+            . update-annalist-site.sh
+            . update-run-annalist.sh
 - [ ] Update front page at annalist.net (as root user):
-        cp ~annalist/uploads/pages/index.html /var/www/annalist.net
-        cp ~annalist/uploads/pages/css/style.css /var/www/annalist.net/css/
-        cp ~annalist/uploads/pages/img/* /var/www/annalist.net/img/
+            cp ~annalist/uploads/pages/index.html /var/www/annalist.net
+            cp ~annalist/uploads/pages/css/style.css /var/www/annalist.net/css/
+            cp ~annalist/uploads/pages/img/* /var/www/annalist.net/img/
 - [ ] Update tutorial document at annalist.net
-        cp -r ~annalist/uploads/tutorial/* /var/www/annalist.net/tutorial/
+            cp -r ~annalist/uploads/tutorial/* /var/www/annalist.net/tutorial/
 - [ ] Check out demo system at http://annalist.net/annalist/
 
-- [ ] Commit changes ("Release x.y.z")
-- [ ] Upload to PyPI (`python setup.py sdist upload`)
-    - But see also: https://pypi.org/project/twine/
+- [ ] Commit changes ("Release x.y.z2")
+- [ ] Upload to PyPI
+        python -m build
+        twine check dist/Annalist-x.y.z2*
+        twine upload dist/Annalist-x.y.z2*
 - [ ] Tag release on release branch
     - `git tag -ln` to check previous tags
-    - `git tag -a release-x.y.z`
+    - `git tag -a release-x.y.z2`
     - For message:
-        "Annalist release x.y.z: (one-line description of release)"
+        "Annalist release x.y.z2: (one-line summary)"
 - [ ] Merge release branch to master
     - e.g.
         - `git checkout master`
-        - `git merge release-prep-x.y.z`
+        - `git merge release-prep-x.y.z1`
 - [ ] Test again on master branch
 - [ ] Push master branch, and tags
     - `git add ..`
-    - `git commit -m "Master branch updated to V0.5.18"`
+    - `git commit -m "Master branch updated to Vx.y.z2"`
     - `git push`
     - `git push --tags`
 - [ ] Merge release branch to develop
     - take care to ensure the branch is merged, not the tagged release
     - e.g.
         - `git checkout develop`
-        - `git merge release-prep-x.y.z`
+        - `git merge release-prep-x.y.z1`
 - [ ] Bump/check Zenodo DOI details:
     - On GitHub, create a new release
-        - release tag: `release-x.y.z`
-        - release title: (one-line description text)
-        - release description: 1-paragraph description from release notes summary
+        - release tag: `release-x.y.z2`
+        - release title: (one-line summary)
+        - release description: (1-paragraph description from release notes summary)
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
     - The link in the DOI badge should display the new release from Zenodo.
@@ -146,14 +147,16 @@
 
 ## Set up next development cycle
 
+- [ ] Update release-preparation.md with any process changes applied...
 - [ ] On develop branch, bump version number again (back to odd value)
+    - `annalist/src/annalistr_rooit/annalist/__init__.py`
 - [ ] Reset TODO list (remove entries moved to release notes, update version)
-- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh`)
-- [ ] Re-test
+- [ ] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh` in `src/annalist_root`)
+- [ ] Re-test (use python `manage.py test`)
 - [ ] Commit and push changes
-    - message: "Bump development branch release to x.y.z"
+    - message: "Bump development branch release to x.y.z3"
 - [ ] Delete release branch
-    - `git branch -d release-prep-x.y.z`
+    - `git branch -d release-prep-x.y.z2`
 
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)
@@ -163,47 +166,16 @@
 
 ## Build kit and PyPI upload
 
-Local:
+Local, run from `annalist/src` directory:
 
     python setup.py clean --all
-    python setup.py build
-    python setup.py sdist
-    python setup.py install
+    python -m build
+    twine check dist/Annalist-x.y.z*
+    pip install . 
 
 Upload to PyPI:
 
-    python setup.py sdist upload
-
-NOTE: upload now requires a recent version of setuptools to be installed; some older versions use a deprecated PyPi API.  To update, use some combination of these commands in the virtual environment:
-
-    pip uninstall setuptools
-    wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-    pip install setuptools --upgrade
-    easy_install --version
-
-### Problems with old versions of software and TLS
-
-On upgrading the version of Pythonto 2.7.14 in April 2018 I ran into a number of compatibility problems with loading python packages.  It appears that:
-
-1. pip needs to be updated to use the latest version of TLS (1.3, I assume)
-2. setuptools need to be updated.
-
-On MacOS, I ended up using the following commands, after installing the latest version of Python2, and changing to the Annalist project base directory:
-
-    rm -rf anenv
-    virtualenv anenv -p python2.7
-    source anenv/bin/activate
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-    python get-pip.py
-    # Look for: "Successfully installed pip-9.0.3 wheel-0.31.0"
-    pip install --upgrade setuptools
-    # Note: installation reports success, then I got an error traceback, which seems
-    #       to be caused by an access to the old (now removed) setuptools directory.
-    #       It seems this error can be ignored.
-    cd src
-    python setup.py clean --all
-    python setup.py build
-    python setup.py install
+    twine upload dist/Annalist-x.y.z*
 
 ## Create docker images
 
