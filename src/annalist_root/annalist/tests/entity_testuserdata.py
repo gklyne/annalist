@@ -20,7 +20,7 @@ from django.db                          import models
 from django.http                        import QueryDict
 from django.urls                        import resolve, reverse
 
-from utils.py3porting           import urljoin
+from urllib.parse                       import urljoin
 
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout

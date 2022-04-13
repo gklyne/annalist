@@ -12,8 +12,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 
 import sys
 
-from utils.py3porting import is_string, to_unicode
-
 class SwitchStdout:
     """
     Context handler class that swiches standard output to a named file or supplied stream.
@@ -28,7 +26,7 @@ class SwitchStdout:
         return
     
     def __enter__(self):
-        if is_string(self.fileorstr):
+        if isinstance(self.fileorstr, str):
             self.outstr = open(self.fileorstr, "w")
             self.opened = True
         else:
@@ -55,7 +53,7 @@ class SwitchStderr(object):
         return
     
     def __enter__(self):
-        if is_string(self.fileorstr):
+        if isinstance(self.fileorstr, str):
             self.outstr = open(self.fileorstr, "w")
             self.opened = True
         else:
@@ -81,7 +79,7 @@ class SwitchStdin(object):
         return
     
     def __enter__(self):
-        if is_string(self.fileorstr):
+        if isinstance(self.fileorstr, str):
             self.instr = open(self.fileorstr, "w")
             self.opened = True
         else:

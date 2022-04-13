@@ -15,8 +15,6 @@ import traceback
 import logging
 log = logging.getLogger(__name__)
 
-from utils.py3porting       import is_string
-
 from annalist               import message
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.util          import fill_type_entity_id
@@ -195,7 +193,7 @@ class Select_view_renderer(object):
             # val      = get_field_view_value(context, None)
             val      = get_field_edit_value(context, None)
             if val is not None:
-                if not is_string(val):
+                if not isinstance(val, str):
                     log.error(ValueError("Entity selector value is not string", val))
                     val = "@@ unexpected selector %r"%(val,)
             typval   = fill_type_entity_id(
@@ -249,7 +247,7 @@ class Select_edit_renderer(object):
     def render(self, context):
         try:
             val     = get_field_edit_value(context, None) or ""
-            if not is_string(val):
+            if not isinstance(val, str):
                 log.error(ValueError("Entity selector value is not string", val))
                 val = "@@ unexpected selector %r"%(val,)
             # Use refer-to type if value does not include type..

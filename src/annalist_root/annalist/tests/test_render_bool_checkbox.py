@@ -17,8 +17,6 @@ import os
 import unittest
 import re
 
-from utils.py3porting import is_string, to_unicode
-
 from annalist.views.fields.render_bool_checkbox import (
     get_bool_checkbox_renderer, 
     BoolCheckboxValueMapper
@@ -37,7 +35,7 @@ class BooleanCheckboxRenderingTest(FieldRendererTestSupport):
     def test_RenderBoolCheckboxValue(self):
 
         def expect_render(val):
-            if is_string(val):
+            if isinstance(val, str):
                 valtext = val
                 valbool = val.lower() in ["true", "yes"]
             else:

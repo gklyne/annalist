@@ -16,8 +16,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from utils.py3porting import is_string
-
 from django.template    import Template, Context
 
 from annalist.views.fields.render_base          import RenderBase
@@ -38,7 +36,7 @@ def import_field_value(data_value):
     Construct field value in expected format for remaining processing
     """
     if data_value:
-        if is_string(data_value):
+        if isinstance(data_value, str):
             data_value = (
                 { 'resource_name': "imported.data"
                 , 'import_url':    data_value

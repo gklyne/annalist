@@ -19,7 +19,9 @@ from bs4                import BeautifulSoup
 from django.test        import TestCase # https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django             import db       # https://stackoverflow.com/questions/8816238/memoryerror-with-django
 
-from utils.py3porting   import is_string, bytes_to_str, quote
+from urllib.parse       import quote
+
+from annalist.util                              import bytes_to_str
 
 from annalist.models.entitytypeinfo             import EntityTypeInfo
 from annalist.views.fields.bound_field          import bound_field
@@ -82,9 +84,9 @@ class AnnalistTestCase(TestCase):
 
     def assertMatch(self, string, pattern, msg=None):
         """
-        Throw an exception if the regular expresson pattern is matched
+        Throw an exception if the regular expression pattern is matched
         """
-        if not is_string(string):
+        if not isinstance(string, str):
             string = bytes_to_str(string)
         m = re.search(pattern, string)
         if not m or not m.group(0):

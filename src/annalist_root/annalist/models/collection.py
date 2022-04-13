@@ -27,22 +27,19 @@ import os.path
 import shutil
 import json
 import datetime
-from collections                    import OrderedDict
 
-from packaging.version              import Version
-
-# from distutils.version              import LooseVersion
-
-from django.conf                    import settings
-
-from utils.py3porting               import isoformat_space
+from collections                            import OrderedDict
+from packaging.version                      import Version
+from django.conf                            import settings
 
 import annalist
 from annalist                               import layout
 from annalist                               import message
 from annalist.exceptions                    import Annalist_Error
 from annalist.identifiers                   import RDF, RDFS, ANNAL
-from annalist.util                          import valid_id, extract_entity_id, make_type_entity_id
+from annalist.util                          import (
+    valid_id, extract_entity_id, make_type_entity_id, isoformat_space
+    )
 
 from annalist.models.entity                 import Entity
 from annalist.models.annalistuser           import AnnalistUser

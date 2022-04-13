@@ -18,9 +18,8 @@ import subprocess
 log = logging.getLogger(__name__)
 
 from utils.SuppressLoggingContext   import SuppressLogging
-from utils.py3porting               import bytes_to_str 
 
-from annalist.util                  import ensure_dir
+from annalist.util                  import bytes_to_str, ensure_dir
 
 from .                              import am_errors
 from .am_settings                   import am_get_settings

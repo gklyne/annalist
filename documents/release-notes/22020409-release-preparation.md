@@ -147,10 +147,10 @@
 
     - The rest should just happen.
         - Note: a new Zenodo URL is generated for the release.
-        - 2022-04-13:  Zewnodo showing failure message
+        - 2022-04-13:  Zenodo showing failure message
             - disconnected and reconnected github account
-            - redelivered via annlist -> settings -> webhooks -> Recent deliveries
-            - (waiting for Zenodo update at https://zenodo.org/account/settings/github/repository/gklyne/annalist)
+            - redelivered via annlist -> settings -> webhooks -> Recent deliveries - didn't work
+            - deleted GitHub release and re-created: worked this time.
     - The link in the DOI badge should display the new release from Zenodo.
 
 
@@ -162,10 +162,10 @@
 - [x] Reset TODO list (remove entries moved to release notes, update version)
 - [x] Regenerate test data (e.g. `maketestsitedata.sh` and `makeemptysitedata.sh` in `src/annalist_root`)
 - [x] Re-test (use python `manage.py test`)
-- [ ] Commit and push changes
+- [x] Commit and push changes
     - message: "Bump development branch release to 0.5.19"
-- [ ] Delete release branch
-    - `git branch -d release-prep-0.5.18`
+- [x] Delete release branch
+    - `git branch -d release-prep-0.5.17`
 
 - [ ] Create Docker image, test (see below)
 - [ ] Push docker image to DockerHub (see below)

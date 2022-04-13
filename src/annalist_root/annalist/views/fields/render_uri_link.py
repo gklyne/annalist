@@ -12,8 +12,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from utils.py3porting                           import is_string, to_unicode
-
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -46,7 +44,7 @@ class URILinkValueMapper(RenderBase):
         """
         Decodes a URI string value as a link
         """
-        if is_string(field_value):
+        if isinstance(field_value, str):
             field_value = field_value.strip()
         return field_value or ""
 
@@ -72,7 +70,7 @@ class uri_link_view_renderer(object):
             )
         textval = linkval
         for p in common_prefixes:
-            if is_string(linkval) and linkval.startswith(p):
+            if isinstance(linkval, str) and linkval.startswith(p):
                 textval = linkval[len(p):]
                 break
         if ":" in linkval:

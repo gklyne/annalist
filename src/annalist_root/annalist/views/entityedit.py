@@ -21,7 +21,7 @@ from django.http                        import HttpResponse
 from django.http                        import HttpResponseRedirect
 from django.urls                        import resolve, reverse
 
-from utils.py3porting                   import is_string, to_unicode, urljoin
+from urllib.parse                       import urljoin 
 
 from annalist.identifiers               import RDFS, ANNAL
 from annalist.exceptions                import Annalist_Error
@@ -1337,7 +1337,7 @@ class GenericEntityEditView(AnnalistGenericView):
         if isinstance(fv, dict):
             field_vals   = fv.copy()
             field_string = None
-        elif is_string(fv):
+        elif isinstance(fv, str):
             field_vals   = {}
             field_string = fv
         else:

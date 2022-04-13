@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 import os
 
-from utils.py3porting           import urljoin
+from urllib.parse               import urljoin
 
 from django.conf                import settings
 from django.http                import QueryDict

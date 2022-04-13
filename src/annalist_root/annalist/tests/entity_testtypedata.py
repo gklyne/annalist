@@ -18,7 +18,7 @@ from django.conf                import settings
 from django.http                import QueryDict
 from django.urls                import resolve, reverse
 
-from utils.py3porting           import urljoin
+from urllib.parse               import urljoin
 
 from annalist.util              import valid_id, extract_entity_id
 from annalist.identifiers       import RDF, RDFS, ANNAL

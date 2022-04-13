@@ -14,8 +14,6 @@ log = logging.getLogger(__name__)
 
 from django.template        import Template, Context
 
-from utils.py3porting       import is_string, to_unicode
-
 from annalist.views.fields.render_base          import RenderBase
 from annalist.views.fields.render_fieldvalue    import (
     RenderFieldValue,
@@ -45,7 +43,7 @@ class BoolCheckboxValueMapper(RenderBase):
         # print "data_value "+repr(data_value)
         if data_value is None:
             textval = "No"
-        elif is_string(data_value):
+        elif isinstance(data_value, str):
             textval = data_value
         elif isinstance(data_value, bool):
             textval = "Yes" if data_value else "No"

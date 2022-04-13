@@ -24,8 +24,6 @@ from django.urls                    import resolve, reverse
 from django.template                import Context
 from django.contrib.auth.models     import User
 
-from utils.py3porting               import is_string, to_unicode
-
 import annalist
 from annalist.util                  import valid_id, extract_entity_id
 from annalist.identifiers           import RDF, RDFS, ANNAL
@@ -312,7 +310,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     # Local helper to cleanup options and acount for duplicate labels
     def update_options(opts):
         return update_choice_labels(
-            [ FieldChoice(o) if is_string(o) else o 
+            [ FieldChoice(o) if isinstance(o, str) else o 
               for o in opts
             ])
 
@@ -368,7 +366,7 @@ def render_choice_options(
     """
     # Local helper to render single option
     def select_option(opt):
-        if is_string(opt):
+        if isinstance(opt, str):
             opt = FieldChoice(opt)
         selected = ('' if opt.value != sel else ' selected="selected"')
         label    = (placeholder or "") if opt.value == "" else opt.choice()

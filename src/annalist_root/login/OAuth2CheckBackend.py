@@ -20,8 +20,6 @@ import httplib2
 
 from django.contrib.auth.models import User
 
-from utils.py3porting import is_string, to_unicode
-
 class OAuth2CheckBackend(object):
     """
     Authenticate using credential object from OAuth2 exchange
@@ -46,7 +44,7 @@ class OAuth2CheckBackend(object):
             "OAuth2CheckBackend.authenticate: username %s, profile %r"%
             (username, profile)
             )
-        if is_string(profile):
+        if isinstance(profile, str):
             # Not oauth2 exchange:
             # @TODO: can we be more specific about what type this should be?
             return None

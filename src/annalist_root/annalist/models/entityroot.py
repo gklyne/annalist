@@ -25,9 +25,9 @@ import shutil
 import json
 import errno
 
-from django.conf import settings
+from urllib.parse           import urljoin
 
-from utils.py3porting       import is_string, urljoin
+from django.conf            import settings
 
 from annalist               import layout
 from annalist               import message

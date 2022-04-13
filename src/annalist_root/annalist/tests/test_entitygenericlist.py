@@ -22,13 +22,14 @@ log = logging.getLogger(__name__)
 import os
 import unittest
 
+from urllib.parse                   import urlparse
+
 from django.conf                    import settings
 from django.db                      import models
 from django.http                    import QueryDict
 from django.test                    import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client             import Client
 
-from utils.py3porting               import urlparse, urljoin
 from utils.SuppressLoggingContext   import SuppressLogging
 
 from annalist                       import layout

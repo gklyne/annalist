@@ -25,7 +25,8 @@ log = logging.getLogger(__name__)
 
 import httpretty
 
-from utils.py3porting       import urljoin, pathname2url
+from urllib.parse   import urljoin
+from urllib.request import pathname2url
 
 from .              import ScanDirectories
 from .FileMimeTypes import FileMimeTypes

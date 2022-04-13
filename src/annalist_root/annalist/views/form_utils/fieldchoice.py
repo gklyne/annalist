@@ -16,8 +16,6 @@ log = logging.getLogger(__name__)
 
 from collections            import namedtuple
 
-from utils.py3porting       import to_unicode
-
 from django.utils.html      import format_html, mark_safe, escape
 
 _FieldChoice_tuple = namedtuple("FieldChoice", ("id", "value", "label", "link", "choice_value"))
@@ -119,7 +117,7 @@ class FieldChoice(_FieldChoice_tuple):
         if self.choice_value:
             choice_text = self.option_label(sep=sep)
         else:
-            choice_text = to_unicode(self.label)
+            choice_text = self.label
         return choice_text
 
     def choice_html(self, sep=u"&nbsp;&nbsp;&nbsp;"):

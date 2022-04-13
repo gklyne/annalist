@@ -18,9 +18,8 @@ import os
 import os.path
 import re
 
-from utils.py3porting       import (
-    urljoin, pathname2url, urlopen, Request, HTTPConnection
-    )
+from urllib.parse       import urljoin, 
+from urllib.request     import urlopen, Request, pathname2url
 
 fileuribase = "file://"
 

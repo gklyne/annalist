@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 import re   # Used for link header parsing
 import httplib2
 
-from utils.py3porting       import urljoin, urlsplit
+from urllib.parse   import urljoin, urlsplit
 
 def splitValues(txt, sep=",", lq='"<', rq='">'):
     """

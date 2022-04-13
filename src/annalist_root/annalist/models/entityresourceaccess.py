@@ -27,10 +27,10 @@ from rdflib                             import Graph, URIRef, Literal
 
 # Used by `json_resource_file` below.
 # See: https://stackoverflow.com/questions/51981089
-from utils.py3porting import write_bytes
-
 from annalist                           import message
 from annalist                           import layout
+
+from annalist.util                      import write_bytes
 
 from annalist.models.entitytypeinfo     import EntityTypeInfo
 

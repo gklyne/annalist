@@ -12,8 +12,6 @@ __license__     = "MIT (http://opensource.org/licenses/MIT)"
 import logging
 log = logging.getLogger(__name__)
 
-from utils.py3porting                   import is_string, to_unicode
-
 from annalist.views.fields.render_base  import RenderBase
 
 #   ----------------------------------------------------------------------------
@@ -32,7 +30,7 @@ class IdentifierValueMapper(RenderBase):
         """
         Returns an Identifier (URI/CURIE) form field value with leading/trailing spaces trimmed
         """
-        if is_string(field_value):
+        if isinstance(field_value, str):
             field_value = field_value.strip()
         return field_value
 

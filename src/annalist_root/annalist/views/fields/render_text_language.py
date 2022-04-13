@@ -15,8 +15,6 @@ log = logging.getLogger(__name__)
 import re
 import collections.abc
 
-from utils.py3porting                           import is_string, to_unicode
-
 from annalist.views.fields.render_base          import RenderBase
 
 from django.conf            import settings
@@ -51,7 +49,7 @@ class TextLanguageValueMapper(RenderBase):
         True
         """
         field_string = ""
-        if is_string(field_value):
+        if isinstance(field_value, str):
             field_string = field_value.strip()
         elif isinstance(field_value, collections.abc.Mapping):
             field_string = field_value["@value"]

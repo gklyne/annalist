@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 import re
 
-from utils.py3porting import urljoin, urlsplit, urlunsplit, quote, unquote
+from urllib.parse       import urlsplit, urlunsplit, quote, unquote
 
 # From RFC 3986:
 gen_delims  = ":/?#[]@"

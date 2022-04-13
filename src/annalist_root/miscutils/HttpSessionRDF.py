@@ -16,7 +16,7 @@ import re   # Used for link header parsing
 import httplib2
 import rdflib
 
-from utils.py3porting       import urljoin, urlsplit
+from urllib.parse   import urljoin, urlsplit
 
 RDF_CONTENT_TYPES = (
     { "application/rdf+xml":    "xml"

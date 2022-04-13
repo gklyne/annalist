@@ -19,7 +19,7 @@ from collections            import OrderedDict, namedtuple
 from django.conf            import settings
 from django.utils.html      import escape
 
-from utils.py3porting       import is_string, to_unicode, urljoin
+from urllib.parse           import urljoin
 
 from annalist.exceptions    import TargetIdNotFound_Error, TargetEntityNotFound_Error
 from annalist.identifiers   import RDFS, ANNAL
@@ -387,7 +387,7 @@ class bound_field(object):
         if target_base and target_value:
             if isinstance(target_value, dict) and 'resource_name' in target_value:
                 target_ref = target_value['resource_name']
-            elif is_string(target_value):
+            elif isinstance(target_value, str):
                 target_ref = target_value
             else:
                 log.warning(

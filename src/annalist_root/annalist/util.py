@@ -27,11 +27,8 @@ import io
 
 from django.conf            import settings
 
-from utils.py3porting       import (
-    is_string, to_unicode,
-    urlparse, urljoin, urlsplit, 
-    urlopen, Request, get_message_type
-    )
+from urllib.parse           import urlparse, urljoin, urlsplit 
+from urllib.request         import urlopen, Request
 
 from annalist               import layout
 from annalist.identifiers   import ANNAL
@@ -227,6 +224,40 @@ def slug_from_uri(uri):
     """
     return slug_from_path(urlsplit(uri).path)
 
+def bytes_to_str(bstr):
+    """
+    Return string value for supplied bytes
+    """
+    return bstr.decode('ascii', 'ignore')
+    # return bstr
+
+def text_to_bytes(ustr):
+    """
+    Return bytes value for supplied string.
+    The intent is that the string may be an ASCII or unicode string, but not
+    something that has already been encoded.
+    """
+    return ustr.encode('utf-8', 'ignore')
+
+def bytes_to_unicode(bstr):
+    """
+    Return Unicode value for supplied (UTF-8 encoding) bytes.
+    """
+    return bstr.decode('utf-8')
+
+def isoformat_space(datetime):
+    """
+    Return ISO-formatted date with space to separate date and time.
+    """
+    return datetime.isoformat(' ')
+
+def write_bytes(file, text):
+    """
+    Write supplied string to file as bytes
+    """
+    file.write(text_to_bytes(text))
+    return
+
 def ensure_dir(dirname):
     """
     Ensure that a named directory exists; if it does not, attempt to create it.
@@ -389,7 +420,7 @@ def strip_comments(f):
         if re.match(r"^\s*//", line):
             fnc.write("\n")
         else:
-            fnc.write(to_unicode(line))
+            fnc.write(line)
     fnc.seek(sof)
     return fnc
 
@@ -585,7 +616,7 @@ def open_url(url):
     """
     r = urlopen(Request(url))
     u = r.geturl()
-    t = get_message_type(r.info())
+    t = r.info().get_content_type()
     return (r, u, t)
 
 def copy_resource_to_fileobj(srcobj, dstobj):

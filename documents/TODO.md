@@ -35,7 +35,7 @@ See also: https://www.divio.com/en/blog/documentation/
 
 # Release 0.5.19, towards 0.5.20
 
-- [ ] Eliminate py3porting module
+- [x] Eliminate py3porting module
 
 (Sub-release?)
 
@@ -50,7 +50,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Remove surplus fields from context when context generation/migration issues are settled
     - cf. collection.set_field_uri_jsonld_context, collection.get_coll_jsonld_context (fid, vid, gid, etc.)
 - [ ] Eliminate type-specific render types (i.e. 'Type', 'View', 'List', 'Field', etc.), and any other redundant render types.  Also "RepeatGroup" and "RepeatGroupRow".
-- [.] performance tuning
+- [ ] performance tuning
     - [x] in EntityTypeInfo: cache type hierarchy for each collection/request; clear when setting up
     - [x] look into entity cacheing (esp. RecordType) for performance improvement
         - partly done per-collection - is this enough?
@@ -71,7 +71,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Automated test suite for annalist_manager (0.5.12)
 - [ ] Review docker files: reduce number of separate commands used; always build on clean python setup.  Use docker-compose instead of or as well as  separate data container?
 - [ ] Code and service review  [#1](https://github.com/gklyne/annalist/issues/1)
-- [.] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
+- [ ] Simplify generic view tests [#33](https://github.com/gklyne/annalist/issues/33)
     - Started moving toward parameterized context data generation for comparison.
 - [ ] Checkout default form buttons. See:  http://stackoverflow.com/questions/1963245/multiple-submit-buttons-on-html-form-designate-one-button-as-default/1963305#comment51736986_1963305
 - [ ] Move outstanding TODOs to GitHub issues

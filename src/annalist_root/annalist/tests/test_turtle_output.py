@@ -16,11 +16,12 @@ import os
 import unittest
 import traceback
 
+from urllib.parse                   import urljoin
+
 from django.test.client             import Client
 
 from rdflib                         import Graph, URIRef, Literal
 
-from utils.py3porting               import urljoin
 from utils.SuppressLoggingContext   import SuppressLogging
 from miscutils.MockHttpResources    import MockHttpFileResources, MockHttpDictResources
 

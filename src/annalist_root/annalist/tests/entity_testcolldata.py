@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 import os
 import unittest
 
-from utils.py3porting                   import urljoin
+from urllib.parse                       import urljoin
 
 from django.conf                        import settings
 from django.db                          import models

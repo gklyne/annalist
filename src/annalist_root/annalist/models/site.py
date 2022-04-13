@@ -19,12 +19,12 @@ import datetime
 import traceback
 from collections                    import OrderedDict
 
+from urllib.parse                   import urljoin
+
 from django.http                    import HttpResponse
 from django.http                    import HttpResponseRedirect
 from django.conf                    import settings
 from django.urls                    import resolve, reverse
-
-from utils.py3porting               import isoformat_space, urljoin
 
 import annalist
 from annalist.identifiers           import RDF, RDFS, ANNAL
@@ -32,7 +32,7 @@ from annalist.exceptions            import Annalist_Error, EntityNotFound_Error
 from annalist                       import layout
 from annalist                       import message
 from annalist.util                  import (
-    valid_id, extract_entity_id, replacetree, updatetree, expandtree
+    valid_id, extract_entity_id, isoformat_space, replacetree, updatetree, expandtree
     )
 
 from annalist.models.annalistuser   import AnnalistUser

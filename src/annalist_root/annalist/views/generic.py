@@ -26,9 +26,10 @@ from django.views.decorators.csrf   import csrf_exempt
 from django.urls                    import resolve, reverse
 from django.conf                    import settings
 
+from urllib.parse                   import urljoin 
+
 import login.login_views
 
-from utils.py3porting               import urljoin
 from utils.ContentNegotiationView   import ContentNegotiationView
 
 import annalist

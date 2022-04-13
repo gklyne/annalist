@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 import copy
 
-from utils.py3porting           import quote, unquote
+from urllib.parse               import quote, unquote
 
 from django.urls                import resolve, reverse
 from django.http                import HttpResponse

@@ -26,9 +26,9 @@ import json
 import errno
 import traceback
 
-from django.conf                import settings
+from urllib.parse               import urljoin
 
-from utils.py3porting           import is_string, urljoin
+from django.conf                import settings
 
 from annalist                   import layout
 from annalist                   import util
@@ -374,7 +374,7 @@ class Entity(EntityRoot):
                     search for children.  See method `_find_alt_parents` for more details.
         """
         if altscope is not None:
-            if not is_string(altscope):
+            if not isinstance(altscope, str):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))
@@ -751,7 +751,7 @@ class Entity(EntityRoot):
             (cls._entitytype, parent._entitydir, entityid)
             )
         if altscope is not None:
-            if not is_string(altscope):
+            if not isinstance(altscope, str):
                 log.error("altscope must be string (%r supplied)"%(altscope))
                 log.error("".join(traceback.format_stack()))
                 raise ValueError("altscope must be string (%r supplied)"%(altscope))

@@ -17,8 +17,6 @@ import re
 from pyparsing import Word, QuotedString, Literal, Group, Empty, StringEnd, ParseException
 from pyparsing import alphas, alphanums
 
-from utils.py3porting               import is_string, to_unicode
-
 from annalist                       import layout
 from annalist.util                  import valid_id, extract_entity_id
 
@@ -263,7 +261,7 @@ class EntityFinder(object):
             for e in val:
                 if cls.value_contains(e, search):
                     return True
-        elif is_string(val):
+        elif isinstance(val, str):
             return search in val
         return False
 

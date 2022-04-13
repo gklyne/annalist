@@ -14,8 +14,6 @@ log = logging.getLogger(__name__)
 
 from django.template        import Template
 
-from utils.py3porting                   import is_string, to_unicode
-
 from annalist.views.fields.render_base  import RenderBase
 
 #   ----------------------------------------------------------------------------
@@ -34,7 +32,7 @@ class EntityIdValueMapper(RenderBase):
         """
         Returns an entity Id form field value as itself with leading/trailing spaces trimmed
         """
-        if is_string(field_value):
+        if isinstance(field_value, str):
             field_value = field_value.strip()
         return field_value
 
