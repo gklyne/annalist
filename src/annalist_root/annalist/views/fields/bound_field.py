@@ -261,7 +261,7 @@ class bound_field(object):
 
         # elif name == "row_field_descs":
         elif True:      # For diagnosing failed accesses...
-            msg = "@@@@ Accessing bound_field.%s"%(name,)
+            msg = "Accessing bound_field.%s"%(name,)
             log.error(msg)
             log.debug("".join(traceback.format_stack()))
             assert False, msg

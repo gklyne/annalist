@@ -36,6 +36,9 @@ See also: https://www.divio.com/en/blog/documentation/
 # Release 0.5.19, towards 0.5.20
 
 - [x] Eliminate py3porting module
+- [x] Edit/new entity reference: no option to add new entity?  (This was an application data collection data setup problem - use "optional" selection render type.)
+- [ ] Option to add field and new type with list+view in one action from edit-view view.  Or from edit-field view.
+
 
 (Sub-release?)
 
@@ -59,7 +62,8 @@ See also: https://www.divio.com/en/blog/documentation/
               (cf. collection.types() and EntityTypeInfo constructor; also URI access)
         - [x] Need more direct way to locate type (and other entities?) by URI
         - [ ] Review common mechanism to retrieve URI for entity?
-              (Current mechanism fixes use of annal:uri for all entities; maybe OK)
+              - (Current mechanism fixes use of annal:uri for all entities; maybe OK)
+              - See `models/entityroot.get_uri()`
         - [x] Think about how to optimize retrieval of subtypes/supertypes
         - [x] Do special case for types, or more generic caching approach?
 - [ ] review renderers and revise to take all message strings from messages.py
@@ -92,8 +96,9 @@ Technical debt:
 
 - [ ] Rename while editing sometimes generates error when saving or invoking new functions that force a save.
     - Consider keeping a list of renames since startup, and applying these when accessing entities to display if the original access fails.  This may be a better general strategy than rewriting continuation URLs.
-- [ ] Check out possible Django compatibility problems:
+- [x] Check out possible Django compatibility problems:
     - see https://docs.djangoproject.com/en/1.8/ref/django-admin/#django-admin-check
+    - discarding this item following Django upgrade to 4.03
 - [ ] Configure for multi-process worker operation
     - [ ] check for code that uses local server state
         - models/collection.py (caches)
@@ -112,8 +117,8 @@ Technical debt:
     - NOTE: 0.5.16 added an environment variable option for specifying the secret key: this is needed when running under gunicorn where the server process is periodically restarted.
 - [ ] provide for site and collection home page content negotiation, so applications can find data by following links.  As a minimum, include (and document) URL templates in response headers for accessing data.  See `FAQs/FAQ_URL_structure.md`.
     - already supported for collection (entity list)
-    - for site data, this should probably be combined with using generic view capabilities for presenting the collecton list (see `models.site.site_data()`)
-- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic can probe multiple values as appropriate.  Or return a list and handle accoordingly.  This still leaves questions of what to do when updating a value.
+    - for site data, this should probably be combined with using generic view capabilities for presenting the collection list (see `models.site.site_data()`)
+- [ ] When accessing fields via subproperties of the field definition key, only the first subproperty found is used.  This means that, for repeated fields using different subproperties, only values for one of those subproperties are returned.  Can method `get_field_value_key` be eliminated so that the value access logic can probe multiple values as appropriate.  Or return a list and handle accordingly.  This still leaves questions of what to do when updating a value.
     - see FieldDescription.get_field_value_key and bound_field.get_field_value_key
     - There are relatively few references to `get_field_value_key`, but the value is stored in some field mappers.
 - [ ] Apply id update in migration logic for all entity types?  (cf. collection)

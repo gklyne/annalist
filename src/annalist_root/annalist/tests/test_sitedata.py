@@ -266,8 +266,6 @@ class AnnalistSiteDataTest(AnnalistTestCase):
         self.assertEqual(len(trows), len(expect_fields))
         for i in range(len(trows)):
             tcols = trows[i].select("div.small-11.columns > div.row > div.columns")
-            # print("@@@@ trows[%d]\n"%(i), trows[i].prettify())
-            # print("@@@@ tcols\n", "\n---\n".join(map(str,tcols)))
             self.assertEqual(trows[i].div.input['type'],  "checkbox")
             self.assertEqual(trows[i].div.input['name'],  "View_fields__select_fields")
             self.assertEqual(trows[i].div.input['value'], str(i))

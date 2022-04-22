@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function
 
 """
 Renderer and value mapper for text values selected from a list of options.
-In some cases, the ren dered edit control also inclused a button for 
+In some cases, the rendered edit control also includes a button for 
 creating a new value.
 """
 
@@ -66,6 +66,7 @@ view_select = (
     {% endif %}
     """)
 
+# Note that edit button text may be updated by code in 'annalist.js'
 edit_select = (
     """<!-- fields.render_select.edit_select -->
     <div class="row"> 
@@ -256,7 +257,6 @@ class Select_edit_renderer(object):
                 )
             textval = SelectValueMapper.encode(typval)
             options = update_choice_labels(context['field']['options'])
-            # print repr(options)
             if textval not in [ o.value for o in options ]:
                 options = list(options)                   # clone
                 options.insert(0, FieldChoice(textval))   # Add missing current value to options
@@ -308,7 +308,7 @@ def get_entitytype_renderer():
 
 def get_view_choice_renderer():
     """
-    Return field renderer object for "view choice" controlm, which combines
+    Return field renderer object for "view choice" control, which combines
     a regular selection box with a "Show view" button.  This option is used
     by the view template/renderer, and is not available as a field choice 
     within the view.

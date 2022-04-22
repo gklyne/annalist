@@ -155,6 +155,7 @@ def get_field_base_renderer(field_render_type):
         # Create and cache renderer
         if ( (field_render_type in _field_view_files) or
              (field_render_type in _field_edit_files) ):
+            # Template-based renderers
             viewfile = _field_view_files.get(field_render_type, None)
             editfile = _field_edit_files.get(field_render_type, None)
             _field_renderers[field_render_type] = RenderFieldValue(
@@ -162,6 +163,7 @@ def get_field_base_renderer(field_render_type):
                 view_file=viewfile, edit_file=editfile
                 )
         elif field_render_type in _field_get_renderer_functions:
+            # Render functions
             _field_renderers[field_render_type] = _field_get_renderer_functions[field_render_type]()
     return _field_renderers.get(field_render_type, None)
 

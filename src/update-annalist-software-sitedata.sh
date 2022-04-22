@@ -5,9 +5,10 @@ echo "(Assumes target Python virtualenv is already activated)"
 echo ""
 
 python setup.py clean --all
-python setup.py build
 pip uninstall -y annalist
-python setup.py install
+pip install .
+# python setup.py build
+# python setup.py install
 annalist-manager updatesite
 annalist-manager collectstatic
 

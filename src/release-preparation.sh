@@ -1,10 +1,11 @@
 # Automated steps for preparing new Annalist release
 
 pip uninstall -y annalist
-python setup.py clean --all
+# python setup.py clean --all
 git clean -fX
-python setup.py build
-python setup.py install
+pip install .
+# python setup.py build
+# python setup.py install
 annalist-manager runtest
 annalist-manager updatesite
 annalist-manager initialize

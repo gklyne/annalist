@@ -105,11 +105,11 @@ class SelectRenderingTest(FieldRendererTestSupport):
             return {'view': render_view, 'edit': render_edit}
         noval = "(No 'test label' selected)"
         test_values = (
-            [ ( "aa",  "label aa",    "http://example.org/aa",  ["aa", "bb", "cc"])
+            [ ( "aa",  "label aa",    "http://example.org/aa",  ["", "aa", "bb", "cc"])
             , ( "",    noval,         None,                     ["", "aa", "bb", "cc"])
-            , ( "dd",  "opt_type/dd", "http://example.org/dd",  ["aa", "bb", "cc"])
-            , ( "",    noval,         None,                     ["aa", "bb", "cc"])
-            , ( "dup", "label dup",   "http://example.org/dup", ["aa", "bb", "cc", "dup", "dup"])
+            , ( "dd",  "opt_type/dd", "http://example.org/dd",  ["", "aa", "bb", "cc"])
+            , ( "",    noval,         None,                     ["", "aa", "bb", "cc"])
+            , ( "dup", "label dup",   "http://example.org/dup", ["", "aa", "bb", "cc", "dup", "dup"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valkey, vallink, valchoices, noval), 
@@ -166,10 +166,10 @@ class SelectRenderingTest(FieldRendererTestSupport):
             return {'view': render_view, 'edit': render_edit}
         noval = "(No 'test label' selected)"
         test_values = (
-            [ ( "aa", "label aa",    "http://example.org/aa", ["aa", "bb", "cc"])
+            [ ( "aa", "label aa",    "http://example.org/aa", ["", "aa", "bb", "cc"])
             , ( "",   noval,         None,                    ["", "aa", "bb", "cc"])
-            , ( "dd", "opt_type/dd", "http://example.org/dd", ["aa", "bb", "cc"])
-            , ( "",   noval,         None,                    ["aa", "bb", "cc"])
+            , ( "dd", "opt_type/dd", "http://example.org/dd", ["", "aa", "bb", "cc"])
+            , ( "",   noval,         None,                    ["", "aa", "bb", "cc"])
             ])
         test_value_context_renders = (
             [ ( self._make_select_test_context(valtext, vallink, valchoices, noval), 

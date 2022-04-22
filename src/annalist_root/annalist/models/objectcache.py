@@ -154,7 +154,6 @@ class ObjectCache(object):
             log.debug("".join(traceback.format_list(self._closed)))
             log.debug("----")
             raise Exception(msg)
-        # print("@@@@ self._cachelock %r, self._cachekey %r"%(self._cachelock, self._cachekey))
         with self._cachelock:
             value = self._cache.get(key, default)
         return value

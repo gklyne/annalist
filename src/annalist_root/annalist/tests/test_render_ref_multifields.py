@@ -496,8 +496,10 @@ class RefMultifieldTest(AnnalistTestCase):
                 render_select_options(
                     "%(field_id)s", 
                     "Image reference",
-                    [FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")],
-                    "%(type_id)s/%(entity_id)s"
+                    [ FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")
+                    ],
+                    "%(type_id)s/%(entity_id)s",
+                    placeholder="(ref image field)"
                     )+
                 """
                 </div>
@@ -754,8 +756,10 @@ class RefMultifieldTest(AnnalistTestCase):
                         render_select_options(
                             "%(repeat_id)s__0__%(field_id)s", 
                             "Image reference",
-                            [FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")],
-                            "%(type_id)s/%(entity_id)s"
+                            [ FieldChoice("%(type_id)s/%(entity_id)s", label="Label %(entity_id)s")
+                            ],
+                            "%(type_id)s/%(entity_id)s",
+                            placeholder="(ref image field)"
                             )+
                         """
                         </div>
@@ -766,7 +770,7 @@ class RefMultifieldTest(AnnalistTestCase):
               </div>
             </div>
             """)%tgt_field_vals(width=6)
-        # log.info(r.content)
+        # log.info(response.content)
         self.assertContains(response, formrow1,  html=True)
         self.assertContains(response, formrow2a, html=True)
         self.assertContains(response, formrow2b, html=True)

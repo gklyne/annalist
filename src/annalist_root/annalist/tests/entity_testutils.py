@@ -307,7 +307,7 @@ def render_select_options(name, label, opts, sel, placeholder=None):
     </div>
     <BLANKLINE>
     """
-    # Local helper to cleanup options and acount for duplicate labels
+    # Local helper to cleanup options and account for duplicate labels
     def update_options(opts):
         return update_choice_labels(
             [ FieldChoice(o) if isinstance(o, str) else o 
@@ -557,11 +557,9 @@ def context_bind_fields(context):
                 bound_cols.append(b_field)
             bound_row = row.copy()
             bound_row._field_description['row_field_descs'] = bound_cols
-            # print "@@@@ bound_row: "+repr(bound_row)
         else:
             bound_row = row
         bound_rows.append(bound_row)
-    # print "@@@@ bound_rows[0]['description']['row_field_descs'][0]:\n"+repr(bound_rows[0]['description']['row_field_descs'][0])
     bound_context['fields'] = bound_rows
     return bound_context
 
@@ -988,7 +986,6 @@ def check_default_view_context_fields(test, response,
             entity_data_ref+"?type=application/json"
             )
     # View fields
-    # log.info("@@@@ response.context['fields'] %r"%(response.context['fields'],))
     test.assertEqual(len(response.context['fields']), 3)
     f0 = context_view_field(response.context, 0, 0)
     f1 = context_view_field(response.context, 0, 1)

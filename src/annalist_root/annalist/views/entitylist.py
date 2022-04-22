@@ -197,7 +197,6 @@ class EntityGenericListView(AnnalistGenericView):
                 ]
             , ANNAL.CURIE.entity_list:  entityvallist
             })
-        # print "@@@@ assemble_list_data: jsondata %r"%(jsondata,)
         return jsondata
 
     # GET

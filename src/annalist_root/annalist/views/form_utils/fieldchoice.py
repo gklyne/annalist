@@ -75,8 +75,17 @@ class FieldChoice(_FieldChoice_tuple):
     >>> c5 = FieldChoice('')
     >>> c5 == FieldChoice(id='', value='', label='', link=None, choice_value=False)
     True
+    >>> c6 = FieldChoice('', value='value6', label='label6', choice_value=True)
+    >>> c6 == FieldChoice(id='', value='value6', label='label6', link=None, choice_value=True)
+    True
+    >>> c6.choice_html() == u'label6&nbsp;&nbsp;&nbsp;(value6)'
+    True
+    >>> c7 = FieldChoice('', label='label7')
+    >>> c7 == FieldChoice(id='', value='', label='label7', link=None, choice_value=False)
+    True
+    >>> c7.choice_html()
+    'label7'
     """
-
     def __new__(_cls, id=None, value=None, label=None, link=None, choice_value=False):
         if value is None: value = id
         if label is None: label = value

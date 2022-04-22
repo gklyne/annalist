@@ -148,7 +148,6 @@ def recordfield_create_values(coll_id="testcoll", field_id="testfield",
     """
     Entity values used when creating a record field entity
     """
-    # print("@@@@ recordfield_create_values property_uri: "+str(property_uri))
     if not property_uri:
       property_uri = "test_property:" + field_id
     d = (
@@ -181,7 +180,6 @@ def recordfield_values(
         value_mode="_enum_value_mode/Value_direct",
         value_type="annal:Text",
         update="Field", hosturi=TestHostUri):
-    # print("@@@@ recordfield_values property_uri: "+str(property_uri))
     d = recordfield_create_values(
         coll_id, field_id, 
         property_uri=property_uri, superproperty_uris=superproperty_uris,

@@ -62,16 +62,8 @@ class TestBoundField(object):
             return ""
         elif name in ["field_value", "field_edit_value"]:
             return self._field["target_value"]
-        #@@@@
-        # elif name == "field_value_link":
-        #     return self._field["field_value_link"]
-        #@@@@
         elif name == "options":
             return self._field["options"]
-        #@@@@
-        # elif name == "context_extra_values":
-        #     return self._extras
-        #@@@@
         attr = "@@TestBoundField.%s@@"%(name,)
         return attr
 
