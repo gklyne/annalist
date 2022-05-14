@@ -365,7 +365,6 @@ class EntityGenericListView(AnnalistGenericView):
         if listinfo.http_response:
             return listinfo.http_response
 
-
         # Report unexpected form data
         # This shouldn't happen, but just in case...
         # Redirect to continuation with error

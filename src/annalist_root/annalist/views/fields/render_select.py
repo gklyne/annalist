@@ -127,7 +127,7 @@ view_entitytype = (
 edit_entitytype = (
     # Note use of fixed field name
     """<!-- fields.render_select.edit_entitytype -->
-    <select name="entity_type">
+    <select name="entity_type_id">
     """+
     edit_options+
     """

@@ -191,7 +191,7 @@ class FieldAliasTest(AnnalistTestCase):
             )
         f = (
             { 'entity_id':          "bibentity1"
-            , 'entity_type':        "BibEntry_type"
+            , 'entity_type_id':     "BibEntry_type"
             , 'orig_id':            "bibentity1"
             , 'orig_type':          "BibEntry_type"
             , 'Bib_type':           "article"
@@ -229,7 +229,7 @@ class FieldAliasTest(AnnalistTestCase):
             )
         f = (
             { 'entity_id':          "bibentity1"
-            , 'entity_type':        "BibEntry_type"
+            , 'entity_type_id':     "BibEntry_type"
             , 'orig_id':            "bibentity1"
             , 'orig_type':          "BibEntry_type"
             , 'Entity_label':       "Updated "+self.bibentity1_data['bib:title']

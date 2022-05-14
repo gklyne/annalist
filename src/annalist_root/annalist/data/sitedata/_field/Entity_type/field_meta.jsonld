@@ -6,7 +6,7 @@
 , "annal:uri":                  "annal:fields/Entity_type"
 , "rdfs:label":                 "Type"
 , "rdfs:comment":               "# Entity type\r\n\r\nAn identifier that identifies the corresponding entity type. Presents as a drop-down list of entity types for editing, and as a hyperlink for viewing."
-, "annal:field_name":           "entity_type"
+, "annal:field_name":           "entity_type_id"
 , "annal:field_render_type":    "_enum_render_type/EntityTypeId"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
 , "annal:field_value_type":     "annal:EntityRef"

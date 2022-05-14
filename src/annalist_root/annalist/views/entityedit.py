@@ -226,7 +226,7 @@ class GenericEntityEditView(AnnalistGenericView):
         orig_entity_id      = request.POST.get('orig_id', entity_id)
         orig_entity_type_id = request.POST.get('orig_type', type_id)
         orig_entity_coll_id = request.POST.get('orig_coll', coll_id)
-        curr_entity_type_id = extract_entity_id(request.POST.get('entity_type', type_id))
+        curr_entity_type_id = extract_entity_id(request.POST.get('entity_type_id', type_id))
         curr_entity_id      = request.POST.get('entity_id', None)
         viewinfo.set_coll_type_entity_id(
             orig_coll_id=orig_entity_coll_id,

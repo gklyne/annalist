@@ -842,24 +842,24 @@ class DisplayInfo(object):
                 log.warning("get_view_id: %s, type_id %s"%(view_id, self.type_id))
         return view_id
 
-    def entity_exists(self, entity_id, entity_type):
+    def entity_exists(self, entity_id, entity_type_id):
         """
         Test a supplied entity is defined in the current collection,
         returning true or False.
 
         entity_id           entity id that is to be tested..
-        entity_type         type of entity to test.
+        entity_type_id      type id of entity to test.
         """
         typeinfo = self.curr_typeinfo
-        if not typeinfo or typeinfo.get_type_id() != entity_type:
-            typeinfo = EntityTypeInfo(self.collection, entity_type)
+        if not typeinfo or typeinfo.get_type_id() != entity_type_id:
+            typeinfo = EntityTypeInfo(self.collection, entity_type_id)
         return typeinfo.entityclass.exists(typeinfo.entityparent, entity_id)
 
-    def entity_is_type_with_values(self, entity_id, entity_type):
+    def entity_is_type_with_values(self, entity_id, entity_type_id):
         """
         Test if indicated entity is a type with values defined.
         """
-        if entity_type == layout.TYPE_TYPEID:
+        if entity_type_id == layout.TYPE_TYPEID:
             typeinfo = EntityTypeInfo(
                 self.collection, entity_id
                 )

@@ -65,7 +65,7 @@ f_Entity_ref = (
 
 f_Entity_type = (
     { 'field_id':               "Entity_type"
-    , 'field_name':             "entity_type"
+    , 'field_name':             "entity_type_id"
     , 'field_label':            "Type"
     , 'field_render_type':      "EntityTypeId"
     , 'field_value_mode':       "Value_direct"

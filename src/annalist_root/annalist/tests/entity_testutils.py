@@ -1008,7 +1008,7 @@ def check_default_view_context_fields(test, response,
     # 2nd field - type id
     check_context_field(test, f1,
         field_id=           "Entity_type",
-        field_name=         "entity_type",
+        field_name=         "entity_type_id",
         field_label=        "Type",
         field_placeholder=  "(type id)",
         field_property_uri= "annal:type_id",

@@ -195,7 +195,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
                   <div class="%(input_classes)s">
                   """+
                     render_choice_options(
-                        "entity_type",
+                        "entity_type_id",
                         self.type_ids,
                         "_type/testtype")+
                   """

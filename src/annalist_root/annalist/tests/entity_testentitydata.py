@@ -486,7 +486,7 @@ def default_view_form_data(
         # Allow setting to blank string...
         form_data_dict['entity_id']       = entity_id
     if entity_id:
-        form_data_dict['entity_type']     = "_type/"+type_id
+        form_data_dict['entity_type_id']  = "_type/"+type_id
         form_data_dict['Entity_label']    = '%s %s/%s/%s'%(update, coll_id, type_id, entity_id)
         form_data_dict['Entity_comment']  = '%s coll %s, type %s, entity %s'%(update, coll_id, type_id, entity_id)
         form_data_dict['orig_id']         = entity_id

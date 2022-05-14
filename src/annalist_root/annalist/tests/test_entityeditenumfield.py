@@ -270,7 +270,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         self.assertFalse(EntityData.exists(self.testdata, "entitynewtype"))
         f = default_view_form_data(
                 entity_id="entitynewtype", action="new", update="Updated entity", 
-                new_enum="entity_type__new_edit"
+                new_enum="entity_type_id__new_edit"
                 )
         u = entitydata_edit_url("new", "testcoll", "testtype", view_id="Default_view")
         r = self.client.post(u, f)
@@ -418,7 +418,7 @@ class EntityEditEnumFieldTest(AnnalistTestCase):
         e1 = self._check_entity_data_values("entitynewtype")
         f  = default_view_form_data(
                 entity_id="entitynewtype", action="edit", update="Updated entity", 
-                new_enum="entity_type__new_edit"
+                new_enum="entity_type_id__new_edit"
                 )
         u  = entitydata_edit_url(
             "edit", "testcoll", "testtype", entity_id="entitynewtype", 

@@ -366,7 +366,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             )
         f = (
             { 'entity_id':          "testentity"
-            , 'entity_type':        "testtype"
+            , 'entity_type_id':     "testtype"
             , 'orig_id':            "testentity"
             , 'orig_type':          "testtype"
             , 'Test_sup_field':     "Updated subproperty value"
@@ -452,7 +452,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             )
         f = (
             { 'entity_id':          "testsetentity"
-            , 'entity_type':        "testtype"
+            , 'entity_type_id':     "testtype"
             , 'orig_id':            "testsetentity"
             , 'orig_type':          "testtype"
             , 'Test_sup_set__0__Test_sup_field': "Updated subprop 1"
@@ -542,7 +542,7 @@ class FieldSubpropertyTest(AnnalistTestCase):
             )
         f = (
             { 'entity_id':          "testlistentity"
-            , 'entity_type':        "testtype"
+            , 'entity_type_id':     "testtype"
             , 'orig_id':            "testlistentity"
             , 'orig_type':          "testtype"
             , 'Test_sup_list__0__Test_sup_field': "Updated subprop 1"

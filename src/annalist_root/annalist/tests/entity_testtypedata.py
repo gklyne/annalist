@@ -281,26 +281,26 @@ def type_view_form_data(action=None,
         , 'continuation_url':   entitydata_list_type_url(coll_id, type_type_id)
         })
     if action:
-        form_data_dict['action']        = action
+        form_data_dict['action']         = action
     if type_type_id:
-        form_data_dict['entity_type']   = "_type/"+type_type_id
-        form_data_dict['orig_type']     = extract_entity_id(type_type_id)
+        form_data_dict['entity_type_id'] = "_type/"+type_type_id
+        form_data_dict['orig_type']      = extract_entity_id(type_type_id)
     if type_entity_id is not None:
-        form_data_dict['entity_id']     = type_entity_id
-        form_data_dict['orig_id']       = type_entity_id
+        form_data_dict['entity_id']      = type_entity_id
+        form_data_dict['orig_id']        = type_entity_id
     if type_entity_id and type_type_id:
         entity_url  = recordtype_url(coll_id=coll_id, type_id=type_entity_id)
-        form_data_dict['entity_id']     = type_entity_id
-        form_data_dict['Type_uri']      = entity_url or ""
-        form_data_dict['Type_view']     = "_view/Default_view"
-        form_data_dict['Type_list']     = "_list/Default_list"
-        form_data_dict['orig_coll']     = coll_id
+        form_data_dict['entity_id']      = type_entity_id
+        form_data_dict['Type_uri']       = entity_url or ""
+        form_data_dict['Type_view']      = "_view/Default_view"
+        form_data_dict['Type_list']      = "_list/Default_list"
+        form_data_dict['orig_coll']      = coll_id
     if orig_coll:
-        form_data_dict['orig_coll']     = orig_coll
+        form_data_dict['orig_coll']      = orig_coll
     if orig_type:
-        form_data_dict['orig_type']     = orig_type
+        form_data_dict['orig_type']      = orig_type
     if orig_id:
-        form_data_dict['orig_id']       = orig_id
+        form_data_dict['orig_id']        = orig_id
     label_id = type_entity_id or orig_id
     if label_id and type_type_id:
         form_data_dict['Type_label']    = (
