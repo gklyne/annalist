@@ -450,22 +450,21 @@ def field_description_from_view_field(
     field_ids_seen  field ids expanded so far, to check for recursive reference.
     """
     field_id    = extract_entity_id(field[ANNAL.CURIE.field_id])
-    # recordfield = RecordField.load(collection, field_id, altscope="all")
     recordfield = collection.get_field(field_id)
     if recordfield is None:
         log.warning("Can't retrieve definition for field %s"%(field_id))
-        # recordfield = RecordField.load(collection, "Field_missing", altscope="all")
         recordfield = collection.get_field("Field_missing")
         recordfield[RDFS.CURIE.label] = message.MISSING_FIELD_LABEL%{ 'id': field_id }
 
-    # If field references group, pull in group details
+    # Pull in field list
     field_list = recordfield.get(ANNAL.CURIE.field_fields, None)
     if not field_list:
         group_ref = extract_entity_id(recordfield.get(ANNAL.CURIE.group_ref, None))
         if group_ref:
+            # Raise error for obsolete structure
             raise UnexpectedValue_Error("Group %s used in field %s"%(group_ref, field_id))
 
-    # If present, `field_property` and `field_placement` override values in the field dexcription
+    # If present, `field_property` and `field_placement` override values in the field description
     return FieldDescription(
         collection, recordfield, view_context=view_context, 
         field_property=field.get(ANNAL.CURIE.property_uri, None),

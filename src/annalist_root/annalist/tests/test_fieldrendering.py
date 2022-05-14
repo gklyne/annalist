@@ -152,10 +152,8 @@ class FieldRenderingTest(FieldRendererTestSupport):
 
     def test_RenderRepeatGroupEdit(self):
         fieldrender   = RenderRepeatGroup(render_repeatgroup.edit_group)
-        rendered_text = fieldrender.render(self._get_repeatgroup_context())
-        # print "\n**************\n"
-        # print rendered_text
-        # print "\n**************\n"
+        with SuppressLogging(logging.WARNING):
+            rendered_text = fieldrender.render(self._get_repeatgroup_context())
         # replace runs of whitespace/newlines with single space:
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         field_choices = (

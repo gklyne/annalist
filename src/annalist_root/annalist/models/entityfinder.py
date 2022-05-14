@@ -426,9 +426,11 @@ class EntitySelector(object):
         #
         def get_context(name, field_id):
             "Get field from named value in current display context"
-            log.debug(f"get_context: name {name}, field_id: {field_id}")
+            # log.debug(f"get_context: name {name}, field_id: {field_id}")
             def get_context_f(e, c):
-                if name in c and c[name]:
+                if not c:
+                    log.warning(f"entityfinder.get_context: no context for '{name}'['{field_id}']; no value returned")
+                elif (name in c) and c[name]:
                     return c[name].get(field_id, None)
                 return None
             return get_context_f

@@ -38,8 +38,9 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Eliminate py3porting module
 - [x] Edit/new entity reference: no option to add new entity?  (This was an application data collection data setup problem - use "optional" selection render type.)
 - [x] Task button to create new referenced type from field editing view.
-- [ ] Bug: broader concept None/undefined in list gives server error
-- [x] Remove references to unused 'annal:record_type' field
+- [x] Remove references to unused 'annal:record_type' field; use 'entity_type_uri' and 'entity_type_id'.
+- [x] Bug: broader concept None/undefined in list gives server error
+- [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
 
 (Sub-release?)
 

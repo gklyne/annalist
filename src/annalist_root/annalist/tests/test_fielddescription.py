@@ -19,6 +19,8 @@ log = logging.getLogger(__name__)
 from django.conf                        import settings
 from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 
+from utils.SuppressLoggingContext       import SuppressLogging
+
 from annalist                           import layout
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist.models.site               import Site
@@ -163,11 +165,12 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_View_field_sel(self):
-        fd = field_description_from_view_field(
-            self.testcoll, 
-            { ANNAL.CURIE.field_id: "View_field_sel" }, 
-            {}
-            )
+        with SuppressLogging(logging.WARNING):
+            fd = field_description_from_view_field(
+                self.testcoll, 
+                { ANNAL.CURIE.field_id: "View_field_sel" }, 
+                {}
+                )
         expect_placement = Placement(
             width   = make_field_width(sw=12, mw=6, lw=6),
             offset  = make_field_offset(so=0, mo=0, lo=0),
@@ -208,11 +211,12 @@ class FieldDescriptionTest(AnnalistTestCase):
         return
 
     def test_View_fields(self):
-        fd = field_description_from_view_field(
-            self.testcoll, 
-            { ANNAL.CURIE.field_id: "View_fields" }, 
-            {}
-            )
+        with SuppressLogging(logging.WARNING):
+            fd = field_description_from_view_field(
+                self.testcoll, 
+                { ANNAL.CURIE.field_id: "View_fields" }, 
+                {}
+                )
         expect_placement = Placement(
             width   = make_field_width(sw=12, mw=12, lw=12),
             offset  = make_field_offset(so=0, mo=0, lo=0),
