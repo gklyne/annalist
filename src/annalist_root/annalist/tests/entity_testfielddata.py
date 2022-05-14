@@ -332,7 +332,8 @@ def field_view_form_data(
         coll_id="testcoll", 
         field_label=None,
         render_type="Text", value_mode="Value_direct",
-        entity_type=None, property_uri=None, value_type="annal:Text",
+        field_entity_type=None, property_uri=None, field_value_type="annal:Text",
+        field_ref_type=None,
         field_placement="",
         action=None, cancel=None, task=None,
         update="Field"):
@@ -344,7 +345,7 @@ def field_view_form_data(
         , 'Field_value_mode':   value_mode
         , 'orig_id':            'orig_field_id'
         , 'orig_type':          layout.FIELD_TYPEID
-        , 'record_type':        "annal:Field"
+        , 'entity_typeuri':     "annal:Field"
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_field")
         })
     if field_id is not None:
@@ -366,12 +367,14 @@ def field_view_form_data(
         form_data_dict['Field_label']       = field_label
         form_data_dict['Field_help']        = "Help for "+field_label
         form_data_dict['Field_tooltip']     = "Tooltip for "+field_label
-    if entity_type:
-        form_data_dict['Field_entity_type'] = entity_type
+    if field_entity_type:
+        form_data_dict['Field_entity_type'] = field_entity_type
     if property_uri:
         form_data_dict['Field_property']    = property_uri
-    if value_type:
-        form_data_dict['Field_value_type']  = value_type
+    if field_value_type:
+        form_data_dict['Field_value_type']  = field_value_type
+    if field_ref_type:
+        form_data_dict['Field_typeref']     = field_ref_type
     if action:
         form_data_dict['action']            = action
     if cancel:

@@ -26,6 +26,8 @@ from django.contrib.auth.models         import User
 from django.test                        import TestCase # cf. https://docs.djangoproject.com/en/dev/topics/testing/tools/#assertions
 from django.test.client                 import Client
 
+from utils.SuppressLoggingContext       import SuppressLogging
+
 from annalist.util                      import valid_id, extract_entity_id
 from annalist.identifiers               import RDF, RDFS, ANNAL
 from annalist                           import layout
@@ -327,7 +329,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_view="_view/Default_view",
             type_list="_list/Default_list",
             type_aliases=[],
-            record_type="annal:Type",
+            entity_typeuri="annal:Type",
             update="RecordType",
             continuation_url=None
             ):
@@ -341,7 +343,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_view=type_view,
             type_list=type_list,
             type_aliases=type_aliases,
-            record_type=record_type,
+            entity_typeuri=entity_typeuri,
             update=update,
             continuation_url=continuation_url
             )
@@ -814,7 +816,8 @@ class RecordTypeEditViewTest(AnnalistTestCase):
     def test_post_new_type_missing_id(self):
         f = type_view_form_data(action="new", update="RecordType")
         u = entitydata_edit_url("new", "testcoll", layout.TYPE_TYPEID, view_id="Type_view")
-        r = self.client.post(u, f)
+        with SuppressLogging(logging.WARNING):
+            r = self.client.post(u, f)
         # print r.content
         self.assertEqual(r.status_code,   200)
         self.assertEqual(r.reason_phrase, "OK")
@@ -825,7 +828,7 @@ class RecordTypeEditViewTest(AnnalistTestCase):
             type_id="",
             type_uri=None,
             type_supertype_uris=[],
-            record_type=None
+            entity_typeuri=None
             )
         return
 

@@ -346,7 +346,7 @@ def view_view_context_data(
         , 'entity_id':          view_id or ""
         , 'orig_id':            orig_id
         , 'orig_type':          layout.VIEW_TYPEID
-        , 'record_type':        "annal:View"
+        , 'entity_typeuri':     "annal:View"
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
@@ -410,7 +410,7 @@ def view_view_form_data(
         , 'View_entity_type':   view_entity_type
         , 'View_edit_view':     "Yes"
         , 'orig_id':            'orig_view_id'
-        , 'record_type':        'annal:View'
+        , 'entity_typeuri':     'annal:View'
         , 'continuation_url':   entitydata_list_type_url(coll_id, "_view")
         # View fields
         , 'View_fields__0__View_field_sel':          layout.FIELD_TYPEID+"/Entity_id"

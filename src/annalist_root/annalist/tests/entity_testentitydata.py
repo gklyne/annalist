@@ -289,7 +289,7 @@ def specified_view_context_data(
         entity_id=None, orig_id=None,
         type_ref=None, type_choices=None, type_ids=[],
         entity_label=None, entity_descr=None, 
-        record_type="annal:EntityData",
+        entity_typeuri="annal:EntityData",
         view_fields=None,
         update="Entity",
         action=None, 
@@ -341,7 +341,7 @@ def specified_view_context_data(
         , 'view_id':            view_id
         , 'entity_id':          entity_id
         , 'orig_type':          type_id
-        , 'record_type':        record_type
+        , 'entity_typeuri':     entity_typeuri
         , 'fields':             view_fields
         , 'continuation_url':   continuation_url
         })
@@ -365,7 +365,7 @@ def default_view_context_data(
         type_ref=None, type_choices=None, type_ids=[],
         entity_label=None, entity_descr=None,
         view_label="Default record view",
-        record_type="annal:EntityData",
+        entity_typeuri="annal:EntityData",
         update="Entity",
         action=None, 
         continuation_url=None
@@ -417,7 +417,7 @@ def default_view_context_data(
         , 'coll_id':            coll_id
         , 'type_id':            type_id
         , 'orig_id':            orig_id
-        , 'record_type':        record_type
+        , 'entity_typeuri':     entity_typeuri
         , 'fields':             view_fields
         , 'continuation_url':   continuation_url
         })

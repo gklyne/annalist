@@ -25,7 +25,7 @@ from annalist.models.recordtypedata import RecordTypeData
 from annalist.models.entitytypeinfo import EntityTypeInfo
 
 #   -------------------------------------------------------------------
-#   Auxilliary functions
+#   Auxiliary functions
 #   -------------------------------------------------------------------
 
 def order_entity_key(entity):
@@ -42,6 +42,17 @@ def order_entity_key(entity):
             0 if entity_id.startswith('_') else 1, entity_id
           )
     return key
+
+def order_entity_label(entity):
+    """
+    Function returns sort key for ordering entities by label (then entity id)
+
+    Use with `sorted`, thus:
+
+        sorted(entities, order_entity_label)
+    """
+    entity_label = entity.get_label()
+    return (entity_label, order_entity_key(entity))
 
 #   -------------------------------------------------------------------
 #   EntityFinder
@@ -189,6 +200,7 @@ class EntityFinder(object):
         Get sorted list of entities of the specified type, matching search term and 
         visible to supplied user permissions.
         """
+        log.debug(f"get_entities_sorted: type {type_id}, altscope {altscope}, search {search}")
         entities = self.get_entities(
             user_permissions, type_id=type_id, altscope=altscope, 
             context=context, search=search
@@ -414,6 +426,7 @@ class EntitySelector(object):
         #
         def get_context(name, field_id):
             "Get field from named value in current display context"
+            log.debug(f"get_context: name {name}, field_id: {field_id}")
             def get_context_f(e, c):
                 if name in c and c[name]:
                     return c[name].get(field_id, None)

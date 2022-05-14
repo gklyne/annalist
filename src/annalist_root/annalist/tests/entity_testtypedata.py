@@ -195,7 +195,7 @@ def type_view_context_data(action=None,
         type_view="_view/Default_view",
         type_list="_list/Default_list",
         type_aliases=[],
-        record_type="annal:Type",
+        entity_typeuri="annal:Type",
         update="RecordType",
         continuation_url=None
     ):
@@ -228,7 +228,7 @@ def type_view_context_data(action=None,
         , 'view_id':            "Type_view"
         , 'entity_id':          type_entity_id or ""
         , 'orig_type':          orig_type or type_type_id
-        , 'record_type':        record_type
+        , 'entity_typeuri':     entity_typeuri
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(

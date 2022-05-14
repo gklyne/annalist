@@ -234,7 +234,8 @@ class FieldListValueMap(object):
         rowdata     = RowData(coll, view_context)
         for f in fields:
             # Add field descriptor for field presentation
-            # log.debug("@@ FieldListValueMap: field %r"%(f,))
+            log.debug("FieldListValueMap: field   %r"%(f,))
+            log.debug("FieldListValueMap: context %r"%(view_context,))
             field_desc = field_description_from_view_field(coll, f, view_context)
             properties = field_desc.resolve_duplicates(properties)
             self.fd.append(field_desc)

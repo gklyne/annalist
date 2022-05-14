@@ -584,6 +584,23 @@ class EntityTypeInfo(object):
             raise ValueError("EntitytypeInfo.remove_entity: Attempt to remove collection")
         return self.entityclass.remove(self.entityparent, entity_id)
 
+    def _unused_default_entity_values(self, entity, default_values):
+        """
+        @@TODO: not sure if this adds anything useful to entity root.setdefault
+
+        Updates a supplied entity with default values from a supplied dictionary,
+        where the entity does not already define values for the supplied key.
+
+        entity          is the entity to be updated with supplied default values
+        default_values  is a dictionary(-like) object of values to be added to the entity
+                        if it does not already have such a value defined.
+        """
+        entity.setdefault(ANNAL.CURIE.type, self.get_type_uri())
+        entity.setdefault('@type',          self.get_all_type_uris())
+        for key, val in default_values.items():
+            entity.setdefault(key, val)
+        return entity
+
     def get_entity(self, entity_id, action="view"):
         """
         Loads and returns an entity for the current type, or 
@@ -599,6 +616,7 @@ class EntityTypeInfo(object):
         entity_id = extract_entity_id(entity_id)
         if valid_id(entity_id, reserved_ok=True):
             if action == "new":
+                log.debug(f"get_entity: new {entity_id:s}")
                 entity = self._new_entity(entity_id)
                 entity_initial_values = self.get_initial_entity_values(entity_id)
                 entity.set_values(entity_initial_values)
@@ -609,6 +627,8 @@ class EntityTypeInfo(object):
                     "EntityTypeInfo.get_entity %s/%s at %s not found"%
                     (self.type_id, entity_id, self.entityparent._entitydir)
                     )
+        else:
+            log.warning(f"get_entity: Invalid entity id {entity_id:s}")
         return entity
 
     def get_create_entity(self, entity_id):
@@ -621,6 +641,8 @@ class EntityTypeInfo(object):
         entity = self.get_entity(entity_id)
         if entity is None:
             entity = self.get_entity(entity_id, action="new")
+        if entity is None:
+            log.error(f"get_create_entity: failed to create id={entity_id:s}")
         return entity
 
     def get_copy_entity(self, entity_id, copy_entity_id):

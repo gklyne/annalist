@@ -29,6 +29,7 @@ from annalist                           import message
 from annalist                           import layout
 from annalist.util                      import (
     valid_id, split_type_entity_id, extract_entity_id,
+    slug_from_uri,
     label_from_id,
     open_url, copy_resource_to_fileobj
     )
@@ -66,9 +67,9 @@ baseentityvaluemap  = (
         , SimpleValueMap(c='customize_view_enable', e=None,                    f=None               )
         , StableValueMap(c='entity_id',             e=ANNAL.CURIE.id,          f='entity_id'        )
         , SimpleValueMap(c='entity_uri',            e=ANNAL.CURIE.uri,         f='entity_uri'       )
-        # The "record_type" value (in context and form data) is intended to reflect the actual
+        # The "entity_typeuri" value (in context and form data) is intended to reflect the actual
         # type of the displayed entity.  Currently, it is not used:
-        , SimpleValueMap(c='record_type',           e=ANNAL.CURIE.type,        f='record_type'      )
+        , SimpleValueMap(c='entity_typeuri',        e=ANNAL.CURIE.type,        f='entity_typeuri'   )
         , SimpleValueMap(c='view_id',               e=None,                    f='view_id'          )
         , SimpleValueMap(c='orig_id',               e=None,                    f='orig_id'          )
         , SimpleValueMap(c='orig_type',             e=None,                    f='orig_type'        )
@@ -1812,7 +1813,7 @@ class GenericEntityEditView(AnnalistGenericView):
 
         Returns the updated responseinfo value.
         """
-        # NOTE: see also find_task_button and annal:edit_task_buttons in correspnding view data
+        # NOTE: see also find_task_button and annal:edit_task_buttons in corresponding view data
 
         # Tasks invoked without saving current entity
         # If no response generated yet, save entity
@@ -1916,19 +1917,19 @@ class GenericEntityEditView(AnnalistGenericView):
             sub_type_id         = base_type_id+layout.SUFFIX_SUBTYPE
             sub_type_entity_id  = entitytypeinfo.TYPE_ID+"/"+sub_type_id
             sub_type_uri        = base_type_uri and base_type_uri + layout.SUFFIX_SUBTYPE
-            sub_type_label      = "@@subtype of " + base_type_label
+            sub_type_supertypes = [{ "@id": base_type_uri }]
             sub_type_values     = (
                 { "type_id":          sub_type_id
                 , "type_uri":           sub_type_uri
-                , "type_label":         sub_type_label
                 , "type_ref":           sub_type_entity_id
                 , "type_view_id":       base_view_entity_id
                 , "type_list_id":       base_list_entity_id
                 , "base_type_id":       base_type_id
                 , "base_type_label":    base_type_label
                 })
-            sub_type_comment    = message.SUBTYPE_COMMENT%sub_type_values
-            sub_type_supertypes = [{ "@id": base_type_uri }]
+            sub_type_label                = message.SUBTYPE_LABEL%sub_type_values
+            sub_type_values["type_label"] = sub_type_label
+            sub_type_comment              = message.SUBTYPE_COMMENT%sub_type_values
             # Create subtype record, and save
             type_typeinfo = EntityTypeInfo(
                 viewinfo.collection, entitytypeinfo.TYPE_ID
@@ -2038,6 +2039,63 @@ class GenericEntityEditView(AnnalistGenericView):
                 )
             responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
 
+        elif task_id == entitytypeinfo.TASK_ID+"/Define_ref_type":
+            if viewinfo.check_authorization("edit"):
+                return responseinfo.set_http_response(viewinfo.http_response)
+            # Extract info from entityformvals
+            field_entity_id     = entityformvals[ANNAL.CURIE.id]
+            field_label         = entityformvals[RDFS.CURIE.label]
+            field_render_type   = entityformvals[ANNAL.CURIE.field_render_type]
+            field_value_type    = entityformvals[ANNAL.CURIE.field_value_type]  # range
+            ref_type_entity_ref = entityformvals[ANNAL.CURIE.field_ref_type]    # type to enumerate for options
+            # Set up referenced type details
+            ref_type_id         = ( ref_type_entity_ref or 
+                                    slug_from_uri(field_value_type) or 
+                                    field_entity_id + layout.SUFFIX_REFTYPE
+                                  )
+            ref_type_entity_ref = ref_type_entity_ref or (entitytypeinfo.TYPE_ID+"/"+ref_type_id)
+            ref_type_view_id    = "Default_view"
+            ref_type_list_id    = "Default_list"
+            ref_type_values     = (
+                { "type_id":          ref_type_id
+                , "type_ref":         ref_type_entity_ref
+                , "type_uri":         field_value_type
+                , "type_view_id":     ref_type_view_id
+                , "type_list_id":     ref_type_list_id
+                , "field_id":         field_entity_id
+                , "field_label":      field_label
+                })
+            ref_type_label                = message.REFTYPE_LABEL%ref_type_values
+            ref_type_values["type_label"] = ref_type_label
+            ref_type_comment              = message.REFTYPE_COMMENT%ref_type_values
+            # Create or update referenced type record, and save
+            type_typeinfo = EntityTypeInfo(
+                viewinfo.collection, entitytypeinfo.TYPE_ID
+                )
+            ref_type_entity = type_typeinfo.get_create_entity(ref_type_entity_ref)
+            ref_type_entity.setdefault(RDFS.CURIE.label,      ref_type_label)
+            ref_type_entity.setdefault(RDFS.CURIE.comment,    ref_type_comment)
+            ref_type_entity.setdefault(ANNAL.CURIE.uri,       field_value_type)
+            ref_type_entity.setdefault(ANNAL.CURIE.type_view, ref_type_view_id)
+            ref_type_entity.setdefault(ANNAL.CURIE.type_list, ref_type_list_id)
+            ref_type_entity._save()
+            # Update type references in field description, save, and redisplay form
+            if entityformvals[ANNAL.CURIE.field_render_type] == "_enum_render_type/Text":
+                entityformvals[ANNAL.CURIE.field_render_type] = None
+            entityformvals.setdefault(ANNAL.CURIE.field_render_type, "_enum_render_type/Enum_optional")
+            entityformvals.setdefault(ANNAL.CURIE.field_ref_type,    ref_type_entity_ref)
+            entityformvals.setdefault(ANNAL.CURIE.field_value_type,  ref_type_entity[ANNAL.CURIE.uri])
+            responseinfo = self.save_entity(
+                viewinfo, entityvaluemap, entityformvals, context_extra_values,
+                responseinfo=responseinfo
+                )
+            info_values = self.info_params(
+                message.TASK_CREATE_REFTYPE%
+                  { 'id': ref_type_id, 'label': ref_type_label, 'field_id': field_entity_id }
+                )
+            redirect_uri = self.get_form_refresh_uri(viewinfo, params=info_values)
+            responseinfo.set_http_response(HttpResponseRedirect(redirect_uri))
+
         elif task_id == entitytypeinfo.TASK_ID+"/Define_many_field":
             if viewinfo.check_authorization("edit"):
                 return responseinfo.set_http_response(viewinfo.http_response)
@@ -2047,7 +2105,7 @@ class GenericEntityEditView(AnnalistGenericView):
             field_entity_type        = entityformvals[ANNAL.CURIE.field_entity_type] # domain
             field_property_uri       = entityformvals[ANNAL.CURIE.property_uri]
             field_value_type         = entityformvals[ANNAL.CURIE.field_value_type]  # range
-            repeat_field_id          = field_entity_id    + layout.SUFFIX_REPEAT
+            repeat_field_id          = field_entity_id + layout.SUFFIX_REPEAT
             repeat_property_uri      = field_property_uri
             repeat_entity_type       = (
                 field_entity_type if field_entity_type != ANNAL.CURIE.Field_list 
@@ -2554,6 +2612,7 @@ class GenericEntityEditView(AnnalistGenericView):
             , entitytypeinfo.TASK_ID+"/Define_subtype"
             , entitytypeinfo.TASK_ID+"/Define_subproperty_field"
             # , entitytypeinfo.TASK_ID+"/Define_subtype_view_list"
+            , entitytypeinfo.TASK_ID+"/Define_ref_type"
             , entitytypeinfo.TASK_ID+"/Define_repeat_field" 
             , entitytypeinfo.TASK_ID+"/Define_list_field" 
             , entitytypeinfo.TASK_ID+"/Define_many_field" 

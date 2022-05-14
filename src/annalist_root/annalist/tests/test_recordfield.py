@@ -1298,9 +1298,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = field_view_form_data(
             field_id="taskrepeatfield",
             field_label="Test repeat field",
-            entity_type="test:repeat_field",
+            field_entity_type="test:repeat_field",
             property_uri="test:repeat_prop",
-            value_type="annal:Text",
+            field_value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_repeat_field"
             )
@@ -1368,9 +1368,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = field_view_form_data(
             field_id="tasklistfield",
             field_label="Test list field",
-            entity_type="test:list_field",
+            field_entity_type="test:list_field",
             property_uri="test:list_prop",
-            value_type="annal:Text",
+            field_value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_list_field"
             )
@@ -1429,6 +1429,65 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         self.check_entity_values(layout.FIELD_TYPEID, rpt_field_id, expect_list_field_values)
         return
 
+    def test_define_ref_type_task(self):
+        # Create new field entity
+        self._create_view_data("taskreftype")
+        self._check_field_data_values("taskreftype")
+        # Post define ref type  field
+        f = field_view_form_data(
+            field_id="taskreftype",
+            field_label="Test ref type",
+            field_entity_type="test:BaseType",
+            property_uri="test:ref_type",
+            render_type="_enum_render_type/Enum_optional",
+            field_value_type="test:RefType",
+            field_ref_type="RefType",
+            field_placement="small:0,12",
+            task="Define_ref_type"
+            )
+        u = entitydata_edit_url("edit", "testcoll", 
+            type_id=layout.FIELD_TYPEID, view_id="Field_view", entity_id="taskreftype"
+            )
+        r = self.client.post(u, f)
+        self.assertEqual(r.status_code,   302)
+        self.assertEqual(r.reason_phrase, "Found")
+        self.assertEqual(r.content,       b"")
+        # Check content of field
+        common_vals = (
+            { 'coll_id':        "testcoll"
+            , 'field_id':       "taskreftype"
+            , 'field_label':    "Test ref type"
+            , 'basetype_uri':   "test:BaseType"
+            , 'property_uri':   "test:ref_type"
+            , "reftype_id":     "RefType"
+            , 'reftype_uri':    "test:RefType"
+            })
+        field_id     = "%(field_id)s"%common_vals
+        property_uri = "%(property_uri)s"%common_vals
+        reftype_id   = "%(reftype_id)s"%common_vals
+        expect_field_values = (
+            { "annal:id":                   field_id
+            , "annal:type":                 "annal:Field"
+            , "rdfs:label":                 "%(field_label)s"%common_vals
+            , "annal:field_render_type":    "_enum_render_type/Enum_optional"
+            , "annal:field_value_mode":     "_enum_value_mode/Value_direct"
+            , "annal:field_value_type":     "test:RefType"
+            , "annal:field_entity_type":    "%(basetype_uri)s"%common_vals
+            , "annal:property_uri":         property_uri
+            , "annal:field_placement":      "small:0,12"
+            })
+        expect_reftype_values = (
+            { "annal:id":                   reftype_id
+            , "annal:type":                 "annal:Type"
+            , "rdfs:label":                 message.REFTYPE_LABEL%common_vals
+            , "annal:uri":                  "test:RefType"
+            , "annal:type_view":            "_view/Default_view"
+            , "annal:type_list":            "_list/Default_list"
+            })
+        self.check_entity_values(layout.FIELD_TYPEID, field_id,   expect_field_values)
+        self.check_entity_values(layout.TYPE_TYPEID,  reftype_id, expect_reftype_values)
+        return
+
     def test_define_many_field_task(self):
         # Create new field entity
         self._create_view_data("taskmanyfield")
@@ -1437,9 +1496,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = field_view_form_data(
             field_id="taskmanyfield",
             field_label="Test many field",
-            entity_type="test:many_field",
+            field_entity_type="test:many_field",
             property_uri="test:many_prop",
-            value_type="annal:Text",
+            field_value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_many_field"
             )
@@ -1515,9 +1574,9 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         f = field_view_form_data(
             field_id=common_vals["field_id"],
             field_label=common_vals["field_label"],
-            entity_type=common_vals["type_uri"],
+            field_entity_type=common_vals["type_uri"],
             property_uri=common_vals["property_uri"],
-            value_type="annal:Text",
+            field_value_type="annal:Text",
             field_placement="small:0,12",
             task="Define_field_ref"
             )
@@ -1599,7 +1658,7 @@ class RecordFieldEditViewTest(AnnalistTestCase):
         # Post define field reference
         f = field_view_form_data(
             field_id=common_vals["field_id"],
-            entity_type=common_vals["type_uri"],
+            field_entity_type=common_vals["type_uri"],
             task="Define_subproperty_field"
             )
         u = entitydata_edit_url("view", "testcoll", 

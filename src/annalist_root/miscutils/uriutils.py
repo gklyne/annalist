@@ -18,7 +18,7 @@ import os
 import os.path
 import re
 
-from urllib.parse       import urljoin, 
+from urllib.parse       import urljoin
 from urllib.request     import urlopen, Request, pathname2url
 
 fileuribase = "file://"

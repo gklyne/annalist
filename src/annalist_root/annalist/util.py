@@ -103,6 +103,8 @@ def extract_entity_id(eid):
     True
     >>> extract_entity_id("entity_id") == "entity_id"
     True
+    >>> extract_entity_id("") == ""
+    True
     """
     _type_id, entity_id = split_type_entity_id(eid)
     return entity_id
@@ -220,6 +222,8 @@ def slug_from_uri(uri):
     >>> slug_from_uri("http:/example.org/foo/bar?baz") == 'bar'
     True
     >>> slug_from_uri("http:/example.org/foo/bar#baz") == 'bar'
+    True
+    >>> slug_from_uri("foo:bar") == 'bar'
     True
     """
     return slug_from_path(urlsplit(uri).path)

@@ -70,7 +70,11 @@
     }
   ]
 , "annal:edit_task_buttons":
-  [ { "annal:button_id":        "_task/Define_many_field" 
+  [ { "annal:button_id":        "_task/Define_ref_type" 
+    , "annal:button_label":     "Define enum type"
+    , "annal:button_help":      "Define new type that is referenced by the current field (i.e. the field value is selected from an enumeration of values of this type ).  The type URI is taken from the `Field_value_type` of the current field.  The resulting type id and URI may be used to populate `Field_typeref` and `Field_value_type` of the current field.   (New type definitions are created with default values, and may be edited later.)"
+    }
+  , { "annal:button_id":        "_task/Define_many_field" 
     , "annal:button_label":     "Define repeat field"
     , "annal:button_help":      "Define new field that allows zero, one or more occurrences of the current field.  The multiple occurrences are supported through repeated use of the field property URI (as opposed to a list field).  (New set field definitions are created with default values derived from the current field, and may be edited later.)"
     }

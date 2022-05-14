@@ -192,7 +192,7 @@ def coll_view_form_data(
         , 'Coll_software_version':  annalist.__version_data__
         , 'Coll_comment':           "Created by Annalist test suite"
         , 'orig_type':              "_coll"
-        , 'record_type':            "annal:Collection"
+        , 'entity_typeuri':         "annal:Collection"
         , 'continuation_url':       ""
         })
     if orig_id:

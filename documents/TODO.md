@@ -37,8 +37,8 @@ See also: https://www.divio.com/en/blog/documentation/
 
 - [x] Eliminate py3porting module
 - [x] Edit/new entity reference: no option to add new entity?  (This was an application data collection data setup problem - use "optional" selection render type.)
-- [ ] Option to add field and new type with list+view in one action from edit-view view.  Or from edit-field view.
-
+- [x] Option to new referenced type with list+view in one action from field editing view..  Or from edit-field view.
+- [ ] broader concept None/undefined in list gives server error
 
 (Sub-release?)
 

@@ -74,7 +74,7 @@ def parseCommandArgs(argv):
                         action='store',
                         dest="configuration", metavar="CONFIG",
                         default="personal",
-                        #choices=['personal', 'shared', 'devel', 'runtests'],
+                        #choices=['personal', 'personal_debug', shared', 'devel', 'runtests'],
                         help="Select site configuration by name (e.g. personal, shared, devel, runtests.")
     parser.add_argument("-p", "--personal",
                         action='store_true',
@@ -110,9 +110,14 @@ def parseCommandArgs(argv):
     # parse command line now
     options = parser.parse_args(argv)
     if options:
-        if options.config_d: options.configuration = "devel"
-        if options.config_p: options.configuration = "personal"
-        if options.config_s: options.configuration = "shared"
+        if options.config_d: 
+            options.configuration = "devel"
+        if options.config_p: 
+            options.configuration = "personal"
+        if options.config_p and options.debug: 
+            options.configuration = "personal_debug"
+        if options.config_s: 
+            options.configuration = "shared"
         if options and options.command:
             return options
     print("No valid usage option given.", file=sys.stderr)

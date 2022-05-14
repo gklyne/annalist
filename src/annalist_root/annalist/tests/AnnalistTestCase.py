@@ -43,7 +43,7 @@ class AnnalistTestCase(TestCase):
         return
 
     """
-    Additonal test methods for Annalist test cases
+    Additional test methods for Annalist test cases
     """
 
     def check_entity_does_not_exist(self, type_id, entity_id):
@@ -55,7 +55,7 @@ class AnnalistTestCase(TestCase):
     def check_entity_values(self, type_id, entity_id, check_values=None):
         "Helper function checks content of entity record; returns entity"
         typeinfo = EntityTypeInfo(self.testcoll, type_id)
-        self.assertTrue(typeinfo.entity_exists(entity_id))
+        self.assertTrue(typeinfo.entity_exists(entity_id), f"Entity not found: {entity_id:s}")
         e = typeinfo.get_entity(entity_id)
         self.assertEqual(e.get_id(), entity_id)
         self.assertEqual(e.get_type_id(), type_id)

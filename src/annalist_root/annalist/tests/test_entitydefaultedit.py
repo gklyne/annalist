@@ -590,7 +590,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
             action="edit", update="Updated entity",
             orig_id="edittype",
             type_ref="", type_choices=self.type_ids,
-            record_type="/testsite/c/testcoll/d/_type/testtype/"
+            entity_typeuri="/testsite/c/testcoll/d/_type/testtype/"
             )
         self.assertEqual(len(r.context['fields']), 3) # 4 fields over 3 rows
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
@@ -614,7 +614,7 @@ class EntityDefaultEditViewTest(AnnalistTestCase):
         expect_context = default_view_context_data(
             entity_id="!badentity", orig_id="edittype", action="edit",
             type_ref="_type/testtype", type_choices=self.type_ids,
-            record_type="/testsite/c/testcoll/d/_type/testtype/"
+            entity_typeuri="/testsite/c/testcoll/d/_type/testtype/"
             )
         self.assertDictionaryMatch(context_bind_fields(r.context), expect_context)
         # Check stored entity is unchanged

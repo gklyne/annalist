@@ -220,6 +220,7 @@ NO_VIEW_OR_LIST_SELECTED	  = "Please select an exiting view and/or list as a bas
 TASK_CREATE_VIEW_LIST         = "Created new view and/or list for type %(id)s (%(label)s)"
 TASK_CREATE_SUBTYPE           = "Created subtype %(id)s (%(label)s)"
 TASK_CREATE_SUBFIELD          = "Created field %(id)s (%(label)s) using subproperty of %(base_uri)s."
+TASK_CREATE_REFTYPE           = "Created/updated type %(id)s (%(label)s) referenced by field %(field_id)s."
 TASK_CREATE_MANY_VALUE_FIELD  = "Created repeating value field '%(field_id)s' for '%(label)s' (check subfield 'Entity type' is blank, or matches repeat field 'Value type')"
 TASK_CREATE_LIST_VALUE_FIELD  = "Created sequence of values field '%(field_id)s' for '%(label)s' (check subfield 'Entity type' is blank, or matches repeat field 'Value type')"
 TASK_CREATE_REFERENCE_FIELD   = "Created reference to field '%(field_id)s'. (Select value for 'Refer to type' on current display, and re-save. Also check subfield 'Entity type' is blank, or matches referring field 'Value type')"
@@ -231,10 +232,22 @@ TASK_CREATE_REFERENCE_FIELD   = "Created reference to field '%(field_id)s'. (Sel
 #     "Entity type [%(type_label)s]($BASE:_type/%(type_id)s)."
 #     )
 
+SUBTYPE_LABEL               = (
+    "@@subtype of %(base_type_label)s"
+    )
 SUBTYPE_COMMENT             = (
     "# %(type_label)s\n\n"+
     "Entity type [%(type_label)s]($BASE:_type/%(type_id)s), "+
     "subtype of [%(base_type_label)s]($BASE:_type/%(base_type_id)s)."
+    )
+
+REFTYPE_LABEL               = (
+    "%(field_label)s"
+    )
+REFTYPE_COMMENT             = (
+    "# %(field_label)s\n\n"+
+    "Entity type [%(field_label)s]($BASE:_type/%(field_id)s), "+
+    "referenced by field [%(field_label)s]($BASE:_field/%(field_id)s)."
     )
 
 SUBFIELD_LABEL               = (

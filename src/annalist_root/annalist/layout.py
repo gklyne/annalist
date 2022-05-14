@@ -308,6 +308,7 @@ COLL_DIRS_PREV  = [ p[1] for p in COLL_DIRS_CURR_PREV if p[1] ]
 SUFFIX_LIST             = ""
 SUFFIX_VIEW             = ""
 SUFFIX_TYPE             = ""
+SUFFIX_REFTYPE          = "_reftype"
 SUFFIX_SUBTYPE          = "_subtype"
 SUFFIX_SUBPROPERTY      = "_subproperty"
 SUFFIX_REPEAT           = "_many"

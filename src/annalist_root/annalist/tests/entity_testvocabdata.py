@@ -195,7 +195,7 @@ def vocab_view_context_data(
         , 'entity_id':          vocab_id or ""
         , 'orig_id':            orig_id
         , 'orig_type':          layout.VOCAB_TYPEID
-        , 'record_type':        "annal:Vocabulary"
+        , 'entity_typeuri':     "annal:Vocabulary"
         , 'continuation_url':   continuation_url
         , 'fields':
           [ context_field_row(
