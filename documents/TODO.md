@@ -40,6 +40,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Task button to create new referenced type from field editing view.
 - [x] Remove references to unused 'annal:record_type' field; use 'entity_type_uri' and 'entity_type_id'.
 - [x] Bug: broader concept None/undefined in list gives server error
+- [x] Security upgrade to Django 4.0.4
 - [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
 
 (Sub-release?)
