@@ -788,6 +788,7 @@ class EntityTypeInfo(object):
         Attempts to read initial values from the type parent directory.
         Failing that, returns system-wide default values.
         """
+        log.debug(f"EntityTypeInfo.get_initial_entity_values: entity_id {entity_id} from {copy_entity_id}")
         values = (
             { '@type':              [ANNAL.CURIE.EntityData]
             , ANNAL.CURIE.type_id:  self.type_id

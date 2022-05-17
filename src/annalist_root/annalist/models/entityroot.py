@@ -179,15 +179,16 @@ class EntityRoot(object):
 
     def set_values(self, values):
         """
-        Set or update values for a collection
+        Set or update values for an entity.
         """
+        # log.debug(f"EntityRoot.set_values: entity_id {self._entityid}, type_id {self._entitytypeid}")
         self._values = values.copy()
-        self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id,      self._entityid)
-        self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id, self._entitytypeid)
-        self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type,    self._entitytype)
+        self._values[ANNAL.CURIE.id]        = self._values.get(ANNAL.CURIE.id)      or self._entityid
+        self._values[ANNAL.CURIE.type_id]   = self._values.get(ANNAL.CURIE.type_id) or self._entitytypeid
+        self._values[ANNAL.CURIE.type]      = self._values.get(ANNAL.CURIE.type)    or self._entitytype
         if ANNAL.CURIE.url not in self._values:
             self._values[ANNAL.CURIE.url] = self.get_view_url_path()
-        # log.info("set_values %r"%(self._values,))
+        # log.debug(f"EntityRoot.set_values: {self._values}")
         return self._values
 
     def get_values(self):
@@ -202,6 +203,7 @@ class EntityRoot(object):
 
         Also used for cache values.
         """
+        # log.debug(f"EntityRoot.get_save_values: entity_id {self._entityid}, ref {self._entityref}")
         values = self._values.copy()
         if self._entityid != layout.INITIAL_VALUES_ID:
             values = self._pre_save_processing(values)
@@ -216,6 +218,8 @@ class EntityRoot(object):
         #     values[ANNAL.CURIE.id] = self._entityid
         #@@
         values.pop(ANNAL.CURIE.url, None)
+        if not values[ANNAL.CURIE.id]:
+            log.debug(f"EntityRoot.get_save_values with no id: values {values}")
         return values
 
     def set_error(self, msg):

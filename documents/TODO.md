@@ -42,6 +42,8 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Bug: broader concept None/undefined in list gives server error
 - [x] Security upgrade to Django 4.0.4
 - [x] Bug: Django changed authentication interface in 1.11/2.1, OIDC authentication (Google, etc.), no longer working.  Add `request` param to `OAuth2CheckBackend.authenticate`.
+- [x] Bug: crash when listing user with no `annal:id` field.
+- [x] Bug: logging in via Google without specifying user id creates user permissions record without `annal:id`.  Update `EntityRoot.set_values` to override value of `annal:id` if value defined is `None`.
 - [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
 
 (Sub-release?)

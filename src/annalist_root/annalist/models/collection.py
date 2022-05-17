@@ -121,7 +121,7 @@ class Collection(Entity):
             [ (ANNAL.CURIE.comment,     ANNAL.CURIE.meta_comment    )
             ])
         collmetadata = self._migrate_values_map_field_names(migration_map, collmetadata)
-        collmetadata[ANNAL.CURIE.id] = self._entityid # In case directory renamed by hand
+        collmetadata[ANNAL.CURIE.id] = self._entityid  # In case directory renamed by hand
         return collmetadata
 
     def flush_collection_caches(self):

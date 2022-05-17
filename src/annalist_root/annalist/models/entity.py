@@ -687,18 +687,14 @@ class Entity(EntityRoot):
                 parent, entityid, (lambda e: e._load_values()), 
                 altscope=altscope
                 )
-            # log.info(" __ Entity.load: _load_values "+repr(v))
-            # log.info("entity.load %r"%(v,))
+            # log.debug(" __ Entity.load: _load_values "+repr(v))
+            # log.debug("entity.load %r"%(v,))
             if v:
                 v = e._migrate_values(v)
                 e.set_values(v)
                 entity = e
         else:
-            log.debug("Entity.load: invalid id %s"%entityid)
-        # log.warning("@@Entity.load ub %r"%(entity._entityurl))
-        # log.warning("@@Entity.load uv %r"%(entity._entityviewurl))
-        # log.warning("@@Entity.load e  %r"%(entity))
-        # log.warning("@@Entity.load v  %r"%(v))
+            log.debug(f"Entity.load: invalid id {entityid}")
         return entity
 
     @classmethod

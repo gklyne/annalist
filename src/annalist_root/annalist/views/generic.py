@@ -325,7 +325,7 @@ class AnnalistGenericView(ContentNegotiationView):
         most once for any HTTP request. 
 
         collection      the collection for which permissions are required.
-        user_id         local identifier for the user permnissions to retrieve.
+        user_id         local identifier for the user permissions to retrieve.
         user_uri        authenticated identifier associated with the user_id.  That is,
                         the authentication service used is presumed to confirm that
                         the identifier belongs to the user currently logged in with
@@ -366,7 +366,7 @@ class AnnalistGenericView(ContentNegotiationView):
 
     def get_message_data(self):
         """
-        Returns a dictionary of message data that can be passed inthe request parameters
+        Returns a dictionary of message data that can be passed in the request parameters
         to be displayed on a different page.
         """
         messagedata = {}
