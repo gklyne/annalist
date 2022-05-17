@@ -39,7 +39,7 @@ class OAuth2CheckBackend(object):
     returned by the OIDC authentication exchange.
     """
 
-    def authenticate(self, username=None, profile=None):
+    def authenticate(self, request, username=None, profile=None):
         log.debug(
             "OAuth2CheckBackend.authenticate: username %s, profile %r"%
             (username, profile)
@@ -47,6 +47,7 @@ class OAuth2CheckBackend(object):
         if isinstance(profile, str):
             # Not oauth2 exchange:
             # @TODO: can we be more specific about what type this should be?
+            log.warning("OAuth2CheckBackend.authenticate: profile unexpected type (str)")
             return None
         auth_username   = None
         auth_email      = None
@@ -61,7 +62,7 @@ class OAuth2CheckBackend(object):
             #
             # Google returns a "verified_email" flag
             # (It looks like this was changed in Google profile...)
-            log.info("login user profile: %r"%(profile,))
+            log.debug("OAuth2CheckBackend.authenticate: login user profile: %r"%(profile,))
             verified_email = (
                 profile.get("verified_email", False) or 
                 profile.get("email_verified", False)
@@ -159,7 +160,7 @@ class OAuth2CheckBackend(object):
             log.info("user.email:      %s"%(return_user.email,))
             return return_user
         # No username or credentials provided
-        log.info("No user id or no credentials provided")
+        log.info("OAuth2CheckBackend.authenticate: No user id or no credentials provided")
         return None
 
     def get_user(self, user_id):

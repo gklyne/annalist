@@ -176,7 +176,7 @@ class OIDC_AuthDoneView(generic.View):
         try:
             credential = flow.step2_exchange(request)
             profile    = flow.step3_get_profile(credential)
-            log.debug("auth_oidc_client: userid %s, profile %r"%(userid, profile))
+            log.info("auth_oidc_client: userid %s, profile %r"%(userid, profile))
             authuser = authenticate(
                 username=userid, profile=profile
                 )

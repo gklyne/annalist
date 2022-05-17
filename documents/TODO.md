@@ -41,6 +41,7 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Remove references to unused 'annal:record_type' field; use 'entity_type_uri' and 'entity_type_id'.
 - [x] Bug: broader concept None/undefined in list gives server error
 - [x] Security upgrade to Django 4.0.4
+- [x] Bug: Django changed authentication interface in 1.11/2.1, OIDC authentication (Google, etc.), no longer working.  Add `request` param to `OAuth2CheckBackend.authenticate`.
 - [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
 
 (Sub-release?)
