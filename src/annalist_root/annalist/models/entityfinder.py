@@ -113,7 +113,7 @@ class EntityFinder(object):
         Otherwise only collection entities are included.        
         """
         #@@
-        log.debug("get_type_entities: type_id %s, user_permissions %r"%(type_id,user_permissions))
+        # log.debug("get_type_entities: type_id %s, user_permissions %r"%(type_id,user_permissions))
         #@@
         entitytypeinfo = EntityTypeInfo(self._coll, type_id)
         for e in entitytypeinfo.enum_entities_with_implied_values(
@@ -121,7 +121,7 @@ class EntityFinder(object):
                 ):
             if e.get_id() != layout.INITIAL_VALUES_ID:
                 #@@
-                log.debug("  yield: %s"%(e.get_id(),))
+                # log.debug("  yield: %s"%(e.get_id(),))
                 #@@
                 yield e
         return

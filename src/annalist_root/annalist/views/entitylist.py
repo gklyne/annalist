@@ -156,12 +156,16 @@ class EntityGenericListView(AnnalistGenericView):
         entityvals = get_entity_values(listinfo.curr_typeinfo, entity)
         entityvals.pop('@context', None)
         log.debug(f"EntityGenericListView.strip_context_values: entityvals {entityvals}")
-        if entityvals[ANNAL.CURIE.id] is None:
-            log.warning(f"EntityGenericListView.strip_context_values: entityvals {entityvals}")
-        entityref = make_type_entity_id(
-            entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
-            )
-        entityvals['@id'] = base_url+entityref
+        # if entityvals[ANNAL.CURIE.id] is None:
+        #     log.warning(f"EntityGenericListView.strip_context_values: entityvals {entityvals}")
+        if ([ANNAL.CURIE.type_id] and entityvals[ANNAL.CURIE.id]):
+            # 
+            entityref = make_type_entity_id(
+                entityvals[ANNAL.CURIE.type_id], entityvals[ANNAL.CURIE.id]
+                )
+            entityvals['@id'] = base_url+entityref
+        else:
+            log.warning(f"EntityGenericListView.strip_context_values: missing id or type_id: entityvals {entityvals}")
         return entityvals
 
     def assemble_list_data(self, listinfo, scope, search_for):

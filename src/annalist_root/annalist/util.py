@@ -134,12 +134,12 @@ def make_type_entity_id(type_id=None, entity_id=None):
     >>> make_type_entity_id(type_id="type_id", entity_id="") == ""
     True
     """
-    # if type_id is None:
-    #     log.warning(f"make_type_entity_id: no type id ({type_id}, {entity_id})")
-    # if entity_id is None:
-    #     log.warning(f"make_type_entity_id: no entity id ({type_id}, {entity_id})")
-    assert type_id is not None,   f"make_type_entity_id: no type id ({type_id}, {entity_id})"
-    assert entity_id is not None, f"make_type_entity_id: no entity id ({type_id}, {entity_id})"
+    if type_id is None:
+        log.warning(f"make_type_entity_id: no type id ({type_id}, {entity_id})")
+    if entity_id is None:
+        log.warning(f"make_type_entity_id: no entity id ({type_id}, {entity_id})")
+    # assert type_id is not None,   f"make_type_entity_id: no type id ({type_id}, {entity_id})"
+    # assert entity_id is not None, f"make_type_entity_id: no entity id ({type_id}, {entity_id})"
     if entity_id != "":
         return type_id + "/" + entity_id
     return ""
