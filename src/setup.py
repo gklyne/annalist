@@ -230,7 +230,7 @@ setup(
         , 'idna==3.3'
         , 'requests-oauthlib==1.3.0'
         , 'oauthlib==3.1.1'
-        , 'certifi==2021.10.8'
+        , 'certifi==2022.12.7'
         , 'httplib2==0.20.2'
         , 'rdflib==6.1.1'
         , 'isodate==0.6.0'
