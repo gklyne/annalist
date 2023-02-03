@@ -222,7 +222,7 @@ setup(
         ],
     zip_safe = False,
     install_requires =
-        [ 'Django==4.0.3'
+        [ 'Django==4.0.9'
         , 'packaging==21.3'
         , 'six==1.16.0'
         , 'requests==2.26.0'
