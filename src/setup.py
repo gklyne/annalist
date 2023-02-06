@@ -229,7 +229,7 @@ setup(
         , 'urllib3==1.26.7'
         , 'idna==3.3'
         , 'requests-oauthlib==1.3.0'
-        , 'oauthlib==3.1.1'
+        , 'oauthlib==3.2.2'
         , 'certifi==2021.10.8'
         , 'httplib2==0.20.2'
         , 'rdflib==6.1.1'
