@@ -179,7 +179,7 @@
 
 
 \def\doi#1{\def\@doi{#1}}
-\doi{http://dx.doi.org/10.1145/0000000.0000000}
+\doi{https://doi.org/10.1145/0000000.0000000}
 
 \oddsidemargin 4.5pc
 \evensidemargin 4.5pc
