@@ -4,7 +4,7 @@
 , "annal:id":                   "Entity_comment"
 , "annal:type_id":              "_field"
 , "annal:uri":                  "annal:fields/Entity_comment"
-, "rdfs:label":                 "Comment"
+, "rdfs:label":                 "Entity comment"
 , "rdfs:comment":               "# Comment\r\n\r\nDescriptive text about an entity.  Interpreted as Markdown for presentation as rich text."
 , "annal:field_render_type":    "_enum_render_type/Markdown"
 , "annal:field_value_mode":     "_enum_value_mode/Value_direct"

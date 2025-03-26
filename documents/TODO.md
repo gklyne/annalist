@@ -44,6 +44,27 @@ See also: https://www.divio.com/en/blog/documentation/
 - [x] Bug: Django changed authentication interface in 1.11/2.1, OIDC authentication (Google, etc.), no longer working.  Add `request` param to `OAuth2CheckBackend.authenticate`.
 - [x] Bug: crash when listing user with no `annal:id` field.
 - [x] Bug: logging in via Google without specifying user id creates user permissions record without `annal:id`.  Update `EntityRoot.set_values` to override value of `annal:id` if value defined is `None`.
+- [ ] Bug: continuation URL following login not working
+- [ ] Bug: user permissions with id set to null causes failure to display `_annalist` collection.
+    ```
+        INFO 2024-03-08 13:18:16,521   /annalist/c/_annalist_site/d/
+        ERROR 2024-03-08 13:18:16,602 make_type_entity_id: no entity id (_user, None)
+        Traceback (most recent call last):
+          File "/home/annalist/anenv3/lib/python3.10/site-packages/annalist_root/annalist/views/entitylist.py", line 223, in get
+            entityvallist = self.assemble_list_data(listinfo, scope, search_for)
+          File "/home/annalist/anenv3/lib/python3.10/site-packages/annalist_root/annalist/views/entitylist.py", line 186, in assemble_list_data
+            entityvallist = [ self.strip_context_values(listinfo, e, base_url) for e in entity_list ]
+          File "/home/annalist/anenv3/lib/python3.10/site-packages/annalist_root/annalist/views/entitylist.py", line 186, in <listcomp>
+            entityvallist = [ self.strip_context_values(listinfo, e, base_url) for e in entity_list ]
+          File "/home/annalist/anenv3/lib/python3.10/site-packages/annalist_root/annalist/views/entitylist.py", line 158, in strip_context_values
+            entityref = make_type_entity_id(
+          File "/home/annalist/anenv3/lib/python3.10/site-packages/annalist_root/annalist/util.py", line 139, in make_type_entity_id
+            assert entity_id is not None, "make_type_entity_id: no entity id (%s, %s)"%(type_id, entity_id)
+        AssertionError: make_type_entity_id: no entity id (_user, None)
+    ```
+- [ ] Bug: removing view from Customize window doesn't substitute values in confirmation prompt
+- [ ] Bug: OpenId login with Google and/or Github no longer work
+- [ ] Bug: On renaming an entity, flush caches
 - [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
 
 (Sub-release?)

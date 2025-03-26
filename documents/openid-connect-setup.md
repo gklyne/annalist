@@ -67,7 +67,7 @@ The JSON file provided by Google looks something like this:
 
 Annalist keeps authentication data in a location separate from the installed software.  The default location is a directory called  `.annalist` in the home directory of the user running the Annalist service.
 
-A subdirectory called `providers` contains a client secrets file for each supported identity provider.  Annalist reads the contehnt of this directory to build a list of identity providers that are offered on the initial login screen.
+A subdirectory called `providers` contains a client secrets file for each supported identity provider.  Annalist reads the content of this directory to build a list of identity providers that are offered on the initial login screen.
 
 To configure Annalist to use the Google authentication service based on the service registration above:
 

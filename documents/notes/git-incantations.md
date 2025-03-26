@@ -120,6 +120,20 @@ See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
 
 ## Others
 
+### Push to a new repository on Github
+
+Create a new empty repository on Github.
+
+    git init
+    git add .
+    git commit -m '@@@'
+    git remote add origin @@github-repo-URI@@
+    git push -u -f origin main
+
+Details from:
+https://www.digitalocean.com/community/tutorials/how-to-push-an-existing-project-to-github
+
+
 ### List staged differences before commit
 
     git diff --staged
@@ -133,7 +147,6 @@ See: http://stackoverflow.com/questions/927358/undo-last-git-commit):
 ### List all commits on branch b1 that are not also on branch b2:
 
     git log b1 ^b2 --no-merges
-
 
 
 ## More incantations
