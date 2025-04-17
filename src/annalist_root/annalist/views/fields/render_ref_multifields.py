@@ -190,7 +190,17 @@ class RenderMultiFields_value(object):
             context['field']
             )
     try:
+        # context['field'] is a bound_field value...
         target_vals = context['field'].get_targetvals()
+        if target_vals is None:
+            field_id = context['field'].field_id
+            field_ref_type = context['field'].description.get('field_ref_type', "")
+            log.warning("No target values available for multi-field reference field %s"%field_id)        
+            log.info("Field '%s' has field_ref_type '%s'"%(field_id, field_ref_type))
+            log.debug("bound_field.field_description %r"%(context['field'].description))
+            if field_ref_type == "":
+                return "@@ref multifield: %(field_id)s has no 'field ref type'@@"%context['field']
+            return "@@ref multifield:  %(field_id)s has no target values@@"%context['field']
         extras      = context['field']['context_extra_values']
         group_fields = [ 
             bound_field(f, target_vals, context_extra_values=extras) 

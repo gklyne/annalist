@@ -174,8 +174,10 @@ class bound_field(object):
                                 probed for values that are not provided by the entity itself.  
                                 Can be used to specify default values for an entity.
         """
+        # @@@@
         # if not isinstance(entityvals, dict):
         #     raise ValueError("bound_field entityvals is not dictionary (%r)"%(entityvals,))
+        # @@@@
         self._field_description = field_description
         self._entityvals        = entityvals
         self._targetvals        = None
