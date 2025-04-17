@@ -158,12 +158,12 @@ class FieldRenderingTest(FieldRendererTestSupport):
         rendered_text = re.sub(r'\s+', " ", rendered_text)
         field_choices = (
                   [ FieldChoice(id="")
-                  , FieldChoice(id="_field/Entity_comment",     label="Comment")
-                  , FieldChoice(id="_field/Entity_id",          label="Id")
-                  , FieldChoice(id="_field/Entity_label",       label="Label")
+                  , FieldChoice(id="_field/Entity_comment",     label="Entity comment")
+                  , FieldChoice(id="_field/Entity_id",          label="Entity Id")
+                  , FieldChoice(id="_field/Entity_label",       label="Entity label")
                   , FieldChoice(id="_field/Entity_ref",         label="Entity ref")
                   , FieldChoice(id="_field/Entity_see_also_r",  label="See also")
-                  , FieldChoice(id="_field/Entity_type",        label="Type")
+                  , FieldChoice(id="_field/Entity_type",        label="Entity type")
                   , FieldChoice(id="_field/Entity_uri",         label="Entity URI")
                   ])
         expect_elements = (

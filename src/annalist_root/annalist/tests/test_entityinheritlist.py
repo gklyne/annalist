@@ -241,12 +241,12 @@ class EntityInheritListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         field_entities = (
-            { ('Entity_id',         "EntityId",      "annal:EntityRef",     "Id")
+            { ('Entity_id',         "EntityId",      "annal:EntityRef",     "Entity Id")
             , ('Bib_address',       "Text",          "annal:Text",          "Address")
             , ('Bib_authors',       "Group_Seq",     "bib:Authors",         "Author(s)")
             , ('Bib_booktitle',     "Text",          "annal:Text",          "Book title")
-            , ('Entity_type',       "EntityTypeId",  "annal:EntityRef",     "Type")
-            , ('Entity_label',      "Text",          "annal:Text",          "Label")
+            , ('Entity_type',       "EntityTypeId",  "annal:EntityRef",     "Entity type")
+            , ('Entity_label',      "Text",          "annal:Text",          "Entity label")
             , ('Field_help',        "Markdown",      "annal:Richtext",      "Help")
             , ('Field_placement',   "Placement",     "annal:Placement",     "Position/size")
             , ('Field_render_type', "Enum_choice",   "annal:EntityRef",     "Render type")

@@ -211,60 +211,70 @@ class bound_field(object):
         # log.info("self._key %s, __getattr__ %s"%(self._key, name))
         # log.info("self._key %s"%self._key)
         # log.info("self._entity %r"%self._entity)
-        if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
-            return self._entityvals.get(name, "")
+        try:
+            if name in ["entity_id", "entity_link", "entity_type_id", "entity_type_link"]:
+                return self._entityvals.get(name, "")
 
-        elif name == "entity_value":
-            return self._entityvals
-        elif name in ["field_value", "field_edit_value"]:
-            return self.get_field_value()
-        elif name == "field_value_key":
-            return self.get_field_value_key()
-        elif name == "field_value_link":
-            return self.get_field_selection_link()
-        elif name in ["target_value", "field_view_value"]:
-            return self.get_target_value()
-        elif name == "target_value_link":
-            return self.get_target_link()
-        elif name == "continuation_url":
-            return self.get_continuation_url()
-        elif name == "continuation_param":
-            return self.get_continuation_param()
+            elif name == "entity_value":
+                return self._entityvals
+            elif name in ["field_value", "field_edit_value"]:
+                return self.get_field_value()
+            elif name == "field_value_key":
+                return self.get_field_value_key()
+            elif name == "field_value_link":
+                return self.get_field_selection_link()
+            elif name in ["target_value", "field_view_value"]:
+                return self.get_target_value()
+            elif name == "target_value_link":
+                return self.get_target_link()
+            elif name == "continuation_url":
+                return self.get_continuation_url()
+            elif name == "continuation_param":
+                return self.get_continuation_param()
 
-        elif name == "field_id":
-            return self._field_description.get_field_id()
-        elif name == "field_name":
-            return self._field_description.get_field_name()
-        elif name == "field_label":
-            return self._field_description["field_label"]
-        elif name == "field_help":
-            return self.get_field_help_esc()
-        elif name == "field_tooltip":
-            return self.get_field_tooltip()
-        elif name == "field_tooltip_attr":
-            return self.get_field_tooltip_attr()
-        elif name == "render":
-            return self._field_description["field_renderer"]
-        elif name == "value_mapper":
-            return self._field_description["field_value_mapper"]
-        elif name == "description":
-            return self._field_description
+            elif name == "field_id":
+                return self._field_description.get_field_id()
+            elif name == "field_name":
+                return self._field_description.get_field_name()
+            elif name == "field_label":
+                return self._field_description["field_label"]
+            elif name == "field_help":
+                return self.get_field_help_esc()
+            elif name == "field_tooltip":
+                return self.get_field_tooltip()
+            elif name == "field_tooltip_attr":
+                return self.get_field_tooltip_attr()
+            elif name == "render":
+                return self._field_description["field_renderer"]
+            elif name == "value_mapper":
+                return self._field_description["field_value_mapper"]
+            elif name == "description":
+                return self._field_description
 
-        elif name == "field_value_key":
-            return self._key
-        elif name == "context_extra_values":
-            return self._extras
-        elif name == "options":
-            return self.get_field_options()
-        elif name == "copy":
-            return self.__copy__
-
-        # elif name == "row_field_descs":
-        elif True:      # For diagnosing failed accesses...
-            msg = "Accessing bound_field.%s"%(name,)
+            elif name == "field_value_key":
+                return self._key
+            elif name == "context_extra_values":
+                return self._extras
+            elif name == "options":
+                return self.get_field_options()
+            elif name == "copy":
+                return self.__copy__
+            # elif name == "row_field_descs":
+            elif True:      # For diagnosing failed accesses...
+                msg = "Accessing bound_field.%s"%(name,)
+                log.error(msg)
+                log.debug("".join(traceback.format_stack()))
+                assert False, msg
+        except Exception as e:
+            msg = "Error accessing bound_field.%s"%(name,)
             log.error(msg)
-            log.debug("".join(traceback.format_stack()))
-            assert False, msg
+            log.error(e)
+            log.info(
+                "@@ bound_field.__getattr__ name %s, _entityvals %r"%
+                (name, self._entityvals)
+                )            
+            return "@@bound_field.%s@@"%(name)
+
         return "@@bound_field.%s@@"%(name)
 
     def get_field_value(self):

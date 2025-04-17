@@ -207,7 +207,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1)s">
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Entity Id</span>
                 </div>
                 <div class="%(input_classes)s">
                     <input type="text" size="64" name="entity_id" 
@@ -230,7 +230,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
                 <div class="small-11 columns">
                   <div class="edit-grouprow col-head row">
                     <div class="%(col_head_classes)s">
-                      <span>Comment</span>
+                      <span>Entity comment</span>
                     </div>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ class RepeatGroupRenderingTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" %(tooltip1)s>
               <div class="row view-value-row">
                 <div class="%(label_classes)s">
-                  <span>Id</span>
+                  <span>Entity Id</span>
                 </div>
                 <div class="%(input_classes)s">
                   <a href="%(view_url)s%(cont_uri_param)s">testentity</a>

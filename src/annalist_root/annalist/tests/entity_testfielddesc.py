@@ -36,7 +36,7 @@ no_options = [ FieldChoice('', label="(no options)") ]
 f_Entity_id = (
     { 'field_id':               "Entity_id"
     , 'field_name':             "entity_id"
-    , 'field_label':            "Id"
+    , 'field_label':            "Entity Id"
     , 'field_render_type':      "EntityId"
     , 'field_value_mode':       "Value_direct"
     , 'field_value_type':       "annal:EntityRef"
@@ -66,7 +66,7 @@ f_Entity_ref = (
 f_Entity_type = (
     { 'field_id':               "Entity_type"
     , 'field_name':             "entity_type_id"
-    , 'field_label':            "Type"
+    , 'field_label':            "Entity type"
     , 'field_render_type':      "EntityTypeId"
     , 'field_value_mode':       "Value_direct"
     , 'field_value_type':       "annal:EntityRef"
@@ -81,7 +81,7 @@ f_Entity_type = (
 f_Entity_label = (
     { 'field_id':               "Entity_label"
     , 'field_name':             "Entity_label"
-    , 'field_label':            "Label"
+    , 'field_label':            "Entity label"
     , 'field_render_type':      "Text"
     , 'field_value_mode':       "Value_direct"
     , 'field_value_type':       "annal:Text"
@@ -96,7 +96,7 @@ f_Entity_label = (
 f_Entity_comment = (
     { 'field_id':               "Entity_comment"
     , 'field_name':             "Entity_comment"
-    , 'field_label':            "Comment"
+    , 'field_label':            "Entity comment"
     , 'field_render_type':      "Markdown"
     , 'field_value_mode':       "Value_direct"
     , 'field_value_type':       "annal:Richtext"

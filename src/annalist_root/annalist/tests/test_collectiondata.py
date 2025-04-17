@@ -156,7 +156,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             <div class="small-12 medium-6 columns" title="%(tooltip1a)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        <span>Id</span>
+                        <span>Entity Id</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="entity_id" 
@@ -182,7 +182,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip2)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        <span>Label</span>
+                        <span>Entity label</span>
                     </div>
                     <div class="%(input_classes)s">
                         <input type="text" size="64" name="Entity_label" 
@@ -196,7 +196,7 @@ class CollectionDataEditViewTest(AnnalistTestCase):
             <div class="small-12 columns" title="%(tooltip3)s">
                 <div class="row view-value-row">
                     <div class="%(label_classes)s">
-                        <span>Comment</span>
+                        <span>Entity comment</span>
                     </div>
                     <div class="%(input_classes)s">
                         <textarea cols="64" rows="6" name="Entity_comment" 

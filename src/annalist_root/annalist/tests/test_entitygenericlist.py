@@ -461,12 +461,12 @@ class EntityGenericListViewTest(AnnalistTestCase):
         self.assertEqual(list_choices['field_value'],   "Field_list")
         # Fields
         field_entities = (
-            { ('Entity_id',         "EntityId",        "annal:EntityRef",  "Id")
+            { ('Entity_id',         "EntityId",        "annal:EntityRef",  "Entity Id")
             , ('Coll_comment',      "Markdown",        "annal:Richtext",   "Collection metadata")
             , ('Coll_parent',       "Enum_choice_opt", "annal:EntityRef",  "Parent")
             , ('Coll_software_version', "Showtext",    "annal:Text",       "S/W version")
-            , ('Entity_type',       "EntityTypeId",    "annal:EntityRef",  "Type")
-            , ('Entity_label',      "Text",            "annal:Text",       "Label")
+            , ('Entity_type',       "EntityTypeId",    "annal:EntityRef",  "Entity type")
+            , ('Entity_label',      "Text",            "annal:Text",       "Entity label")
             , ('Field_help',        "Markdown",        "annal:Richtext",   "Help")
             , ('Field_placement',   "Placement",       "annal:Placement",  "Position/size")
             , ('Field_render_type', "Enum_choice",     "annal:EntityRef",  "Render type")

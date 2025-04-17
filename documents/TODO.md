@@ -65,7 +65,9 @@ See also: https://www.divio.com/en/blog/documentation/
 - [ ] Bug: removing view from Customize window doesn't substitute values in confirmation prompt
 - [ ] Bug: OpenId login with Google and/or Github no longer work
 - [ ] Bug: On renaming an entity, flush caches
+- [ ] Bug: Sub-field references in field-group don't show up as field options in dropdown list when entity type is set for subfield.  Need special handling for case when subfield URI is @id?  Workaround: set value type to entity type required by subfield.
 - [ ] Try sorting lists by label rather than by id (see entityfinder.get_entities_sorted()).
+
 
 (Sub-release?)
 
